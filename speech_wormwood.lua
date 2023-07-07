@@ -4813,7 +4813,7 @@ return{
 		LUNAR_FORGE = "Make shiny things!",
 		LUNAR_FORGE_KIT = "Where to plant it?",
 
-		--LUNARPLANT_KIT = "TODO",
+		LUNARPLANT_KIT = "Fixey stuff",
 		ARMOR_LUNARPLANT = "Mean friend made nice clothes",
 		LUNARPLANTHAT = "Mean friend made nice hat",
 		BOMB_LUNARPLANT = "Boom ball",
@@ -4825,7 +4825,7 @@ return{
         PUNCHINGBAG = "It okay. Not real",
 
         -- Rifts 2
-        SHADOWRIFT_PORTAL = "Anybody down there?",
+        SHADOWRIFT_PORTAL = "Anyone down there?",
 
 		SHADOW_FORGE = "Scary hands helping?",
 		SHADOW_FORGE_KIT = "Not done yet",
@@ -4834,7 +4834,7 @@ return{
         FUSED_SHADELING_BOMB = "Look out!",
 
 		VOIDCLOTH = "Leaves? No...",
-		--VOIDCLOTH_KIT = "TODO",
+		VOIDCLOTH_KIT = "Fixey stuff",
 		VOIDCLOTHHAT = "Dark inside",
 		ARMOR_VOIDCLOTH = "Smiling?",
 

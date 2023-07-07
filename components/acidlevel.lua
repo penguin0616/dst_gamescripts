@@ -48,7 +48,7 @@ function AcidLevel:DoAcidRainTick()
     local rate = (inst.components.moisture and inst.components.moisture:_GetMoistureRateAssumingRain() or TheWorld.state.precipitationrate)
 
     if inst.components.inventory then
-        if inst.components.inventory:EquipHasTag("acidrainimmune") then
+        if inst:HasTag("rainimmunity") or inst.components.inventory:EquipHasTag("acidrainimmune") then
             damage = 0
         else
             -- Melt worn waterproofer equipment.

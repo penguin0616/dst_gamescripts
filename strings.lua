@@ -3704,7 +3704,7 @@ STRINGS =
 		VOIDCLOTH = "Dark Tatters",
 		VOIDCLOTHHAT = "Void Cowl",
 		ARMOR_VOIDCLOTH = "Void Robe",
-		VOIDCLOTH_KIT = "Void Kit",
+		VOIDCLOTH_KIT = "Void Repair Kit",
 
         VOIDCLOTH_UMBRELLA = "Umbralla",
         VOIDCLOTH_SCYTHE = "Shadow Reaper",
@@ -14633,6 +14633,12 @@ STRINGS.SKILLTREE = {
         REEDSCRAFTING_TITLE = "Monkeytail Crafting",
         REEDSCRAFTING_DESC = "Sacrifice health to craft Monkeytails.",
 
+        JUICYBERRYBUSHCRAFTING_TITLE = "Juicy Berry Bush Crafting",
+        JUICYBERRYBUSHCRAFTING_DESC = "Sacrifice health to craft Juicy Berry Bushes.",
+
+        LUREPLANTCRAFTING_TITLE = "Lureplant Crafting",
+        LUREPLANTCRAFTING_DESC = "Sacrifice health to craft Lureplants.",
+
         SYRUPCRAFTING_TITLE = "Poor Sap",
         SYRUPCRAFTING_DESC = "Learn to craft Ipecaca Syrup to induce pooping in other creatures.",
 
@@ -14861,7 +14867,7 @@ STRINGS.SCRAPBOOK = {
         CANDYBAG = "A 14 slot container for holding Candies Trinkets and Decorations.",
         SPICEPACK = "A 6 slot container that slows the spoiling of items inside.",
         BLUEAMULET = "Raises sanity while cooling the wearer.",
-        PURPLEAMULET = "Wearer will becomes insane.",
+        PURPLEAMULET = "Wearer becomes insane.",
         REDAMULET = "A Ghost that haunts this amulet will be revived.",
         GREENAMULET = "Halves the cost of crafted items and raises sanity when worn.",
         ORANGEAMULET = "Automatically picks up items nearby and puts them in your inventory. Also raises sanity when worn.",
@@ -14885,6 +14891,25 @@ STRINGS.SCRAPBOOK = {
         LUNARPLANTHAT = "Glows in the dark and augments the Brightshade Staff with more projectile bounces.\nGives lunar weapons with Planar Damage a boost.",
         DENBEDAZZLER = "Bedazzle a Spider Den to pacify the spiders nearby. Bedazzled dens do not grow.",
         TOWNPORTALTALISMAN = "When another survivor is channeling a Lazy Deserter, use this to teleport to them.",
+        BOOK_TENTACLES = "Summon some unfriendly Tentacles nearby.",
+        BOOK_BIRDS = "Summon up to 20 birds to land nearby.",
+        BOOK_BRIMSTONE = "Bring down over a dozen uncontrolled lightning strikes",
+        BOOK_SLEEP = "Puts creatures nearby to sleep.",
+        BOOK_HORTICULTURE = "Rapidly grow up to 10 nearby garden plants or fruiting bushes.",
+        BOOK_HORTICULTURE_UPGRADED = "Rapidly grow up to 15 nearby garden plants or fruiting bushes.",
+        BOOK_SILVICULTURE = "Grow grass, saplings and trees nearby, but grass will need to be fertilized again sooner.",
+        BOOK_FISH = "Summon a school of Ocean Fish nearby.",
+        BOOK_FIRE = "Extinguishes all burning and smouldering fires closeby and creates or charges a Firey Pen infused with that energy.",
+        BOOK_WEB = "Create several turfs worth of Spider Webbing on the ground that slows creatures traveling on it. It will go away after 2 minutes.",
+        BOOK_TEMPERATURE = "Dries Survivors nearby as well as setting their temperature to a nice 35 degrees.",
+        BOOK_LIGHT = "Summons half a day of light to shine down. Will cause an earthquake in the caves.",
+        BOOK_LIGHT_UPGRADED = "Summons 2 days of light to shine down. Will cause an earthquake in the caves.",
+        BOOK_RAIN = "If it's raining, the rain will stop. If it's not raining, rain will start and also water nearby farm soil.",
+        BOOK_MOON = "Sets the current moon stage to full.",
+        BOOK_BEES = "Summons 2 Grumle Bee followers. Maximum 16 at a time.",
+        BOOK_RESEARCH_STATION = "Gives nearby survivors a crafting charge. Each charge lets them craft the next item one tech level higher than normal.",
+        WOLFGANG_WHISTLE = "Toggles Wolfgang's coaching skill on and off.",
+        COMPOSTWRAP = "Wormwood will heal 8 health plus 1 health/sec for 32 seconds. Wormwood will also bloom for 4 minutes.\nThis also works as good fertilizer for gardening.",
     },
 }
 

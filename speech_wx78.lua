@@ -389,12 +389,12 @@ return{
 
 		CAST_SPELLBOOK =
 		{
---fallback to speech_wilson.lua 			NO_TOPHAT = "only_used_by_waxwell",
+			NO_TOPHAT = "only_used_by_waxwell",
 		},
 
 		CASTAOE =
 		{
---fallback to speech_wilson.lua 			NO_MAX_SANITY = "only_used_by_waxwell",
+			NO_MAX_SANITY = "only_used_by_waxwell",
 		},
     },
 
@@ -419,11 +419,11 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
 	--waxwell specific
---fallback to speech_wilson.lua 	ANNOUNCE_SHADOWLEVEL_ITEM = "only_used_by_waxwell",
---fallback to speech_wilson.lua 	ANNOUNCE_EQUIP_SHADOWLEVEL_T1 = "only_used_by_waxwell",
---fallback to speech_wilson.lua 	ANNOUNCE_EQUIP_SHADOWLEVEL_T2 = "only_used_by_waxwell",
---fallback to speech_wilson.lua 	ANNOUNCE_EQUIP_SHADOWLEVEL_T3 = "only_used_by_waxwell",
---fallback to speech_wilson.lua 	ANNOUNCE_EQUIP_SHADOWLEVEL_T4 = "only_used_by_waxwell",
+	ANNOUNCE_SHADOWLEVEL_ITEM = "only_used_by_waxwell",
+	ANNOUNCE_EQUIP_SHADOWLEVEL_T1 = "only_used_by_waxwell",
+	ANNOUNCE_EQUIP_SHADOWLEVEL_T2 = "only_used_by_waxwell",
+	ANNOUNCE_EQUIP_SHADOWLEVEL_T3 = "only_used_by_waxwell",
+	ANNOUNCE_EQUIP_SHADOWLEVEL_T4 = "only_used_by_waxwell",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -4809,7 +4809,7 @@ return{
 		LUNAR_FORGE = "GREETINGS, COUSIN",
 		LUNAR_FORGE_KIT = "ASSEMBLY REQUIRED",
 
-		--LUNARPLANT_KIT = "TODO",
+		LUNARPLANT_KIT = "ITEM RESTORATION HARDWARE",
 		ARMOR_LUNARPLANT = "THE DEAD HUSK OF MY ENEMY IS AN EXCELLENT DAMAGE BUFFER",
 		LUNARPLANTHAT = "ACTIVATE HEADLIGHTS",
 		BOMB_LUNARPLANT = "THROWABLE DEVASTATION",
@@ -4830,7 +4830,7 @@ return{
         FUSED_SHADELING_BOMB = "WARNING: CONTENTS UNDER PRESSURE",
 
 		VOIDCLOTH = "ALL THAT IS LEFT OF MY ENEMIES",
-		--VOIDCLOTH_KIT = "TODO",
+		VOIDCLOTH_KIT = "ITEM RESTORATION HARDWARE",
 		VOIDCLOTHHAT = "IT WOULD BE A SHAME TO HIDE MY PERFECT MECHANICAL FACE",
 		ARMOR_VOIDCLOTH = "THE IRON CHAINS ARE A NICE TOUCH",
 

@@ -4809,7 +4809,7 @@ return{
 		LUNAR_FORGE = "To work, then.",
 		LUNAR_FORGE_KIT = "There's more to be done.",
 
-		--LUNARPLANT_KIT = "TODO",
+		LUNARPLANT_KIT = "Some things can be repaired.",
 		ARMOR_LUNARPLANT = "Does no one else find this armor oddly itchy?",
 		LUNARPLANTHAT = "It looks wonderfully ominous.",
 		BOMB_LUNARPLANT = "Someone's about to have a very bad day.",
@@ -4830,7 +4830,7 @@ return{
         FUSED_SHADELING_BOMB = "That is one persistent tail.",
 
 		VOIDCLOTH = "It would be a shame to let this material go to waste.",
-		--VOIDCLOTH_KIT = "TODO",
+		VOIDCLOTH_KIT = "Some things can be repaired.",
 		VOIDCLOTHHAT = "Darkness is an often underrated accessory.",
 		ARMOR_VOIDCLOTH = "The fabric really breathes.",
 

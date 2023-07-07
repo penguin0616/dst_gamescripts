@@ -4809,7 +4809,7 @@ return{
 		LUNAR_FORGE = "Why waste time staring at it when I could be making something?",
 		LUNAR_FORGE_KIT = "Well, it's not going to build itself.",
 
-		--LUNARPLANT_KIT = "TODO",
+		LUNARPLANT_KIT = "Fixing it is faster than making a new one.",
 		ARMOR_LUNARPLANT = "Some extra protection is always welcome.",
 		LUNARPLANTHAT = "It's incredible that I can see anything while wearing it.",
 		BOMB_LUNARPLANT = "This should end a fight quickly.",
@@ -4830,7 +4830,7 @@ return{
         FUSED_SHADELING_BOMB = "What a nasty little thing!",
 
 		VOIDCLOTH = "Tatters of spacetime.",
-		--VOIDCLOTH_KIT = "TODO",
+		VOIDCLOTH_KIT = "Fixing it is faster than making a new one.",
 		VOIDCLOTHHAT = "Oooh, it makes one look rather mysterious, doesn't it?",
 		ARMOR_VOIDCLOTH = "I prefer chains that have a pocket watch at the end of them.",
 

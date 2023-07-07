@@ -4809,7 +4809,7 @@ return{
 		LUNAR_FORGE = "Can we use it to make crafts?",
 		LUNAR_FORGE_KIT = "We can build it, we have lots of free hands to spare!",
 
-		--LUNARPLANT_KIT = "TODO",
+		LUNARPLANT_KIT = "Mum would be proud to see how good we are at this!",
 		ARMOR_LUNARPLANT = "We're gonna look so tough!",
 		LUNARPLANTHAT = "We're gonna be a spider knight!",
 		BOMB_LUNARPLANT = "Catch!",
@@ -4830,7 +4830,7 @@ return{
         FUSED_SHADELING_BOMB = "You're not one of our spider friends!",
 
 		VOIDCLOTH = "It's definitely not spider silk.",
-		--VOIDCLOTH_KIT = "TODO",
+		VOIDCLOTH_KIT = "Mum would be proud to see how good we are at this!",
 		VOIDCLOTHHAT = "It makes us look pretty spooky.",
 		ARMOR_VOIDCLOTH = "It makes it look like our tummy's smiling!",
 

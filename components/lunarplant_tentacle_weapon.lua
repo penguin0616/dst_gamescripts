@@ -1,6 +1,6 @@
 local function DefaultLunarPlantTentacleCondition(inst, owner, attack_data)
-	return (owner ~= nil) and (owner.components.skilltreeupdater ~= nil) and
-		owner.components.skilltreeupdater:IsActivated("wormwood_allegiance_lunar_plant_gear_2")
+    return (owner ~= nil) and (owner.components.skilltreeupdater ~= nil) and
+        owner.components.skilltreeupdater:IsActivated("wormwood_allegiance_lunar_plant_gear_2")
 end
 
 local LunarPlant_Tentacle_Weapon = Class(function(self, inst)
@@ -40,8 +40,8 @@ end
 
 function LunarPlant_Tentacle_Weapon:SetOwner(owner)
     if self.owner then
-        self.inst:RemoveEventCallback("onattackother", self._on_attack, owner)
-        self.inst:RemoveEventCallback("onremove", self._erase_owner, owner)
+        self.inst:RemoveEventCallback("onattackother", self._on_attack, self.owner)
+        self.inst:RemoveEventCallback("onremove", self._erase_owner, self.owner)
     end
 
     self.owner = owner

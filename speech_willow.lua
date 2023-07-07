@@ -900,17 +900,17 @@ return{
 
     ANNOUNCE_COACH = 
     {
-        "TODO",
-        "TODO",
-        "TODO",
-        "TODO",
-        "TODO",
-        "TODO",
-        "TODO",
-        "TODO",
-        "TODO",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
     },
-    ANNOUNCE_WOLFGANG_WIMPY_COACHING = "TODO",
+    ANNOUNCE_WOLFGANG_WIMPY_COACHING = "only_used_by_wolfgang",
     ANNOUNCE_WOLFGANG_MIGHTY_COACHING = "only_used_by_wolfgang",
     ANNOUNCE_WOLFGANG_BEGING_COACHING = "only_used_by_wolfgang",
     ANNOUNCE_WOLFGANG_END_COACHING = "only_used_by_wolfgang",
@@ -4816,7 +4816,7 @@ return{
 		LUNAR_FORGE = "What gives? That little fire doesn't even feel warm!",
 		LUNAR_FORGE_KIT = "Right. Now I guess I have to build it.",
 
-		--LUNARPLANT_KIT = "TODO",
+		LUNARPLANT_KIT = "Do I look like the kind of person who fixes things? Ugh, fiiiiine...",
 		ARMOR_LUNARPLANT = "I make it look good.",
 		LUNARPLANTHAT = "How am I supposed to see in that thing?",
 		BOMB_LUNARPLANT = "Heh. Think fast!",
@@ -4837,7 +4837,7 @@ return{
         FUSED_SHADELING_BOMB = "They sure go out with a bang.",
 
 		VOIDCLOTH = "Finders keepers!",
-		--VOIDCLOTH_KIT = "TODO",
+		VOIDCLOTH_KIT = "Do I look like the kind of person who fixes things? Ugh, fiiiiine...",
 		VOIDCLOTHHAT = "You never know who might really be hiding under that hood.",
 		ARMOR_VOIDCLOTH = "I think I look good in red.",
 

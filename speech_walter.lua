@@ -4809,7 +4809,7 @@ return{
 		LUNAR_FORGE = "Let's make something, Woby!",
 		LUNAR_FORGE_KIT = "Woby and I can have that set up in a jiffy!",
 
-		--LUNARPLANT_KIT = "TODO",
+		LUNARPLANT_KIT = "I hope this goes toward my sewing badge.",
 		ARMOR_LUNARPLANT = "It makes me feel so safe, it's scary!",
 		LUNARPLANTHAT = "That's definitely the helmet of some kind of ghost knight!",
 		BOMB_LUNARPLANT = "If only I could use it in my slingshot.",
@@ -4830,7 +4830,7 @@ return{
         FUSED_SHADELING_BOMB = "Woah! The ball's alive!",
 
 		VOIDCLOTH = "All that's left of that poor shadow monster.",
-		--VOIDCLOTH_KIT = "TODO",
+		VOIDCLOTH_KIT = "I hope this goes toward my sewing badge.",
 		VOIDCLOTHHAT = "Woby doesn't like it when I wear that.",
 		ARMOR_VOIDCLOTH = "It almost looks like it has a face, doesn't it?",
 

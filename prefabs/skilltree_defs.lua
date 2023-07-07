@@ -27,9 +27,11 @@ local function CountTags(prefab, targettag, skillselection)
     local tag_count = 0
     for skill in pairs(dataset) do
         local data = SKILLTREE_DEFS[prefab][skill]
-        for _, tag in ipairs(data.tags) do
-            if tag == targettag then
-                tag_count = tag_count + 1
+        if data then
+            for _, tag in ipairs(data.tags) do
+                if tag == targettag then
+                    tag_count = tag_count + 1
+                end
             end
         end
     end

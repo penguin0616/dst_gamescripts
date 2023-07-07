@@ -2619,7 +2619,8 @@ function d_createscrapbookdata(should_print)
                 end
             end
 
-            if t.components.fueled and t.components.fueled.fueltype == FUELTYPE.USAGE then
+            local fueled = t.components.fueled
+            if fueled ~= nil and (fueled.fueltype == FUELTYPE.USAGE or fueled.secondaryfueltype == FUELTYPE.USAGE) and not fueled.no_sewing then
                 WriteInfo( "sewable", true )
             end
 

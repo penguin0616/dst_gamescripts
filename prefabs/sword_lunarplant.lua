@@ -82,15 +82,15 @@ end
 local function PushIdleLoop(inst)
 	if inst.components.finiteuses:GetUses() > 0 then
 		inst.AnimState:PushAnimation("idle")
-	else
-		inst.AnimState:PlayAnimation("broken")
 	end
 end
 
 local function OnStopFloating(inst)
-	inst.blade1.AnimState:SetFrame(0)
-	inst.blade2.AnimState:SetFrame(0)
-	inst:DoTaskInTime(0, PushIdleLoop) --#V2C: #HACK restore the looping anim, timing issues
+	if inst.components.finiteuses:GetUses() > 0 then
+		inst.blade1.AnimState:SetFrame(0)
+		inst.blade2.AnimState:SetFrame(0)
+		inst:DoTaskInTime(0, PushIdleLoop) --#V2C: #HACK restore the looping anim, timing issues
+	end
 end
 
 local function onequip(inst, owner)
@@ -131,17 +131,49 @@ local function SetupEquippable(inst)
 	inst.components.equippable:SetOnUnequip(onunequip)
 end
 
+local FLOAT_SCALE_BROKEN = { 1, 0.7, 1 }
+local FLOAT_SCALE = { 1, 0.4, 1 }
+
+local function OnIsBrokenDirty(inst)
+	if inst.isbroken:value() then
+		inst.components.floater:SetSize("small")
+		inst.components.floater:SetVerticalOffset(0.05)
+		inst.components.floater:SetScale(FLOAT_SCALE_BROKEN)
+	else
+		inst.components.floater:SetSize("med")
+		inst.components.floater:SetVerticalOffset(0.05)
+		inst.components.floater:SetScale(FLOAT_SCALE)
+	end
+end
+
+local SWAP_DATA_BROKEN = { bank = "sword_lunarplant", anim = "broken" }
+local SWAP_DATA = { sym_build = "sword_lunarplant", sym_name = "swap_sword_lunarplant" }
+
+local function SetIsBroken(inst, isbroken)
+	if isbroken then
+		inst.components.floater:SetBankSwapOnFloat(false, nil, SWAP_DATA_BROKEN)
+	else
+		inst.components.floater:SetBankSwapOnFloat(true, -17.5, SWAP_DATA)
+	end
+	inst.isbroken:set(isbroken)
+	OnIsBrokenDirty(inst)
+end
+
 local function OnBroken(inst)
 	if inst.components.equippable ~= nil then
 		inst:RemoveComponent("equippable")
 		inst.AnimState:PlayAnimation("broken")
+		SetIsBroken(inst, true)
 	end
 end
 
 local function OnRepaired(inst)
 	if inst.components.equippable == nil then
 		SetupEquippable(inst)
+		inst.blade1.AnimState:SetFrame(0)
+		inst.blade2.AnimState:SetFrame(0)
 		inst.AnimState:PlayAnimation("idle", true)
+		SetIsBroken(inst, false)
 	end
 end
 
@@ -166,12 +198,15 @@ local function fn()
 	--weapon (from weapon component) added to pristine state for optimization
 	inst:AddTag("weapon")
 
-	local swap_data = { sym_build = "sword_lunarplant", sym_name = "swap_sword_lunarplant" }
-	MakeInventoryFloatable(inst, "med", 0.05, { 1, 0.4, 1 }, true, -17.5, swap_data)
+	inst:AddComponent("floater")
+	inst.isbroken = net_bool(inst.GUID, "sword_lunarplant.isbroken", "isbrokendirty")
+	SetIsBroken(inst, false)
 
 	inst.entity:SetPristine()
 
 	if not TheWorld.ismastersim then
+		inst:ListenForEvent("isbrokendirty", OnIsBrokenDirty)
+
 		return inst
 	end
 

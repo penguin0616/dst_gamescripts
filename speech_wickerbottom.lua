@@ -4809,7 +4809,7 @@ return{
 		LUNAR_FORGE = "It utilizes crystallized energy to reshape and reinforce organic material.",
 		LUNAR_FORGE_KIT = "It should be a simple matter to construct it.",
 
-		--LUNARPLANT_KIT = "TODO",
+		LUNARPLANT_KIT = "Now that I'm familiar with the material, it's a simple matter to repair it.",
 		ARMOR_LUNARPLANT = "Surprisingly effective plant-based armor.",
 		LUNARPLANTHAT = "It does not fit well over my glasses, but I suppose I must make do.",
 		BOMB_LUNARPLANT = "Unstable energy, barely held together by a hardy plant epidermis.",
@@ -4830,7 +4830,7 @@ return{
         FUSED_SHADELING_BOMB = "Its body is highly volatile.",
 
 		VOIDCLOTH = "This unusual fabric may be quite useful.",
-		--VOIDCLOTH_KIT = "TODO",
+		VOIDCLOTH_KIT = "Now that I'm familiar with the material, it's a simple matter to repair it.",
 		VOIDCLOTHHAT = "Prolonged use will surely have detrimental effects on the mind.",
 		ARMOR_VOIDCLOTH = "Armor against metaphysical damage.",
 

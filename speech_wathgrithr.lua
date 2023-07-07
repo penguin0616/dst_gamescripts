@@ -4809,7 +4809,7 @@ return{
 		LUNAR_FORGE = "I shall forge weapons to rival the gods themselves!",
 		LUNAR_FORGE_KIT = "The forge must be built, forthwith!",
 
-		--LUNARPLANT_KIT = "TODO",
+		LUNARPLANT_KIT = "Even the sturdiest armor will sometimes need repairs.",
 		ARMOR_LUNARPLANT = "Armor crafted from a fallen foe.",
 		LUNARPLANTHAT = "A formidable helm, burning with an unearthly flame!",
 		BOMB_LUNARPLANT = "I have made the plant's power my own.",
@@ -4830,7 +4830,7 @@ return{
         FUSED_SHADELING_BOMB = "'Tis small, but lively!",
 
 		VOIDCLOTH = "Remnants of a fallen foe.",
-		--VOIDCLOTH_KIT = "TODO",
+		VOIDCLOTH_KIT = "Even the sturdiest armor will sometimes need repairs.",
 		VOIDCLOTHHAT = "I despise the thought of hiding one's face in combat.",
 		ARMOR_VOIDCLOTH = "This garb invites madness...",
 

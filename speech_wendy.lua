@@ -4813,7 +4813,7 @@ return{
 		LUNAR_FORGE = "Will I be able to create anything of use?",
 		LUNAR_FORGE_KIT = "I should try to put these scattered pieces together...",
 
-		--LUNARPLANT_KIT = "TODO",
+		LUNARPLANT_KIT = "You can't always fix what's broken. But sometimes you can.",
 		ARMOR_LUNARPLANT = "Shining armor, but no knight to save us.",
 		LUNARPLANTHAT = "It lets me hide my face from the world.",
 		BOMB_LUNARPLANT = "An instrument of destruction.",
@@ -4834,7 +4834,7 @@ return{
         FUSED_SHADELING_BOMB = "They lead such short, explosive lives.",
 
 		VOIDCLOTH = "Tattered remains.",
-		--VOIDCLOTH_KIT = "TODO",
+		VOIDCLOTH_KIT = "You can't always fix what's broken. But sometimes you can.",
 		VOIDCLOTHHAT = "I can disappear into the darkness within.",
 		ARMOR_VOIDCLOTH = "This ragged cloak will either protect me, or be my shroud.",
 

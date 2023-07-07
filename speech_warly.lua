@@ -4809,7 +4809,7 @@ return{
 		LUNAR_FORGE = "What shall I cook up with this?",
 		LUNAR_FORGE_KIT = "I'll whip it up tout de suite!",
 
-		--LUNARPLANT_KIT = "TODO",
+		LUNARPLANT_KIT = "I usually whip things up from scratch.",
 		ARMOR_LUNARPLANT = "A hard outer crust.",
 		LUNARPLANTHAT = "An extra layer for my head.",
 		BOMB_LUNARPLANT = "Explosions really add some zest to a fight.",
@@ -4830,7 +4830,7 @@ return{
         FUSED_SHADELING_BOMB = "It's about to pop!",
 
 		VOIDCLOTH = "Leftovers from those nightmares.",
-		--VOIDCLOTH_KIT = "TODO",
+		VOIDCLOTH_KIT = "I usually whip things up from scratch.",
 		VOIDCLOTHHAT = "To protect my head while unraveling my mind.",
 		ARMOR_VOIDCLOTH = "Will it really keep me safe?",
 

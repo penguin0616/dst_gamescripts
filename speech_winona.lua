@@ -899,17 +899,17 @@ return{
 
     ANNOUNCE_COACH = 
     {
-        "TODO",
-        "TODO",
-        "TODO",
-        "TODO",
-        "TODO",
-        "TODO",
-        "TODO",
-        "TODO",
-        "TODO",
+        "only_used_by_wolfang",
+        "only_used_by_wolfang",
+        "only_used_by_wolfang",
+        "only_used_by_wolfang",
+        "only_used_by_wolfang",
+        "only_used_by_wolfang",
+        "only_used_by_wolfang",
+        "only_used_by_wolfang",
+        "only_used_by_wolfang",
     },
-    ANNOUNCE_WOLFGANG_WIMPY_COACHING = "TODO",
+    ANNOUNCE_WOLFGANG_WIMPY_COACHING = "only_used_by_wolfang",
     ANNOUNCE_WOLFGANG_MIGHTY_COACHING = "only_used_by_wolfang",
     ANNOUNCE_WOLFGANG_BEGING_COACHING = "only_used_by_wolfang",
     ANNOUNCE_WOLFGANG_END_COACHING = "only_used_by_wolfang",
@@ -4815,7 +4815,7 @@ return{
 		LUNAR_FORGE = "It's givin' me some bright ideas.",
 		LUNAR_FORGE_KIT = "Let's get this thing up and running!",
 
-		--LUNARPLANT_KIT = "TODO",
+		LUNARPLANT_KIT = "Never hurts to keep a repair kit handy.",
 		ARMOR_LUNARPLANT = "Built to last!",
 		LUNARPLANTHAT = "It should keep my noggin' nice and safe.",
 		BOMB_LUNARPLANT = "Anyone call for a demolition crew?",
@@ -4836,7 +4836,7 @@ return{
         FUSED_SHADELING_BOMB = "Watch out, it's gonna blow!",
 
 		VOIDCLOTH = "I can work with any material.",
-		--VOIDCLOTH_KIT = "TODO",
+		VOIDCLOTH_KIT = "Never hurts to keep a repair kit handy.",
 		VOIDCLOTHHAT = "Some folks think it's safer to be kept in the dark.",
 		ARMOR_VOIDCLOTH = "Looks pretty tattered, will it really protect me from anything?",
 

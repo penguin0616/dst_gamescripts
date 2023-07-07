@@ -4819,7 +4819,7 @@ return {
 		LUNAR_FORGE = "Just the place to make something very clever and scientific.",
 		LUNAR_FORGE_KIT = "A simple combination of elements!",
 
-		--LUNARPLANT_KIT = "TODO",
+		LUNARPLANT_KIT = "I'm moonlighting as a tailor.",
 		ARMOR_LUNARPLANT = "This armor doesn't leaf any room for improvement.",
 		LUNARPLANTHAT = "It makes me look even brighter than usual.",
 		BOMB_LUNARPLANT = "Botany and chemistry, working together.",
@@ -4840,7 +4840,7 @@ return {
         FUSED_SHADELING_BOMB = "Bombastic!",
 
 		VOIDCLOTH = "Those shadows are all cut from the same cloth.",
-		--VOIDCLOTH_KIT = "TODO",
+		VOIDCLOTH_KIT = "My knowledge of sewing with shadows is patchy at best.",
 		VOIDCLOTHHAT = "It makes me feel dark and mysterious.",
 		ARMOR_VOIDCLOTH = "Oh drat, there's a tear across the front!",
 

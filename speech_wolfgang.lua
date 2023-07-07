@@ -4810,7 +4810,7 @@ return{
 		LUNAR_FORGE = "Is there a mighty hammer for Wolfgang to swing?",
 		LUNAR_FORGE_KIT = "Wolfgang will find good spot for it!",
 
-		--LUNARPLANT_KIT = "TODO",
+		LUNARPLANT_KIT = "Wolfgang will fix, good as new!",
 		ARMOR_LUNARPLANT = "Tough, like Wolfgang!",
 		LUNARPLANTHAT = "Wolfgang feels very safe inside.",
 		BOMB_LUNARPLANT = "Boom!",
@@ -4831,7 +4831,7 @@ return{
         FUSED_SHADELING_BOMB = "Boom bug!",
 
 		VOIDCLOTH = "Scary little rags.",
-		--VOIDCLOTH_KIT = "TODO",
+		VOIDCLOTH_KIT = "Wolfgang will fix, good as new!",
 		VOIDCLOTHHAT = "Eep! Is too dark in there!",
 		ARMOR_VOIDCLOTH = "Creepy shirt is happy to be worn by Wolfgang.",
 

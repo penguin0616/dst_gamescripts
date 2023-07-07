@@ -24,267 +24,267 @@ SetSharedLootTable('fruit_dragon_ripe',
 })
 
 local function IsBetterHeatSource(heat_source, inst, cur_heat)
-	local heat = heat_source.components.heater ~= nil and heat_source.components.heater:GetHeat(inst) or 0
-	return heat > cur_heat
+    local heat = heat_source.components.heater ~= nil and heat_source.components.heater:GetHeat(inst) or 0
+    return heat > cur_heat
 end
 
 local HEATSOURCE_MUST_TAGS = {"HASHEATER"}
 local HEATSOURCE_CANT_TAGS = {"monster"}
 
 local function FindNewHome(inst)
-	if inst.components.timer:TimerExists("panicing")
-		or inst.components.sleeper:IsAsleep()
-		or inst.components.combat.target ~= nil then
-		return
-	end
+    if inst.components.timer:TimerExists("panicing")
+        or inst.components.sleeper:IsAsleep()
+        or inst.components.combat.target ~= nil then
+        return
+    end
 
-	local home = inst.components.entitytracker:GetEntity("home")
-	local new_home = (home ~= nil and home.components.heater ~= nil and inst:IsNear(home, TUNING.FRUITDRAGON.KEEP_HOME_RANGE) and home.components.heater:GetHeat(inst) > 0 and home:IsOnValidGround()) and home or nil
+    local home = inst.components.entitytracker:GetEntity("home")
+    local new_home = (home ~= nil and home.components.heater ~= nil and inst:IsNear(home, TUNING.FRUITDRAGON.KEEP_HOME_RANGE) and home.components.heater:GetHeat(inst) > 0 and home:IsOnValidGround()) and home or nil
 
-	local cur_heat = new_home ~= nil and new_home.components.heater:GetHeat(inst) or 0
-	local x, y, z = inst.Transform:GetWorldPosition()
-	local heat_sources = TheSim:FindEntities(x, y, z, inst:IsAsleep() and TUNING.FRUITDRAGON.ENTITY_SLEEP_FIND_HOME_RANGE or TUNING.FRUITDRAGON.FIND_HOME_RANGE, HEATSOURCE_MUST_TAGS, HEATSOURCE_CANT_TAGS)
-	for i, v in ipairs(heat_sources) do
-		if v ~= inst and v ~= new_home and IsBetterHeatSource(v, inst, cur_heat) then
-			new_home = v
-			break
-		end
-	end
+    local cur_heat = new_home ~= nil and new_home.components.heater:GetHeat(inst) or 0
+    local x, y, z = inst.Transform:GetWorldPosition()
+    local heat_sources = TheSim:FindEntities(x, y, z, inst:IsAsleep() and TUNING.FRUITDRAGON.ENTITY_SLEEP_FIND_HOME_RANGE or TUNING.FRUITDRAGON.FIND_HOME_RANGE, HEATSOURCE_MUST_TAGS, HEATSOURCE_CANT_TAGS)
+    for i, v in ipairs(heat_sources) do
+        if v ~= inst and v ~= new_home and IsBetterHeatSource(v, inst, cur_heat) then
+            new_home = v
+            break
+        end
+    end
 
-	if new_home ~= home then
-		if home ~= nil then
-			inst.components.entitytracker:ForgetEntity("home")
-		end
-		if new_home ~= nil then
-			inst.components.entitytracker:TrackEntity("home", new_home)
-		end
-	end
+    if new_home ~= home then
+        if home ~= nil then
+            inst.components.entitytracker:ForgetEntity("home")
+        end
+        if new_home ~= nil then
+            inst.components.entitytracker:TrackEntity("home", new_home)
+        end
+    end
 end
 
 local function OnNewTarget(inst, data)
-	if data.target:HasTag("fruitdragon") then
-		inst._min_challenge_attacks = inst._is_ripe and 0 or 2
-	end
+    if data.target:HasTag("fruitdragon") then
+        inst._min_challenge_attacks = inst._is_ripe and 0 or 2
+    end
 end
 
 local function KeepTarget(inst, target)
-	if target:HasTag("fruitdragon") then
-		return (target.components.combat.target == nil or target.components.combat.target:HasTag("fruitdragon"))
-				and not target.components.timer:TimerExists("panicing")
-				and inst:IsNear(target, TUNING.FRUITDRAGON.CHALLENGE_DIST)
-	end
+    if target:HasTag("fruitdragon") then
+        return (target.components.combat.target == nil or target.components.combat.target:HasTag("fruitdragon"))
+                and not target.components.timer:TimerExists("panicing")
+                and inst:IsNear(target, TUNING.FRUITDRAGON.CHALLENGE_DIST)
+    end
 
     return target --inst:IsNear(target, TUNING.FRUITDRAGON.CHALLENGE_DIST * 2)
 end
 
 local function ShouldTarget(target)
-	return target:HasTag("fruitdragon")
-			and not target.components.timer:TimerExists("panicing")
-			and target.components.combat.target == nil
+    return target:HasTag("fruitdragon")
+            and not target.components.timer:TimerExists("panicing")
+            and target.components.combat.target == nil
 end
 
 local FRUITDRAGON_TAGS = {"fruitdragon"}
 local function RetargetFn(inst)
-	if (inst.components.sleeper == nil or not inst.components.sleeper:IsAsleep())
-		and not inst.components.timer:TimerExists("panicing") then
+    if (inst.components.sleeper == nil or not inst.components.sleeper:IsAsleep())
+        and not inst.components.timer:TimerExists("panicing") then
 
-		if inst.components.combat.target ~= nil and KeepTarget(inst, inst.components.combat.target) then
-			return inst.components.combat.target
-		elseif inst.components.entitytracker:GetEntity("home") ~= nil then
-			return FindEntity(inst, TUNING.FRUITDRAGON.CHALLENGE_DIST, function(guy) return ShouldTarget(guy) end, FRUITDRAGON_TAGS)
-					or FindEntity(inst.components.entitytracker:GetEntity("home"), TUNING.FRUITDRAGON.CHALLENGE_DIST, function(guy) return guy ~= inst and ShouldTarget(guy) end, FRUITDRAGON_TAGS)
-		end
-	end
+        if inst.components.combat.target ~= nil and KeepTarget(inst, inst.components.combat.target) then
+            return inst.components.combat.target
+        elseif inst.components.entitytracker:GetEntity("home") ~= nil then
+            return FindEntity(inst, TUNING.FRUITDRAGON.CHALLENGE_DIST, function(guy) return ShouldTarget(guy) end, FRUITDRAGON_TAGS)
+                    or FindEntity(inst.components.entitytracker:GetEntity("home"), TUNING.FRUITDRAGON.CHALLENGE_DIST, function(guy) return guy ~= inst and ShouldTarget(guy) end, FRUITDRAGON_TAGS)
+        end
+    end
     return nil
 end
 
 local function OnAttacked(inst, data)
-	local home = inst.components.entitytracker:GetEntity("home")
-	home = (home ~= nil and home.components.inventoryitem ~= nil) and home.components.inventoryitem:GetGrandOwner() or home
+    local home = inst.components.entitytracker:GetEntity("home")
+    home = (home ~= nil and home.components.inventoryitem ~= nil) and home.components.inventoryitem:GetGrandOwner() or home
 
-	if data.attacker == home then -- if my home, or the thing holding it, attacked me then this is not my home any more
-		inst.components.entitytracker:ForgetEntity("home")
-	end
+    if data.attacker == home then -- if my home, or the thing holding it, attacked me then this is not my home any more
+        inst.components.entitytracker:ForgetEntity("home")
+    end
     inst.components.combat:SetTarget(data.attacker)
 end
 
 local function doattack(inst, data)
-	if data.target:HasTag("fruitdragon") then
-		if data.target:HasTag("sleeping") and data.target.components.sleeper ~= nil then
-			data.target.components.sleeper:WakeUp()
-			data.target:PushEvent("wake_up_to_challenge")
-		end
-		data.target.components.combat:SuggestTarget(inst)
-	end
+    if data.target:HasTag("fruitdragon") then
+        if data.target:HasTag("sleeping") and data.target.components.sleeper ~= nil then
+            data.target.components.sleeper:WakeUp()
+            data.target:PushEvent("wake_up_to_challenge")
+        end
+        data.target.components.combat:SuggestTarget(inst)
+    end
 end
 
 local function OnLostChallenge(inst)
-	inst.components.entitytracker:ForgetEntity("home")
-	inst.components.timer:StartTimer("panicing", TUNING.FRUITDRAGON.CHALLENGE_LOST_PANIC_TIME)
-	inst.components.combat:DropTarget()
+    inst.components.entitytracker:ForgetEntity("home")
+    inst.components.timer:StartTimer("panicing", TUNING.FRUITDRAGON.CHALLENGE_LOST_PANIC_TIME)
+    inst.components.combat:DropTarget()
 end
 
 local function onattackother(inst, data)
-	if data.target:HasTag("fruitdragon") then
-		if not KeepTarget(inst, data.target) then
-			inst.components.combat:DropTarget()
+    if data.target:HasTag("fruitdragon") then
+        if not KeepTarget(inst, data.target) then
+            inst.components.combat:DropTarget()
 
-		elseif inst._min_challenge_attacks <= 0 and math.random() < TUNING.FRUITDRAGON.CHALLENGE_WIN_CHANCE then
-			data.target:PushEvent("lostfruitdragonchallenge")
+        elseif inst._min_challenge_attacks <= 0 and math.random() < TUNING.FRUITDRAGON.CHALLENGE_WIN_CHANCE then
+            data.target:PushEvent("lostfruitdragonchallenge")
 
-			inst.components.combat:DropTarget()
-			inst.components.combat:TryRetarget()
-		end
-		inst._min_challenge_attacks = inst._min_challenge_attacks - 1
-	end
+            inst.components.combat:DropTarget()
+            inst.components.combat:TryRetarget()
+        end
+        inst._min_challenge_attacks = inst._min_challenge_attacks - 1
+    end
 end
 
 local function onblocked(inst, data)
-	if data.attacker:HasTag("fruitdragon") and not inst.components.timer:TimerExists("panicing") then
-		inst.components.combat:SuggestTarget(data.attacker)
-		if inst.components.sleeper ~= nil then
-			inst.components.sleeper:WakeUp()
-		end
-	end
+    if data.attacker:HasTag("fruitdragon") and not inst.components.timer:TimerExists("panicing") then
+        inst.components.combat:SuggestTarget(data.attacker)
+        if inst.components.sleeper ~= nil then
+            inst.components.sleeper:WakeUp()
+        end
+    end
 end
 
 local function GetRemainingTimeAwake(inst)
-	local max_awake_time = (TUNING.FRUITDRAGON.AWAKE_TIME_MIN + inst.sleep_variance * TUNING.FRUITDRAGON.AWAKE_TIME_VAR) * (inst._is_ripe and TUNING.FRUITDRAGON.AWAKE_TIME_RIPE_MOD or 1) * (inst.components.entitytracker:GetEntity("home") == nil and TUNING.FRUITDRAGON.AWAKE_TIME_HOMELESS_MOD or 1)
-	return max_awake_time - (GetTime() - inst._wakeup_time)
+    local max_awake_time = (TUNING.FRUITDRAGON.AWAKE_TIME_MIN + inst.sleep_variance * TUNING.FRUITDRAGON.AWAKE_TIME_VAR) * (inst._is_ripe and TUNING.FRUITDRAGON.AWAKE_TIME_RIPE_MOD or 1) * (inst.components.entitytracker:GetEntity("home") == nil and TUNING.FRUITDRAGON.AWAKE_TIME_HOMELESS_MOD or 1)
+    return max_awake_time - (GetTime() - inst._wakeup_time)
 end
 
 local function GetRemainingNapTime(inst)
-	local max_awake_time = (TUNING.FRUITDRAGON.NAP_TIME_MIN + inst.sleep_variance * TUNING.FRUITDRAGON.NAP_TIME_VAR) * (inst._is_ripe and TUNING.FRUITDRAGON.NAP_TIME_RIPE_MOD or 1) * (inst.components.entitytracker:GetEntity("home") and TUNING.FRUITDRAGON.NAP_TIME_HOMELESS_MOD or 1)
-	return max_awake_time - (GetTime() - inst._nap_time)
+    local max_awake_time = (TUNING.FRUITDRAGON.NAP_TIME_MIN + inst.sleep_variance * TUNING.FRUITDRAGON.NAP_TIME_VAR) * (inst._is_ripe and TUNING.FRUITDRAGON.NAP_TIME_RIPE_MOD or 1) * (inst.components.entitytracker:GetEntity("home") and TUNING.FRUITDRAGON.NAP_TIME_HOMELESS_MOD or 1)
+    return max_awake_time - (GetTime() - inst._nap_time)
 end
 
 local function StartNextNapTimer(inst)
-	inst._wakeup_time = GetTime()
-	inst.sleep_variance = math.random()
+    inst._wakeup_time = GetTime()
+    inst.sleep_variance = math.random()
 end
 
 local function StartNappingTimer(inst)
-	inst._nap_time = GetTime()
-	inst.sleep_variance = math.random()
+    inst._nap_time = GetTime()
+    inst.sleep_variance = math.random()
 end
 
 local function QueueRipen(inst)
-	inst._ripen_pending = not inst._is_ripe
-	inst._unripen_pending = false
+    inst._ripen_pending = not inst._is_ripe
+    inst._unripen_pending = false
 end
 
 local function MakeRipe(inst, force)
-	if inst._ripen_pending or force then
-		inst._ripen_pending = false
-		inst._is_ripe = true
+    if inst._ripen_pending or force then
+        inst._ripen_pending = false
+        inst._is_ripe = true
 
-	    inst.components.lootdropper:SetChanceLootTable('fruit_dragon_ripe')
-		inst.components.combat:SetDefaultDamage(TUNING.FRUITDRAGON.RIPE_DAMAGE)
+        inst.components.lootdropper:SetChanceLootTable('fruit_dragon_ripe')
+        inst.components.combat:SetDefaultDamage(TUNING.FRUITDRAGON.RIPE_DAMAGE)
 
-		inst.AnimState:SetBuild("fruit_dragon_ripe_build")
-	end
+        inst.AnimState:SetBuild("fruit_dragon_ripe_build")
+    end
 end
 
 local function QueueUnripe(inst)
-	inst._ripen_pending = false
-	inst._unripen_pending = inst._is_ripe
+    inst._ripen_pending = false
+    inst._unripen_pending = inst._is_ripe
 end
 
 local function MakeUnripe(inst, force)
-	if inst._unripen_pending or force then
-		inst._unripen_pending = false
-		inst._is_ripe = false
+    if inst._unripen_pending or force then
+        inst._unripen_pending = false
+        inst._is_ripe = false
 
-	    inst.components.lootdropper:SetChanceLootTable('fruit_dragon')
-		inst.components.combat:SetDefaultDamage(TUNING.FRUITDRAGON.UNRIPE_DAMAGE)
+        inst.components.lootdropper:SetChanceLootTable('fruit_dragon')
+        inst.components.combat:SetDefaultDamage(TUNING.FRUITDRAGON.UNRIPE_DAMAGE)
 
-		inst.AnimState:SetBuild("fruit_dragon_build")
-	end
+        inst.AnimState:SetBuild("fruit_dragon_build")
+    end
 end
 
 local function IsHomeGoodEnough(inst, dist, min_temp)
-	local home = inst.components.entitytracker:GetEntity("home")
-	return home ~= nil and home.components.heater ~= nil
-			and inst:IsNear(home, dist)
-			and home.components.heater:GetHeat(inst) >= min_temp
+    local home = inst.components.entitytracker:GetEntity("home")
+    return home ~= nil and home.components.heater ~= nil
+            and inst:IsNear(home, dist)
+            and home.components.heater:GetHeat(inst) >= min_temp
 end
 
 local function Sleeper_SleepTest(inst)
     if (inst.components.combat and inst.components.combat.target) or inst.sg:HasStateTag("busy") or inst.components.timer:TimerExists("panicing") then
-		return false
-	end
+        return false
+    end
 
-	if inst.components.entitytracker:GetEntity("home") then
-		if (TheWorld.state.isnight or GetRemainingTimeAwake(inst) <= 0) and IsHomeGoodEnough(inst, TUNING.FRUITDRAGON.NAP_DIST_FROM_HOME, TUNING.FRUITDRAGON.NAP_MIN_HEAT) then
-			if inst._is_ripe and not IsHomeGoodEnough(inst, TUNING.FRUITDRAGON.NAP_DIST_FROM_HOME, TUNING.FRUITDRAGON.RIPEN_NAP_MIN_HEAT) then
-				QueueUnripe(inst)
-			end
+    if inst.components.entitytracker:GetEntity("home") then
+        if (TheWorld.state.isnight or GetRemainingTimeAwake(inst) <= 0) and IsHomeGoodEnough(inst, TUNING.FRUITDRAGON.NAP_DIST_FROM_HOME, TUNING.FRUITDRAGON.NAP_MIN_HEAT) then
+            if inst._is_ripe and not IsHomeGoodEnough(inst, TUNING.FRUITDRAGON.NAP_DIST_FROM_HOME, TUNING.FRUITDRAGON.RIPEN_NAP_MIN_HEAT) then
+                QueueUnripe(inst)
+            end
 
-			return true
-		end
-	else
-		if TheWorld.state.isnight or GetRemainingTimeAwake(inst) <= 0 then
-			if inst._is_ripe then
-				QueueUnripe(inst)
-			end
+            return true
+        end
+    else
+        if TheWorld.state.isnight or GetRemainingTimeAwake(inst) <= 0 then
+            if inst._is_ripe then
+                QueueUnripe(inst)
+            end
 
-			return true
-		end
-	end
+            return true
+        end
+    end
 
-	return false
+    return false
 end
 
 -- TODO: on lose home, call: inst.components.sleeper:WakeUp()
 
 local function Sleeper_WakeTest(inst)
-	if (inst.components.combat ~= nil and inst.components.combat.target ~= nil) then
-		return true
-	end
-
-	if TheWorld.state.isnight then
-		return false
-	end
-
-	if GetRemainingNapTime(inst) <= 0 then
-		inst._sleep_interrupted = false
-		return true
+    if (inst.components.combat ~= nil and inst.components.combat.target ~= nil) then
+        return true
     end
 
-	return false
+    if TheWorld.state.isnight then
+        return false
+    end
+
+    if GetRemainingNapTime(inst) <= 0 then
+        inst._sleep_interrupted = false
+        return true
+    end
+
+    return false
 end
 
 local function Sleeper_OnSleep(inst)
-	StartNappingTimer(inst)
-	if not inst.components.health:IsDead() then
-		inst.components.health:StartRegen(TUNING.FRUITDRAGON.NAP_REGEN_AMOUNT, TUNING.FRUITDRAGON.NAP_REGEN_INTERVAL)
-	end
+    StartNappingTimer(inst)
+    if not inst.components.health:IsDead() then
+        inst.components.health:StartRegen(TUNING.FRUITDRAGON.NAP_REGEN_AMOUNT, TUNING.FRUITDRAGON.NAP_REGEN_INTERVAL)
+    end
 end
 
 local function Sleeper_OnWakeUp(inst)
-	if not inst._sleep_interrupted then
-		if not inst._ripen_pending and not inst._is_ripe
-			and IsHomeGoodEnough(inst, TUNING.FRUITDRAGON.NAP_DIST_FROM_HOME, TUNING.FRUITDRAGON.RIPEN_NAP_MIN_HEAT) then
+    if not inst._sleep_interrupted then
+        if not inst._ripen_pending and not inst._is_ripe
+            and IsHomeGoodEnough(inst, TUNING.FRUITDRAGON.NAP_DIST_FROM_HOME, TUNING.FRUITDRAGON.RIPEN_NAP_MIN_HEAT) then
 
-			QueueRipen(inst)
-		end
-	end
+            QueueRipen(inst)
+        end
+    end
 
-	if not inst.components.health:IsDead() then
-		inst.components.health:StopRegen()
-	end
+    if not inst.components.health:IsDead() then
+        inst.components.health:StopRegen()
+    end
 
-	StartNextNapTimer(inst)
-	inst._sleep_interrupted = true -- reseting it
+    StartNextNapTimer(inst)
+    inst._sleep_interrupted = true -- reseting it
 end
 
 ----
 local function OnSpawnedByWormwood(inst, wormwood)
-	inst.components.timer:StartTimer("finish_transformed_life", TUNING.FRUITDRAGON_LOYALTY_MAXTIME)
-	inst:SetPrefabNameOverride("wormwood_mutantproxy_fruitdragon")
-	MakeRipe(inst, true)
+    inst.components.timer:StartTimer("finish_transformed_life", TUNING.FRUITDRAGON_LOYALTY_MAXTIME)
+    inst:SetPrefabNameOverride("wormwood_mutantproxy_fruitdragon")
+    MakeRipe(inst, true)
 
-	local wormwood_leader = wormwood.components.leader
+    local wormwood_leader = wormwood.components.leader
     if not wormwood_leader then
         return
     end
@@ -294,24 +294,25 @@ local function OnSpawnedByWormwood(inst, wormwood)
 
     wormwood:PushEvent("makefriend")
 
-	local existing_fruitdragon_follower_count = wormwood_leader:CountFollowers("fruitdragon")
-	if existing_fruitdragon_follower_count == TUNING.FRUITDRAGON_FOLLOWER_LIMIT then
-		local oldest_follower_percent, oldest_follower = math.huge, nil
-		for follower in pairs(wormwood_leader.followers) do
-			if follower.components.follower then
-				local loyalty_percent = follower.components.follower:GetLoyaltyPercent()
-				if loyalty_percent < oldest_follower_percent then
-					oldest_follower_percent = loyalty_percent
-					oldest_follower = follower
-				end
-			end
-		end
+    local existing_fruitdragon_follower_count = wormwood_leader:CountFollowers("fruitdragon")
 
-		if oldest_follower then
-			wormwood_leader:RemoveFollower(oldest_follower)
-			oldest_follower.components.timer:SetTimeLeft("finish_transformed_life", 2)
-		end
-	end
+    if existing_fruitdragon_follower_count >= TUNING.FRUITDRAGON_FOLLOWER_LIMIT then
+        local oldest_follower_percent, oldest_follower = math.huge, nil
+        for follower in pairs(wormwood_leader.followers) do
+            if follower.components.follower then
+                local loyalty_percent = follower.components.follower:GetLoyaltyPercent()
+                if loyalty_percent < oldest_follower_percent then
+                    oldest_follower_percent = loyalty_percent
+                    oldest_follower = follower
+                end
+            end
+        end
+
+        if oldest_follower then
+            wormwood_leader:RemoveFollower(oldest_follower)
+            oldest_follower.components.timer:SetTimeLeft("finish_transformed_life", 2)
+        end
+    end
 
     wormwood_leader:AddFollower(inst)
     follower:AddLoyaltyTime(TUNING.FRUITDRAGON_LOYALTY_MAXTIME)
@@ -331,21 +332,21 @@ end
 
 ----
 local function OnTimerDone(inst, data)
-	if data.name == "finish_transformed_life" then
-		finish_transformed_life(inst)
-	end
+    if data.name == "finish_transformed_life" then
+        finish_transformed_life(inst)
+    end
 end
 
 ----
 local function OnSave(inst, data)
-	data._is_ripe = inst._is_ripe
+    data._is_ripe = inst._is_ripe
     data._is_follower = (inst.components.follower ~= nil)
 end
 
 local function OnLoad(inst, data)
-	if data then
+    if data then
         if data._is_ripe then
-		    inst:MakeRipe(true)
+            inst:MakeRipe(true)
         end
 
         if data._is_follower then
@@ -353,54 +354,54 @@ local function OnLoad(inst, data)
             follower.maxfollowtime = TUNING.FRUITDRAGON_LOYALTY_MAXTIME
         end
 
-		if inst.components.timer:TimerExists("finish_transformed_life") then
-			inst:SetPrefabNameOverride("wormwood_mutantproxy_fruitdragon")
-		end
-	end
+        if inst.components.timer:TimerExists("finish_transformed_life") then
+            inst:SetPrefabNameOverride("wormwood_mutantproxy_fruitdragon")
+        end
+    end
 end
 
 local function OnEntitySleep(inst)
-	inst.components.health:StopRegen()
+    inst.components.health:StopRegen()
 
-	if inst._findnewhometask ~= nil then
-		inst._findnewhometask:Cancel()
-		inst._findnewhometask = nil
-	end
+    if inst._findnewhometask ~= nil then
+        inst._findnewhometask:Cancel()
+        inst._findnewhometask = nil
+    end
 
-	inst._entitysleeptime = GetTime()
+    inst._entitysleeptime = GetTime()
 end
 
 local function OnEntityWake(inst)
-	if inst._entitysleeptime == nil then
-		return
-	end
+    if inst._entitysleeptime == nil then
+        return
+    end
 
-	local dt = (GetTime() - inst._entitysleeptime)
-	if dt > 1 then
-		if inst.components.entitytracker:GetEntity("home") == nil then
-			FindNewHome(inst)
-		end
-		if IsHomeGoodEnough(inst, TUNING.FRUITDRAGON.KEEP_HOME_RANGE, TUNING.FRUITDRAGON.RIPEN_NAP_MIN_HEAT) then
-			if not inst._is_ripe then
-				inst:MakeRipe(true)
-			end
-		else
-			if inst._is_ripe then
-				inst:MakeUnripe(true)
-			end
-		end
+    local dt = (GetTime() - inst._entitysleeptime)
+    if dt > 1 then
+        if inst.components.entitytracker:GetEntity("home") == nil then
+            FindNewHome(inst)
+        end
+        if IsHomeGoodEnough(inst, TUNING.FRUITDRAGON.KEEP_HOME_RANGE, TUNING.FRUITDRAGON.RIPEN_NAP_MIN_HEAT) then
+            if not inst._is_ripe then
+                inst:MakeRipe(true)
+            end
+        else
+            if inst._is_ripe then
+                inst:MakeUnripe(true)
+            end
+        end
 
-		if not inst.components.health:IsDead() and inst.components.health:IsHurt() then
-			local estimated_naps = math.floor(dt / (40 + math.random() * 20))
-			inst.components.health:DoDelta(estimated_naps * (TUNING.FRUITDRAGON.NAP_TIME_MIN / TUNING.FRUITDRAGON.NAP_REGEN_INTERVAL)  * TUNING.FRUITDRAGON.NAP_REGEN_AMOUNT) -- fake regen
-		end
-	end
+        if not inst.components.health:IsDead() and inst.components.health:IsHurt() then
+            local estimated_naps = math.floor(dt / (40 + math.random() * 20))
+            inst.components.health:DoDelta(estimated_naps * (TUNING.FRUITDRAGON.NAP_TIME_MIN / TUNING.FRUITDRAGON.NAP_REGEN_INTERVAL)  * TUNING.FRUITDRAGON.NAP_REGEN_AMOUNT) -- fake regen
+        end
+    end
 
-	inst._findnewhometask = inst:DoPeriodicTask(3, FindNewHome, 0.1 + math.random())
+    inst._findnewhometask = inst:DoPeriodicTask(3, FindNewHome, 0.1 + math.random())
 
-	if not inst.components.health:IsDead() and inst.components.sleeper ~= nil and inst.components.sleeper:IsAsleep() then
-		inst.components.health:StartRegen(TUNING.FRUITDRAGON.NAP_REGEN_AMOUNT, TUNING.FRUITDRAGON.NAP_REGEN_INTERVAL, true)
-	end
+    if not inst.components.health:IsDead() and inst.components.sleeper ~= nil and inst.components.sleeper:IsAsleep() then
+        inst.components.health:StartRegen(TUNING.FRUITDRAGON.NAP_REGEN_AMOUNT, TUNING.FRUITDRAGON.NAP_REGEN_INTERVAL, true)
+    end
 end
 
 local function GetStatus(inst)
@@ -408,11 +409,11 @@ local function GetStatus(inst)
 end
 
 local function GetDebugString(inst)
-	return	"Home: " .. tostring(inst.components.entitytracker:GetEntity("home")) ..
-			"\nRipe: " .. tostring(inst._is_ripe) ..
-			(not inst:HasTag("sleeping") and ("\nSleep in: " .. tostring(GetRemainingTimeAwake(inst))) or ("\nAwake in: " .. tostring(GetRemainingNapTime(inst)))) ..
-			"\n\n"
-			.. inst:_GetDebugString()
+    return	"Home: " .. tostring(inst.components.entitytracker:GetEntity("home")) ..
+            "\nRipe: " .. tostring(inst._is_ripe) ..
+            (not inst:HasTag("sleeping") and ("\nSleep in: " .. tostring(GetRemainingTimeAwake(inst))) or ("\nAwake in: " .. tostring(GetRemainingNapTime(inst)))) ..
+            "\n\n"
+            .. inst:_GetDebugString()
 end
 
 local fruit_dragon_sounds =
@@ -473,9 +474,9 @@ local function fn()
     end
 
     inst.sounds = fruit_dragon_sounds
-	inst._sleep_interrupted = true
-	inst._wakeup_time = GetTime()
-	inst._nap_time = -math.huge
+    inst._sleep_interrupted = true
+    inst._wakeup_time = GetTime()
+    inst._nap_time = -math.huge
 
     inst:AddComponent("timer")
 
@@ -489,18 +490,18 @@ local function fn()
     inst:AddComponent("combat")
     inst.components.combat:SetHurtSound("turnoftides/creatures/together/fruit_dragon/hit")
     inst.components.combat.hiteffectsymbol = "gecko_torso_middle"
-	inst.components.combat:SetAttackPeriod(TUNING.FRUITDRAGON.ATTACK_PERIOD)
-	inst.components.combat:SetDefaultDamage(TUNING.FRUITDRAGON.UNRIPE_DAMAGE)
-	inst.components.combat:SetRange(TUNING.FRUITDRAGON.ATTACK_RANGE, TUNING.FRUITDRAGON.HIT_RANGE)
+    inst.components.combat:SetAttackPeriod(TUNING.FRUITDRAGON.ATTACK_PERIOD)
+    inst.components.combat:SetDefaultDamage(TUNING.FRUITDRAGON.UNRIPE_DAMAGE)
+    inst.components.combat:SetRange(TUNING.FRUITDRAGON.ATTACK_RANGE, TUNING.FRUITDRAGON.HIT_RANGE)
     inst.components.combat:SetKeepTargetFunction(KeepTarget)
-	inst.components.combat:SetRetargetFunction(1, RetargetFn)
-	inst:ListenForEvent("doattack", doattack)
+    inst.components.combat:SetRetargetFunction(1, RetargetFn)
+    inst:ListenForEvent("doattack", doattack)
     inst:ListenForEvent("attacked", OnAttacked)
-	inst:ListenForEvent("onattackother", onattackother)
-	inst:ListenForEvent("blocked", onblocked)
-	inst:ListenForEvent("newcombattarget", OnNewTarget)
+    inst:ListenForEvent("onattackother", onattackother)
+    inst:ListenForEvent("blocked", onblocked)
+    inst:ListenForEvent("newcombattarget", OnNewTarget)
 
-	inst:AddComponent("entitytracker")
+    inst:AddComponent("entitytracker")
 
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetChanceLootTable('fruit_dragon')
@@ -509,10 +510,10 @@ local function fn()
     inst.components.sleeper.testperiod = 3
     inst.components.sleeper:SetWakeTest(Sleeper_WakeTest)
     inst.components.sleeper:SetSleepTest(Sleeper_SleepTest)
-	inst:ListenForEvent("gotosleep", Sleeper_OnSleep)
-	inst:ListenForEvent("onwakeup", Sleeper_OnWakeUp)
+    inst:ListenForEvent("gotosleep", Sleeper_OnSleep)
+    inst:ListenForEvent("onwakeup", Sleeper_OnWakeUp)
 
-	StartNextNapTimer(inst)
+    StartNextNapTimer(inst)
 
     inst:AddComponent("locomotor")
     inst.components.locomotor.runspeed = TUNING.FRUITDRAGON.RUN_SPEED
@@ -520,24 +521,24 @@ local function fn()
 
     MakeSmallFreezableCharacter(inst)
 
-	inst.MakeRipe = MakeRipe
-	inst.MakeUnripe = MakeUnripe
+    inst.MakeRipe = MakeRipe
+    inst.MakeUnripe = MakeUnripe
 
     inst:SetBrain(brain)
     inst:SetStateGraph("SGfruitdragon")
 
     MakeHauntablePanicAndIgnite(inst)
 
-	inst._findnewhometask = inst:DoPeriodicTask(3, FindNewHome, 0.1 + math.random())
+    inst._findnewhometask = inst:DoPeriodicTask(3, FindNewHome, 0.1 + math.random())
 
-	--    inst:ListenForEvent("moisturedelta", OnMoistureDelta)
+    --    inst:ListenForEvent("moisturedelta", OnMoistureDelta)
 
-	inst:ListenForEvent("lostfruitdragonchallenge", OnLostChallenge)
+    inst:ListenForEvent("lostfruitdragonchallenge", OnLostChallenge)
     inst:ListenForEvent("spawnedbywormwoodproxy", OnSpawnedByWormwood)
-	inst:ListenForEvent("timerdone", OnTimerDone)
+    inst:ListenForEvent("timerdone", OnTimerDone)
 
-	inst._GetDebugString = inst.GetDebugString
-	inst.GetDebugString = GetDebugString
+    inst._GetDebugString = inst.GetDebugString
+    inst.GetDebugString = GetDebugString
 
     inst.OnEntitySleep = OnEntitySleep
     inst.OnEntityWake = OnEntityWake

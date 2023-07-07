@@ -1119,8 +1119,6 @@ local function onbecamehuman(inst)
         inst.components.playercontroller:SetCanUseMap(true)
     end]]
 
-    UpdateShadowDominanceState(inst)
-
     SetWereDrowning(inst, WEREMODES.NONE)
     SetWereRunner(inst, WEREMODES.NONE)
     SetWereWorker(inst, WEREMODES.NONE)
@@ -1130,6 +1128,8 @@ local function onbecamehuman(inst)
     SetWereVision(inst, WEREMODES.NONE)
     ChangeWereModeValue(inst, WEREMODES.NONE)
     OnResetBeard(inst)
+
+    UpdateShadowDominanceState(inst)
 end
 
 local function onbecamebeaver(inst)
@@ -1176,8 +1176,6 @@ local function onbecamebeaver(inst)
         inst.components.playercontroller:SetCanUseMap(false)
     end]]
 
-    UpdateShadowDominanceState(inst)
-
     SetWereDrowning(inst, WEREMODES.BEAVER)
     SetWereRunner(inst, WEREMODES.BEAVER)
     SetWereWorker(inst, WEREMODES.BEAVER)
@@ -1187,6 +1185,8 @@ local function onbecamebeaver(inst)
     SetWereVision(inst, WEREMODES.BEAVER)
     ChangeWereModeValue(inst, WEREMODES.BEAVER)
     OnResetBeard(inst)
+
+    UpdateShadowDominanceState(inst)
 end
 
 local function onbecamemoose(inst)
@@ -1233,8 +1233,6 @@ local function onbecamemoose(inst)
         inst.components.playercontroller:SetCanUseMap(false)
     end]]
 
-    UpdateShadowDominanceState(inst)
-
     SetWereDrowning(inst, WEREMODES.MOOSE)
     SetWereRunner(inst, WEREMODES.MOOSE)
     SetWereWorker(inst, WEREMODES.MOOSE)
@@ -1244,6 +1242,8 @@ local function onbecamemoose(inst)
     SetWereVision(inst, WEREMODES.MOOSE)
     ChangeWereModeValue(inst, WEREMODES.MOOSE)
     OnResetBeard(inst)
+
+    UpdateShadowDominanceState(inst)
 end
 
 local function onbecamegoose(inst)
@@ -1290,8 +1290,6 @@ local function onbecamegoose(inst)
         inst.components.playercontroller:SetCanUseMap(false)
     end]]
 
-    UpdateShadowDominanceState(inst)
-
     SetWereDrowning(inst, WEREMODES.GOOSE)
     SetWereRunner(inst, WEREMODES.GOOSE)
     SetWereWorker(inst, WEREMODES.GOOSE)
@@ -1301,6 +1299,8 @@ local function onbecamegoose(inst)
     SetWereVision(inst, WEREMODES.GOOSE)
     ChangeWereModeValue(inst, WEREMODES.GOOSE)
     OnResetBeard(inst)
+
+    UpdateShadowDominanceState(inst)
 end
 
 local function onwerenesschange(inst)

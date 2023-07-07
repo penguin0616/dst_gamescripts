@@ -4810,7 +4810,7 @@ return{
 		LUNAR_FORGE = "How aboot we get this furnace going, eh Luce?",
 		LUNAR_FORGE_KIT = "Still needs some setting up.",
 
-		--LUNARPLANT_KIT = "TODO",
+		LUNARPLANT_KIT = "That should patch things up easy enough, eh?",
 		ARMOR_LUNARPLANT = "Sturdy organic armor.",
 		LUNARPLANTHAT = "It's got me feelin' a bit light-headed.",
 		BOMB_LUNARPLANT = "Let's kick things off with a bang, eh?",
@@ -4831,7 +4831,7 @@ return{
         FUSED_SHADELING_BOMB = "That can't be good...",
 
 		VOIDCLOTH = "It ain't flannel, but I can work with it.",
-		--VOIDCLOTH_KIT = "TODO",
+		VOIDCLOTH_KIT = "That should patch things up easy enough, eh?",
 		VOIDCLOTHHAT = "A dark hood, full of secrets.",
 		ARMOR_VOIDCLOTH = "Quite the getup, eh?",
 

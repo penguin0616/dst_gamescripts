@@ -4809,7 +4809,7 @@ return{
 		LUNAR_FORGE = "Make shiny things.",
 		LUNAR_FORGE_KIT = "Look easy to build, florp.",
 
-		--LUNARPLANT_KIT = "TODO",
+		LUNARPLANT_KIT = "Fix-up stuff.",
 		ARMOR_LUNARPLANT = "Tough and glowy!",
 		LUNARPLANTHAT = "Cage for head, florp?",
 		BOMB_LUNARPLANT = "Hee-hee-hee... boom!!",
@@ -4830,7 +4830,7 @@ return{
         FUSED_SHADELING_BOMB = "It gonna 'splode!",
 
 		VOIDCLOTH = "All torn up.",
-		--VOIDCLOTH_KIT = "TODO",
+		VOIDCLOTH_KIT = "Fix-up stuff.",
 		VOIDCLOTHHAT = "It dark inside!",
 		ARMOR_VOIDCLOTH = "Scary shirt...",
 

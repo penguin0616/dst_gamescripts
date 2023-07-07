@@ -214,12 +214,8 @@ function Mightiness:DoDelta(delta, force_update, delay_skin, forcesound, fromgym
             self.current = math.min(self.current + delta, self.max+self.overmaxmax)
         end
     else
-        self.current = self.current + delta
+        self.current = math.max(0,self.current + delta)
     end    
-
-    if self.current < 0 then 
-        self.current = 0
-    end
 
     self.inst:PushEvent("mightinessdelta", { oldpercent = old / self.max, newpercent = self.current / self.max, delta = self.current-old })
 

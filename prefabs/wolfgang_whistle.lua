@@ -44,6 +44,8 @@ local function fn()
     inst.AnimState:SetBuild("wolfgang_whistle")
     inst.AnimState:PlayAnimation("idle")
 
+    inst.scrapbook_specialinfo = "WOLFGANG_WHISTLE"
+
     inst.getuseitemverb = getuseitemverb
 
     inst.pickupsound = "metal"

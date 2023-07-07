@@ -1072,7 +1072,9 @@ local COMPONENT_ACTIONS =
 
 		forgerepair = function(inst, doer, target, actions, right)
 			if right then
-				if doer.replica.rider ~= nil and doer.replica.rider:IsRiding() then
+				if target.components.floater ~= nil and target.components.floater:IsFloating() then
+					return
+				elseif doer.replica.rider ~= nil and doer.replica.rider:IsRiding() then
 					if not (target.replica.inventoryitem ~= nil and target.replica.inventoryitem:IsGrandOwner(doer)) then
 						return
 					end
