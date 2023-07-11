@@ -1748,8 +1748,6 @@ function ScrapbookScreen:PopulateInfoPanel(data)
 				tex = tex(data.craftingprefab and {prefab=data.craftingprefab} or nil)
 			end
 
-			print("TEX", tex)
-
 			local makerecipeentry = function(tex,text)
 				local icon = recipewidget:AddChild(Image(atlas, tex))
 				icon:ScaleToSize(STAT_ICONSIZE,STAT_ICONSIZE)

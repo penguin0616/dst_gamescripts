@@ -392,7 +392,7 @@ local function UpdateImages(inst, range)
     inst.swap_dumbbell = "swap_dumbbell_heat"..tostring(range)
     inst.swap_dumbbell_symbol = "swap_dumbbell_heat"
 
-    if inst.components.inventoryitem.owner then
+    if inst.components.inventoryitem.owner ~= nil and inst.components.equippable ~= nil and inst.components.equippable:IsEquipped() then
         inst.components.inventoryitem.owner.AnimState:OverrideSymbol("swap_object", inst.swap_dumbbell, inst.swap_dumbbell_symbol)
     end
 

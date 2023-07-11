@@ -45,6 +45,13 @@ function fns.IsNearDanger(inst, hounded_ok)
         nil, nil, nopigdanger and DANGER_NOPIG_ONEOF_TAGS or DANGER_ONEOF_TAGS) ~= nil
 end
 
+--V2C: Things to explicitly hide mouseover Attack command when not Force Attacking.
+--     e.g. other players' shadow creatures
+--NOTE: Normally, non-hostile creatures still show "Attack" when you mouseover.
+function fns.TargetForceAttackOnly(inst, target)
+	return target.HostileToPlayerTest ~= nil and target:HasTag("shadowcreature") and not target:HostileToPlayerTest(inst)
+end
+
 function fns.SetGymStartState(inst)
     inst.Transform:SetNoFaced()
 
@@ -2185,6 +2192,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst._underleafcanopy = net_bool(inst.GUID, "localplayer._underleafcanopy","underleafcanopydirty")
         inst._lunarportalmax = net_event(inst.GUID, "localplayer._lunarportalmax")
         inst._shadowportalmax = net_event(inst.GUID, "localplayer._shadowportalmax")
+        inst._skilltreeactivatedany = net_event(inst.GUID, "localplayer._skilltreeactivatedany")
 
         if IsSpecialEventActive(SPECIAL_EVENTS.YOTB) then
             inst.yotb_skins_sets = net_shortint(inst.GUID, "player.yotb_skins_sets")
@@ -2466,6 +2474,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.YOTB_isskinunlocked = fns.YOTB_isskinunlocked
 
         inst.IsNearDanger = fns.IsNearDanger
+		inst.TargetForceAttackOnly = fns.TargetForceAttackOnly
         inst.SetGymStartState = fns.SetGymStartState
         inst.SetGymStopState = fns.SetGymStopState
         inst.SwapAllCharacteristics = fns.SwapAllCharacteristics

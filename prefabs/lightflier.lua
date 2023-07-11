@@ -221,7 +221,7 @@ MakeFormation = function(inst, target)
     leader.components.formationleader.ondisbandfn = onformationdisband
 
     leader.components.formationleader.min_formation_size = 1
-    leader.components.formationleader.max_formation_size = 3
+    leader.components.formationleader.max_formation_size = inst._crafter ~= nil and TUNING.WORMWOOD_LIGHTFLIER_FORMATION_SIZE or TUNING.LIGHTFLIER_FORMATION_SIZE
 
     leader.components.formationleader.radius = FORMATION_RADIUS
     leader.components.formationleader.thetaincrement = FORMATION_ROTATION_SPEED
@@ -249,7 +249,7 @@ local function FindTarget(inst)
         return
     end
 
-    if inst._crafter then
+    if inst._crafter and not inst._crafter._lightflier_formation then
         MakeFormation(inst, inst._crafter)
         return
     end
@@ -354,8 +354,8 @@ end
 local function OnSpawnedByWormwood(inst, crafter)
     set_crafter(inst, crafter)
 
-    inst.components.timer:StartTimer("finish_transformed_life", TUNING.WORMWOOD_LIGHTFLIER_FORMATION_DURATION)
-	inst:SetPrefabNameOverride("wormwood_mutantproxy_lightflier")
+    inst.components.timer:StartTimer("finish_transformed_life", TUNING.WORMWOOD_LIGHTFLIER_LIFETIME)
+    inst:SetPrefabNameOverride("wormwood_mutantproxy_lightflier")
 
     FindTarget(inst)
 end
@@ -453,7 +453,7 @@ end
 
 local function OnLoad(inst, data)
     if inst.components.timer:TimerExists("finish_transformed_life") then
-	    inst:SetPrefabNameOverride("wormwood_mutantproxy_lightflier")
+        inst:SetPrefabNameOverride("wormwood_mutantproxy_lightflier")
     end
 end
 

@@ -285,8 +285,8 @@ ACTIONS =
     UNLOCK = Action(),
     USEKLAUSSACKKEY = Action(),
     TEACH = Action({ mount_valid=true }),
-    TURNON = Action({ priority=2 }),
-    TURNOFF = Action({ priority=2 }),
+    TURNON = Action({ priority=2, invalid_hold_action = true, }),
+    TURNOFF = Action({ priority=2, invalid_hold_action = true, }),
     SEW = Action({ mount_valid=true }),
     STEAL = Action(),
     USEITEM = Action({ priority=1, instant=true }),
@@ -349,7 +349,7 @@ ACTIONS =
     ABANDON = Action({ rmb=true }),
     PET = Action(),
     DISMANTLE = Action({ rmb=true }),
-    TACKLE = Action({ rmb=true, distance=math.huge }),
+    TACKLE = Action({ rmb=true, distance=math.huge, invalid_hold_action = true, }),
 	GIVE_TACKLESKETCH = Action(),
 	REMOVE_FROM_TROPHYSCALE = Action(),
 	CYCLE = Action({ rmb=true, priority=2 }),
@@ -2104,6 +2104,17 @@ ACTIONS.SHAVE.fn = function(act)
     end
 end
 
+ACTIONS.PLAY.strfn = function(act)
+	if act.invobject ~= nil then
+		if act.invobject:HasTag("coach_whistle") then
+			if act.doer:HasTag("wolfgang_coach") and act.doer:HasTag("mightiness_normal") then
+				return act.doer:HasTag("coaching") and "COACH_OFF" or "COACH_ON"
+			end
+			return "TWEET"
+		end
+	end
+end
+
 ACTIONS.PLAY.fn = function(act)
     if act.invobject and act.invobject.components.instrument then
         return act.invobject.components.instrument:Play(act.doer)
@@ -2426,7 +2437,6 @@ ACTIONS.TURNOFF.fn = function(act)
 end
 
 ACTIONS.USEITEM.fn = function(act)
-
     if act.invobject ~= nil and
         act.invobject.components.useableitem ~= nil and
         act.invobject.components.useableitem:CanInteract() and
@@ -2442,15 +2452,7 @@ ACTIONS.USEITEM.fn = function(act)
     end
 end
 
-ACTIONS.USEITEM.strfn = function(act)
-    if act.invobject.getuseitemverb then
-        return act.invobject.getuseitemverb(act.invobject,act.doer)
-    end
-    return "GENERIC"
-end
-
 ACTIONS.USEITEMON.strfn = function(act)
-
     return (act.invobject ~= nil and string.upper(act.invobject.prefab))
             or "GENERIC"
 end

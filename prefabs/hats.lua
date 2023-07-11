@@ -1997,7 +1997,9 @@ local function MakeHat(name)
     fns.moonstorm_goggles = function()
         local inst = simple(moonstorm_custom_init)
 
-        inst.components.floater:SetSize("med")
+        inst.scrapbook_specialinfo = "MOONSTORMGOGGLESHAT"
+
+        inst.components.floater:SetSize("med")        
         inst.components.floater:SetScale(0.72)
 
         if not TheWorld.ismastersim then
@@ -3110,10 +3112,13 @@ local function MakeHat(name)
         inst.components.damagetyperesist:RemoveResist("lunar_aligned", inst, "setbonus")
     end
 
+	local lunarplant_swap_data_broken = { bank = "hat_lunarplant", anim = "broken" }
+
 	local function lunarplant_onbroken(inst)
 		if inst.components.equippable ~= nil then
 			inst:RemoveComponent("equippable")
 			inst.AnimState:PlayAnimation("broken")
+			inst.components.floater:SetSwapData(lunarplant_swap_data_broken)
 		end
 	end
 
@@ -3125,6 +3130,7 @@ local function MakeHat(name)
 			inst.components.equippable:SetOnUnequip(lunarplant_onunequip)
 			inst.components.equippable:SetOnEquipToModel(fns.simple_onequiptomodel)
 			inst.AnimState:PlayAnimation("anim")
+			inst.components.floater:SetSwapData(swap_data)
 		end
 	end
 
@@ -3311,10 +3317,13 @@ local function MakeHat(name)
 		voidcloth_setbuffowner(inst, nil)
 	end
 
+	local voidcloth_swap_data_broken = { bank = "hat_voidcloth", anim = "broken" }
+
 	fns.voidcloth_onbroken = function(inst)
 		if inst.components.equippable ~= nil then
 			inst:RemoveComponent("equippable")
 			inst.AnimState:PlayAnimation("broken")
+			inst.components.floater:SetSwapData(voidcloth_swap_data_broken)
 		end
 	end
 
@@ -3326,6 +3335,7 @@ local function MakeHat(name)
 			inst.components.equippable:SetOnUnequip(fns.voidcloth_onunequip)
 			inst.components.equippable:SetOnEquipToModel(fns.simple_onequiptomodel)
 			inst.AnimState:PlayAnimation("anim")
+			inst.components.floater:SetSwapData(swap_data)
 		end
 	end
 
@@ -3349,7 +3359,7 @@ local function MakeHat(name)
 		local inst = simple(fns.voidcloth_custom_init)
 
 		inst.components.floater:SetSize("med")
-		inst.components.floater:SetVerticalOffset(0.25)
+		inst.components.floater:SetVerticalOffset(0.1)
 		inst.components.floater:SetScale(.75)
 
         inst:AddTag("miasmaimmune")

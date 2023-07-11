@@ -82,10 +82,14 @@ local function SetupEquippable(inst)
 	inst.components.equippable:SetOnUnequip(onunequip)
 end
 
+local SWAP_DATA_BROKEN = { bank = "armor_lunarplant", anim = "broken" }
+local SWAP_DATA = { bank = "armor_lunarplant", anim = "anim" }
+
 local function OnBroken(inst)
 	if inst.components.equippable ~= nil then
 		inst:RemoveComponent("equippable")
 		inst.AnimState:PlayAnimation("broken")
+		inst.components.floater:SetSwapData(SWAP_DATA_BROKEN)
 	end
 end
 
@@ -93,6 +97,7 @@ local function OnRepaired(inst)
 	if inst.components.equippable == nil then
 		SetupEquippable(inst)
 		inst.AnimState:PlayAnimation("anim")
+		inst.components.floater:SetSwapData(SWAP_DATA)
 	end
 end
 
@@ -123,8 +128,7 @@ local function fn()
 
 	inst.foleysound = "dontstarve/movement/foley/lunarplantarmour_foley"
 
-	local swap_data = { bank = "armor_lunarplant", anim = "anim" }
-	MakeInventoryFloatable(inst, "small", 0.2, 0.80, nil, nil, swap_data)
+	MakeInventoryFloatable(inst, "small", 0.2, 0.80, nil, nil, SWAP_DATA)
 
 	inst.scrapbook_specialinfo = "ARMORLUNARPLANT"
 

@@ -280,7 +280,7 @@ end
 
 ----
 local function OnSpawnedByWormwood(inst, wormwood)
-    inst.components.timer:StartTimer("finish_transformed_life", TUNING.FRUITDRAGON_LOYALTY_MAXTIME)
+    inst.components.timer:StartTimer("finish_transformed_life", TUNING.WORMWOOD_FRUITDRAGON_LIFETIME)
     inst:SetPrefabNameOverride("wormwood_mutantproxy_fruitdragon")
     MakeRipe(inst, true)
 
@@ -290,16 +290,16 @@ local function OnSpawnedByWormwood(inst, wormwood)
     end
 
     local follower = inst:AddComponent("follower")
-    follower.maxfollowtime = TUNING.FRUITDRAGON_LOYALTY_MAXTIME + 1
+    follower.maxfollowtime = TUNING.WORMWOOD_FRUITDRAGON_LIFETIME + 1
 
     wormwood:PushEvent("makefriend")
 
     local existing_fruitdragon_follower_count = wormwood_leader:CountFollowers("fruitdragon")
 
-    if existing_fruitdragon_follower_count >= TUNING.FRUITDRAGON_FOLLOWER_LIMIT then
+    if existing_fruitdragon_follower_count >= TUNING.WORMWOOD_FRUITDRAGON_FOLLOWER_LIMIT then
         local oldest_follower_percent, oldest_follower = math.huge, nil
         for follower in pairs(wormwood_leader.followers) do
-            if follower.components.follower then
+            if follower.components.follower ~= nil and follower:HasTag("fruitdragon") then
                 local loyalty_percent = follower.components.follower:GetLoyaltyPercent()
                 if loyalty_percent < oldest_follower_percent then
                     oldest_follower_percent = loyalty_percent
@@ -315,7 +315,7 @@ local function OnSpawnedByWormwood(inst, wormwood)
     end
 
     wormwood_leader:AddFollower(inst)
-    follower:AddLoyaltyTime(TUNING.FRUITDRAGON_LOYALTY_MAXTIME)
+    follower:AddLoyaltyTime(TUNING.WORMWOOD_FRUITDRAGON_LIFETIME)
 end
 
 local function finish_transformed_life(inst)
@@ -351,7 +351,7 @@ local function OnLoad(inst, data)
 
         if data._is_follower then
             local follower = inst:AddComponent("follower")
-            follower.maxfollowtime = TUNING.FRUITDRAGON_LOYALTY_MAXTIME
+            follower.maxfollowtime = TUNING.WORMWOOD_FRUITDRAGON_LIFETIME
         end
 
         if inst.components.timer:TimerExists("finish_transformed_life") then

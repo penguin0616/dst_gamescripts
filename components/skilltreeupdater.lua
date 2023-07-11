@@ -77,6 +77,7 @@ function SkillTreeUpdater:ActivateSkill_Server(skill, unlocks) -- NOTES(JBK): Us
         onactivate(self.inst)
     end
     self.inst:PushEvent("onactivateskill_server", {skill = skill,})
+    self.inst._skilltreeactivatedany:push()
 end
 function SkillTreeUpdater:ActivateSkill(skill, prefab, fromrpc)
     -- should ignore the prefab paramater as that's just used skilltreedata at frontend

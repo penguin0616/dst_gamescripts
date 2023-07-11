@@ -910,7 +910,7 @@ return{
     },
     ANNOUNCE_WOLFGANG_WIMPY_COACHING = "only_used_by_wolfgang",
     ANNOUNCE_WOLFGANG_MIGHTY_COACHING = "only_used_by_wolfang",
-    ANNOUNCE_WOLFGANG_BEGING_COACHING = "only_used_by_wolfang",
+    ANNOUNCE_WOLFGANG_BEGIN_COACHING = "only_used_by_wolfang",
     ANNOUNCE_WOLFGANG_END_COACHING = "only_used_by_wolfang",
 
 	BATTLECRY =
@@ -4815,7 +4815,7 @@ return{
 		LUNAR_FORGE = "There isn't any iron in that forge, is there?",
 		LUNAR_FORGE_KIT = "Shall we forge ahead?",
 
-		--LUNARPLANT_KIT = "A stitch here and there for a quick repair.",
+		LUNARPLANT_KIT = "A stitch here and there for a quick repair.",
 		ARMOR_LUNARPLANT = "Strong and light, quite good in a fight.",
 		LUNARPLANTHAT = "It has me looking on the bright side, hyuyu!",
 		BOMB_LUNARPLANT = "This will be the start of some wonderful pranks.",
@@ -4836,7 +4836,7 @@ return{
         FUSED_SHADELING_BOMB = "Keep away, I don't want to play!",
 
 		VOIDCLOTH = "Bits of tattered reality. And it comes in my color!",
-		--VOIDCLOTH_KIT = "A stitch here and there for a quick repair.",
+		VOIDCLOTH_KIT = "A stitch here and there for a quick repair.",
 		VOIDCLOTHHAT = "A hood of night, that blocks out all light.",
 		ARMOR_VOIDCLOTH = "It broke the chains of its previous plane.",
 

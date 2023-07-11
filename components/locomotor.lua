@@ -171,11 +171,6 @@ local function ServerGetSpeedMultiplier(self)
         end
     end
 
-    local is_mighty = self.inst.components.mightiness ~= nil and self.inst.components.mightiness:GetState() == "mighty"
-    local is_wimpy  = self.inst.components.mightiness ~= nil and self.inst.components.mightiness:GetState() == "wimpy"
-    if not is_wimpy and not is_mighty and self.inst.components.skilltreeupdater and self.inst.components.skilltreeupdater:IsActivated("wolfgang_normal_speed") then
-        mult = mult * TUNING.SKILLS.WOLFGANG_NORMAL_SPEED
-    end
     return mult * (self:TempGroundSpeedMultiplier() or self.groundspeedmultiplier) * self.throttle
 end
 
@@ -205,9 +200,6 @@ local function ClientGetSpeedMultiplier(self)
                 end
             end
         end
-    end
-    if self.inst:HasTag("wimpy_speed") then
-        mult = mult * TUNING.SKILLS.WOLFGANG_WIMPY_SPEED
     end
 
     return mult * (self:TempGroundSpeedMultiplier() or self.groundspeedmultiplier) * self.throttle

@@ -9,6 +9,16 @@ local SPAWN_LIFETIME = 15*FRAMES
 local function onbuilt(inst, data)
     inst.builder = data.builder
 
+    if inst.builder ~= nil and inst.builder:IsValid() then
+        local pos = inst.builder:GetPosition()
+        local offset = FindWalkableOffset(pos, math.random()*TWOPI, 3, 12, false, false, nil, false, true)
+
+        if offset ~= nil then
+            pos = pos + offset
+            inst.Transform:SetPosition(pos:Get())
+        end
+    end
+
     inst:ListenForEvent("onremove", function(_) inst.builder = nil end, inst.builder)
 end
 
@@ -17,7 +27,9 @@ local function MakeProxy(product)
 
     local function finish_spawn(inst)
         local product_instance = SpawnPrefab(product)
+
         product_instance.Transform:SetPosition(inst.Transform:GetWorldPosition())
+
         if inst.builder then
             product_instance:PushEvent("spawnedbywormwoodproxy", inst.builder)
         end
@@ -56,6 +68,8 @@ local function MakeProxy(product)
 
         local timer = inst:AddComponent("timer")
         timer:StartTimer(FINISH_SPAWN_TIMERNAME, SPAWN_LIFETIME)
+
+        inst.SoundEmitter:PlaySound("meta2/wormwood/animation_dropdown")
 
         return inst
     end

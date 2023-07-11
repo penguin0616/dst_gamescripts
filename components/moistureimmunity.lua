@@ -39,7 +39,7 @@ function MoistureImmunity:RemoveSource_Internal(src)
 	--     moisture component force dry already handles source
 	--     "onremove" on its own.
 	if self.inst.components.moisture ~= nil then
-		self.isnt.components.moisture:ForceDry(false, src)
+		self.inst.components.moisture:ForceDry(false, src)
 	end
 
 	if src ~= self.inst then

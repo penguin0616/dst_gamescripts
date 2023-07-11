@@ -40,13 +40,14 @@ local assets =
     Asset("ANIM", "anim/player_woodie.zip"),
     Asset("ANIM", "anim/round_puff_fx.zip"),
     Asset("ANIM", "anim/player_idles_woodie.zip"),
+    Asset("ANIM", "anim/player_actions_woodcarving.zip"),
     Asset("ATLAS", "images/woodie.xml"),
     Asset("IMAGE", "images/woodie.tex"),
     Asset("IMAGE", "images/colour_cubes/beaver_vision_cc.tex"),
     Asset("MINIMAP_IMAGE", "woodie_1"), --beaver
     Asset("MINIMAP_IMAGE", "woodie_2"), --moose
     Asset("MINIMAP_IMAGE", "woodie_3"), --goose
-    Asset("SCRIPT", "scripts/prefabs/skilltree_woodie.lua"),    
+    Asset("SCRIPT", "scripts/prefabs/skilltree_woodie.lua"),
 }
 
 local prefabs =
@@ -64,7 +65,7 @@ local prefabs =
     "weremoose_transform2_fx",
     "weremoose_revert_fx",
     "weremoose_shock_fx",
-	"weremoose_smash_fx",
+    "weremoose_smash_fx",
     --
     "weregoose_transform_fx",
     "weregoose_shock_fx",
@@ -214,10 +215,10 @@ local function BeaverRightClickPicker(inst, target, pos)
     return target ~= nil
         and target ~= inst
         and (   (   inst:HasTag("on_walkable_plank") and
-					target:HasTag("walkingplank") and
+                    target:HasTag("walkingplank") and
                     inst.components.playeractionpicker:SortActionList({ ACTIONS.ABANDON_SHIP }, target, nil)
                 ) or
-				(   target:HasTag("HAMMER_workable") and
+                (   target:HasTag("HAMMER_workable") and
                     inst.components.playeractionpicker:SortActionList({ ACTIONS.HAMMER }, target, nil)
                 ) or
                 (   target:HasTag("DIG_workable") and
@@ -248,13 +249,13 @@ local function MooseLeftClickPicker(inst, target)
     return target ~= nil
         and target ~= inst
         and (   (   inst.replica.combat:CanTarget(target) and
-					(not target:HasTag("player") or inst.components.playercontroller:IsControlPressed(CONTROL_FORCE_ATTACK)) and
+                    (not target:HasTag("player") or inst.components.playercontroller:IsControlPressed(CONTROL_FORCE_ATTACK)) and
                     inst.components.playeractionpicker:SortActionList({ ACTIONS.ATTACK }, target, nil)
                 )
-				or
-				(   target:HasTag("walkingplank") and
-					target:HasTag("interactable") and
-					target:HasTag("plank_extended") and
+                or
+                (   target:HasTag("walkingplank") and
+                    target:HasTag("interactable") and
+                    target:HasTag("plank_extended") and
                     inst.components.playeractionpicker:SortActionList({ ACTIONS.MOUNT_PLANK }, target, nil)
                 )
             )
@@ -262,22 +263,22 @@ local function MooseLeftClickPicker(inst, target)
 end
 
 local function MooseRightClickPicker(inst, target, pos)
-	return target ~= inst
-		and (	(	target ~= nil and
-					target:HasTag("walkingplank") and
-					inst:HasTag("on_walkable_plank") and
-					inst.components.playeractionpicker:SortActionList({ ACTIONS.ABANDON_SHIP }, target, nil)
-				)
-				or
-				(	(not inst.components.playercontroller.isclientcontrollerattached and not inst:HasTag("tackling")) and
-					inst.components.playeractionpicker:SortActionList({ ACTIONS.TACKLE }, target or pos, nil)
-				)
-			)
-		or nil
+    return target ~= inst
+        and (	(	target ~= nil and
+                    target:HasTag("walkingplank") and
+                    inst:HasTag("on_walkable_plank") and
+                    inst.components.playeractionpicker:SortActionList({ ACTIONS.ABANDON_SHIP }, target, nil)
+                )
+                or
+                (	not inst.components.playercontroller.isclientcontrollerattached and
+                    inst.components.playeractionpicker:SortActionList({ ACTIONS.TACKLE }, target or pos, nil)
+                )
+            )
+        or nil
 end
 
 local function MoosePointSpecialActions(inst, pos, useitem, right)
-    return right and inst.components.playercontroller:IsEnabled() and not inst:HasTag("tackling") and { ACTIONS.TACKLE } or {}
+    return right and inst.components.playercontroller:IsEnabled() and { ACTIONS.TACKLE } or {}
 end
 
 local function GooseActionString(inst, action)
@@ -308,6 +309,10 @@ local function ReticuleUpdatePositionFn(inst, pos, reticule, ease, smoothing, dt
         rot = Lerp((drot > 180 and rot0 + 360) or (drot < -180 and rot0 - 360) or rot0, rot, dt * smoothing)
     end
     reticule.Transform:SetRotation(rot)
+
+	if inst.components.reticule ~= nil then
+		inst.components.reticule.ease = reticule.entity:IsVisible()
+	end
 end
 
 local function EnableReticule(inst, enable)
@@ -830,7 +835,7 @@ end
 
 local function OnDodgeAttack(inst)
     local fx = SpawnPrefab("weregoose_transform_fx")
-    
+
     fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
     fx.Transform:SetScale(1.3, 1.3, 1.3)
 end
@@ -861,7 +866,7 @@ local function SetWereFighter(inst, mode)
         end
 
         if planardefense_skill then
-            inst.components.planardefense:AddBonus(inst, TUNING.SKILLS.WOODIE.MOOSE_PLANAR_DEF, "weremoose_skill") 
+            inst.components.planardefense:AddBonus(inst, TUNING.SKILLS.WOODIE.MOOSE_PLANAR_DEF, "weremoose_skill")
         end
 
     elseif mode == WEREMODES.GOOSE then
@@ -1447,13 +1452,13 @@ local function OnTackleTrample(inst, other)
 end
 
 local function OnTakeDrowningDamage(inst, tuning)
-	if tuning.WERENESS ~= nil then
-		inst.components.wereness:DoDelta(-tuning.WERENESS)
-	end
+    if tuning.WERENESS ~= nil then
+        inst.components.wereness:DoDelta(-tuning.WERENESS)
+    end
 end
 
 local function GetDowningDamgeTunings(inst)
-	return TUNING.DROWNING_DAMAGE[IsWereMode(inst.weremode:value()) and "WEREWOODIE" or "WOODIE"]
+    return TUNING.DROWNING_DAMAGE[IsWereMode(inst.weremode:value()) and "WEREWOODIE" or "WOODIE"]
 end
 
 --------------------------------------------------------------------------
@@ -1574,6 +1579,8 @@ local function common_postinit(inst)
     --bearded (from beard component) added to pristine state for optimization
     inst:AddTag("bearded")
 
+    inst.AnimState:AddOverrideBuild("player_actions_woodcarving")
+
     inst.AnimState:OverrideSymbol("round_puff01", "round_puff_fx", "round_puff01")
 
     if TheNet:GetServerGameMode() == "lavaarena" then
@@ -1618,11 +1625,11 @@ local function master_postinit(inst)
     if TheNet:GetServerGameMode() == "lavaarena" then
         event_server_data("lavaarena", "prefabs/woodie").master_postinit(inst)
     elseif TheNet:GetServerGameMode() == "quagmire" then
-		-- nothing to see here (dont go into the else case, or else!)
+        -- nothing to see here (dont go into the else case, or else!)
     else
-	    inst.components.health:SetMaxHealth(TUNING.WOODIE_HEALTH)
-		inst.components.hunger:SetMax(TUNING.WOODIE_HUNGER)
-		inst.components.sanity:SetMax(TUNING.WOODIE_SANITY)
+        inst.components.health:SetMaxHealth(TUNING.WOODIE_HEALTH)
+        inst.components.hunger:SetMax(TUNING.WOODIE_HUNGER)
+        inst.components.sanity:SetMax(TUNING.WOODIE_SANITY)
 
         -- Give Woodie a beard so he gets some insulation from winter cold
         -- (Value is Wilson's level 2 beard.)
@@ -1633,7 +1640,7 @@ local function master_postinit(inst)
 
         OnResetBeard(inst)
 
-	    inst.components.foodaffinity:AddPrefabAffinity("honeynuggets", TUNING.AFFINITY_15_CALORIES_LARGE)
+        inst.components.foodaffinity:AddPrefabAffinity("honeynuggets", TUNING.AFFINITY_15_CALORIES_LARGE)
 
         inst:AddComponent("wereness")
 

@@ -201,8 +201,22 @@ function SkillTreeWidget:OnControl(control, down)
         return true
     end
 
-    return false
+    if not down and not TheInput:ControllerAttached() and control ==  CONTROL_ACTION then
+        local skilltree = self.root.tree
 
+        if not skilltree.selectedskill or
+            not skilltree.skillgraphics[skilltree.selectedskill].status.activatable or
+            not skilltree.infopanel.activatebutton:IsVisible()
+        then
+            return false
+        end
+
+        self.root.infopanel.activatebutton.onclick()
+
+        return true
+    end
+
+    return false
 end
 
 function SkillTreeWidget:GetSelectedSkill()

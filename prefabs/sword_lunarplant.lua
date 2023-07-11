@@ -14,12 +14,16 @@ local function SetBuffEnabled(inst, enabled)
 	if enabled then
 		if not inst._bonusenabled then
 			inst._bonusenabled = true
-			inst.components.weapon:SetDamage(inst.base_damage * TUNING.WEAPONS_LUNARPLANT_SETBONUS_DAMAGE_MULT)
+			if inst.components.weapon ~= nil then
+				inst.components.weapon:SetDamage(inst.base_damage * TUNING.WEAPONS_LUNARPLANT_SETBONUS_DAMAGE_MULT)
+			end
 			inst.components.planardamage:AddBonus(inst, TUNING.WEAPONS_LUNARPLANT_SETBONUS_PLANAR_DAMAGE, "setbonus")
 		end
 	elseif inst._bonusenabled then
 		inst._bonusenabled = nil
-		inst.components.weapon:SetDamage(inst.base_damage)
+		if inst.components.weapon ~= nil then
+			inst.components.weapon:SetDamage(inst.base_damage)
+		end
 		inst.components.planardamage:RemoveBonus(inst, "setbonus")
 	end
 end
@@ -125,10 +129,19 @@ local function OnAttack(inst, attacker, target)
 	end
 end
 
-local function SetupEquippable(inst)
+local function SetupComponents(inst)
 	inst:AddComponent("equippable")
 	inst.components.equippable:SetOnEquip(onequip)
 	inst.components.equippable:SetOnUnequip(onunequip)
+
+	inst:AddComponent("weapon")
+	inst.components.weapon:SetDamage(inst._bonusenabled and inst.base_damage * TUNING.WEAPONS_LUNARPLANT_SETBONUS_DAMAGE_MULT or inst.base_damage)
+	inst.components.weapon:SetOnAttack(OnAttack)
+end
+
+local function DisableComponents(inst)
+	inst:RemoveComponent("equippable")
+	inst:RemoveComponent("weapon")
 end
 
 local FLOAT_SCALE_BROKEN = { 1, 0.7, 1 }
@@ -161,7 +174,7 @@ end
 
 local function OnBroken(inst)
 	if inst.components.equippable ~= nil then
-		inst:RemoveComponent("equippable")
+		DisableComponents(inst)
 		inst.AnimState:PlayAnimation("broken")
 		SetIsBroken(inst, true)
 	end
@@ -169,7 +182,7 @@ end
 
 local function OnRepaired(inst)
 	if inst.components.equippable == nil then
-		SetupEquippable(inst)
+		SetupComponents(inst)
 		inst.blade1.AnimState:SetFrame(0)
 		inst.blade2.AnimState:SetFrame(0)
 		inst.AnimState:PlayAnimation("idle", true)
@@ -227,9 +240,6 @@ local function fn()
 
 	-------
 	inst.base_damage = TUNING.SWORD_LUNARPLANT_DAMAGE
-	local weapon = inst:AddComponent("weapon")
-	weapon:SetDamage(inst.base_damage)
-	weapon:SetOnAttack(OnAttack)
 
 	local planardamage = inst:AddComponent("planardamage")
 	planardamage:SetBaseDamage(TUNING.SWORD_LUNARPLANT_PLANAR_DAMAGE)
@@ -240,7 +250,7 @@ local function fn()
 	inst:AddComponent("inspectable")
 	inst:AddComponent("inventoryitem")
 
-	SetupEquippable(inst)
+	SetupComponents(inst)
 
 	inst:AddComponent("lunarplant_tentacle_weapon")
 

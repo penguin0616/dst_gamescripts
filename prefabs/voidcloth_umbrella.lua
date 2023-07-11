@@ -77,6 +77,34 @@ local function SetupEquippable(inst)
 	inst.components.equippable:SetOnEquipToModel(OnEquipToModel)
 end
 
+local FLOAT_SCALE_BROKEN = { 0.75, 0.5, 0.75 }
+local FLOAT_SCALE = { .975, 0.455, 1 }
+
+local function OnIsBrokenDirty(inst)
+	if inst.isbroken:value() then
+		inst.components.floater:SetSize("med")
+		inst.components.floater:SetVerticalOffset(0.15)
+		inst.components.floater:SetScale(FLOAT_SCALE_BROKEN)
+	else
+		inst.components.floater:SetSize("large")
+		inst.components.floater:SetVerticalOffset(0)
+		inst.components.floater:SetScale(FLOAT_SCALE)
+	end
+end
+
+local SWAP_DATA_BROKEN = { sym_build = "umbrella_voidcloth", sym_name = "swap_umbrella_broken_float", bank = "umbrella_voidcloth", anim = "broken" }
+local SWAP_DATA = { sym_build = "umbrella_voidcloth", sym_name = "swap_umbrella_float", bank = "umbrella_voidcloth" }
+
+local function SetIsBroken(inst, isbroken)
+	if isbroken then
+		inst.components.floater:SetBankSwapOnFloat(true, -15, SWAP_DATA_BROKEN)
+	else
+		inst.components.floater:SetBankSwapOnFloat(true, -47, SWAP_DATA)
+	end
+	inst.isbroken:set(isbroken)
+	OnIsBrokenDirty(inst)
+end
+
 local function OnPerish(inst)
 	if inst.components.machine:IsOn() then
 		inst.components.machine:TurnOff()
@@ -101,11 +129,13 @@ local function OnPerish(inst)
 					end
 				end
 				inst:RemoveComponent("equippable")
+				SetIsBroken(inst, true)
 				owner:PushEvent("umbrellaranout", data)
 				return
 			end
 		end
 		inst:RemoveComponent("equippable")
+		SetIsBroken(inst, true)
     end
 end
 
@@ -113,6 +143,7 @@ local function OnRepaired(inst)
 	if inst.components.equippable == nil then
 		SetupEquippable(inst)
 		inst.AnimState:PlayAnimation("idle")
+		SetIsBroken(inst, false)
 	end
 end
 
@@ -273,20 +304,16 @@ local function topocket(inst)--, owner)
 	end
 end
 
-local function PushIdleLoop(inst)
-	if inst.components.fueled:IsEmpty() then
-		inst.AnimState:PlayAnimation("broken")
-	end
-end
-
-local function OnStopFloating(inst)
-	inst:DoTaskInTime(0, PushIdleLoop) --#V2C: #HACK restore the looping anim, timing issues
-end
-
 local function OnExitLimbo(inst)
 	--unfortunately returning to scene always re-enables shadow
 	if not inst.components.machine:IsOn() then
 		inst.DynamicShadow:Enable(false)
+	end
+end
+
+local function OnLoad(inst)
+	if inst.components.fueled:IsEmpty() then
+		OnPerish(inst)
 	end
 end
 
@@ -321,8 +348,10 @@ local function UmbrellaFn()
 	inst:AddTag("shadow_item")
 
 	inst.triggerfx = net_event(inst.GUID, "voidcloth_umbrella.triggerfx")
+	inst.isbroken = net_bool(inst.GUID, "voidcloth_umbrella.isbroken", "isbrokendirty")
 
-	MakeInventoryFloatable(inst, "large", nil, { .975, 0.455, 1 })
+	inst:AddComponent("floater")
+	SetIsBroken(inst, false)
 
 	--Must be added client-side, but configured server-side
 	inst:AddComponent("raindome")
@@ -332,6 +361,8 @@ local function UmbrellaFn()
     if not TheWorld.ismastersim then
 		--delayed because we don't want any old events
 		inst:DoTaskInTime(0, inst.ListenForEvent, "voidcloth_umbrella.triggerfx", CLIENT_TriggerFX)
+
+		inst:ListenForEvent("isbrokendirty", OnIsBrokenDirty)
 
         return inst
     end
@@ -361,8 +392,6 @@ local function UmbrellaFn()
 	inst.components.machine.turnofffn = turnoff
 	inst.components.machine.cooldowntime = 0.5
 
-	inst.components.floater:SetBankSwapOnFloat(true, -47, {sym_name = "swap_umbrella_float", sym_build = "umbrella_voidcloth", bank = "umbrella_voidcloth"})
-
 	inst:AddComponent("shadowlevel")
 	inst.components.shadowlevel:SetDefaultLevel(TUNING.VOIDCLOTH_UMBRELLA_SHADOW_LEVEL)
 
@@ -377,8 +406,9 @@ local function UmbrellaFn()
 
 	inst:ListenForEvent("onputininventory", topocket)
 	inst:ListenForEvent("floater_startfloating", topocket)
-	inst:ListenForEvent("floater_stopfloating", OnStopFloating)
 	inst:ListenForEvent("exitlimbo", OnExitLimbo)
+
+	inst.OnLoad = OnLoad
 
     return inst
 end

@@ -119,7 +119,7 @@ function Tune(overrides)
 		PLAYER_DAMAGE_TAKEN_MOD = 1,
 
         -- Controller specific tuning values.
-        CONTROLLER_DEADZONE_RADIUS = 0.3, -- TODO(JBK): Hook this up.
+		CONTROLLER_DEADZONE_RADIUS = 0.3,
 		CONTROLLER_RETICULE_INITIAL_DEADZONE_RADIUS = .5,
 		CONTROLLER_RETICULE_RSTICK_SPEED = 2,
         CONTROLLER_BLINKFOCUS_DISTANCESQ_MIN = 4,
@@ -5275,6 +5275,8 @@ function Tune(overrides)
             STARVE_TIME = total_day_time*2,
         },
 
+        LIGHTFLIER_FORMATION_SIZE = 3,
+
         LIGHTFLIER_FLOWER_REGROW_TIME = total_day_time*12, -- this refers to regrow after picked, not duration for regrowthmanager
         LIGHTFLIER_FLOWER_LIGHT_TIME = 140,
         LIGHTFLIER_FLOWER_LIGHT_TIME_VARIANCE = 50,
@@ -6080,7 +6082,7 @@ function Tune(overrides)
 
         DUMBBELL_CONSUMPTION_BLUEGEM = 0.3,
         DUMBBELL_CONSUMPTION_REDEM = 0.3,
-        DUMBBELL_CONSUMPTION_HEAT = 0.8,        
+        DUMBBELL_CONSUMPTION_HEAT = 0.8,
 
         DUMBBELL_DAMAGE_ROCK = wilson_attack*.5,
         DUMBBELL_DAMAGE_GOLD = wilson_attack*.8,
@@ -6441,7 +6443,7 @@ function Tune(overrides)
         AUTOTERRAFORMER_REPEAT_DELAY = 0.25,
         ANTLIONHAT_USES = 400,
         NIGHTMAREFUEL_FINITEUSESREPAIRVALUE = 50,
-        
+
         -- Setting the Stage
         STAGEUSHER_ATTACK_PERIOD = 8,
         STAGEUSHER_ATTACK_DAMAGE = 80,
@@ -6628,6 +6630,11 @@ function Tune(overrides)
                     BEAVER = -7,
                     GOOSE = -20,
                 },
+
+                ALLEGIANCE_SHADOW_RESIST = 0.9,
+                ALLEGIANCE_VS_LUNAR_BONUS = 1.1,
+                ALLEGIANCE_LUNAR_RESIST = 0.9,
+                ALLEGIANCE_VS_SHADOW_BONUS = 1.1,
             },
 
             WOLFGANG_MIGHTY_WORK_CHANCE_1 = 0.95,
@@ -6849,24 +6856,36 @@ function Tune(overrides)
         LEIF_IDOL_NUM_SPAWNS = 2,
         LEIF_IDOL_SPAWN_RADIUS = 10,
 
+        LUCY_CARVING_TALK_COOLDOWN = 15, -- seconds
+
         WORMWOOD_BLOOM_STAGE_DURATION_UPGRADED1 = total_day_time * 0.9,
         WORMWOOD_BLOOM_STAGE_DURATION_UPGRADED2 = total_day_time * 0.75,
         WORMWOOD_BLOOM_FULL_DURATION_UPGRADED = total_day_time * 4.5,
         WORMWOOD_BLOOM_FULL_MAX_DURATION_UPGRADED = total_day_time * 7.5,
+
         WORMWOOD_PETALS_RATE = 15,
-        WORMWOOD_LIGHTFLIER_FORMATION_DURATION = total_day_time,
+        LUNARPLANTTENTACLE_PLANARDAMAGE = 5,
         WORMWOOD_ROOT_TIME = 6,
         WORMWOOD_ROOT_DAMAGE = 10,
+
+        WORMWOOD_CARRAT_LIFETIME = 3 * total_day_time,
+        WORMWOOD_LIGHTFLIER_LIFETIME = total_day_time,
+        WORMWOOD_FRUITDRAGON_LIFETIME = 2 * total_day_time,
+
         IPECAC_TASK_TIME = 7,
         IPECAC_POOP_COUNT = 4,
-        FRUITDRAGON_LOYALTY_MAXTIME = 2.0*total_day_time,
-        FRUITDRAGON_FOLLOWER_LIMIT = 3,
-        WORMWOOD_CARRAT_LIFETIME = 3.0*total_day_time,
+
+        WORMWOOD_MUSHROOMPLANTER_RATEBONUS_1 = 0.9,
+        WORMWOOD_MUSHROOMPLANTER_RATEBONUS_2 = 0.8,
+
         WORMWOOD_CARRAT_GATHER_COOLDOWN = 10,
-        LUNARPLANTTENTACLE_PLANARDAMAGE = 5,
+        WORMWOOD_LIGHTFLIER_FORMATION_SIZE = 8,
+        WORMWOOD_FRUITDRAGON_FOLLOWER_LIMIT = 3,
 
         QUAKE_BLOCKER_RANGE = 40,
         DUMBBELL_HEAT_MAX_USES = 150,
+
+        WOLFGANG_COACH_BUFF = 2,
     }
 
     TUNING_MODIFIERS = {}

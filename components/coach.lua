@@ -20,59 +20,69 @@ end
 local INSPIRE_DIST = 25
 local SANITY_BUFF = 5
 local function inspire(inst)
-    local didinspire = false
+     local coach = inst.components.coach
 
-    local fightbuff = {}
-    local sanitybuff= {}
-    if inst.components.leader then
-        for follower, i in pairs(inst.components.leader.followers)do
-            if follower and follower:GetDistanceSqToInst(inst) < INSPIRE_DIST*INSPIRE_DIST then
-                table.insert(fightbuff,follower)
+    if not coach.lastcoachtime or (GetTime() - coach.lastcoachtime  > coach.settime) then
+        coach.lastcoachtime = GetTime()
+
+        local didinspire = false
+
+        local fightbuff = {}
+        local sanitybuff= {}
+        if inst.components.leader then
+            for follower, i in pairs(inst.components.leader.followers)do
+                if follower and follower:GetDistanceSqToInst(inst) < INSPIRE_DIST*INSPIRE_DIST then
+                    table.insert(fightbuff,follower)
+                end
             end
         end
-    end
 
-    for k,v in pairs(AllPlayers) do
-        if v:GetDistanceSqToInst(inst) < INSPIRE_DIST*INSPIRE_DIST  and v ~= inst then
-            table.insert(sanitybuff,v)
-            if v.components.leader then
-                for follower, i in pairs(v.components.leader.followers)do
-                    if follower and follower:GetDistanceSqToInst(inst) < INSPIRE_DIST*INSPIRE_DIST then
-                        table.insert(fightbuff,follower)
+        for k,v in pairs(AllPlayers) do
+            if v:GetDistanceSqToInst(inst) < INSPIRE_DIST*INSPIRE_DIST  and v ~= inst then
+                table.insert(sanitybuff,v)
+                if v.components.leader then
+                    for follower, i in pairs(v.components.leader.followers)do
+                        if follower and follower:GetDistanceSqToInst(inst) < INSPIRE_DIST*INSPIRE_DIST then
+                            table.insert(fightbuff,follower)
+                        end
                     end
-                end
-            end            
+                end            
+            end
         end
-    end
 
-    for i,v in ipairs(sanitybuff) do
-        if v.components.sanity and v.components.sanity:GetPercent() < 0.75 then
-            v.components.sanity:DoDelta(SANITY_BUFF)
-            didinspire = true
+        for i,v in ipairs(sanitybuff) do
+            if v.components.sanity and v.components.sanity:GetPercent() < 0.75 then
+                v.components.sanity:DoDelta(SANITY_BUFF)
+                didinspire = true
+            end
         end
-    end
 
-    for i,v in ipairs(fightbuff) do
-         if v.components.combat:HasTarget() then
+        for i,v in ipairs(fightbuff) do
             didinspire = true
             v:DoTaskInTime(0.2+(0.1*i),function()
                 v:PushEvent("cheer")
                 v:AddDebuff("wolfgang_coach_buff", "wolfgang_coach_buff")
             end)
         end
-    end
 
-    if didinspire then
-        inst.components.talker:Say(GetString(inst, "ANNOUNCE_COACH"))
+        if didinspire then
+            inst:PushEvent("coach")
+        else
+            if not coach.noteamlasttime then
+                coach.noteamlasttime = true
+                inst.components.talker:Say(GetString(inst, "ANNOUNCE_WOLFGANG_NOTEAM"))
+            else
+                coach.noteamlasttime = nil    
+            end
+        end
     end
-
-    local coach = inst.components.coach
+   
     coach.inspiretask = coach.inst:DoTaskInTime((math.random()*coach.randtime) + coach.settime, inspire)
 end
 
 function Coach:StartInspiring()
     if not self.inspiretask then
-        self.inspiretask = self.inst:DoTaskInTime((math.random()*self.randtime) + self.settime, inspire)
+        self.inspiretask = self.inst:DoTaskInTime(7, inspire)
     end
 end
 

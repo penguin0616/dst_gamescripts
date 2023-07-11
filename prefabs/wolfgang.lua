@@ -12,8 +12,17 @@ local assets =
     Asset("ANIM", "anim/player_idles_wolfgang_skinny.zip"),
     Asset("ANIM", "anim/player_idles_wolfgang_mighty.zip"),
 
+	Asset("ANIM", "anim/player_coach.zip"),
+	Asset("ANIM", "anim/player_mount_coach.zip"),
+
     Asset("SOUND", "sound/wolfgang.fsb"),
     Asset("SCRIPT", "scripts/prefabs/skilltree_wolfgang.lua"),    
+}
+
+local fxassets =
+{
+    Asset("ANIM", "anim/coached_fx.zip"),
+    
 }
 
 local start_inv = {}
@@ -142,8 +151,22 @@ local function OnUnequip(inst, data)
     inst:RecalculatePlanarDamage()
 end
 
+local function RecalculateMightySpeed(inst)
+    local skilltreeupdater = inst.components.skilltreeupdater
+    if skilltreeupdater then
+        if inst.components.mightiness:GetState() == "normal" then
+            if skilltreeupdater:IsActivated("wolfgang_normal_speed") then
+                inst.components.locomotor:SetExternalSpeedMultiplier(inst, "wolfgang_normal_speed", TUNING.SKILLS.WOLFGANG_NORMAL_SPEED)
+            end
+        else
+            inst.components.locomotor:RemoveExternalSpeedMultiplier(inst, "wolfgang_normal_speed")
+        end
+    end
+end
+
 local function mightychange(inst, data)
     inst:RecalculatePlanarDamage()
+    inst:RecalculateMightySpeed()
 end
 
 local function OnDoingWork(inst, data)
@@ -636,6 +659,7 @@ local function master_postinit(inst)
         inst.OnLoad = onload
         inst.OnNewSpawn = onload
         inst.RecalculatePlanarDamage = RecalculatePlanarDamage
+        inst.RecalculateMightySpeed = RecalculateMightySpeed
     end
 end
 
@@ -655,7 +679,7 @@ local function OnAttached(inst, target)
     inst.bufftask = inst:DoTaskInTime(BUFF_DURATION, OnKillBuff)
 
     if target ~= nil and target:IsValid() and target.components.combat ~= nil then
-        local mult = 1.5
+        local mult = TUNING.WOLFGANG_COACH_BUFF
         target.components.combat.externaldamagemultipliers:SetModifier(inst, mult)
     end
 end
@@ -677,17 +701,24 @@ end
 local function bufffn()
     local inst = CreateEntity()
 
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddNetwork()
+    inst.entity:AddFollower()   
+     
+    inst:AddTag("FX")
+    inst:AddTag("NOCLICK")
+
+    inst.AnimState:SetBank("coached_fx")
+    inst.AnimState:SetBuild("coached_fx")
+    inst.AnimState:PlayAnimation("idle",true)
+
     if not TheWorld.ismastersim then
         --Not meant for client!
         inst:DoTaskInTime(0, inst.Remove)
         return inst
     end
 
-    inst.entity:AddTransform()
-
-    --[[Non-networked entity]]
-    --inst.entity:SetCanSleep(false)
-    inst.entity:Hide()
     inst.persists = false
 
     inst:AddTag("CLASSIFIED")
@@ -702,4 +733,4 @@ local function bufffn()
 end
 
 return MakePlayerCharacter("wolfgang", prefabs, assets, common_postinit, master_postinit),
-        Prefab("wolfgang_coach_buff", bufffn, nil, prefabs)
+        Prefab("wolfgang_coach_buff", bufffn, fxassets, prefabs)

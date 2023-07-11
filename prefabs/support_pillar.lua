@@ -9,23 +9,14 @@ local prefabs =
     "support_pillar",
     "support_pillar_complete",
     "support_pillar_broken",
+    "support_pillar_top",
 }
 
 local function crumble(inst)
     local new_pillar = ReplacePrefab(inst, "support_pillar_broken")
 end
 
-local function onquake_complete(inst)    
-    inst.AnimState:PlayAnimation("quake",false)
-    inst.AnimState:PushAnimation("idle", true)
-end
-
-local function onhit_complete(inst)
-    inst.AnimState:PlayAnimation("idle_hit",false)
-    inst.AnimState:PushAnimation("idle", true)
-
-    inst.components.workable:SetWorkLeft(5)
-
+local function decriment_complete(inst)
     local find = function(item)
         return item and true
     end
@@ -39,7 +30,19 @@ local function onhit_complete(inst)
     if not inst.components.inventory:FindItem(find) then
         local new_pillar = ReplacePrefab(inst, "support_pillar")
         new_pillar.components.constructionsite:AddMaterial("rocks", 39)
-    end
+        new_pillar.AnimState:PlayAnimation("break_"..new_pillar.getartnum(new_pillar), true)
+    end    
+end
+
+local function onquake_complete(inst)    
+    inst.AnimState:PlayAnimation("idle_quake",false)
+    --inst.AnimState:PushAnimation("idle", true)
+end
+
+local function onhit_complete(inst)
+    inst.AnimState:PlayAnimation("idle_hit",false)
+    --inst.AnimState:PushAnimation("idle", true)
+    inst.components.workable:SetWorkLeft(5)
 end
 
 local function onhammered_complete(inst)
@@ -97,7 +100,6 @@ local function completefn()
 
     inst:AddTag("structure")
     inst:AddTag("quake_blocker")
-    inst.AnimState:SetMultColour(1,0.8,0.8,1)
 
     inst:SetPhysicsRadiusOverride(1)
     MakeObstaclePhysics(inst, inst.physicsradiusoverride)
@@ -127,18 +129,11 @@ local function completefn()
     inst:AddComponent("inspectable")    
     inst:ListenForEvent("startquake",function() onquake_complete(inst) end, TheWorld.net)
     inst:ListenForEvent("animover", function()
-        if inst.AnimState:IsCurrentAnimation("hit") then
-            local find = function(item)
-                return item and true
-            end
+        if inst.AnimState:IsCurrentAnimation("idle_hit") or inst.AnimState:IsCurrentAnimation("idle_quake") then
+            inst.AnimState:PlayAnimation("idle", true)
+            print("HERE?")
 
-            local rock = inst.components.inventory:DropItem(inst.components.inventory:GetItemInSlot(1))
-            if rock then rock:Remove() end
-
-            if not inst.components.inventory:FindItem(find) then
-                local new_pillar = ReplacePrefab(inst, "support_pillar")
-                new_pillar.components.constructionsite:AddMaterial("rocks", 39)
-            end
+            decriment_complete(inst)
         end
     end)
 
@@ -252,26 +247,25 @@ local function scaffoldfn()
     return inst
 end
 
-local function onquake(inst)
-    inst.AnimState:PlayAnimation("break_quake_"..inst.getartnum(inst), false)
-    inst.AnimState:PushAnimation("break_"..inst.getartnum(inst), true)
-    inst.components.constructionsite:Disable()
-end
-
-local function onhit(inst)
-    inst.AnimState:PlayAnimation("break_hit_"..inst.getartnum(inst), false)
-    inst.AnimState:PushAnimation("break_"..inst.getartnum(inst), true)
-    inst.components.workable:SetWorkLeft(5)
+local function decriment(inst)
     if inst.components.constructionsite.materials["rocks"] then
         inst.components.constructionsite.materials["rocks"].amount = inst.components.constructionsite.materials["rocks"].amount -1
         if math.random() < 0.3 then inst.components.lootdropper:FlingItem(SpawnPrefab("rocks")) end
     end
     if not inst.components.constructionsite.materials["rocks"] or inst.components.constructionsite.materials["rocks"].amount < 1 then
-        local fx = SpawnPrefab("collapse_small")
-        fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
-        fx:SetMaterial("rock")       
         local newpillar = ReplacePrefab(inst, "support_pillar_broken")
+        newpillar.AnimState:PlayAnimation("collapse")       
     end
+end
+
+local function onquake(inst)
+    inst.AnimState:PlayAnimation("break_quake_"..inst.getartnum(inst), false)
+    inst.components.constructionsite:Disable()
+end
+
+local function onhit(inst)
+    inst.AnimState:PlayAnimation("break_hit_"..inst.getartnum(inst), false)
+    inst.components.workable:SetWorkLeft(5)
 end
 
 local function onhammered(inst)
@@ -345,14 +339,10 @@ local function fn()
 
     inst:ListenForEvent("startquake",function() onquake(inst) end, TheWorld.net)
     inst:ListenForEvent("animover", function()
-        if inst.AnimState:IsCurrentAnimation("hit") then
-            inst.components.constructionsite:Enable()
-            if inst.components.constructionsite.materials["rocks"] then
-                inst.components.constructionsite.materials["rocks"].amount = inst.components.constructionsite.materials["rocks"].amount -1            
-            end
-            if not inst.components.constructionsite.materials["rocks"] or inst.components.constructionsite.materials["rocks"].amount < 1 then
-                crumble(inst)
-            end            
+        if inst.AnimState:IsCurrentAnimation("break_hit_1") or inst.AnimState:IsCurrentAnimation("break_hit_2") or inst.AnimState:IsCurrentAnimation("break_hit_3") or
+           inst.AnimState:IsCurrentAnimation("break_quake_1") or inst.AnimState:IsCurrentAnimation("break_quake_2") or inst.AnimState:IsCurrentAnimation("break_quake_3")  then
+           inst.AnimState:PlayAnimation("break_"..inst.getartnum(inst), true)
+           decriment(inst)    
         end
     end)
 
@@ -363,8 +353,6 @@ local function fn()
 end
 
 local function onhit_broken(inst)
---    inst:PlayAnimation("hit")
---    inst:PushAnimation("idle", false)
     inst.components.workable:SetWorkLeft(5)
     if inst.components.constructionsite.materials["rocks"] then
         inst.components.constructionsite.materials["rocks"].amount = inst.components.constructionsite.materials["rocks"].amount -1
@@ -435,6 +423,39 @@ local function brokenfn()
     inst:AddComponent("inspectable")
 
     inst:ListenForEvent("onbuilt", onconstruction_built)
+    inst:ListenForEvent("animover", function(inst) 
+        if inst.AnimState:IsCurrentAnimation("collapse") then
+            inst.AnimState:PlayAnimation("broken_base")
+            local top = SpawnPrefab("support_pillar_top")
+            local x,y,z = inst.Transform:GetWorldPosition()
+            top.Transform:SetPosition(x,y,z)
+            ErodeAway(top, 30*FRAMES)
+        end
+    end)
+
+    return inst
+end
+
+local function topfn()
+
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddNetwork()
+
+    inst:AddTag("FX")
+    inst:AddTag("NOCLICK")
+
+    inst.AnimState:SetBank("support_pillar")
+    inst.AnimState:SetBuild("support_pillar")
+    inst.AnimState:PlayAnimation("broken_top")
+
+    inst.entity:SetPristine()
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
 
     return inst
 end
@@ -477,4 +498,5 @@ return Prefab("support_pillar_scaffold", scaffoldfn, assets, prefabs),
        MakePlacer("support_pillar_scaffold_placer", "support_pillar", "support_pillar", "idle", nil, false, true, nil, nil, nil, placer_postinit_fn),
        Prefab("support_pillar", fn, assets, prefabs),
        Prefab("support_pillar_complete", completefn, assets, prefabs),
+       Prefab("support_pillar_top", topfn, assets, prefabs),
        Prefab("support_pillar_broken", brokenfn, assets, prefabs)

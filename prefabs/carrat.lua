@@ -462,6 +462,12 @@ local function finish_transformed_life(inst)
 
     local carrot = SpawnPrefab("carrot")
     carrot.Transform:SetPosition(ix, iy, iz)
+
+    -- Lootdropper is removed when submerged!
+    if not inst.components.lootdropper then
+        inst:AddComponent("lootdropper")
+    end
+
     inst.components.lootdropper:FlingItem(carrot)
 
     local fx = SpawnPrefab("wormwood_lunar_transformation_finish")

@@ -161,7 +161,7 @@ GymStates.AddGymStates = function(states, actionhandlers, events)
         {
             EventHandler("animqueueover", function(inst)
                 --if inst.components.mightiness:GetPercent() == 1 then
-                    print(inst.components.mightiness:GetCurrent(), inst.components.mightiness:GetMax(),inst.components.mightiness:GetOverMax())
+                --    print(inst.components.mightiness:GetCurrent(), inst.components.mightiness:GetMax(),inst.components.mightiness:GetOverMax())
                 if inst.components.mightiness:GetCurrent() >= inst.components.mightiness:GetMax() + inst.components.mightiness:GetOverMax() then 
                     exitgym(inst)
                 else
@@ -211,7 +211,7 @@ GymStates.AddGymStates = function(states, actionhandlers, events)
         {
             EventHandler("animqueueover", function(inst)
                 --if inst.components.mightiness:GetPercent() == 1 then
-                         print(inst.components.mightiness:GetCurrent(), inst.components.mightiness:GetMax(),inst.components.mightiness:GetOverMax())
+                --         print(inst.components.mightiness:GetCurrent(), inst.components.mightiness:GetMax(),inst.components.mightiness:GetOverMax())
                 if inst.components.mightiness:GetCurrent() >= inst.components.mightiness:GetMax() + inst.components.mightiness:GetOverMax() then 
                     exitgym(inst)
                 else                

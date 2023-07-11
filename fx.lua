@@ -2773,7 +2773,7 @@ local fx =
         build = "moon_tea_fx",
         anim = "puff",
         bloom = true,
-		sound = "dontstarve/common/fireOut",
+		sound = "meta2/wormwood/animation_dropdown",
         fn = FinalOffset1,
     },
 }

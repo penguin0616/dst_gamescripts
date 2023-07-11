@@ -370,14 +370,15 @@ local GetSpawnPoint = _ismastersim and function(pt, rad, minrad)
             and not _world.Map:IsPointNearHole(Vector3(x, 0, z))
     end)
 
-    -- DONT DROP NEAR QUAKE BLOCKERS.
-    local newpt = pt + result_offset
-    local ents = TheSim:FindEntities(newpt.x, newpt.y, newpt.z, TUNING.QUAKE_BLOCKER_RANGE, QUAKE_BLOCKER_MUST_TAGS)
-    if #ents > 0 then
-        return nil
+    if result_offset ~= nil then
+        local newpt = pt + result_offset
+
+        -- DONT DROP NEAR QUAKE BLOCKERS.
+        local num_ents = TheSim:CountEntities(newpt.x, newpt.y, newpt.z, TUNING.QUAKE_BLOCKER_RANGE, QUAKE_BLOCKER_MUST_TAGS)
+
+        return num_ents <= 0 and newpt or nil
     end
 
-    return result_offset ~= nil and pt + result_offset or nil
 end or nil
 
 local STRUCTURES_CANT_TAGS = { "INLIMBO", "burnt" } -- Excluding "fire" tag for firepits.
@@ -465,13 +466,13 @@ EndQuake = _ismastersim and function(inst, continue)
     end
 
     for i, op in ipairs(_originalplayers) do
-	    for j, ap in ipairs(_activeplayers) do
-			if op == ap and not op:HasTag("playerghost") then
-				AwardPlayerAchievement("survive_earthquake", op)
-				break
-			end
-		end
-	end
+        for j, ap in ipairs(_activeplayers) do
+            if op == ap and not op:HasTag("playerghost") then
+                AwardPlayerAchievement("survive_earthquake", op)
+                break
+            end
+        end
+    end
 end or nil
 
 local StartQuake = _ismastersim and function(inst, data, overridetime)
@@ -480,7 +481,7 @@ local StartQuake = _ismastersim and function(inst, data, overridetime)
     _debrispersecond = FunctionOrValue(data.debrispersecond)
     _mammalsremaining = FunctionOrValue(data.mammals)
 
-	_originalplayers = {}
+    _originalplayers = {}
     for i, v in ipairs(_activeplayers) do
         ScheduleDrop(v)
 

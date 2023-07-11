@@ -113,7 +113,10 @@ local function BuildSkillsData(SkillTreeFns)
             group = "training",
             tags = {"training"},
             onactivate = function(inst, fromload)
-                    inst:AddTag("wolfgang_normal_speed")
+                    inst:RecalculateMightySpeed()
+                end,
+            ondeactivate = function(inst, fromload)
+                    inst:RecalculateMightySpeed()
                 end,
         },         
 
@@ -373,7 +376,7 @@ local function BuildSkillsData(SkillTreeFns)
         },
 
         wolfgang_allegiance_lock_3 = {
-            desc = STRINGS.SKILLTREE.ALLEGIANCE_LOCK_5_DESC,
+            desc = STRINGS.SKILLTREE.ALLEGIANCE_LOCK_4_DESC,
             pos = {200-GAP/2,Y-GAP},
             --pos = {0,-1},
             group = "allegiance",

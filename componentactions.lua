@@ -124,13 +124,6 @@ local function CheckRowOverride(doer, target)
     return false
 end
 
---V2C: Things to explicitly hide mouseover Attack command when not Force Attacking.
---     e.g. other players' shadow creatures 
---NOTE: Normally, non-hostile creatures still show "Attack" when you mouseover.
-local function TargetForceAttackOnly(inst, target)
-	return target.HostileToPlayerTest ~= nil and target:HasTag("shadowcreature") and not target:HostileToPlayerTest(inst)
-end
-
 local SCYTHE_ONEOFTAGS = {"plant", "lichen", "oceanvine", "kelp"}
 
 local function IsValidScytheTarget(target)
@@ -1572,7 +1565,7 @@ local COMPONENT_ACTIONS =
                 if target.replica.combat == nil then
                     -- lighting or extinguishing fires
                     table.insert(actions, ACTIONS.ATTACK)
-				elseif not TargetForceAttackOnly(doer, target) and
+				elseif not (doer.TargetForceAttackOnly ~= nil and doer:TargetForceAttackOnly(target)) and
 					target.replica.combat:CanBeAttacked(doer) and
                     not doer.replica.combat:IsAlly(target) and
                     not (doer:HasTag("player") and target:HasTag("player")) and
@@ -1959,7 +1952,7 @@ local COMPONENT_ACTIONS =
                     doer.replica.combat:CanLightTarget(target, inst) then
                     table.insert(actions, ACTIONS.ATTACK)
                 elseif not (target:HasTag("wall") or target:HasTag("mustforceattack"))
-					and not TargetForceAttackOnly(doer, target)
+					and not (doer.TargetForceAttackOnly ~= nil and doer:TargetForceAttackOnly(target))
                     and target.replica.combat ~= nil
                     and doer.replica.combat:CanTarget(target)
                     and target.replica.combat:CanBeAttacked(doer)
@@ -2338,9 +2331,9 @@ local COMPONENT_ACTIONS =
         end,
 
         useableitem = function(inst, doer, actions)
-            if (not inst:HasTag("inuse") or inst:HasTag("useitem_toggle")) and
-                (inst.replica.equippable == nil or
-                inst.replica.equippable:IsEquipped() ) and
+            if not inst:HasTag("inuse") and
+                inst.replica.equippable ~= nil and
+                inst.replica.equippable:IsEquipped() and
                 doer.replica.inventory ~= nil and
                 doer.replica.inventory:IsOpenedBy(doer) then
                 table.insert(actions, ACTIONS.USEITEM)

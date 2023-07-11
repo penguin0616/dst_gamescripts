@@ -52,11 +52,15 @@ local function StartGrowing(inst, giver, product)
         local productname = (is_spore and spore_to_cap[product.prefab]) or product.prefab
 
         local grow_time_percent = 1.0
-        if grower_skilltreeupdater then
-            grow_time_percent = (grower_skilltreeupdater:IsActivated("wormwood_mushroomplanter_ratebonus_1") and 0.9)
-                or (grower_skilltreeupdater:IsActivated("wormwood_mushroomplanter_ratebonus_2") and 0.8)
-                or 1.0
+
+        if grower_skilltreeupdater ~= nil then
+            if grower_skilltreeupdater:IsActivated("wormwood_mushroomplanter_ratebonus2") then
+                grow_time_percent = TUNING.WORMWOOD_MUSHROOMPLANTER_RATEBONUS_2
+            elseif grower_skilltreeupdater:IsActivated("wormwood_mushroomplanter_ratebonus1") then
+                grow_time_percent = TUNING.WORMWOOD_MUSHROOMPLANTER_RATEBONUS_1
+            end
         end
+
         local grow_time = grow_time_percent * TUNING.MUSHROOMFARM_FULL_GROW_TIME
 
         DoMushroomOverrideSymbol(inst, productname)

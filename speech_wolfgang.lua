@@ -906,8 +906,13 @@ return{
     },
     ANNOUNCE_WOLFGANG_WIMPY_COACHING = "They'll never listen to Wolfgang like this! Need to train!",
     ANNOUNCE_WOLFGANG_MIGHTY_COACHING = "Wolfgang's muscles are too impressive. Would not want to embarrass others.",
-    ANNOUNCE_WOLFGANG_BEGING_COACHING = "Come, friends! Wolfgang will show you how it's done!",
+    ANNOUNCE_WOLFGANG_BEGIN_COACHING = "Come, friends! Wolfgang will show you how it's done!",
     ANNOUNCE_WOLFGANG_END_COACHING = "Is time to rest weary muscles.",
+    ANNOUNCE_WOLFGANG_NOTEAM = {
+        "Where is team?",
+        "Wolfgang needs team.",
+        "let's go... team?",
+    },
 
 	BATTLECRY =
 	{

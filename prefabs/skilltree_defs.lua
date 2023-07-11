@@ -6,10 +6,21 @@ local function CreateSkillTreeFor(characterprefab, skills)
     local RPC_LOOKUP = {}
     local rpc_id = 0
     for k, v in orderedPairs(skills) do
-        v.rpc_id = rpc_id
-        RPC_LOOKUP[rpc_id] = k
-        rpc_id = rpc_id + 1
-        -- NOTES(JBK): If this goes beyond 32 it will not be shown to other players in the inspection panel.
+        if v.lock_open == nil then -- NOTES(JBK): Only include skills for this.
+            v.rpc_id = rpc_id
+            RPC_LOOKUP[rpc_id] = k
+            rpc_id = rpc_id + 1
+            if rpc_id >= 32 then
+                -- NOTES(JBK): If this goes beyond 32 it will not be shown to other players in the inspection panel.
+                -- It will not be networked during initial skill selection.
+                local err = string.format("Skill Tree for %s has TOO MANY skills! This will break networking.", characterprefab)
+                if BRANCH == "dev" then
+                    assert(false, err)
+                else
+                    print(err)
+                end
+            end
+        end
     end
     SKILLTREE_METAINFO[characterprefab] = { -- Must be first for metatable setting.
         RPC_LOOKUP = RPC_LOOKUP,
@@ -81,7 +92,7 @@ end
 
 local function MakeNoShadowLock(extra_data, not_root)
     local lock = {
-        desc = STRINGS.SKILLTREE.ALLEGIANCE_LOCK_4_DESC,
+        desc = STRINGS.SKILLTREE.ALLEGIANCE_LOCK_5_DESC,
         root = not not_root,
         group = "allegiance",
         tags = {"allegiance", "lock"},
@@ -124,7 +135,7 @@ end
 
 local function MakeNoLunarLock(extra_data, not_root)
     local lock = {
-        desc = STRINGS.SKILLTREE.ALLEGIANCE_LOCK_5_DESC,
+        desc = STRINGS.SKILLTREE.ALLEGIANCE_LOCK_4_DESC,
         root = not not_root,
         group = "allegiance",
         tags = {"allegiance", "lock"},

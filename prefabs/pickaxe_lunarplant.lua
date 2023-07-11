@@ -12,12 +12,16 @@ local function SetBuffEnabled(inst, enabled)
 	if enabled then
 		if not inst._bonusenabled then
 			inst._bonusenabled = true
-			inst.components.weapon:SetDamage(inst.base_damage * TUNING.WEAPONS_LUNARPLANT_SETBONUS_DAMAGE_MULT)
+			if inst.components.weapon ~= nil then
+				inst.components.weapon:SetDamage(inst.base_damage * TUNING.WEAPONS_LUNARPLANT_SETBONUS_DAMAGE_MULT)
+			end
 			inst.components.planardamage:AddBonus(inst, TUNING.WEAPONS_LUNARPLANT_SETBONUS_PLANAR_DAMAGE, "setbonus")
 		end
 	elseif inst._bonusenabled then
 		inst._bonusenabled = nil
-		inst.components.weapon:SetDamage(inst.base_damage)
+		if inst.components.weapon ~= nil then
+			inst.components.weapon:SetDamage(inst.base_damage)
+		end
 		inst.components.planardamage:RemoveBonus(inst, "setbonus")
 	end
 end
@@ -81,34 +85,68 @@ local function onunequip(inst, owner)
 	SetBuffOwner(inst, nil)
 end
 
-local function SetupEquippable(inst)
+local function SetupComponents(inst)
 	inst:AddComponent("equippable")
 	inst.components.equippable:SetOnEquip(onequip)
 	inst.components.equippable:SetOnUnequip(onunequip)
+
+	inst:AddComponent("tool")
+	inst.components.tool:SetAction(ACTIONS.HAMMER, TUNING.PICKAXE_LUNARPLANT_EFFICIENCY)
+	inst.components.tool:SetAction(ACTIONS.MINE, TUNING.PICKAXE_LUNARPLANT_EFFICIENCY)
+	inst.components.tool:EnableToughWork(true)
+
+	inst:AddComponent("weapon")
+	inst.components.weapon:SetDamage(inst._bonusenabled and inst.base_damage * TUNING.WEAPONS_LUNARPLANT_SETBONUS_DAMAGE_MULT or inst.base_damage)
+end
+
+local function DisableComponents(inst)
+	inst:RemoveComponent("equippable")
+	inst:RemoveComponent("tool")
+	inst:RemoveComponent("weapon")
+end
+
+local FLOAT_SCALE_BROKEN = { 1, 0.72, 1 }
+local FLOAT_SCALE = { 0.75, 0.4, 0.75 }
+
+local function OnIsBrokenDirty(inst)
+	if inst.isbroken:value() then
+		inst.components.floater:SetSize("small")
+		inst.components.floater:SetVerticalOffset(0.1)
+		inst.components.floater:SetScale(FLOAT_SCALE_BROKEN)
+	else
+		inst.components.floater:SetSize("med")
+		inst.components.floater:SetVerticalOffset(0.05)
+		inst.components.floater:SetScale(FLOAT_SCALE)
+	end
+end
+
+local SWAP_DATA_BROKEN = { sym_build = "pickaxe_lunarplant", sym_name = "swap_pickaxe_lunarplant_broken_float", bank = "pickaxe_lunarplant", anim = "broken" }
+local SWAP_DATA = { sym_build = "pickaxe_lunarplant", sym_name = "swap_pickaxe_lunarplant" }
+
+local function SetIsBroken(inst, isbroken)
+	if isbroken then
+		inst.components.floater:SetBankSwapOnFloat(true, -8, SWAP_DATA_BROKEN)
+	else
+		inst.components.floater:SetBankSwapOnFloat(true, -13, SWAP_DATA)
+	end
+	inst.isbroken:set(isbroken)
+	OnIsBrokenDirty(inst)
 end
 
 local function OnBroken(inst)
 	if inst.components.equippable ~= nil then
-		inst:RemoveComponent("equippable")
+		DisableComponents(inst)
 		inst.AnimState:PlayAnimation("broken")
+		SetIsBroken(inst, true)
 	end
 end
 
 local function OnRepaired(inst)
 	if inst.components.equippable == nil then
-		SetupEquippable(inst)
+		SetupComponents(inst)
 		inst.AnimState:PlayAnimation("idle")
+		SetIsBroken(inst, false)
 	end
-end
-
-local function PushIdleLoop(inst)
-	if inst.components.finiteuses:GetUses() <= 0 then
-		inst.AnimState:PlayAnimation("broken")
-	end
-end
-
-local function OnStopFloating(inst)
-	inst:DoTaskInTime(0, PushIdleLoop) --#V2C: #HACK restore the looping anim, timing issues
 end
 
 local function fn()
@@ -133,20 +171,17 @@ local function fn()
 	--weapon (from weapon component) added to pristine state for optimization
 	inst:AddTag("weapon")
 
-	local swap_data = { sym_build = "pickaxe_lunarplant", sym_name = "swap_pickaxe_lunarplant" }
-	MakeInventoryFloatable(inst, "med", 0.05, { 0.75, 0.4, 0.75 }, true, -13, swap_data)
+	inst:AddComponent("floater")
+	inst.isbroken = net_bool(inst.GUID, "pickaxe_lunarplant.isbroken", "isbrokendirty")
+	SetIsBroken(inst, false)
 
 	inst.entity:SetPristine()
 
 	if not TheWorld.ismastersim then
+		inst:ListenForEvent("isbrokendirty", OnIsBrokenDirty)
+
 		return inst
 	end
-
-	-------
-	local tool = inst:AddComponent("tool")
-	tool:SetAction(ACTIONS.HAMMER, TUNING.PICKAXE_LUNARPLANT_EFFICIENCY)
-	tool:SetAction(ACTIONS.MINE, TUNING.PICKAXE_LUNARPLANT_EFFICIENCY)
-	tool:EnableToughWork(true)
 
 	-------
 	local finiteuses = inst:AddComponent("finiteuses")
@@ -157,8 +192,6 @@ local function fn()
 
 	-------
 	inst.base_damage = TUNING.PICKAXE_LUNARPLANT_DAMAGE
-	local weapon = inst:AddComponent("weapon")
-	weapon:SetDamage(inst.base_damage)
 
 	local planardamage = inst:AddComponent("planardamage")
 	planardamage:SetBaseDamage(TUNING.PICKAXE_LUNARPLANT_PLANAR_DAMAGE)
@@ -169,8 +202,7 @@ local function fn()
 	inst:AddComponent("inspectable")
 	inst:AddComponent("inventoryitem")
 
-	SetupEquippable(inst)
-	inst:ListenForEvent("floater_stopfloating", OnStopFloating)
+	SetupComponents(inst)
 
 	inst:AddComponent("lunarplant_tentacle_weapon")
 

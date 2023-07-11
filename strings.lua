@@ -551,7 +551,13 @@ STRINGS =
             FERTILIZE_GROUND = "Fertilize Plot",
         },
 
-        PLAY = "Play",
+		PLAY =
+		{
+			COACH_ON = "Begin Coaching",
+			COACH_OFF = "End Coaching",
+			TWEET = "Tweet",
+			GENERIC = "Play",
+		},
         NET = "Catch",
         CATCH = "Catch",
         FISH = "Fish",
@@ -584,7 +590,7 @@ STRINGS =
 			WHEELSPIN_STOP = "Press",
             PICK_FLOWER = "Pick Flower From",
             EQUIPMENTSWAP = "Swap Clothes",
-            SPIN = "Spin",    
+            SPIN = "Spin",
         },
 
 		OPEN_CRAFTING =
@@ -637,12 +643,7 @@ STRINGS =
             GENERIC = "Turn Off",
             EMERGENCY = "Emergency Mode",
         },
-        USEITEM = {
-            GENERIC = "Use",
-            COACH_ON = "Begin Coaching",
-            COACH_OFF = "End Coaching",
-            TWEET = "Tweet",
-        },
+        USEITEM = "Use",
         USEITEMON =
         {
             GENERIC = "Use On",
@@ -980,7 +981,7 @@ STRINGS =
         {
             BEAVER = "Tail Slap",
             GOOSE = "Takeoff",
-        }, 
+        },
 
         IDENTIFY_PLANT = "Identify",
     },
@@ -4313,6 +4314,7 @@ STRINGS =
         TRAP_BRAMBLE = "An equal opportunity annoyer.",
         WORMWOOD_SAPLING        = "Grow out on a limb.",
         WORMWOOD_BERRYBUSH      = "It's hand-made!",
+        WORMWOOD_BERRYBUSH2     = "It's hand-made!", -- TODO
         WORMWOOD_JUICYBERRYBUSH = "Arm-fresh produce.",
         WORMWOOD_REEDS          = "Knowing how to reed comes in handy.",
         WORMWOOD_LUREPLANTBULB  = "Costs an arm, but not a leg.",
@@ -4535,7 +4537,7 @@ STRINGS =
         DUMBBELL_MARBLE = "A quick way to a chiseled physique.",
         DUMBBELL_GEM = "Polish every facet of your workout.",
 
-        DUMBELL_HEAT = "Get the ultimate warm-up.",
+        DUMBBELL_HEAT = "Get the ultimate warm-up.",
         DUMBBELL_REDGEM = "Feel the burn!",
         DUMBBELL_BLUEGEM = "Ice out would-be workout disturbers.",
 
@@ -4579,7 +4581,7 @@ STRINGS =
         --
         SEWING_MANNEQUIN = "A model for all the latest equippable looks.",
 
-        -- 
+        --
         NIGHTCAPHAT = "A cap for your sleepy head.",
 
         YOTR_FOOD1 = "No bunnies were harmed in the making of this cake.",
@@ -4637,7 +4639,7 @@ STRINGS =
         TRANSMUTE_NIGHTMAREFUEL = "Transmute Pure Horror into Nightmare Fuel.",
 
         TRANSMUTE_PUREBRILLIANCE = "Transmute Infused Moon Shards into Pure Brilliance.",
-        TRANSMUTE_MOONGLASS_CHARGED = "Transmute Pure Brilliance into Infused Moon Shards.",        
+        TRANSMUTE_MOONGLASS_CHARGED = "Transmute Pure Brilliance into Infused Moon Shards.",
 
         -- Rifts 1
         LUNAR_FORGE_KIT = "Forge otherworldly items.",
@@ -4670,13 +4672,14 @@ STRINGS =
         WOODCARVEDHAT = "Your head will stay nice and safe (knock on wood).",
         WALKING_STICK = "Traverse your favorite nature trail with ease.",
 
-        SUPPORT_PILLAR = "We all need some support.",
+        SUPPORT_PILLAR_SCAFFOLD = "We all need some support.",
+        WOLFGANG_WHISTLE = "Let out your inner coach!",
 
     },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
-	COOKINGRECIPECARD_DESC = 
+	COOKINGRECIPECARD_DESC =
 	{
 		BASE = "{name}:\n{ingredients}.",
 		INGREDIENTS_FIRST = "{num}x {ing}",
@@ -5304,7 +5307,7 @@ STRINGS =
         "This world is unraveling.",
         "It's all happening again...",
         "I tried to stop it... it seems I learned nothing...",
-    },    
+    },
     STALKER_ATRIUM_PLAYER_BATTLECRY =
     {
         "You will fall as we did.",
@@ -5322,7 +5325,7 @@ STRINGS =
         "You have brought about your own end.",
         "Please. Let me save you from what is coming.",
         "I recognize your arrogance. I possessed it myself.",
-    },    
+    },
     STALKER_ATRIUM_SUMMON_MINIONS =
     {
         "Be woven.",
@@ -6870,6 +6873,8 @@ STRINGS.UI =
             CARNIVAL_HOSTSHOP = "Purchase",
 			MADSCIENCE = "Mix",
 			COOK = "Cook",
+			GROW = "Grow",
+			TRANSFORM = "Transform",
 		},
         TABNEEDSTUFF =
         {
@@ -7436,7 +7441,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "Skilltree Spotlight:\nWormwood, Wolfgang, Woodie\nBeta Build",
+		MAINBANNER_BETA_TITLE = "Skill Spotlight:\nWormwood, Wolfgang, Woodie\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -8279,7 +8284,7 @@ STRINGS.UI =
 
     },
 
-    SCRAPBOOK = 
+    SCRAPBOOK =
     {
         TITLE = "Scrapbook",
         ONLINE_DATA_USER_OFFLINE = "Login to retrieve online scrapbook data.",
@@ -9127,7 +9132,7 @@ STRINGS.UI =
 			ENDLESS = "A never-ending Don't Starve sandbox.\nResurrection is always available via the Florid Postern.",
             COMPLETE_DARKNESS = "A dark twist on the standard Don't Starve experience.",
             LIGHTS_OUT = "A dark twist on the standard Don't Starve experience.",
-			
+
             MOD_MISSING = "This preset came from a mod, but that mod isn't active right now!",
         },
 
@@ -11027,7 +11032,7 @@ STRINGS.UI =
         FAILED_NOPERMISSIONS_TITLE = "Permissions Required",
         FAILED_NOPERMISSIONS_BODY = "Unfortunately you will need to login to continue viewing this panel, but you do not allow data collection which is required to login.\n\nData Collection settings can be modified in the Options menu.",
         FAILED_NOPERMISSIONS_NOCHOICE = "I understand",
-		
+
         MYSTERYBOX_DISABLE = "You must be logged in to access the Treasury.",
     },
 
@@ -12761,7 +12766,7 @@ STRINGS.UI =
         PLAY_TOGETHER_TITLE = "Play Together",
         PLAY_TOGETHER_BODY = "You can join a server or host your own. Invitations will be sent to the rest of your party once you are in the game.",
     },
-    
+
     START_SHADOW_RIFTS =
     {
         TITLE  = "The Price of Ambition",
@@ -12775,7 +12780,7 @@ STRINGS.UI =
         BODY   = "Be warned, assisting the Cryptic Founder will alter your world and cannot be undone. Much will be lost and gained in the name of Progress.\n\nAre you sure you'd like to continue?",
         OK     = "I'm ready!",
         CANCEL = "Let me think about it.",
-    },    
+    },
 }
 
 --these are broken out into their own files for ease of editing
@@ -12802,7 +12807,7 @@ STRINGS.CHARACTERS =
 
 STRINGS.VOIDCLOTH_SCYTHE_TALK =
 {
-    overtime = 
+    overtime =
     {
         "You want to cut and ssssslice, yes you do!",
         "The ssssseeds were planted long ago, now reap the rewards.",
@@ -13115,6 +13120,18 @@ STRINGS.LUCY =
         "Let's not do that again.",
         "Remember your breathing exercises!",
         "Everything is going to be fine. Just focus!",
+    },
+    carve_woodie_boards = {
+        "Don't get a splinter!",
+        "You want boards? I'll show you boards! Hee-YAH!",
+    },
+    carve_woodcarvedhat = {
+        "Gotta protect that pretty head of yours!",
+        "Watch me work my magic!",
+    },
+    carve_walking_stick = {
+        "Only the best for you, buddy!",
+        "Heh, this one's gonna be something special!",
     },
 }
 STRINGS.LAVALUCY =
@@ -13623,10 +13640,10 @@ STRINGS.STAGEACTOR =
         "Adieu, patrie,",
         "Azur!",
         "Adieu, maison, treille au fruit mûr,",
-        "Adieu, les fleurs d'or du vieux mur!",  
+        "Adieu, les fleurs d'or du vieux mur!",
     },
-    
-    WAXWELL1 = 
+
+    WAXWELL1 =
     {
         "Thank you very much, you are too kind.",
         "And now, I will pull shadows incarnate from this mysterious tome!",
@@ -13668,7 +13685,7 @@ STRINGS.STAGEACTOR =
         "The Western tradition of theater can trace its origins back to ancient Athens;",
         "the word \"theater\" of course coming from the Greek \"theatron,\"",
         "which itself was derived from the verb \"theasthai,\" \"to behold.\"",
-        "Isn't etymology delightful?",   
+        "Isn't etymology delightful?",
     },
 
     WILLOW1 = {
@@ -13696,15 +13713,15 @@ STRINGS.STAGEACTOR =
         "Though some are weird, make scary magic, and one is spider,",
         "Will stay with them till very end,",
         "Make Wolfgang's bad day brighter.",
-    },  
+    },
 
     WOODIE1 = {
         "Er... I don't really like bein' the center of attention.",
-        "Let me try!", 
-        "Chop chop chop, swing swing swing,", 
-        "Choppin' is my favourite thing.", 
-        "Swing swing swing, chop chop chop,", 
-        "Love it way too much to stop!", 
+        "Let me try!",
+        "Chop chop chop, swing swing swing,",
+        "Choppin' is my favourite thing.",
+        "Swing swing swing, chop chop chop,",
+        "Love it way too much to stop!",
         "You've sure got a way with words, Luce.",
     },
 
@@ -13759,7 +13776,7 @@ STRINGS.STAGEACTOR =
 
     BAD_COSTUMES = {
         "Something's wrong!",
-        "Check your costumes!", 
+        "Check your costumes!",
         "We'll come back.",
         "When you get it right!",
     },
@@ -13806,7 +13823,7 @@ STRINGS.STAGEACTOR =
 
         -- BIRDS
         "Heavy is the head who wears the crown.",
-        "His head is bigger than most.",  
+        "His head is bigger than most.",
     },
 
     FOOL_SOLILOQUY = {
@@ -13919,7 +13936,7 @@ STRINGS.STAGEACTOR =
         LINE11  = "for one as fragile as you.",
         LINE12  = "It's simply not the place for a girl made of porcelain!",
         LINE13  = "I know what must be done,",
-        LINE14  = "I will build you a fine suit of armor.",       
+        LINE14  = "I will build you a fine suit of armor.",
         LINE15  = "Wear it, and you will have nothing to fear.",
 
         -- NARRATOR
@@ -13971,7 +13988,7 @@ STRINGS.STAGEACTOR =
         LINE13  = "What a show-off.",
 
         -- DOLL
-        LINE14  = "Excuse me, sir!", 
+        LINE14  = "Excuse me, sir!",
         LINE15  = "How did you make the flowers bloom?",
 
         -- KING
@@ -14108,7 +14125,7 @@ STRINGS.STAGEACTOR =
 
         -- DOLL
         LINE16  = "I will speak to him.",
-        LINE17  = "And I promise you this, mirror;", 
+        LINE17  = "And I promise you this, mirror;",
         LINE18  = "I will see both of us whole again.",
     },
 
@@ -14232,7 +14249,7 @@ STRINGS.STAGEACTOR =
         -- BIRDS
         LINE24  = "The special effects are getting better.",
         LINE25  = "Wish I could say the same for the actors.",
-        LINE26  = "HA HA HA HA HA!",  
+        LINE26  = "HA HA HA HA HA!",
         LINE27  = "Another flawless performance from the tree.",
         LINE28  = "How do they do it?!",
     },
@@ -14438,9 +14455,9 @@ STRINGS.SKILLTREE = {
 
         WILSON_ALLEGIANCE_SHADOW_TITLE = "Shadow Courtier",
         WILSON_ALLEGIANCE_SHADOW_DESC = "The Queen will reward your loyalty with the secrets of Shadow Transmutation.",
-        
+
         WILSON_ALLEGIANCE_LUNAR_TITLE = "Lunar Innovator",
-        WILSON_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity with the secrets of Lunar Transmutation.",        
+        WILSON_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity with the secrets of Lunar Transmutation.",
     },
 
     WOODIE = {
@@ -14448,7 +14465,7 @@ STRINGS.SKILLTREE = {
         WOODIE_CURSE_WEREMETER_1_TITLE = "Transformation Timer I",
         WOODIE_CURSE_WEREMETER_2_TITLE = "Transformation Timer II",
         WOODIE_CURSE_WEREMETER_3_TITLE = "Transformation Timer III",
-        
+
         WOODIE_CURSE_WEREMETER_1_DESC = "Were-forms last a little longer.",
         WOODIE_CURSE_WEREMETER_2_DESC = "Were-forms last a fair amount longer.",
         WOODIE_CURSE_WEREMETER_3_DESC = "Were-forms last much longer.",
@@ -14515,7 +14532,7 @@ STRINGS.SKILLTREE = {
         WOODIE_HUMAN_TREEGUARD_1_TITLE = "Treeguard Feller I",
         WOODIE_HUMAN_TREEGUARD_2_TITLE = "Treeguard Feller II",
         WOODIE_HUMAN_TREEGUARD_MAX_TITLE = "Treeguard Feller III",
-        
+
         WOODIE_HUMAN_TREEGUARD_1_DESC = "Deal a fair amount more damage to Treeguards.",
         WOODIE_HUMAN_TREEGUARD_2_DESC = "Deal much more damage to Treeguards.",
         WOODIE_HUMAN_TREEGUARD_MAX_DESC = "Learn to craft the Treeguard Idol, an extremely burnable effigy.",
@@ -14525,7 +14542,7 @@ STRINGS.SKILLTREE = {
         WOODIE_HUMAN_LUCY_1_TITLE = "Woodworker",
         WOODIE_HUMAN_LUCY_2_TITLE = "Hat Carving",
         WOODIE_HUMAN_LUCY_3_TITLE = "Cane Carving",
-        
+
         WOODIE_HUMAN_LUCY_1_DESC = "Use Lucy to carve boards more efficiently.",
         WOODIE_HUMAN_LUCY_2_DESC = "Use Lucy to carve a nice Hardwood Hat for protection.",
         WOODIE_HUMAN_LUCY_3_DESC = "Use Lucy to carve a Wooden Walking Stick for easy mobility.",
@@ -14536,7 +14553,7 @@ STRINGS.SKILLTREE = {
 
         WOODIE_ALLEGIANCE_SHADOW_TITLE = "Shadow Wrangler",
         WOODIE_ALLEGIANCE_SHADOW_DESC = "The Queen will reward your loyalty by calling off her shadow creatures.\n(But only when you're in a were-form.)",
-        
+
         WOODIE_ALLEGIANCE_LUNAR_TITLE = "Lunar Renegade",
         WOODIE_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity by blocking the moon's ability to trigger your curse.",
     },
@@ -14607,8 +14624,8 @@ STRINGS.SKILLTREE = {
         WOLFGANG_ALLEGIANCE_SHADOW_2_DESC = "The Queen will reward your loyalty with devastating strength.\nAdd +20% of total damage fighting Lunar-aligned creatures when Mighty.",
 
         WOLFGANG_ALLEGIANCE_SHADOW_3_TITLE = "Shadow Guard III",
-        WOLFGANG_ALLEGIANCE_SHADOW_3_DESC = "The Queen will reward your loyalty with devastating strength.\nAdd +30% of total damage fighting Lunar-aligned creatures when Mighty.",        
-        
+        WOLFGANG_ALLEGIANCE_SHADOW_3_DESC = "The Queen will reward your loyalty with devastating strength.\nAdd +30% of total damage fighting Lunar-aligned creatures when Mighty.",
+
         WOLFGANG_ALLEGIANCE_LUNAR_1_TITLE = "Lunar Strategist I",
         WOLFGANG_ALLEGIANCE_LUNAR_1_DESC = "The Cryptic Founder will reward your curiosity by revealing the enemy's weaknesses.\nAdd +10% of total damage fighting Shadow-aligned creatures when Mighty.",
 
@@ -14616,7 +14633,7 @@ STRINGS.SKILLTREE = {
         WOLFGANG_ALLEGIANCE_LUNAR_2_DESC = "The Cryptic Founder will reward your curiosity by revealing the enemy's weaknesses.\nAdd +20% of total damage fighting Shadow-aligned creatures when Mighty.",
 
         WOLFGANG_ALLEGIANCE_LUNAR_3_TITLE = "Lunar Strategist III",
-        WOLFGANG_ALLEGIANCE_LUNAR_3_DESC = "The Cryptic Founder will reward your curiosity by revealing the enemy's weaknesses.\nAdd +30% of total damage fighting Shadow-aligned creatures when Mighty.",  
+        WOLFGANG_ALLEGIANCE_LUNAR_3_DESC = "The Cryptic Founder will reward your curiosity by revealing the enemy's weaknesses.\nAdd +30% of total damage fighting Shadow-aligned creatures when Mighty.",
 
     },
 
@@ -14660,7 +14677,7 @@ STRINGS.SKILLTREE = {
         LUNAR_GEAR_1_DESC = "Seize foes and keep them rooted in place while wearing Brightshade Armor.",
 
         LUNAR_GEAR_2_TITLE = "Lunar Guardian II",
-        LUNAR_GEAR_2_DESC = "Summon vines to join the fray while attacking with Brightshade weapons.",
+        LUNAR_GEAR_2_DESC = "Summon vines to join the fray while attacking with Brightshade melee weapons.",
 
         --LUNAR_GEAR_3_TITLE = "Lunar III",
         --LUNAR_GEAR_3_DESC = "Seize foes and keep them rooted in place with your Brightshade Armor.", - removed
@@ -14702,13 +14719,13 @@ STRINGS.SKILLTREE = {
         COUNT_LOCK_2_DESC = "Learn enough right-branch skills to unlock.",
 
         LUNAR_MUTATIONS_1_TITLE = "Lunar Cultivator I",
-        LUNAR_MUTATIONS_1_DESC = "Tap into your lunar roots to transform Carrots into Carrats.",
+        LUNAR_MUTATIONS_1_DESC = "Tap into your lunar roots to transform Carrots into Carrats.\nCarrats you've created will retrieve food they find on the ground.",
 
         LUNAR_MUTATIONS_2_TITLE = "Lunar Cultivator II",
-        LUNAR_MUTATIONS_2_DESC = "Tap into your lunar roots to transform Lightbulbs into Bulbous Lightbugs.",
+        LUNAR_MUTATIONS_2_DESC = "Tap into your lunar roots to transform Lightbulbs into Bulbous Lightbugs.\nBulbous Lightbugs you've created will follow you around.",
 
         LUNAR_MUTATIONS_3_TITLE = "Lunar Cultivator III",
-        LUNAR_MUTATIONS_3_DESC = "Tap into your lunar roots to transform Dragon Fruit into Saladmanders.",
+        LUNAR_MUTATIONS_3_DESC = "Tap into your lunar roots to transform Dragon Fruit into Saladmanders.\nSaladmanders you've created start out in their fully ripened form.",
     },
 }
 
@@ -14777,8 +14794,8 @@ STRINGS.SCRAPBOOK = {
         HORRIBLE = "HORRIBLE",
         INSECT = "INSECT",
         SEEDS = "SEEDS",
-        BERRY = "BERRY", 
-        RAW = "RAW", 
+        BERRY = "BERRY",
+        RAW = "RAW",
         BURNT = "BURNT",
         ROUGHAGE = "ROUGHAGE",
         WOOD = "WOOD",
@@ -14809,29 +14826,29 @@ STRINGS.SCRAPBOOK = {
 
     CYCLE_VIEW = "Cycle Layout",
     CYCLE_CAT = "Cycle Category",
-    CYCLE_QUOTES = "Cycle Quotes",    
+    CYCLE_QUOTES = "Cycle Quotes",
     SEARCH = "Search",
    -- CANCEL_SEARCH = "Cancel Search",
 
     SPECIALINFO ={
-        -- creatures
-        CHESTER ="Things can be stored in Chester much like a treasure chest.",
+        -- Creatures.
+        CHESTER = "Things can be stored in Chester much like a treasure chest.",
         HUTCH = "Things can be stored in Hutch much like a treasure chest.",
-        BEEFALO = "Watch out for an aggrssive mating season.\n\nFeed and care for one of these beasts and maybe you can saddle them.",
-        BERNIE_ACTIVE = "A powerful friend when Willow's mind approaches insaity.",
+        BEEFALO = "Watch out for an aggressive mating season.\n\nFeed and care for one of these beasts, and maybe you can saddle them.",
+        BERNIE_ACTIVE = "A powerful friend when Willow's mind approaches insanity.",
         CANARY = "Sensitive to vapours, they tend to die when great poisons are detected nearby.",
         POLLYROGERS = "Gathers loot nearby.",
         MOLE = "Ever played the game \"Whack-A-Mole\"? What a great game.",
         POWDERMONKEY = "Best keep a bribe handy for these freebooters.",
         SPIDER_HEALER = "Emits powerful spider-healing flatulence when threatened.",
 
-        -- items
+        -- Items.
         ABIGAIL_FLOWER = "Used by Wendy to call her Ghostly sister Abigail.",
         CURSEDMONKEYTOKEN = "Seems like it takes some special magic to get rid of these wonky things.",
-        BEEHAT = "The protection this hat offers only really works on Bees and Bee like creatures.",
+        BEEHAT = "The protection this hat offers only really works on Bees and Bee-like creatures.",
         HIVEHAT = "Makes scary things around you relaxing instead.",
         ARMORBONE = "Every 5 seconds, one incoming hit will be completely ignored.",
-        BONEHAT = "Wearing this will drive you instantly insane, even the shadows will tolerate you.",
+        BONEHAT = "Wearing this will drive you instantly insane; even the shadows will tolerate you.",
         ARMORBRAMBLE = "This thorny husk deals its damage when attacked.",
         ARMORDREADSTONE = "This armor slowly repairs itself.",
         DREADSTONEHAT = "This helm slowly repairs itself.",
@@ -14840,10 +14857,10 @@ STRINGS.SCRAPBOOK = {
         ARMORSANITY = "As this armor blocks damage, it tends to drive its wearer insane.",
         ARMORDRAGONFLY = "Wrapped in the scales of the Dragonfly makes you immune to fire.",
         ARMORSNURTLESHELL = "One can tuck inside this hard shell to survive any assault.",
-        RUINSHAT = "Frequently, hits on this crown will cause it to create an impentrable barrier for a short time.",
-        VOIDCLOTHHAT = "Damage from Planar damage weapons will ramp up with consecutive hits if you can keep attacking.\nGetting hit will break this damage chain.",
+        RUINSHAT = "Frequently, hits on this crown will cause it to create an impenetrable barrier for a short time.",
+        VOIDCLOTHHAT = "Damage from Shadow Planar damage weapons will ramp up with consecutive hits if you can keep attacking.\nGetting hit will break this damage chain.",
         VOIDCLOTHARMOR = "Wearing this scary robe makes you not care about how scary everything around you is.",
-        BATHBOMB = "Makes a hotspring all warm, steamy, and glassy when dropped in.",
+        BATHBOMB = "Makes a hot spring all warm, steamy, and glassy when dropped in.",
         BATTLESONG_SANITYAURA = "Scary creatures seem about half as scary listening to this beautiful song.",
         BATTLESONG_DURABILITY = "Reduce wear on your weapons by 25% while listening.",
         BATTLESONG_HEALTHGAIN = "Nearby friends will heal when fighting. Wigfrid will heal a little more too.",
@@ -14854,18 +14871,18 @@ STRINGS.SCRAPBOOK = {
         BEEFBELL = "Name and bond with one Beefalo at a time. Bonded Beefalo will follow the holder, even into caves and offline.",
         PLANTABLE_FERTILIZE = "This needs some fertilizing after planting.",
         SCANDATA = "Data is used to craft Circuits for WK78.",
-        WX78SCANNER = "Chirps when interesting bio targets are nearby. Will chase and scan intersting bio targets while WX78 is close. Drops Bio Data when finished.",
-        MOONEYE = "Allways appears on the minimap, even in unexplored areas.",
+        WX78SCANNER = "Chirps when interesting biological targets are nearby. Will chase and scan interesting biological targets while WX78 is close. Drops Bio Data when finished.",
+        MOONEYE = "Always appears on the minimap, even in unexplored areas.",
         BOATPATCH = "Plugs leaks on boats.",
         LIFEINJECTOR = "Restores lost \"maximum health\" noted in black on the Health HUD indicator.",
         ALTARPLUG = "It looks like it plugs into something",
         WX78MODULEREMOVER = "Removes installed Circuits from WX78.",
         RESKINTOOL = "Cycles through the skins on in-world items.",
-        POCKETWATCHDISMANTLER = "Break pocket watches down into their originial ingredients other than Nightmare Fuel.",
-        ARMORSLURPER = "Restores sanity over time and slowes hunger drain by 40%",
+        POCKETWATCHDISMANTLER = "Break pocket watches down into their original ingredients other than Nightmare Fuel.",
+        ARMORSLURPER = "Restores sanity over time and slows hunger drain by 40%.",
         COSTUME = "Costume piece used in stage plays",
-        CANDYBAG = "A 14 slot container for holding Candies Trinkets and Decorations.",
-        SPICEPACK = "A 6 slot container that slows the spoiling of items inside.",
+        CANDYBAG = "A 14 slots container for holding Candies, Trinkets, and Decorations.",
+        SPICEPACK = "A 6 slots container that slows the spoiling of items inside.",
         BLUEAMULET = "Raises sanity while cooling the wearer.",
         PURPLEAMULET = "Wearer becomes insane.",
         REDAMULET = "A Ghost that haunts this amulet will be revived.",
@@ -14873,43 +14890,63 @@ STRINGS.SCRAPBOOK = {
         ORANGEAMULET = "Automatically picks up items nearby and puts them in your inventory. Also raises sanity when worn.",
         YELLOWAMULET = "Emits light like a torch and gives a 20% speed boost while worn.",
         BEARGERVEST = "Hunger rate is slowed by 25% when worn.",
-        BALLOONVEST = "Wearer will not suffere any drowning damage when they wash up on shore.",
-        ICEPACK = "An 8 slot container that halves the speed of food spoiling inside.",
-        PIGGYBACK = "A large 12 slot container that also slows the wearer by 20% when worn.",
-        ONEMANBAND = "Wearing the one man band is a sanity lowering experience but converts nearby pigmen and bunnymen will become followers.",
-        SEEDPOUCH = "A 14 slot container that will only hold seeds, nuts, and beans. Spoilage is slowed by 50%",
+        BALLOONVEST = "Wearer will not suffer any drowning damage when they wash up on shore.",
+        ICEPACK = "An 8 slots container that halves the speed of food spoiling inside.",
+        PIGGYBACK = "A large 12 slots container that also slows the wearer by 20% when worn.",
+        ONEMANBAND = "Wearing the One-Man Band is a sanity-lowering experience, but converts nearby pigmen and bunnymen to followers.",
+        SEEDPOUCH = "A 14 slots container that will only hold seeds, nuts, and beans. Spoilage is slowed by 50%.",
         PIGCOIN = "Summons an Elite Pig.",
-        COOKBOOK = "A record of all the foods cooked and or eaten as well as the ingredients used to cook them.",
-        CRATEREDMOONROCK = "Contains a gem shaped socket.",
-        ORANGESTAFF = "When held it increases speed by 25% and can teleport the user to visible locations at the cost of some sanity.",
-        GREENSTAFF = "Truns crafted items and structures into their ingredient parts based on their remaining durability. Gem ingredients are not returned.",
-        YELLOWSTAFF = "Spanws a Dwarf Star.",
-        PURPLESTAFF = "Teleports targets to a random location, or to a fueled Telelocator Foucus.",
+        COOKBOOK = "A record of all the foods cooked and/or eaten, as well as the ingredients used to cook them.",
+        CRATEREDMOONROCK = "Contains a gem-shaped socket.",
+        ORANGESTAFF = "When held, it increases speed by 25% and can teleport the user to visible locations at the cost of some sanity.",
+        GREENSTAFF = "Turns crafted items and structures into their ingredient parts based on their remaining durability. Gem ingredients are not returned.",
+        YELLOWSTAFF = "Creates a Dwarf Star.",
+        PURPLESTAFF = "Teleports targets to a random location or to a fueled Telelocator Focus.",
         BLUESTAFF = "Shoots freezing projectiles.",
         REDSTAFF = "Shoots projectiles that ignite targets on fire.",
-        ARMORLUNARPLANT = "Reflects damage back at Shadow Aligned enemy.",
+        ARMORLUNARPLANT = "Reflects damage back at Shadow Aligned enemies.",
         LUNARPLANTHAT = "Glows in the dark and augments the Brightshade Staff with more projectile bounces.\nGives lunar weapons with Planar Damage a boost.",
         DENBEDAZZLER = "Bedazzle a Spider Den to pacify the spiders nearby. Bedazzled dens do not grow.",
         TOWNPORTALTALISMAN = "When another survivor is channeling a Lazy Deserter, use this to teleport to them.",
         BOOK_TENTACLES = "Summon some unfriendly Tentacles nearby.",
         BOOK_BIRDS = "Summon up to 20 birds to land nearby.",
-        BOOK_BRIMSTONE = "Bring down over a dozen uncontrolled lightning strikes",
+        BOOK_BRIMSTONE = "Bring down over a dozen uncontrolled lightning strikes.",
         BOOK_SLEEP = "Puts creatures nearby to sleep.",
         BOOK_HORTICULTURE = "Rapidly grow up to 10 nearby garden plants or fruiting bushes.",
         BOOK_HORTICULTURE_UPGRADED = "Rapidly grow up to 15 nearby garden plants or fruiting bushes.",
-        BOOK_SILVICULTURE = "Grow grass, saplings and trees nearby, but grass will need to be fertilized again sooner.",
+        BOOK_SILVICULTURE = "Grow grass, saplings, and trees nearby, but grass will need to be fertilized again sooner.",
         BOOK_FISH = "Summon a school of Ocean Fish nearby.",
-        BOOK_FIRE = "Extinguishes all burning and smouldering fires closeby and creates or charges a Firey Pen infused with that energy.",
+        BOOK_FIRE = "Extinguishes all burning and smoldering fires nearby and creates or charges a Fiery Pen infused with that energy.",
         BOOK_WEB = "Create several turfs worth of Spider Webbing on the ground that slows creatures traveling on it. It will go away after 2 minutes.",
-        BOOK_TEMPERATURE = "Dries Survivors nearby as well as setting their temperature to a nice 35 degrees.",
+        BOOK_TEMPERATURE = "Dries survivors nearby as well as setting their temperature to a nice 35 degrees.",
         BOOK_LIGHT = "Summons half a day of light to shine down. Will cause an earthquake in the caves.",
         BOOK_LIGHT_UPGRADED = "Summons 2 days of light to shine down. Will cause an earthquake in the caves.",
         BOOK_RAIN = "If it's raining, the rain will stop. If it's not raining, rain will start and also water nearby farm soil.",
         BOOK_MOON = "Sets the current moon stage to full.",
-        BOOK_BEES = "Summons 2 Grumle Bee followers. Maximum 16 at a time.",
+        BOOK_BEES = "Summons 2 Grumble Bee followers. Maximum 16 at a time.",
         BOOK_RESEARCH_STATION = "Gives nearby survivors a crafting charge. Each charge lets them craft the next item one tech level higher than normal.",
         WOLFGANG_WHISTLE = "Toggles Wolfgang's coaching skill on and off.",
         COMPOSTWRAP = "Wormwood will heal 8 health plus 1 health/sec for 32 seconds. Wormwood will also bloom for 4 minutes.\nThis also works as good fertilizer for gardening.",
+        DUSTMERINGUE = "It's not food fit for a person.",
+        BEEFALOTREAT = "Snacks for Beefalo.",
+        BEEFALOFEED = "Snacks for Beefalo.",
+        GHOSTLYELIXERREGENERATION = "Raises Abigail's health regeneration from 1 to 3 health per second. Lasts 1 day.",
+        GHOSTLYELIXERHEALING = "Raises Abigail's health regeneration from 1 to 20 health per second. Lasts 30 seconds.",
+        GHOSTLYELIXERSHIELD = "Doubles Abigail's shield duration from 0.5 seconds to 1 second. Lasts 1 day.",
+        GHOSTLYELIXERATTACK = "Abigail will deal her nighttime damage during the day and dusk. Lasts 1 day.",
+        GHOSTLYELIXERSPEED = "Abigail has a 75% speed boost for 1 day.",
+        GHOSTLYELIXERRETALIATION = "Doubles Abigail's shield duration from 0.5 seconds to 1 second. Attacking creatures also take 20 damage. Lasts 1 day.",
+        FEATHERPENCIL = "Draws the closest item nearby onto a Mini Sign.",
+        MINIFLARE = "Creates a flash in the sky that can be seen by all survivors on the minimap.",
+        MEGAFLARE = "Creates a flash in the sky that can be seen by all survivors on the minimap. This large flash will also draw the attention of some hostile mobs.",
+        FARMPLOW = "Digs up a tile and turns it into Farm Soil.",
+        SADDLE = "Can be put onto a Beefalo if it's willing.",
+        SADDLEWAR = "Can be put onto a Beefalo if it's willing. Slower than a regular saddle, it also adds 16 damage to attacks made while riding.",
+        SADDLERACE = "Can be put onto a Beefalo if it's willing. Increases speed over a regular saddle.",
+        PIGTOKEN = "Given to the Pig King to initiate a Wrestling Match.",
+        WINTERSFEASTCOOKEDFOODS = "Captures the spirit of food when this is put on a Winter's Feast Table. The more, the merrier.",
+        GUNPOWDER = "Will explode for 200 damage when lit.",
+        MOONSTORMGOGGLESHAT = "Improves vision in a storm. Will help locate mysterious holograms."
     },
 }
 

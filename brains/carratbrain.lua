@@ -99,10 +99,10 @@ local function gather_food_action(inst)
     local foods = {}
     local scaries = {}
     for _, ent in ipairs(ents_nearby) do
-        if ent ~= inst and ent.entity:IsVisible() then
+        if ent ~= inst and ent.entity:IsVisible() and ent:IsValid() then
             if ent:HasTag("scarytoprey") and not ent:HasTag("carratcrafter") and ent ~= inst._creator then
                 table.insert(scaries, ent)
-            elseif edible(inst, ent) then
+            elseif edible(inst, ent) and (inst._creator == nil or not (inst._creator:IsValid() and ent:IsNear(inst._creator, 5))) then
                 table.insert(foods, ent)
             end
         end
@@ -124,7 +124,7 @@ local function gather_food_action(inst)
 
             for si = 1, #scaries do
                 local scary_thing = scaries[si]
-                if scary_thing ~= nil and scary_thing.Transform ~= nil then
+                if scary_thing ~= nil and scary_thing:IsValid() and scary_thing.Transform ~= nil then
                     local sq_distance = food:GetDistanceSqToPoint(scary_thing.Transform:GetWorldPosition())
                     if sq_distance < AVOID_PLAYER_DIST_SQ then
                         scary_thing_nearby = true
@@ -142,7 +142,7 @@ local function gather_food_action(inst)
 
     if target then
         local act
-        if inst._creator then -- If we were spawned, don't eat things! It's not nice.
+        if inst._creator and inst._creator:IsValid() then -- If we were spawned, don't eat things! It's not nice.
             if not inst.components.timer:TimerExists("mutantproxy_food_gathering") and not inst.components.inventory:IsFull() then
                 act = BufferedAction(inst, target, ACTIONS.PICKUP)
             end
@@ -161,7 +161,11 @@ local function drop_item_action(inst)
     local creator = inst._creator
     local item = inst.components.inventory:GetFirstItemInAnySlot() 
     if item then
-        inst.components.timer:StartTimer("mutantproxy_food_gathering", TUNING.WORMWOOD_CARRAT_GATHER_COOLDOWN)
+        if inst.components.timer:TimerExists("mutantproxy_food_gathering") then
+            inst.components.timer:SetTimeLeft("mutantproxy_food_gathering", TUNING.WORMWOOD_CARRAT_GATHER_COOLDOWN)
+        else
+            inst.components.timer:StartTimer("mutantproxy_food_gathering", TUNING.WORMWOOD_CARRAT_GATHER_COOLDOWN)
+        end
 
         local ba = BufferedAction(inst, creator, ACTIONS.DROP, item)
         ba.options.wholestack = true
@@ -188,7 +192,7 @@ local function returntobeefalo(inst)
 end
 
 local function GetCreatorLocation(inst)
-    if inst._creator and inst:IsNear(inst._creator, 35) then
+    if inst._creator ~= nil and inst._creator:IsValid() and inst:IsNear(inst._creator, 35) then
         return inst._creator:GetPosition()
     else
         return nil

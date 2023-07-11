@@ -197,25 +197,71 @@ local function OnAttack(inst, attacker, target)
     end
 end
 
-local function SetupEquippable(inst)
+local function SetupComponents(inst)
 	inst:AddComponent("equippable")
 	inst.components.equippable.dapperness = -TUNING.DAPPERNESS_MED
 	inst.components.equippable.is_magic_dapperness = true
 	inst.components.equippable:SetOnEquip(OnEquip)
 	inst.components.equippable:SetOnUnequip(OnUnequip)
+
+	inst:AddComponent("weapon")
+	inst.components.weapon:SetDamage(TUNING.VOIDCLOTH_SCYTHE_DAMAGE)
+	inst.components.weapon:SetOnAttack(OnAttack)
+end
+
+local function DisableComponents(inst)
+	inst:RemoveComponent("equippable")
+	inst:RemoveComponent("weapon")
+end
+
+local FLOAT_SCALE_BROKEN = { 0.8, 0.4, 0.8 }
+local FLOAT_SCALE = { 1.2, 0.4, 1.2 }
+
+local function OnIsBrokenDirty(inst)
+	if inst.isbroken:value() then
+		inst.components.floater:SetSize("med")
+		inst.components.floater:SetVerticalOffset(0.25)
+		inst.components.floater:SetScale(FLOAT_SCALE_BROKEN)
+	else
+		inst.components.floater:SetSize("med")
+		inst.components.floater:SetVerticalOffset(0)
+		inst.components.floater:SetScale(FLOAT_SCALE)
+	end
+end
+
+local SWAP_DATA_BROKEN = { sym_build = "scythe_voidcloth", sym_name = "scythe_base_broken_float", bank = "scythe_voidcloth", anim = "broken" }
+local SWAP_DATA = { sym_build = "scythe_voidcloth", sym_name = "swap_scythe", bank = "scythe_voidcloth" }
+
+local function SetIsBroken(inst, isbroken)
+	if isbroken then
+		inst.components.floater:SetBankSwapOnFloat(true, -10, SWAP_DATA_BROKEN)
+		if inst.fx ~= nil then
+			inst.fx:Hide()
+		end
+	else
+		inst.components.floater:SetBankSwapOnFloat(true, -20, SWAP_DATA)
+		if inst.fx ~= nil then
+			inst.fx:Show()
+		end
+	end
+	inst.isbroken:set(isbroken)
+	OnIsBrokenDirty(inst)
 end
 
 local function OnBroken(inst)
 	if inst.components.equippable ~= nil then
-		inst:RemoveComponent("equippable")
+		DisableComponents(inst)
 		inst.AnimState:PlayAnimation("broken")
+		SetIsBroken(inst, true)
 	end
 end
 
 local function OnRepaired(inst)
 	if inst.components.equippable == nil then
-		SetupEquippable(inst)
+		SetupComponents(inst)
+		inst.fx.AnimState:SetFrame(0)
 		inst.AnimState:PlayAnimation("idle", true)
+		SetIsBroken(inst, false)
 	end
 end
 
@@ -246,7 +292,9 @@ local function ScytheFn()
 
     inst:AddTag("shadow_item")
 
-    MakeInventoryFloatable(inst, "med", 0.05, {1.5, 0.4, 1.5})
+	inst:AddComponent("floater")
+	inst.isbroken = net_bool(inst.GUID, "voidcloth_scythe.isbroken", "isbrokendirty")
+	SetIsBroken(inst, false)
 
     local talker = inst:AddComponent("talker")
     talker.fontsize = 28
@@ -273,6 +321,8 @@ local function ScytheFn()
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
+		inst:ListenForEvent("isbrokendirty", OnIsBrokenDirty)
+
         return inst
     end
 
@@ -301,17 +351,13 @@ local function ScytheFn()
     finiteuses:SetUses(TUNING.VOIDCLOTH_SCYTHE_USES)
     finiteuses:SetConsumption(ACTIONS.SCYTHE, 1)
 
-    local weapon = inst:AddComponent("weapon")
-    weapon:SetDamage(TUNING.VOIDCLOTH_SCYTHE_DAMAGE)
-    weapon:SetOnAttack(OnAttack)
-
     local planardamage = inst:AddComponent("planardamage")
     planardamage:SetBaseDamage(TUNING.VOIDCLOTH_SCYTHE_PLANAR_DAMAGE)
 
     local damagetypebonus = inst:AddComponent("damagetypebonus")
     damagetypebonus:AddBonus("lunar_aligned", inst, TUNING.WEAPONS_VOIDCLOTH_VS_LUNAR_BONUS)
 
-	SetupEquippable(inst)
+	SetupComponents(inst)
 
     inst:AddComponent("shadowlevel")
     inst.components.shadowlevel:SetDefaultLevel(TUNING.VOIDCLOTH_SCYTHE_SHADOW_LEVEL)
@@ -323,8 +369,6 @@ local function ScytheFn()
 
 	MakeForgeRepairable(inst, FORGEMATERIALS.VOIDCLOTH, OnBroken, OnRepaired)
     MakeHauntableLaunch(inst)
-
-    inst.components.floater:SetBankSwapOnFloat(true, -11, {sym_name = "swap_scythe", sym_build = "scythe_voidcloth", bank = "scythe_voidcloth"})
 
     inst.SayRandomLine = SayRandomLine
     inst.ToggleTalking = ToggleTalking
