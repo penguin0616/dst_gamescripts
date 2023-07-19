@@ -82,7 +82,7 @@ end
 
 function Coach:StartInspiring()
     if not self.inspiretask then
-        self.inspiretask = self.inst:DoTaskInTime(7, inspire)
+        self.inspiretask = self.inst:DoTaskInTime(TUNING.COACH_TIME_TO_INSPIRE, inspire)
     end
 end
 

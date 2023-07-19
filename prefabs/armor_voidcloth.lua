@@ -53,11 +53,6 @@ local function onunequip(inst, owner)
 	end
 end
 
-local function GetSetBonusEquip(inst, owner)
-	local hat = owner.components.inventory ~= nil and owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) or nil
-	return hat ~= nil and hat.prefab == "voidclothhat" and hat or nil
-end
-
 local function SetupEquippable(inst)
 	inst:AddComponent("equippable")
 	inst.components.equippable.equipslot = EQUIPSLOTS.BODY
@@ -73,6 +68,8 @@ local function OnBroken(inst)
 		inst:RemoveComponent("equippable")
 		inst.AnimState:PlayAnimation("broken")
 		inst.components.floater:SetSwapData(SWAP_DATA_BROKEN)
+		inst:AddTag("broken")
+		inst.components.inspectable.nameoverride = "BROKEN_FORGEDITEM"
 	end
 end
 
@@ -81,6 +78,8 @@ local function OnRepaired(inst)
 		SetupEquippable(inst)
 		inst.AnimState:PlayAnimation("anim")
 		inst.components.floater:SetSwapData(SWAP_DATA)
+		inst:RemoveTag("broken")
+		inst.components.inspectable.nameoverride = nil
 	end
 end
 
@@ -99,6 +98,7 @@ local function fn()
 
     inst:AddTag("cloth")
 	inst:AddTag("shadow_item")
+	inst:AddTag("show_broken_ui")
 
 	--shadowlevel (from shadowlevel component) added to pristine state for optimization
 	inst:AddTag("shadowlevel")
@@ -186,6 +186,12 @@ local function fx_OnUpdate(inst)
     end
 end
 
+local function fx_ColourChanged(inst, r, g, b, a)
+	for i, v in ipairs(inst.fx) do
+		v.AnimState:SetAddColour(r, g, b, a)
+	end
+end
+
 local function fx_SpawnFxForOwner(inst, owner)
     inst.owner = owner
     inst.wasmoving = false
@@ -198,6 +204,7 @@ local function fx_SpawnFxForOwner(inst, owner)
         fx.components.highlightchild:SetOwner(owner)
         table.insert(inst.fx, fx)
     end
+	inst.components.colouraddersync:SetColourChangedFn(fx_ColourChanged)
     if owner:HasTag("locomotor") then
         inst:AddComponent("updatelooper")
         inst.components.updatelooper:AddOnUpdateFn(fx_OnUpdate)
@@ -214,6 +221,9 @@ end
 
 local function fx_AttachToOwner(inst, owner)
     inst.entity:SetParent(owner.entity)
+	if owner.components.colouradder ~= nil then
+		owner.components.colouradder:AttachChild(inst)
+	end
     --Dedicated server does not need to spawn the local fx
     if not TheNet:IsDedicated() then
         fx_SpawnFxForOwner(inst, owner)
@@ -227,6 +237,8 @@ local function fxfn()
     inst.entity:AddNetwork()
 
     inst:AddTag("FX")
+
+	inst:AddComponent("colouraddersync")
 
     inst.entity:SetPristine()
 

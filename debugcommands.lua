@@ -2723,6 +2723,9 @@ function d_createscrapbookdata(should_print)
                 end
             end
 
+            -- Remove itself if it exists.
+            table.removearrayvalue(deps, t.prefab)
+
             if deps then
                 f:write(' deps={')
                 for i,dep in ipairs(deps)do

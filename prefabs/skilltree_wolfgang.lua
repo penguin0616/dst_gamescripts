@@ -33,9 +33,6 @@ local function BuildSkillsData(SkillTreeFns)
             --pos = {1,0},
             group = "might",
             tags = {"might"},
-            onactivate = function(inst, fromload)
-                    
-                end,
             root = true,
             connects = {
                 "wolfgang_critwork_2",
@@ -49,9 +46,6 @@ local function BuildSkillsData(SkillTreeFns)
             --pos = {1,0},
             group = "might",
             tags = {"might"},
-            onactivate = function(inst, fromload)
-        
-                end,
             connects = {
                 "wolfgang_critwork_3",
             },
@@ -64,9 +58,6 @@ local function BuildSkillsData(SkillTreeFns)
             --pos = {1,0},
             group = "might",
             tags = {"might"},
-            onactivate = function(inst, fromload)
-                    
-                end,
         }, 
 
         -- TRAINING
@@ -81,9 +72,6 @@ local function BuildSkillsData(SkillTreeFns)
             group = "training",
             tags = {"autogym"},
             root = true,
-            onactivate = function(inst, fromload)
-                    
-                end,
         },
 
         wolfgang_normal_coach = {
@@ -94,9 +82,8 @@ local function BuildSkillsData(SkillTreeFns)
             --pos = {1,0},
             group = "training",
             tags = {"training"},
-            onactivate = function(inst, fromload)
-                    inst:AddTag("wolfgang_coach")
-                end,
+            onactivate = function(inst, fromload) inst:AddTag("wolfgang_coach") end,
+            ondeactivate = function(inst, fromload) inst:RemoveTag("wolfgang_coach") end,
             root = true,
             connects = {
                 "wolfgang_normal_speed",
@@ -112,12 +99,8 @@ local function BuildSkillsData(SkillTreeFns)
             --pos = {1,0},
             group = "training",
             tags = {"training"},
-            onactivate = function(inst, fromload)
-                    inst:RecalculateMightySpeed()
-                end,
-            ondeactivate = function(inst, fromload)
-                    inst:RecalculateMightySpeed()
-                end,
+            onactivate = function(inst, fromload) inst:RecalculateMightySpeed() end,
+            ondeactivate = function(inst, fromload) inst:RecalculateMightySpeed() end,
         },         
 
         wolfgang_dumbbell_crafting = {
@@ -129,9 +112,8 @@ local function BuildSkillsData(SkillTreeFns)
             --pos = {1,0},
             group = "training",
             tags = {"dumbbell_craft"},
-            onactivate = function(inst, fromload)
-                    inst:AddTag("wolfgang_dumbbell_crafting")
-                end,
+            onactivate = function(inst, fromload) inst:AddTag("wolfgang_dumbbell_crafting") end,
+            ondeactivate = function(inst, fromload) inst:RemoveTag("wolfgang_dumbbell_crafting") end,
             root = true,
             connects = {
                 "wolfgang_dumbbell_throwing_1",
@@ -148,9 +130,6 @@ local function BuildSkillsData(SkillTreeFns)
             --pos = {1,0},
             group = "training",
             tags = {"dumbbell_throwing"},
-            onactivate = function(inst, fromload)
-                    
-                end,
             connects = {
                 "wolfgang_dumbbell_throwing_2",
             },            
@@ -164,9 +143,6 @@ local function BuildSkillsData(SkillTreeFns)
             --pos = {1,0},
             group = "training",
             tags = {"dumbbell_throwing"},
-            onactivate = function(inst, fromload)
-                    
-                end,
         },
 
         wolfgang_overbuff_1 = {

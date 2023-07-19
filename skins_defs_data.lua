@@ -4628,7 +4628,6 @@ TheInventory:AddScrapbook2Key( "34FB4F82" ) -- pitchfork
 TheInventory:AddScrapbook6Key( "9CAF68F6" ) -- plantmeat
 TheInventory:AddScrapbook0Key( "AAE6CB30" ) -- plantmeat_cooked
 TheInventory:AddScrapbook3Key( "6C92CBD3" ) -- plantregistryhat
-TheInventory:AddScrapbook13Key( "7D55F97D" ) -- playbill_the_doll
 TheInventory:AddScrapbook1Key( "560982A1" ) -- pocket_scale
 TheInventory:AddScrapbook7Key( "CA70877" ) -- pocketwatch_dismantler
 TheInventory:AddScrapbook14Key( "DE6B0AEE" ) -- pocketwatch_heal
@@ -6624,7 +6623,6 @@ TheInventory:AddScrapbook12Key( "4374C56C" ) -- yellowstaff
 --TheInventory:AddItemIDPairing(1490, "loading_waterlogged_trailer")
 --TheInventory:AddItemIDPairing(1491, "loading_webber_trailer")
 --TheInventory:AddItemIDPairing(1492, "loading_wes_trailer3")
---TheInventory:AddItemIDPairing(1493, "steeringwheel_nautical_item")
 --TheInventory:AddItemIDPairing(1494, "steeringwheel_nautical")
 --TheInventory:AddItemIDPairing(1495, "playerportrait_bg_steeringwheelnautical")
 --TheInventory:AddItemIDPairing(1496, "profileflair_steeringwheel_nautical")
@@ -6825,9 +6823,7 @@ TheInventory:AddScrapbook12Key( "4374C56C" ) -- yellowstaff
 --TheInventory:AddItemIDPairing(1691, "wolfgang_pirate")
 --TheInventory:AddItemIDPairing(1692, "woodie_pirate")
 --TheInventory:AddItemIDPairing(1693, "wurt_pirate")
---TheInventory:AddItemIDPairing(1694, "steeringwheel_wagstaff_item")
 --TheInventory:AddItemIDPairing(1695, "steeringwheel_wagstaff")
---TheInventory:AddItemIDPairing(1696, "walkingplank_wagstaff")
 --TheInventory:AddItemIDPairing(1697, "mast_malbatross_wagstaff")
 --TheInventory:AddItemIDPairing(1698, "firepit_hole_alt")
 --TheInventory:AddItemIDPairing(1699, "firepit_kiln_alt")
@@ -6843,7 +6839,6 @@ TheInventory:AddScrapbook12Key( "4374C56C" ) -- yellowstaff
 --TheInventory:AddItemIDPairing(1709, "profileflair_anchor_nautical")
 --TheInventory:AddItemIDPairing(1710, "playerportrait_bg_anchornautical")
 --TheInventory:AddItemIDPairing(1711, "boat_wagstaff")
---TheInventory:AddItemIDPairing(1712, "boat_wagstaff_item")
 --TheInventory:AddItemIDPairing(1713, "perdling_pollyrogers")
 --TheInventory:AddItemIDPairing(1714, "watermelonhat_banana")
 --TheInventory:AddItemIDPairing(1715, "monkeyhatmedium_blue")
@@ -6851,7 +6846,6 @@ TheInventory:AddScrapbook12Key( "4374C56C" ) -- yellowstaff
 --TheInventory:AddItemIDPairing(1717, "monkeyhatsmall_beads")
 --TheInventory:AddItemIDPairing(1718, "monkeyhatsmall_belt")
 --TheInventory:AddItemIDPairing(1719, "boat_nautical")
---TheInventory:AddItemIDPairing(1720, "boat_nautical_item")
 --TheInventory:AddItemIDPairing(1721, "profileflair_boat_nautical")
 --TheInventory:AddItemIDPairing(1722, "playerportrait_bg_boatnautical")
 --TheInventory:AddItemIDPairing(1723, "loading_carnival3")
@@ -6934,8 +6928,6 @@ TheInventory:AddScrapbook12Key( "4374C56C" ) -- yellowstaff
 --TheInventory:AddItemIDPairing(1800, "wormhole_fantasy")
 --TheInventory:AddItemIDPairing(1801, "wormhole_gothic")
 --TheInventory:AddItemIDPairing(1802, "critterlab_gothic")
---TheInventory:AddItemIDPairing(1803, "insanityrock_fantasy")
---TheInventory:AddItemIDPairing(1804, "insanityrock_gothic")
 --TheInventory:AddItemIDPairing(1805, "sanityrock_gothic")
 --TheInventory:AddItemIDPairing(1806, "body_wanda_lunar")
 --TheInventory:AddItemIDPairing(1807, "hand_wanda_lunar")
@@ -7116,7 +7108,7 @@ TheInventory:AddScrapbook12Key( "4374C56C" ) -- yellowstaff
 --TheInventory:AddItemIDPairing(1982, "wolfgang_lunar")
 --TheInventory:AddItemIDPairing(1983, "wortox_shadow")
 
-TheInventory:ValidateWithSignature( "32d385c04b2947f493d5712130db21710087f2f9d61b3ffc9c1bf1c09d57fb2dcf826b05fa2b9751eacb8b84629a515acddb916db85bfd2c20aef8c0ab24bc48e445e9c91c07da9e2d6339889d3aa49fa320ce69955b82cc22b12353d266663a957008257b1e5d6ae586309983db00efdb8b7955766a299d8715ca15bb34c558516d693b32e97610f56a5ec95e34cc73ac6703b5d068ca76b53aec786b32d9991696b5be436a89b27614c874423115c66c689065ca3b7561eef3acbd7cf5d6d36517269e34cd2f38b45973d0fcadeb8d9a3e77bb7f3c2f867f6ae653605fa0065b4aa8e6d1d5170a23a61cca1625f974638f3b8707a278e4d50493e0c2316ff2d0dae2cd3ecf99a3a24aa4d7cb12dcb2796090133b7ffdd9850ca7e06520cee2e96497e3b29b25c7793daf93ed14d70293fbc721a44022eb13ae9f54cab284383e8051e1c1105d6cdfaad0473555b93ca0993349045eee27ec89b2771a61424e3dadfa7c7f2137e0cbcfbc3f38426776ef6d424281f127e223b0a92d0ca72b1cac77af4c94e2530e3bc60f96e3617e9182a7c5712da0cb4d97cf0a4021e64606dd1ca624742280bace24e760d62223403dc40bf01741998163d7bd74718bdad919b8699b1f3e5d87eab698e1fe53273d592298077e290e6281f7979251f628bf587932eae894f2a8029746d9064c16f511b0ba83f00498d569e53cf3477d709a" )
+TheInventory:ValidateWithSignature( "08d8520e62ea0c25a88f6559b96cd6a09300c5b42671549ecebd805cbefd3c33f4d9b29224c281d041cadc7a0af12079e7f3aaecce919e0b61a3d92156ee0e9b9b6d6558bd80a8dc1108b96d49bc8030d595702226ea7bdf0dd2b8491058c85b3544dfe0ce32abae9a992e624f8c406a820c6904cc1032d721ca36f2e2a8fbe96e68dbb6d3d82cc7ec5f5cd9ffd67acee3c046c0766b0fc0528f80ec29e6ab65eeacfe8e37311869b42191a0d48b8160f8bdd14ef05b750c713c9967856c8d6fde8b3be3cafd0902ba4c78f814d4af61eaf8e595c04db476c3471c9d7f6bb8cabe97eb769dcacd6b725dce9af7c1e08d00accd6d8bdd0f58c7ce6362e397af57eeeda8346a745900aded7384f7be5c2a874068dd012355690b8217bfe06717b6d8f0528f17c3b03eda702a9a65ecfd08e1d5b1ba56f0d29220059237c3ead40a8ca042b15d146dc0fbdf742160d5ac6e8e0b3e0a4a08f8ade63c8667521e75506da6b2936cbc3a4bc399c98d4fb0b5e4b8c0de8d9d9728714117c02663fdc64f97bd5b8b64ab06c686f1b305b3f494443e87b35c0bdc4769f9701000cfaabec6c54ef94ca0f840edba7efd49f54646225c049c7ec2aa2796287ef37f534af45773a8231100db74b6321aa89e73c60708b851863b75e9c9240fa05881c924716af83b794528c178e80f31087d55a65f8a14063e64d0bb355a25cd2b2d789a0715" )
 
 end -- Temporary protection guard for platforms missing the engine change.
 

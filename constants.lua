@@ -1056,7 +1056,8 @@ FE_MUSIC =
     (FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT] ~= nil and FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT].sound) or
     WORLD_SPECIAL_EVENT ~= SPECIAL_EVENTS.CARNIVAL and -- FIXME(JBK): Remove this line when the shadow rift update is done.
     (SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT] ~= nil and SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT].sound) or
-    "dontstarve/music/music_FE_shadowrift"
+    "dontstarve/music/music_FE_survivorsguideone"
+    --"dontstarve/music/music_FE_shadowrift"
     --"dontstarve/music/music_FE_lunarrift"
     --"dontstarve/music/music_FE_daywalker"
     --"dontstarve/music/music_FE_maxwell"

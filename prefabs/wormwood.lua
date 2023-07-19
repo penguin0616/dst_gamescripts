@@ -254,14 +254,8 @@ local function PollenTick(inst)
     inst:DoTaskInTime(math.random() * .6, DoSpawnPollen)
 end
 
-----
-local function IdentifyPetals(item)
-    return item.prefab == "petals"
-end
-
 local PLANTS_RANGE = 1
 local MAX_PLANTS = 18
-local MAX_PETALS = 10 -- Important that this is lower than the maximum stack size of petals.
 
 local PLANTFX_TAGS = { "wormwood_plant_fx" }
 local function PlantTick(inst)
@@ -307,21 +301,6 @@ local function PlantTick(inst)
             plant:SetVariation(rnd)
         end
     end
-
-    if inst.components.skilltreeupdater:IsActivated("wormwood_blooming_petals") and not inst.components.timer:TimerExists("wormwood_blooming_petals_cooldown") then
-        inst.components.timer:StartTimer("wormwood_blooming_petals_cooldown", TUNING.WORMWOOD_PETALS_RATE)
-
-        local inventory = inst.components.inventory
-
-        -- If we have fewer than our max petals count, and our inventory has a spot for more,
-        -- dunk one into our inventory (and track the time we did it).
-        local has_max_petals, num_petals = inventory:Has("petals", MAX_PETALS)
-        if not has_max_petals and not (num_petals == 0 and inventory:IsFull()) then
-            local petals = SpawnPrefab("petals")
-            petals.Transform:SetPosition(x, y, z)
-            inventory:GiveItem(petals, nil, Vector3(x, y, z))
-        end
-    end
 end
 
 local function EnableBeeBeacon(inst, enable)
@@ -336,20 +315,27 @@ local function EnableBeeBeacon(inst, enable)
     end
 end
 
-local PLANT_TAGS = {"tendable_farmplant"}
-local function TendToPlantsAOE(inst)
+local AOE_EFFECTS_ONEOF_TAGS = { "tendable_farmplant", "trap_bramble" }
+local AOE_EFFECTS_CANT_TAGS = { "INLIMBO", "FX"}
+local function DoAOEeffect(inst)
     local x, y, z = inst.Transform:GetWorldPosition()
 
     local skilltreeupdater = inst.components.skilltreeupdater
-    local interact_range_multiplier = (skilltreeupdater == nil and 1.0)
-        or (skilltreeupdater:IsActivated("wormwood_blooming_farmrange3") and 2.0)
-        or (skilltreeupdater:IsActivated("wormwood_blooming_farmrange2") and 1.5)
-        or (skilltreeupdater:IsActivated("wormwood_blooming_farmrange1") and 1.2)
-        or 1.0
+
+    local reset_brambletraps = skilltreeupdater ~= nil and skilltreeupdater:IsActivated("wormwood_blooming_farmrange3") or false
+
+    local interact_range_multiplier = (
+        skilltreeupdater ~= nil and skilltreeupdater:IsActivated("wormwood_blooming_farmrange1") and TUNING.WORMWOOD_TENDRANGE_MULT
+        or 1
+    )
+
     local interact_range = TUNING.WORMWOOD_BLOOM_FARM_PLANT_INTERACT_RANGE * interact_range_multiplier
-    for _, v in pairs(TheSim:FindEntities(x, y, z, interact_range, PLANT_TAGS)) do
+    for _, v in pairs(TheSim:FindEntities(x, y, z, interact_range, nil, AOE_EFFECTS_CANT_TAGS, AOE_EFFECTS_ONEOF_TAGS)) do
         if v.components.farmplanttendable then
             v.components.farmplanttendable:TendTo(inst)
+
+        elseif reset_brambletraps and v.components.mine ~= nil and v:HasTag("minesprung") then
+            v.components.mine:Reset()
         end
     end
 end
@@ -365,7 +351,7 @@ local function EnableFullBloom(inst, enable)
                 or TUNING.INSULATION_SMALL
 
             if not inst.tendplanttask then
-                inst.tendplanttask = inst:DoPeriodicTask(.5, TendToPlantsAOE)
+                inst.tendplanttask = inst:DoPeriodicTask(.5, DoAOEeffect)
             end
 
             -- trail effects
@@ -375,6 +361,8 @@ local function EnableFullBloom(inst, enable)
             if not inst.planttask then
                 inst.planttask = inst:DoPeriodicTask(.25, PlantTick)
             end
+
+            inst:UpdatePhotosynthesisState(TheWorld.state.isday)
         end
     elseif inst.fullbloom then
         inst.fullbloom = nil
@@ -393,6 +381,8 @@ local function EnableFullBloom(inst, enable)
             inst.planttask:Cancel()
             inst.planttask = nil
         end
+
+        inst:UpdatePhotosynthesisState(TheWorld.state.isday)
     end
 end
 
@@ -570,6 +560,8 @@ end
 local function OnBecameGhost(inst)
     inst.components.bloomness:SetLevel(0)
     StopWatchingWorldPlants(inst)
+
+    inst:UpdatePhotosynthesisState(TheWorld.state.isday)
 end
 
 local function OnRespawnedFromGhost(inst)
@@ -577,6 +569,50 @@ local function OnRespawnedFromGhost(inst)
         inst.components.bloomness:Fertilize()
     end
     WatchWorldPlants(inst)
+
+    inst:UpdatePhotosynthesisState(TheWorld.state.isday)
+end
+
+local function WLFSort(a, b) -- Better than roundcheck!
+    return a.GUID < b.GUID
+end
+
+local function RecalculateLightFlierPattern(inst)
+    local pets = inst.components.petleash and inst.components.petleash:GetPetsWithPrefab("wormwood_lightflier") or nil
+    if pets then
+        inst.wormwood_lightflier_pattern = pets
+        table.sort(pets, WLFSort)
+        for i, v in ipairs(pets) do
+            pets[v] = i
+        end
+        pets.maxpets = #pets
+    else
+        inst.wormwood_lightflier_pattern = nil
+    end
+end
+
+local function OnSpawnPet(inst, pet)
+    if pet.prefab == "wormwood_lightflier" then
+        inst:RecalculateLightFlierPattern()
+    end
+    if inst._OnSpawnPet ~= nil then
+        inst:_OnSpawnPet(pet)
+    end
+end
+
+local function OnDespawnPet(inst, pet)
+    if pet.prefab == "wormwood_lightflier" then
+        inst:RecalculateLightFlierPattern()
+    end
+    if inst._OnDespawnPet ~= nil then
+        inst:_OnDespawnPet(pet)
+    end
+end
+
+local function OnRemovedPet(inst, pet)
+    if pet.prefab == "wormwood_lightflier" then
+        inst:RecalculateLightFlierPattern()
+    end
 end
 
 local function OnNewSpawn(inst)
@@ -605,6 +641,20 @@ local function OnInit(inst)
     --Client listeners
     inst:ListenForEvent("pollendirty", OnPollenDirty)
     inst:ListenForEvent("bloomfxdirty", OnBloomFXDirty)
+end
+
+-- Also called from skilltree_wormwood.lua
+local function UpdatePhotosynthesisState(inst, isday)
+    if inst.components.health ~= nil then
+        local skill_active =  inst.components.skilltreeupdater ~= nil and inst.components.skilltreeupdater:IsActivated("wormwood_blooming_petals") or nil
+
+        if skill_active and isday and inst.fullbloom and not inst:HasTag("playerghost") then
+            local regen = TUNING.WORMWOOD_PHOTOSYNTHESIS_HEALTH_REGEN
+            inst.components.health:StartRegen(regen.amount, regen.period)
+        else
+            inst.components.health:StopRegen()
+        end
+    end
 end
 
 local function common_postinit(inst)
@@ -654,6 +704,20 @@ local function master_postinit(inst)
         inst.components.eater:SetAbsorptionModifiers(0, 1, 1)
     end
 
+    if inst.components.petleash ~= nil then
+        inst._OnSpawnPet = inst.components.petleash.onspawnfn
+        inst._OnDespawnPet = inst.components.petleash.ondespawnfn
+    else
+        inst:AddComponent("petleash")
+    end
+    local petleash = inst.components.petleash
+    petleash:SetOnSpawnFn(OnSpawnPet)
+    petleash:SetOnDespawnFn(OnDespawnPet)
+    petleash:SetOnRemovedFn(OnRemovedPet)
+    petleash:SetMaxPetsForPrefab("wormwood_lightflier", TUNING.WORMWOOD_PET_LIGHTFLIER_LIMIT)
+    petleash:SetMaxPetsForPrefab("wormwood_carrat", TUNING.WORMWOOD_PET_CARRAT_LIMIT)
+    petleash:SetMaxPetsForPrefab("wormwood_fruitdragon", TUNING.WORMWOOD_PET_FRUITDRAGON_LIMIT)
+
     inst.components.foodaffinity:AddPrefabAffinity("cave_banana_cooked", TUNING.AFFINITY_15_CALORIES_SMALL)
 
     inst.components.burnable:SetBurnTime(TUNING.WORMWOOD_BURN_TIME)
@@ -699,6 +763,8 @@ local function master_postinit(inst)
     WatchWorldPlants(inst)
 
     inst.UpdateBloomStage = UpdateBloomStage
+    inst.RecalculateLightFlierPattern = RecalculateLightFlierPattern
+    inst.UpdatePhotosynthesisState = UpdatePhotosynthesisState
 
     inst.OnPreLoad = OnPreLoad
     inst.OnLoad = OnLoad

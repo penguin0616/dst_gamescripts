@@ -314,6 +314,19 @@ local function BuildSkillsData(SkillTreeFns)
 
             group = "gathering",
             tags = {"blooming"},
+
+            onactivate = function(inst)
+                if inst.fullbloom then
+                    inst.components.temperature.inherentsummerinsulation = TUNING.INSULATION_MED_LARGE
+                end
+            end,
+            ondeactivate = function(inst)
+                if inst.fullbloom then
+                    inst.components.temperature.inherentsummerinsulation = TUNING.INSULATION_SMALL
+                else
+                    inst.components.temperature.inherentsummerinsulation = 0
+                end
+            end,
         },
         wormwood_blooming_max_upgrade = {
             title = SKILLTREESTRINGS.BLOOMING_MAX_UPGRADE_TITLE,
@@ -336,14 +349,25 @@ local function BuildSkillsData(SkillTreeFns)
                 "wormwood_blooming_petals",
             },
         },
+
+        -- Soft renamed to wormwood_blooming_photosynthesis.
         wormwood_blooming_petals = {
-            title = SKILLTREESTRINGS.BLOOMING_PETALS_TITLE,
-            desc = SKILLTREESTRINGS.BLOOMING_PETALS_DESC,
-            icon = "wormwood_blooming_petals",
+            title = SKILLTREESTRINGS.BLOOMING_PHOTOSYNTHESIS_TITLE,
+            desc = SKILLTREESTRINGS.BLOOMING_PHOTOSYNTHESIS_DESC,
+            icon = "wormwood_blooming_photosynthesis",
             pos = {UI_VERTICAL_MIDDLE - 115 - 120, UI_BOTTOM + 58},
 
             group = "gathering",
             tags = {"blooming"},
+
+            onactivate = function(inst)
+                inst:WatchWorldState("isday", inst.UpdatePhotosynthesisState)
+                inst:UpdatePhotosynthesisState(TheWorld.state.isday)
+            end,
+            ondeactivate = function(inst)
+                inst:StopWatchingWorldState("isday", inst.UpdatePhotosynthesisState)
+                inst:UpdatePhotosynthesisState(TheWorld.state.isday)
+            end,
         },
 
         --
@@ -355,14 +379,22 @@ local function BuildSkillsData(SkillTreeFns)
 
             group = "gathering",
             tags = {"blooming"},
+            onactivate = function(owner)
+                owner:AddTag("farmplantfastpicker")
+            end,
+            ondeactivate = function(owner)
+                owner:RemoveTag("farmplantfastpicker")
+            end,
             connects = {
                 "wormwood_blooming_farmrange2",
             },
         },
+
+        -- Soft renamed to wormwood_quick_selffertilizer
         wormwood_blooming_farmrange2 = {
-            title = SKILLTREESTRINGS.BLOOMING_FARMRANGE2_TITLE,
-            desc = SKILLTREESTRINGS.BLOOMING_FARMRANGE2_DESC,
-            icon = "wormwood_blooming_farmrange2",
+            title = SKILLTREESTRINGS.QUICK_SELFFERTILIZER_TITLE,
+            desc = SKILLTREESTRINGS.QUICK_SELFFERTILIZER_DESC,
+            icon = "wormwood_quick_selffertilizer",
             pos = {UI_VERTICAL_MIDDLE - 90, UI_BOTTOM + 95},
 
             group = "gathering",
@@ -381,6 +413,8 @@ local function BuildSkillsData(SkillTreeFns)
             group = "gathering",
             tags = {"blooming"},
         },
+
+        -- Soft renamed to wormwood_blooming_trapbramble
         wormwood_blooming_farmrange3 = {
             title = SKILLTREESTRINGS.BLOOMING_FARMRANGE3_TITLE,
             desc = SKILLTREESTRINGS.BLOOMING_FARMRANGE3_DESC,

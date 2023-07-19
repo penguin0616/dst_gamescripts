@@ -154,6 +154,17 @@ end
 BrainCommon.PanicWhenScared = PanicWhenScared
 
 --------------------------------------------------------------------------
+
+local function IsUnderIpecacsyrupEffect(inst)
+    return inst:HasDebuff("ipecacsyrup_buff")
+end
+
+BrainCommon.IsUnderIpecacsyrupEffect = IsUnderIpecacsyrupEffect
+BrainCommon.IpecacsyrupPanicTrigger = function(inst)
+    return WhileNode(function() return BrainCommon.IsUnderIpecacsyrupEffect(inst) end, "IpecacsyrupPanicTrigger", Panic(inst))
+end
+
+--------------------------------------------------------------------------
 -- Actions: MINE, CHOP
 
 local MINE_TAGS = { "MINE_workable" }

@@ -908,10 +908,11 @@ return{
     ANNOUNCE_WOLFGANG_MIGHTY_COACHING = "Wolfgang's muscles are too impressive. Would not want to embarrass others.",
     ANNOUNCE_WOLFGANG_BEGIN_COACHING = "Come, friends! Wolfgang will show you how it's done!",
     ANNOUNCE_WOLFGANG_END_COACHING = "Is time to rest weary muscles.",
-    ANNOUNCE_WOLFGANG_NOTEAM = {
+    ANNOUNCE_WOLFGANG_NOTEAM = 
+    {
         "Where is team?",
         "Wolfgang needs team.",
-        "let's go... team?",
+        "Let's go... team?",
     },
 
 	BATTLECRY =
@@ -4823,6 +4824,8 @@ return{
 		SWORD_LUNARPLANT = "Is sword of star-stuff.",
 		PICKAXE_LUNARPLANT = "Rocks will tremble before Wolfgang!",
 		SHOVEL_LUNARPLANT = "But is not shoe? Wolfgang is confused...",
+
+		BROKEN_FORGEDITEM = "Sorry friends, Wolfgang forgets his own strength.",
 
         PUNCHINGBAG = "Wolfgang will try to go easy on tiny punch man.",
 

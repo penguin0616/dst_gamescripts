@@ -65,6 +65,11 @@ local function SetBuffOwner(inst, owner)
 end
 
 local function SetFxOwner(inst, owner)
+	if inst._owner ~= nil and inst._owner.components.colouradder ~= nil then
+		inst._owner.components.colouradder:DetachChild(inst.blade1)
+		inst._owner.components.colouradder:DetachChild(inst.blade2)
+	end
+	inst._owner = owner
 	if owner ~= nil then
 		inst.blade1.entity:SetParent(owner.entity)
 		inst.blade2.entity:SetParent(owner.entity)
@@ -72,6 +77,10 @@ local function SetFxOwner(inst, owner)
 		inst.blade2.Follower:FollowSymbol(owner.GUID, "swap_object", nil, nil, nil, true, nil, 5, 8)
 		inst.blade1.components.highlightchild:SetOwner(owner)
 		inst.blade2.components.highlightchild:SetOwner(owner)
+		if owner.components.colouradder ~= nil then
+			owner.components.colouradder:AttachChild(inst.blade1)
+			owner.components.colouradder:AttachChild(inst.blade2)
+		end
 	else
 		inst.blade1.entity:SetParent(inst.entity)
 		inst.blade2.entity:SetParent(inst.entity)
@@ -177,6 +186,8 @@ local function OnBroken(inst)
 		DisableComponents(inst)
 		inst.AnimState:PlayAnimation("broken")
 		SetIsBroken(inst, true)
+		inst:AddTag("broken")
+		inst.components.inspectable.nameoverride = "BROKEN_FORGEDITEM"
 	end
 end
 
@@ -187,6 +198,8 @@ local function OnRepaired(inst)
 		inst.blade2.AnimState:SetFrame(0)
 		inst.AnimState:PlayAnimation("idle", true)
 		SetIsBroken(inst, false)
+		inst:RemoveTag("broken")
+		inst.components.inspectable.nameoverride = nil
 	end
 end
 
@@ -207,6 +220,7 @@ local function fn()
 	inst.AnimState:SetLightOverride(.1)
 
 	inst:AddTag("sharp")
+	inst:AddTag("show_broken_ui")
 
 	--weapon (from weapon component) added to pristine state for optimization
 	inst:AddTag("weapon")
@@ -284,6 +298,8 @@ local function fxfn()
 	if not TheWorld.ismastersim then
 		return inst
 	end
+
+	inst:AddComponent("colouradder")
 
 	inst.persists = false
 

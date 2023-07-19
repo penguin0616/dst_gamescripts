@@ -1184,11 +1184,11 @@ function ScrapbookScreen:PopulateInfoPanel(data)
 	if data then
 
 		if data.health then
-			makeentry("icon_health.tex",tostring(math.floor(data.health)))
+			makeentry("icon_health.tex", tostring(math.floor(data.health)))
 		end
 
 		if data.damage then
-			makeentry("icon_damage.tex",tostring(math.floor(data.damage)))
+			makeentry("icon_damage.tex", tostring(checknumber(data.damage) and math.floor(data.damage) or data.damage))
 		end
 
 		if data.sanityaura then

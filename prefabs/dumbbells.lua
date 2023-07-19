@@ -520,6 +520,7 @@ local function MakeDumbbell(name, consumption, efficiency, damage, impact_sound,
         if name == "dumbbell_heat" then
             inst:AddTag("HASHEATER")
             inst:AddTag("icebox_valid")
+            inst:AddTag("heatrock")
         end
 
         inst:AddComponent("reticule")

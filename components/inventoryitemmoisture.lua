@@ -147,7 +147,7 @@ function InventoryItemMoisture:GetTargetMoisture()
     --Otherwise (most likely a container), keep items dry
     local owner = self.inst.components.inventoryitem.owner
     return (self.inst.components.floater ~= nil and self.inst.components.floater.showing_effect and TUNING.OCEAN_WETNESS)
-		or (owner == nil and (TheWorld.state.israining and not self.inst:HasTag("rainimmunity") and TheWorld.state.wetness or 0))
+		or (owner == nil and (TheWorld.state.israining and self.inst.components.rainimmunity == nil and TheWorld.state.wetness or 0))
         or (owner.components.moisture ~= nil and owner.components.moisture:GetMoisture())
         or 0
 end

@@ -24,6 +24,7 @@ local events=
     CommonHandlers.OnSleep(),
     CommonHandlers.OnFreeze(),
 	CommonHandlers.OnSink(),
+    CommonHandlers.OnIpecacPoop(),
 
     EventHandler("doattack", function(inst, data) if not inst.components.health:IsDead() then inst.sg:GoToState("attack", data.target) end end),
     EventHandler("death", function(inst)
@@ -79,11 +80,6 @@ local events=
     EventHandler("despawn", function(inst, data)
         if not inst.components.health:IsDead() then
             inst.sg:GoToState("despawn")
-        end
-    end),
-    EventHandler("ipecacpoop", function(inst)
-        if not inst.components.health:IsDead() and not inst.sg:HasStateTag("busy") then
-            inst.sg:GoToState("ipecacpoop")
         end
     end),
 }
@@ -860,22 +856,6 @@ local states=
             inst:DoTaskInTime(0, inst.Remove)
         end,
     },
-
-    State{
-        name = "ipecacpoop",
-        tags = { "busy" },
-
-        onenter = function(inst)
-            inst.SoundEmitter:PlaySound(inst.sounds.grunt)
-            inst.AnimState:PlayAnimation("hit")
-            inst.Physics:Stop()
-        end,
-
-        events =
-        {
-            EventHandler("animover", go_to_idle),
-        },
-    },
 }
 
 --#TODO: Special walk states for when stomach is empty, use that graze walk loop
@@ -893,6 +873,7 @@ CommonStates.AddWalkStates(
 CommonStates.AddSimpleState(states,"hit", "hit")
 CommonStates.AddFrozenStates(states)
 CommonStates.AddSinkAndWashAsoreStates(states)
+CommonStates.AddIpecacPoopState(states)
 
 CommonStates.AddSleepStates(states,
 {

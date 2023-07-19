@@ -259,6 +259,12 @@ function LootDropper:GetAllPossibleLoot()
         end
     end
 
+    local wintersfeast_loot = self.GetWintersFeastOrnaments ~= nil and self.GetWintersFeastOrnaments(self.inst) or TUNING.WINTERS_FEAST_TREE_DECOR_LOOT[string.upper(self.inst.prefab)] or nil
+
+    if wintersfeast_loot ~= nil and wintersfeast_loot.special ~= nil then
+        loots[wintersfeast_loot.special] = true
+    end
+
     return loots
 end
 
@@ -326,7 +332,7 @@ function LootDropper:SpawnLootPrefab( lootprefab, pt, linked_skinname, skin_id, 
                 if self.inst.components.inventoryitem ~= nil then
                     loot.components.inventoryitem:InheritMoisture(self.inst.components.inventoryitem:GetMoisture(), self.inst.components.inventoryitem:IsWet())
                 else
-                    loot.components.inventoryitem:InheritMoisture(TheWorld.state.wetness, TheWorld.state.iswet)
+					loot.components.inventoryitem:InheritWorldWetnessAtTarget(self.inst)
                 end
             end
 

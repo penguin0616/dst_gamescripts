@@ -110,15 +110,6 @@ GymStates.AddGymStates = function(states, actionhandlers, events)
                 inst.sg.statemem.dontleavegym = true
                 inst.sg:GoToState("mighty_gym_workout_loop")
             end),
-
-            EventHandler("auto_success", function(inst, data)
-                inst.sg.statemem.dontleavegym = true
-                if data and data.perfect then
-                    inst.sg:GoToState("mighty_gym_success_perfect")
-                else
-                    inst.sg:GoToState("mighty_gym_success")
-                end
-            end),
         },
 
         onexit = function(inst)

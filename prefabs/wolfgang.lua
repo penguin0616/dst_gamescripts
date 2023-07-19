@@ -25,6 +25,11 @@ local fxassets =
     
 }
 
+local buff_prefabs =
+{
+	"wolfgang_coach_buff_fx",
+}
+
 local start_inv = {}
 for k, v in pairs(TUNING.GAMEMODE_STARTING_ITEMS) do
 	start_inv[string.lower(k)] = v.WOLFGANG
@@ -284,6 +289,27 @@ end
 
 ------------------------------------------------
 
+local function CalcLiftAction(inst)
+    local busy = inst:HasTag("busy")
+
+    local percent = inst.bell_percent
+    local level  = inst.player_classified.inmightygym:value() + 1
+
+    local success_min = TUNING["BELL_SUCCESS_MIN_"..level]
+    local success_max = TUNING["BELL_SUCCESS_MAX_"..level]
+
+    local success_mid_min = TUNING["BELL_MID_SUCCESS_MIN_"..level]
+    local success_mid_max = TUNING["BELL_MID_SUCCESS_MAX_"..level]
+
+    if not busy and success_min and percent >= success_min and percent <= success_max then
+        return ACTIONS.LIFT_GYM_SUCCEED_PERFECT
+    elseif not busy and percent >= success_mid_min and percent <= success_mid_max then
+        return ACTIONS.LIFT_GYM_SUCCEED
+    else
+        return ACTIONS.LIFT_GYM_FAIL
+    end
+end
+
 local function bell_SetPercent(inst, val)
     val = val or inst.bell_percent
 
@@ -295,6 +321,20 @@ local function bell_SetPercent(inst, val)
 end
 
 local function updatebell(inst, dt)
+    if inst.components.skilltreeupdater:IsActivated("wolfgang_autogym") then -- NOTES(JBK): This must be before the bell_percent gets updated.
+        local liftaction = CalcLiftAction(inst)
+        local level = inst.player_classified.inmightygym:value() + 1
+        if level < TUNING.BELL_PERFECT_LEVEL_STARTING and liftaction == ACTIONS.LIFT_GYM_SUCCEED or liftaction == ACTIONS.LIFT_GYM_SUCCEED_PERFECT then
+            if inst.components.playercontroller ~= nil then
+                local x, y, z = inst.Transform:GetWorldPosition()
+                local act = BufferedAction(inst, nil, liftaction, nil, Vector3(x, y, z))
+                if not TheWorld.ismastersim then
+                    SendRPCToServer(RPC.LeftClick, act.action.code, x, z)
+                end
+                inst.components.playercontroller:DoAction(act)
+            end
+        end
+    end
 
     if inst.bell_forward and inst.bell_percent >= 1 then
         inst.bell_forward = false
@@ -314,33 +354,6 @@ local function updatebell(inst, dt)
         inst.bell_SetPercent(inst, inst.bell_percent - (dt * inst.bell_speed))
         if (oldpercent > 0 and inst.bell_percent <= 0) then
             playsound = true
-        end
-    end
-
-    local WINDOW_TOP = 0.53
-    local WINDO_BOTTOM = 0.47
-    if inst.components.skilltreeupdater:IsActivated("wolfgang_autogym") then
-        local busy = inst:HasTag("busy")
-
-        local percent = inst.bell_percent
-        local level  = inst.player_classified.inmightygym:value() + 1
-
-        local success_min = TUNING["BELL_SUCCESS_MIN_"..level]
-        local success_max = TUNING["BELL_SUCCESS_MAX_"..level]
-
-        local success_mid_min = TUNING["BELL_MID_SUCCESS_MIN_"..level]
-        local success_mid_max = TUNING["BELL_MID_SUCCESS_MAX_"..level]
-
-        if (oldpercent >WINDOW_TOP or oldpercent < WINDO_BOTTOM) and inst.bell_percent <= WINDOW_TOP and inst.bell_percent >= WINDO_BOTTOM then        
-            if not busy and success_min and percent >= success_min and percent <= success_max then
-              SendRPCToServer(RPC.autogym, true)
-              inst:PushEvent("auto_success", {perfect=true})
-              inst.bell:ding("perfect")
-            elseif not busy and percent >= success_mid_min and percent <= success_mid_max then
-               SendRPCToServer(RPC.autogym)
-               inst:PushEvent("auto_success")
-               inst.bell:ding()
-            end            
         end
     end
 
@@ -381,34 +394,13 @@ local function onliftgym(inst,data)
     end
 end
 
-local function CalcLiftAction(inst)
-    local busy = inst:HasTag("busy")
-
-    local percent = inst.bell_percent
-    local level  = inst.player_classified.inmightygym:value() + 1
-
-    local success_min = TUNING["BELL_SUCCESS_MIN_"..level]
-    local success_max = TUNING["BELL_SUCCESS_MAX_"..level]
-
-    local success_mid_min = TUNING["BELL_MID_SUCCESS_MIN_"..level]
-    local success_mid_max = TUNING["BELL_MID_SUCCESS_MAX_"..level]
-
-    if not busy and success_min and percent >= success_min and percent <= success_max then
-        return ACTIONS.LIFT_GYM_SUCCEED_PERFECT
-    elseif not busy and percent >= success_mid_min and percent <= success_mid_max then
-        return ACTIONS.LIFT_GYM_SUCCEED
-    else
-        return ACTIONS.LIFT_GYM_FAIL
-    end
-end
-
 local function LeftClickPicker(inst, target, position)
-    if inst:HasTag("ingym") and not inst.components.skilltreeupdater:IsActivated("wolfgang_autogym") then
+    if inst:HasTag("ingym") then
         if inst ~= ThePlayer then
             if CLIENT_REQUESTED_ACTION == ACTIONS.LIFT_GYM_SUCCEED_PERFECT or CLIENT_REQUESTED_ACTION == ACTIONS.LIFT_GYM_SUCCEED or CLIENT_REQUESTED_ACTION == ACTIONS.LIFT_GYM_FAIL then
                 return inst.components.playeractionpicker:SortActionList({ CLIENT_REQUESTED_ACTION })
             end
-        else
+        elseif not inst.components.skilltreeupdater:IsActivated("wolfgang_autogym") then
             return inst.components.playeractionpicker:SortActionList({ CalcLiftAction(inst) }, position)
         end
     end
@@ -432,7 +424,7 @@ local function PointSpecialActions(inst, pos, useitem, right)
 				if CLIENT_REQUESTED_ACTION == ACTIONS.LIFT_GYM_SUCCEED_PERFECT or CLIENT_REQUESTED_ACTION == ACTIONS.LIFT_GYM_SUCCEED or CLIENT_REQUESTED_ACTION == ACTIONS.LIFT_GYM_FAIL then
 					return { CLIENT_REQUESTED_ACTION }
 				end
-			else
+			elseif not inst.components.skilltreeupdater:IsActivated("wolfgang_autogym") then
 				return { CalcLiftAction(inst) }
 			end
 		end
@@ -446,7 +438,7 @@ local function actionbuttonoverride(inst, force_target)
 		if CLIENT_REQUESTED_ACTION == ACTIONS.LIFT_GYM_SUCCEED_PERFECT or CLIENT_REQUESTED_ACTION == ACTIONS.LIFT_GYM_SUCCEED or CLIENT_REQUESTED_ACTION == ACTIONS.LIFT_GYM_FAIL then
 			return BufferedAction(inst, nil, CLIENT_REQUESTED_ACTION, nil, inst:GetPosition())
 		end
-	else
+	elseif not inst.components.skilltreeupdater:IsActivated("wolfgang_autogym") then
 		return BufferedAction(inst, nil, CalcLiftAction(inst), nil, inst:GetPosition())
 	end
 end
@@ -570,6 +562,8 @@ end
 
 local function common_postinit(inst)
     inst:AddTag("strongman")
+    --mightiness_normal (from mightiness component) added to pristine state for optimization
+    inst:AddTag("mightiness_normal")
 
     if TheNet:GetServerGameMode() == "lavaarena" then
         inst._isavatar = net_bool(inst.GUID, "wolfgang._isavatar", "isavatardirty")
@@ -663,8 +657,6 @@ local function master_postinit(inst)
     end
 end
 
-local BUFF_DURATION = 10
-
 local function OnKillBuff(inst)
     inst.components.debuff:Stop()
 end
@@ -676,11 +668,14 @@ local function OnAttached(inst, target)
         inst.components.debuff:Stop()
     end, target)
 
-    inst.bufftask = inst:DoTaskInTime(BUFF_DURATION, OnKillBuff)
+    inst.bufftask = inst:DoTaskInTime(TUNING.COACH_TIME_BUFF_LASTS, OnKillBuff)
 
     if target ~= nil and target:IsValid() and target.components.combat ~= nil then
         local mult = TUNING.WOLFGANG_COACH_BUFF
         target.components.combat.externaldamagemultipliers:SetModifier(inst, mult)
+        local fx = SpawnPrefab("wolfgang_coach_buff_fx")
+        inst.bufffx = fx
+        fx.entity:SetParent(target.entity)
     end
 end
 
@@ -688,36 +683,31 @@ local function OnDetached(inst, target)
     if target ~= nil and target:IsValid() and target.components.combat ~= nil then
         target.components.combat.externaldamagemultipliers:RemoveModifier(inst)
     end
+    if inst.bufffx and inst.bufffx:IsValid() then
+        inst.bufffx:Remove()
+    end
+    inst.bufffx = nil
     inst:Remove()
 end
 
 local function OnExtendedBuff(inst)
     if inst.bufftask ~= nil then
         inst.bufftask:Cancel()
-        inst.bufftask = inst:DoTaskInTime(BUFF_DURATION, OnKillBuff)
+        inst.bufftask = inst:DoTaskInTime(TUNING.COACH_TIME_BUFF_LASTS, OnKillBuff)
     end
 end
 
 local function bufffn()
     local inst = CreateEntity()
 
-    inst.entity:AddTransform()
-    inst.entity:AddAnimState()
-    inst.entity:AddNetwork()
-    inst.entity:AddFollower()   
-     
-    inst:AddTag("FX")
-    inst:AddTag("NOCLICK")
-
-    inst.AnimState:SetBank("coached_fx")
-    inst.AnimState:SetBuild("coached_fx")
-    inst.AnimState:PlayAnimation("idle",true)
-
     if not TheWorld.ismastersim then
         --Not meant for client!
         inst:DoTaskInTime(0, inst.Remove)
         return inst
     end
+
+    inst.entity:AddTransform()
+    --[[Non-networked entity]]
 
     inst.persists = false
 
@@ -732,5 +722,31 @@ local function bufffn()
     return inst
 end
 
+local function bufffn_fx()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddNetwork()
+    inst.entity:AddFollower()   
+     
+    inst:AddTag("FX")
+
+    inst.AnimState:SetBank("coached_fx")
+    inst.AnimState:SetBuild("coached_fx")
+    inst.AnimState:PlayAnimation("idle",true)
+
+    inst.entity:SetPristine()
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst.persists = false
+
+    return inst
+end
+
 return MakePlayerCharacter("wolfgang", prefabs, assets, common_postinit, master_postinit),
-        Prefab("wolfgang_coach_buff", bufffn, fxassets, prefabs)
+        Prefab("wolfgang_coach_buff", bufffn, nil, buff_prefabs),
+        Prefab("wolfgang_coach_buff_fx", bufffn_fx, fxassets)

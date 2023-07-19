@@ -49,11 +49,7 @@ local function fn_syrup()
 
     --
     inst:AddComponent("tradable")
-
-    --
     inst:AddComponent("inspectable")
-
-    --
     inst:AddComponent("inventoryitem")
 
     --
@@ -72,7 +68,7 @@ local IPECAC_TICK_TIMERNAME = "pooptick"
 local function buff_OnAttached(inst, target)
     inst.entity:SetParent(target.entity)
     inst.Transform:SetPosition(0,0,0)
-    inst.components.timer:StartTimer(IPECAC_TICK_TIMERNAME, TUNING.IPECAC_TASK_TIME)
+    inst.components.timer:StartTimer(IPECAC_TICK_TIMERNAME, TUNING.IPECAC_TICK_TIME)
 
     local stop_fn = function() inst.components.debuff:Stop() end
     inst:ListenForEvent("death", stop_fn, target)
@@ -85,28 +81,30 @@ local function buff_OnExtended(inst, target)
 end
 
 local function buff_DoTick(inst)
-    if inst._tick_count == 0 then
+    if inst._tick_count <= 0 then
         inst.components.debuff:Stop()
     else
         inst._tick_count = inst._tick_count - 1
-        inst.components.timer:StartTimer(IPECAC_TICK_TIMERNAME, TUNING.IPECAC_TASK_TIME)
+        inst.components.timer:StartTimer(IPECAC_TICK_TIMERNAME, TUNING.IPECAC_TICK_TIME)
     end
 
     local target = inst.components.debuff.target
     if target then
-        SpawnPrefab("poop").Transform:SetPosition(target.Transform:GetWorldPosition())
+        local poop = SpawnPrefab("poop")
+
+        poop.Transform:SetPosition(target.Transform:GetWorldPosition())
+        
+        local periodicspawner = target.components.periodicspawner
+        if periodicspawner ~= nil and periodicspawner.onspawn ~= nil then
+            periodicspawner.onspawn(target, poop)
+        end
 
         target:PushEvent("ipecacpoop")
 
-        local target_combat = target.components.combat
         local target_health = target.components.health
 
-        -- Damage amount is the same as a red mushroom.
-        local damage = TUNING.HEALING_MED
-        if target_combat then
-            target_combat:GetAttacked(inst, damage)
-        elseif target_health then
-            target_health:DoDelta(-damage, nil, inst.prefab, nil, inst)
+        if target_health then
+            target_health:DoDelta(-TUNING.IPECAC_DAMAGE_PER_TICK, nil, inst.prefab, nil, inst)
         end
     end
 end
@@ -163,5 +161,6 @@ local function fn_buff()
     return inst
 end
 
-return Prefab("ipecacsyrup", fn_syrup, assets, prefabs),
-    Prefab("ipecacsyrup_buff", fn_buff, assets)
+return
+        Prefab("ipecacsyrup",      fn_syrup, assets, prefabs),
+        Prefab("ipecacsyrup_buff", fn_buff,  assets         )

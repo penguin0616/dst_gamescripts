@@ -313,7 +313,7 @@ end
 
 local function DropWetTool(inst, data)
     --Tool slip.
-    if inst.components.moisture:GetSegs() < 4 or inst:HasTag("stronggrip") then
+	if inst.components.moisture:GetSegs() < 4 or inst:HasTag("stronggrip") or inst.components.rainimmunity ~= nil then
         return
     end
 
@@ -1371,7 +1371,9 @@ end
 --------------------------------------------------------------------------
 
 local function DoEffects(pet)
-    SpawnPrefab(pet:HasTag("flying") and "spawn_fx_small_high" or "spawn_fx_small").Transform:SetPosition(pet.Transform:GetWorldPosition())
+    if not pet.no_spawn_fx then
+        SpawnPrefab(pet:HasTag("flying") and "spawn_fx_small_high" or "spawn_fx_small").Transform:SetPosition(pet.Transform:GetWorldPosition())
+    end
 end
 
 local function OnSpawnPet(inst, pet)
@@ -2158,6 +2160,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
 		inst.isplayer = true
 
+		inst.TargetForceAttackOnly = fns.TargetForceAttackOnly
+
         if common_postinit ~= nil then
             common_postinit(inst)
         end
@@ -2474,7 +2478,6 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.YOTB_isskinunlocked = fns.YOTB_isskinunlocked
 
         inst.IsNearDanger = fns.IsNearDanger
-		inst.TargetForceAttackOnly = fns.TargetForceAttackOnly
         inst.SetGymStartState = fns.SetGymStartState
         inst.SetGymStopState = fns.SetGymStopState
         inst.SwapAllCharacteristics = fns.SwapAllCharacteristics

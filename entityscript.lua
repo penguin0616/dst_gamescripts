@@ -681,8 +681,14 @@ function EntityScript:GetAdjectivedName()
                 return ConstructAdjectivedName(self, name, STRINGS.WET_PREFIX.FUEL)
             end
         end
+		--broken
+		if self:HasTag("broken") then
+			return ConstructAdjectivedName(self, ConstructAdjectivedName(self, name, STRINGS.WET_PREFIX.GENERIC), STRINGS.BROKENITEM)
+		end
         --generic
         return ConstructAdjectivedName(self, name, STRINGS.WET_PREFIX.GENERIC)
+	elseif self:HasTag("broken") then
+		return ConstructAdjectivedName(self, name, STRINGS.BROKENITEM)
     end
     return name
 end

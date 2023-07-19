@@ -908,6 +908,12 @@ return{
     ANNOUNCE_WOLFGANG_MIGHTY_COACHING = "only_used_by_wolfgang",
     ANNOUNCE_WOLFGANG_BEGIN_COACHING = "only_used_by_wolfgang",
     ANNOUNCE_WOLFGANG_END_COACHING = "only_used_by_wolfgang",
+    ANNOUNCE_WOLFGANG_NOTEAM = 
+    {
+        "only_used_by_wolfang",
+        "only_used_by_wolfang",
+        "only_used_by_wolfang",
+    },
 
 	BATTLECRY =
 	{
@@ -4818,6 +4824,8 @@ return{
 		SWORD_LUNARPLANT = "I still prefer my axe.",
 		PICKAXE_LUNARPLANT = "Using a plant to break stone just feels backwards somehow.",
 		SHOVEL_LUNARPLANT = "Let's get digging, eh?",
+
+		BROKEN_FORGEDITEM = "That thing's seen better days.",
 
         PUNCHINGBAG = "I should see how much of a punch I'm packing, eh?",
 

@@ -431,7 +431,7 @@ local function blinkstaff_reticuletargetfn()
     rotation = rotation * DEGREES
     for r = 13, 1, -1 do
         local numtries = 2 * PI * r
-        local offset = FindWalkableOffset(pos, rotation, r, numtries, false, true, NoHoles)
+        local offset = FindWalkableOffset(pos, rotation, r, numtries, false, true, NoHoles, false, true)
         if offset ~= nil then
             pos.x = pos.x + offset.x
             pos.y = 0
@@ -626,6 +626,10 @@ local function destroystructure(staff, target)
     if target.components.stewer ~= nil then
         target.components.stewer:Harvest()
     end
+
+	if target.components.constructionsite ~= nil then
+		target.components.constructionsite:DropAllMaterials()
+	end
 
    	target:PushEvent("ondeconstructstructure", caster)
 

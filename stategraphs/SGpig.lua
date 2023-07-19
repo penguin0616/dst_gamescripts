@@ -25,6 +25,7 @@ local events =
     CommonHandlers.OnDeath(),
     CommonHandlers.OnHop(),
 	CommonHandlers.OnSink(),
+	CommonHandlers.OnIpecacPoop(),
     EventHandler("transformnormal", function(inst)
         if not inst.components.health:IsDead() then
             inst.sg:GoToState("transformNormal")
@@ -43,11 +44,6 @@ local events =
     EventHandler("win_yotb", function(inst, data)
         if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead()) then
             inst.sg:GoToState("win_yotb")
-        end
-    end),
-    EventHandler("ipecacpoop", function(inst)
-        if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead()) then
-            inst.sg:GoToState("ipecacpoop")
         end
     end),
 }
@@ -296,22 +292,6 @@ local states =
             EventHandler("animover", go_to_idle),
         },
     },
-
-    State{
-        name = "ipecacpoop",
-        tags = { "busy" },
-
-        onenter = function(inst)
-            inst.SoundEmitter:PlaySound("dontstarve/pig/oink")
-            inst.AnimState:PlayAnimation("hit")
-            inst.Physics:Stop()
-        end,
-
-        events =
-        {
-            EventHandler("animover", go_to_idle),
-        },
-    },
 }
 
 CommonStates.AddWalkStates(states,
@@ -347,5 +327,6 @@ CommonStates.AddSimpleActionState(states, "pickup", "pig_pickup", 10 * FRAMES, {
 CommonStates.AddSimpleActionState(states, "gohome", "pig_pickup", 4 * FRAMES, { "busy" })
 CommonStates.AddHopStates(states, true, { pre = "boat_jump_pre", loop = "boat_jump_loop", pst = "boat_jump_pst"})
 CommonStates.AddSinkAndWashAsoreStates(states)
+CommonStates.AddIpecacPoopState(states)
 
 return StateGraph("pig", states, events, "idle", actionhandlers)

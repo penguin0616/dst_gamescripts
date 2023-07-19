@@ -911,6 +911,12 @@ return{
     ANNOUNCE_WOLFGANG_MIGHTY_COACHING = "only_used_by_wolfgang",
     ANNOUNCE_WOLFGANG_BEGIN_COACHING = "only_used_by_wolfgang",
     ANNOUNCE_WOLFGANG_END_COACHING = "only_used_by_wolfgang",
+    ANNOUNCE_WOLFGANG_NOTEAM = 
+    {
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+    },
 
 	BATTLECRY =
 	{
@@ -4821,6 +4827,8 @@ return{
 		SWORD_LUNARPLANT = "A shining beacon of pain.",
 		PICKAXE_LUNARPLANT = "It makes the endless toil a bit easier.",
 		SHOVEL_LUNARPLANT = "Some things should stay buried... but not today.",
+
+		BROKEN_FORGEDITEM = "A broken mockery of what it once was.",
 
         PUNCHINGBAG = "Some are simply made to suffer.",
 

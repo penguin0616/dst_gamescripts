@@ -208,7 +208,7 @@ end
 
 -- NOTES(JBK): More of an internal function to get a raw number elsewhere.
 function Moisture:_GetMoistureRateAssumingRain()
-	if self.inst:HasTag("rainimmunity") then
+	if self.inst.components.rainimmunity ~= nil then
 		return 0
 	end
 

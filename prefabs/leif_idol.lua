@@ -49,7 +49,9 @@ local function WakeUpNearbyLeifs(inst, x, y, z, doer)
             v:DoTaskInTime(math.random(), WakeUpLeif)
         end
 
-        v.components.combat:SuggestTarget(doer)
+        if doer ~= nil then
+            v.components.combat:SuggestTarget(doer)
+        end
     end
 
     return ents
@@ -95,31 +97,30 @@ local function OnBurnt(inst)
 
     local x, y, z = inst.Transform:GetWorldPosition()
 
-    local stacksize = inst.components.stackable ~= nil and inst.components.stackable:StackSize()
+    local stacksize = inst.components.stackable ~= nil and inst.components.stackable:StackSize() or nil
 
     local doer = inst._igniter or FindClosestPlayerInRange(x, y, z, 15, true)
 
-    if doer ~= nil then
-        -- Tell any nearby leifs to wake up.
-        inst:WakeUpNearbyLeifs(x, y, z, doer)
-        
-        -- Spawn new ones.
-        inst:SpawnNewLeifs(x, y, z, doer, stacksize)
-    end
+    -- Tell any nearby leifs to wake up.
+    inst:WakeUpNearbyLeifs(x, y, z, doer)
+    
+    -- Spawn new ones.
+    inst:SpawnNewLeifs(x, y, z, doer, stacksize)
 end
 
 local function OnFuelTaken(inst, target)
+    inst.SoundEmitter:PlaySound("dontstarve/creatures/leif/livinglog_burn")
+
     local x, y, z = target.Transform:GetWorldPosition()
 
     local doer = FindClosestPlayerInRange(x, y, z, 15, true)
 
-    if doer ~= nil then
-        -- Tell any nearby leifs to wake up.
-        inst:WakeUpNearbyLeifs(x, y, z, doer)
-        
-        -- Spawn new ones.
-        inst:SpawnNewLeifs(x, y, z, doer)
-    end
+    -- Tell any nearby leifs to wake up.
+    inst:WakeUpNearbyLeifs(x, y, z, doer)
+    
+    -- Spawn new ones.
+    inst:SpawnNewLeifs(x, y, z, doer)
+
 end
 
 local function fn()

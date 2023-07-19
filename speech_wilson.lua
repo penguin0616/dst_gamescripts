@@ -917,7 +917,12 @@ return {
     ANNOUNCE_WOLFGANG_MIGHTY_COACHING = "only_used_by_wolfgang",
     ANNOUNCE_WOLFGANG_BEGIN_COACHING = "only_used_by_wolfgang",
     ANNOUNCE_WOLFGANG_END_COACHING = "only_used_by_wolfgang",
-    ANNOUNCE_WOLFGANG_NOTEAM = "only_used_by_wolfgang",
+    ANNOUNCE_WOLFGANG_NOTEAM = 
+    {
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+    },
 
 	BATTLECRY =
 	{
@@ -4828,6 +4833,8 @@ return {
 		SWORD_LUNARPLANT = "It's hard not to make sound effects when I wave it around.",
 		PICKAXE_LUNARPLANT = "Smashing!",
 		SHOVEL_LUNARPLANT = "The dirt displacing possibilities are endless!",
+
+		BROKEN_FORGEDITEM = "It's broken, but I think I could repair it.",
 
         PUNCHINGBAG = "It comes with a finely calibrated ouch-o-meter.",
 

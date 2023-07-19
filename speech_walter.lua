@@ -907,6 +907,12 @@ return{
     ANNOUNCE_WOLFGANG_MIGHTY_COACHING = "only_used_by_wolfgang",
     ANNOUNCE_WOLFGANG_BEGIN_COACHING = "only_used_by_wolfgang",
     ANNOUNCE_WOLFGANG_END_COACHING = "only_used_by_wolfgang",
+    ANNOUNCE_WOLFGANG_NOTEAM = 
+    {
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+    },
 
 	BATTLECRY =
 	{
@@ -4817,6 +4823,8 @@ return{
 		SWORD_LUNARPLANT = "A space sword! Neat!",
 		PICKAXE_LUNARPLANT = "Those are some really tough leaves!",
 		SHOVEL_LUNARPLANT = "I came up with the name! ",
+
+		BROKEN_FORGEDITEM = "Woby! Were you playing with that?",
 
         PUNCHINGBAG = "Don't worry Woby, it's just for practice!",
 

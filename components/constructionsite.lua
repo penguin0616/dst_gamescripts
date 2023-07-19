@@ -149,6 +149,49 @@ function ConstructionSite:AddMaterial(prefab, num)
     return num
 end
 
+function ConstructionSite:RemoveMaterial(prefab, num)
+	--Return amount removed
+	local material = self.materials[prefab]
+	if material ~= nil then
+		num = math.min(num or 1, material.amount)
+		material.amount = material.amount - num
+		if material.slot ~= nil then
+			self.inst.replica.constructionsite:SetSlotCount(material.slot, material.amount)
+		end
+		if material.amount <= 0 then
+			self.materials[prefab] = nil
+		end
+		return num
+	end
+	return 0
+end
+
+function ConstructionSite:DropAllMaterials(drop_pos)
+	local x, y, z
+	if drop_pos ~= nil then
+		x, y, z = drop_pos:Get()
+	else
+		x, y, z = self.inst.Transform:GetWorldPosition()
+	end
+	for k, v in pairs(self.materials) do
+		local num = self:RemoveMaterial(k, v.amount)
+		while num > 0 do
+			local loot = SpawnPrefab(k)
+			if loot.components.stackable ~= nil then
+				loot.components.stackable:SetStackSize(math.min(num, loot.components.stackable.maxsize))
+				num = num - loot.components.stackable:StackSize()
+			else
+				num = num - 1
+			end
+			if loot.components.inventoryitem ~= nil then
+				loot.components.inventoryitem:DoDropPhysics(x, y, z, true)
+			else
+				loot.Transform:SetPosition(x, y, z)
+			end
+		end
+	end
+end
+
 function ConstructionSite:GetMaterialCount(prefab)
     return (self.materials[prefab] or EMPTY_TABLE).amount or 0
 end

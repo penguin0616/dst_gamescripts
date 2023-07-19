@@ -907,6 +907,12 @@ return{
     ANNOUNCE_WOLFGANG_MIGHTY_COACHING = "only_used_by_wolfang",
     ANNOUNCE_WOLFGANG_BEGIN_COACHING = "only_used_by_wolfang",
     ANNOUNCE_WOLFGANG_END_COACHING = "only_used_by_wolfang",
+    ANNOUNCE_WOLFGANG_NOTEAM = 
+    {
+        "only_used_by_wolfang",
+        "only_used_by_wolfang",
+        "only_used_by_wolfang",
+    },
 
 	BATTLECRY =
 	{
@@ -4817,6 +4823,8 @@ return{
 		SWORD_LUNARPLANT = "It mine!! Me want glowy sword!",
 		PICKAXE_LUNARPLANT = "It real good at breaking stuff.",
 		SHOVEL_LUNARPLANT = "Good scooper-upper, florp.",
+
+		BROKEN_FORGEDITEM = "Didn't break it!! Was someone else!",
 
         PUNCHINGBAG = "Allowed to hit it? Yay!!",
 

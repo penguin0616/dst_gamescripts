@@ -907,6 +907,12 @@ return{
     ANNOUNCE_WOLFGANG_MIGHTY_COACHING = "only_used_by_wolfgang",
     ANNOUNCE_WOLFGANG_BEGIN_COACHING = "only_used_by_wolfgang",
     ANNOUNCE_WOLFGANG_END_COACHING = "only_used_by_wolfgang",
+    ANNOUNCE_WOLFGANG_NOTEAM = 
+    {
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+    },
 
 	BATTLECRY =
 	{
@@ -4817,6 +4823,8 @@ return{
 		SWORD_LUNARPLANT = "Am I worthy of wielding a weapon of such brilliance?",
 		PICKAXE_LUNARPLANT = "Neither stone nor structure shall stand in my way!",
 		SHOVEL_LUNARPLANT = "The ground stands no chance against me.",
+
+		BROKEN_FORGEDITEM = "'Tis battered, but not lost!",
 
         PUNCHINGBAG = "Alas, 'tis not a very lively sparring partner.",
 

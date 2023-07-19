@@ -804,6 +804,13 @@ local fx =
         anim = "idle",
     },
     {
+        name = "werebeaver_groundpound_fx",
+        bank = "bearger_ground_fx",
+        build = "bearger_ground_fx",
+        sound = "meta2/woodie/ground_fx",
+        anim = "idle",
+    },
+    {
         name = "lavaarena_portal_player_fx",
         bank = "lavaarena_player_teleport",
         build = "lavaarena_player_teleport",

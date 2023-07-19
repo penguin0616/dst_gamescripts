@@ -1741,7 +1741,7 @@ function Tune(overrides)
         ARMOR_COOKIECUTTERHAT = wilson_health*5*multiplayer_armor_durability_modifier,
         ARMOR_COOKIECUTTERHAT_ABSORPTION = .7*multiplayer_armor_absorption_modifier,
 
-        ARMOR_WOODCARVED_HAT = wilson_health*2*multiplayer_armor_durability_modifier,
+        ARMOR_WOODCARVED_HAT = wilson_health*2.5*multiplayer_armor_durability_modifier,
         ARMOR_WOODCARVED_HAT_ABSORPTION = .7*multiplayer_armor_absorption_modifier,
 
         ARMORDRAGONFLY = wilson_health * 9*multiplayer_armor_durability_modifier,
@@ -6152,6 +6152,8 @@ function Tune(overrides)
         BELL_MID_SUCCESS_MIN_3 = 0.25,
         BELL_MID_SUCCESS_MAX_3 = 0.75,
 
+        BELL_PERFECT_LEVEL_STARTING = 4, -- We can start getting perfects here.
+
         BELL_SUCCESS_MIN_4 = 0.45,
         BELL_SUCCESS_MAX_4 = 0.60,
         BELL_MID_SUCCESS_MIN_4 = 0.12,
@@ -6598,10 +6600,7 @@ function Tune(overrides)
                     0.55, -- Level 3
                 },
 
-                DAMAGE_BONUS_VS_TREEGUARDS = {
-                    LEVEL_1 = 1.5,
-                    LEVEL_2 = 2.0,
-                },
+                DAMAGE_BONUS_VS_TREEGUARDS = math.sqrt(2), -- sqrt because two skill levels combine to hit 2x damage.
 
                 CURSE_MASTER_MIN_HUNGER = 0.15, -- Percent
 
@@ -6610,25 +6609,25 @@ function Tune(overrides)
                     CHOP = 1.8, -- Level 2
                 },
 
-                MOOSE_HEALTH_REGEN = { -- (0.6 / seg)
-                    amount = 3.0,
+                MOOSE_HEALTH_REGEN = { -- (0.3 / seg)
+                    amount = 1.5,
                     period = 5,
                 },
 
-                MOOSE_CANCEL_CHARGE_TIME = 5 * FRAMES,
-                MOOSE_IMPROVED_RUN_SPEED = 6,
+                MOOSE_CANCEL_CHARGE_TIME = 7 * FRAMES,
+                MOOSE_RUN_SPEED_BONUS_MULT = 1.11, -- 1.11 * 5.4 ~ 6
                 MOOSE_REDUCED_GROGGINESS = 0.15, -- Percent
-                MOOSE_PLANAR_DEF = 10,
+                MOOSE_PLANAR_DEF = 15,
 
-                MOOSE_SMASH_DAMAGE = wilson_attack * 4,
+                MOOSE_SMASH_DAMAGE = wilson_attack * 3.5,
                 MOOSE_SMASH_PLANAR_DAMAGE = 80,
 
                 GOOSE_DODGE_COOLDOWN_TIME = 5,
-                GOOSE_IMPROVED_RUN_SPEED = 8.4 + 1.6,
+                GOOSE_RUN_SPEED_BONUS_MULT = 1.19, -- 1.19 * 8.4 ~ 10
 
                 WERESKILL_WERENESS_CONSUMPTION = {
-                    BEAVER = -7,
-                    GOOSE = -20,
+                    BEAVER = -5,
+                    GOOSE  = -20,
                 },
 
                 ALLEGIANCE_SHADOW_RESIST = 0.9,
@@ -6863,29 +6862,47 @@ function Tune(overrides)
         WORMWOOD_BLOOM_FULL_DURATION_UPGRADED = total_day_time * 4.5,
         WORMWOOD_BLOOM_FULL_MAX_DURATION_UPGRADED = total_day_time * 7.5,
 
-        WORMWOOD_PETALS_RATE = 15,
+        WORMWOOD_TENDRANGE_MULT = 1.5,
+
+        WORMWOOD_PHOTOSYNTHESIS_HEALTH_REGEN =
+        {
+            amount = 1,
+            period = 20,
+        },
+
         LUNARPLANTTENTACLE_PLANARDAMAGE = 5,
         WORMWOOD_ROOT_TIME = 6,
         WORMWOOD_ROOT_DAMAGE = 10,
 
-        WORMWOOD_CARRAT_LIFETIME = 3 * total_day_time,
-        WORMWOOD_LIGHTFLIER_LIFETIME = total_day_time,
-        WORMWOOD_FRUITDRAGON_LIFETIME = 2 * total_day_time,
-
-        IPECAC_TASK_TIME = 7,
-        IPECAC_POOP_COUNT = 4,
+        IPECAC_POOP_COUNT = 15,
+        IPECAC_TICK_TIME = 3,
+        IPECAC_DAMAGE_PER_TICK = 5,
 
         WORMWOOD_MUSHROOMPLANTER_RATEBONUS_1 = 0.9,
         WORMWOOD_MUSHROOMPLANTER_RATEBONUS_2 = 0.8,
 
-        WORMWOOD_CARRAT_GATHER_COOLDOWN = 10,
-        WORMWOOD_LIGHTFLIER_FORMATION_SIZE = 8,
-        WORMWOOD_FRUITDRAGON_FOLLOWER_LIMIT = 3,
+        WORMWOOD_PET_LIGHTFLIER_LIMIT = 6,
+        WORMWOOD_PET_FRUITDRAGON_LIMIT = 2,
+        WORMWOOD_PET_CARRAT_LIMIT = 4,
+
+        WORMWOOD_PET_CARRAT_LIFETIME = 3 * total_day_time,
+        WORMWOOD_PET_LIGHTFLIER_LIFETIME = total_day_time,
+        WORMWOOD_PET_FRUITDRAGON_LIFETIME = 2 * total_day_time,
+
+        WORMWOOD_PET_FRUITDRAGON_HEALTH = 400,
+        WORMWOOD_PET_FRUITDRAGON_ATTACK_PERIOD = 2,
+        WORMWOOD_PET_FRUITDRAGON_DAMAGE = 30,
+        WORMWOOD_PET_FRUITDRAGON_WALK_SPEED = 1,
+        WORMWOOD_PET_FRUITDRAGON_RUN_SPEED = 4,
+
+        WORMWOOD_PET_CARRAT_GATHER_COOLDOWN = 10,
 
         QUAKE_BLOCKER_RANGE = 40,
         DUMBBELL_HEAT_MAX_USES = 150,
 
         WOLFGANG_COACH_BUFF = 2,
+        COACH_TIME_TO_INSPIRE = 7,
+        COACH_TIME_BUFF_LASTS = 10,
     }
 
     TUNING_MODIFIERS = {}

@@ -106,6 +106,10 @@ function DefaultBurntStructureFn(inst)
     if inst.components.wardrobe ~= nil then
         inst:RemoveComponent("wardrobe")
     end
+	if inst.components.constructionsite ~= nil then
+		inst.components.constructionsite:DropAllMaterials()
+		inst:RemoveComponent("constructionsite")
+	end
     if inst.Light then
         inst.Light:Enable(false)
     end

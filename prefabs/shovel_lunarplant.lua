@@ -122,7 +122,7 @@ local function OnIsBrokenDirty(inst)
 	end
 end
 
-local SWAP_DATA_BROKEN = { sym_build = "shovel_lunarplant", sym_name = "swap_shovel_lunarplant_broken_float", bank = "shovel_lunarplant", anim = "broken" }
+local SWAP_DATA_BROKEN = { sym_build = "shovel_lunarplant", sym_name = "swap_shovel_BROKEN_FORGEDITEM_float", bank = "shovel_lunarplant", anim = "broken" }
 local SWAP_DATA = { sym_build = "shovel_lunarplant", sym_name = "swap_shovel_lunarplant" }
 
 local function SetIsBroken(inst, isbroken)
@@ -140,6 +140,8 @@ local function OnBroken(inst)
 		DisableComponents(inst)
 		inst.AnimState:PlayAnimation("broken")
 		SetIsBroken(inst, true)
+		inst:AddTag("broken")
+		inst.components.inspectable.nameoverride = "BROKEN_FORGEDITEM"
 	end
 end
 
@@ -148,6 +150,8 @@ local function OnRepaired(inst)
 		SetupComponents(inst)
 		inst.AnimState:PlayAnimation("idle")
 		SetIsBroken(inst, false)
+		inst:RemoveTag("broken")
+		inst.components.inspectable.nameoverride = nil
 	end
 end
 
@@ -163,6 +167,8 @@ local function fn()
 	inst.AnimState:SetBank("shovel_lunarplant")
 	inst.AnimState:SetBuild("shovel_lunarplant")
 	inst.AnimState:PlayAnimation("idle")
+
+	inst:AddTag("show_broken_ui")
 
 	--tool (from tool component) added to pristine state for optimization
 	inst:AddTag("tool")

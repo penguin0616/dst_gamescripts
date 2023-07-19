@@ -880,6 +880,16 @@ local function onclothingchanged(inst,data)
     end
 end
 
+local function PoopOnSpawned(inst, poop)
+    local heading_angle = -(inst.Transform:GetRotation()) + 180
+
+    local pos = Vector3(inst.Transform:GetWorldPosition())
+    pos.x = pos.x + (math.cos(heading_angle*DEGREES))
+    pos.y = pos.y + 0.8
+    pos.z = pos.z + (math.sin(heading_angle*DEGREES))
+    poop.Transform:SetPosition(pos.x, pos.y, pos.z)
+end
+
 local function beefalo()
     local inst = CreateEntity()
 
@@ -1013,6 +1023,7 @@ local function beefalo()
     inst.components.periodicspawner:SetDensityInRange(20, 2)
     inst.components.periodicspawner:SetMinimumSpacing(8)
 	inst.components.periodicspawner:SetSpawnTestFn(CanSpawnPoop)
+    inst.components.periodicspawner:SetOnSpawnFn(PoopOnSpawned)
     inst.components.periodicspawner:Start()
 
 

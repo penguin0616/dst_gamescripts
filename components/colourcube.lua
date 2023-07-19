@@ -358,6 +358,7 @@ local function OnPlayerDeactivated(inst, player)
 	inst:RemoveEventCallback("stormlevel", OnStormLevelChanged, player)
     inst:RemoveEventCallback("enterraindome", OnEnterRainDome, player)
     inst:RemoveEventCallback("exitraindome", OnExitRainDome, player)
+    OnExitRainDome()
     OnSanityDelta(player, { newpercent = 1, sanitymode = SANITY_MODE_INSANITY })
     OnOverrideCCTable(player, nil)
     if player == _activatedplayer then

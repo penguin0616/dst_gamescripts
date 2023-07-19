@@ -880,10 +880,6 @@ local RPC_HANDLERS =
         end
     end,
 
-    autogym = function(player,perfect)
-        player:PushEvent("auto_success",{perfect=perfect})
-    end,
-
     SetWriteableText = function(player, target, text)
         if not (checkentity(target) and
                 optstring(text)) then

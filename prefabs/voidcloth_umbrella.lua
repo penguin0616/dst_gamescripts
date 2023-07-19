@@ -136,6 +136,8 @@ local function OnPerish(inst)
 		end
 		inst:RemoveComponent("equippable")
 		SetIsBroken(inst, true)
+		inst:AddTag("broken")
+		inst.components.inspectable.nameoverride = "BROKEN_FORGEDITEM"
     end
 end
 
@@ -144,6 +146,8 @@ local function OnRepaired(inst)
 		SetupEquippable(inst)
 		inst.AnimState:PlayAnimation("idle")
 		SetIsBroken(inst, false)
+		inst:RemoveTag("broken")
+		inst.components.inspectable.nameoverride = nil
 	end
 end
 
@@ -199,6 +203,7 @@ local function CreateDomeFX()
 
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
+	inst.entity:AddSoundEmitter()
 
 	inst.AnimState:SetBank("umbrella_voidcloth")
 	inst.AnimState:SetBuild("umbrella_voidcloth")
@@ -216,7 +221,9 @@ end
 local function CLIENT_TriggerFX(inst)
 	local x, y, z = inst.Transform:GetWorldPosition()
 	CreateWaveFX().Transform:SetPosition(x, 0, z)
-	CreateDomeFX().Transform:SetPosition(x, 0, z)
+	local fx = CreateDomeFX()
+	fx.Transform:SetPosition(x, 0, z)
+	fx.SoundEmitter:PlaySound("meta2/voidcloth_umbrella/barrier_activate")
 end
 
 local function SERVER_TriggerFX(inst)
@@ -259,7 +266,7 @@ local function turnon(inst)
 			SERVER_TriggerFX(inst)
 		end
 
-		inst.SoundEmitter:PlaySound("meta2/voidcloth_umbrella/barrier_lp", "loop", .5)
+		inst.SoundEmitter:PlaySound("meta2/voidcloth_umbrella/barrier_lp", "loop")
 	end
 end
 
@@ -278,9 +285,11 @@ local function turnoff(inst)
 		inst.shadowtask = nil
 	end
 
+	local shouldsfx
 	if inst.components.fueled:IsEmpty() then
 		inst.DynamicShadow:Enable(false)
 		inst.AnimState:PlayAnimation("broken")
+		shouldsfx = true
 	elseif inst.components.inventoryitem:IsHeld() or inst:IsAsleep() then
 		inst.DynamicShadow:Enable(false)
 		inst.AnimState:PlayAnimation("idle")
@@ -289,9 +298,15 @@ local function turnoff(inst)
 		inst.shadowtask = inst:DoTaskInTime(9 * FRAMES, SetShadow, false)
 		inst.AnimState:PlayAnimation("barrier_pst")
 		inst.AnimState:PushAnimation("idle", false)
+		shouldsfx = true
 	end
 
-	inst.SoundEmitter:KillSound("loop")
+	if inst.SoundEmitter:PlayingSound("loop") then
+		inst.SoundEmitter:KillSound("loop")
+		if shouldsfx then
+			inst.SoundEmitter:PlaySound("meta2/voidcloth_umbrella/barrier_close")
+		end
+	end
 end
 
 local function topocket(inst)--, owner)
@@ -338,14 +353,14 @@ local function UmbrellaFn()
     inst:AddTag("nopunch")
     inst:AddTag("umbrella")
     inst:AddTag("acidrainimmune")
+	inst:AddTag("shadow_item")
+	inst:AddTag("show_broken_ui")
 
     --waterproofer (from waterproofer component) added to pristine state for optimization
     inst:AddTag("waterproofer")
 
 	--shadowlevel (from shadowlevel component) added to pristine state for optimization
 	inst:AddTag("shadowlevel")
-
-	inst:AddTag("shadow_item")
 
 	inst.triggerfx = net_event(inst.GUID, "voidcloth_umbrella.triggerfx")
 	inst.isbroken = net_bool(inst.GUID, "voidcloth_umbrella.isbroken", "isbrokendirty")
@@ -439,6 +454,10 @@ local function FxOnRemoveEntity(inst)
 	inst.fx:Remove()
 end
 
+local function FxColourChanged(inst, r, g, b, a)
+	inst.fx.AnimState:SetAddColour(r, g, b, a)
+end
+
 local function FxOnEntityReplicated(inst)
 	local owner = inst.entity:GetParent()
 	if owner ~= nil then
@@ -446,6 +465,7 @@ local function FxOnEntityReplicated(inst)
 		inst.fx.entity:SetParent(owner.entity)
 		inst.fx.Follower:FollowSymbol(owner.GUID, "swap_object", nil, nil, nil, true, nil, 5, 8)
 		inst.fx.components.highlightchild:SetOwner(owner)
+		inst.components.colouraddersync:SetColourChangedFn(FxColourChanged)
 		inst.OnRemoveEntity = FxOnRemoveEntity
 	end
 end
@@ -454,6 +474,9 @@ local function FxAttachToOwner(inst, owner)
 	inst.entity:SetParent(owner.entity)
 	inst.Follower:FollowSymbol(owner.GUID, "swap_object", nil, nil, nil, true, nil, 0, 2)
 	inst.components.highlightchild:SetOwner(owner)
+	if owner.components.colouradder ~= nil then
+		owner.components.colouradder:AttachChild(inst)
+	end
 
 	--Dedicated server does not need to spawn the local fx
 	if not TheNet:IsDedicated() then
@@ -477,6 +500,7 @@ local function FollowSymbolFxFn()
     inst.AnimState:SetSymbolLightOverride("lightning", 1)
 
     inst:AddComponent("highlightchild")
+	inst:AddComponent("colouraddersync")
 
     inst.entity:SetPristine()
 

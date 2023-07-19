@@ -90,6 +90,8 @@ local function OnBroken(inst)
 		inst:RemoveComponent("equippable")
 		inst.AnimState:PlayAnimation("broken")
 		inst.components.floater:SetSwapData(SWAP_DATA_BROKEN)
+		inst:AddTag("broken")
+		inst.components.inspectable.nameoverride = "BROKEN_FORGEDITEM"
 	end
 end
 
@@ -98,6 +100,8 @@ local function OnRepaired(inst)
 		SetupEquippable(inst)
 		inst.AnimState:PlayAnimation("anim")
 		inst.components.floater:SetSwapData(SWAP_DATA)
+		inst:RemoveTag("broken")
+		inst.components.inspectable.nameoverride = nil
 	end
 end
 
@@ -121,6 +125,7 @@ local function fn()
 
 	inst:AddTag("lunarplant")
 	inst:AddTag("gestaltprotection")
+	inst:AddTag("show_broken_ui")
 
 	inst.AnimState:SetBank("armor_lunarplant")
 	inst.AnimState:SetBuild("armor_lunarplant")
@@ -199,6 +204,12 @@ local function glow_OnRemoveEntity(inst)
 	end
 end
 
+local function glow_ColourChanged(inst, r, g, b, a)
+	for i, v in ipairs(inst.fx) do
+		v.AnimState:SetAddColour(r, g, b, a)
+	end
+end
+
 local function glow_SpawnFxForOwner(inst, owner)
 	inst.fx = {}
 	local frame
@@ -211,6 +222,7 @@ local function glow_SpawnFxForOwner(inst, owner)
 		fx.components.highlightchild:SetOwner(owner)
 		table.insert(inst.fx, fx)
 	end
+	inst.components.colouraddersync:SetColourChangedFn(glow_ColourChanged)
 	inst.OnRemoveEntity = glow_OnRemoveEntity
 end
 
@@ -223,6 +235,9 @@ end
 
 local function glow_AttachToOwner(inst, owner)
 	inst.entity:SetParent(owner.entity)
+	if owner.components.colouradder ~= nil then
+		owner.components.colouradder:AttachChild(inst)
+	end
 	--Dedicated server does not need to spawn the local fx
 	if not TheNet:IsDedicated() then
 		glow_SpawnFxForOwner(inst, owner)
@@ -236,6 +251,8 @@ local function glowfn()
 	inst.entity:AddNetwork()
 
 	inst:AddTag("FX")
+
+	inst:AddComponent("colouraddersync")
 
 	inst.entity:SetPristine()
 

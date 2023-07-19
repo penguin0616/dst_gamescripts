@@ -10,10 +10,16 @@ local prefabs =
 }
 
 local function SetFxOwner(inst, owner)
+	if inst._owner ~= nil and inst._owner.components.colouradder ~= nil then
+		inst._owner.components.colouradder:DetachChild(inst.fx)
+	end
 	if owner ~= nil then
 		inst.fx.entity:SetParent(owner.entity)
 		inst.fx.Follower:FollowSymbol(owner.GUID, "swap_object", nil, nil, nil, true)
 		inst.fx.components.highlightchild:SetOwner(owner)
+		if owner.components.colouradder ~= nil then
+			owner.components.colouradder:AttachChild(inst.fx)
+		end
 	else
 		inst.fx.entity:SetParent(inst.entity)
 		--For floating
@@ -109,7 +115,7 @@ local function OnIsBrokenDirty(inst)
 	end
 end
 
-local SWAP_DATA_BROKEN = { sym_build = "staff_lunarplant", sym_name = "swap_staff_lunarplant_broken_float", bank = "staff_lunarplant", anim = "broken" }
+local SWAP_DATA_BROKEN = { sym_build = "staff_lunarplant", sym_name = "swap_staff_BROKEN_FORGEDITEM_float", bank = "staff_lunarplant", anim = "broken" }
 local SWAP_DATA = { sym_build = "staff_lunarplant", sym_name = "swap_staff_lunarplant" }
 
 local function SetIsBroken(inst, isbroken)
@@ -133,6 +139,8 @@ local function OnBroken(inst)
 		DisableComponents(inst)
 		inst.AnimState:PlayAnimation("broken")
 		SetIsBroken(inst, true)
+		inst:AddTag("broken")
+		inst.components.inspectable.nameoverride = "BROKEN_FORGEDITEM"
 	end
 end
 
@@ -142,6 +150,8 @@ local function OnRepaired(inst)
 		inst.fx.AnimState:SetFrame(0)
 		inst.AnimState:PlayAnimation("idle", true)
 		SetIsBroken(inst, false)
+		inst:RemoveTag("broken")
+		inst.components.inspectable.nameoverride = nil
 	end
 end
 
@@ -167,6 +177,7 @@ local function fn()
 	inst.AnimState:SetLightOverride(.1)
 
 	inst:AddTag("rangedweapon")
+	inst:AddTag("show_broken_ui")
 
 	--weapon (from weapon component) added to pristine state for optimization
 	inst:AddTag("weapon")
@@ -247,6 +258,8 @@ local function fxfn()
 	if not TheWorld.ismastersim then
 		return inst
 	end
+
+	inst:AddComponent("colouradder")
 
 	inst.persists = false
 

@@ -120,7 +120,7 @@ local function OnIsBrokenDirty(inst)
 	end
 end
 
-local SWAP_DATA_BROKEN = { sym_build = "pickaxe_lunarplant", sym_name = "swap_pickaxe_lunarplant_broken_float", bank = "pickaxe_lunarplant", anim = "broken" }
+local SWAP_DATA_BROKEN = { sym_build = "pickaxe_lunarplant", sym_name = "swap_pickaxe_BROKEN_FORGEDITEM_float", bank = "pickaxe_lunarplant", anim = "broken" }
 local SWAP_DATA = { sym_build = "pickaxe_lunarplant", sym_name = "swap_pickaxe_lunarplant" }
 
 local function SetIsBroken(inst, isbroken)
@@ -138,6 +138,8 @@ local function OnBroken(inst)
 		DisableComponents(inst)
 		inst.AnimState:PlayAnimation("broken")
 		SetIsBroken(inst, true)
+		inst:AddTag("broken")
+		inst.components.inspectable.nameoverride = "BROKEN_FORGEDITEM"
 	end
 end
 
@@ -146,6 +148,8 @@ local function OnRepaired(inst)
 		SetupComponents(inst)
 		inst.AnimState:PlayAnimation("idle")
 		SetIsBroken(inst, false)
+		inst:RemoveTag("broken")
+		inst.components.inspectable.nameoverride = nil
 	end
 end
 
@@ -161,6 +165,8 @@ local function fn()
 	inst.AnimState:SetBank("pickaxe_lunarplant")
 	inst.AnimState:SetBuild("pickaxe_lunarplant")
 	inst.AnimState:PlayAnimation("idle")
+
+	inst:AddTag("show_broken_ui")
 
 	--inst:AddTag("sharp")
 	inst:AddTag("hammer")

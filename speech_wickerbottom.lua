@@ -907,6 +907,12 @@ return{
     ANNOUNCE_WOLFGANG_MIGHTY_COACHING = "only_used_by_wolfgang",
     ANNOUNCE_WOLFGANG_BEGIN_COACHING = "only_used_by_wolfgang",
     ANNOUNCE_WOLFGANG_END_COACHING = "only_used_by_wolfgang",
+    ANNOUNCE_WOLFGANG_NOTEAM = 
+    {
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+    },
 
 	BATTLECRY =
 	{
@@ -4817,6 +4823,8 @@ return{
 		SWORD_LUNARPLANT = "The energy has been stabilized enough to form a functional blade.",
 		PICKAXE_LUNARPLANT = "A surprisingly effective mining and crushing implement.",
 		SHOVEL_LUNARPLANT = "A surprisingly effective digging implement.",
+
+		BROKEN_FORGEDITEM = "With the right materials, it could be repaired.",
 
         PUNCHINGBAG = "A useful tool for testing a weapon's efficacy.",
 

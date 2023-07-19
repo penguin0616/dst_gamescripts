@@ -143,10 +143,6 @@ local function common_onload(inst, data)
     if inst.components.named ~= nil and inst.components.named.name ~= nil then
         inst.components.named:SetName(nil)
     end
-
-    if inst.components.timer and inst.components.timer:TimerExists("finish_transformed_life") then
-        inst:SetPrefabNameOverride("wormwood_mutantproxy_carrat")
-    end
 end
 
 local function OnMusicStateDirty(inst)
@@ -260,9 +256,7 @@ local function go_to_submerged(inst)
     inst.components.workable:SetWorkLeft(1)
 
     -- Non-component setup --
-    if not inst._creator then
-        inst:SetPrefabNameOverride("CARROT_PLANTED")
-    end
+    inst:SetPrefabNameOverride("CARROT_PLANTED")
     inst.AnimState:SetRayTestOnBB(true)
 
     inst._planted_ruffle_task = inst:DoPeriodicTask(
@@ -448,41 +442,6 @@ local function on_dropped(inst)
     end
 end
 
-----
-local function OnSpawnedByWormwood(inst, creator)
-	inst.components.timer:StartTimer("finish_transformed_life", TUNING.WORMWOOD_CARRAT_LIFETIME)
-    inst:SetPrefabNameOverride("wormwood_mutantproxy_carrat")
-
-    inst._creator = creator
-    inst:ListenForEvent("onremove", function(_) inst.creator = nil end, creator)
-end
-
-local function finish_transformed_life(inst)
-    local ix, iy, iz = inst.Transform:GetWorldPosition()
-
-    local carrot = SpawnPrefab("carrot")
-    carrot.Transform:SetPosition(ix, iy, iz)
-
-    -- Lootdropper is removed when submerged!
-    if not inst.components.lootdropper then
-        inst:AddComponent("lootdropper")
-    end
-
-    inst.components.lootdropper:FlingItem(carrot)
-
-    local fx = SpawnPrefab("wormwood_lunar_transformation_finish")
-    fx.Transform:SetPosition(ix, iy, iz)
-
-    inst:Remove()
-end
-
-local function OnTimerDone(inst, data)
-    if data.name == "finish_transformed_life" then
-        finish_transformed_life(inst)
-    end
-end
-----
-
 local function go_to_emerged(inst)
     -- Add tags --
     inst:AddTag("animal")
@@ -531,9 +490,7 @@ local function go_to_emerged(inst)
 
     -- Non-component setup --
     inst.AnimState:SetRayTestOnBB(false)
-    if not inst._creator then
-        inst:SetPrefabNameOverride(nil)
-    end
+    inst:SetPrefabNameOverride(nil)
 
     if inst._planted_ruffle_task ~= nil then
         inst._planted_ruffle_task:Cancel()
@@ -756,11 +713,11 @@ local function fn()
 
     inst.sounds = carratsounds -- sounds must be assigned before the stategraph
 
-    local inventoryitem = inst:AddComponent("inventoryitem")
-    inventoryitem.nobounce = true
-    inventoryitem.canbepickedup = false
-    inventoryitem.canbepickedupalive = true
-    inventoryitem:SetSinks(true)
+    inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.nobounce = true
+    inst.components.inventoryitem.canbepickedup = false
+    inst.components.inventoryitem.canbepickedupalive = true
+    inst.components.inventoryitem:SetSinks(true)
 
 	inst._setcolorfn = common_setcolor
     local yotc_carrat = IsSpecialEventActive(SPECIAL_EVENTS.YOTC)
@@ -791,46 +748,43 @@ local function fn()
         inst:WatchWorldState("isnight", yotc_nighttime_degrade_test)
     end
 
-    local locomotor = inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
-    locomotor.walkspeed = TUNING.CARRAT.WALK_SPEED
-    locomotor.runspeed = TUNING.CARRAT.RUN_SPEED
+    inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
+    inst.components.locomotor.walkspeed = TUNING.CARRAT.WALK_SPEED
+    inst.components.locomotor.runspeed = TUNING.CARRAT.RUN_SPEED
 
     inst:SetStateGraph("SGcarrat")
     inst:SetBrain(brain)
 
-    local eater = inst:AddComponent("eater")
-    eater:SetDiet({ FOODGROUP.OMNI }, { FOODGROUP.OMNI })
-    eater:SetStrongStomach(true)
+    inst:AddComponent("eater")
+    inst.components.eater:SetDiet({ FOODGROUP.OMNI }, { FOODGROUP.OMNI })
+    inst.components.eater:SetStrongStomach(true)
 
-    local cookable = inst:AddComponent("cookable")
-    cookable.product = "plantmeat_cooked"
-    cookable:SetOnCookedFn(on_cooked_fn)
+    inst:AddComponent("cookable")
+    inst.components.cookable.product = "plantmeat_cooked"
+    inst.components.cookable:SetOnCookedFn(on_cooked_fn)
 
     inst:AddComponent("homeseeker")
 
-    local health = inst:AddComponent("health")
-    health:SetMaxHealth(TUNING.CARRAT.HEALTH)
-    health.murdersound = inst.sounds.death
+    inst:AddComponent("health")
+    inst.components.health:SetMaxHealth(TUNING.CARRAT.HEALTH)
+    inst.components.health.murdersound = inst.sounds.death
 
-    local lootdropper = inst:AddComponent("lootdropper")
-    lootdropper:SetChanceLootTable("carrat")
+    inst:AddComponent("lootdropper")
+    inst.components.lootdropper:SetChanceLootTable("carrat")
 
-    local combat = inst:AddComponent("combat")
-    combat.hiteffectsymbol = "carrat_body"
+    inst:AddComponent("combat")
+    inst.components.combat.hiteffectsymbol = "carrat_body"
 
     -- Mostly copying MakeSmallBurnableCharacter, EXCEPT for the symbol following,
     -- because it looks bad paired with the burning of the planted prefab.
-    local burnable = inst:AddComponent("burnable")
-    burnable:SetFXLevel(2)
-    burnable:SetBurnTime(10)
-    burnable.canlight = false
-    burnable:AddBurnFX("fire", Vector3(0, 0, 0))
+    inst:AddComponent("burnable")
+    inst.components.burnable:SetFXLevel(2)
+    inst.components.burnable:SetBurnTime(10)
+    inst.components.burnable.canlight = false
+    inst.components.burnable:AddBurnFX("fire", Vector3(0, 0, 0))
 
-    local propagator = MakeSmallPropagator(inst)
-    propagator.acceptsheat = false
-
-    local inventory = inst:AddComponent("inventory")
-    inventory.maxslots = 1
+    MakeSmallPropagator(inst)
+    inst.components.propagator.acceptsheat = false
 
     MakeTinyFreezableCharacter(inst, "carrat_body")
 
@@ -839,15 +793,10 @@ local function fn()
     inst.components.sleeper.watchlight = true
     inst:AddComponent("tradable")
 
-    inst:AddComponent("timer")
-
     MakeHauntablePanic(inst)
 
     local _on_added_to_inventory = (yotc_carrat and yotc_on_inventory) or nil
     MakeFeedableSmallLivestock(inst, TUNING.CARRAT.PERISH_TIME, _on_added_to_inventory, on_dropped)
-
-    inst:ListenForEvent("spawnedbywormwoodproxy", OnSpawnedByWormwood)
-    inst:ListenForEvent("timerdone", OnTimerDone)
 
     inst.GoToSubmerged = go_to_submerged
     inst.GoToEmerged = go_to_emerged
@@ -947,28 +896,28 @@ local function planted_fn()
 	inst._setcolorfn = common_setcolor
 	--inst._color = nil -- Carried over to planted carrat in SGcarrat 'submerged' state
 
-    local inspectable = inst:AddComponent("inspectable")
-    inspectable.nameoverride = "CARROT_PLANTED"
+    inst:AddComponent("inspectable")
+    inst.components.inspectable.nameoverride = "CARROT_PLANTED"
 
-    local pickable = inst:AddComponent("pickable")
-    pickable.picksound = "dontstarve/wilson/pickup_plants"
-    pickable.onpickedfn = on_planted_prefab_picked
-	pickable.remove_when_picked = true
-    pickable.canbepicked = true
+    inst:AddComponent("pickable")
+    inst.components.pickable.picksound = "dontstarve/wilson/pickup_plants"
+    inst.components.pickable.onpickedfn = on_planted_prefab_picked
+	inst.components.pickable.remove_when_picked = true
+    inst.components.pickable.canbepicked = true
 
-    local burnable = MakeSmallBurnable(inst)
-    burnable:SetOnIgniteFn(on_planted_prefab_ignite)
-    burnable:SetOnBurntFn(nil)
+    MakeSmallBurnable(inst)
+    inst.components.burnable:SetOnIgniteFn(on_planted_prefab_ignite)
+    inst.components.burnable:SetOnBurntFn(nil)
 
     MakeSmallPropagator(inst)
 
-    local hauntable = inst:AddComponent("hauntable")
-    hauntable:SetHauntValue(TUNING.HAUNT_TINY)
+    inst:AddComponent("hauntable")
+    inst.components.hauntable:SetHauntValue(TUNING.HAUNT_TINY)
 
-    local workable = inst:AddComponent("workable")
-    workable:SetWorkAction(ACTIONS.DIG)
-    workable:SetOnFinishCallback(on_planted_prefab_dug_up)
-    workable:SetWorkLeft(1)
+    inst:AddComponent("workable")
+    inst.components.workable:SetWorkAction(ACTIONS.DIG)
+    inst.components.workable:SetOnFinishCallback(on_planted_prefab_dug_up)
+    inst.components.workable:SetWorkLeft(1)
 
     inst:DoPeriodicTask(
         TUNING.CARRAT.PLANTED_RUFFLE_TIME,

@@ -48,22 +48,26 @@ local function CreateRemoveTagFn(tag)
     return function(inst) inst:RemoveTag(tag) end
 end
 
-local function CreateAddDamageTypeBonusFn(tag, mult, key)
+local function CreateAddDamageBonusVsTreeguardsFn(level)
     return function(inst)
         local damagetypebonus = inst.components.damagetypebonus
         if damagetypebonus ~= nil then
-            damagetypebonus:AddBonus(tag, inst, mult, key)
+            damagetypebonus:AddBonus("evergreens", inst, TUNING.SKILLS.WOODIE.DAMAGE_BONUS_VS_TREEGUARDS, "woodie_treeguard_skill_level_"..level)
         end
     end
 end
 
-local function CreateRemoveDamageTypeBonusFn(tag, key)
+local function CreateRemoveDamageBonusVsTreeguardsFn(level)
     return function(inst)
         local damagetypebonus = inst.components.damagetypebonus
         if damagetypebonus ~= nil then
-            damagetypebonus:RemoveBonus(tag, inst, key)
+            damagetypebonus:RemoveBonus("evergreens", inst, "woodie_treeguard_skill_level_"..level)
         end
     end
+end
+
+local function RecalculateWereformSpeed(inst)
+    inst:RecalculateWereformSpeed()
 end
 
 --------------------------------------------------------------------------------------------------
@@ -142,6 +146,14 @@ local function BuildSkillsData(SkillTreeFns)
             connects = {
                 "woodie_curse_beaver_2",
             },
+            onactivate = function(inst)
+                -- For load (skills activation occurs after onload functions).
+                if inst:IsWerebeaver() then
+                    local modifiers = TUNING.SKILLS.WOODIE.BEAVER_WORK_MULTIPLIER
+
+                    inst.components.worker:SetAction(ACTIONS.MINE, .5 * modifiers.MINE)
+                end
+            end,
         },
 
         -- The Werebeaver chops faster.
@@ -152,6 +164,14 @@ local function BuildSkillsData(SkillTreeFns)
             connects = {
                 "woodie_curse_beaver_3",
             },
+            onactivate = function(inst)
+                -- For load (skills activation occurs after onload functions).
+                if inst:IsWerebeaver() then
+                    local modifiers = TUNING.SKILLS.WOODIE.BEAVER_WORK_MULTIPLIER
+
+                    inst.components.worker:SetAction(ACTIONS.CHOP, 4 * modifiers.CHOP)
+                end
+            end,
         },
 
         -- The Werebeaver can chop, mine and break hard materials.
@@ -162,6 +182,12 @@ local function BuildSkillsData(SkillTreeFns)
             connects = {
                 "woodie_curse_beaver_lock",
             },
+            onactivate = function(inst)
+                -- For load (skills activation occurs after onload functions).
+                if inst:IsWerebeaver() then
+                    inst:AddTag("toughworker")
+                end
+            end,
         },
 
         woodie_curse_beaver_lock = {
@@ -195,8 +221,8 @@ local function BuildSkillsData(SkillTreeFns)
             group = "curse",
             tags = {"curse", "moose"},
             root = true,
-            onactivate   = CreateAddTagFn("fastermoose"), -- For client run speed.
-            ondeactivate = CreateRemoveTagFn("fastermoose"),
+            onactivate   = RecalculateWereformSpeed,
+            ondeactivate = RecalculateWereformSpeed,
             connects = {
                 "woodie_curse_moose_2",
             },
@@ -210,6 +236,13 @@ local function BuildSkillsData(SkillTreeFns)
             connects = {
                 "woodie_curse_moose_3",
             },
+            onactivate = function(inst)
+                -- For load (skills activation occurs after onload functions).
+                if inst:IsWeremoose() then
+                    local regendata = TUNING.SKILLS.WOODIE.MOOSE_HEALTH_REGEN
+                    inst.components.health:StartRegen(regendata.amount, regendata.period)
+                end
+            end,
         },
 
         -- The Werebeaver can stop his dash whenever he wants.
@@ -243,7 +276,14 @@ local function BuildSkillsData(SkillTreeFns)
             pos = {MOOSE_POS_X, POS_Y_5},
             group = "curse",
             tags = {"curse", "moose_epic"},
-            onactivate   = CreateAddTagFn("weremoosecombo"),
+            onactivate = function(inst)
+                inst:AddTag("weremoosecombo")
+
+                -- For load (skills activation occurs after onload functions).
+                if inst:IsWeremoose() then
+                    inst.components.planardefense:AddBonus(inst, TUNING.SKILLS.WOODIE.MOOSE_PLANAR_DEF, "weremoose_skill")
+                end
+            end,
             ondeactivate = CreateRemoveTagFn("weremoosecombo"),
         },
 
@@ -255,8 +295,8 @@ local function BuildSkillsData(SkillTreeFns)
             group = "curse",
             tags = {"curse", "goose"},
             root = true,
-            onactivate   = CreateAddTagFn("fastergoose"), -- For client run speed.
-            ondeactivate = CreateRemoveTagFn("fastergoose"),
+            onactivate   = RecalculateWereformSpeed,
+            ondeactivate = RecalculateWereformSpeed,
             connects = {
                 "woodie_curse_goose_2",
             },
@@ -270,6 +310,12 @@ local function BuildSkillsData(SkillTreeFns)
             connects = {
                 "woodie_curse_goose_3",
             },
+            onactivate = function(inst)
+                -- For load (skills activation occurs after onload functions).
+                if inst:IsWeregoose() then
+                    inst.components.moisture:SetInherentWaterproofness(TUNING.WATERPROOFNESS_ABSOLUTE)
+                end
+            end,
         },
 
         -- The weregoose can dodge an attack from time to time.
@@ -280,6 +326,14 @@ local function BuildSkillsData(SkillTreeFns)
             connects = {
                 "woodie_curse_goose_lock",
             },
+            onactivate = function(inst)
+                -- For load (skills activation occurs after onload functions).
+                if inst:IsWeregoose() and not inst.components.attackdodger then
+                    inst:AddComponent("attackdodger")
+                    inst.components.attackdodger:SetCooldownTime(TUNING.SKILLS.WOODIE.GOOSE_DODGE_COOLDOWN_TIME)
+                    inst.components.attackdodger:SetOnDodgeFn(inst.OnDodgeAttack)
+                end
+            end,
         },
 
         woodie_curse_goose_lock = {
@@ -379,8 +433,8 @@ local function BuildSkillsData(SkillTreeFns)
             group = "human",
             tags = {"human", "treeguard"},
             root = true,
-            onactivate   = CreateAddDamageTypeBonusFn("evergreens", TUNING.SKILLS.WOODIE.DAMAGE_BONUS_VS_TREEGUARDS.LEVEL_1, "woodie_treeguard_skill"),
-            ondeactivate = CreateRemoveDamageTypeBonusFn("evergreens", "woodie_treeguard_skill"),
+            onactivate   = CreateAddDamageBonusVsTreeguardsFn(1),
+            ondeactivate = CreateRemoveDamageBonusVsTreeguardsFn(1),
             connects = {
                 "woodie_human_treeguard_2",
             },
@@ -391,8 +445,8 @@ local function BuildSkillsData(SkillTreeFns)
             pos = {TREE_GUARD_POS_X, HUMAN_POS_Y_2},
             group = "human",
             tags = {"human", "treeguard"},
-            onactivate   = CreateAddDamageTypeBonusFn("evergreens", TUNING.SKILLS.WOODIE.DAMAGE_BONUS_VS_TREEGUARDS.LEVEL_2, "woodie_treeguard_skill"),
-            ondeactivate = CreateRemoveDamageTypeBonusFn("evergreens", "woodie_treeguard_skill"),
+            onactivate   = CreateAddDamageBonusVsTreeguardsFn(2),
+            ondeactivate = CreateRemoveDamageBonusVsTreeguardsFn(2),
             connects = {
                 "woodie_human_treeguard_max",
             },
@@ -436,6 +490,8 @@ local function BuildSkillsData(SkillTreeFns)
 
             onactivate = function(inst, fromload)
                 inst:AddTag("player_shadow_aligned")
+                inst:UpdateShadowDominanceState()
+
                 local damagetyperesist = inst.components.damagetyperesist
                 if damagetyperesist then
                     damagetyperesist:AddResist("shadow_aligned", inst, TUNING.SKILLS.WOODIE.ALLEGIANCE_SHADOW_RESIST, "allegiance_shadow")
@@ -447,6 +503,8 @@ local function BuildSkillsData(SkillTreeFns)
             end,
             ondeactivate = function(inst, fromload)
                 inst:RemoveTag("player_shadow_aligned")
+                inst:UpdateShadowDominanceState()
+
                 local damagetyperesist = inst.components.damagetyperesist
                 if damagetyperesist then
                     damagetyperesist:RemoveResist("shadow_aligned", inst, "allegiance_shadow")
@@ -476,6 +534,7 @@ local function BuildSkillsData(SkillTreeFns)
 
             onactivate = function(inst, fromload)
                 inst:AddTag("player_lunar_aligned")
+
                 local damagetyperesist = inst.components.damagetyperesist
                 if damagetyperesist then
                     damagetyperesist:AddResist("lunar_aligned", inst, TUNING.SKILLS.WOODIE.ALLEGIANCE_LUNAR_RESIST, "allegiance_lunar")
@@ -487,6 +546,7 @@ local function BuildSkillsData(SkillTreeFns)
             end,
             ondeactivate = function(inst, fromload)
                 inst:RemoveTag("player_lunar_aligned")
+
                 local damagetyperesist = inst.components.damagetyperesist
                 if damagetyperesist then
                     damagetyperesist:RemoveResist("lunar_aligned", inst, "allegiance_lunar")

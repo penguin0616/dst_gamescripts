@@ -912,6 +912,12 @@ return{
     ANNOUNCE_WOLFGANG_MIGHTY_COACHING = "only_used_by_wolfang",
     ANNOUNCE_WOLFGANG_BEGIN_COACHING = "only_used_by_wolfang",
     ANNOUNCE_WOLFGANG_END_COACHING = "only_used_by_wolfang",
+    ANNOUNCE_WOLFGANG_NOTEAM = 
+    {
+        "only_used_by_wolfang",
+        "only_used_by_wolfang",
+        "only_used_by_wolfang",
+    },
 
 	BATTLECRY =
 	{
@@ -4823,6 +4829,8 @@ return{
 		SWORD_LUNARPLANT = "A swish to and fro will cut down my foe.",
 		PICKAXE_LUNARPLANT = "To bash and break.",
 		SHOVEL_LUNARPLANT = "Dig a hole to who knows where!",
+
+		BROKEN_FORGEDITEM = "This broken pile might still be worthwhile.",
 
         PUNCHINGBAG = "It does not complain, for it feels no pain!",
 

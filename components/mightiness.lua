@@ -98,6 +98,8 @@ local Mightiness = Class(function(self, inst)
     self.ratemodifiers = SourceModifierList(self.inst)
 
     self.state = "normal"
+    -- Recommended to explicitly add tag to prefab pristine state
+    inst:AddTag("mightiness_normal")
 
     local period = 1
     self.inst:DoPeriodicTask(period, OnTaskTick, nil, self, period)

@@ -29,7 +29,7 @@ function HandleDugGround(dug_ground, x, y, z)
     if spawnturf ~= nil then
         local loot = SpawnPrefab("turf_"..spawnturf.name)
         if loot.components.inventoryitem ~= nil then
-            loot.components.inventoryitem:InheritMoisture(TheWorld.state.wetness, TheWorld.state.iswet)
+			loot.components.inventoryitem:InheritWorldWetnessAtXZ(x, z)
         end
         loot.Transform:SetPosition(x, y, z)
         if loot.Physics ~= nil then

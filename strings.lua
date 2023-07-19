@@ -1001,6 +1001,7 @@ STRINGS =
     WITHEREDITEM = "Withered",
     SMOLDERINGITEM = "Smoldering",
     DISEASEDITEM = "Diseased",
+	BROKENITEM = "Broken",
 
     WET_PREFIX =
     {
@@ -4314,14 +4315,14 @@ STRINGS =
         TRAP_BRAMBLE = "An equal opportunity annoyer.",
         WORMWOOD_SAPLING        = "Grow out on a limb.",
         WORMWOOD_BERRYBUSH      = "It's hand-made!",
-        WORMWOOD_BERRYBUSH2     = "It's hand-made!", -- TODO
+        WORMWOOD_BERRYBUSH2     = "As many berries as your arm can carry.",
         WORMWOOD_JUICYBERRYBUSH = "Arm-fresh produce.",
         WORMWOOD_REEDS          = "Knowing how to reed comes in handy.",
         WORMWOOD_LUREPLANTBULB  = "Costs an arm, but not a leg.",
         IPECACSYRUP             = "Keeps you regular.",
-        WORMWOOD_CARRAT         = "Transform a plain old carrot into a Carrat!",
-        WORMWOOD_LIGHTFLIER     = "Transform an ordinary Light Bulb into a Bulbous Lightbug!",
-        WORMWOOD_FRUITDRAGON    = "Transform a dreary Dragon Fruit into a Saladmander!",
+        WORMWOOD_CARRAT         = "Transform a plain old Carrot into a helpful Carrat!",
+        WORMWOOD_LIGHTFLIER     = "Transform an ordinary Light Bulb into a loyal Bulbous Lightbug!",
+        WORMWOOD_FRUITDRAGON    = "Transform a dreary Dragon Fruit into a fierce Saladmander!",
 
         --v2 Warly
         PORTABLECOOKPOT_ITEM = "For the gourmet on the go.",
@@ -14514,7 +14515,7 @@ STRINGS.SKILLTREE = {
         WOODIE_CURSE_EPIC_GOOSE_TITLE = "Weregoose Mastery",
 
         WOODIE_CURSE_EPIC_BEAVER_DESC = "The Werebeaver learns to smack the ground with his tail, destroying everything around him.",
-        WOODIE_CURSE_EPIC_MOOSE_DESC = "The Weremoose learns to throw stronger punches and has a tougher hide.",
+        WOODIE_CURSE_EPIC_MOOSE_DESC = "The Weremoose learns to throw a strong planar punch on every 3rd hit, and gains a natural defense against planar damage.",
         WOODIE_CURSE_EPIC_GOOSE_DESC = "The Weregoose learns to fly around to explore the world, but it's a little out of control.",
 
         ----------------------
@@ -14535,7 +14536,7 @@ STRINGS.SKILLTREE = {
 
         WOODIE_HUMAN_TREEGUARD_1_DESC = "Deal a fair amount more damage to Treeguards.",
         WOODIE_HUMAN_TREEGUARD_2_DESC = "Deal much more damage to Treeguards.",
-        WOODIE_HUMAN_TREEGUARD_MAX_DESC = "Learn to craft the Treeguard Idol, an extremely burnable effigy.",
+        WOODIE_HUMAN_TREEGUARD_MAX_DESC = "Learn to craft the Treeguard Idol, an extremely burnable effigy.\nAttracts Treeguards when burned.",
 
         ----------------------
 
@@ -14695,20 +14696,20 @@ STRINGS.SKILLTREE = {
         BLOOMING_MAX_UPGRADE_TITLE = "Flower Power",
         BLOOMING_MAX_UPGRADE_DESC = "Stay in full bloom longer.",
 
-        BLOOMING_PETALS_TITLE = "Petal Production",
-        BLOOMING_PETALS_DESC = "Produce flower petals while in full bloom.",
+        BLOOMING_PHOTOSYNTHESIS_TITLE = "Photosynthesis", -- TODO
+        BLOOMING_PHOTOSYNTHESIS_DESC = "Slowly regenerates health when exposed to strong sunlight while in full bloom.", -- TODO
 
         BLOOMING_OVERHEATPROTECTION_TITLE = "Shade Plant",
         BLOOMING_OVERHEATPROTECTION_DESC = "Gain increased protection from overheating when in full bloom.",
 
-        BLOOMING_FARMRANGE1_TITLE = "Farmhand I",
-        BLOOMING_FARMRANGE1_DESC = "Tend farm plants within a larger range while full bloom.",
+        BLOOMING_FARMRANGE1_TITLE = "Farmhand",
+        BLOOMING_FARMRANGE1_DESC = "Tend farm plants within a larger range while full bloom.\nHarvest farm plants faster.", -- TODO
 
-        BLOOMING_FARMRANGE2_TITLE = "Farmhand II",
-        BLOOMING_FARMRANGE2_DESC = "Tend farm plants within an even larger range while full bloom.",
+        QUICK_SELFFERTILIZER_TITLE = "Skilled Self-fertilizer", -- TODO
+        QUICK_SELFFERTILIZER_DESC = "Self-fertilizes faster with Compost Wraps.", -- TODO
 
-        BLOOMING_FARMRANGE3_TITLE = "Farmhand III",
-        BLOOMING_FARMRANGE3_DESC = "Tend farm plants within a vast range while full bloom.",
+        BLOOMING_FARMRANGE3_TITLE = "Bramble Trap Specialist", -- TODO
+        BLOOMING_FARMRANGE3_DESC = "Reset nearby Bramble Traps while in full bloom.\nDeploy Bramble Traps that don't hurt players.", -- TODO
 
         FRUITFLIES_TITLE = "Fly Trap",
         FRUITFLIES_DESC = "Fruit flies will be drawn to you instead of farm plants.\nThe Lord of the Fruit Flies is more likely to appear.",
@@ -14725,7 +14726,7 @@ STRINGS.SKILLTREE = {
         LUNAR_MUTATIONS_2_DESC = "Tap into your lunar roots to transform Lightbulbs into Bulbous Lightbugs.\nBulbous Lightbugs you've created will follow you around.",
 
         LUNAR_MUTATIONS_3_TITLE = "Lunar Cultivator III",
-        LUNAR_MUTATIONS_3_DESC = "Tap into your lunar roots to transform Dragon Fruit into Saladmanders.\nSaladmanders you've created start out in their fully ripened form.",
+        LUNAR_MUTATIONS_3_DESC = "Tap into your lunar roots to transform Dragon Fruit into Saladmanders.\nSaladmanders you've created will attack things you do.",
     },
 }
 
@@ -14836,9 +14837,9 @@ STRINGS.SCRAPBOOK = {
         HUTCH = "Things can be stored in Hutch much like a treasure chest.",
         BEEFALO = "Watch out for an aggressive mating season.\n\nFeed and care for one of these beasts, and maybe you can saddle them.",
         BERNIE_ACTIVE = "A powerful friend when Willow's mind approaches insanity.",
-        CANARY = "Sensitive to vapours, they tend to die when great poisons are detected nearby.",
+        CANARY = "Sensitive to vapours, they tend to die when monstrous poisons are detected nearby.",
         POLLYROGERS = "Gathers loot nearby.",
-        MOLE = "Ever played the game \"Whack-A-Mole\"? What a great game.",
+        MOLE = "Ever played \"Whack-A-Mole\"? What a great game.",
         POWDERMONKEY = "Best keep a bribe handy for these freebooters.",
         SPIDER_HEALER = "Emits powerful spider-healing flatulence when threatened.",
 
@@ -14852,16 +14853,16 @@ STRINGS.SCRAPBOOK = {
         ARMORBRAMBLE = "This thorny husk deals its damage when attacked.",
         ARMORDREADSTONE = "This armor slowly repairs itself.",
         DREADSTONEHAT = "This helm slowly repairs itself.",
-        EYEMASKHAT = "Feed this beast to restore it.",
-        ARMORMARBLE = "This durable armor is also a little heavy and slows its wearer.",
-        ARMORSANITY = "As this armor blocks damage, it tends to drive its wearer insane.",
-        ARMORDRAGONFLY = "Wrapped in the scales of the Dragonfly makes you immune to fire.",
+        EYEMASKHAT = "Feed this hungry eye to restore it.",
+        ARMORMARBLE = "This armor is durable but heavy, and slows its wearer.",
+        ARMORSANITY = "This armor blocks damage, but has a nasty habit of driving its wearer insane.",
+        ARMORDRAGONFLY = "Wrapped in the scales of the Dragonfly, it makes you immune to fire.",
         ARMORSNURTLESHELL = "One can tuck inside this hard shell to survive any assault.",
         RUINSHAT = "Frequently, hits on this crown will cause it to create an impenetrable barrier for a short time.",
         VOIDCLOTHHAT = "Damage from Shadow Planar damage weapons will ramp up with consecutive hits if you can keep attacking.\nGetting hit will break this damage chain.",
         VOIDCLOTHARMOR = "Wearing this scary robe makes you not care about how scary everything around you is.",
         BATHBOMB = "Makes a hot spring all warm, steamy, and glassy when dropped in.",
-        BATTLESONG_SANITYAURA = "Scary creatures seem about half as scary listening to this beautiful song.",
+        BATTLESONG_SANITYAURA = "Scary creatures seem about half as frightening when you're listening to this beautiful song.",
         BATTLESONG_DURABILITY = "Reduce wear on your weapons by 25% while listening.",
         BATTLESONG_HEALTHGAIN = "Nearby friends will heal when fighting. Wigfrid will heal a little more too.",
         BATTLESONG_SANITYGAIN = "Nearby friends will gain sanity when fighting. Wigfrid will gain a little more too.",
@@ -14870,17 +14871,17 @@ STRINGS.SCRAPBOOK = {
         BATTLESONG_PANIC = "Panic nearby enemies.",
         BEEFBELL = "Name and bond with one Beefalo at a time. Bonded Beefalo will follow the holder, even into caves and offline.",
         PLANTABLE_FERTILIZE = "This needs some fertilizing after planting.",
-        SCANDATA = "Data is used to craft Circuits for WK78.",
-        WX78SCANNER = "Chirps when interesting biological targets are nearby. Will chase and scan interesting biological targets while WX78 is close. Drops Bio Data when finished.",
+        SCANDATA = "Data is used to craft Circuits for WX-78.",
+        WX78SCANNER = "Chirps when interesting biological targets are nearby. Will chase and scan interesting biological targets while WX-78 is close. Drops Bio Data when finished.",
         MOONEYE = "Always appears on the minimap, even in unexplored areas.",
         BOATPATCH = "Plugs leaks on boats.",
-        LIFEINJECTOR = "Restores lost \"maximum health\" noted in black on the Health HUD indicator.",
-        ALTARPLUG = "It looks like it plugs into something",
-        WX78MODULEREMOVER = "Removes installed Circuits from WX78.",
+        LIFEINJECTOR = "Restores lost \"maximum health\".",
+        ALTARPLUG = "It looks like it plugs into something.",
+        WX78MODULEREMOVER = "Removes installed Circuits from WX-78.",
         RESKINTOOL = "Cycles through the skins on in-world items.",
         POCKETWATCHDISMANTLER = "Break pocket watches down into their original ingredients other than Nightmare Fuel.",
         ARMORSLURPER = "Restores sanity over time and slows hunger drain by 40%.",
-        COSTUME = "Costume piece used in stage plays",
+        COSTUME = "Costume piece used in stage plays.",
         CANDYBAG = "A 14 slots container for holding Candies, Trinkets, and Decorations.",
         SPICEPACK = "A 6 slots container that slows the spoiling of items inside.",
         BLUEAMULET = "Raises sanity while cooling the wearer.",
@@ -14938,7 +14939,7 @@ STRINGS.SCRAPBOOK = {
         GHOSTLYELIXERRETALIATION = "Doubles Abigail's shield duration from 0.5 seconds to 1 second. Attacking creatures also take 20 damage. Lasts 1 day.",
         FEATHERPENCIL = "Draws the closest item nearby onto a Mini Sign.",
         MINIFLARE = "Creates a flash in the sky that can be seen by all survivors on the minimap.",
-        MEGAFLARE = "Creates a flash in the sky that can be seen by all survivors on the minimap. This large flash will also draw the attention of some hostile mobs.",
+        MEGAFLARE = "Creates a flash in the sky that can be seen by all survivors on the minimap. This large flash will also draw the attention of some hostile creatures.",
         FARMPLOW = "Digs up a tile and turns it into Farm Soil.",
         SADDLE = "Can be put onto a Beefalo if it's willing.",
         SADDLEWAR = "Can be put onto a Beefalo if it's willing. Slower than a regular saddle, it also adds 16 damage to attacks made while riding.",

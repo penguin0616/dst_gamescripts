@@ -907,6 +907,12 @@ return{
     ANNOUNCE_WOLFGANG_MIGHTY_COACHING = "only_used_by_wolfang",
     ANNOUNCE_WOLFGANG_BEGIN_COACHING = "only_used_by_wolfang",
     ANNOUNCE_WOLFGANG_END_COACHING = "only_used_by_wolfang",
+    ANNOUNCE_WOLFGANG_NOTEAM = 
+    {
+        "only_used_by_wolfang",
+        "only_used_by_wolfang",
+        "only_used_by_wolfang",
+    },
 
 	BATTLECRY =
 	{
@@ -4817,6 +4823,8 @@ return{
 		SWORD_LUNARPLANT = "SPACE SWORD! SPACE SWORD!!",
 		PICKAXE_LUNARPLANT = "COMMENCE OBLITERATION",
 		SHOVEL_LUNARPLANT = "ENHANCED DIGGING IMPLEMENT",
+
+		BROKEN_FORGEDITEM = "MATERIALS REQUIRED TO REBOOT",
 
         PUNCHINGBAG = "TARGET PRACTICE",
 
