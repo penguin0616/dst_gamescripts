@@ -2,8 +2,11 @@ require("stategraphs/commonstates")
 
 local actionhandlers =
 {
+    ActionHandler(ACTIONS.GIVE, "give"),
+    ActionHandler(ACTIONS.GIVEALLTOPLAYER, "give"),
+    ActionHandler(ACTIONS.DROP, "give"),
     ActionHandler(ACTIONS.PICKUP, "pickup"),
-    ActionHandler(ACTIONS.DROP, "pickup"),
+    ActionHandler(ACTIONS.CHECKTRAP, "pickup"),
 }
 
 local events =
@@ -94,16 +97,46 @@ local states =
         events =
         {
             EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle") 
+                end
             end),
         },
         
         timeline =
         {
-            FrameEvent(3, function(inst)
-                inst.SoundEmitter:PlaySound(inst.sounds.eat)
-            end),
             FrameEvent(9, function(inst)
+                inst:PerformBufferedAction()
+            end),
+        },
+
+        onexit = function(inst)
+            inst.Physics:SetActive(true)
+        end,
+    },
+
+    State {
+        name = "give",
+        tags = {"busy"},
+
+        onenter = function(inst)
+            inst.Physics:SetActive(false)
+            inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("lose_small_pre", false)
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+        
+        timeline =
+        {
+            FrameEvent(7, function(inst)
                 inst:PerformBufferedAction()
             end),
         },

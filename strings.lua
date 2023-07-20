@@ -14697,7 +14697,7 @@ STRINGS.SKILLTREE = {
         BLOOMING_MAX_UPGRADE_DESC = "Stay in full bloom longer.",
 
         BLOOMING_PHOTOSYNTHESIS_TITLE = "Photosynthesis", -- TODO
-        BLOOMING_PHOTOSYNTHESIS_DESC = "Slowly regenerates health when exposed to strong sunlight while in full bloom.", -- TODO
+        BLOOMING_PHOTOSYNTHESIS_DESC = "Slowly regenerates health when exposed to daylight while in full bloom.", -- TODO
 
         BLOOMING_OVERHEATPROTECTION_TITLE = "Shade Plant",
         BLOOMING_OVERHEATPROTECTION_DESC = "Gain increased protection from overheating when in full bloom.",
@@ -14709,7 +14709,7 @@ STRINGS.SKILLTREE = {
         QUICK_SELFFERTILIZER_DESC = "Self-fertilizes faster with Compost Wraps.", -- TODO
 
         BLOOMING_FARMRANGE3_TITLE = "Bramble Trap Specialist", -- TODO
-        BLOOMING_FARMRANGE3_DESC = "Reset nearby Bramble Traps while in full bloom.\nDeploy Bramble Traps that don't hurt players.", -- TODO
+        BLOOMING_FARMRANGE3_DESC = "Reset nearby Bramble Traps while in full bloom.\nPlant Bramble Traps that don't hurt players.", -- TODO
 
         FRUITFLIES_TITLE = "Fly Trap",
         FRUITFLIES_DESC = "Fruit flies will be drawn to you instead of farm plants.\nThe Lord of the Fruit Flies is more likely to appear.",

@@ -920,7 +920,6 @@ local function beefalo()
     inst:AddTag("beefalo")
     inst:AddTag("animal")
     inst:AddTag("largecreature")
-    inst:AddTag("ipecacsusceptible")
 
     --bearded (from beard component) added to pristine state for optimization
     inst:AddTag("bearded")

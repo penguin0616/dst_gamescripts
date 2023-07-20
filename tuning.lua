@@ -6619,7 +6619,7 @@ function Tune(overrides)
                 MOOSE_REDUCED_GROGGINESS = 0.15, -- Percent
                 MOOSE_PLANAR_DEF = 15,
 
-                MOOSE_SMASH_DAMAGE = wilson_attack * 3.5,
+                MOOSE_SMASH_DAMAGE = wilson_attack * 4,
                 MOOSE_SMASH_PLANAR_DAMAGE = 80,
 
                 GOOSE_DODGE_COOLDOWN_TIME = 5,
@@ -6870,9 +6870,13 @@ function Tune(overrides)
             period = 20,
         },
 
-        LUNARPLANTTENTACLE_PLANARDAMAGE = 5,
+        LUNARPLANTTENTACLE_DAMAGE = 70,
+        LUNARPLANTTENTACLE_PLANARDAMAGE = 15,
+
         WORMWOOD_ROOT_TIME = 6,
         WORMWOOD_ROOT_DAMAGE = 10,
+
+        WORMWOOD_TRAP_BRAMBLE_AUTO_RESET_COOLDOWN = 3, -- seconds.
 
         IPECAC_POOP_COUNT = 15,
         IPECAC_TICK_TIME = 3,
@@ -6886,16 +6890,14 @@ function Tune(overrides)
         WORMWOOD_PET_CARRAT_LIMIT = 4,
 
         WORMWOOD_PET_CARRAT_LIFETIME = 3 * total_day_time,
-        WORMWOOD_PET_LIGHTFLIER_LIFETIME = total_day_time,
+        WORMWOOD_PET_LIGHTFLIER_LIFETIME = 2.5 * total_day_time,
         WORMWOOD_PET_FRUITDRAGON_LIFETIME = 2 * total_day_time,
 
-        WORMWOOD_PET_FRUITDRAGON_HEALTH = 400,
+        WORMWOOD_PET_FRUITDRAGON_HEALTH = 600,
         WORMWOOD_PET_FRUITDRAGON_ATTACK_PERIOD = 2,
-        WORMWOOD_PET_FRUITDRAGON_DAMAGE = 30,
+        WORMWOOD_PET_FRUITDRAGON_DAMAGE = 40,
         WORMWOOD_PET_FRUITDRAGON_WALK_SPEED = 1,
-        WORMWOOD_PET_FRUITDRAGON_RUN_SPEED = 4,
-
-        WORMWOOD_PET_CARRAT_GATHER_COOLDOWN = 10,
+        WORMWOOD_PET_FRUITDRAGON_RUN_SPEED = 3,
 
         QUAKE_BLOCKER_RANGE = 40,
         DUMBBELL_HEAT_MAX_USES = 150,

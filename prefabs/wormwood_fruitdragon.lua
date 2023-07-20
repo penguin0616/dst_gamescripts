@@ -65,6 +65,10 @@ local function Sleeper_SleepTest(inst)
         return false
     end
 
+    if inst.components.health and inst.components.health:GetPercent() > 0.9 then
+        return false
+    end
+
     if TheWorld.state.isnight or GetRemainingTimeAwake(inst) <= 0 then
         return true
     end

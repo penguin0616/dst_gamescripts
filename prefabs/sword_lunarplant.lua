@@ -65,11 +65,11 @@ local function SetBuffOwner(inst, owner)
 end
 
 local function SetFxOwner(inst, owner)
-	if inst._owner ~= nil and inst._owner.components.colouradder ~= nil then
-		inst._owner.components.colouradder:DetachChild(inst.blade1)
-		inst._owner.components.colouradder:DetachChild(inst.blade2)
+	if inst._fxowner ~= nil and inst._fxowner.components.colouradder ~= nil then
+		inst._fxowner.components.colouradder:DetachChild(inst.blade1)
+		inst._fxowner.components.colouradder:DetachChild(inst.blade2)
 	end
-	inst._owner = owner
+	inst._fxowner = owner
 	if owner ~= nil then
 		inst.blade1.entity:SetParent(owner.entity)
 		inst.blade2.entity:SetParent(owner.entity)

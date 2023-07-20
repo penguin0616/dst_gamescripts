@@ -80,7 +80,6 @@ local function fn()
     MakeCharacterPhysics(inst, 1, 0.5)
 
     inst.DynamicShadow:SetSize(1, .75)
-    inst.DynamicShadow:Enable(false)
     inst.Transform:SetSixFaced()
 
     inst.AnimState:SetBank("carrat")

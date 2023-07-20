@@ -46,7 +46,7 @@ local function IsExposedToRain(inst)
 end
 
 local function OnIsRaining(self, israining)
-	if israining and inst.components.rainimmunity == nil then
+	if israining and self.inst.components.rainimmunity == nil then
         self:Pause()
     else
         self:Resume()
@@ -55,9 +55,9 @@ end
 
 local function OnRainImmunity(inst)
 	if IsExposedToRain(inst) then
-		self:Pause()
+		inst.components.dryer:Pause()
 	else
-		self:Resume()
+		inst.components.dryer:Resume()
 	end
 end
 

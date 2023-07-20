@@ -7,6 +7,14 @@ local function shouldKeepTarget()
     return true
 end
 
+local function Despawn(inst)
+    if inst.sg.currentstate.name ~= "attack_pst" then
+        inst.sg:GoToState("attack_pst")
+    else
+        inst:Remove()
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -41,16 +49,16 @@ local function fn()
     --
     local combat = inst:AddComponent("combat")
     combat:SetRange(2)
-    combat:SetDefaultDamage(TUNING.TENTACLE_DAMAGE)
+    combat:SetDefaultDamage(TUNING.LUNARPLANTTENTACLE_DAMAGE)
     combat:SetAttackPeriod(TUNING.TENTACLE_ATTACK_PERIOD)
     combat:SetKeepTargetFunction(shouldKeepTarget)
 
     --
-	inst:AddComponent("planarentity")
+    inst:AddComponent("planarentity")
 
     --
-	local planardamage = inst:AddComponent("planardamage")
-	planardamage:SetBaseDamage(TUNING.LUNARPLANTTENTACLE_PLANARDAMAGE)
+    local planardamage = inst:AddComponent("planardamage")
+    planardamage:SetBaseDamage(TUNING.LUNARPLANTTENTACLE_PLANARDAMAGE)
 
     --
     local lootdropper = inst:AddComponent("lootdropper")
@@ -63,7 +71,7 @@ local function fn()
     inst:SetStateGraph("SGlunarplanttentacle")
 
     --
-    inst:DoTaskInTime(9, inst.Remove)
+    inst:DoTaskInTime(9, Despawn)
     inst.persists = false
 
     return inst

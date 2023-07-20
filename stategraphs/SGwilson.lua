@@ -577,9 +577,11 @@ local actionhandlers =
     ActionHandler(ACTIONS.PICK,
         function(inst, action)
             return
-                (inst:HasTag("woodiequickpicker") and "dowoodiefastpick") or
                 (inst:HasTag("farmplantfastpicker") and action.target ~= nil and action.target:HasTag("farm_plant") and "domediumaction") or
-                (inst.components.rider ~= nil and inst.components.rider:IsRiding() and "dolongaction") or
+				(inst.components.rider ~= nil and inst.components.rider:IsRiding() and (
+					(inst:HasTag("woodiequickpicker") and "dowoodiefastpick") or
+					"dolongaction"
+				)) or
                 (
                     action.target ~= nil and
                     action.target.components.pickable ~= nil and
@@ -587,6 +589,7 @@ local actionhandlers =
                         (action.target.components.pickable.jostlepick and "dojostleaction") or
                         (action.target.components.pickable.quickpick and "doshortaction") or
                         (inst:HasTag("fastpicker") and "doshortaction") or
+						(inst:HasTag("woodiequickpicker") and "dowoodiefastpick") or
                         (inst:HasTag("quagmire_fasthands") and "domediumaction") or
                         "dolongaction"
                     )
@@ -8329,9 +8332,13 @@ local states =
                 inst.sg.statemem.ismoose = true
 				if inst.AnimState:IsCurrentAnimation("punch_a") or inst.AnimState:IsCurrentAnimation("punch_c") then
 					inst.AnimState:PlayAnimation("punch_b")
+					if inst:HasTag("weremoosecombo") then
+						inst.sg:AddStateTag("nointerrupt")
+					end
 				elseif inst.AnimState:IsCurrentAnimation("punch_b") then
 					if inst:HasTag("weremoosecombo") then
 						inst.sg.statemem.ismoosesmash = true
+						inst.sg:AddStateTag("nointerrupt")
 						inst.AnimState:PlayAnimation("moose_slam")
 						inst.SoundEmitter:PlaySound("meta2/woodie/weremoose_groundpound", nil, nil, true)
 					else
@@ -8394,6 +8401,7 @@ local states =
                 if inst.sg.statemem.ismoose then
 					if inst.sg.statemem.ismoosesmash then
 						inst:PushMooseSmashShake()
+						inst.sg:RemoveStateTag("nointerrupt")
 
 						local x, y, z = inst.Transform:GetWorldPosition()
 						local rot = inst.Transform:GetRotation()

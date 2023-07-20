@@ -39,7 +39,9 @@ local states =
         events =
         {
             EventHandler("animover", function(inst)
-                inst:Remove()
+                if inst.components.combat.target == nil then
+                    inst.sg:GoToState("attack_pst")
+                end
             end),
         },
     },
@@ -59,8 +61,7 @@ CommonStates.AddFrozenStates(states)
 
 CommonStates.AddSimpleState(states, "attack", "atk", {"attack"}, "attack_pst",
 {
-    FrameEvent(7, function(inst) inst.components.combat:DoAttack() end),
-    FrameEvent(17, function(inst) inst.components.combat:DoAttack() end),
+    FrameEvent(15, function(inst) inst.components.combat:DoAttack() end),
     FrameEvent(18, function(inst) inst.sg:RemoveStateTag("attack") end),
 },
 {

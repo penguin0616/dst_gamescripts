@@ -533,7 +533,12 @@ end
 
 local function RecalculatePlanarDamage(inst)
     local item = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-    if item and item.components.planardamage and item.components.planardamage:GetDamage() > 0 and inst.components.mightiness:IsMighty() then
+	if item and
+		item.components.planardamage and
+		item.components.planardamage:GetDamage() > 0 and
+		inst.components.mightiness:IsMighty() and
+		not item:HasTag("magicweapon")
+	then
         if inst.components.skilltreeupdater:IsActivated("wolfgang_planardamage_1") then
             inst.components.planardamage:AddBonus(inst, TUNING.SKILLS.WOLFGANG_PLANARDAMAGE_1, "wolfgang_planardamage_1")
         end

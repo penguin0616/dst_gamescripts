@@ -11,7 +11,7 @@ local prefabs =
 }
 
 local function syrup_OnEaten(inst, eater)
-    if eater:HasTag("ipecacsusceptible") then
+    if eater.sg ~= nil and eater.sg:HasState("ipecacpoop") then
         eater:AddDebuff("ipecacsyrup_buff", "ipecacsyrup_buff")
     end
 end

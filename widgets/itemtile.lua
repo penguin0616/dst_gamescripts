@@ -411,7 +411,7 @@ function ItemTile:SetPercent(percent)
 			val_to_show = 1
 		end
 		self.percent:SetString(string.format("%2.0f%%", val_to_show))
-		if self.item:HasTag("show_broken_ui") then
+		if not self.dragging and self.item:HasTag("show_broken_ui") then
 			if percent > 0 then
 				self.bg:Hide()
 				self.spoilage:Hide()
@@ -475,6 +475,7 @@ end
 --]]
 
 function ItemTile:StartDrag()
+	self.dragging = true
     --self:SetScale(1,1,1)
     if self.item.replica.inventoryitem ~= nil then -- HACK HACK: items without an inventory component won't have any of these
         if self.spoilage ~= nil then

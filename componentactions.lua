@@ -127,13 +127,7 @@ end
 local SCYTHE_ONEOFTAGS = {"plant", "lichen", "oceanvine", "kelp"}
 
 local function IsValidScytheTarget(target)
-    for _, tag in pairs(SCYTHE_ONEOFTAGS) do
-        if target:HasTag(tag) then
-            return true
-        end
-    end
-    
-    return false
+    return target:HasOneOfTags(SCYTHE_ONEOFTAGS)
 end
 
 -- SCENE		using an object in the world

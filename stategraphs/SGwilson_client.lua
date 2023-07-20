@@ -230,12 +230,15 @@ local actionhandlers =
     ActionHandler(ACTIONS.OPEN_CRAFTING, "dostandingaction"),
     ActionHandler(ACTIONS.PICK,
         function(inst, action)
-			return (inst:HasTag("woodiequickpicker") and "dowoodiefastpick")
-                or (inst:HasTag("farmplantfastpicker") and action.target:HasTag("farm_plant") and "domediumaction")
-				or (inst.replica.rider ~= nil and inst.replica.rider:IsRiding() and "dolongaction")
+			return (inst:HasTag("farmplantfastpicker") and action.target:HasTag("farm_plant") and "domediumaction")
+				or (inst.replica.rider ~= nil and inst.replica.rider:IsRiding() and (
+						(inst:HasTag("woodiequickpicker") and "dowoodiefastpick") or
+						"dolongaction"
+					))
                 or (action.target:HasTag("jostlepick") and "dojostleaction")
                 or (action.target:HasTag("quickpick") and "doshortaction")
                 or (inst:HasTag("fastpicker") and "doshortaction")
+				or (inst:HasTag("woodiequickpicker") and "dowoodiefastpick")
                 or (inst:HasTag("quagmire_fasthands") and "domediumaction")
                 or "dolongaction"
         end),

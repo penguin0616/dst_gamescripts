@@ -106,9 +106,10 @@ local function SetBuffOwner(inst, owner)
 end
 
 local function SetFxOwner(inst, owner)
-	if inst._owner ~= nil and inst._owner.components.colouradder ~= nil then
-		inst._owner.components.colouradder:DetachChild(inst.fx)
+	if inst._fxowner ~= nil and inst._fxowner.components.colouradder ~= nil then
+		inst._fxowner.components.colouradder:DetachChild(inst.fx)
 	end
+	inst._fxowner = owner
     if owner ~= nil then
         inst.fx.entity:SetParent(owner.entity)
         inst.fx.Follower:FollowSymbol(owner.GUID, "swap_object", nil, nil, nil, true, nil, 2)

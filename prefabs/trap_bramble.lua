@@ -42,6 +42,8 @@ local function OnExplode(inst)--, target)
 end
 
 local function OnReset(inst)
+    inst.last_reset = GetTime()
+
     if inst.components.inventoryitem ~= nil then
         inst.components.inventoryitem.nobounce = true
     end

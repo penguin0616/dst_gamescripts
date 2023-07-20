@@ -85,7 +85,7 @@ local function OnDebrisFXDirty(inst)
 		ErodeAway(fx, 1)
 	else
 		fx.entity:AddSoundEmitter()
-		fx.SoundEmitter:PlaySound("meta2/pillar/pillar_collapse")
+		fx.SoundEmitter:PlaySound("meta2/pillar/pillar_quake")
 		fx.AnimState:PlayAnimation(inst._debrisfx:value() == 2 and "quake_debris" or "hit_debris")
 		fx:ListenForEvent("animover", fx.Remove)
 	end
@@ -174,8 +174,13 @@ local function UpdateLevel(inst)
 	inst.suffix = inst._level:value() > 0 and "_"..tostring(inst._level:value()) or ""
 	OnLevelDirty(inst)
 
-	if inst.suffix == "" then
-		inst.components.constructionsite:Disable()
+	if inst.suffix == "_4" then
+		inst:RemoveTag("quake_blocker")
+	else
+		inst:AddTag("quake_blocker")
+		if inst.suffix == "" then
+			inst.components.constructionsite:Disable()
+		end
 	end
 	if not inst:IsAsleep() then
 		SetEnableWatchQuake(inst, inst.suffix ~= "_4")
@@ -348,7 +353,6 @@ local function fn()
 
 	inst:AddTag("structure")
 	inst:AddTag("antlion_sinkhole_blocker")
-	inst:AddTag("quake_blocker")    
 
 	--constructionsite (from constructionsite component) added to pristine state for optimization
 	inst:AddTag("constructionsite")
