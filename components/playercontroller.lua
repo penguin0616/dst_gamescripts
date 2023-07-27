@@ -1882,14 +1882,17 @@ function PlayerController:DoInspectButton()
         return
     end
 
-    if buffaction.action == ACTIONS.LOOKAT and
-        buffaction.target ~= nil and
-        buffaction.target.components.playeravatardata ~= nil and
-        self.inst.HUD ~= nil then
-        local client_obj = buffaction.target.components.playeravatardata:GetData()
-        if client_obj ~= nil then
-            client_obj.inst = buffaction.target
-            self.inst.HUD:TogglePlayerInfoPopup(client_obj.name, client_obj, true, buffaction.target)
+    if buffaction.action == ACTIONS.LOOKAT and buffaction.target ~= nil then
+        if buffaction.target.components.playeravatardata ~= nil and self.inst.HUD ~= nil then
+            local client_obj = buffaction.target.components.playeravatardata:GetData()
+            if client_obj ~= nil then
+                client_obj.inst = buffaction.target
+                self.inst.HUD:TogglePlayerInfoPopup(client_obj.name, client_obj, true, buffaction.target)
+            end
+        end
+        if self.handler ~= nil then
+			--assert(self.inst == ThePlayer)
+            TheScrapbookPartitions:SetInspectedByCharacter(buffaction.target.prefab, self.inst.prefab)
         end
     end
 
@@ -3590,8 +3593,9 @@ function PlayerController:DoAction(buffaction, spellbook)
         self.locomotor:PreviewAction(buffaction, true)
     end
 
-    if ThePlayer and buffaction.action == ACTIONS.LOOKAT and buffaction.target then
-        TheScrapbookPartitions:SetInspectedByCharacter(buffaction.target.prefab, ThePlayer.prefab)
+    if self.handler ~= nil and buffaction.action == ACTIONS.LOOKAT and buffaction.target then
+		--assert(self.inst == ThePlayer)
+        TheScrapbookPartitions:SetInspectedByCharacter(buffaction.target.prefab, self.inst.prefab)
     end
 end
 
@@ -4254,9 +4258,6 @@ function PlayerController:RemoteInspectItemFromInvTile(item)
             end
             self.locomotor:PreviewAction(buffaction, true)
         end
-    end
-    if ThePlayer and item then
-        TheScrapbookPartitions:SetInspectedByCharacter(item.prefab, ThePlayer.prefab)
     end
 end
 

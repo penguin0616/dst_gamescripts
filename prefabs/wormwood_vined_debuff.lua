@@ -14,16 +14,10 @@ local function OnAttached(inst, target, followsymbol, followoffset)
 
     OnChangeFollowSymbol(inst, target, followsymbol, followoffset)
 
-    local target_Physics = target.Physics
-    if target_Physics then
-        target_Physics:Stop()
-        target_Physics:SetTempMass0(true)
-        target:AddTag("rooted")
-        target:PushEvent("rooted")
-    end
-    if target.components.locomotor then
-        target.components.locomotor:SetExternalSpeedMultiplier(inst, "rooted", 0)
-    end
+	if target.components.rooted == nil then
+		target:AddComponent("rooted")
+	end
+	target.components.rooted:AddSource(inst)
 
     local function on_target_removed(t) inst.components.debuff:Stop() end
     inst:ListenForEvent("death", on_target_removed, target)
@@ -48,12 +42,8 @@ local function OnAttached(inst, target, followsymbol, followoffset)
 end
 
 local function OnDetached(inst, target)
-    if target and target:IsValid() then
-        if target.Physics then
-            target.Physics:SetTempMass0(false)
-        end
-        target:RemoveTag("rooted")
-        target:PushEvent("unrooted")
+	if target and target:IsValid() and target.components.rooted ~= nil then
+		target.components.rooted:RemoveSource(inst)
     end
 
     inst.AnimState:PlayAnimation("spike_pst")

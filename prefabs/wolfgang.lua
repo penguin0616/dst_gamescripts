@@ -141,19 +141,25 @@ local function onload(inst)
 end
 
 local function OnEquip(inst, data)
-    local item = data ~= nil and data.item or nil
-    if item and item:HasTag("heavy") then
-        inst.components.mightiness:Pause()
+	if data ~= nil and data.item ~= nil then
+		if data.item:HasTag("heavy") then
+			inst.components.mightiness:Pause()
+		end
+		if data.eslot == EQUIPSLOTS.HANDS then
+			inst:RecalculatePlanarDamage()
+		end
     end
-    inst:RecalculatePlanarDamage()
 end
 
 local function OnUnequip(inst, data)
-    local item = data ~= nil and data.item or nil
-    if item and item:HasTag("heavy") then
-        inst.components.mightiness:Resume()
+	if data ~= nil and data.item ~= nil then
+		if data.item:HasTag("heavy") then
+			inst.components.mightiness:Resume()
+		end
+		if data.eslot == EQUIPSLOTS.HANDS then
+			inst:RecalculatePlanarDamage()
+		end
     end
-    inst:RecalculatePlanarDamage()
 end
 
 local function RecalculateMightySpeed(inst)
@@ -539,28 +545,25 @@ local function RecalculatePlanarDamage(inst)
 		inst.components.mightiness:IsMighty() and
 		not item:HasTag("magicweapon")
 	then
-        if inst.components.skilltreeupdater:IsActivated("wolfgang_planardamage_1") then
-            inst.components.planardamage:AddBonus(inst, TUNING.SKILLS.WOLFGANG_PLANARDAMAGE_1, "wolfgang_planardamage_1")
-        end
-        if inst.components.skilltreeupdater:IsActivated("wolfgang_planardamage_2") then
-            inst.components.planardamage:AddBonus(inst, TUNING.SKILLS.WOLFGANG_PLANARDAMAGE_2, "wolfgang_planardamage_2")
-        end
-        if inst.components.skilltreeupdater:IsActivated("wolfgang_planardamage_3") then
-            inst.components.planardamage:AddBonus(inst, TUNING.SKILLS.WOLFGANG_PLANARDAMAGE_3, "wolfgang_planardamage_3")
-        end
-        if inst.components.skilltreeupdater:IsActivated("wolfgang_planardamage_4") then
-            inst.components.planardamage:AddBonus(inst, TUNING.SKILLS.WOLFGANG_PLANARDAMAGE_4, "wolfgang_planardamage_4")
-        end
-        if inst.components.skilltreeupdater:IsActivated("wolfgang_planardamage_5") then
-            inst.components.planardamage:AddBonus(inst, TUNING.SKILLS.WOLFGANG_PLANARDAMAGE_5, "wolfgang_planardamage_5")
-        end
-    else
-        inst.components.planardamage:RemoveBonus(inst, "wolfgang_planardamage_1")
-        inst.components.planardamage:RemoveBonus(inst, "wolfgang_planardamage_2")
-        inst.components.planardamage:RemoveBonus(inst, "wolfgang_planardamage_3")
-        inst.components.planardamage:RemoveBonus(inst, "wolfgang_planardamage_4")
-        inst.components.planardamage:RemoveBonus(inst, "wolfgang_planardamage_5")
+		item.components.planardamage:AddBonus(inst,
+			(inst.components.skilltreeupdater:IsActivated("wolfgang_planardamage_1") and TUNING.SKILLS.WOLFGANG_PLANARDAMAGE_1 or 0) +
+			(inst.components.skilltreeupdater:IsActivated("wolfgang_planardamage_2") and TUNING.SKILLS.WOLFGANG_PLANARDAMAGE_2 or 0) +
+			(inst.components.skilltreeupdater:IsActivated("wolfgang_planardamage_3") and TUNING.SKILLS.WOLFGANG_PLANARDAMAGE_3 or 0) +
+			(inst.components.skilltreeupdater:IsActivated("wolfgang_planardamage_4") and TUNING.SKILLS.WOLFGANG_PLANARDAMAGE_4 or 0) +
+			(inst.components.skilltreeupdater:IsActivated("wolfgang_planardamage_5") and TUNING.SKILLS.WOLFGANG_PLANARDAMAGE_5 or 0),
+			"wolfgang_planardamage"
+		)
+	else
+		item = nil
     end
+
+	local olditem = inst._mightyplanarweapon
+	if olditem ~= item then
+		if olditem ~= nil and olditem.components.planardamage ~= nil then
+			olditem.components.planardamage:RemoveBonus(inst, "wolfgang_planardamage")
+		end
+		inst._mightyplanarweapon = item
+	end
 end
 
 --------------------------------------------------------------------------

@@ -4887,6 +4887,11 @@ return{
         SUPPORT_PILLAR_COMPLETE = "Ahhh. Safer now",
         SUPPORT_PILLAR_BROKEN = "Fell down",
 
+		SUPPORT_PILLAR_DREADSTONE_SCAFFOLD = "Not done",
+		SUPPORT_PILLAR_DREADSTONE = "Cracking? Uh oh...",
+		SUPPORT_PILLAR_DREADSTONE_COMPLETE = "Thank you, tall rocks!",
+		SUPPORT_PILLAR_DREADSTONE_BROKEN = "Goodbye, tall rocks",
+
         WOLFGANG_WHISTLE = "Muscle man's tweet-maker",
     },
 

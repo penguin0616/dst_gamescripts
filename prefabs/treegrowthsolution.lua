@@ -42,6 +42,7 @@ local function fn()
     inst.GetFertilizerKey = GetFertilizerKey
 
     inst.scrapbook_anim = "item"
+    inst.scrapbook_specialinfo = "TREEGROWTHSOLUTION"
 
     inst.entity:SetPristine()
 

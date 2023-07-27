@@ -4883,6 +4883,11 @@ return{
         SUPPORT_PILLAR_COMPLETE = "I wonder how long it will last.",
         SUPPORT_PILLAR_BROKEN = "Time has not been kind.",
 
+		SUPPORT_PILLAR_DREADSTONE_SCAFFOLD = "Oh! I thought that was done already.",
+		SUPPORT_PILLAR_DREADSTONE = "Everything breaks down over time. Well, most things anyway.",
+		SUPPORT_PILLAR_DREADSTONE_COMPLETE = "Hmph. Time will tell.",
+		SUPPORT_PILLAR_DREADSTONE_BROKEN = "Does anything last?",
+
         WOLFGANG_WHISTLE = "There's a time and a place for exercise, I suppose.",
     },
 

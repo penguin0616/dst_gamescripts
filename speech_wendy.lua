@@ -4887,6 +4887,11 @@ return{
         SUPPORT_PILLAR_COMPLETE = "It promises protection, but for how long?",
         SUPPORT_PILLAR_BROKEN = "Nothing good can last...",
 
+		SUPPORT_PILLAR_DREADSTONE_SCAFFOLD = "What hides beneath that shroud?",
+		SUPPORT_PILLAR_DREADSTONE = "The cracks have started to show...",
+		SUPPORT_PILLAR_DREADSTONE_COMPLETE = "Dreadful, yet comforting.",
+		SUPPORT_PILLAR_DREADSTONE_BROKEN = "Eventually, we all fall.",
+
         WOLFGANG_WHISTLE = "Abigail, I saw you whispering at Wolfgang to make us do pushups!",
     },
 

@@ -882,8 +882,11 @@ local function SetWereFighter(inst, mode)
     inst:RemoveEventCallback("attacked", OnMooseFighting)
     inst:RemoveEventCallback("blocked", OnMooseFighting)
 
-    inst:RemoveComponent("attackdodger")
+    if inst.components.attackdodger then
+        inst:RemoveComponent("attackdodger")
+    end
 
+    local skilltreeupdater = inst.components.skilltreeupdater
     if mode == WEREMODES.MOOSE then
         inst:ListenForEvent("onattackother", OnMooseFighting)
         inst:ListenForEvent("onmissother", OnMooseFighting)
@@ -891,12 +894,11 @@ local function SetWereFighter(inst, mode)
         inst:ListenForEvent("blocked", OnMooseFighting)
         ResetMooseFightingLevel(inst)
 
-        local skilltreeupdater = inst.components.skilltreeupdater
-
         local healthregen_skill = skilltreeupdater:IsActivated("woodie_curse_moose_2")
         local planardefense_skill = skilltreeupdater:IsActivated("woodie_curse_epic_moose")
 
         if healthregen_skill then
+            -- FIXME(JBK): Change this to a buff and remove health StartRegen StopRegen calls.
             local regendata = TUNING.SKILLS.WOODIE.MOOSE_HEALTH_REGEN
             inst.components.health:StartRegen(regendata.amount, regendata.period)
         end
@@ -906,9 +908,11 @@ local function SetWereFighter(inst, mode)
         end
 
     elseif mode == WEREMODES.GOOSE then
-        inst:AddComponent("attackdodger")
-        inst.components.attackdodger:SetCooldownTime(TUNING.SKILLS.WOODIE.GOOSE_DODGE_COOLDOWN_TIME)
-        inst.components.attackdodger:SetOnDodgeFn(inst.OnDodgeAttack)
+        if skilltreeupdater:IsActivated("woodie_curse_goose_3") then
+            inst:AddComponent("attackdodger")
+            inst.components.attackdodger:SetCooldownTime(TUNING.SKILLS.WOODIE.GOOSE_DODGE_COOLDOWN_TIME)
+            inst.components.attackdodger:SetOnDodgeFn(inst.OnDodgeAttack)
+        end
     end
 
     if mode ~= WEREMODES.MOOSE then
@@ -919,6 +923,7 @@ local function SetWereFighter(inst, mode)
         end
 
         inst.components.planardefense:RemoveBonus(inst, "weremoose_skill")
+        -- FIXME(JBK): Change this to a buff and remove health StartRegen StopRegen calls.
         inst.components.health:StopRegen()
     end
 end

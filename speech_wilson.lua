@@ -4893,6 +4893,11 @@ return {
         SUPPORT_PILLAR_COMPLETE = "It fills me with confidence.",
         SUPPORT_PILLAR_BROKEN = "You were once tall and strong.",
 
+		SUPPORT_PILLAR_DREADSTONE_SCAFFOLD = "It's all under wraps for now.",
+		SUPPORT_PILLAR_DREADSTONE = "I should really get around to fixing that.",
+		SUPPORT_PILLAR_DREADSTONE_COMPLETE = "That looks dreadfully strong.",
+		SUPPORT_PILLAR_DREADSTONE_BROKEN = "How dreadful.",
+
         WOLFGANG_WHISTLE = "It gives me terrible flashbacks to the gym classes of my youth...",
     },
 

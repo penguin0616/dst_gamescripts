@@ -61,7 +61,7 @@ local function OnAttacked(inst, data)
             local timer = inst.components.timer
             if timer and timer:TimerExists("finish_transformed_life") then
                 timer:StopTimer("finish_transformed_life")
-                inst:PushEvent("timerdone", { name = "finish_transformed_life" })
+				finish_transformed_life(inst)
             end
         end
     end
@@ -97,6 +97,8 @@ local function fn()
     inst:AddTag("stunnedbybomb")
     inst:AddTag("lunar_aligned")
     inst:AddTag("NOBLOCK")
+    inst:AddTag("notraptrigger")
+    inst:AddTag("wormwood_pet")
 
     inst:SetPrefabNameOverride("carrat")
 
@@ -153,6 +155,7 @@ local function fn()
 
     inst:AddComponent("follower")
     inst.no_spawn_fx = true
+    inst.RemoveWormwoodPet = finish_transformed_life
 
     return inst
 end

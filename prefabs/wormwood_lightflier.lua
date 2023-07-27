@@ -16,7 +16,7 @@ local function EnableBuzz(inst, enable)
     if enable then
         if not inst.buzzing then
             inst.buzzing = true
-            if not (inst.components.inventoryitem:IsHeld() or inst:IsAsleep() or inst.SoundEmitter:PlayingSound("loop")) then
+            if not (inst:IsAsleep() or inst.SoundEmitter:PlayingSound("loop")) then
                 inst.SoundEmitter:PlaySound("grotto/creatures/light_bug/fly_LP", "loop")
             end
         end
@@ -79,7 +79,7 @@ local function OnAttacked(inst, data)
             local timer = inst.components.timer
             if timer and timer:TimerExists("finish_transformed_life") then
                 timer:StopTimer("finish_transformed_life")
-                inst:PushEvent("timerdone", { name = "finish_transformed_life" })
+				finish_transformed_life(inst)
             end
         end
     end
@@ -125,6 +125,8 @@ local function fn()
     inst:AddTag("lightbattery")
 
     inst:AddTag("NOBLOCK")
+    inst:AddTag("notraptrigger")
+    inst:AddTag("wormwood_pet")
 
     MakeInventoryFloatable(inst)
 
@@ -176,6 +178,7 @@ local function fn()
     inst:ListenForEvent("timerdone", OnTimerDone)
 
     inst.no_spawn_fx = true
+    inst.RemoveWormwoodPet = finish_transformed_life
 
     local updatelooper = inst:AddComponent("updatelooper")
     updatelooper:AddOnUpdateFn(OnUpdate)

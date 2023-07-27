@@ -859,9 +859,6 @@ ACTIONS.LOOKAT.fn = function(act)
 				) then
 					act.doer.components.locomotor:Stop()
 				end
-                if ThePlayer == act.doer then
-                    TheScrapbookPartitions:SetInspectedByCharacter(targ.prefab, ThePlayer.prefab)
-                end
 				if act.doer.components.talker ~= nil then
 					act.doer.components.talker:Say(desc, nil, targ.components.inspectable.noanim, nil, nil, nil, text_filter_context, original_author)
 				end
@@ -3194,7 +3191,8 @@ ACTIONS.CONSTRUCT.strfn = function(act)
                 (act.target:HasTag("constructionsite")      and "STORE")
             )
         or  (
-                (act.target:HasTag("offerconstructionsite") and "OFFER_TO")
+				(act.target:HasTag("offerconstructionsite") and "OFFER_TO") or
+				(act.target:HasTag("repairconstructionsite") and "REPAIR")
             )
         or nil
 end
@@ -3212,11 +3210,6 @@ ACTIONS.CONSTRUCT.fn = function(act)
         --Silent fail for construction in the dark
         if not CanEntitySeeTarget(act.doer, target) then
             return true
-        end
-
-        -- DANY: open sound here.
-        if act.doer == ThePlayer then
-            act.doer.SoundEmitter:PlaySound("dontstarve/wilson/chest_open")
         end
 
         local item = act.invobject
@@ -3272,28 +3265,23 @@ ACTIONS.STOPCONSTRUCTION.stroverridefn = function(act)
 end
 
 ACTIONS.STOPCONSTRUCTION.strfn = function(act)
-    return
-        (
-            (act.target:HasTag("offerconstructionsite") and "OFFER")
-        )
-    or nil
+	return (act.target:HasTag("offerconstructionsite") and "OFFER")
+		or (act.target:HasTag("repairconstructionsite") and "REPAIR")
+		or nil
 end
 
 ACTIONS.STOPCONSTRUCTION.fn = function(act)
     if act.doer ~= nil and act.doer.components.constructionbuilder ~= nil then
         act.doer.components.constructionbuilder:StopConstruction()
-
-        -- DANY: close sound here.
-        if act.doer == ThePlayer then
-            act.doer.SoundEmitter:PlaySound("dontstarve/wilson/chest_close")
-        end
-
     end
     return true
 end
 
 ACTIONS.APPLYCONSTRUCTION.strfn = function(act)
-	return act.target:HasTag("offerconstructionsite") and "OFFER" or nil
+	print(act.target, act.target:HasTag("repairconstructionsite"))
+	return (act.target:HasTag("offerconstructionsite") and "OFFER")
+		or (act.target:HasTag("repairconstructionsite") and "REPAIR")
+		or nil
 end
 
 ACTIONS.APPLYCONSTRUCTION.fn = function(act)

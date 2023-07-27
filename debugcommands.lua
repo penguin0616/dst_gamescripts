@@ -2032,12 +2032,12 @@ function d_createscrapbookdata(should_print)
                 subcat = '"Mutator"'
             end
 
-            if t.components.tool then
-                subcat = '"Tool"'
+            if t.components.weapon or t.scrapbook_subcat == "weapon"  then
+                subcat = '"Weapon"'
             end
 
-            if t.components.weapon then
-                subcat = '"Weapon"'
+            if t.components.tool or t.scrapbook_subcat == "tool" then
+                subcat = '"Tool"'
             end
 
             if t:HasTag("farm_plant") then
@@ -2649,6 +2649,27 @@ function d_createscrapbookdata(should_print)
             if t.components.perishable then
                 WriteInfo( "perishable",  t.components.perishable.perishtime )
             end
+
+            -----------------------------------------
+            ------------------------------------ OAR
+            if t.components.oar then
+                WriteInfo( "oar_force",  t.components.oar.force )
+                WriteInfo( "oar_velocity",  t.components.oar.max_velocity )
+            end
+
+            -----------------------------------------
+            ------------------------------------ TACKLE
+            if t.components.oceanfishingtackle then
+                if t.components.oceanfishingtackle.casting_data then
+                    WriteInfo( "float_range", t.components.oceanfishingtackle.casting_data.dist_max + 5)
+                    WriteInfo( "float_accuracy", t.components.oceanfishingtackle.casting_data.dist_min_accuracy)
+                end
+                if t.components.oceanfishingtackle.lure_data then
+                    WriteInfo( "lure_charm", t.components.oceanfishingtackle.lure_data.charm)
+                    WriteInfo( "lure_dist", t.components.oceanfishingtackle.lure_data.dist_max)
+                    WriteInfo( "lure_radius", t.components.oceanfishingtackle.lure_data.radius)
+                end
+            end            
 
             -----------------------------------------
             ------------------------------------- DEPS

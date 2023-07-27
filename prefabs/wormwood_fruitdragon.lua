@@ -26,20 +26,6 @@ local function RetargetFn(inst)
     return inst.components.combat.target
 end
 
-local function OnAttacked(inst, data)
-    if data.attacker ~= nil then
-        if data.attacker.components.petleash and data.attacker.components.petleash:IsPet(inst) then
-            local timer = inst.components.timer
-            if timer and timer:TimerExists("finish_transformed_life") then
-                timer:StopTimer("finish_transformed_life")
-                inst:PushEvent("timerdone", { name = "finish_transformed_life" })
-            end
-        elseif data.attacker.components.combat then
-            inst.components.combat:SuggestTarget(data.attacker)
-        end
-    end
-end
-
 local function GetRemainingTimeAwake(inst)
     local max_awake_time = (TUNING.FRUITDRAGON.AWAKE_TIME_MIN + inst.sleep_variance * TUNING.FRUITDRAGON.AWAKE_TIME_VAR)
     return max_awake_time - (GetTime() - inst._wakeup_time)
@@ -153,6 +139,20 @@ local function OnEntityWake(inst)
     end
 end
 
+local function OnAttacked(inst, data)
+    if data.attacker ~= nil then
+        if data.attacker.components.petleash and data.attacker.components.petleash:IsPet(inst) then
+            local timer = inst.components.timer
+            if timer and timer:TimerExists("finish_transformed_life") then
+                timer:StopTimer("finish_transformed_life")
+				finish_transformed_life(inst)
+            end
+        elseif data.attacker.components.combat then
+            inst.components.combat:SuggestTarget(data.attacker)
+        end
+    end
+end
+
 local fruit_dragon_sounds =
 {
     idle = "turnoftides/creatures/together/fruit_dragon/idle",
@@ -198,6 +198,8 @@ local function fn()
     inst:AddTag("scarytoprey")
     inst:AddTag("lunar_aligned")
     inst:AddTag("NOBLOCK")
+    inst:AddTag("notraptrigger")
+    inst:AddTag("wormwood_pet")
 
     inst:SetPrefabNameOverride("fruitdragon")
 
@@ -257,6 +259,7 @@ local function fn()
     
     inst:AddComponent("follower")
     inst.no_spawn_fx = true
+    inst.RemoveWormwoodPet = finish_transformed_life
 
     inst.OnEntitySleep = OnEntitySleep
     inst.OnEntityWake = OnEntityWake

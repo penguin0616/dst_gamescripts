@@ -33,6 +33,7 @@ local function MakeWereItem(were_mode)
 
         inst:AddTag("monstermeat")
         inst:AddTag("wereitem")
+        inst:AddTag("unsafefood")
 
         if were_mode == "goose" then
             MakeInventoryFloatable(inst, "small", .15, { 1.3, 1.1, 1.3 })

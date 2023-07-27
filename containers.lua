@@ -373,7 +373,13 @@ params.construction_container =
         {
             text = STRINGS.ACTIONS.APPLYCONSTRUCTION.GENERIC,
             position = Vector3(0, -94, 0),
-        }
+		},
+		--V2C: -override the default widget sound, which is heard only by the client
+		--     -most containers disable the client sfx via skipopensnd/skipclosesnd,
+		--      and play it in world space through the prefab instead.
+		opensound = "dontstarve/wilson/chest_open",
+		closesound = "dontstarve/wilson/chest_close",
+		--
     },
     usespecificslotsforitems = true,
     type = "cooker",
@@ -403,10 +409,12 @@ function params.construction_container.widget.buttoninfo.validfn(inst)
     return inst.replica.container ~= nil and not inst.replica.container:IsEmpty()
 end
 
+params.construction_repair_container = deepcopy(params.construction_container)
+params.construction_repair_container.widget.buttoninfo.text = STRINGS.ACTIONS.APPLYCONSTRUCTION.REPAIR
+
 --------------------------------------------------------------------------
 --[[ enable_shadow_rift_construction_container ]]
 --------------------------------------------------------------------------
-
 
 params.enable_shadow_rift_construction_container = deepcopy(params.construction_container)
 
@@ -1458,37 +1466,6 @@ params.quagmire_backpack =
 for x = 0, 7 do
     table.insert(params.quagmire_backpack.widget.slotpos, Vector3(-x * 75 - 75*.5, 120, 0))
 end
-
---------------------------------------------------------------------------
---[[ pillar ]]
---------------------------------------------------------------------------
-
-params.support_pillar_complete =
-{
-    widget =
-    {
-        slotpos =
-        {
-            Vector3(0, 0, 0),
-        },
-        slotbg =
-        {
-            { image = "inv_slot_morsel.tex" },
-        },
-        animbank = "ui_beard_1x1",
-        animbuild = "ui_beard_1x1",
-        pos = Vector3(-82, 89, 0),
-        side_align_tip = 160,
-    },
-    acceptsstacks = true,
-    lowpriorityselection = true,
-   -- excludefromcrafting = false,
-}
-
-function params.support_pillar_complete.itemtestfn(container, item, slot)
-    return item.prefab == "rocks"
-end
-
 
 --------------------------------------------------------------------------
 

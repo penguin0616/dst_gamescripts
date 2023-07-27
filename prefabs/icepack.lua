@@ -71,8 +71,6 @@ local function fn()
 
     inst:AddComponent("container")
     inst.components.container:WidgetSetup("icepack")
-    inst.components.container.skipclosesnd = true
-    inst.components.container.skipopensnd = true
 
     MakeHauntableLaunchAndDropFirstItem(inst)
 

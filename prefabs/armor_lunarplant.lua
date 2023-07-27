@@ -6,6 +6,7 @@ local assets =
 local prefabs =
 {
 	"armor_lunarplant_glow_fx",
+	"hitsparks_reflect_fx",
     "wormwood_vined_debuff",
 }
 
@@ -114,6 +115,13 @@ local function ReflectDamageFn(inst, attacker, damage, weapon, stimuli, spdamage
 	}
 end
 
+local function OnReflectDamage(inst, data)
+	--data.attacker is the target we are reflecting dmg to
+	if data ~= nil and data.attacker ~= nil and data.attacker:IsValid() then
+		SpawnPrefab("hitsparks_reflect_fx"):Setup(inst.components.inventoryitem.owner or inst, data.attacker)
+	end
+end
+
 local function fn()
 	local inst = CreateEntity()
 
@@ -154,6 +162,7 @@ local function fn()
 
 	inst:AddComponent("damagereflect")
 	inst.components.damagereflect:SetReflectDamageFn(ReflectDamageFn)
+	inst:ListenForEvent("onreflectdamage", OnReflectDamage)
 
 	SetupEquippable(inst)
 

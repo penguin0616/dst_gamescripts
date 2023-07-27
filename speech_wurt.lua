@@ -4883,6 +4883,11 @@ return{
         SUPPORT_PILLAR_COMPLETE = "Made with own two claws!",
         SUPPORT_PILLAR_BROKEN = "Didn't do it!",
 
+		SUPPORT_PILLAR_DREADSTONE_SCAFFOLD = "Need rocks! MORE ROCKS!!",
+		SUPPORT_PILLAR_DREADSTONE = "Hey, stop it! Not allowed to break, florp!",
+		SUPPORT_PILLAR_DREADSTONE_COMPLETE = "Pretty pretty pillar, florp!",
+		SUPPORT_PILLAR_DREADSTONE_BROKEN = "Glorp! Found it like that.",
+
         WOLFGANG_WHISTLE = "Shiny... maybe he not mind if me borrow...",
     },
 

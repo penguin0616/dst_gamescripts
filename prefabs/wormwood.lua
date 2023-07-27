@@ -315,14 +315,16 @@ local function EnableBeeBeacon(inst, enable)
     end
 end
 
-local AOE_EFFECTS_ONEOF_TAGS = { "tendable_farmplant", "trap_bramble", "daylight" }
+local AOE_EFFECTS_ONEOF_TAGS = { "tendable_farmplant", "trap_bramble" }
 local AOE_EFFECTS_CANT_TAGS = { "INLIMBO", "FX"}
+local DAYLIGHT_MUST_TAGS = {"daylight"}
+local DAYLIGHT_CANT_TAGS = {"INLIMBO"}
 local function DoAOEeffect(inst)
     local x, y, z = inst.Transform:GetWorldPosition()
 
     local skilltreeupdater = inst.components.skilltreeupdater
 
-    local reset_brambletraps, grow_in_daylight, do_grow_in_daylight
+    local reset_brambletraps, grow_in_daylight
     if skilltreeupdater ~= nil then
         reset_brambletraps = skilltreeupdater:IsActivated("wormwood_blooming_farmrange3")
         grow_in_daylight = skilltreeupdater:IsActivated("wormwood_blooming_petals")
@@ -342,12 +344,15 @@ local function DoAOEeffect(inst)
             if v.last_reset == nil or v.last_reset + TUNING.WORMWOOD_TRAP_BRAMBLE_AUTO_RESET_COOLDOWN < GetTime() then
                 v.components.mine:Reset()
             end
-        elseif grow_in_daylight and v:HasTag("daylight") then
-            do_grow_in_daylight = true
         end
     end
 
-    inst:UpdatePhotosynthesisState(do_grow_in_daylight or TheWorld.state.isday)
+    local should_grow_in_daylight = TheWorld.state.isday
+    if grow_in_daylight and not should_grow_in_daylight then
+        should_grow_in_daylight = TheSim:FindEntities(x, y, z, TUNING.DAYLIGHT_SEARCH_RANGE, DAYLIGHT_MUST_TAGS, DAYLIGHT_CANT_TAGS)[1] ~= nil
+    end
+
+    inst:UpdatePhotosynthesisState(should_grow_in_daylight)
 end
 
 local function EnableFullBloom(inst, enable)
@@ -662,6 +667,7 @@ local function UpdatePhotosynthesisState(inst, isday)
     if should_photosynthesize ~= inst.photosynthesizing then
         inst.photosynthesizing = should_photosynthesize
         if inst.components.health then
+            -- FIXME(JBK): Change this to a buff and remove health StartRegen StopRegen calls.
             if should_photosynthesize then
                 local regen = TUNING.WORMWOOD_PHOTOSYNTHESIS_HEALTH_REGEN
                 inst.components.health:StartRegen(regen.amount, regen.period)
@@ -669,6 +675,18 @@ local function UpdatePhotosynthesisState(inst, isday)
                 inst.components.health:StopRegen()
             end
         end
+    end
+end
+
+local function RemoveWormwoodPets(inst)
+    local todespawn = {}
+    for k, v in pairs(inst.components.petleash:GetPets()) do
+        if v:HasTag("wormwood_pet") then
+            table.insert(todespawn, v)
+        end
+    end
+    for i, v in ipairs(todespawn) do
+        v:RemoveWormwoodPet()
     end
 end
 
@@ -774,6 +792,7 @@ local function master_postinit(inst)
     inst:ListenForEvent("unequip", OnUnequip)
     inst:ListenForEvent("ms_becameghost", OnBecameGhost)
     inst:ListenForEvent("ms_respawnedfromghost", OnRespawnedFromGhost)
+	inst:ListenForEvent("ms_playerreroll", RemoveWormwoodPets)
     inst:WatchWorldState("season", OnSeasonChange)
     WatchWorldPlants(inst)
 

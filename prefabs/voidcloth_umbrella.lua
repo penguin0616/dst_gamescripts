@@ -371,6 +371,8 @@ local function UmbrellaFn()
 	--Must be added client-side, but configured server-side
 	inst:AddComponent("raindome")
 
+	inst.scrapbook_specialinfo = "VOIDCLOTHUMBRELLA"
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then

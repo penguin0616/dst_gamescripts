@@ -4883,6 +4883,11 @@ return{
         SUPPORT_PILLAR_COMPLETE = "A glorious monument to our resilience!",
         SUPPORT_PILLAR_BROKEN = "We shall rebuild!",
 
+		SUPPORT_PILLAR_DREADSTONE_SCAFFOLD = "The building hath commenced!",
+		SUPPORT_PILLAR_DREADSTONE = "This noble pillar hath withstood much for our sakes.",
+		SUPPORT_PILLAR_DREADSTONE_COMPLETE = "'Twould withstand Ragnarok.",
+		SUPPORT_PILLAR_DREADSTONE_BROKEN = "How the mighty have fallen.",
+
         WOLFGANG_WHISTLE = "My ally will get our forces fighting fit!",
     },
 

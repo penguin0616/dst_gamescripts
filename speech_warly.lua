@@ -4883,6 +4883,11 @@ return{
         SUPPORT_PILLAR_COMPLETE = "It's nice to have some stability.",
         SUPPORT_PILLAR_BROKEN = "Crumbled like a dry pastry.",
 
+		SUPPORT_PILLAR_DREADSTONE_SCAFFOLD = "What's cooking under there?",
+		SUPPORT_PILLAR_DREADSTONE = "I fear it won't be standing much longer.",
+		SUPPORT_PILLAR_DREADSTONE_COMPLETE = "Looks well done to me!",
+		SUPPORT_PILLAR_DREADSTONE_BROKEN = "If at first you don't succeed...",
+
         WOLFGANG_WHISTLE = "I think my friend is enjoying this taste of leadership.",
     },
 

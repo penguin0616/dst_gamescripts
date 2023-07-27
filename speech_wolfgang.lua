@@ -4884,6 +4884,11 @@ return{
         SUPPORT_PILLAR_COMPLETE = "Is mighty pillar!",
         SUPPORT_PILLAR_BROKEN = "Is crumbled. Very sad.",
 
+		SUPPORT_PILLAR_DREADSTONE_SCAFFOLD = "Do not look! Is not done yet!",
+		SUPPORT_PILLAR_DREADSTONE = "Stay strong, mighty pillar!",
+		SUPPORT_PILLAR_DREADSTONE_COMPLETE = "Mighty pillar is mighty... and little bit scary.",
+		SUPPORT_PILLAR_DREADSTONE_BROKEN = "Poor scary pillar is broke. So sad.",
+
         WOLFGANG_WHISTLE = "Wolfgang is good teacher!",
     },
 

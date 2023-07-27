@@ -387,6 +387,9 @@ local function rock_avocado_fruit_sprout()
 
     inst:AddTag("deployedplant")
 
+    inst.scrapbook_specialinfo = "PLANTABLE"
+    inst.scrapbook_anim = "idle_seed"
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then

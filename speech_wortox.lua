@@ -4889,6 +4889,11 @@ return{
         SUPPORT_PILLAR_COMPLETE = "Thank you for your support, hyuyu!",
         SUPPORT_PILLAR_BROKEN = "All that trouble for a pile of rubble.",
 
+		SUPPORT_PILLAR_DREADSTONE_SCAFFOLD = "A pile of pillar-in-progress.",
+		SUPPORT_PILLAR_DREADSTONE = "Alas and alack, the stone has a crack!",
+		SUPPORT_PILLAR_DREADSTONE_COMPLETE = "What a marvel! Shame it's not marble.",
+		SUPPORT_PILLAR_DREADSTONE_BROKEN = "The Pillar of Dread looks rather dead, hyuyu!",
+
         WOLFGANG_WHISTLE = "Who knew a whistle held such sway, it makes folks listen to what you say!",
     },
 

@@ -4884,6 +4884,11 @@ return{
         SUPPORT_PILLAR_COMPLETE = "Tall and sturdy as a redwood.",
         SUPPORT_PILLAR_BROKEN = "Shucks, I came too late to yell \"timbeerrrrr\"!",
 
+		SUPPORT_PILLAR_DREADSTONE_SCAFFOLD = "Needs some more work yet, eh?",
+		SUPPORT_PILLAR_DREADSTONE = "It's startin' to look a little unsteady.",
+		SUPPORT_PILLAR_DREADSTONE_COMPLETE = "She'll take a few swings, eh, Luce?",
+		SUPPORT_PILLAR_DREADSTONE_BROKEN = "Well, that's all she wrote.",
+
         WOLFGANG_WHISTLE = "He'd better not ask me to start doing jumping jacks...",
     },
 

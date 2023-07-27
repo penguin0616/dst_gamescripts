@@ -4883,6 +4883,11 @@ return{
         SUPPORT_PILLAR_COMPLETE = "It'll keep us safe!",
         SUPPORT_PILLAR_BROKEN = "Oh no, it broke!",
 
+		SUPPORT_PILLAR_DREADSTONE_SCAFFOLD = "What's hiding under there?",
+		SUPPORT_PILLAR_DREADSTONE = "Uh oh, those cracks are looking bigger...",
+		SUPPORT_PILLAR_DREADSTONE_COMPLETE = "Thanks for keeping us safe, pillar!",
+		SUPPORT_PILLAR_DREADSTONE_BROKEN = "Aww, poor pillar.",
+
         WOLFGANG_WHISTLE = "Mr. Wolfgang likes to play with whistles, just like us!",
     },
 

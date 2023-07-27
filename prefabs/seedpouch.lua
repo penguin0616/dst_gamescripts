@@ -74,8 +74,6 @@ local function fn()
 
     inst:AddComponent("container")
     inst.components.container:WidgetSetup("seedpouch")
-    inst.components.container.skipclosesnd = true
-    inst.components.container.skipopensnd = true
 
 	inst:AddComponent("preserver")
 	inst.components.preserver:SetPerishRateMultiplier(TUNING.SEEDPOUCH_PRESERVER_RATE)

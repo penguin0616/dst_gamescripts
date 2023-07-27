@@ -25,26 +25,24 @@ function GroundPounder:GetPoints(pt)
     local radius = self.initialRadius
 
     for i = 1, self.numRings do
-        local theta = 0
-        local circ = 2*PI*radius
-        local numPoints = circ * self.pointDensity
+        local numPoints = math.floor(TWOPI * radius * self.pointDensity)
+
+        if not points[i] then
+            points[i] = {}
+        end
+
         for p = 1, numPoints do
-
-            if not points[i] then
-                points[i] = {}
-            end
-
-            local offset = Vector3(radius * math.cos(theta), 0, -radius * math.sin(theta))
-            local point = pt + offset
+            local theta = (TWOPI / numPoints) * p
+            local x = pt.x + radius * math.cos(theta)
+            local z = pt.z + radius * math.sin(theta)
+            local point = Vector3(x, 0, z)
 
             table.insert(points[i], point)
-
-            theta = theta - (2*PI/numPoints)
         end
 
         radius = radius + self.radiusStepDistance
-
     end
+
     return points
 end
 
@@ -168,6 +166,7 @@ function GroundPounder:GroundPound(pt)
     end
 end
 
+-- Note(DiogoW): I don't think this is working as expected.
 function GroundPounder:GroundPound_Offscreen(position)
     self.inst.components.combat:EnableAreaDamage(false)
 

@@ -4889,6 +4889,11 @@ return{
         SUPPORT_PILLAR_COMPLETE = "Good and sturdy!",
         SUPPORT_PILLAR_BROKEN = "I'd better roll up my sleeves and get to rebuildin'.",
 
+		SUPPORT_PILLAR_DREADSTONE_SCAFFOLD = "Looks like there's some buildin' to be done!",
+		SUPPORT_PILLAR_DREADSTONE = "Looks like it could use some repairs.",
+		SUPPORT_PILLAR_DREADSTONE_COMPLETE = "Now that's one mean lookin' pillar!",
+		SUPPORT_PILLAR_DREADSTONE_BROKEN = "Well don't just look at it. Let's get to fixin'.",
+
         WOLFGANG_WHISTLE = "Whatcha need, coach?",
     },
 

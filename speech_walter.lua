@@ -4883,6 +4883,11 @@ return{
         SUPPORT_PILLAR_COMPLETE = "That's not going anywhere!",
         SUPPORT_PILLAR_BROKEN = "Um. Maybe I spoke too soon...",
 
+		SUPPORT_PILLAR_DREADSTONE_SCAFFOLD = "I bet there's some interesting secrets hiding under there!",
+		SUPPORT_PILLAR_DREADSTONE = "Don't worry Woby, I'm sure it'll be fine!",
+		SUPPORT_PILLAR_DREADSTONE_COMPLETE = "Absolutely indestructible!",
+		SUPPORT_PILLAR_DREADSTONE_BROKEN = "How could it be so desctructible?",
+
         WOLFGANG_WHISTLE = "We're ready, coach! Right, Woby?",
     },
 

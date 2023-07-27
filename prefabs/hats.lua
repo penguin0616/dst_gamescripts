@@ -375,6 +375,8 @@ local function MakeHat(name)
     fns.woodcarved = function()
         local inst = simple(fns.woodcarved_custom_init)
 
+        inst.scrapbook_specialinfo = "WOODCARVEDHAT"
+
         if not TheWorld.ismastersim then
             return inst
         end
@@ -561,6 +563,8 @@ local function MakeHat(name)
     fns.feather = function()
         local inst = simple()
 
+        inst.scrapbook_specialinfo = "FEATHERHAT"
+
         if not TheWorld.ismastersim then
             return inst
         end
@@ -604,6 +608,7 @@ local function MakeHat(name)
         inst.components.floater:SetVerticalOffset(0.1)
         inst.components.floater:SetScale(0.65)
 
+        inst.scrapbook_specialinfo = "BEEFALOHAT"
         if not TheWorld.ismastersim then
             return inst
         end
@@ -735,6 +740,8 @@ local function MakeHat(name)
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.6)
 
+        inst.scrapbook_specialinfo = "MINERHAT"
+
         if not TheWorld.ismastersim then
             return inst
         end
@@ -850,6 +857,8 @@ local function MakeHat(name)
         inst.components.floater:SetSize("med")
         inst.components.floater:SetVerticalOffset(0.1)
         inst.components.floater:SetScale(0.62)
+
+        inst.scrapbook_specialinfo = "SPIDERHAT"
 
         if not TheWorld.ismastersim then
             return inst
@@ -1101,6 +1110,8 @@ local function MakeHat(name)
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.65)
 
+        inst.scrapbook_specialinfo = "BUSHHAT"
+
         if not TheWorld.ismastersim then
             return inst
         end
@@ -1155,6 +1166,8 @@ local function MakeHat(name)
 
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.68)
+
+        inst.scrapbook_specialinfo = "KELPHAT"
 
         if not TheWorld.ismastersim then
             return inst
@@ -1364,6 +1377,7 @@ local function MakeHat(name)
 
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.65)
+        inst.scrapbook_specialinfo = "BALLOONHAT"
 
         if not TheWorld.ismastersim then
             return inst
@@ -1462,6 +1476,8 @@ local function MakeHat(name)
     fns.walter = function()
         local inst = simple(walter_custom_init)
 
+        inst.scrapbook_specialinfo = "WALTERHAT"
+
         if not TheWorld.ismastersim then
             return inst
         end
@@ -1502,6 +1518,8 @@ local function MakeHat(name)
 
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.66)
+
+        inst.scrapbook_specialinfo = "ICEHAT"
 
         if not TheWorld.ismastersim then
             return inst
@@ -1582,6 +1600,8 @@ local function MakeHat(name)
     fns.watermelon = function()
         local inst = simple(watermelon_custom_init)
 
+        inst.scrapbook_specialinfo = "WATERMELONHAT"
+
         if not TheWorld.ismastersim then
             return inst
         end
@@ -1646,6 +1666,8 @@ local function MakeHat(name)
 
     fns.mole = function()
         local inst = simple(mole_custom_init)
+
+        inst.scrapbook_specialinfo = "MOLEHAT"
 
         if not TheWorld.ismastersim then
             return inst
@@ -1751,6 +1773,8 @@ local function MakeHat(name)
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.95)
 
+        inst.scrapbook_specialinfo = "MUSHHAT"
+
         if not TheWorld.ismastersim then
             return inst
         end
@@ -1760,6 +1784,8 @@ local function MakeHat(name)
 
     fns.green_mushroom = function()
         local inst = common_mushroom("spore_small")
+
+        inst.scrapbook_specialinfo = "MUSHHAT"
 
         inst.components.floater:SetSize("med")
 
@@ -1775,6 +1801,8 @@ local function MakeHat(name)
 
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.7)
+
+        inst.scrapbook_specialinfo = "MUSHHAT"
 
         if not TheWorld.ismastersim then
             return inst
@@ -1957,6 +1985,8 @@ local function MakeHat(name)
 
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.72)
+
+        inst.scrapbook_specialinfo = "DESERTHAT"
 
         if not TheWorld.ismastersim then
             return inst
@@ -2159,6 +2189,8 @@ local function MakeHat(name)
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.72)
 
+        inst.scrapbook_specialinfo = "ANTLIONHAT"
+
         if not TheWorld.ismastersim then
             return inst
         end
@@ -2324,6 +2356,8 @@ local function MakeHat(name)
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.72)
 
+        inst.scrapbook_specialinfo = "POLLYROGERSHAT"
+
         inst.defaultanim = "anim"
 
         if not TheWorld.ismastersim then
@@ -2397,6 +2431,8 @@ local function MakeHat(name)
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.72)
 
+        inst.scrapbook_specialinfo = "MONKEYSMALLHAT"
+
         if not TheWorld.ismastersim then
             return inst
         end
@@ -2437,6 +2473,8 @@ local function MakeHat(name)
 
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.72)
+
+        inst.scrapbook_specialinfo = "MONKEYMEDIUMHAT"
 
         if not TheWorld.ismastersim then
             return inst
@@ -2573,6 +2611,8 @@ local function MakeHat(name)
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.68)
 
+        inst.scrapbook_specialinfo = "MERMHAT"
+
         if not TheWorld.ismastersim then
             return inst
         end
@@ -2629,6 +2669,8 @@ local function MakeHat(name)
         local inst = simple()
 
         inst.components.floater:SetSize("med")
+
+        inst.scrapbook_specialinfo = "BATNOSEHAT"
 
         if not TheWorld.ismastersim then
             return inst
@@ -2687,6 +2729,8 @@ local function MakeHat(name)
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.65)
 
+        inst.scrapbook_specialinfo = "PLANTREGISTRYHAT"
+
         if not TheWorld.ismastersim then
             return inst
         end
@@ -2726,6 +2770,8 @@ local function MakeHat(name)
 
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.72)
+
+        inst.scrapbook_specialinfo = "NUTRIENTHAT"
 
         if not TheWorld.ismastersim then
             return inst
@@ -2967,6 +3013,8 @@ local function MakeHat(name)
 
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.68)
+
+        inst.scrapbook_specialinfo = "ALTERGUARDIANHAT"
 
         if not TheWorld.ismastersim then
             return inst

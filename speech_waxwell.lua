@@ -4883,6 +4883,11 @@ return{
         SUPPORT_PILLAR_COMPLETE = "It will hold, for now.",
         SUPPORT_PILLAR_BROKEN = "It couldn't withstand the pressure.",
 
+		SUPPORT_PILLAR_DREADSTONE_SCAFFOLD = "There is work to be done. For someone else.",
+		SUPPORT_PILLAR_DREADSTONE = "It's buckling under the weight.",
+		SUPPORT_PILLAR_DREADSTONE_COMPLETE = "Hope it's as strong as it looks.",
+		SUPPORT_PILLAR_DREADSTONE_BROKEN = "Surprise, surprise.",
+
         WOLFGANG_WHISTLE = "Ah yes. What could be more motivating than the shriek of a whistle?",
     },
 

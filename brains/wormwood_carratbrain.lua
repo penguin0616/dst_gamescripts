@@ -55,9 +55,16 @@ end
 
 local NORMAL_RUNAWAY_DATA = {tags = {"scarytoprey"}, notags = {"carratcrafter"}, fn = ShouldRunFromScary}
 function CarratBrain:OnStart()
+    local leader = GetLeader(self.inst)
+    local ignorethese = nil
+    if leader ~= nil then
+        ignorethese = leader._brain_pickup_ignorethese or {}
+        leader._brain_pickup_ignorethese = ignorethese
+    end
     local pickupparams = {
         range = SEE_BAIT_MAXDIST,
-        custom_pickup_filter = PickUpFilter
+        custom_pickup_filter = PickUpFilter,
+        ignorethese = ignorethese,
     }
 
     local root = PriorityNode(

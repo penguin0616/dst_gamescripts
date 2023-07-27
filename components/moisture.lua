@@ -233,6 +233,21 @@ function Moisture:_GetMoistureRateAssumingRain()
     return rate * (1 - waterproofmult)
 end
 
+-- DiogoW: Used by events that add moisture: waves, row fail, etc.
+function Moisture:GetWaterproofness()
+    local waterproofness =
+        (   self.inst.components.inventory ~= nil and
+            self.inst.components.inventory:GetWaterproofness() or 0
+        ) +
+        (   self.inherentWaterproofness or 0
+        ) +
+        (
+            self.waterproofnessmodifiers:Get() or 0
+        )
+    
+    return math.clamp(waterproofness, 0, 1)
+end
+
 function Moisture:GetMoistureRate()
     if not TheWorld.state.israining then
         return 0

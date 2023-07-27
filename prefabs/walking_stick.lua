@@ -54,6 +54,8 @@ local function fn()
 
     MakeInventoryFloatable(inst, "med", 0.05, {0.95, 0.40, 0.95}, true, 1, floatable_swap_data)
 
+    inst.scrapbook_specialinfo = "WALKINGSTICK"
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then

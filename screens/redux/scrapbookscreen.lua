@@ -1427,6 +1427,22 @@ function ScrapbookScreen:PopulateInfoPanel(data)
 			makeentry("icon_lightbattery.tex",STRINGS.SCRAPBOOK.DATA_LIGHTBATTERY)
 		end
 
+		if data.float_range and data.float_accuracy  then
+			makeentry("icon_bobber.tex",STRINGS.SCRAPBOOK.DATA_FLOAT_RANGE ..data.float_range)
+			makesubentry(STRINGS.SCRAPBOOK.DATA_FLOAT_ACCURACY..data.float_accuracy)
+		end
+
+		if data.lure_charm and data.lure_dist and data.lure_radius then
+			makeentry("icon_lure.tex",STRINGS.SCRAPBOOK.DATA_LURE_RADIUS ..data.lure_radius)
+			makesubentry(STRINGS.SCRAPBOOK.DATA_LURE_CHARM..data.lure_charm)
+			statsheight = statsheight - STAT_GAP_SMALL -2
+			makesubentry(STRINGS.SCRAPBOOK.DATA_LURE_DIST..data.lure_dist)
+		end
+
+		if data.oar_force and data.oar_velocity then
+			makeentry("icon_oar.tex", STRINGS.SCRAPBOOK.DATA_OAR_VELOCITY.. data.oar_velocity)
+			makesubentry(STRINGS.SCRAPBOOK.DATA_OAR_FORCE.. data.oar_force)
+		end
 	end
 
 	---------------------------------------------
@@ -1570,8 +1586,8 @@ function ScrapbookScreen:PopulateInfoPanel(data)
 
 
 ------------------------ SPECIAL INFO -------------------------------
-
-	if data and data.specialinfo and STRINGS.SCRAPBOOK.SPECIALINFO[data.specialinfo] then
+	
+	if data and data.specialinfo and STRINGS.SCRAPBOOK.SPECIALINFO[data.specialinfo] and data.knownlevel > 1 then
 		local body
 		local shortblock = string.len(STRINGS.SCRAPBOOK.SPECIALINFO[data.specialinfo]) < 110
 		height, body = setcustomblock(height,{str=STRINGS.SCRAPBOOK.SPECIALINFO[data.specialinfo], minwidth=width-100, leftoffset=40, shortblock=shortblock})

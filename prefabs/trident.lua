@@ -209,6 +209,8 @@ local function trident()
 
     MakeInventoryFloatable(inst, "med", 0.05, {1.1, 0.5, 1.1}, true, -9, FLOATER_SWAP_DATA)
 
+    inst.scrapbook_specialinfo = "TRIDENT"
+
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst

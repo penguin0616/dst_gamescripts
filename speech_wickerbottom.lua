@@ -4883,6 +4883,11 @@ return{
         SUPPORT_PILLAR_COMPLETE = "That should stabilize the cave's ceiling for now.",
         SUPPORT_PILLAR_BROKEN = "It would be prudent to attempt some repairs.",
 
+		SUPPORT_PILLAR_DREADSTONE_SCAFFOLD = "It appears some construction is required.",
+		SUPPORT_PILLAR_DREADSTONE = "I'm afraid it will not be able to withstand these tectonic shifts forever.",
+		SUPPORT_PILLAR_DREADSTONE_COMPLETE = "Dreadstone. This will hold.",
+		SUPPORT_PILLAR_DREADSTONE_BROKEN = "Broken? Perhaps this material is not as indestructible as I surmised.",
+
         WOLFGANG_WHISTLE = "Please try to keep the noise to a minimum, dear.",
     },
 

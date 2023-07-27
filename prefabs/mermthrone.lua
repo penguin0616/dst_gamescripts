@@ -10,7 +10,8 @@ local assets =
 local prefabs =
 {
     "mermthrone",
-    "mermking"
+	"mermking",
+	"construction_container",
 }
 
 local function OnConstructed(inst, doer)

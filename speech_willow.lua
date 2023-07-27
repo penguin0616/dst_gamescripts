@@ -4890,6 +4890,11 @@ return{
         SUPPORT_PILLAR_COMPLETE = "It's nice not having to worry about rocks falling on my head.",
         SUPPORT_PILLAR_BROKEN = "I guess I'll have to keep an eye out for falling rocks again.",
 
+		SUPPORT_PILLAR_DREADSTONE_SCAFFOLD = "Hmm. That looks suspiciously like work.",
+		SUPPORT_PILLAR_DREADSTONE = "I don't wanna be here when that thing finally breaks.",
+		SUPPORT_PILLAR_DREADSTONE_COMPLETE = "Cool. Wonder if it will burn.",
+		SUPPORT_PILLAR_DREADSTONE_BROKEN = "Somebody should really repair this.",
+
         WOLFGANG_WHISTLE = "I can't NOT listen to him when he's holding a shiny whistle!",
     },
 

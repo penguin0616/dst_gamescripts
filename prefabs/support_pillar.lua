@@ -15,12 +15,14 @@ local prefabs =
 {
 	"collapse_big",
 	"cutstone",
+	"construction_repair_container",
 }
 
 local prefabs_scaffold =
 {
 	"support_pillar",
 	"collapse_big",
+	"construction_container",
 }
 
 --loot for "support_pillar" is basically the recipe for "support_pillar_scaffold" minus the boards
@@ -347,6 +349,8 @@ local function fn()
 
 	MakeObstaclePhysics(inst, 2)
 
+	inst.Transform:SetEightFaced()
+
 	inst.AnimState:SetBank("support_pillar")
 	inst.AnimState:SetBuild("support_pillar")
 	inst.AnimState:PlayAnimation("idle_4")
@@ -356,6 +360,9 @@ local function fn()
 
 	--constructionsite (from constructionsite component) added to pristine state for optimization
 	inst:AddTag("constructionsite")
+
+	--Repair action strings.
+	inst:AddTag("repairconstructionsite")
 
 	inst._level = net_tinybyte(inst.GUID, "support_pillar._level", "leveldirty")
 	inst._level:set(4)
@@ -377,7 +384,7 @@ local function fn()
 	inst.reinforced = 0
 
 	inst:AddComponent("constructionsite")
-	inst.components.constructionsite:SetConstructionPrefab("construction_container")
+	inst.components.constructionsite:SetConstructionPrefab("construction_repair_container")
 	inst.components.constructionsite:SetOnConstructedFn(OnConstructed)
 
 	inst:AddComponent("inspectable")
@@ -470,6 +477,8 @@ local function scaffoldfn()
 
 	MakeObstaclePhysics(inst, 2)
 
+	inst.Transform:SetEightFaced()
+
 	inst.AnimState:SetBank("support_pillar")
 	inst.AnimState:SetBuild("support_pillar")
 	inst.AnimState:PlayAnimation("scaffold")
@@ -548,22 +557,5 @@ end
 --------------------------------------------------------------------------
 
 return Prefab("support_pillar_scaffold", scaffoldfn, assets_scaffold, prefabs_scaffold),
-	MakePlacer("support_pillar_scaffold_placer", "support_pillar", "support_pillar", "idle", nil, true, nil, nil, nil, nil, placer_postinit_fn),
+	MakePlacer("support_pillar_scaffold_placer", "support_pillar", "support_pillar", "idle", nil, true, nil, nil, nil, "eight", placer_postinit_fn),
 	Prefab("support_pillar", fn, assets, prefabs)
-
---#V2C: #TODO: remove b4 beta ends
-, Prefab("support_pillar_complete",
-	function()
-		local inst = fn()
-		inst:SetPrefabName("support_pillar")
-		if TheWorld.ismastersim then
-			inst:MakeReinforced()
-		end
-		return inst
-	end)
-, Prefab("support_pillar_broken",
-	function()
-		local inst = fn()
-		inst:SetPrefabName("support_pillar")
-		return inst
-	end)

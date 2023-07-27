@@ -168,7 +168,8 @@ local function onattack_blue(inst, attacker, target, skipsanity)
         target:PushEvent("attacked", { attacker = attacker, damage = 0, weapon = inst })
     end
 
-    if target.components.freezable ~= nil then
+	--V2C: valid check in case any of the previous callbacks or events removed the target
+	if target.components.freezable ~= nil and target:IsValid() then
         target.components.freezable:AddColdness(1)
         target.components.freezable:SpawnShatterFX()
     end
@@ -998,6 +999,8 @@ local function opal()
     inst.components.reticule.targetfn = light_reticuletargetfn
     inst.components.reticule.ease = true
     inst.components.reticule.ispassableatallpoints = true
+
+    inst.scrapbook_specialinfo = "OPALSTAFF"
 
     if not TheWorld.ismastersim then
         return inst
