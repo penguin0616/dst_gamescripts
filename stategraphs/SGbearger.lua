@@ -70,7 +70,7 @@ local function ChooseAttack(inst, target)
 
     if inst.sg:HasStateTag("running") then
         inst.sg:GoToState("pound")
-	elseif inst.components.sleeper ~= nil and not (inst.components.timer:TimerExists("Yawn") or inst.sg:HasStateTag("yawn")) then
+	elseif inst.components.sleeper ~= nil and inst:HasTag("hibernation") and not (inst.components.timer:TimerExists("Yawn") or inst.sg:HasStateTag("yawn")) then
         inst.sg:GoToState("yawn")
 	elseif not inst.components.timer:TimerExists("GroundPound") then
         inst.sg:GoToState("pound")

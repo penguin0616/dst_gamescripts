@@ -1288,7 +1288,7 @@ CommonStates.AddSleepExStates(states,
 	onsleep = function(inst)
 		inst.sg:AddStateTag("caninterrupt")
 		inst.sg.mem.dostagger = nil
-		isnt.sg.mem.dohowl = nil
+		inst.sg.mem.dohowl = nil
 	end,
 })
 

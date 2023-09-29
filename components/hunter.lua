@@ -393,13 +393,13 @@ OnUpdateHunt = function(inst, hunt)
 end
 
 local ALTERNATE_BEASTS = {"warg", "spat"}
-local function GetHuntedBeast(hunt)
+local function GetHuntedBeast(hunt, spawn_pt)
     if self:IsWargShrineActive() then
         return "claywarg"
     end
 
     -- NOTES(JBK): Very high priority for goats with all of the random elements in play.
-    if TheWorld.state.isspring and TheWorld.state.israining and TheWorld.Map:FindVisualNodeAtPoint(spawn_x, spawn_y, spawn_z, "sandstorm") then
+    if TheWorld.state.isspring and TheWorld.state.israining and TheWorld.Map:FindVisualNodeAtPoint(spawn_pt.x, spawn_pt.y, spawn_pt.z, "sandstorm") then
         return "lightninggoat"
     end
 
@@ -424,7 +424,7 @@ local function SpawnHuntedBeast(hunt, pt)
         return false
     end
 
-    local beastprefab = GetHuntedBeast(hunt)
+    local beastprefab = GetHuntedBeast(hunt, spawn_pt)
     local huntedbeast = SpawnPrefab(beastprefab)
     huntedbeast.Physics:Teleport(spawn_pt:Get())
     -- NOTES(JBK): Let each prefab handle the isfork in the event specifically.

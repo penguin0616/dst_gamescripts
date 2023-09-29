@@ -350,7 +350,7 @@ end
 --[[ END PLAYER TRACKING ]]
 
 local function OnWakeUp(inst)
-	inst.components.knownlocations:RememberLocation("spawnpoint", self:GetPosition())
+	inst.components.knownlocations:RememberLocation("spawnpoint", inst:GetPosition())
 end
 
 local function OnKilledOther(inst, data)
