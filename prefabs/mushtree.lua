@@ -460,6 +460,10 @@ local function maketree(name, data, state)
             inst:AddTag("webbable")
         end
 
+        inst.scrapbook_specialinfo = "TREE"
+        inst.scrapbook_proxy = "mushtree_tall"
+        inst.scrapbook_deps = { "charcoal", data.spore }
+
         inst:SetPrefabName(name)
 
         inst.entity:SetPristine()

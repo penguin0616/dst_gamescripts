@@ -527,6 +527,8 @@ local function MakePillar(name, bank, build)
 			return inst
 		end
 
+		inst.scrapbook_anim = "idle"
+
 		inst.suffix = "_4"
 		inst.reinforced = 0
 
@@ -663,6 +665,8 @@ local function MakeScaffold(name, bank, build)
 		if build ~= "support_pillar" then
 			inst.AnimState:OverrideSymbol("pillar_scaffold", "support_pillar", "pillar_scaffold")
 			inst.AnimState:OverrideSymbol("pillar_scaffold_90s", "support_pillar", "pillar_scaffold_90s")
+
+			inst.scrapbook_overridedata = {{"pillar_scaffold", "support_pillar", "pillar_scaffold"}, {"pillar_scaffold_90s", "support_pillar", "pillar_scaffold_90s"}}
 		end
 
 		if build == "support_pillar_dreadstone" then

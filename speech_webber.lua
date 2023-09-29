@@ -522,6 +522,10 @@ return{
 	ANNOUNCE_HUNT_BEAST_NEARBY = "Fresh tracks!",
 	ANNOUNCE_HUNT_LOST_TRAIL = "Animal went bye-bye.",
 	ANNOUNCE_HUNT_LOST_TRAIL_SPRING = "It's too muddy to track.",
+    ANNOUNCE_HUNT_START_FORK = "Whatever left those prints must be big... and scary...",
+    ANNOUNCE_HUNT_SUCCESSFUL_FORK = "They'll never see us coming!",
+    ANNOUNCE_HUNT_WRONG_FORK = "Why do we feel like something's watching us...",
+    ANNOUNCE_HUNT_AVOID_FORK = "We feel better sticking to the safer trail.",
 	ANNOUNCE_INV_FULL = "Our pockets are full!",
 	ANNOUNCE_KNOCKEDOUT = "Ow, our head!",
 	ANNOUNCE_LOWRESEARCH = "That might've taught a toddler something.",
@@ -890,6 +894,8 @@ return{
     ANNOUNCE_SHADOW_RIFT_MAX = "What was that creepy light?",
 
     ANNOUNCE_SCRAPBOOK_FULL = "We already filled up our scrapbook.",
+
+    ANNOUNCE_CHAIR_ON_FIRE = "We are fine.",
 
     ANNOUNCE_COACH = 
     {
@@ -4909,6 +4915,105 @@ return{
 		SUPPORT_PILLAR_DREADSTONE_BROKEN = "Aww, poor pillar.",
 
         WOLFGANG_WHISTLE = "Mr. Wolfgang likes to play with whistles, just like us!",
+
+        -- Rifts 3
+
+        MUTATEDDEERCLOPS = "Aah! We're sorry!",
+        MUTATEDWARG = "That's not a nice puppy!",
+        MUTATEDBEARGER = "It got scarier!",
+
+        LUNARFROG = "Is that frog sick?",
+
+        DEERCLOPSCORPSE =
+        {
+            GENERIC  = "Looking at it makes us feel kind of sad.",
+            BURNING  = "We guess it's better this way.",
+            REVIVING = "T-that's not good!",
+        },
+
+        WARGCORPSE =
+        {
+            GENERIC  = "We shouldn't just leave him like that...",
+            BURNING  = "Good-bye puppy.",
+            REVIVING = "W-we don't think that's supposed to happen!",
+        },
+
+        BEARGERCORPSE =
+        {
+            GENERIC  = "At least he won't try to stomp on us anymore.",
+            BURNING  = "Now he won't come back.",
+            REVIVING = "Aah! He's coming back!",
+        },
+
+        BEARGERFUR_SACK = "We like our snacks cold.",
+        HOUNDSTOOTH_BLOWPIPE = "We can shoot dog teeth!",
+        DEERCLOPSEYEBALL_SENTRYWARD =
+        {
+            GENERIC = "Brrr, we don't like it chilly.",    -- Enabled.
+            NOEYEBALL = "Aww, we have eight eyes and it doesn't even have one.",  -- Disabled.
+        },
+
+        SECURITY_PULSE_CAGE = "We wonder what goes in there.",
+        SECURITY_PULSE_CAGE_FULL = "Oooh it glows. Can we touch it?",
+
+		CARPENTRY_STATION =
+        {
+            GENERIC = "We'll be careful with the saw!",
+            BURNT = "Oops...",
+        },
+
+        WOOD_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "I remember drawing at the table.",
+            HAS_ITEM = "I remember drawing at the table.",
+            BURNT = "Too bad.",
+        },
+
+        WOOD_CHAIR =
+        {
+            GENERIC = "Mother said we could never sit still.",
+            OCCUPIED = "Mother said we could never sit still.",
+            BURNT = "We thought we smelled burning.",
+        },
+
+        DECOR_CENTERPIECE = "Is it a toy for us?",
+        DECOR_LAMP = "It's so bright for our eyes.",
+        DECOR_FLOWERVASE =
+        {
+            GENERIC = "We like it!",
+            EMPTY = "Reminds me of antique shopping with mother.",
+            WILTED = "They look sad.",
+            FRESHLIGHT = "Nice and bright!",
+            OLDLIGHT = "It's gonna go out soon.",
+        },
+        DECOR_PICTUREFRAME =
+        {
+            GENERIC = "We can paint better.",
+            UNDRAWN = "We don't feel like painting right now.",
+        },
+        DECOR_PORTRAITFRAME = "Are we handsome?",
+
+        PHONOGRAPH = "We could listen to that forever.",
+        RECORD = "It's a real earworm!",
+        RECORD_CREEPYFOREST = "It's his favorite song!",
+        RECORD_DANGER = "It's his favorite song!",
+        RECORD_DAWN = "It makes us want to do a little dance!",
+        RECORD_DRSTYLE = "It makes us want to do a little dance!",
+        RECORD_DUSK = "It makes us want to do a little dance!",
+        RECORD_EFS = "This one's kind of scary.",
+        RECORD_END = "It makes us want to do a little dance!",
+        RECORD_MAIN = "It makes us want to do a little dance!",
+        RECORD_WORKTOBEDONE = "It makes us want to do a little dance!",
+
+        ARCHIVE_ORCHESTRINA_MAIN = "We love puzzles!",
+
+        WAGPUNKHAT = "What's one more voice in our head?",
+        ARMORWAGPUNK = "Ms. Wickerbottom said to keep our fingers away from the gears.",
+        WAGSTAFF_MACHINERY = "We're not supposed to play in scrap piles, no matter how much we want to.'", --[[TODO]]
+        WAGPUNK_BITS = "We love puzzles!",
+        WAGPUNKBITS_KIT = "We want to play with the toy!",
+
+        WAGSTAFF_MUTATIONS_NOTE = "Is it a story?",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

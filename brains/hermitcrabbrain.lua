@@ -289,7 +289,7 @@ end
 
 local function DoCommentAction(inst)
     if inst.comment_data then
-        return BufferedAction(inst, nil, ACTIONS.COMMENT, nil, inst.comment_data.pos)
+        return BufferedAction(inst, nil, ACTIONS.COMMENT, nil, inst.comment_data.pos, nil, inst.comment_data.distance)
     end
 end
 
@@ -387,7 +387,7 @@ local function DoBottleToss(inst)
             local x,y,z = source.Transform:GetWorldPosition()
             local ents = TheSim:FindEntities(x,y,z, inst.island_radius, FISHING_MARKER_TAGS)
             if #ents > 0 then
-                local pos = Vector3(ents[math.random(1,#ents)].Transform:GetWorldPosition())
+                local pos = ents[math.random(1,#ents)]:GetPosition()
 
                 if pos then
                     local equipped = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
@@ -403,6 +403,27 @@ local function DoBottleToss(inst)
                     inst.dotalkingtimers(inst)
                     return BufferedAction(inst, nil, ACTIONS.WATER_TOSS, bottle, pos)
                 end
+            end
+        end
+    end
+end
+
+local SITTABLE_TAGS = {"cansit"}
+local function DoChairSit(inst)
+    if not inst:HasTag("sitting_on_chair") and not inst.components.timer:TimerExists("sat_on_chair") then
+        local source = inst.CHEVO_marker
+        if source then
+            local x,y,z = source.Transform:GetWorldPosition()
+            local ents = TheSim:FindEntities(x,y,z, inst.island_radius, SITTABLE_TAGS)
+            local target = nil
+            if #ents > 0 then
+                for _, ent in ipairs(ents)do
+                    target = ent
+                    break
+                end
+            end
+            if target then
+                return BufferedAction(inst, target, ACTIONS.SITON)
             end
         end
     end
@@ -444,9 +465,12 @@ function HermitBrain:OnStart()
                     PriorityNode{
                         DoAction(self.inst, DoHarvestMeat, "meat harvest", true ),
                         DoAction(self.inst, DoHarvestBerries, "berry harvest", true ),
+                        DoAction(self.inst, DoChairSit, "sit on chairs", true ),
                         DoAction(self.inst, DoFishingAction, "gone fishing", true ),
                         DoAction(self.inst, DoBottleToss, "bottle", true ),
-                        Wander(self.inst, GetHomePos, MAX_WANDER_DIST, nil, nil, nil, nil, {should_run = false})
+                        IfNode( function() return not self.inst.sg:HasStateTag("sitting") end, "not sitting",
+                            Wander(self.inst, GetHomePos, MAX_WANDER_DIST, nil, nil, nil, nil, {should_run = false})
+                        ),
                     },0.5),
                 },0.5),
         }, 0.5)

@@ -75,7 +75,11 @@ local function MakePortal(name, bank, build, assets, prefabs, common_postinit, m
         inst:AddTag("multiplayer_portal")
         inst:AddTag("antlion_sinkhole_blocker")
 
+        inst:AddComponent("pointofinterest")
+
         inst:SetDeployExtraSpacing(2)
+
+        inst.scrapbook_specialinfo = "MULTIPLAYERPORTAL"
 
         if common_postinit ~= nil then
             common_postinit(inst)
@@ -86,6 +90,8 @@ local function MakePortal(name, bank, build, assets, prefabs, common_postinit, m
         if not TheWorld.ismastersim then
             return inst
         end
+
+        inst.scrapbook_adddeps = { "moonrockidol", "multiplayer_portal_moonrock_constr_plans" }
 
         inst:SetStateGraph("SGmultiplayerportal")
 

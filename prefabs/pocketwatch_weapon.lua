@@ -138,8 +138,6 @@ local function fn()
 
 	inst.playfuelsound = net_event(inst.GUID, "pocketwatch_weapon.playfuelsound")
 
-	inst.scrapbook_specialinfo = "POCKETWATCH_WEAPON"
-
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then

@@ -522,6 +522,10 @@ return{
 	ANNOUNCE_HUNT_BEAST_NEARBY = "Game is close at hand...",
 	ANNOUNCE_HUNT_LOST_TRAIL = "I have lost the trail.",
 	ANNOUNCE_HUNT_LOST_TRAIL_SPRING = "The trail has been washed out.",
+    ANNOUNCE_HUNT_START_FORK = "Oh my... that trail looks a bit dangerous for my taste...",
+    ANNOUNCE_HUNT_SUCCESSFUL_FORK = "It's close, I've nearly got it!",
+    ANNOUNCE_HUNT_WRONG_FORK = "Mon dieu, I have the most terrible feeling...",
+    ANNOUNCE_HUNT_AVOID_FORK = "This trail might be safer, non?",
 	ANNOUNCE_INV_FULL = "I cannot carry another stitch.",
 	ANNOUNCE_KNOCKEDOUT = "My head... spinning...",
 	ANNOUNCE_LOWRESEARCH = "I did not learn any new tricks from that.",
@@ -890,6 +894,8 @@ return{
     ANNOUNCE_SHADOW_RIFT_MAX = "What was that eerie glow?",
 
     ANNOUNCE_SCRAPBOOK_FULL = "My scrapbook is already filled to the brim.",
+
+    ANNOUNCE_CHAIR_ON_FIRE = "C'est bon.",
 
     ANNOUNCE_COACH = 
     {
@@ -4909,6 +4915,105 @@ return{
 		SUPPORT_PILLAR_DREADSTONE_BROKEN = "If at first you don't succeed...",
 
         WOLFGANG_WHISTLE = "I think my friend is enjoying this taste of leadership.",
+
+        -- Rifts 3
+
+        MUTATEDDEERCLOPS = "I never thought I'd miss the way it looked before...",
+        MUTATEDWARG = "Its temper hasn't improved one bit.",
+        MUTATEDBEARGER = "My, it seems that crystal really sticks to your ribs.",
+
+        LUNARFROG = "I can't help but wonder how it might taste fried in butter.",
+
+        DEERCLOPSCORPSE =
+        {
+            GENERIC  = "What an unappetizing smell.",
+            BURNING  = "It is done. Well done.",
+            REVIVING = "Mon dieu! What is happening?",
+        },
+
+        WARGCORPSE =
+        {
+            GENERIC  = "The sight of it turns my stomach.",
+            BURNING  = "Au revoir.",
+            REVIVING = "This cannot be!",
+        },
+
+        BEARGERCORPSE =
+        {
+            GENERIC  = "C'est fini.",
+            BURNING  = "Bearger, en flambé.",
+            REVIVING = "Oh dear. A second course!",
+        },
+
+        BEARGERFUR_SACK = "This will keep my ingredients fresh.",
+        HOUNDSTOOTH_BLOWPIPE = "Les dents will make a dent!",
+        DEERCLOPSEYEBALL_SENTRYWARD =
+        {
+            GENERIC = "If you can't take the heat, freeze the kitchen.",    -- Enabled.
+            NOEYEBALL = "It's missing the SEEcret ingredient.",  -- Disabled.
+        },
+
+        SECURITY_PULSE_CAGE = "This reminds me of my little oven back home.",
+        SECURITY_PULSE_CAGE_FULL = "Something is cooking.",
+
+		CARPENTRY_STATION =
+        {
+            GENERIC = "A bit of furniture would be nice around here.",
+            BURNT = "C'est la vie...",
+        },
+
+        WOOD_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "All it's missing are homecooked food and good wine.",
+            HAS_ITEM = "All it's missing are homecooked food and good wine.",
+            BURNT = "C'est tragique.",
+        },
+
+        WOOD_CHAIR =
+        {
+            GENERIC = "Mon chair.",
+            OCCUPIED = "Leur chair.",
+            BURNT = "Chair brûlé.",
+        },
+
+        DECOR_CENTERPIECE = "It's no Rodin.",
+        DECOR_LAMP = "Lumiere!",
+        DECOR_FLOWERVASE =
+        {
+            GENERIC = "Pretty, though I prefer flour.",
+            EMPTY = "We must replace these at once.",
+            WILTED = "I'm sorry, Maman.",
+            FRESHLIGHT = "Now we can all shine a little brighter.",
+            OLDLIGHT = "It's looking pretty dim.",
+        },
+        DECOR_PICTUREFRAME =
+        {
+            GENERIC = "It's fine.",
+            UNDRAWN = "My art is done in the kitchen.",
+        },
+        DECOR_PORTRAITFRAME = "I long to see the face of Maman.",
+
+        PHONOGRAPH = "One song can evoke many memories. Perhaps too many.",
+        RECORD = "Now where have I heard that before?",
+        RECORD_CREEPYFOREST = "A feast for the ears!",
+        RECORD_DANGER = "A feast for the ears!",
+        RECORD_DAWN = "A feast for the ears!",
+        RECORD_DRSTYLE = "What a sweet sound it makes.",
+        RECORD_DUSK = "What a sweet sound it makes.",
+        RECORD_EFS = "A feast for the ears!",
+        RECORD_END = "A feast for the ears!",
+        RECORD_MAIN = "What a sweet sound it makes.",
+        RECORD_WORKTOBEDONE = "What a sweet sound it makes.",
+
+        ARCHIVE_ORCHESTRINA_MAIN = "It's a mystery to me.",
+
+        WAGPUNKHAT = "It stirs up such pugnacious thoughts in my mind!",
+        ARMORWAGPUNK = "A hard shell to protect my soft, delicious insides.",
+        WAGSTAFF_MACHINERY = "Abandoned.",
+        WAGPUNK_BITS = "Ingredients for some sort of machine?",
+        WAGPUNKBITS_KIT = "Reminds me of my mixer.",
+
+        WAGSTAFF_MUTATIONS_NOTE = "Zut alors! I thought it would be a recipe!",
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

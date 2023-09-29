@@ -158,6 +158,10 @@ function specificfn(id)
             return inst
         end
 
+        inst.scrapbook_anim = "full"
+        inst.scrapbook_speechname = "statue_marble"
+        inst.scrapbook_build = id == 1 and "statue_small_type1_build" or "statue_small_type4_build"
+
         inst:SetPrefabName("statue_marble")
         setstatuetype(inst, id)
 

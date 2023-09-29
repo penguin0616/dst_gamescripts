@@ -2343,6 +2343,9 @@ TheInventory:AddRestrictedBuildFromLua( "rainometer_circus", "rainometer_circus"
 TheInventory:AddRestrictedBuildFromLua( "razor_barber", "razor_barber", false )
 TheInventory:AddRestrictedBuildFromLua( "razor_scissors", "razor_scissors", false )
 TheInventory:AddRestrictedBuildFromLua( "razor_straight", "razor_straight", false )
+TheInventory:AddRestrictedBuildFromLua( "record_creepyforest", "record_creepyforest", false )
+TheInventory:AddRestrictedBuildFromLua( "record_drstyle", "record_drstyle", false )
+TheInventory:AddRestrictedBuildFromLua( "record_efs", "record_efs", false )
 TheInventory:AddRestrictedBuildFromLua( "reflectivevest_cawnival", "reflectivevest_cawnival", false )
 TheInventory:AddRestrictedBuildFromLua( "researchlab2_alchemytable", "researchlab2_alchemytable", false )
 TheInventory:AddRestrictedBuildFromLua( "researchlab2_crystal", "researchlab2_crystal", false )
@@ -3716,7 +3719,7 @@ TheInventory:AddGenericKVKey( "fuelweaver_killed" )
 TheInventory:AddGenericKVKey( "wonkey_played" )
 
 if TheInventory.AddScrapbook0Key == nil then
-    TheInventory:ValidateWithSignature( "4d75050028ca0b61f77fde39ba56df4437328904c50cc2be461a7b103a7a5aae70c826c9c1c82b3cd077ab6553f1349ad6dc7e0388073a63384c49d8757a9808a9d58889b172ecca3eb0feb170f07c140a70b99f43fd9d40347d7331701e4b798589bf8cb66bbc7cc47a360f3748959ab7fe8a49af76fc3a95bba1b813bc59cdddffeb3a0857ab30604ab5d5dde5218c0301025e0c59dfcd15382f506be3e163294f2505b0057bc430c058d288c95f287edd09347a323c036387ff94ae017fd3e006c5ed42cbcd88bf715f68944a04ab901c329595dceec465fcff2d5e922969aca8095a2ba7080c3b0589fd1597c665e0cd52430ff47459ba74f4d5e6786df9a5f16023b6089a15ce2a6ae43ebe2c2d4b3868ce78fdf15fa2b0db1d37de57d6bd2355eca49f45bc7830cfde65e67a163da3e91465227aced8c11013ded200145eb766605c8772c85e9dc2ef2537053936a3f9fa1364b03f1326d04860df12d9c3f1d185927823f1030d800ba3051b1826c61a2dcafdeda1eb6fd69bc66cc20ae6c36efd1f1a5f4eb03a68cfc3c1286c027bcbb5e5983b3f4d582f40e94fa0dd03cee1fd373954fac6fceed03095a9fbeb89b1488302581b30a26f76fafa49f005110b381adac493dd7b6b8756c5bcb4cc5d14119d89e577f0ee2cb62b4015da8a02116b1fb325b8c4b7bb993d62df254db786b3f9fff6f6daaf52bf0b3ad3ce" )
+    TheInventory:ValidateWithSignature( "29d681644bfff14493aef8399847b72e0b2c322e9f4f7b5eb2e5f395c258aa59f284f9e6611cd6293e80a521fc9e6631b9e5c9bfed3434de3afd16563f459a233f304e11305175da7612dc83bca9796c4c5aaf073d5e558775c0e80122d02625135cd381883a8d878c7370181d776a19622455c23c08e59a1332be4cd23a81edbe2c725ee283db5b023a8b3312c05cfd55d3bff63c289df3acdd774a74ddaf07c7e05d186077fec4e7304526ac4e2da2d362d446ae066b374f991e69194cd8f2837c1630061abef7c4ce1495269a59cfecaff40d75882b3ce8f6ec01cbe7c4dc59de8c6a2ea221923ada994d857b284d1fe8bfee69e4408b91da75f96aa63c5a9ed99afb3c2b6fd143d0014ab915ada8862977ffc3755cbfeb7c75f20a38fb67267c02942f9a08e2cbe0aac1d32164d9b1e942831be26ae0c302a8c90d1733ee71376f3b0b048239a7fc1d9b05c806894e5e5c26b0f01297e95d21caaf1e60f6404d607802a2e012e7541d9129961a904044d50d5fafa68794c09d890071908c952874b5c9c0eb5d8882efb6deb542a8afa6b8635d72055bbb1e87a94f1032c4196b9b8be30db87a789aceedbe9ef9714324d22794940563df07f78b90940e845580f7a8af1088b5fa415ced9b67def141f0bb4e707fb48bcc2543e45489faa08eb31dda7cc83369c7fea437f6abf952527485198adee71dafdef1210a81316b" )
 else -- Temporary protection guard for platforms missing the engine change 1.
 
 TheInventory:AddScrapbook5Key( "679F8765" ) -- abigail
@@ -3724,7 +3727,6 @@ TheInventory:AddScrapbook5Key( "481FFFD5" ) -- abigail_flower
 TheInventory:AddScrapbook9Key( "F1CD8EA9" ) -- acorn
 TheInventory:AddScrapbook13Key( "7E58AEBD" ) -- acorn_cooked
 TheInventory:AddScrapbook2Key( "674707C2" ) -- acorn_sapling
-TheInventory:AddScrapbook11Key( "C7A0F0FB" ) -- adventure_portal
 TheInventory:AddScrapbook11Key( "A33A8B1B" ) -- alterguardian_contained
 TheInventory:AddScrapbook14Key( "C91353CE" ) -- alterguardian_phase1
 TheInventory:AddScrapbook4Key( "C7692354" ) -- alterguardianhat
@@ -3733,22 +3735,25 @@ TheInventory:AddScrapbook2Key( "CBA65752" ) -- amulet
 TheInventory:AddScrapbook5Key( "C829CD55" ) -- anchor
 TheInventory:AddScrapbook13Key( "3539BC5D" ) -- anchor_item
 TheInventory:AddScrapbook3Key( "C2B7DE33" ) -- ancient_altar
+TheInventory:AddScrapbook1Key( "39EB2C81" ) -- ancient_altar_broken
 TheInventory:AddScrapbook8Key( "B93A8268" ) -- animal_track
 TheInventory:AddScrapbook3Key( "4974BCA3" ) -- antlion
 TheInventory:AddScrapbook15Key( "1443402F" ) -- antlion_sinkhole
 TheInventory:AddScrapbook8Key( "E2469258" ) -- antlionhat
 TheInventory:AddScrapbook4Key( "CE860ED4" ) -- antliontrinket
+TheInventory:AddScrapbook10Key( "8518EA3A" ) -- archive_centipede
 TheInventory:AddScrapbook10Key( "C565DFEA" ) -- archive_centipede_husk
 TheInventory:AddScrapbook0Key( "31365ED0" ) -- archive_cookpot
 TheInventory:AddScrapbook3Key( "82BF7443" ) -- archive_lockbox
 TheInventory:AddScrapbook9Key( "F7E56709" ) -- archive_lockbox_dispencer
 TheInventory:AddScrapbook5Key( "1BD39585" ) -- archive_moon_statue
+TheInventory:AddScrapbook13Key( "5C08466D" ) -- archive_orchestrina_main
 TheInventory:AddScrapbook9Key( "29B534E9" ) -- archive_portal
 TheInventory:AddScrapbook8Key( "44B959B8" ) -- archive_resonator
 TheInventory:AddScrapbook10Key( "E3C2CBBA" ) -- archive_resonator_item
 TheInventory:AddScrapbook12Key( "B61F28CC" ) -- archive_rune_statue
 TheInventory:AddScrapbook11Key( "CA67EBB" ) -- archive_security_desk
-TheInventory:AddScrapbook1Key( "E8E1FA71" ) -- archive_switch
+TheInventory:AddScrapbook15Key( "E57799DF" ) -- archive_switch_base
 TheInventory:AddScrapbook15Key( "767287F" ) -- armor_bramble
 TheInventory:AddScrapbook5Key( "E8455075" ) -- armor_lunarplant
 TheInventory:AddScrapbook14Key( "ADFDB7AE" ) -- armor_sanity
@@ -3761,7 +3766,9 @@ TheInventory:AddScrapbook12Key( "1541C9CC" ) -- armorruins
 TheInventory:AddScrapbook12Key( "ABDC24AC" ) -- armorskeleton
 TheInventory:AddScrapbook8Key( "DA17C8E8" ) -- armorslurper
 TheInventory:AddScrapbook10Key( "D75A045A" ) -- armorsnurtleshell
+TheInventory:AddScrapbook0Key( "2D5FD160" ) -- armorwagpunk
 TheInventory:AddScrapbook12Key( "7F2D088C" ) -- armorwood
+TheInventory:AddScrapbook9Key( "68FF6FF9" ) -- arrowsign_post
 TheInventory:AddScrapbook6Key( "3036FC96" ) -- ash
 TheInventory:AddScrapbook3Key( "6AD1C973" ) -- asparagus
 TheInventory:AddScrapbook3Key( "3A903573" ) -- asparagus_cooked
@@ -3769,7 +3776,6 @@ TheInventory:AddScrapbook3Key( "F5792F43" ) -- asparagus_oversized
 TheInventory:AddScrapbook6Key( "56D4C316" ) -- asparagus_seeds
 TheInventory:AddScrapbook10Key( "3145126A" ) -- asparagussoup
 TheInventory:AddScrapbook8Key( "8EA00A08" ) -- atrium_gate
-TheInventory:AddScrapbook5Key( "ED22D8D5" ) -- atrium_idol
 TheInventory:AddScrapbook2Key( "D6109CA2" ) -- atrium_key
 TheInventory:AddScrapbook9Key( "E4DB1099" ) -- atrium_light
 TheInventory:AddScrapbook8Key( "BDDF1BF8" ) -- atrium_overgrowth
@@ -3814,6 +3820,7 @@ TheInventory:AddScrapbook6Key( "E609BAC6" ) -- batwing_cooked
 TheInventory:AddScrapbook2Key( "CB246DD2" ) -- beardhair
 TheInventory:AddScrapbook0Key( "63A7F5E0" ) -- bearger
 TheInventory:AddScrapbook4Key( "791CD764" ) -- bearger_fur
+TheInventory:AddScrapbook2Key( "B4E156D2" ) -- beargerfur_sack
 TheInventory:AddScrapbook0Key( "A6B98890" ) -- beargervest
 TheInventory:AddScrapbook9Key( "F8E41FA9" ) -- bedroll_furry
 TheInventory:AddScrapbook6Key( "3D4D1DC6" ) -- bedroll_straw
@@ -3833,7 +3840,7 @@ TheInventory:AddScrapbook9Key( "D8067599" ) -- beehat
 TheInventory:AddScrapbook2Key( "A3226D92" ) -- beehive
 TheInventory:AddScrapbook5Key( "8BBC7F55" ) -- beemine
 TheInventory:AddScrapbook8Key( "1C4D0FC8" ) -- beequeen
-TheInventory:AddScrapbook8Key( "B4778EB8" ) -- beequeenhive
+TheInventory:AddScrapbook3Key( "5162DC63" ) -- beequeenhivegrown
 TheInventory:AddScrapbook13Key( "A9BD39BD" ) -- beeswax
 TheInventory:AddScrapbook10Key( "B542310A" ) -- bernie_active
 TheInventory:AddScrapbook12Key( "29D9D3BC" ) -- bernie_big
@@ -3911,6 +3918,7 @@ TheInventory:AddScrapbook11Key( "22DAD40B" ) -- bookstation
 TheInventory:AddScrapbook2Key( "86860BC2" ) -- boomerang
 TheInventory:AddScrapbook10Key( "F295861A" ) -- brush
 TheInventory:AddScrapbook9Key( "76D26529" ) -- bugnet
+TheInventory:AddScrapbook13Key( "C8F9891D" ) -- bullkelp_plant
 TheInventory:AddScrapbook0Key( "25E29090" ) -- bullkelp_root
 TheInventory:AddScrapbook2Key( "B79C8102" ) -- bundle
 TheInventory:AddScrapbook12Key( "1883478C" ) -- bundlewrap
@@ -3933,8 +3941,8 @@ TheInventory:AddScrapbook8Key( "7DDD4938" ) -- canary
 TheInventory:AddScrapbook3Key( "73DEB323" ) -- candybag
 TheInventory:AddScrapbook5Key( "2E54B535" ) -- cane
 TheInventory:AddScrapbook10Key( "AD46C74A" ) -- cannonball_rock_item
+TheInventory:AddScrapbook11Key( "BA16312B" ) -- carpentry_station
 TheInventory:AddScrapbook1Key( "40468F91" ) -- carrat
-TheInventory:AddScrapbook12Key( "AC11539C" ) -- carrat_planted
 TheInventory:AddScrapbook3Key( "40549303" ) -- carrot
 TheInventory:AddScrapbook3Key( "71127E3" ) -- carrot_cooked
 TheInventory:AddScrapbook3Key( "554910D3" ) -- carrot_oversized
@@ -3953,7 +3961,7 @@ TheInventory:AddScrapbook13Key( "D491C8ED" ) -- cave_fern
 TheInventory:AddScrapbook0Key( "B88DB840" ) -- cavein_boulder
 TheInventory:AddScrapbook11Key( "27841B6B" ) -- ceviche
 TheInventory:AddScrapbook13Key( "EC8853AD" ) -- charcoal
-TheInventory:AddScrapbook10Key( "96132B1A" ) -- charlie_lecturn
+TheInventory:AddScrapbook14Key( "FF56904E" ) -- charlie_stage_post
 TheInventory:AddScrapbook8Key( "5810C628" ) -- chessjunk
 TheInventory:AddScrapbook6Key( "5FBEEFE6" ) -- chesspiece_anchor
 TheInventory:AddScrapbook2Key( "B9B93E52" ) -- chesspiece_antlion
@@ -3967,6 +3975,7 @@ TheInventory:AddScrapbook0Key( "A6053170" ) -- chesspiece_catcoon
 TheInventory:AddScrapbook2Key( "7870B372" ) -- chesspiece_clayhound
 TheInventory:AddScrapbook1Key( "DEEA0AD1" ) -- chesspiece_claywarg
 TheInventory:AddScrapbook8Key( "9F49CAD8" ) -- chesspiece_crabking
+TheInventory:AddScrapbook1Key( "C574BF61" ) -- chesspiece_daywalker
 TheInventory:AddScrapbook10Key( "B15EFCCA" ) -- chesspiece_deerclops
 TheInventory:AddScrapbook15Key( "3460A4CF" ) -- chesspiece_dragonfly
 TheInventory:AddScrapbook11Key( "9EEAEA2B" ) -- chesspiece_eyeofterror
@@ -4022,6 +4031,7 @@ TheInventory:AddScrapbook4Key( "50513384" ) -- costume_tree_body
 TheInventory:AddScrapbook12Key( "AC23A04C" ) -- cotl_tabernacle_level3
 TheInventory:AddScrapbook12Key( "75D59BDC" ) -- cotl_trinket
 TheInventory:AddScrapbook7Key( "7CBEE0C7" ) -- crabking
+TheInventory:AddScrapbook7Key( "2AC255F7" ) -- crabking_claw
 TheInventory:AddScrapbook5Key( "DCD8F65" ) -- crawlinghorror
 TheInventory:AddScrapbook6Key( "49AFD846" ) -- critterlab
 TheInventory:AddScrapbook7Key( "36B4BD17" ) -- crow
@@ -4036,12 +4046,18 @@ TheInventory:AddScrapbook2Key( "5B342532" ) -- daywalker
 TheInventory:AddScrapbook7Key( "47AD0A77" ) -- daywalker_pillar
 TheInventory:AddScrapbook4Key( "34DEC024" ) -- dead_sea_bones
 TheInventory:AddScrapbook9Key( "823876F9" ) -- deciduoustree_tall
+TheInventory:AddScrapbook15Key( "431B8F5F" ) -- decor_centerpiece
+TheInventory:AddScrapbook2Key( "ADC07472" ) -- decor_flowervase
+TheInventory:AddScrapbook2Key( "610C98F2" ) -- decor_lamp
+TheInventory:AddScrapbook9Key( "8688E7A9" ) -- decor_pictureframe
+TheInventory:AddScrapbook8Key( "78913258" ) -- decor_portraitframe
 TheInventory:AddScrapbook14Key( "5ECAC1CE" ) -- deer
 TheInventory:AddScrapbook14Key( "5CD01ACE" ) -- deer_antler1
 TheInventory:AddScrapbook15Key( "5CD01ACF" ) -- deer_antler2
 TheInventory:AddScrapbook0Key( "5CD01AD0" ) -- deer_antler3
 TheInventory:AddScrapbook11Key( "471E629B" ) -- deerclops
 TheInventory:AddScrapbook12Key( "7FF8D18C" ) -- deerclops_eyeball
+TheInventory:AddScrapbook5Key( "F98AFEC5" ) -- deerclopseyeball_sentryward
 TheInventory:AddScrapbook6Key( "48C52446" ) -- deserthat
 TheInventory:AddScrapbook9Key( "C07F6679" ) -- dirtpile
 TheInventory:AddScrapbook10Key( "FF9D356A" ) -- dock_kit
@@ -4060,6 +4076,8 @@ TheInventory:AddScrapbook9Key( "CF09A4D9" ) -- dragonpie
 TheInventory:AddScrapbook11Key( "3C4C114B" ) -- dreadstone
 TheInventory:AddScrapbook0Key( "85A73BB0" ) -- dreadstonehat
 TheInventory:AddScrapbook11Key( "6969E25B" ) -- driftwood_log
+TheInventory:AddScrapbook3Key( "B55B7D53" ) -- driftwood_small1
+TheInventory:AddScrapbook6Key( "40C062F6" ) -- driftwood_tall
 TheInventory:AddScrapbook10Key( "32D080EA" ) -- drumstick
 TheInventory:AddScrapbook12Key( "825B5E3C" ) -- drumstick_cooked
 TheInventory:AddScrapbook6Key( "F2335176" ) -- dug_bananabush
@@ -4095,6 +4113,7 @@ TheInventory:AddScrapbook0Key( "ECB2FD20" ) -- eggplant_cooked
 TheInventory:AddScrapbook6Key( "BA36B956" ) -- eggplant_oversized
 TheInventory:AddScrapbook9Key( "D5A44029" ) -- eggplant_seeds
 TheInventory:AddScrapbook3Key( "9EA1C793" ) -- endtable
+TheInventory:AddScrapbook2Key( "C93D7D72" ) -- evergreen_sparse_tall
 TheInventory:AddScrapbook7Key( "80914807" ) -- evergreen_tall
 TheInventory:AddScrapbook14Key( "651E3E9E" ) -- eyebrellahat
 TheInventory:AddScrapbook14Key( "D498497E" ) -- eyemaskhat
@@ -4129,6 +4148,7 @@ TheInventory:AddScrapbook0Key( "7FCEFF10" ) -- featherfan
 TheInventory:AddScrapbook8Key( "80CB1E18" ) -- featherhat
 TheInventory:AddScrapbook0Key( "BA3AE90" ) -- featherpencil
 TheInventory:AddScrapbook1Key( "A1EBF7F1" ) -- fence
+TheInventory:AddScrapbook9Key( "B29D9059" ) -- fence_gate
 TheInventory:AddScrapbook9Key( "A14B3E59" ) -- fence_gate_item
 TheInventory:AddScrapbook1Key( "18F754C1" ) -- fence_item
 TheInventory:AddScrapbook15Key( "BF25729F" ) -- fence_rotator
@@ -4145,9 +4165,7 @@ TheInventory:AddScrapbook3Key( "3F4D75C3" ) -- firepen
 TheInventory:AddScrapbook5Key( "3F5176C5" ) -- firepit
 TheInventory:AddScrapbook10Key( "E5936C6A" ) -- firestaff
 TheInventory:AddScrapbook14Key( "CE5A342E" ) -- firesuppressor
-TheInventory:AddScrapbook8Key( "BDDEA4B8" ) -- fish
 TheInventory:AddScrapbook4Key( "D3576EC4" ) -- fish_box
-TheInventory:AddScrapbook14Key( "935782EE" ) -- fish_cooked
 TheInventory:AddScrapbook13Key( "B918C5FD" ) -- fishingrod
 TheInventory:AddScrapbook3Key( "60230443" ) -- fishmeat
 TheInventory:AddScrapbook3Key( "C3A4E6A3" ) -- fishmeat_cooked
@@ -4158,8 +4176,6 @@ TheInventory:AddScrapbook2Key( "CF3380C2" ) -- fishtacos
 TheInventory:AddScrapbook9Key( "E5306269" ) -- flint
 TheInventory:AddScrapbook11Key( "E4D9A49B" ) -- flower
 TheInventory:AddScrapbook1Key( "C8A635B1" ) -- flower_cave
-TheInventory:AddScrapbook15Key( "EDEF919F" ) -- flower_cave_double
-TheInventory:AddScrapbook12Key( "F50DD2AC" ) -- flower_cave_triple
 TheInventory:AddScrapbook8Key( "2FFE1998" ) -- flower_evil
 TheInventory:AddScrapbook3Key( "896E4933" ) -- flower_rose
 TheInventory:AddScrapbook6Key( "EA9CF236" ) -- flower_withered
@@ -4186,6 +4202,8 @@ TheInventory:AddScrapbook8Key( "E1624348" ) -- fruitmedley
 TheInventory:AddScrapbook2Key( "5BF8DB2" ) -- furtuft
 TheInventory:AddScrapbook7Key( "F8A60EA7" ) -- fused_shadeling
 TheInventory:AddScrapbook10Key( "3687E0BA" ) -- fused_shadeling_bomb
+TheInventory:AddScrapbook13Key( "97BD555D" ) -- gargoyle_hounddeath
+TheInventory:AddScrapbook4Key( "E3CC6674" ) -- gargoyle_werepigdeath
 TheInventory:AddScrapbook14Key( "960BB96E" ) -- garlic
 TheInventory:AddScrapbook8Key( "4A61CCB8" ) -- garlic_cooked
 TheInventory:AddScrapbook14Key( "A1DF1BBE" ) -- garlic_oversized
@@ -4206,7 +4224,7 @@ TheInventory:AddScrapbook10Key( "E9B32ADA" ) -- giftwrap
 TheInventory:AddScrapbook0Key( "819D4E50" ) -- gingerbreadhouse
 TheInventory:AddScrapbook1Key( "3619BD11" ) -- glassblock
 TheInventory:AddScrapbook11Key( "77DD59BB" ) -- glasscutter
-TheInventory:AddScrapbook7Key( "FD80ABE7" ) -- glassspike_short
+TheInventory:AddScrapbook10Key( "6FFAF40A" ) -- glassspike
 TheInventory:AddScrapbook7Key( "FEF4C277" ) -- glommer
 TheInventory:AddScrapbook2Key( "4C804492" ) -- glommerflower
 TheInventory:AddScrapbook13Key( "18C46CD" ) -- glommerfuel
@@ -4237,13 +4255,8 @@ TheInventory:AddScrapbook5Key( "B1591875" ) -- greenamulet
 TheInventory:AddScrapbook12Key( "B80B9ACC" ) -- greengem
 TheInventory:AddScrapbook13Key( "B9465E6D" ) -- greenmooneye
 TheInventory:AddScrapbook13Key( "7FCB037D" ) -- greenstaff
-TheInventory:AddScrapbook9Key( "232B14D9" ) -- grotto_moonglass_1
-TheInventory:AddScrapbook11Key( "232B14DB" ) -- grotto_moonglass_3
-TheInventory:AddScrapbook12Key( "232B14DC" ) -- grotto_moonglass_4
 TheInventory:AddScrapbook1Key( "C355F2D1" ) -- grotto_pool_big
 TheInventory:AddScrapbook8Key( "34ACEA58" ) -- grotto_pool_small
-TheInventory:AddScrapbook11Key( "C634CE2B" ) -- grotto_waterfall_small1
-TheInventory:AddScrapbook12Key( "C634CE2C" ) -- grotto_waterfall_small2
 TheInventory:AddScrapbook12Key( "F2EB5D8C" ) -- guacamole
 TheInventory:AddScrapbook4Key( "C7E99C14" ) -- guano
 TheInventory:AddScrapbook9Key( "761A1799" ) -- gunpowder
@@ -4281,14 +4294,13 @@ TheInventory:AddScrapbook6Key( "C4101586" ) -- hammer
 TheInventory:AddScrapbook6Key( "B4E674C6" ) -- hawaiianshirt
 TheInventory:AddScrapbook3Key( "3CB06493" ) -- healingsalve
 TheInventory:AddScrapbook5Key( "DB20FA95" ) -- heatrock
+TheInventory:AddScrapbook15Key( "F09EEEFF" ) -- hedgehound
 TheInventory:AddScrapbook8Key( "ABE2CCE8" ) -- hedgehound_bush
 TheInventory:AddScrapbook14Key( "204761DE" ) -- hermit_bundle
 TheInventory:AddScrapbook4Key( "5ABA2084" ) -- hermit_cracked_pearl
 TheInventory:AddScrapbook10Key( "1313104A" ) -- hermit_pearl
+TheInventory:AddScrapbook3Key( "38853CD3" ) -- hermitcrab
 TheInventory:AddScrapbook13Key( "F7909B5D" ) -- hermithouse
-TheInventory:AddScrapbook14Key( "90239CFE" ) -- hermithouse_construction1
-TheInventory:AddScrapbook15Key( "90239CFF" ) -- hermithouse_construction2
-TheInventory:AddScrapbook0Key( "90239D00" ) -- hermithouse_construction3
 TheInventory:AddScrapbook11Key( "F76051CB" ) -- hivehat
 TheInventory:AddScrapbook12Key( "739FBE3C" ) -- homesign
 TheInventory:AddScrapbook11Key( "FB0ADDFB" ) -- honey
@@ -4303,6 +4315,7 @@ TheInventory:AddScrapbook4Key( "FE864CA4" ) -- hound
 TheInventory:AddScrapbook8Key( "6ED9E628" ) -- houndbone
 TheInventory:AddScrapbook5Key( "1C6B2805" ) -- houndmound
 TheInventory:AddScrapbook9Key( "E8712B19" ) -- houndstooth
+TheInventory:AddScrapbook6Key( "9696D846" ) -- houndstooth_blowpipe
 TheInventory:AddScrapbook12Key( "15261EEC" ) -- hutch
 TheInventory:AddScrapbook13Key( "6300A2ED" ) -- hutch_fishbowl
 TheInventory:AddScrapbook11Key( "341774AB" ) -- ice
@@ -4312,7 +4325,6 @@ TheInventory:AddScrapbook0Key( "EB646050" ) -- icehat
 TheInventory:AddScrapbook9Key( "72E4CDB9" ) -- icehound
 TheInventory:AddScrapbook4Key( "C22935E4" ) -- icepack
 TheInventory:AddScrapbook5Key( "3CCDBE75" ) -- icestaff
-TheInventory:AddScrapbook8Key( "1BD1B038" ) -- insanityrock
 TheInventory:AddScrapbook0Key( "768E4F60" ) -- ipecacsyrup
 TheInventory:AddScrapbook5Key( "2B3F1F65" ) -- jammypreserves
 TheInventory:AddScrapbook14Key( "8FEB788E" ) -- jellybean
@@ -4329,6 +4341,7 @@ TheInventory:AddScrapbook11Key( "3884DFAB" ) -- klaussackkey
 TheInventory:AddScrapbook13Key( "BC896D0D" ) -- knight
 TheInventory:AddScrapbook13Key( "55D45F4D" ) -- knight_nightmare
 TheInventory:AddScrapbook7Key( "3E5E84D7" ) -- koalefant_summer
+TheInventory:AddScrapbook13Key( "99F4D30D" ) -- koalefant_winter
 TheInventory:AddScrapbook3Key( "DF281963" ) -- koalefig_trunk
 TheInventory:AddScrapbook11Key( "2747C45B" ) -- krampus
 TheInventory:AddScrapbook10Key( "B921CD3A" ) -- krampus_sack
@@ -4336,12 +4349,6 @@ TheInventory:AddScrapbook6Key( "37C31AA6" ) -- lantern
 TheInventory:AddScrapbook10Key( "617530BA" ) -- latkes
 TheInventory:AddScrapbook4Key( "BDF4B374" ) -- lava_pond
 TheInventory:AddScrapbook0Key( "6AF325B0" ) -- lava_pond_rock
-TheInventory:AddScrapbook2Key( "77864682" ) -- lava_pond_rock2
-TheInventory:AddScrapbook3Key( "77864683" ) -- lava_pond_rock3
-TheInventory:AddScrapbook4Key( "77864684" ) -- lava_pond_rock4
-TheInventory:AddScrapbook5Key( "77864685" ) -- lava_pond_rock5
-TheInventory:AddScrapbook6Key( "77864686" ) -- lava_pond_rock6
-TheInventory:AddScrapbook7Key( "77864687" ) -- lava_pond_rock7
 TheInventory:AddScrapbook5Key( "83496A85" ) -- lavae
 TheInventory:AddScrapbook1Key( "2E114B71" ) -- lavae_cocoon
 TheInventory:AddScrapbook11Key( "3997740B" ) -- lavae_egg
@@ -4358,7 +4365,6 @@ TheInventory:AddScrapbook15Key( "EF2BADBF" ) -- lightbulb
 TheInventory:AddScrapbook6Key( "1C2D4D46" ) -- lightcrab
 TheInventory:AddScrapbook3Key( "E6B3A803" ) -- lighter
 TheInventory:AddScrapbook10Key( "F4FBB9FA" ) -- lightflier
-TheInventory:AddScrapbook0Key( "B9C7C200" ) -- lightflier_flower
 TheInventory:AddScrapbook2Key( "E51ACD32" ) -- lightning_rod
 TheInventory:AddScrapbook5Key( "57C92145" ) -- lightninggoat
 TheInventory:AddScrapbook8Key( "D39D5F48" ) -- lightninggoathorn
@@ -4386,11 +4392,11 @@ TheInventory:AddScrapbook6Key( "FF4CA2C6" ) -- lumpy_sapling
 TheInventory:AddScrapbook14Key( "E2A4213E" ) -- lunar_forge
 TheInventory:AddScrapbook5Key( "23432F55" ) -- lunar_forge_kit
 TheInventory:AddScrapbook10Key( "BBFAF6DA" ) -- lunar_grazer
+TheInventory:AddScrapbook10Key( "4C136BA" ) -- lunarfrog
 TheInventory:AddScrapbook15Key( "C967C16F" ) -- lunarplant_husk
 TheInventory:AddScrapbook12Key( "56F1E98C" ) -- lunarplant_kit
 TheInventory:AddScrapbook6Key( "20EEDA06" ) -- lunarplanthat
 TheInventory:AddScrapbook3Key( "759F7653" ) -- lunarrift_crystal_big
-TheInventory:AddScrapbook10Key( "1468CCDA" ) -- lunarrift_crystal_small
 TheInventory:AddScrapbook0Key( "34D2E7F0" ) -- lunarrift_portal
 TheInventory:AddScrapbook5Key( "D10462A5" ) -- lunarthrall_plant
 TheInventory:AddScrapbook15Key( "3D0E946F" ) -- lureplant
@@ -4446,6 +4452,7 @@ TheInventory:AddScrapbook2Key( "CFE24112" ) -- mermguard
 TheInventory:AddScrapbook8Key( "320A7F48" ) -- mermhat
 TheInventory:AddScrapbook3Key( "D1C28C73" ) -- mermhead
 TheInventory:AddScrapbook13Key( "67FF1ED" ) -- mermhouse
+TheInventory:AddScrapbook13Key( "A8ECA2ED" ) -- mermhouse_crafted
 TheInventory:AddScrapbook10Key( "5F5C3FEA" ) -- mermking
 TheInventory:AddScrapbook11Key( "2C83D19B" ) -- mermthrone
 TheInventory:AddScrapbook13Key( "4AE2BB6D" ) -- mermwatchtower
@@ -4457,6 +4464,7 @@ TheInventory:AddScrapbook12Key( "85181F7C" ) -- minerhat
 TheInventory:AddScrapbook15Key( "E20416CF" ) -- miniboatlantern
 TheInventory:AddScrapbook12Key( "BFF3263C" ) -- minifan
 TheInventory:AddScrapbook7Key( "C4221357" ) -- miniflare
+TheInventory:AddScrapbook4Key( "C3D47D34" ) -- minisign
 TheInventory:AddScrapbook14Key( "3532833E" ) -- minisign_item
 TheInventory:AddScrapbook7Key( "86030F67" ) -- minotaur
 TheInventory:AddScrapbook10Key( "A796FA" ) -- minotaurchest
@@ -4529,20 +4537,24 @@ TheInventory:AddScrapbook8Key( "9946FCF8" ) -- mossling
 TheInventory:AddScrapbook9Key( "522427A9" ) -- mound
 TheInventory:AddScrapbook1Key( "32D00A11" ) -- mulleddrink
 TheInventory:AddScrapbook1Key( "6F0425F1" ) -- multiplayer_portal
-TheInventory:AddScrapbook4Key( "34535674" ) -- multiplayer_portal_moonrock
 TheInventory:AddScrapbook5Key( "A9B00505" ) -- multiplayer_portal_moonrock_constr_plans
 TheInventory:AddScrapbook14Key( "3EDAE42E" ) -- multitool_axe_pickaxe
 TheInventory:AddScrapbook3Key( "297A87E3" ) -- mushgnome
 TheInventory:AddScrapbook13Key( "27BB8F1D" ) -- mushroom_farm
 TheInventory:AddScrapbook15Key( "5C964CCF" ) -- mushroom_light
+TheInventory:AddScrapbook3Key( "15CBE723" ) -- mushroom_light2
 TheInventory:AddScrapbook1Key( "CE7A37B1" ) -- mushroomsprout
 TheInventory:AddScrapbook4Key( "79308DE4" ) -- mushroomsprout_dark
 TheInventory:AddScrapbook9Key( "1AD851D9" ) -- mushtree_medium
 TheInventory:AddScrapbook5Key( "F4A552E5" ) -- mushtree_moon
 TheInventory:AddScrapbook3Key( "BB2A25C3" ) -- mushtree_small
 TheInventory:AddScrapbook1Key( "336D2E51" ) -- mushtree_tall
+TheInventory:AddScrapbook11Key( "16F0B2BB" ) -- mushtree_tall_webbed
 TheInventory:AddScrapbook11Key( "60EAF2EB" ) -- mutated_penguin
+TheInventory:AddScrapbook2Key( "C631FF22" ) -- mutatedbearger
+TheInventory:AddScrapbook13Key( "93B3EADD" ) -- mutateddeerclops
 TheInventory:AddScrapbook6Key( "DB7556E6" ) -- mutatedhound
+TheInventory:AddScrapbook13Key( "51414A5D" ) -- mutatedwarg
 TheInventory:AddScrapbook1Key( "D42416D1" ) -- mutator_dropper
 TheInventory:AddScrapbook2Key( "AB6368B2" ) -- mutator_healer
 TheInventory:AddScrapbook3Key( "978CF793" ) -- mutator_hider
@@ -4567,24 +4579,24 @@ TheInventory:AddScrapbook1Key( "10B48261" ) -- oasis_cactus
 TheInventory:AddScrapbook10Key( "F3987B3A" ) -- oasislake
 TheInventory:AddScrapbook4Key( "237DA7C4" ) -- ocean_trawler
 TheInventory:AddScrapbook11Key( "32906FDB" ) -- ocean_trawler_kit
-TheInventory:AddScrapbook0Key( "4585C7B0" ) -- oceanfish_medium_1
-TheInventory:AddScrapbook1Key( "4585C7B1" ) -- oceanfish_medium_2
-TheInventory:AddScrapbook2Key( "4585C7B2" ) -- oceanfish_medium_3
-TheInventory:AddScrapbook3Key( "4585C7B3" ) -- oceanfish_medium_4
-TheInventory:AddScrapbook4Key( "4585C7B4" ) -- oceanfish_medium_5
-TheInventory:AddScrapbook5Key( "4585C7B5" ) -- oceanfish_medium_6
-TheInventory:AddScrapbook6Key( "4585C7B6" ) -- oceanfish_medium_7
-TheInventory:AddScrapbook7Key( "4585C7B7" ) -- oceanfish_medium_8
-TheInventory:AddScrapbook8Key( "4585C7B8" ) -- oceanfish_medium_9
-TheInventory:AddScrapbook0Key( "BA4CCFD0" ) -- oceanfish_small_1
-TheInventory:AddScrapbook1Key( "BA4CCFD1" ) -- oceanfish_small_2
-TheInventory:AddScrapbook2Key( "BA4CCFD2" ) -- oceanfish_small_3
-TheInventory:AddScrapbook3Key( "BA4CCFD3" ) -- oceanfish_small_4
-TheInventory:AddScrapbook4Key( "BA4CCFD4" ) -- oceanfish_small_5
-TheInventory:AddScrapbook5Key( "BA4CCFD5" ) -- oceanfish_small_6
-TheInventory:AddScrapbook6Key( "BA4CCFD6" ) -- oceanfish_small_7
-TheInventory:AddScrapbook7Key( "BA4CCFD7" ) -- oceanfish_small_8
-TheInventory:AddScrapbook8Key( "BA4CCFD8" ) -- oceanfish_small_9
+TheInventory:AddScrapbook2Key( "890A0602" ) -- oceanfish_medium_1_inv
+TheInventory:AddScrapbook3Key( "CCF66503" ) -- oceanfish_medium_2_inv
+TheInventory:AddScrapbook4Key( "10E2C404" ) -- oceanfish_medium_3_inv
+TheInventory:AddScrapbook5Key( "54CF2305" ) -- oceanfish_medium_4_inv
+TheInventory:AddScrapbook6Key( "98BB8206" ) -- oceanfish_medium_5_inv
+TheInventory:AddScrapbook7Key( "DCA7E107" ) -- oceanfish_medium_6_inv
+TheInventory:AddScrapbook8Key( "20944008" ) -- oceanfish_medium_7_inv
+TheInventory:AddScrapbook9Key( "64809F09" ) -- oceanfish_medium_8_inv
+TheInventory:AddScrapbook10Key( "A86CFE0A" ) -- oceanfish_medium_9_inv
+TheInventory:AddScrapbook2Key( "B754EE22" ) -- oceanfish_small_1_inv
+TheInventory:AddScrapbook3Key( "FB414D23" ) -- oceanfish_small_2_inv
+TheInventory:AddScrapbook4Key( "3F2DAC24" ) -- oceanfish_small_3_inv
+TheInventory:AddScrapbook5Key( "831A0B25" ) -- oceanfish_small_4_inv
+TheInventory:AddScrapbook6Key( "C7066A26" ) -- oceanfish_small_5_inv
+TheInventory:AddScrapbook7Key( "AF2C927" ) -- oceanfish_small_6_inv
+TheInventory:AddScrapbook8Key( "4EDF2828" ) -- oceanfish_small_7_inv
+TheInventory:AddScrapbook9Key( "92CB8729" ) -- oceanfish_small_8_inv
+TheInventory:AddScrapbook10Key( "D6B7E62A" ) -- oceanfish_small_9_inv
 TheInventory:AddScrapbook8Key( "278B19D8" ) -- oceanfishingbobber_ball
 TheInventory:AddScrapbook1Key( "3A2D2291" ) -- oceanfishingbobber_canary
 TheInventory:AddScrapbook0Key( "5E73F2F0" ) -- oceanfishingbobber_crow
@@ -4640,6 +4652,7 @@ TheInventory:AddScrapbook2Key( "1645CE02" ) -- perogies
 TheInventory:AddScrapbook9Key( "C4F29869" ) -- petals
 TheInventory:AddScrapbook10Key( "65EB274A" ) -- petals_evil
 TheInventory:AddScrapbook7Key( "1E746C37" ) -- phlegm
+TheInventory:AddScrapbook6Key( "ED1E0DD6" ) -- phonograph
 TheInventory:AddScrapbook13Key( "B1FA364D" ) -- pickaxe
 TheInventory:AddScrapbook7Key( "1DF522C7" ) -- pickaxe_lunarplant
 TheInventory:AddScrapbook11Key( "A8774A7B" ) -- pickledherring
@@ -4703,7 +4716,6 @@ TheInventory:AddScrapbook0Key( "113860B0" ) -- powcake
 TheInventory:AddScrapbook9Key( "99CA37B9" ) -- powder_monkey
 TheInventory:AddScrapbook14Key( "ADA4BB4E" ) -- premiumwateringcan
 TheInventory:AddScrapbook5Key( "9DCD89A5" ) -- prime_mate
-TheInventory:AddScrapbook0Key( "262EEF40" ) -- propsign
 TheInventory:AddScrapbook10Key( "7ACC6ACA" ) -- puffin
 TheInventory:AddScrapbook8Key( "50CA2668" ) -- pumpkin
 TheInventory:AddScrapbook14Key( "B267F53E" ) -- pumpkin_cooked
@@ -4712,6 +4724,9 @@ TheInventory:AddScrapbook8Key( "898837B8" ) -- pumpkin_oversized
 TheInventory:AddScrapbook11Key( "2D99608B" ) -- pumpkin_seeds
 TheInventory:AddScrapbook12Key( "4AD6EF2C" ) -- pumpkincookie
 TheInventory:AddScrapbook4Key( "88070A44" ) -- pumpkinpie
+TheInventory:AddScrapbook4Key( "E67EAEB4" ) -- punchingbag
+TheInventory:AddScrapbook11Key( "6A22B48B" ) -- punchingbag_lunar
+TheInventory:AddScrapbook11Key( "9FE9D86B" ) -- punchingbag_shadow
 TheInventory:AddScrapbook7Key( "122F70D7" ) -- purebrilliance
 TheInventory:AddScrapbook14Key( "9D92CCE" ) -- purpleamulet
 TheInventory:AddScrapbook3Key( "2AE7E3B3" ) -- purplegem
@@ -4724,6 +4739,7 @@ TheInventory:AddScrapbook7Key( "D3671C87" ) -- rainhat
 TheInventory:AddScrapbook14Key( "FBAEFA0E" ) -- rainometer
 TheInventory:AddScrapbook10Key( "51E97B1A" ) -- ratatouille
 TheInventory:AddScrapbook14Key( "1CD9E60E" ) -- razor
+TheInventory:AddScrapbook1Key( "E14258B1" ) -- record
 TheInventory:AddScrapbook4Key( "1C1E3DC4" ) -- red_cap
 TheInventory:AddScrapbook2Key( "AB67FEE2" ) -- red_cap_cooked
 TheInventory:AddScrapbook6Key( "BA4090A6" ) -- red_mushroom
@@ -4745,6 +4761,7 @@ TheInventory:AddScrapbook3Key( "E213ABB3" ) -- roastturkey
 TheInventory:AddScrapbook10Key( "9C61DAEA" ) -- robin
 TheInventory:AddScrapbook10Key( "B8DC9DFA" ) -- robin_winter
 TheInventory:AddScrapbook12Key( "9CE1EAAC" ) -- rock1
+TheInventory:AddScrapbook13Key( "9CE1EAAD" ) -- rock2
 TheInventory:AddScrapbook14Key( "C7DBAF9E" ) -- rock_avocado_bush
 TheInventory:AddScrapbook14Key( "63C8615E" ) -- rock_avocado_fruit
 TheInventory:AddScrapbook13Key( "6C41426D" ) -- rock_avocado_fruit_ripe
@@ -4753,7 +4770,6 @@ TheInventory:AddScrapbook10Key( "657F2FFA" ) -- rock_avocado_fruit_sprout
 TheInventory:AddScrapbook3Key( "349BC713" ) -- rock_avocado_fruit_sprout_sapling
 TheInventory:AddScrapbook8Key( "4F5EA448" ) -- rock_flintless
 TheInventory:AddScrapbook1Key( "E992CD51" ) -- rock_ice
-TheInventory:AddScrapbook12Key( "3F316F5C" ) -- rock_light
 TheInventory:AddScrapbook11Key( "87F86DB" ) -- rock_moon
 TheInventory:AddScrapbook12Key( "E02458AC" ) -- rock_moon_shell
 TheInventory:AddScrapbook15Key( "5719E47F" ) -- rock_petrified_tree
@@ -4764,41 +4780,25 @@ TheInventory:AddScrapbook9Key( "976FCDF9" ) -- rook_nightmare
 TheInventory:AddScrapbook2Key( "EF21C9F2" ) -- rope
 TheInventory:AddScrapbook15Key( "CA05365F" ) -- rottenegg
 TheInventory:AddScrapbook6Key( "6AC7F0A6" ) -- royal_jelly
-TheInventory:AddScrapbook12Key( "EB14ACFC" ) -- rubble
 TheInventory:AddScrapbook1Key( "DF13A0C1" ) -- ruins_bat
-TheInventory:AddScrapbook6Key( "8D7D69B6" ) -- ruins_bowl
 TheInventory:AddScrapbook8Key( "3F72DA28" ) -- ruins_cavein_obstacle
 TheInventory:AddScrapbook1Key( "2EF75831" ) -- ruins_chair
-TheInventory:AddScrapbook2Key( "D5650A42" ) -- ruins_chipbowl
-TheInventory:AddScrapbook2Key( "5C1E70E2" ) -- ruins_plate
-TheInventory:AddScrapbook6Key( "4520D076" ) -- ruins_rubble_chair
-TheInventory:AddScrapbook15Key( "82A47A7F" ) -- ruins_rubble_table
-TheInventory:AddScrapbook12Key( "38050C" ) -- ruins_rubble_vase
 TheInventory:AddScrapbook7Key( "57A80367" ) -- ruins_statue_head
-TheInventory:AddScrapbook6Key( "D1543AB6" ) -- ruins_statue_head_nogem
 TheInventory:AddScrapbook9Key( "3E57DA99" ) -- ruins_statue_mage
-TheInventory:AddScrapbook8Key( "A43426E8" ) -- ruins_statue_mage_nogem
-TheInventory:AddScrapbook10Key( "6C7B023A" ) -- ruins_table
-TheInventory:AddScrapbook1Key( "291CDE91" ) -- ruins_vase
 TheInventory:AddScrapbook0Key( "E16C07D0" ) -- ruinshat
-TheInventory:AddScrapbook9Key( "9D461419" ) -- ruinsrelic_bowl
 TheInventory:AddScrapbook14Key( "BBBC468E" ) -- ruinsrelic_chair
-TheInventory:AddScrapbook5Key( "58AC71A5" ) -- ruinsrelic_chipbowl
-TheInventory:AddScrapbook15Key( "E8E35F3F" ) -- ruinsrelic_plate
-TheInventory:AddScrapbook7Key( "F93FF097" ) -- ruinsrelic_table
-TheInventory:AddScrapbook4Key( "38E588F4" ) -- ruinsrelic_vase
 TheInventory:AddScrapbook14Key( "EFE1AB3E" ) -- sacred_chest
 TheInventory:AddScrapbook6Key( "DEB59676" ) -- saddle_basic
 TheInventory:AddScrapbook9Key( "A801BD29" ) -- saddle_race
 TheInventory:AddScrapbook0Key( "A8651FD0" ) -- saddle_war
 TheInventory:AddScrapbook10Key( "4742FEAA" ) -- saddlehorn
-TheInventory:AddScrapbook7Key( "28479B97" ) -- saladfurnace
 TheInventory:AddScrapbook12Key( "59E56CEC" ) -- salsa
 TheInventory:AddScrapbook5Key( "8999B2F5" ) -- saltbox
 TheInventory:AddScrapbook11Key( "5E02CFFB" ) -- saltlick
 TheInventory:AddScrapbook11Key( "7820117B" ) -- saltrock
 TheInventory:AddScrapbook2Key( "CCE99F72" ) -- saltstack
 TheInventory:AddScrapbook9Key( "26756C89" ) -- sandblock
+TheInventory:AddScrapbook2Key( "6056A382" ) -- sandspike
 TheInventory:AddScrapbook3Key( "A5DA3273" ) -- sanityrock
 TheInventory:AddScrapbook8Key( "28861538" ) -- sapling
 TheInventory:AddScrapbook8Key( "77DF6828" ) -- sapling_moon
@@ -4807,14 +4807,17 @@ TheInventory:AddScrapbook11Key( "ED65FCBB" ) -- scarecrow
 TheInventory:AddScrapbook5Key( "A397B9B5" ) -- scorched_skeleton
 TheInventory:AddScrapbook4Key( "39E3AB34" ) -- scrapbook_page
 TheInventory:AddScrapbook7Key( "795096B7" ) -- sculptingtable
-TheInventory:AddScrapbook15Key( "68DC3DF" ) -- sculpture_bishop
+TheInventory:AddScrapbook1Key( "977A4001" ) -- sculpture_bishopbody
 TheInventory:AddScrapbook15Key( "A9B3889F" ) -- sculpture_bishophead
-TheInventory:AddScrapbook15Key( "4FF1D16F" ) -- sculpture_knight
+TheInventory:AddScrapbook1Key( "32A6BD91" ) -- sculpture_knightbody
 TheInventory:AddScrapbook15Key( "44E0062F" ) -- sculpture_knighthead
-TheInventory:AddScrapbook11Key( "D571BF1B" ) -- sculpture_rook
+TheInventory:AddScrapbook13Key( "4FE97F3D" ) -- sculpture_rookbody
 TheInventory:AddScrapbook14Key( "7E4A4BCE" ) -- sculpture_rooknose
+TheInventory:AddScrapbook5Key( "50504D5" ) -- seafaring_prototyper
 TheInventory:AddScrapbook15Key( "B433197F" ) -- seafoodgumbo
 TheInventory:AddScrapbook9Key( "EF200739" ) -- seastack
+TheInventory:AddScrapbook1Key( "947101A1" ) -- security_pulse_cage
+TheInventory:AddScrapbook13Key( "6F91060D" ) -- security_pulse_cage_full
 TheInventory:AddScrapbook10Key( "70AFD24A" ) -- seedpouch
 TheInventory:AddScrapbook2Key( "107F3FC2" ) -- seeds
 TheInventory:AddScrapbook4Key( "EE071964" ) -- seeds_cooked
@@ -4903,20 +4906,23 @@ TheInventory:AddScrapbook3Key( "26BCF423" ) -- spoiled_fish
 TheInventory:AddScrapbook11Key( "3D2B2FAB" ) -- spoiled_fish_small
 TheInventory:AddScrapbook9Key( "29AD5029" ) -- spoiled_food
 TheInventory:AddScrapbook15Key( "1A35332F" ) -- spore_medium
+TheInventory:AddScrapbook11Key( "13BEFF3B" ) -- spore_moon
 TheInventory:AddScrapbook13Key( "ED18EED" ) -- spore_small
 TheInventory:AddScrapbook7Key( "5286DAA7" ) -- spore_tall
 TheInventory:AddScrapbook2Key( "46B701F2" ) -- squid
 TheInventory:AddScrapbook4Key( "534F3FF4" ) -- staff_lunarplant
 TheInventory:AddScrapbook6Key( "FF7A976" ) -- staff_tornado
+TheInventory:AddScrapbook2Key( "E95A0B92" ) -- staffcoldlight
 TheInventory:AddScrapbook6Key( "36458456" ) -- stafflight
 TheInventory:AddScrapbook13Key( "ADECA88D" ) -- stagehand
 TheInventory:AddScrapbook9Key( "2B529ED9" ) -- stageusher
 TheInventory:AddScrapbook15Key( "33EEBEFF" ) -- stalagmite
+TheInventory:AddScrapbook13Key( "75F1728D" ) -- stalagmite_tall
 TheInventory:AddScrapbook12Key( "D3EAD8AC" ) -- stalker
 TheInventory:AddScrapbook5Key( "F77F69B5" ) -- stalker_atrium
 TheInventory:AddScrapbook0Key( "10C53670" ) -- stalker_forest
+TheInventory:AddScrapbook9Key( "5C4A9F29" ) -- stalker_minion
 TheInventory:AddScrapbook2Key( "E6E4B4B2" ) -- stash_map
-TheInventory:AddScrapbook8Key( "6DB347B8" ) -- statue_marble
 TheInventory:AddScrapbook1Key( "4F19B3A1" ) -- statue_marble_muse
 TheInventory:AddScrapbook15Key( "D0D8F0CF" ) -- statue_marble_pawn
 TheInventory:AddScrapbook3Key( "DC8D21B3" ) -- statueglommer
@@ -4934,6 +4940,10 @@ TheInventory:AddScrapbook14Key( "A6298B3E" ) -- succulent_plant
 TheInventory:AddScrapbook11Key( "B223392B" ) -- succulent_potted
 TheInventory:AddScrapbook9Key( "641EAE99" ) -- sunkenchest
 TheInventory:AddScrapbook8Key( "2FA30738" ) -- supertacklecontainer
+TheInventory:AddScrapbook10Key( "32844B3A" ) -- support_pillar
+TheInventory:AddScrapbook0Key( "53B98870" ) -- support_pillar_dreadstone
+TheInventory:AddScrapbook5Key( "1B92BDE5" ) -- support_pillar_dreadstone_scaffold
+TheInventory:AddScrapbook11Key( "B0F1C19B" ) -- support_pillar_scaffold
 TheInventory:AddScrapbook13Key( "F2A26AD" ) -- surfnturf
 TheInventory:AddScrapbook1Key( "47611D71" ) -- sweatervest
 TheInventory:AddScrapbook7Key( "9CC615D7" ) -- sweetpotato
@@ -4971,6 +4981,7 @@ TheInventory:AddScrapbook2Key( "90DDB862" ) -- tillweed
 TheInventory:AddScrapbook11Key( "202DEFCB" ) -- tillweedsalve
 TheInventory:AddScrapbook13Key( "FB4D9E6D" ) -- toadstool
 TheInventory:AddScrapbook0Key( "D1BC9F80" ) -- toadstool_cap
+TheInventory:AddScrapbook8Key( "6B741228" ) -- toadstool_dark
 TheInventory:AddScrapbook10Key( "7F38202A" ) -- tomato
 TheInventory:AddScrapbook12Key( "7C066EFC" ) -- tomato_cooked
 TheInventory:AddScrapbook10Key( "97236C7A" ) -- tomato_oversized
@@ -5084,6 +5095,7 @@ TheInventory:AddScrapbook5Key( "265D1455" ) -- turf_woodfloor
 TheInventory:AddScrapbook13Key( "79720FDD" ) -- turfcraftingstation
 TheInventory:AddScrapbook0Key( "52C59920" ) -- turkeydinner
 TheInventory:AddScrapbook1Key( "B0A79A1" ) -- twiggy_nut
+TheInventory:AddScrapbook10Key( "112002BA" ) -- twiggy_nut_sapling
 TheInventory:AddScrapbook9Key( "3E7C9B79" ) -- twiggy_tall
 TheInventory:AddScrapbook2Key( "9BE18AF2" ) -- twigs
 TheInventory:AddScrapbook14Key( "8804D9BE" ) -- twinofterror1
@@ -5099,12 +5111,19 @@ TheInventory:AddScrapbook13Key( "AC8EF0BD" ) -- voidcloth_umbrella
 TheInventory:AddScrapbook5Key( "A2446795" ) -- voidclothhat
 TheInventory:AddScrapbook2Key( "208B0122" ) -- voltgoatjelly
 TheInventory:AddScrapbook0Key( "C43E6110" ) -- waffles
+TheInventory:AddScrapbook6Key( "B7735CE6" ) -- wagpunk_bits
+TheInventory:AddScrapbook12Key( "95DFDF5C" ) -- wagpunkbits_kit
+TheInventory:AddScrapbook12Key( "B2C60EBC" ) -- wagpunkhat
+TheInventory:AddScrapbook2Key( "A646CB72" ) -- wagstaff_machinery
+TheInventory:AddScrapbook3Key( "F75A0343" ) -- wagstaff_mutations_note
 TheInventory:AddScrapbook6Key( "3D7A4986" ) -- wagstaff_tool_1
 TheInventory:AddScrapbook7Key( "3D7A4987" ) -- wagstaff_tool_2
 TheInventory:AddScrapbook8Key( "3D7A4988" ) -- wagstaff_tool_3
 TheInventory:AddScrapbook9Key( "3D7A4989" ) -- wagstaff_tool_4
 TheInventory:AddScrapbook10Key( "3D7A498A" ) -- wagstaff_tool_5
 TheInventory:AddScrapbook10Key( "4BB60C0A" ) -- walking_stick
+TheInventory:AddScrapbook0Key( "F6D0400" ) -- wall_dreadstone
+TheInventory:AddScrapbook2Key( "4DDEFB72" ) -- wall_dreadstone_item
 TheInventory:AddScrapbook11Key( "6D8DF54B" ) -- wall_hay
 TheInventory:AddScrapbook7Key( "DE4BC7E7" ) -- wall_hay_item
 TheInventory:AddScrapbook11Key( "816018FB" ) -- wall_moonrock
@@ -5235,6 +5254,10 @@ TheInventory:AddScrapbook9Key( "66F89619" ) -- wobster_sheller_dead_cooked
 TheInventory:AddScrapbook4Key( "127F1174" ) -- wobster_sheller_land
 TheInventory:AddScrapbook1Key( "5A131A91" ) -- wobybig
 TheInventory:AddScrapbook8Key( "28C0CF8" ) -- wolfgang_whistle
+TheInventory:AddScrapbook3Key( "EAC18573" ) -- wood_chair
+TheInventory:AddScrapbook9Key( "5EC418F9" ) -- wood_stool
+TheInventory:AddScrapbook11Key( "EF944E8B" ) -- wood_table_round
+TheInventory:AddScrapbook0Key( "DBB6ADC0" ) -- wood_table_square
 TheInventory:AddScrapbook13Key( "B51D5ECD" ) -- woodcarvedhat
 TheInventory:AddScrapbook3Key( "D7C5DE33" ) -- worm
 TheInventory:AddScrapbook3Key( "93186CB3" ) -- wormhole
@@ -7169,7 +7192,7 @@ TheInventory:AddScrapbook12Key( "4374C56C" ) -- yellowstaff
 --TheInventory:AddItemIDPairing(2002, "profileflair_pottedfern_cotl")
 
 if TheInventory.AddFreeItemForEveryone == nil then
-    TheInventory:ValidateWithSignature( "41c50a7d589ca9891c75e113526fb0296faeef4b2d62d0e86ade2e389105b5a8a51223b66ab00dcb9a167214cc58c0cb7fa754c94bda4a6454e5ecbe03a5aa447dfd124508058ab2830649dd1858cab79264bd96db201fae069237abb49d553accfffc8fa841d5564d94b89687d92f6cfbbb48cd34c75152634b0d484fead26640c765e46608e3099cfa16ed72bfe104cad9779a58593705c31dcf06772d1e4af1bf9ca4b9c5e66eafa3b9bfdd1fc3909ca834d46e34e8cc22ed629e00c5874666cffe05bb1c7b47a373d52724363673be3e9f22ded409349eb8f91545ac30fbb4b3c326e3de006cad3e88579199a034bbcaa9a4b259757654f4f9db7704efee692eb6ca89b8deece3758bff12f8df5cb7bfc83634dff46c25e44568a761a40898601d94c9e03582a608726cf10b9510a3827146c239fb005d6612661a1d6925c3ef6f934e4261c3b8222ae575a763cd94ba4462577c95b3edf9607d89a9007fde2f204b12495c435ef7cc70d42b7bfb81985da0ac82e9b0da7d38ec05d0c597e836bbdf71672c4572d8f3a20a4230d9eb74d69caca73e4ce8fa679ccf8a799d53f5226779f10050bb2bb44de95b5975eb9eaf99a69330d906e5e09c7b6e8a93dbd7af05fc29caca27e2a00f977b11da2c5f56b885c168c28a0b04232853ba08ed03191060551aec5a96ccfef9590a0c7b0cc45c3ad61dfdd3a4a6a889e92894" )
+    TheInventory:ValidateWithSignature( "7bc6095e7a36857ed3745161794eb6c7b2e117613976325ece04b4c485130fe955a740bf6c47af968598e3d422d2c0fecc5a6f2e4f2ca74f7835450f6a1ad28783b5453c829cb773e0ce27634d851b6ecfdf4f06a7c8764878546b0e24c8fd348d76f3b76d57ec6d4dfcf6a93eeac9c12f4aecd1bf93f151be3000dbeaeec6eaceffcfe3a4a729f94959ba4c00c3a62a326015b6c31fd9e032a85931fc5803615373960595945dbf7cd198cab7e3dcf0cef989e58eba55e62dc37d16ca55d5837af60b2c846da3126c250a30e6f1bcaf2f727151201b0df91d2652a55ca90b74c6e16f3d38744d24bd9866543217481acd48e6f3d390187c66c5ee02f652da0ea68114dee8c27c9cc25c89f1602f25f74822db2f89a3fbf5542d5330c83179c524c4b9cbd6e2995c68fda59ed4d3efc3d7cf351b9b5720f66a91de6d51bc6515dbaf3dad2a1fd8149092fa400eadca5d33b3aeddcc6b7aff5cdbe48d7fa6e6224a60d2c6d3ce809b90de1b7922bddca0f47010be89e13340338c09718fc0ecb9fa2c7b83c624f61e2e058fd0e27519ac2a2ee7a46e847cc89bbd0706ebd00820f157e62e1a859a9e686b2eb0cdda4c12500b3763e513df8038ffc3f04044240fbc1b06d1f5328c8c7b332ddc99a8b4276343f68262ec59b10bdaaeb2286a0b64d1c36f85e8ed5dc245ec692fc6b23677b51ec529dd33eb2f8c8eaf3ba6799bc0" )
 else -- Temporary protection guard for platforms missing the engine change 2.
 
 -- These are free items for everyone and are not networked.
@@ -7220,8 +7243,11 @@ TheInventory:AddFreeItemForEveryone("beefalo_body_beast") -- 112
 TheInventory:AddFreeItemForEveryone("beefalo_tail_beast") -- 112
 TheInventory:AddFreeItemForEveryone("loading_dst10_signed") -- 144
 TheInventory:AddFreeItemForEveryone("loading_dst10_unsigned") -- 144
+TheInventory:AddFreeItemForEveryone("record_creepyforest") -- 147
+TheInventory:AddFreeItemForEveryone("record_drstyle") -- 147
+TheInventory:AddFreeItemForEveryone("record_efs") -- 147
 
-TheInventory:ValidateWithSignature( "77868ac6f532de64b508ec00046eabef01cde6af063e15a6218d6e1915a7dbaa6b4a5d930c2848dd78ca0e1863723d599d83823bee06f40495b976e387084f54c19fffc80bdd44b97a298a3ba9d22d09d331c6296f135387edada828c4603870ff771cb3ce485f4e5b6d036bfd0d987f85f0ff2e6422f8dcf5f53e3182d98c1300f771ec41c5953c4681d2d09bb71363e7bb1f1c03a70b3df41c7497ba1c0e9cf118aa03128776dc28cb3e20f005abac51c0d1e2ae18d52501941f5ba880ee4118c73e894f97f306aa8ec8e47812e09a9065fd2709b9081e94ba74eccfb21f158f00a89eb2a39346e9bb9bf5ce4adc68335c41565df45755ab05863d31bf4be1316ce651ebf060b1ff831c3ed861a19f1b2b79e7afe4e87952245742a20f0ee967edd162aab58f033d5d4490776b3913e34a7db9c67fb46a4872757efba48c98c8c131f746976843621924e528ae58eb7647fb5ceb1c57aaf644f8ccdbf0d48147d14e1edcb21aff8efac12e7882356396334d8482824da48ccb4e3715b8a9724f61d18bb5f46186c1527cbc4b75a7b5acf52467ef4487d9c5950e9d98e7722bcb8b6eee8f0c4ee466c040c5013a2e95ae00f1b5ba37bd353fba5e321011e48f23655450deb1e5b56ecd4c1da1c7b6dc80a758dbaf9845b9852e142478f92c931fa53dd1abfd6fcf18ad7d8e5115d6b2d513aad9bdd2e28b2b45a02e2c35f7d3" )
+TheInventory:ValidateWithSignature( "78648d2bebe2f268cef9045ad19aa8845a1344dd0c9224217e2ca506454b5e186c5c4d0558829095487330cc237e39b3d747dff1d4e1f753c0e80c6e6505baefd130930a4a3a0dbec400283b4ef573d07b4e604feccaf41c302b0cd9cc7ab0d10bd20f3108f552d63721a250a0e6b69e3b62808b3ce01dd0ba9b514227c478e6cdf4980b76122a0083c943527e0f49b19e87f4ea4220f78875498ad8b731f8273867fcd45258312c54df8c76ce9173fa84cc4489ba31cae24a22e3de1b503b47ca683f8c781214a57116df806aa71efbc32ca22a75be997a94aad6ee2f90281757c59dfb3b4a751a19e4d08ab4f83cda7f8ae3c9ad8e815e14c132d05559a35c4d1bd38fd4e4abd1b79f6a5a205b955d2b1e16ebb33afc4651e2b5868791c998c03cbac95283fbf67376d1b31b27793210fbd6dcbfe8c02de3e7443a1a8352c06be4c15f6b93e02e8246acf76a6ee8556d5f4e511e6115757e0d2b345998ae799321cb0539fc53a6559acebdf1d27943ae3768043c131cedfc66ea49a50490d796f2d46d77b1b7592b3566f008644b5303771fb48b6692be238ac5422c471e0ea633dbc88f88b70ae9250efdfbd62174b4eb792324c2ec021b67d7b797dd3b65390286f3729258d99096f1d629473826b6d065bf8e0c6584b63638a9028e8c9fcafabfbc30183e4ca4b2a18db99a2e7e993eb66fbcf4298c0fe438c2a643120b" )
 
 end -- Temporary protection guard for platforms missing the engine change 2.
 

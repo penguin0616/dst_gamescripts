@@ -34,6 +34,7 @@ local prefabs =
     "minotaur_blood3",
     "minotaur_blood_big",
     "support_pillar_scaffold_blueprint",
+    "minotaurchest",
 }
 
 local prefabs_chest =

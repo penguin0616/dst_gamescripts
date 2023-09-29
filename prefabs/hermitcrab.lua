@@ -61,6 +61,8 @@ local TASKS = {
     GIVE_BIG_SUMMER =15,
     GIVE_BIG_SPRING = 16,
     GIVE_BIG_AUTUM = 17,
+
+    MAKE_CHAIR = 18,
 }
 
 local MAX_TARGET_SHARES = 5
@@ -125,7 +127,7 @@ local function ShouldAcceptItem(inst, item)
     if item:HasTag("oceanfish") or
        ( item:HasTag("umbrella") and TheWorld.state.israining and not hasumbrella ) or
        ( iscoat(item) and TheWorld.state.issnowing and not hascoat ) or
-       ( item.prefab == "flowersalad" and not inst.components.timer:TimerExists("salad")) or
+       ( item.prefab == "flowersalad" and not inst.components.timer:TimerExists("salad")) or    
        item.prefab == "hermit_cracked_pearl"
         then
         return true
@@ -323,6 +325,10 @@ local function rewardcheck(inst)
             local problems = inst.components.friendlevels.friendlytasks
 
             str = problems[task].completestrings[gfl][math.random(1,#problems[task].completestrings[gfl])]
+
+            if problems[task].specifictaskreward then
+                inst.components.friendlevels.specifictaskreward = problems[task].specifictaskreward
+            end
         else
             str = STRINGS.HERMITCRAB_DEFAULT_REWARD[gfl][math.random(1,#STRINGS.HERMITCRAB_DEFAULT_REWARD[gfl])]
         end
@@ -354,7 +360,6 @@ local STOP_RUN_DIST = 8
 
 local function onTaskComplete(inst, defaulttask)
     if not inst.giverewardstask then
-
         inst.giverewardstask = inst:DoPeriodicTask(0.5, function()
             if not inst.sg:HasStateTag("ishome") then
                 local player = FindClosestPlayerToInst(inst, STOP_RUN_DIST, true)
@@ -624,6 +629,7 @@ local FIND_PLANT_TAGS = {"bush","plant"}
 local FIND_STRUCTURE_TAGS = {"structure"}
 local FIND_HEAVY_TAGS = {"underwater_salvageable"}
 local FIND_HERMITCRAB_LURE_MARKER_TAGS = {"hermitcrab_lure_marker"}
+local FIND_CHAIR_ONEOF_TAGS = {"faced_chair","limited_chair"}
 
 local function lureplantcomplainfn(inst)
     local source = inst.CHEVO_marker
@@ -718,6 +724,17 @@ local function fishwinterfn(inst)
     end
 end
 
+local function buildchairfn(inst)
+    local source = inst.CHEVO_marker
+    if source then
+        local pos = Vector3(source.Transform:GetWorldPosition())
+        local ents = TheSim:FindEntities(pos.x,pos.y,pos.z, ISLAND_RADIUS, nil, nil, FIND_CHAIR_ONEOF_TAGS)
+        if #ents > 0 then
+            return true
+        end
+    end
+end
+
 local friendlytasks ={
     [TASKS.FIX_HOUSE_1] =       {completestrings=STRINGS.HERMITCRAB_REWARD.FIX_HOUSE_1},
     [TASKS.FIX_HOUSE_2] =       {completestrings=STRINGS.HERMITCRAB_REWARD.FIX_HOUSE_2},
@@ -736,6 +753,8 @@ local friendlytasks ={
     [TASKS.GIVE_BIG_SUMMER] = {completestrings=STRINGS.HERMITCRAB_REWARD.GIVE_FISH_SUMMER,    complain=true, complianstrings=STRINGS.HERMITCRAB_COMPLAIN.GIVE_FISH_SUMMER,  complaintest=fishsummerfn}, -- oceanfish_small_8
     [TASKS.GIVE_BIG_SPRING] = {completestrings=STRINGS.HERMITCRAB_REWARD.GIVE_FISH_SPRING,    complain=true, complianstrings=STRINGS.HERMITCRAB_COMPLAIN.GIVE_FISH_SPRING,  complaintest=fishspringfn}, -- oceanfish_small_7
     [TASKS.GIVE_BIG_AUTUM]  = {completestrings=STRINGS.HERMITCRAB_REWARD.GIVE_FISH_AUTUM,     complain=true, complianstrings=STRINGS.HERMITCRAB_COMPLAIN.GIVE_FISH_AUTUM,   complaintest=fishautumfn},  -- oceanfish_small_6
+
+    [TASKS.MAKE_CHAIR]      = {completestrings=STRINGS.HERMITCRAB_REWARD.MAKE_CHAIR,          complain=true, complianstrings=STRINGS.HERMITCRAB_COMPLAIN.MAKE_CHAIR,        complaintest=buildchairfn,      specifictaskreward={"carpentry_station_blueprint"} },
 
 }
 
@@ -776,6 +795,35 @@ local function initfriendlevellisteners(inst)
 
         end
     end, TheWorld)
+
+    --MAKE CHAIR
+    inst:ListenForEvent("CHEVO_makechair", function(world,data)
+        local source = inst.CHEVO_marker
+        if not source then return end
+
+        local target = data.target
+        if target:GetDistanceSqToInst(source) < ISLAND_RADIUS * ISLAND_RADIUS then
+            local px, py, pz = source.Transform:GetWorldPosition()
+            local ents = TheSim:FindEntities(px, py, pz, ISLAND_RADIUS, nil, nil, FIND_CHAIR_ONEOF_TAGS)
+
+            -- INVESTIGATE
+            if not inst.comment_data then
+                local generalfriendlevel = inst:getgeneralfriendlevel()
+                local investigate_chair_strings = STRINGS.HERMITCRAB_INVESTIGATE.MAKE_CHAIR[generalfriendlevel]
+
+                inst.comment_data = {
+                    pos = target:GetPosition(),
+                    distance = 1.0,
+                    speech = investigate_chair_strings[math.random(1, #investigate_chair_strings)],
+                }
+            end
+
+            if #ents > 0 then
+                inst.components.friendlevels:CompleteTask(TASKS.MAKE_CHAIR, data.doer)
+            end
+
+        end
+    end, TheWorld)    
 
     --FILL_MEATRACKS
     inst:ListenForEvent("CHEVO_starteddrying", function(world,data)
@@ -1221,6 +1269,8 @@ local function fn()
     inst.components.talker.font = TALKINGFONT_HERMIT
 
     inst:AddComponent("npc_talker")
+    inst:AddComponent("pointofinterest")
+    inst.components.pointofinterest:SetHeight(200)
 
     inst.displaynamefn = displaynamefn
 
@@ -1229,6 +1279,8 @@ local function fn()
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst.scrapbook_hide = { "ARM_carry", "HAT", "HAIR_HAT", "HEAD_HAT" }
 
     inst.components.talker.ontalk = ontalk
 

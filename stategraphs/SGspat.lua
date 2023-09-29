@@ -87,17 +87,24 @@ local states=
 
     State{
         name = "bellow",
-        tags = {"canrotate"},
+        tags = {"busy", "canrotate"},
 
-        onenter = function(inst)
+        onenter = function(inst, data)
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("bellow")
             inst.SoundEmitter:PlaySound(inst.sounds.grunt)
+            inst.sg.statemem.count = data and data.count or nil
         end,
 
         events=
         {
-            EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
+            EventHandler("animover", function(inst)
+                if inst.sg.statemem.count ~= nil and inst.sg.statemem.count > 1 then
+                    inst.sg:GoToState("bellow", {count=inst.sg.statemem.count - 1})
+                else
+                    inst.sg:GoToState("idle")
+                end
+            end),
         },
     },
 

@@ -925,6 +925,12 @@ PREFAB_SKINS = {
 		"razor_scissors",
 		"razor_straight",
 	},
+	record =
+	{
+		"record_creepyforest",
+		"record_drstyle",
+		"record_efs",
+	},
 	reflectivevest =
 	{
 		"reflectivevest_cawnival",

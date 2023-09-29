@@ -231,6 +231,7 @@ local function fn()
     inst.AnimState:SetBank("glommer_statue")
     inst.AnimState:SetBuild("glommer_statue")
     inst.AnimState:PlayAnimation("full")
+    inst.scrapbook_anim = "full"
 
     inst.Light:SetRadius(0)
     inst.Light:SetIntensity(.9)
@@ -244,6 +245,8 @@ local function fn()
     inst.lighttask = nil
 
     inst.entity:AddTag("statue")
+
+    inst:AddComponent("pointofinterest")
 
     inst.entity:SetPristine()
 

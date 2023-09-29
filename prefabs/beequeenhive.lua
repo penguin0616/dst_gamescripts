@@ -457,9 +457,14 @@ local function fn()
 
     inst.Transform:SetScale(1.4, 1.4, 1.4)
 
+    inst.scrapbook_anim ="large"
+    inst.scrapbook_specialinfo ="BEEQUEENHIVE"
+
     inst.MiniMapEntity:SetIcon("beequeenhivegrown.png")
 
     inst.physrad = net_tinybyte(inst.GUID, "beequeenhivegrown.physrad", "physraddirty")
+
+    inst:AddComponent("pointofinterest")
 
     inst.entity:SetPristine()
 
@@ -518,6 +523,8 @@ local function base_fn()
     inst.AnimState:Hide("honey3")
     inst.AnimState:SetLayer(LAYER_BACKGROUND)
     inst.AnimState:SetSortOrder(3)
+
+    inst.scrapbook_proxy ="beequeenhivegrown"
 
     inst.Transform:SetScale(1.4, 1.4, 1.4)
 

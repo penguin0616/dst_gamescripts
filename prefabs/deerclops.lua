@@ -1,6 +1,6 @@
 local brain = require "brains/deerclopsbrain"
 
-local assets =
+local normal_assets =
 {
     Asset("ANIM", "anim/deerclops_basic.zip"),
     Asset("ANIM", "anim/deerclops_actions.zip"),
@@ -9,18 +9,63 @@ local assets =
     Asset("SOUND", "sound/deerclops.fsb"),
 }
 
-local prefabs =
+local mutated_assets =
+{
+    Asset("ANIM", "anim/deerclops_basic.zip"),
+    Asset("ANIM", "anim/deerclops_actions.zip"),
+    Asset("ANIM", "anim/deerclops_mutated_actions.zip"),
+    Asset("ANIM", "anim/deerclops_mutated.zip"),
+    Asset("SOUND", "sound/deerclops.fsb"),
+}
+
+local normal_prefabs =
 {
     "meat",
     "deerclops_eyeball",
     "chesspiece_deerclops_sketch",
-    "icespike_fx_1",
-    "icespike_fx_2",
-    "icespike_fx_3",
-    "icespike_fx_4",
+	"deerclops_icespike_fx",
     "deerclops_laser",
     "deerclops_laserempty",
     "winter_ornament_light1",
+    "deerclopscorpse",
+}
+
+local mutated_prefabs =
+{
+    "deerclops",
+	"deerclops_icespike_fx",
+	"deerclops_icelance_ping_fx",
+	"deerclops_impact_circle_fx",
+	"deerclops_aura_circle_fx",
+	"deerclops_spikefire_fx",
+	"character_fire_flicker",
+	"spoiled_food",
+	"purebrilliance",
+	"ice",
+}
+
+local normal_sounds =
+{
+	step = "dontstarve/creatures/deerclops/step",
+	taunt_grrr = "dontstarve/creatures/deerclops/taunt_grrr",
+	taunt_howl = "dontstarve/creatures/deerclops/taunt_howl",
+	hurt = "dontstarve/creatures/deerclops/hurt",
+	death = "dontstarve/creatures/deerclops/death",
+	attack = "dontstarve/creatures/deerclops/attack",
+	swipe = "dontstarve/creatures/deerclops/swipe",
+	charge = "dontstarve/creatures/deerclops/charge",
+}
+
+local mutated_sounds =
+{
+	step = "dontstarve/creatures/deerclops/step",
+	taunt_grrr = "rifts3/mutated_deerclops/taunt_grrr",
+	taunt_howl = "rifts3/mutated_deerclops/taunt_howl",
+	hurt = "rifts3/mutated_deerclops/hurt",
+	death = "rifts3/mutated_deerclops/death",
+	attack = "rifts3/mutated_deerclops/attack",
+	swipe = "dontstarve/creatures/deerclops/swipe",
+	charge = "dontstarve/creatures/deerclops/charge",
 }
 
 local TARGET_DIST = 16
@@ -78,7 +123,7 @@ local function AfterWorking(inst, data)
             inst.structuresDestroyed = inst.structuresDestroyed + 1
             if inst:IsSated() then
                 inst.components.knownlocations:ForgetLocation("targetbase")
-                inst.AnimState:OverrideSymbol("deerclops_head", IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) and "deerclops_yule" or "deerclops_build", "deerclops_head_neutral")
+                inst.AnimState:OverrideSymbol("deerclops_head", inst.build, "deerclops_head_neutral")
             end
         end
     end
@@ -109,11 +154,16 @@ end
 
 local function OnSave(inst, data)
     data.structuresDestroyed = inst.structuresDestroyed
+	data.looted = inst.looted
 end
 
 local function OnLoad(inst, data)
     if data then
         inst.structuresDestroyed = data.structuresDestroyed or inst.structuresDestroyed
+		inst.looted = data.looted
+		if inst.looted ~= nil and inst.components.health:IsDead() then
+			inst.sg:GoToState("corpse", true)
+		end
     end
 end
 
@@ -129,7 +179,7 @@ local function OnHitOther(inst, data)
     if other ~= nil then
         if not (other.components.health ~= nil and other.components.health:IsDead()) then
             if other.components.freezable ~= nil then
-                other.components.freezable:AddColdness(2)
+				other.components.freezable:AddColdness(inst.sg.statemem.freezepower or 2)
             end
             if other.components.temperature ~= nil then
                 local mintemp = math.max(other.components.temperature.mintemp, 0)
@@ -146,10 +196,29 @@ local function OnHitOther(inst, data)
 end
 
 local function OnRemove(inst)
+	if inst.spikefire ~= nil then
+		inst.spikefire:Remove()
+		inst.spikefire = nil
+	end
+	if inst.sg.mem.circle ~= nil then
+		inst.sg.mem.circle:KillFX()
+		inst.sg.mem.circle = nil
+	end
+	if inst.icespike_pool ~= nil then
+		for i, v in ipairs(inst.icespike_pool) do
+			v:Remove()
+		end
+		inst.icespike_pool = nil
+	end
     TheWorld:PushEvent("hasslerremoved", inst)
 end
 
 local function OnDead(inst)
+	--V2C: make sure we're still burning by the time we actually reach death in stategraph
+	if inst.components.burnable:IsBurning() then
+		inst.components.burnable:SetBurnTime(nil)
+		inst.components.burnable:ExtendBurning()
+	end
     AwardRadialAchievement("deerclops_killed", inst:GetPosition(), TUNING.ACHIEVEMENT_RADIUS_FOR_GIANT_KILL)
     TheWorld:PushEvent("hasslerkilled", inst)
 end
@@ -175,9 +244,13 @@ local function OnNewTarget(inst, data)
         inst.structuresDestroyed = inst.structuresDestroyed - 1
         inst.components.knownlocations:ForgetLocation("home")
     end
+	if inst._disengagetask ~= nil then
+		inst._disengagetask:Cancel()
+		inst._disengagetask = nil
+	end
 end
 
-local function OnNewState(inst, data)
+local function YuleOnNewState(inst, data)
     if not (inst.sg:HasStateTag("sleeping") or inst.sg:HasStateTag("waking")) then
         inst.Light:SetIntensity(.6)
         inst.Light:SetRadius(8)
@@ -186,9 +259,75 @@ local function OnNewState(inst, data)
     end
 end
 
-local loot = {"meat", "meat", "meat", "meat", "meat", "meat", "meat", "meat", "deerclops_eyeball", "chesspiece_deerclops_sketch"}
+local function Mutated_Disengage(inst)
+	inst._disengagetask = nil
+	if inst.sg.mem.circle ~= nil then
+		inst.sg.mem.circle:KillFX()
+		inst.sg.mem.circle = nil
+	end
+end
 
-local function fn()
+local function Mutated_OnDroppedTarget(inst)
+	if inst._disengagetask == nil then
+		inst._disengagetask = inst:DoTaskInTime(6, Mutated_Disengage)
+	end
+end
+
+local function Mutated_OnDead(inst)
+    if TheWorld ~= nil and TheWorld.components.lunarriftmutationsmanager ~= nil then
+        TheWorld.components.lunarriftmutationsmanager:SetMutationDefeated(inst)
+    end
+end
+
+local function Mutated_OnIgnite(inst, source, doer)
+	if inst.components.burnable.burntime ~= 0 and inst.spikefire == nil and inst.sg.mem.noice ~= 2 then
+		inst.spikefire = SpawnPrefab("deerclops_spikefire_fx")
+		inst.spikefire.Follower:FollowSymbol(inst.GUID,
+			(inst.sg.mem.noice == 1 and "swap_fire_2") or
+			(inst.sg.mem.noice == 0 and "swap_fire_1") or
+			"swap_fire_0",
+			0, 0, 0, true)
+	end
+end
+
+local function Mutated_OnExtinguish(inst)
+	if inst.spikefire ~= nil then
+		inst.spikefire:KillFX()
+		inst.spikefire = nil
+	end
+	if inst._staggertask ~= nil then
+		inst._staggertask:Cancel()
+		inst._staggertask = nil
+	end
+end
+
+SetSharedLootTable("deerclops",
+{
+    {'meat',                         1.0},
+    {'meat',                         1.0},
+    {'meat',                         1.0},
+    {'meat',                         1.0},
+    {'meat',                         1.0},
+    {'meat',                         1.0},
+    {'meat',                         1.0},
+    {'meat',                         1.0},
+    {'deerclops_eyeball',            1.0},
+    {'chesspiece_deerclops_sketch',  1.0},
+})
+
+SetSharedLootTable("mutateddeerclops",
+{
+	{ "spoiled_food",				1.0 },
+	{ "spoiled_food",				1.0 },
+	{ "spoiled_food",				1.0 },
+	{ "spoiled_food",				0.5 },
+	{ "purebrilliance",				1.0 },
+	{ "purebrilliance",				0.75 },
+	{ "ice",						1.0 },
+	{ "ice",						0.75 },
+})
+
+local function commonfn(build, commonfn)
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -211,21 +350,15 @@ local function fn()
     inst:AddTag("scarytoprey")
     inst:AddTag("largecreature")
 
+    inst.build = build
+
     inst.AnimState:SetBank("deerclops")
-
-    if IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
-        inst.AnimState:SetBuild("deerclops_yule")
-
-        inst.entity:AddLight()
-        inst.Light:SetIntensity(.6)
-        inst.Light:SetRadius(8)
-        inst.Light:SetFalloff(3)
-        inst.Light:SetColour(1, 0, 0)
-    else
-        inst.AnimState:SetBuild("deerclops_build")
-    end
-
+    inst.AnimState:SetBuild(build)
     inst.AnimState:PlayAnimation("idle_loop", true)
+
+    if commonfn ~= nil then
+        commonfn(inst)
+    end
 
     inst.entity:SetPristine()
 
@@ -236,6 +369,7 @@ local function fn()
     inst.Physics:SetCollisionCallback(oncollide)
 
     inst.structuresDestroyed = 0
+	inst.icespike_pool = {}
 
     ------------------------------------------
 
@@ -250,21 +384,18 @@ local function fn()
     inst:AddComponent("sanityaura")
     inst.components.sanityaura.aurafn = CalcSanityAura
 
-    MakeLargeBurnableCharacter(inst, "deerclops_body")
-    MakeHugeFreezableCharacter(inst, "deerclops_body")
+	MakeLargeBurnableCharacter(inst, "swap_fire")
 
     ------------------
+
     inst:AddComponent("health")
-    inst.components.health:SetMaxHealth(TUNING.DEERCLOPS_HEALTH)
+	inst.components.health.nofadeout = true
 
     ------------------
 
     inst:AddComponent("combat")
-    inst.components.combat:SetDefaultDamage(TUNING.DEERCLOPS_DAMAGE)
     inst.components.combat.playerdamagepercent = TUNING.DEERCLOPS_DAMAGE_PLAYER_PERCENT
-    inst.components.combat:SetRange(TUNING.DEERCLOPS_ATTACK_RANGE)
     inst.components.combat.hiteffectsymbol = "deerclops_body"
-    inst.components.combat:SetAttackPeriod(TUNING.DEERCLOPS_ATTACK_PERIOD)
     inst.components.combat:SetRetargetFunction(1, RetargetFn)
     inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
 
@@ -273,15 +404,7 @@ local function fn()
 
     ------------------------------------------
 
-    inst:AddComponent("sleeper")
-    inst.components.sleeper:SetResistance(4)
-    inst.components.sleeper:SetSleepTest(ShouldSleep)
-    inst.components.sleeper:SetWakeTest(ShouldWake)
-
-    ------------------------------------------
-
     inst:AddComponent("lootdropper")
-    inst.components.lootdropper:SetLoot(loot)
 
     ------------------------------------------
 
@@ -311,13 +434,105 @@ local function fn()
     inst.IsSated = IsSated
     inst.WantsToLeave = WantsToLeave
 
+    return inst
+end
+
+local function normalcommonfn(inst)
     if IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
+        inst.entity:AddLight()
+        inst.Light:SetIntensity(.6)
+        inst.Light:SetRadius(8)
+        inst.Light:SetFalloff(3)
+        inst.Light:SetColour(1, 0, 0)
+    end
+end
+
+local function normalfn()
+    local yule = IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST)
+
+    local inst = commonfn(yule and "deerclops_yule" or "deerclops_build", normalcommonfn)
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst.sounds = normal_sounds
+
+    inst.components.health:SetMaxHealth(TUNING.DEERCLOPS_HEALTH)
+
+    inst.components.combat:SetDefaultDamage(TUNING.DEERCLOPS_DAMAGE)
+	inst.components.combat:SetRange(TUNING.DEERCLOPS_ATTACK_RANGE)
+    inst.components.combat:SetAttackPeriod(TUNING.DEERCLOPS_ATTACK_PERIOD)
+
+    inst.components.lootdropper:SetChanceLootTable("deerclops")
+
+	inst:AddComponent("sleeper")
+	inst.components.sleeper:SetResistance(4)
+	inst.components.sleeper:SetSleepTest(ShouldSleep)
+	inst.components.sleeper:SetWakeTest(ShouldWake)
+
+	MakeHugeFreezableCharacter(inst, "deerclops_body")
+
+    if yule then
+		inst.haslaserbeam = true
+
         inst:AddComponent("timer")
 
-        inst:ListenForEvent("newstate", OnNewState)
+        inst:ListenForEvent("newstate", YuleOnNewState)
     end
 
     return inst
 end
 
-return Prefab("deerclops", fn, assets, prefabs)
+local function mutatedcommonfn(inst)
+    inst:AddTag("lunar_aligned")
+
+	inst.AnimState:SetSymbolMultColour("gestalt_ball", 1, 1, 1, 0.6)
+	inst.AnimState:SetSymbolLightOverride("gestalt_ball", 0.1)
+	inst.AnimState:SetSymbolBloom("gestalt_ball")
+
+	inst.AnimState:SetSymbolMultColour("gestalt_embers", 1, 1, 1, 0.6)
+	inst.AnimState:SetSymbolLightOverride("gestalt_embers", 0.1)
+	inst.AnimState:SetSymbolBloom("gestalt_embers")
+end
+
+local function mutatedfn()
+    local inst = commonfn("deerclops_mutated", mutatedcommonfn)
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst.sounds = mutated_sounds
+	inst.hasiceaura = true
+	inst.hasknockback = true
+	inst.hasicelance = true
+
+    inst:AddComponent("timer")
+
+    inst.components.health:SetMaxHealth(TUNING.MUTATED_DEERCLOPS_HEALTH)
+
+    inst.components.combat:SetDefaultDamage(TUNING.MUTATED_DEERCLOPS_DAMAGE)
+	inst.components.combat:SetRange(TUNING.MUTATED_DEERCLOPS_ATTACK_RANGE)
+    inst.components.combat:SetAttackPeriod(TUNING.MUTATED_DEERCLOPS_ATTACK_PERIOD)
+
+	inst:AddComponent("planarentity")
+	inst:AddComponent("planardamage")
+	inst.components.planardamage:SetBaseDamage(TUNING.MUTATED_DEERCLOPS_PLANAR_DAMAGE)
+
+    inst.components.lootdropper:SetChanceLootTable("mutateddeerclops")
+
+	inst.components.burnable.fxdata[1].prefab = "character_fire_flicker"
+	inst.components.burnable.nocharring = true
+	inst.components.burnable:SetOnIgniteFn(Mutated_OnIgnite)
+	inst.components.burnable:SetOnExtinguishFn(Mutated_OnExtinguish)
+
+	inst:ListenForEvent("droppedtarget", Mutated_OnDroppedTarget)
+    inst:ListenForEvent("death", Mutated_OnDead)
+
+    return inst
+end
+
+return
+        Prefab("deerclops",         normalfn, normal_assets, normal_prefabs),
+        Prefab("mutateddeerclops",  mutatedfn,  mutated_assets,  mutated_prefabs )

@@ -369,8 +369,12 @@ local function portalfn()
     inst.entity:SetPristine()
 
     inst._fx = CreateParticleFx(inst)
-    inst.highlightchildren = {inst._fx}
+    inst.highlightchildren = {inst._fx}    
     inst.highlightoverride = {0.15, 0, 0}
+
+    inst.scrapbook_anim = "scrapbook" -- "stage_3_loop"
+    inst.scrapbook_nodamage = true
+    inst.scrapbook_specialinfo = "SHADOWRIFTPORTAL"
 
     if not TheWorld.ismastersim then
         return inst

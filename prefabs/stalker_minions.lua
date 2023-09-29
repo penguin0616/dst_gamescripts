@@ -197,6 +197,10 @@ local function MakeMinion(name, data, prefabs)
             return inst
         end
 
+        inst.scrapbook_bank = "stalker_minion_2"
+        inst.scrapbook_build = "stalker_minion_2"
+        inst.scrapbook_overridedata = {{"fx_flames", "stalker_shadow_build", "fx_flames"}, {"shield_minion", "stalker_shadow_build", "shield_minion"}, {"fx_dark_minion", "stalker_shadow_build", "fx_dark_minion"}}
+
         inst.recentlycharged = {}
         inst.Physics:SetCollisionCallback(OnCollide)
 

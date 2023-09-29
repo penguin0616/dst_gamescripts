@@ -5376,6 +5376,36 @@ table.insert(prefs, CreatePrefabSkin("razor_straight",
 	release_group = 107,
 }))
 
+table.insert(prefs, CreatePrefabSkin("record_creepyforest",
+{
+	base_prefab = "record",
+	type = "item",
+	rarity = "Complimentary",
+	init_fn = function(inst) record_init_fn(inst, "record_creepyforest", "dontstarve/music/gramaphone_creepyforest") end,
+	skin_tags = { },
+	release_group = 147,
+}))
+
+table.insert(prefs, CreatePrefabSkin("record_drstyle",
+{
+	base_prefab = "record",
+	type = "item",
+	rarity = "Complimentary",
+	init_fn = function(inst) record_init_fn(inst, "record_drstyle", "dontstarve/music/gramaphone_drstyle") end,
+	skin_tags = { },
+	release_group = 147,
+}))
+
+table.insert(prefs, CreatePrefabSkin("record_efs",
+{
+	base_prefab = "record",
+	type = "item",
+	rarity = "Complimentary",
+	init_fn = function(inst) record_init_fn(inst, "record_efs", "dontstarve/music/gramaphone_efs") end,
+	skin_tags = { },
+	release_group = 147,
+}))
+
 table.insert(prefs, CreatePrefabSkin("reflectivevest_cawnival",
 {
 	base_prefab = "reflectivevest",

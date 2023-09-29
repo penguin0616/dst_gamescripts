@@ -535,6 +535,9 @@ local function MakeWeed(weed_def)
             return inst
         end
 
+		inst.scrapbook_overridedata= {"soil01", "farm_soil", "soil01"}
+		inst.scrapbook_anim = "crop_full"
+
 		inst.UpdateResearchStage = UpdateResearchStage
 
 		inst:AddComponent("inspectable")

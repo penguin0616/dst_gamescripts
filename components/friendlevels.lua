@@ -42,6 +42,14 @@ function Friendlevels:DoRewards(target)
         end
     end
 
+    if self.specifictaskreward then
+        for i, reward in ipairs(self.specifictaskreward) do
+            local item = SpawnPrefab(reward)
+            table.insert(gifts, item)    
+        end
+        self.specifictaskreward = nil
+    end    
+
     self.queuedrewards = {}
     return gifts
 end

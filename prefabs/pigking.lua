@@ -647,6 +647,8 @@ local function fn()
 
     inst.OnRemoveEntity = RemoveBuildingBlockers
 
+    inst:AddComponent("pointofinterest")
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then

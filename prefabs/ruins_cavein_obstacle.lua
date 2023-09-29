@@ -279,6 +279,7 @@ local function baserock_fn(bank, build, anim, icon, tag, multcolour)
     else
         inst.AnimState:PlayAnimation(anim..inst.version)
     end
+    inst.scrapbook_anim = "full1"
 
     MakeSnowCoveredPristine(inst)
 

@@ -1739,6 +1739,23 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/wilson_fx.zip"),
         Asset("ANIM", "anim/player_one_man_band.zip"),
 		Asset("ANIM", "anim/player_sit.zip"),
+		Asset("ANIM", "anim/player_sit_nofaced.zip"),
+		Asset("ANIM", "anim/player_sit_transition.zip"),
+		--sitting emotes
+		Asset("ANIM", "anim/player_sit_angry.zip"),
+		Asset("ANIM", "anim/player_sit_facepalm.zip"),
+		Asset("ANIM", "anim/player_sit_fistshake.zip"),
+		Asset("ANIM", "anim/player_sit_flex.zip"),
+		Asset("ANIM", "anim/player_sit_happy.zip"),
+		Asset("ANIM", "anim/player_sit_kiss.zip"),
+		Asset("ANIM", "anim/player_sit_laugh.zip"),
+		Asset("ANIM", "anim/player_sit_no.zip"),
+		Asset("ANIM", "anim/player_sit_rude.zip"),
+		Asset("ANIM", "anim/player_sit_sad.zip"),
+		Asset("ANIM", "anim/player_sit_sleepy.zip"),
+		Asset("ANIM", "anim/player_sit_toast.zip"),
+		Asset("ANIM", "anim/player_sit_wave.zip"),
+		--
 
         Asset("ANIM", "anim/player_slurtle_armor.zip"),
         Asset("ANIM", "anim/player_staff.zip"),
@@ -2227,6 +2244,12 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.PostActivateHandshake = ex_fns.PostActivateHandshake
         inst.OnPostActivateHandshake_Client = ex_fns.OnPostActivateHandshake_Client
         inst._PostActivateHandshakeState_Client = POSTACTIVATEHANDSHAKE.NONE
+
+        inst:DoTaskInTime(0,function()
+            if ThePlayer and ThePlayer == inst then
+                TheScrapbookPartitions:SetInspectedByCharacter("multiplayer_portal", ThePlayer.prefab) 
+            end
+        end)
 
         inst.entity:SetPristine()
         if not TheWorld.ismastersim then

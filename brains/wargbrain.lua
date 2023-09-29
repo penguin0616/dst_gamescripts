@@ -30,6 +30,7 @@ end
 
 function WargBrain:OnStart()
     local isclay = self.inst:HasTag("clay")
+	local ismutated = self.inst:HasTag("lunar_aligned")
     local root = PriorityNode(
     {
         WhileNode(function() return self.inst.sg:HasStateTag("intro_state") end, "intro",
@@ -38,13 +39,17 @@ function WargBrain:OnStart()
         WhileNode(function() return isclay and self.inst.sg:HasStateTag("statue") end, "Statue",
             ActionNode(function() TryReanimate(self) end, "TryReanimate")),
 
-		BrainCommon.PanicTrigger(self.inst),
+		IfNode(function() return not ismutated end, "NormalPanic",
+			BrainCommon.PanicTrigger(self.inst)),
+
         MinPeriod(self.inst, TUNING.WARG_SUMMONPERIOD, true,
             IfNode(function() return CanSpawnChild(self.inst) end, "needs follower",
                 ActionNode(function()
-                    if not IsEntityDead(self.inst) then
-                        self.inst.sg:GoToState("howl",{howl = true})
-                        return SUCCESS
+					if not (self.inst.sg:HasStateTag("howling") or self.inst.sg.mem.dohowl) then
+						self.inst.sg:HandleEvent("dohowl")
+						if self.inst.sg:HasStateTag("howling") or self.inst.sg.mem.dohowl then
+							return SUCCESS
+						end
                     end
                     return FAILED
                 end, "Summon Hound"))),

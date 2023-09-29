@@ -34,6 +34,7 @@ local function MoveToPointAction(inst)
 		-- go to LunarThrall_Plant_Gestalt_Brain		
 		local dist = inst.plant_target:GetDistanceSqToInst(inst)
 		if dist <= ATTACH_DIST * ATTACH_DIST then
+			inst.Transform:SetPosition(inst.plant_target.Transform:GetWorldPosition())
 			inst.sg:GoToState("infest")
 		elseif dist <= CLOSE_DIST * CLOSE_DIST then
 

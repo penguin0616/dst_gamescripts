@@ -151,6 +151,10 @@ local function fn()
     inst.components.talker.ontalk = ontalk
 
     inst.speech_override_fn = speech_override_fn    
+    inst.scrapbook_anim = "scrapbook"
+
+    inst:AddComponent("pointofinterest")
+    inst.components.pointofinterest:SetHeight(-700)
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then

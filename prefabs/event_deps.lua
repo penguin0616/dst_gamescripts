@@ -218,7 +218,9 @@ local SPECIAL_EVENT_DEPS =
         {
             assets =
             {
-                
+                -- TODO(DiogoW): Wait until the new banner is ready.
+                --Asset("ANIM", "anim/dst_menu_rift3.zip"),
+                --Asset("PKGREF", "anim/dst_menu_meta2_cotl.zip"),
                 Asset("ANIM", "anim/dst_menu_meta2_cotl.zip"),
                 Asset("PKGREF", "anim/dst_menu_meta2.zip"),
                 Asset("PKGREF", "anim/dst_menu_rift2.zip"),

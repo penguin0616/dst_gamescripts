@@ -569,6 +569,10 @@ local function portalfn()
     inst.AnimState:PlayAnimation("stage_1_appear")
     inst.AnimState:PushAnimation("stage_1_loop", true)
 
+    inst.scrapbook_anim = "stage_3_loop"
+    inst.scrapbook_nodamage = true
+    inst.scrapbook_specialinfo = "LUNARRIFTPORTAL"
+
     inst.AnimState:SetLightOverride(1)
 
     inst.Light:SetIntensity(0.7)

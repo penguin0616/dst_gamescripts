@@ -183,6 +183,29 @@ local function DoPortalTint(inst, val)
     end
 end
 
+-- Talk functions
+local function CancelTalk_Override(inst, instant)
+	if inst.sg.statemem.talktask ~= nil then
+		inst.sg.statemem.talktask:Cancel()
+		inst.sg.statemem.talktask = nil
+		StopTalkSound(inst, instant)
+	end
+end
+
+local function OnTalk_Override(inst)
+	CancelTalk_Override(inst, true)
+	if DoTalkSound(inst) then
+		inst.sg.statemem.talktask = inst:DoTaskInTime(1.5 + math.random() * .5, CancelTalk_Override)
+	end
+	return true
+end
+
+local function OnDoneTalking_Override(inst)
+	CancelTalk_Override(inst)
+	return true
+end
+--
+
 local actionhandlers =
 {
     ActionHandler(ACTIONS.GOHOME, "gohome"),
@@ -300,6 +323,7 @@ local actionhandlers =
         end
     end),
     ActionHandler(ACTIONS.WATER_TOSS, "toss"),
+	ActionHandler(ACTIONS.SITON, "start_sitting"),
 }
 
 local events =
@@ -998,11 +1022,7 @@ local states =
         events =
         {
             EventHandler("ontalk", function(inst)
-                if inst.sg.statemem.talktask ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst, true)
-                end
+                CancelTalk_Override(inst, true)
                 if DoTalkSound(inst) then
                     inst.sg.statemem.talktask =
                         inst:DoTaskInTime(1.5 + math.random() * .5,
@@ -1037,10 +1057,8 @@ local states =
         },
 
         onexit = function(inst)
-            if not inst.sg.statemem.bowing and inst.sg.statemem.talktask ~= nil then
-                inst.sg.statemem.talktask:Cancel()
-                inst.sg.statemem.talktask = nil
-                StopTalkSound(inst)
+            if not inst.sg.statemem.bowing then
+                CancelTalk_Override(inst)
             end
         end,
     },
@@ -1070,11 +1088,7 @@ local states =
         events =
         {
             EventHandler("ontalk", function(inst)
-                if inst.sg.statemem.talktask ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst, true)
-                end
+                CancelTalk_Override(inst, true)
                 if DoTalkSound(inst) then
                     inst.sg.statemem.talktask =
                         inst:DoTaskInTime(1.5 + math.random() * .5,
@@ -1093,13 +1107,7 @@ local states =
             end),
         },
 
-        onexit = function(inst)
-            if inst.sg.statemem.talktask ~= nil then
-                inst.sg.statemem.talktask:Cancel()
-                inst.sg.statemem.talktask = nil
-                StopTalkSound(inst)
-            end
-        end,
+        onexit = CancelTalk_Override,
     },
 
     State{
@@ -2586,7 +2594,6 @@ local states =
 
         events =
         {
-
             EventHandler("animqueueover", function(inst)
                 local gfl = inst.getgeneralfriendlevel(inst)
                 inst.components.npc_talker:Say( STRINGS.HERMITCRAB_THROWBOTTLE[gfl][math.random(1,#STRINGS.HERMITCRAB_THROWBOTTLE[gfl])]  )
@@ -3224,11 +3231,11 @@ local states =
         name = "oceanfishing_cast",
         tags = { "prefish", "npc_fishing" },
         onenter = function(inst)
-            inst.components.timer:StartTimer("fishingtime",20+(math.random()*40))
+            inst.components.timer:StartTimer("fishingtime", (1 +(2 * math.random())) * TUNING.SEG_TIME )
 
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("fishing_ocean_pre")
-        inst.AnimState:PushAnimation("fishing_ocean_cast", false)
+            inst.AnimState:PushAnimation("fishing_ocean_cast", false)
             inst.AnimState:PushAnimation("fishing_ocean_cast_loop", true)
         end,
 
@@ -3304,7 +3311,8 @@ local states =
         ontimeout = function(inst)
             if inst.components.talker ~= nil then
                 inst.dotalkingtimers(inst)
-                inst.components.npc_talker:Say(STRINGS.HERMITCRAB_ANNOUNCE_OCEANFISHING_IDLE_QUOTE, nil, nil, true)
+                local fishing_idle_lines = STRINGS.HERMITCRAB_ANNOUNCE_OCEANFISHING_IDLE_QUOTE[math.random(#STRINGS.HERMITCRAB_ANNOUNCE_OCEANFISHING_IDLE_QUOTE)]
+                inst.components.npc_talker:Say(fishing_idle_lines, nil, nil, true)
 
                 inst.sg:SetTimeout(inst.sg.timeinstate + TUNING.OCEAN_FISHING.IDLE_QUOTE_TIME_MIN + math.random() * TUNING.OCEAN_FISHING.IDLE_QUOTE_TIME_VAR)
             end
@@ -3691,11 +3699,7 @@ local states =
         events =
         {
             EventHandler("ontalk", function(inst)
-                if inst.sg.statemem.talktask ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst, true)
-                end
+                CancelTalk_Override(inst, true)
                 if DoTalkSound(inst) then
                     inst.sg.statemem.talktask =
                         inst:DoTaskInTime(1.5 + math.random() * .5,
@@ -3719,13 +3723,7 @@ local states =
             end),
         },
 
-        onexit = function(inst)
-            if inst.sg.statemem.talktask ~= nil then
-                inst.sg.statemem.talktask:Cancel()
-                inst.sg.statemem.talktask = nil
-                StopTalkSound(inst)
-            end
-        end,
+        onexit = CancelTalk_Override,
     },
 
 
@@ -4094,11 +4092,389 @@ local states =
         end,
     },
 
+    -- SITTING ---------------------------------------------------------------
+    State{
+        name = "start_sitting",
+        tags = { "busy", "sitting" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+
+            local bufferedaction = inst:GetBufferedAction()
+            local chair = (bufferedaction and bufferedaction.target) or nil
+            if chair and chair:IsValid() then
+                inst.Transform:SetRotation(chair.Transform:GetRotation())
+                local sittable = chair.components.sittable
+                if inst:PerformBufferedAction() and sittable and sittable:IsOccupiedBy(inst) then
+                    inst:AddTag("sitting_on_chair")
+
+                    inst.sg.statemem.chair = chair
+
+                    inst.components.timer:StartTimer("sat_on_chair", TUNING.TOTAL_DAY_TIME)
+
+                    inst.sg.statemem.nofaced = chair:HasTag("limited_chair")
+                    if inst.sg.statemem.nofaced then
+                        inst.Transform:SetNoFaced()
+                        inst.AnimState:SetBankAndPlayAnimation("wilson_sit_nofaced", "sit_jump")
+                    else
+                        inst.AnimState:SetBankAndPlayAnimation("wilson_sit", "sit_jump")
+                    end
+
+                    inst.components.timer:StartTimer("sat_on_chair", TUNING.TOTAL_DAY_TIME)
+
+                    inst.sg.statemem.onremovechair = function(chair)
+                        inst.sg.statemem.chair = nil
+                        inst.sg.statemem.stop = true
+                        inst.sg:GoToState("stop_sitting_pst")
+                    end
+                    inst:ListenForEvent("onremove", inst.sg.statemem.onremovechair, chair)
+
+                    inst.sg.statemem.onbecomeunsittable = function(chair)
+                        inst.sg.statemem.sitting = true
+                        inst.sg.statemem.jumpoff = true
+                        inst.sg:GoToState("sit_jumpoff", {
+                            chair = inst.sg.statemem.chair,
+                            isphysicstoggle = inst.sg.statemem.isphysicstoggle,
+                        })
+                    end
+                    inst:ListenForEvent("becomeunsittable", inst.sg.statemem.onbecomeunsittable, chair)
+
+                    local rot = chair.Transform:GetRotation()
+                    inst.Transform:SetRotation(rot)
+                    local x, y, z = inst.Transform:GetWorldPosition()
+                    local x1, y1, z1 = chair.Transform:GetWorldPosition()
+                    local dx = x1 - x
+                    local dz = z1 - z
+                    if dx ~= 0 or dz ~= 0 then
+                        local dist = math.sqrt(dx * dx + dz * dz)
+                        local speed = dist * 30 / inst.AnimState:GetCurrentAnimationNumFrames()
+                        local dir = math.atan2(-dz, dx) - rot * DEGREES
+                        inst.Physics:SetMotorVel(speed * math.cos(dir), 0, -speed * math.sin(dir))
+                    end
+                    ToggleOffPhysics(inst)
+                else
+                    inst.sg:GoToState("idle")
+                end
+            else
+                inst:ClearBufferedAction()
+
+                inst.sg:GoToState("idle")
+            end
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg.statemem.sitting = true
+                    inst.sg:GoToState("sitting", {
+                        landed = true,
+                        chair = inst.sg.statemem.chair,
+                        onremovechair = inst.sg.statemem.onremovechair,
+                        onbecomeunsittable = inst.sg.statemem.onbecomeunsittable,
+                        isphysicstoggle = inst.sg.statemem.isphysicstoggle,
+                    })
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            inst.Physics:Stop()
+            if not inst.sg.statemem.sitting or inst.sg.statemem.jumpoff then
+                inst:RemoveTag("sitting_on_chair")
+                if inst.sg.statemem.nofaced then
+                    inst.Transform:SetFourFaced()
+                end
+            end
+            if not inst.sg.statemem.sitting then
+                if not inst.sg.statemem.stop then
+                    inst.AnimState:SetBank("wilson")
+                end
+                if inst.sg.statemem.isphysicstoggle then
+                    ToggleOnPhysics(inst)
+                end
+                local chair = inst.sg.statemem.chair
+                if chair and chair:IsValid() then
+                    inst:RemoveEventCallback("onremove", inst.sg.statemem.onremovechair, chair)
+                    inst:RemoveEventCallback("becomeunsittable", inst.sg.statemem.onbecomeunsittable, chair)
+
+                    local sittable = chair.components.sittable
+                    if sittable and sittable:IsOccupiedBy(inst) then
+                        sittable:SetOccupier(nil)
+                    end
+                end
+            end
+        end,
+    },
+
+	State{
+		name = "sitting",
+		tags = { "sitting" },
+
+		onenter = function(inst, data)
+			local chair, landed
+			if EntityScript.is_instance(data) then
+				chair = data
+			elseif data then
+				landed = data.landed
+				chair = data.chair
+				inst.sg.statemem.onremovechair = data.onremovechair
+				inst.sg.statemem.onbecomeunsittable = data.onbecomeunsittable
+				inst.sg.statemem.isphysicstoggle = data.isphysicstoggle
+			end
+
+			if not chair or not chair:IsValid() or not chair.components.sittable then
+				inst.sg.statemem.stop = true
+                inst.AnimState:SetBankAndPlayAnimation("wilson", "sit_off_pst")
+                inst.sg:GoToState("idle", true)
+				return
+			elseif not chair.components.sittable:IsOccupied() then
+				chair.components.sittable:SetOccupier(inst)
+			elseif not chair.components.sittable:IsOccupiedBy(inst) then
+				inst.sg.statemem.stop = true
+                inst.AnimState:SetBankAndPlayAnimation("wilson", "sit_off_pst")
+                inst.sg:GoToState("idle", true)
+				return
+			end
+
+			if not inst.sg.statemem.onremovechair then
+				inst.sg.statemem.onremovechair = function(_)
+					inst.sg.statemem.chair = nil
+					inst.sg.statemem.stop = true
+                    inst.AnimState:SetBankAndPlayAnimation("wilson", "sit_off_pst")
+                    inst.sg:GoToState("idle", true)
+				end
+				inst:ListenForEvent("onremove", inst.sg.statemem.onremovechair, chair)
+			end
+
+			if not inst.sg.statemem.onbecomeunsittable then
+				inst.sg.statemem.onbecomeunsittable = function(_chair)
+					inst.sg.statemem.sitting = true
+					inst.sg.statemem.jumpoff = true
+					inst.sg:GoToState("sit_jumpoff", {
+						chair = _chair,
+						isphysicstoggle = inst.sg.statemem.isphysicstoggle,
+					})
+				end
+				inst:ListenForEvent("becomeunsittable", inst.sg.statemem.onbecomeunsittable, chair)
+			end
+
+			if not inst.sg.statemem.isphysicstoggle then
+				ToggleOffPhysics(inst)
+			end
+
+			inst.components.locomotor:StopMoving()
+			inst.sg.statemem.chair = chair
+
+			local bank = "wilson_sit"
+			inst:AddTag("sitting_on_chair")
+			if chair:HasTag("limited_chair") then
+				inst.Transform:SetNoFaced()
+				bank = "wilson_sit_nofaced"
+			end
+
+			if landed then
+				inst.AnimState:SetBankAndPlayAnimation(bank, "sit_loop_pre")
+				inst.AnimState:PushAnimation("sit"..tostring(math.random(2)).."_loop")
+			else
+				inst.AnimState:SetBankAndPlayAnimation(bank, "sit"..tostring(math.random(2)).."_loop", true)
+			end
+			inst.Physics:Teleport(chair.Transform:GetWorldPosition())
+
+            inst.sg:SetTimeout((1 + 1.5 * math.random()) * TUNING.SEG_TIME)
+		end,
+
+		events =
+		{
+			EventHandler("ontalk", function(inst)
+				local duration = inst.sg.statemem.talktask ~= nil and GetTaskRemaining(inst.sg.statemem.talktask) or 1.5 + math.random() * .5
+				inst.AnimState:PlayAnimation("sit_dial", true)
+				if inst.sg.statemem.sittalktask then
+					inst.sg.statemem.sittalktask:Cancel()
+				end
+				inst.sg.statemem.sittalktask = inst:DoTaskInTime(duration, function(inst)
+					inst.sg.statemem.sittalktask = nil
+					if inst.AnimState:IsCurrentAnimation("sit_dial") then
+						inst.AnimState:PlayAnimation("sit"..tostring(math.random(2)).."_loop", true)
+					end
+				end)
+				return OnTalk_Override(inst)
+			end),
+			EventHandler("donetalking", function(inst)
+				if inst.sg.statemem.sittalktask then
+					inst.sg.statemem.sittalktask:Cancel()
+					inst.sg.statemem.sittalktask = nil
+					if inst.AnimState:IsCurrentAnimation("sit_dial") then
+						inst.AnimState:PlayAnimation("sit"..tostring(math.random(2)).."_loop", true)
+					end
+				end
+				return OnDoneTalking_Override(inst)
+			end),
+			EventHandler("equip", function(inst, data)
+				inst.AnimState:PlayAnimation(data.eslot == EQUIPSLOTS.HANDS and "sit_item_out" or "sit_item_hat")
+				inst.AnimState:PushAnimation("sit"..tostring(math.random(2)).."_loop")
+			end),
+			EventHandler("unequip", function(inst, data)
+				inst.AnimState:PlayAnimation(data.eslot == EQUIPSLOTS.HANDS and "sit_item_in" or "sit_item_hat")
+				inst.AnimState:PushAnimation("sit"..tostring(math.random(2)).."_loop")
+			end),
+			EventHandler("performaction", function(inst, data)
+				if data and data.action and data.action.action == ACTIONS.DROP then
+					inst.AnimState:PlayAnimation("sit_item_hat")
+					inst.AnimState:PushAnimation("sit"..tostring(math.random(2)).."_loop")
+				end
+			end),
+			EventHandler("locomote", function(inst, data)
+				if data and data.remoteoverridelocomote or inst.components.locomotor:WantsToMoveForward() then
+					inst.sg.statemem.sitting = true
+					inst.sg.statemem.stop = true
+					inst.sg:GoToState("sit_jumpoff", {
+						chair = inst.sg.statemem.chair,
+						isphysicstoggle = inst.sg.statemem.isphysicstoggle,
+					})
+				end
+			end),
+		},
+
+        ontimeout = function(inst)
+            inst.sg.statemem.sitting = true
+            inst.sg.statemem.stop = true
+            inst.sg:GoToState("sit_jumpoff", {
+                chair = inst.sg.statemem.chair,
+                isphysicstoggle = inst.sg.statemem.isphysicstoggle,
+            })
+        end,
+
+		onexit = function(inst)
+			local chair = inst.sg.statemem.chair
+			if chair then
+				inst:RemoveEventCallback("onremove", inst.sg.statemem.onremovechair, chair)
+				inst:RemoveEventCallback("becomeunsittable", inst.sg.statemem.onbecomeunsittable, chair)
+			end
+			if not inst.sg.statemem.sitting or inst.sg.statemem.jumpoff then
+				inst:RemoveTag("sitting_on_chair")
+				inst.Transform:SetFourFaced()
+			end
+			if not inst.sg.statemem.sitting then
+				if not inst.sg.statemem.stop then
+					inst.AnimState:SetBank("wilson")
+				end
+				if inst.sg.statemem.isphysicstoggle then
+					ToggleOnPhysics(inst)
+				end
+				if chair and chair:IsValid() then
+                    local sittable = chair.components.sittable
+					if sittable and sittable:IsOccupiedBy(inst) then
+						sittable:SetOccupier(nil)
+					end
+					local radius = inst:GetPhysicsRadius(0) + chair:GetPhysicsRadius(0)
+					if radius > 0 then
+						local x, y, z = inst.Transform:GetWorldPosition()
+						local x1, y1, z1 = chair.Transform:GetWorldPosition()
+						if x == x1 and z == z1 then
+							local rot = inst.Transform:GetRotation() * DEGREES
+							x = x1 + radius * math.cos(rot)
+							z = z1 - radius * math.sin(rot)
+							if TheWorld.Map:IsPassableAtPoint(x, 0, z, true) then
+								inst.Physics:Teleport(x, 0, z)
+							end
+						end
+					end
+				end
+			end
+			if inst.sg.statemem.sittalktask then
+				inst.sg.statemem.sittalktask:Cancel()
+			end
+			CancelTalk_Override(inst)
+		end,
+	},
+
+	State{
+		name = "sit_jumpoff",
+		tags = { "busy", "nopredict", "sitting" },
+
+		onenter = function(inst, data)
+			local chair
+			if EntityScript.is_instance(data) then
+				chair = data
+			elseif data then
+				chair = data.chair
+				inst.sg.statemem.isphysicstoggle = data.isphysicstoggle
+			end
+
+			if not chair or not chair:IsValid() then
+				inst.sg.statemem.stop = true
+                inst.AnimState:SetBankAndPlayAnimation("wilson", "sit_off_pst")
+                if inst.components.locomotor:WantsToMoveForward() then
+                    inst.sg:GoToState("walk_start")
+                else
+                    inst.sg:GoToState("idle", true)
+                end
+				return
+			end
+			if not inst.sg.statemem.isphysicstoggle then
+				ToggleOffPhysics(inst)
+			end
+			inst.sg.statemem.chair = chair
+
+			inst.components.locomotor:StopMoving()
+
+			inst.AnimState:SetBankAndPlayAnimation("wilson", "sit_jump_off")
+			local radius = inst:GetPhysicsRadius(0) + chair:GetPhysicsRadius(0)
+			if radius > 0 then
+				inst.Physics:SetMotorVel(radius * 30 / inst.AnimState:GetCurrentAnimationNumFrames(), 0, 0)
+				if inst:IsOnPassablePoint() then
+					inst.sg.statemem.safepos = inst:GetPosition()
+				end
+			end
+		end,
+
+		onupdate = function(inst)
+			local safepos = inst.sg.statemem.safepos
+			if safepos and inst:IsOnPassablePoint() then
+				safepos.x, safepos.y, safepos.z = inst.Transform:GetWorldPosition()
+			end
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					if inst.sg.statemem.safepos and not inst:IsOnPassablePoint() then
+						inst.Physics:Teleport(inst.sg.statemem.safepos.x, 0, inst.sg.statemem.safepos.z)
+					end
+					inst.sg.statemem.stop = true
+                    inst.AnimState:SetBankAndPlayAnimation("wilson", "sit_off_pst")
+
+                    if inst.components.locomotor:WantsToMoveForward() then
+                        inst.sg:GoToState("walk_start")
+                    else
+                        inst.sg:GoToState("idle", true)
+                    end
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			inst:RemoveTag("sitting_on_chair")
+			inst.Transform:SetFourFaced()
+			if not inst.sg.statemem.stop then
+				inst.AnimState:SetBank("wilson")
+			end
+			if inst.sg.statemem.isphysicstoggle then
+				ToggleOnPhysics(inst)
+			end
+			local chair = inst.sg.statemem.chair
+			if chair and chair:IsValid() and
+                chair.components.sittable and chair.components.sittable:IsOccupiedBy(inst) then
+				--
+				chair.components.sittable:SetOccupier(nil)
+			end
+		end,
+	},
+	--------------------------------------------------------------------------
 }
 
-local function landed_in_water_state(inst)
-    return (inst.components.drownable ~= nil and inst.components.drownable:ShouldDrown() and "sink") or nil
-end
 CommonStates.AddSimpleState(states, "refuse", "idle_loop", { "busy" })
 CommonStates.AddSimpleActionState(states, "gohome", "pickup", 4 * FRAMES, { "busy", "ishome" })
 CommonStates.AddSimpleActionState(states, "pickup", "pickup", 10 * FRAMES, { "busy" })

@@ -247,6 +247,13 @@ local function makesculpture(name, physics_radius, scale, second_piece_name)
         inst:SetPrefabName("sculpture_"..name.."body")
         inst.MiniMapEntity:SetIcon(inst.prefab.."_fixed.png")
 
+        inst.scrapbook_anim = "full"
+        inst.scrapbook_specialinfo = "SCULPTURE"
+
+        if not second_piece_name then
+            inst:AddComponent("pointofinterest")
+        end
+
         inst.entity:SetPristine()
 
         if not TheWorld.ismastersim then

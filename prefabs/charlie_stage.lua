@@ -367,6 +367,8 @@ local function fn()
     inst:AddTag("DECOR")
     inst:AddTag("NOCLICK")
 
+    inst.scrapbook_specialinfo = "CHARLIESTAGE"
+
     inst:DoTaskInTime(0, setup_stage_temptile_test)
 
     inst.entity:SetPristine()
@@ -450,6 +452,9 @@ local function postfn()
 
     inst._musictype = net_tinybyte(inst.GUID, "charlie_stage._musictype")
     inst._musictype:set_local(0)
+
+    inst:AddComponent("pointofinterest")
+    inst.components.pointofinterest:SetHeight(-475)
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then

@@ -522,6 +522,10 @@ return{
 	ANNOUNCE_HUNT_BEAST_NEARBY = "Prints!",
 	ANNOUNCE_HUNT_LOST_TRAIL = "Prints gone",
 	ANNOUNCE_HUNT_LOST_TRAIL_SPRING = "Prints gone",
+    ANNOUNCE_HUNT_START_FORK = "To big scary!",
+    ANNOUNCE_HUNT_SUCCESSFUL_FORK = "Found big scary!",
+    ANNOUNCE_HUNT_WRONG_FORK = "Big scary found first",
+    ANNOUNCE_HUNT_AVOID_FORK = "No big scary this way",
 	ANNOUNCE_INV_FULL = "Too much stuff",
 	ANNOUNCE_KNOCKEDOUT = "Wha--?",
 	ANNOUNCE_LOWRESEARCH = "Learned stuff",
@@ -894,6 +898,8 @@ return{
     ANNOUNCE_SHADOW_RIFT_MAX = "Glowy!",
 
     ANNOUNCE_SCRAPBOOK_FULL = "Book filled up!",
+
+    ANNOUNCE_CHAIR_ON_FIRE = "This fine",
 
     ANNOUNCE_COACH = 
     {
@@ -4913,6 +4919,105 @@ return{
 		SUPPORT_PILLAR_DREADSTONE_BROKEN = "Goodbye, tall rocks",
 
         WOLFGANG_WHISTLE = "Muscle man's tweet-maker",
+
+        -- Rifts 3
+
+        MUTATEDDEERCLOPS = "Branch head? What in eye?",
+        MUTATEDWARG = "Wierd Woofer",
+        MUTATEDBEARGER = "Scary fuzzy big and mean and stinky",
+
+        LUNARFROG = "Ribbit?",
+
+        DEERCLOPSCORPSE =
+        {
+            GENERIC  = "Branch head dead",
+            BURNING  = "Branch head burning",
+            REVIVING = "Branch head back. Uh oh",
+        },
+
+        WARGCORPSE =
+        {
+            GENERIC  = "Woofer stay. Good Woofer",
+            BURNING  = "Bye bye forever, Woofer",
+            REVIVING = "No no no. Bad Wooofer!",
+        },
+
+        BEARGERCORPSE =
+        {
+            GENERIC  = "Fuzzy sleeping?",
+            BURNING  = "Fuzzy on fire!",
+            REVIVING = "Stay gone fuzzy! Stay gone!",
+        },
+
+        BEARGERFUR_SACK = "Carry belly stuff. Thanks Fuzzy!",
+        HOUNDSTOOTH_BLOWPIPE = "Toothy ptooey",
+        DEERCLOPSEYEBALL_SENTRYWARD =
+        {
+            GENERIC = "Branch head eye make cold",    -- Enabled.
+            NOEYEBALL = "Where branch head eye?",  -- Disabled.
+        },
+
+        SECURITY_PULSE_CAGE = "Big nothing",
+        SECURITY_PULSE_CAGE_FULL = "Hello, pretty light ball",
+
+		CARPENTRY_STATION =
+        {
+            GENERIC = "Ooh, sharp",
+            BURNT = "Oops, burnt",
+        },
+
+        WOOD_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "Empty table",
+            HAS_ITEM = "Table full",
+            BURNT = "Oh. Bye bye",
+        },
+
+        WOOD_CHAIR =
+        {
+            GENERIC = "Sit Place",
+            OCCUPIED = "That okay! Will sit somewhere else",
+            BURNT = "Oh no!",
+        },
+
+        DECOR_CENTERPIECE = "Hm. Hmmmmm. Art",
+        DECOR_LAMP = "Little light",
+        DECOR_FLOWERVASE =
+        {
+            GENERIC = "Little home for little friend",
+            EMPTY = "Needs friend for cup",
+            WILTED = "Sick, Friend?",
+            FRESHLIGHT = "Light Friend looks good!",
+            OLDLIGHT = "Sick, Light Friend?",
+        },
+        DECOR_PICTUREFRAME =
+        {
+            GENERIC = "Huh? Not real!",
+            UNDRAWN = "Nothing inside",
+        },
+        DECOR_PORTRAITFRAME = "Oh! Hello!",
+
+        PHONOGRAPH = "Singing box",
+        RECORD = "Forever song",
+        RECORD_CREEPYFOREST = "Friend song!",
+        RECORD_DANGER = "Scary time",
+        RECORD_DAWN = "Good Morning!",
+        RECORD_DRSTYLE = "Bouncy!",
+        RECORD_DUSK = "Night night",
+        RECORD_EFS = "Bouncy!",
+        RECORD_END = "Bye bye",
+        RECORD_MAIN = "Happy sad",
+        RECORD_WORKTOBEDONE = "Busy busy",
+
+        ARCHIVE_ORCHESTRINA_MAIN = "Singing floor",
+
+        WAGPUNKHAT = "Just like robot friend!",
+        ARMORWAGPUNK = "Be strong like robot friend!",
+        WAGSTAFF_MACHINERY = "Lonely stuff",
+        WAGPUNK_BITS = "Robot buildy bits?",
+        WAGPUNKBITS_KIT = "Robot clothes fixer",
+
+        WAGSTAFF_MUTATIONS_NOTE = "Book leaf?",
     },
 
     DESCRIBE_GENERIC = "Friend?",

@@ -148,6 +148,9 @@ local function basefn()
     inst.AnimState:SetBuild("mastupgrade_lightningrod")
     inst.AnimState:PlayAnimation("base")
 
+    inst.scrapbook_anim = "top"
+    inst.scrapbook_specialinfo = "MASTUPGRADELIGHTNINGCONDUCTOR"
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then

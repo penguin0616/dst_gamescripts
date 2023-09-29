@@ -302,15 +302,17 @@ end
 
 local function OnLoad(inst, data)
     --print("OnLoad", inst, data.ispet)
-    if data ~= nil and data.ispet then
-        inst:AddTag("pet_hound")
-        if inst.sg ~= nil then
-            inst.sg:GoToState("idle")
-        end
-    end
-    if data ~= nil and data.hedgeitem then
-        inst.hedgeitem = data.hedgeitem        
-    end
+	if data ~= nil then
+		if data.ispet then
+			inst:AddTag("pet_hound")
+			if inst.sg ~= nil then
+				inst.sg:GoToState("idle")
+			end
+		end
+		if data.hedgeitem then
+			inst.hedgeitem = data.hedgeitem
+		end
+	end
 end
 
 local function GetStatus(inst)
@@ -397,6 +399,9 @@ local function OnStopFollowing(inst)
 end
 
 local function CanMutateFromCorpse(inst)
+	if inst.forcemutate then
+		return true
+	end
     if not TUNING.SPAWN_MUTATED_HOUNDS then return false end
 	if (inst.components.amphibiouscreature == nil or not inst.components.amphibiouscreature.in_water)
 		and math.random() <= TUNING.MUTATEDHOUND_SPAWN_CHANCE then
@@ -405,6 +410,19 @@ local function CanMutateFromCorpse(inst)
 		return TheWorld.Map:IsInLunacyArea(x, y, z)
 	end
 	return false
+end
+
+local function OnChangedLeader(inst, new, old)
+	--ignore if new is nil, (always nil upon death)
+	if new ~= nil then
+		if new.prefab == "mutatedwarg" then
+			inst.forcemutate = true
+			inst.components.follower:KeepLeaderOnAttacked()
+		else
+			inst.forcemutate = nil
+			inst.components.follower:LoseLeaderOnAttacked()
+		end
+	end
 end
 
 local function fncommon(bank, build, morphlist, custombrain, tag, data)
@@ -456,6 +474,9 @@ local function fncommon(bank, build, morphlist, custombrain, tag, data)
         return inst
     end
 
+    -- NOTE(DiogoW): Ignore original dependencies.
+    inst.scrapbook_deps = { }
+
 	inst._CanMutateFromCorpse = data.canmutatefn
 
 	inst.sounds = sounds
@@ -497,6 +518,8 @@ local function fncommon(bank, build, morphlist, custombrain, tag, data)
     inst:SetBrain(custombrain or brain)
 
     inst:AddComponent("follower")
+	inst.components.follower.OnChangedLeader = OnChangedLeader
+
     inst:AddComponent("entitytracker")
 
     inst:AddComponent("health")
@@ -562,11 +585,11 @@ end
 local function fndefault()
     local inst = fncommon("hound", "hound_ocean", { "firehound", "icehound" }, nil, nil, {amphibious = true, canmutatefn = CanMutateFromCorpse})
 
-    inst.scrapbook_removedeps = {"bluegem", "redgem"}
-
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst.scrapbook_deps = { "gargoyle_hounddeath" }
 
     MakeMediumFreezableCharacter(inst, "hound_body")
     MakeMediumBurnableCharacter(inst, "hound_body")
@@ -584,11 +607,11 @@ end
 local function fnfire()
     local inst = fncommon("hound", "hound_red_ocean", { "hound", "icehound" }, nil, nil, {amphibious = true})
 
-    inst.scrapbook_removedeps = {"bluegem"}
-
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst.scrapbook_deps = { "gargoyle_hounddeath" }
 
     MakeMediumFreezableCharacter(inst, "hound_body")
     inst.components.freezable:SetResistance(4) --because fire
@@ -624,11 +647,11 @@ end
 local function fncold()
     local inst = fncommon("hound", "hound_ice_ocean", { "firehound", "hound" }, nil, nil, {amphibious = true})
 
-    inst.scrapbook_removedeps = {"redgem"}
-
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst.scrapbook_deps = { "gargoyle_hounddeath" }
 
     MakeMediumBurnableCharacter(inst, "hound_body")
 
@@ -728,8 +751,6 @@ local function fnmutated()
     local inst = fncommon("hound", "hound_mutated", nil, nil, "hound_mutated", {amphibious = true})
     
     inst:AddTag("lunar_aligned")
-
-    inst.scrapbook_removedeps = {"redgem","bluegem"}
 
     if not TheWorld.ismastersim then
         return inst

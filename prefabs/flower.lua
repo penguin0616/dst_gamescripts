@@ -165,6 +165,9 @@ function rosefn()
     local inst = commonfn()
 
     inst:SetPrefabName("flower")
+    inst.scrapbook_anim = "rose"
+    inst.scrapbook_damage = TUNING.ROSE_DAMAGE
+    inst.scrapbook_speechname = "FLOWER"
 
     if not TheWorld.ismastersim then
         return inst

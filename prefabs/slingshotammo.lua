@@ -270,6 +270,7 @@ local function inv_fn(ammo_def)
     return inst
 end
 
+-- NOTE(DiogoW): Add an entry to SCRAPBOOK_DEPS table in prefabs/slingshot.lua when adding a new ammo.
 local ammo =
 {
 	{
