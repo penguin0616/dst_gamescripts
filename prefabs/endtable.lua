@@ -174,6 +174,20 @@ local function getstatus(inst)
         or nil
 end
 
+--
+local function OnLongUpdate(inst, dt)
+    if inst.task then
+        local time_remaining = GetTaskRemaining(inst.task) - dt
+        inst.task:Cancel()
+
+        if time_remaining > 0 then
+            inst.task = inst:DoTaskInTime(time_remaining, WiltFlower)
+        else
+            WiltFlower(inst)
+        end
+    end
+end
+
 local function onsave(inst, data)
     if inst.components.burnable ~= nil and inst.components.burnable:IsBurning() or inst:HasTag("burnt") then
         data.burnt = true
@@ -262,6 +276,7 @@ local function fn()
     inst:ListenForEvent("onbuilt", onbuilt)
 	inst:ListenForEvent("ondeconstructstructure", ondeconstructstructure)
 
+    inst.OnLongUpdate = OnLongUpdate
     inst.OnSave = onsave
     inst.OnLoad = onload
 

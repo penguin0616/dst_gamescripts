@@ -3774,6 +3774,7 @@ STRINGS =
 
         BEARGERFUR_SACK = "Polar Bearger Bin",
         DEERCLOPSEYEBALL_SENTRYWARD = "Ice Crystaleyezer",
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "Ice Crystaleyezer Kit",
         HOUNDSTOOTH_BLOWPIPE = "Howlitzer",
 
         SECURITY_PULSE_CAGE = "Spark Ark",
@@ -4752,7 +4753,7 @@ STRINGS =
         -- Rifts 3
 
         BEARGERFUR_SACK = "A portable fridge. Cool.",
-        DEERCLOPSEYEBALL_SENTRYWARD = "Take a break from sunburn with freezer burn.",
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "Take a break from sunburn with freezer burn.",
         HOUNDSTOOTH_BLOWPIPE = "Like biting, but from a distance.",
 
         CARPENTRY_STATION = "Quit horsing around and make some furniture.",
@@ -15452,9 +15453,9 @@ STRINGS.SCRAPBOOK = {
         BEEQUEENHIVE = "This enormous and extremely pokable beehive is packed with sweet honey and other surprises.",
         MULTIPLAYERPORTAL = "Enter and re-enter the amazing Constant again and again through this perennial portal.",
         ARMORWAGPUNK = "\"Well, A Rather Beautifully Intelligent System.\" Uses a complicated assortment of cogs and circuitry for computing.\n\nOnce a target has been selected, as long as it stays in range, the W.A.R.B.I.S. begins calculating optimal performance to fight the target.\n\nThe armor improves the wearer's speed as it analyzes the target, ending at a 30% speed boost.\n\nWhen combined with the W.A.R.B.I.S. headgear, the two will sync up for a few moments sharing target information.",
-        WAGPUNKHAT   = "\"Well, A Rather Beautifully Intelligent System.\" Uses a complicated assortment of cogs and circuitry for computing.\n\nOnce a target has been selected, as long as it stays in range, the W.A.R.B.I.S. begins calculating optimal performance to fight the target.\n\nThe head gear improves the wearer's damage as it analyzes the target, ending at a 40% damage increase.\n\nWhen combined with the W.A.R.B.I.S. armor, the two will sync up for a few moments sharing target information.\n\nWearing the W.A.R.B.I.S. Head Gear also provides the wearer with a Dramatically Updating Diagram (or D.U.D.) which provides information on which target is currently being analyzed and what level the W.A.R.B.I.S. has reached.",
+        WAGPUNKHAT   = "\"Well, A Rather Beautifully Intelligent System.\" Uses a complicated assortment of cogs and circuitry for computing.\n\nOnce a target has been selected, as long as it stays in range, the W.A.R.B.I.S. begins calculating optimal performance to fight the target.\n\nThe head gear improves the wearer's damage as it analyzes the target, ending at a 20% damage increase.\n\nWhen combined with the W.A.R.B.I.S. armor, the two will sync up for a few moments sharing target information.\n\nWearing the W.A.R.B.I.S. Head Gear also provides the wearer with a Dramatically Updating Diagram (or D.U.D.) which provides information on which target is currently being analyzed and what level the W.A.R.B.I.S. has reached.",
         WAGSTAFF_MACHINERY = "Seems like someone was just working here. Whatever they were making, I guess they finished it.",
-        WAGSTAFF_MUTATIONS_NOTE = "\n\"Day 56 - Lunar Mutations Study\"\n\n\"It seems as though these strange entities that emerged from the rifts are in search of living hosts... or perhaps once living.\"\n\n\"NOTE: The following creatures warrant immediate study as I suspect they may be the most viable as hosts:\"\n\n• Frog\n• Penguin\n• Warg\n• Koalefant\n• Deerclops\n\n\"Other possible Rift entity host candidates:\"\n\n• Grass Gekko\n• Hound\n• Bearger\n• Mosling\n",
+        WAGSTAFF_MUTATIONS_NOTE = "\n\"Day 56 - Lunar Mutations Study\"\n\n\"It seems as though these strange entities that emerged from the rifts are in search of living hosts... or perhaps once living.\"\n\n\"NOTE: The following creatures warrant immediate study as I suspect they may be the most viable as hosts:\"\n\n• Frog\n• Pengull\n• Varg\n• Koalefant\n• Deerclops\n\n\"Other possible Rift entity host candidates:\"\n\n• Grass Gekko\n• Hound\n• Bearger\n• Mosling\n",
 
     },
 

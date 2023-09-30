@@ -30,6 +30,11 @@ local function MakeDecorItem(name, bank, build, data)
 
         inst:AddTag("furnituredecor") -- From "furnituredecor", for optimization
 
+        local float = data.float
+        if float then
+            MakeInventoryFloatable(inst, float[1], float[2], float[3])
+        end
+
         if data.common_postinit then
             data.common_postinit(inst)
         end
@@ -76,8 +81,18 @@ local function MakeDecorItem(name, bank, build, data)
 end
 
 local decor_items = {}
-table.insert(decor_items, MakeDecorItem("decor_centerpiece", "decor_centerpiece"))
-table.insert(decor_items, MakeDecorItem("decor_portraitframe", "decor_portraitframe"))
+
+local CENTERPIECE_DATA =
+{
+    float = {"med", 0.05, 0.68},
+}
+table.insert(decor_items, MakeDecorItem("decor_centerpiece", "decor_centerpiece", nil, CENTERPIECE_DATA))
+
+local PORTRAITFRAME_DATA =
+{
+    float = {"med", 0.05, 0.64},
+}
+table.insert(decor_items, MakeDecorItem("decor_portraitframe", "decor_portraitframe", nil, PORTRAITFRAME_DATA))
 
 --
 return unpack(decor_items)

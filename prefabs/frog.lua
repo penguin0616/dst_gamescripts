@@ -52,7 +52,7 @@ local LUNAR_SOUNDS = {
 
 local RETARGET_MUST_TAGS = { "_combat", "_health" }
 local RETARGET_CANT_TAGS = { "merm" }
-local LUNAR_RETARGET_CANT_TAGS = { "lunar_aligned" }
+local LUNAR_RETARGET_CANT_TAGS = { "merm", "lunar_aligned" }
 
 local function retargetfn(inst)
     if not inst.components.health:IsDead() and not inst.components.sleeper:IsAsleep() then

@@ -13,7 +13,7 @@ local prefabs =
 local AOE_RANGE = 0.9
 local AOE_RANGE_PADDING = 3
 local AOE_TARGET_TAGS = { "_combat" }
-local AOE_TARGET_CANT_TAGS = { "INLIMBO", "flight", "invisible", "lunar_aligned" }
+local AOE_TARGET_CANT_TAGS = { "INLIMBO", "flight", "invisible", "playerghost", "lunar_aligned" }
 local MULTIHIT_FRAMES = 10
 
 local function OnUpdateHitbox(inst)

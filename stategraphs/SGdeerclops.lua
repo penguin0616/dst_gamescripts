@@ -606,6 +606,8 @@ local states =
 
             if inst.bufferedaction and inst.bufferedaction.action == ACTIONS.GOHOME then
                 inst:PerformBufferedAction()
+			else
+				inst.components.combat.battlecryenabled = false
             end
         end,
 
@@ -751,7 +753,7 @@ local states =
 			FrameEvent(5, function(inst) SetLightValue(inst, 1.045) end),
 			FrameEvent(6, function(inst) SetLightValue(inst, 1.07) end),
 			FrameEvent(32, function(inst)
-				if IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
+				if inst.yule then
 					local player--[[, rangesq]] = inst:GetNearestPlayer()
 					LaunchAt(SpawnPrefab("winter_ornament_light1"), inst, player, 1, 6, .5)
 					inst.SoundEmitter:PlaySound("dontstarve/wilson/equip_item_gold")
@@ -834,7 +836,7 @@ local states =
 			end
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("corpse")
-			if loading and IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) and inst.looted ~= 2 then
+			if loading and inst.yule and inst.looted ~= 2 then
 				inst.components.lootdropper:SpawnLootPrefab("winter_ornament_light1")
 				inst.looted = 2
 			end
@@ -844,7 +846,7 @@ local states =
 		{
 			--delay 1 frame in case we are loading
 			FrameEvent(1, function(inst)
-				local corpse = not inst:HasTag("lunar_aligned") and TheWorld.components.lunarriftmutationsmanager:TryMutate(inst, "deerclopscorpse") or nil
+				local corpse = not inst:HasTag("lunar_aligned") and TheWorld.components.lunarriftmutationsmanager ~= nil and TheWorld.components.lunarriftmutationsmanager:TryMutate(inst, "deerclopscorpse") or nil
 				if corpse == nil then
 					inst:AddTag("NOCLICK")
 					inst.persists = false
@@ -861,7 +863,7 @@ local states =
 							inst.components.burnable:KillFX()
 						end
 					end
-				elseif IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
+				elseif inst.yule then
 					corpse:SetAltBuild("yule")
 				end
 			end),

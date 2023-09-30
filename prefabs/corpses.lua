@@ -192,6 +192,7 @@ local function MakeCreatureCorpse(data)
 
         inst.StartMutation = StartMutation
         inst.SpawnGestalt = SpawnGestalt
+        inst.SetAltBuild = SetAltBuild
 
         inst:AddComponent("entitytracker")
 
@@ -210,9 +211,10 @@ local function MakeCreatureCorpse(data)
             inst:DoTaskInTime(0, inst.SpawnGestalt)
         end
 
-        inst.SetAltBuild = SetAltBuild
         inst.OnSave = OnSave
         inst.OnLoad = OnLoad
+
+        inst.OnEntitySleep = inst.Remove
 
         MakeHauntableIgnite(inst)
 

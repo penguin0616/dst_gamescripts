@@ -59,7 +59,7 @@ local function fn()
     inst:AddTag("cattoy")
     inst:AddTag("phonograph_record")
 
-    MakeInventoryFloatable(inst, "med", 0.05, 0.68)
+    MakeInventoryFloatable(inst, "med", 0.02, 0.7)
 
     inst.entity:SetPristine()
 

@@ -286,10 +286,12 @@ function Temperature:OnUpdate(dt, applyhealthdelta)
     -- Can override range, e.g. in special containers
     local mintemp = self.mintemp
     local maxtemp = self.maxtemp
-    local ambient_temperature = GetTemperatureAtXZ(x, z)
-
+    
     local owner = self.inst.components.inventoryitem ~= nil and self.inst.components.inventoryitem.owner or nil
     local inside_pocket_container = owner ~= nil and owner:HasTag("pocketdimension_container")
+
+    local ambient_temperature = inside_pocket_container and TheWorld.state.temperature or GetTemperatureAtXZ(x, z)
+
     if owner ~= nil and owner:HasTag("fridge") and not owner:HasTag("nocool") then
         -- Inside a fridge, excluding icepack ("nocool")
         -- Don't cool it below freezing unless ambient temperature is below freezing

@@ -437,20 +437,20 @@ local function commonfn(build, commonfn)
     return inst
 end
 
-local function normalcommonfn(inst)
-    if IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
-        inst.entity:AddLight()
-        inst.Light:SetIntensity(.6)
-        inst.Light:SetRadius(8)
-        inst.Light:SetFalloff(3)
-        inst.Light:SetColour(1, 0, 0)
-    end
+local function yulecommonfn(inst)
+	inst.entity:AddLight()
+	inst.Light:SetIntensity(.6)
+	inst.Light:SetRadius(8)
+	inst.Light:SetFalloff(3)
+	inst.Light:SetColour(1, 0, 0)
 end
 
 local function normalfn()
     local yule = IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST)
 
-    local inst = commonfn(yule and "deerclops_yule" or "deerclops_build", normalcommonfn)
+	local inst = yule and
+		commonfn("deerclops_yule", yulecommonfn) or
+		commonfn("deerclops_build")
 
     if not TheWorld.ismastersim then
         return inst
@@ -474,6 +474,7 @@ local function normalfn()
 	MakeHugeFreezableCharacter(inst, "deerclops_body")
 
     if yule then
+		inst.yule = true
 		inst.haslaserbeam = true
 
         inst:AddComponent("timer")

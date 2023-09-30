@@ -669,7 +669,7 @@ Recipe2("shovel_lunarplant",				{Ingredient("purebrilliance", 1), Ingredient("lu
 Recipe2("lunarplant_kit",					{Ingredient("purebrilliance", 1), Ingredient("lunarplant_husk", 1)},									TECH.LUNARFORGING_TWO, {nounlock=true, station_tag="lunar_forge"})
 
 Recipe2("beargerfur_sack",					{Ingredient("security_pulse_cage_full", 1), Ingredient("bearger_fur", 1),     Ingredient("purebrilliance", 3), Ingredient("moonrocknugget", 5)}, 	TECH.LUNARFORGING_TWO, {nounlock=true, station_tag="lunar_forge"})
-Recipe2("deerclopseyeball_sentryward",		{Ingredient("security_pulse_cage_full", 1), Ingredient("moonglass", 8),      Ingredient("purebrilliance", 5), Ingredient("moonrocknugget", 3)},  	TECH.LUNARFORGING_TWO, {nounlock=true, station_tag="lunar_forge", placer="deerclopseyeball_sentryward_placer", min_spacing=1.5, testfn = function(pt) return TheWorld.Map:IsSurroundedByLand(pt.x, 0, pt.z, 3.5) end })
+Recipe2("deerclopseyeball_sentryward_kit",	{Ingredient("security_pulse_cage_full", 1), Ingredient("moonglass", 8),      Ingredient("purebrilliance", 5), Ingredient("moonrocknugget", 3)},  	TECH.LUNARFORGING_TWO, {nounlock=true, station_tag="lunar_forge"})
 Recipe2("houndstooth_blowpipe",				{Ingredient("security_pulse_cage_full", 1), Ingredient("lunarplant_husk", 3), Ingredient("purebrilliance", 3), Ingredient("moonrocknugget", 3)}, 	TECH.LUNARFORGING_TWO, {nounlock=true, station_tag="lunar_forge"})
 
 Recipe2("wagpunkhat",						{Ingredient("wagpunk_bits", 8), Ingredient("transistor", 3), Ingredient("alterguardianhatshard", 1)},	TECH.LOST)
@@ -962,6 +962,7 @@ Recipe("shieldofterror",                {Ingredient("gears", 2), Ingredient("nig
 Recipe("potatosack",                    {Ingredient("cutgrass", 2), Ingredient("rocks", 3)}, nil, TECH.LOST, nil, nil, true)
 Recipe("lunar_forge",					{Ingredient("moonrocknugget", 5), Ingredient("moonglass", 5), Ingredient("purebrilliance", 1)}, nil, TECH.LOST, nil, nil, true)
 Recipe("shadow_forge",					{Ingredient("nightmarefuel", 5), Ingredient("dreadstone", 2), Ingredient("horrorfuel", 1)}, nil, TECH.LOST, nil, nil, true)
+Recipe("deerclopseyeball_sentryward",   {Ingredient("moonglass", 8), Ingredient("purebrilliance", 5), Ingredient("moonrocknugget", 3)}, nil, TECH.LOST, nil, nil, true)
 
 --WILSON TRANSMUTATION
 Recipe2("transmute_log",                {Ingredient("twigs", 3)}, 	TECH.NONE, 				{product="log", image="log.tex",     builder_tag="alchemist", description="transmute_log"})

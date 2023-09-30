@@ -155,6 +155,20 @@ local function onburnt(inst)
     DefaultBurntFn(inst)
 end
 
+--
+local function OnLongUpdate(inst, dt)
+    if inst._wilttask then
+        local time_remaining = GetTaskRemaining(inst._wilttask) - dt
+        inst._wilttask:Cancel()
+
+        if time_remaining > 0 then
+            inst._wilttask = inst:DoTaskInTime(time_remaining, flower_vase_wilt_flower)
+        else
+            flower_vase_wilt_flower(inst)
+        end
+    end
+end
+
 -- SAVE/LOAD
 local function OnSave(inst, data)
     data.flower_id = inst._flower_id
@@ -202,6 +216,8 @@ local function fn()
     inst.Light:SetColour(169/255, 231/255, 245/255)
     inst.Light:Enable(false)
 
+    MakeInventoryFloatable(inst, "small", 0.05, 0.65)
+
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst
@@ -244,6 +260,7 @@ local function fn()
     MakeSmallPropagator(inst)
 
     --
+    inst.OnLongUpdate = OnLongUpdate
     inst.OnSave = OnSave
     inst.OnLoad = OnLoad
 

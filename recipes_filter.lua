@@ -346,7 +346,7 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"lunarplant_kit",
 
 	"beargerfur_sack",
-	"deerclopseyeball_sentryward",
+	"deerclopseyeball_sentryward_kit",
 	"houndstooth_blowpipe",
 
 	----SHADOW_FORGE----

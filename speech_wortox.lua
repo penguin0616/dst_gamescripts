@@ -4958,6 +4958,7 @@ return{
             GENERIC = "What the eye sees stays icy! Hyuyu!",    -- Enabled.
             NOEYEBALL = "It turned a blind eye!",  -- Disabled.
         },
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "I'll keep my eye on the prize, hyuyu!",
 
         SECURITY_PULSE_CAGE = "It's orbless, more or less.",
         SECURITY_PULSE_CAGE_FULL = "It absorbed the orb!",

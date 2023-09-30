@@ -249,7 +249,7 @@ end)
 function Lunarthrall_plantspawner:MoveGestaltToPlant(thrall)
     local target = thrall.plant_target
 
-    local pos = target and target:GetPosition() or nil
+    local pos = target ~= nil and target:IsValid() and target:GetPosition() or nil
 
     if not pos then
         thrall:Remove()

@@ -1396,7 +1396,7 @@ local states =
 		{
 			--delay 1 frame in case we are loading
 			FrameEvent(1, function(inst)
-				local corpse = not inst:HasTag("lunar_aligned") and TheWorld.components.lunarriftmutationsmanager:TryMutate(inst, "beargercorpse") or nil
+				local corpse = not inst:HasTag("lunar_aligned") and TheWorld.components.lunarriftmutationsmanager ~= nil and TheWorld.components.lunarriftmutationsmanager:TryMutate(inst, "beargercorpse") or nil
 				if corpse == nil then
 					inst:AddTag("NOCLICK")
 					inst.persists = false

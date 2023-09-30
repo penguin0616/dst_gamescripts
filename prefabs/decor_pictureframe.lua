@@ -124,6 +124,8 @@ local function fn()
     inst._imagename = net_string(inst.GUID, "decor_pictureframe._imagename")
     inst.displaynamefn = item_frame_displaynamefn
 
+    MakeInventoryFloatable(inst, "med", 0.05, 0.85)
+
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst

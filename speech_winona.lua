@@ -4958,6 +4958,7 @@ return{
             GENERIC = "That is one creepy refrigeration unit.",    -- Enabled.
             NOEYEBALL = "It needs that spooky ol' eye to work.",  -- Disabled.
         },
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "Time to roll up the ol' sleeves!",
 
         SECURITY_PULSE_CAGE = "Well, there's a whole lotta nothin' inside.",
         SECURITY_PULSE_CAGE_FULL = "Sure it's bright, but what else does it do?",

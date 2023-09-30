@@ -4952,6 +4952,7 @@ return{
             GENERIC = "An implement that conditions the air, or ambient-temperature-reduction-device for short.",    -- Enabled.
             NOEYEBALL = "It is rendered useless without the eye of that beast.",  -- Disabled.
         },
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "It should be a simple matter to construct it.",
 
         SECURITY_PULSE_CAGE = "I have not come across this in any book.",
         SECURITY_PULSE_CAGE_FULL = "The glowing object inside emits some sort of energy.",

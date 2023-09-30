@@ -417,9 +417,11 @@ local function OnChangedLeader(inst, new, old)
 	if new ~= nil then
 		if new.prefab == "mutatedwarg" then
 			inst.forcemutate = true
+			inst.wargleader = new
 			inst.components.follower:KeepLeaderOnAttacked()
 		else
 			inst.forcemutate = nil
+			inst.wargleader = nil
 			inst.components.follower:LoseLeaderOnAttacked()
 		end
 	end
@@ -748,9 +750,7 @@ local function fnclay()
 end
 
 local function fnmutated()
-    local inst = fncommon("hound", "hound_mutated", nil, nil, "hound_mutated", {amphibious = true})
-    
-    inst:AddTag("lunar_aligned")
+    local inst = fncommon("hound", "hound_mutated", nil, nil, "lunar_aligned", {amphibious = true})
 
     if not TheWorld.ismastersim then
         return inst

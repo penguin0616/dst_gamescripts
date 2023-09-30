@@ -156,6 +156,8 @@ local function fn()
     inst:AddTag("recordplayer")
     inst:AddTag("furnituredecor")
 
+    MakeInventoryFloatable(inst, "med", 0.07, 0.72)
+
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst

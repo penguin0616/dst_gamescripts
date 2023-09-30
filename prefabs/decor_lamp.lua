@@ -63,6 +63,8 @@ local function fn()
     inst.Light:SetRadius(2)
     inst.Light:Enable(false)
 
+    MakeInventoryFloatable(inst, "small", 0.065, 0.85)
+
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst

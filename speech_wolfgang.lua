@@ -4953,6 +4953,7 @@ return{
             GENERIC = "Scary eye put chill in Wolfgang's spine.",    -- Enabled.
             NOEYEBALL = "Okay, scary eye gone but now is too hot for Wolfgang.",  -- Disabled.
         },
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "Is not ready! Wolfgang will fix this.",
 
         SECURITY_PULSE_CAGE = "Is too small for Wolfgang to hide in. Not that Wolfgang need to hide.",
         SECURITY_PULSE_CAGE_FULL = "Glowing ball of energy not explode, right?",

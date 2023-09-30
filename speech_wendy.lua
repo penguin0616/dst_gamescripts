@@ -4956,6 +4956,7 @@ return{
             GENERIC = "No colder than a world without Abigail.",    -- Enabled.
             NOEYEBALL = "Hot. Cold. What does it matter?",  -- Disabled.
         },
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "I guess I could set this up and be helpful.",
 
         SECURITY_PULSE_CAGE = "I feel the same way.",
         SECURITY_PULSE_CAGE_FULL = "It must be nice.",

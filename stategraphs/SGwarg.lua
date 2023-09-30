@@ -91,7 +91,7 @@ local AOE_OFFSET = 3
 local AOE_RANGE = 1.7
 local AOE_RANGE_PADDING = 3
 local AOE_TARGET_TAGS = { "_combat" }
-local AOE_TARGET_CANT_TAGS = { "INLIMBO", "flight", "invisible", "lunar_aligned" }
+local AOE_TARGET_CANT_TAGS = { "INLIMBO", "flight", "invisible", "playerghost", "lunar_aligned" }
 local MULTIHIT_FRAMES = 10
 
 --NOTE: This is for close range that the breath fx doesn't fully cover
@@ -404,7 +404,7 @@ local states =
 		{
 			--delay 1 frame in case we are loading
 			FrameEvent(1, function(inst)
-				local corpse = not inst:HasTag("lunar_aligned") and TheWorld.components.lunarriftmutationsmanager:TryMutate(inst, "wargcorpse") or nil
+				local corpse = not inst:HasTag("lunar_aligned") and TheWorld.components.lunarriftmutationsmanager ~= nil and TheWorld.components.lunarriftmutationsmanager:TryMutate(inst, "wargcorpse") or nil
 				if corpse == nil then
 					inst:AddTag("NOCLICK")
 					inst.persists = false

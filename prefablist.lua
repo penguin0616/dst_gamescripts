@@ -248,7 +248,7 @@ PREFABFILES = {
   "cookingrecipecard",
   "cookpot",
   "coontail",
-  "corpse gestalt",
+  "corpse_gestalt",
   "corpses",
   "costumes",
   "cotl_tabernacle",

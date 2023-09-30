@@ -4959,6 +4959,7 @@ return{
             GENERIC = "But how will anything burn?",    -- Enabled.
             NOEYEBALL = "There we go.",  -- Disabled.
         },
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "Fine. I'll build it. But I might burn it later.",
 
         SECURITY_PULSE_CAGE = "It's empty. So what?",
         SECURITY_PULSE_CAGE_FULL = "Great, it glows. But does it burn?",

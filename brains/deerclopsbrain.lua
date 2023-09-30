@@ -123,7 +123,12 @@ function DeerclopsBrain:OnStart()
 				ActionNode(function()
 					self.inst:PushEvent("doicegrow")
 				end)),
-            AttackWall(self.inst),
+			ParallelNode{
+				AttackWall(self.inst),
+				ActionNode(function()
+					self.inst.components.combat.battlecryenabled = true
+				end),
+			},
 			WhileNode(function() return self.inst.components.combat:InCooldown() end, "Chase",
 				PriorityNode({
 					FailIfSuccessDecorator(
@@ -131,6 +136,10 @@ function DeerclopsBrain:OnStart()
 					FaceEntity(self.inst, GetTarget, IsTarget),
 				}, 0.5)),
             ChaseAndAttack(self.inst, CHASE_TIME, CHASE_DIST, nil, nil, nil, OceanChaseWaryDistance),
+			FailIfSuccessDecorator(
+				ActionNode(function()
+					self.inst.components.combat.battlecryenabled = true
+				end)),
             DoAction(self.inst, BaseDestroy, "DestroyBase", true),
             WhileNode(function() return self.inst:WantsToLeave() end, "Trying To Leave",
                 Wander(self.inst, GetHomePos, 30)),

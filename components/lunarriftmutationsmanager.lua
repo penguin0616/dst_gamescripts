@@ -45,6 +45,7 @@ function LunarRiftMutationsManager:_CanCorpseMutate(ent)
     return
         TheWorld.components.riftspawner ~= nil and
         TheWorld.components.riftspawner:IsLunarPortalActive() and
+        not ent:IsOnOcean() and
         (ent.components.burnable == nil or not ent.components.burnable:IsBurning())
 end
 
@@ -85,7 +86,9 @@ function LunarRiftMutationsManager:SetMutationDefeated(ent)
 end
 
 function LunarRiftMutationsManager:TriggerWagstaffAppearance(ent)
-    local pos = ent:GetPosition()
+    local entpos = ent:GetPosition()
+    local pos = entpos
+ 
     local offset = FindWalkableOffset(pos, math.random()*TWOPI, 8, 12, false, false, nil, false, true)
 
     if offset ~= nil then
@@ -96,6 +99,7 @@ function LunarRiftMutationsManager:TriggerWagstaffAppearance(ent)
 
     if self:IsWagstaffSpawned() then
         self.wagstaff.Transform:SetPosition(pos:Get())
+        self.wagstaff:ForceFacePoint(entpos:Get())
         self.wagstaff:TalkAboutMutatedCreature()
     end
 end

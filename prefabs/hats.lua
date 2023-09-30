@@ -3514,14 +3514,12 @@ local function MakeHat(name)
         end
     end
 
-    fns.wagpunk_spawnsteam = function(player,fx)
-        player:DoTaskInTime(math.random()* 0.3,function()
-            if not player.components.health:IsDead() and not player.components.freezable:IsFrozen() then
-                local x,y,z = player.Transform:GetWorldPosition()
-                local fx = SpawnPrefab(fx)
-                player:AddChild(fx)
+    fns.wagpunk_spawnsteam = function(inst, prefab)
+        inst:DoTaskInTime(math.random() * 0.3, function()
+            if inst:IsValid() and not (inst.components.health ~= nil and inst.components.health:IsDead()) and not (inst.components.freezable ~= nil and inst.components.freezable:IsFrozen()) then
+                inst:AddChild(SpawnPrefab(prefab))
             end
-        end)    
+        end)
     end 
 
     fns.wagpunk_spawnbufffx = function(owner)
@@ -3544,47 +3542,44 @@ local function MakeHat(name)
             owner.SoundEmitter:KillSound("wagpunkambient_hat")
         end
 
-        inst.fx.level:set(1)
+        if inst.fx ~= nil then
+            inst.fx.level:set(1)
+        end
     end
 
-    fns.wagpunk_setnewtarget = function(inst,target,owner)
-        if not owner then
-            return
-        end
-
-        if not inst.components.equippable then
-            return
-        end
-
-        if not target.components.health:IsDead() then
-            if inst.fx then
-                inst.fx.level:set(2)
-            end
-
-            if inst._targettask then
-                inst._targettask:Cancel()
-                inst._targettask = nil
-            end
-            inst._potencialtarget = nil
-
-            if inst and inst.components.targettracker then
-                if not inst.components.targettracker:IsTracking(target) then
-                    inst.components.targettracker:TrackTarget(target)
-                    fns.wagpunk_spawnbufffx(owner)
-
-                    fns.wagpunk_dosayindelay(inst,STRINGS.WARBIS.START)
-                end
-
-                local armor = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
-
-                if armor ~= nil and armor.components.targettracker ~= nil and not armor.components.targettracker:HasTarget() then
-                    armor:SetNewTarget(target, owner)
-                end
-            end
-        else
-            if inst.fx then
+    fns.wagpunk_setnewtarget = function(inst, target, owner)
+        if owner == nil or inst.components.equippable == nil or not target:IsValid() or target.components.health == nil or target.components.health:IsDead() then
+            if inst.fx ~= nil then
                 inst.fx.level:set(1)
-                owner.SoundEmitter:KillSound("wagpunkambient_hat")
+            end
+
+            owner.SoundEmitter:KillSound("wagpunkambient_hat")
+
+            return
+        end
+
+        if inst.fx ~= nil then
+            inst.fx.level:set(2)
+        end
+
+        if inst._targettask then
+            inst._targettask:Cancel()
+            inst._targettask = nil
+        end
+        inst._potencialtarget = nil
+
+        if inst and inst.components.targettracker then
+            if not inst.components.targettracker:IsTracking(target) then
+                inst.components.targettracker:TrackTarget(target)
+                fns.wagpunk_spawnbufffx(owner)
+
+                fns.wagpunk_dosayindelay(inst,STRINGS.WARBIS.START)
+            end
+
+            local armor = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
+
+            if armor ~= nil and armor.components.targettracker ~= nil and not armor.components.targettracker:HasTarget() then
+                armor:SetNewTarget(target, owner)
             end
         end
     end
@@ -3620,7 +3615,10 @@ local function MakeHat(name)
                 fns.wagpunk_dosayindelay(hat, STRINGS.WARBIS.NEW)
             end
 
-            hat.fx.level:set(2)
+            if hat.fx ~= nil then
+                hat.fx.level:set(2)
+            end
+
             fns.wagpunk_playambient(owner,0)
 
             hat._potencialtarget = data.target
@@ -3633,11 +3631,14 @@ local function MakeHat(name)
         local STAGE2 = TUNING.ARMORPUNK_STAGE2
         local STAGE3 = TUNING.ARMORPUNK_STAGE3
         local owner = inst.components.inventoryitem.owner
-        if owner then
+
+        if owner ~= nil then
             local saystring = nil
 
             if STAGE3 <= targettime and lasttime < STAGE3 then
-                inst.fx.level:set(5)
+                if inst.fx ~= nil then
+                    inst.fx.level:set(5)
+                end
                 owner.components.combat.externaldamagemultipliers:SetModifier(inst, TUNING.ARMOR_WAGPUNK_HAT_STAGE3)
                 fns.wagpunk_playambient(owner,0.7)
                 -- ADD EFFECT 3
@@ -3645,7 +3646,9 @@ local function MakeHat(name)
                 fns.wagpunk_spawnbufffx(owner)
     
             elseif STAGE2 <= targettime and lasttime < STAGE2 then
-                inst.fx.level:set(4)
+                if inst.fx ~= nil then
+                    inst.fx.level:set(4)
+                end
                 owner.components.combat.externaldamagemultipliers:SetModifier(inst, TUNING.ARMOR_WAGPUNK_HAT_STAGE2)
                 fns.wagpunk_playambient(owner,0.5)
                 -- ADD EFFECT 2
@@ -3653,7 +3656,9 @@ local function MakeHat(name)
                 fns.wagpunk_spawnbufffx(owner)
 
             elseif STAGE1 <= targettime and lasttime < STAGE1 then
-                inst.fx.level:set(3)
+                if inst.fx ~= nil then
+                    inst.fx.level:set(3)
+                end
                 owner.components.combat.externaldamagemultipliers:SetModifier(inst, TUNING.ARMOR_WAGPUNK_HAT_STAGE1)
                 fns.wagpunk_playambient(owner,0.3)
                -- ADD EFFECT 1
@@ -3662,7 +3667,7 @@ local function MakeHat(name)
 
             end
 
-            if saystring then       
+            if saystring then
                 fns.wagpunk_dosayindelay(inst,saystring)
             end
         end
@@ -3687,8 +3692,11 @@ local function MakeHat(name)
         end
 
         inst.fx = SpawnPrefab("wagpunkhat_fx")
-        inst.fx:AttachToOwner(owner)
-        inst.fx.level:set(1)
+
+        if inst.fx ~= nil then 
+            inst.fx:AttachToOwner(owner)
+            inst.fx.level:set(1)
+        end
 
         inst._wearer:set(owner)
 
@@ -3711,7 +3719,7 @@ local function MakeHat(name)
             inst.fx.level:set(1)
             inst.fx:Remove()
             inst.fx = nil
-        end     
+        end
 
         inst._wearer:set(nil)
     end
@@ -3738,19 +3746,23 @@ local function MakeHat(name)
     end
 
     fns.OnChangeTargetDirty = function(inst)
-        -- This is ThePlayer and there is no target, stop the targeting
-        if inst._wearer:value() == ThePlayer and inst._target:value() == nil then
-            ThePlayer:PushEvent("wagpunkui_targetupdate",nil)
-        -- ThePlayer is wearing this hat, or it's broken then update the targeting
-        elseif inst.replica.inventoryitem:IsHeldBy(ThePlayer) and (inst:HasTag("broken") or inst.replica.equippable:IsEquipped()) then
-            ThePlayer:PushEvent("wagpunkui_targetupdate",inst._target:value())
+        local wearer = inst._wearer:value()
+
+        if wearer == ThePlayer then
+            -- This is ThePlayer and there is no target, stop the targeting
+            if inst._target:value() == nil then
+                ThePlayer:PushEvent("wagpunkui_targetupdate", nil)
+            -- ThePlayer is wearing this hat, or it's broken then update the targeting
+            elseif inst.replica.inventoryitem:IsHeldBy(wearer) and (inst:HasTag("broken") or inst.replica.equippable:IsEquipped()) then
+                wearer:PushEvent("wagpunkui_targetupdate", inst._target:value())
+            end
         end
     end
 
     fns.OnChangeWearerDirty = function(inst)
         if inst._wearer:value() == ThePlayer then
             ThePlayer:PushEvent("wagpunkui_worn",inst)
-        else
+        elseif ThePlayer ~= nil then
             ThePlayer:PushEvent("wagpunkui_removed",inst)
         end
     end

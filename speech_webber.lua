@@ -4952,6 +4952,7 @@ return{
             GENERIC = "Brrr, we don't like it chilly.",    -- Enabled.
             NOEYEBALL = "Aww, we have eight eyes and it doesn't even have one.",  -- Disabled.
         },
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "We have many eyes and arms to build this!",
 
         SECURITY_PULSE_CAGE = "We wonder what goes in there.",
         SECURITY_PULSE_CAGE_FULL = "Oooh it glows. Can we touch it?",
@@ -5009,7 +5010,7 @@ return{
 
         WAGPUNKHAT = "What's one more voice in our head?",
         ARMORWAGPUNK = "Ms. Wickerbottom said to keep our fingers away from the gears.",
-        WAGSTAFF_MACHINERY = "We're not supposed to play in scrap piles, no matter how much we want to.'", --[[TODO]]
+        WAGSTAFF_MACHINERY = "We're not supposed to play in scrap piles, no matter how much we want to.'",
         WAGPUNK_BITS = "We love puzzles!",
         WAGPUNKBITS_KIT = "We want to play with the toy!",
 

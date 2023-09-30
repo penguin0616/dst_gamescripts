@@ -1628,6 +1628,7 @@ local PREFABS =
 
     ["beargerfur_sack"] = true,
     ["deerclopseyeball_sentryward"] = true,
+    ["deerclopseyeball_sentryward_kit"] = true,
     ["houndstooth_blowpipe"] = true,
     ["security_pulse_cage"] = true,
     ["security_pulse_cage_full"] = true,

@@ -4952,6 +4952,7 @@ return{
             GENERIC = "The cold doth sooth me.",    -- Enabled.
             NOEYEBALL = "Where art thou, cursed eye?",  -- Disabled.
         },
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "Fear not the heat, I shall build this posthaste.",
 
         SECURITY_PULSE_CAGE = "'Tis a trap!",
         SECURITY_PULSE_CAGE_FULL = "It burns bright like the sword of Surtr.",

@@ -4953,6 +4953,7 @@ return{
             GENERIC = "She'll keep the brews frosty all summer, eh?",    -- Enabled.
             NOEYEBALL = "The eye's been lifted? Where are we? Toronto?",  -- Disabled.
         },
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "Better get buildin', eh?",
 
         SECURITY_PULSE_CAGE = "Somebody better get to unemptying this trap.",
         SECURITY_PULSE_CAGE_FULL = "Great Lakes, I think she caught something!",

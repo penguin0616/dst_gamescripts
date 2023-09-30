@@ -4952,6 +4952,7 @@ return{
             GENERIC = "If you can't take the heat, freeze the kitchen.",    -- Enabled.
             NOEYEBALL = "It's missing the SEEcret ingredient.",  -- Disabled.
         },
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "I'll whip it up tout de suite!",
 
         SECURITY_PULSE_CAGE = "This reminds me of my little oven back home.",
         SECURITY_PULSE_CAGE_FULL = "Something is cooking.",

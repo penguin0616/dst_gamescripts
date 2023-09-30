@@ -4952,6 +4952,7 @@ return{
             GENERIC = "Keeps it cold like my heart.",    -- Enabled.
             NOEYEBALL = "Don't say I didn't warn you when it all goes up in flames.",  -- Disabled.
         },
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "Do I have to do everything around here?",
 
         SECURITY_PULSE_CAGE = "It's empty. Someone do something.",
         SECURITY_PULSE_CAGE_FULL = "It's full. Someone do something.",

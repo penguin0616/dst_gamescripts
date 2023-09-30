@@ -187,7 +187,7 @@ local function NumHoundsToSpawn(inst)
         end
         numHounds = numHounds + addHounds
     end
-    local numFollowers = inst.components.leader:CountFollowers()
+	local numFollowers = inst.components.leader:CountFollowers() + inst.numfollowercorpses
     local num = math.min(numFollowers+numHounds/2, numHounds) -- only spawn half the hounds per howl
     num = (math.log(num)/0.4)+1 -- 0.4 is approx log(1.5)
 
@@ -649,6 +649,29 @@ local function SpawnHounds(inst, radius_override)
     return hounds
 end
 
+local function OnCorpseRemoved(corpse)
+	local inst = corpse._warg
+	inst.followercorpses[corpse] = nil
+	inst.numfollowercorpses = inst.numfollowercorpses - 1
+end
+
+local function RememberFollowerCorpse(inst, corpse)
+	if inst.followercorpses[corpse] == nil then
+		corpse._warg = inst
+		inst.followercorpses[corpse] = true
+		inst.numfollowercorpses = inst.numfollowercorpses + 1
+		inst:ListenForEvent("onremove", OnCorpseRemoved, corpse)
+	end
+end
+
+local function ForgetFollowerCorpse(inst, corpse)
+	if inst.followercorpses[corpse] ~= nil then
+		inst:RemoveEventCallback("onremove", OnCorpseRemoved, corpse)
+		OnCorpseRemoved(corpse)
+		corpse._warg = nil
+	end
+end
+
 local mutated_scrapbook_overridedata = {
     { "flameL", "warg_mutated_actions", "flameanim" },
     { "flameR", "warg_mutated_actions", "flameanim" },
@@ -891,6 +914,11 @@ local function MakeWarg(data)
             inst.noidlesound = false
             inst.sg:GoToState("statue")
         end
+
+		inst.numfollowercorpses = 0
+		inst.followercorpses = {}
+		inst.RememberFollowerCorpse = RememberFollowerCorpse
+		inst.ForgetFollowerCorpse = ForgetFollowerCorpse
 
         return inst
     end

@@ -37,7 +37,7 @@ local function KillTargetTask(inst)
 end
 
 local function SpawnSteamFX_Internal(inst, prefab)
-    if inst:IsValid() and not inst.components.health:IsDead() and not inst.components.freezable:IsFrozen() then
+    if inst:IsValid() and not (inst.components.health ~= nil and inst.components.health:IsDead()) and not (inst.components.freezable ~= nil and inst.components.freezable:IsFrozen()) then
         inst:AddChild(SpawnPrefab(prefab))
     end
 end
@@ -72,35 +72,34 @@ local function ResetBuff(inst)
 end
 
 local function SetNewTarget(inst, target, owner)
-    if owner == nil or inst.components.equippable == nil then
+    if owner == nil or inst.components.equippable == nil or not target:IsValid() or target.components.health == nil or target.components.health:IsDead() then
+        if inst.fx ~= nil then
+            inst.fx.level:set(1)
+        end
+
+        owner.SoundEmitter:KillSound(AMB_SOUNDNAME)
+
         return
     end
 
-    if not target.components.health:IsDead() then
-        if inst.fx ~= nil then
-            inst.fx.level:set(2)
+    if inst.fx ~= nil then
+        inst.fx.level:set(2)
+    end
+
+    inst:KillTargetTask()
+
+    if inst.components.targettracker ~= nil then
+        if not inst.components.targettracker:IsTracking(target) then
+            inst.components.targettracker:TrackTarget(target)
+            inst:SpawnBuffFX(owner)
+
+            inst.components.equippable.walkspeedmult = TUNING.ARMORPUNK_SPEED_MULT_STAGE0
         end
 
-        inst:KillTargetTask()
+        local hat = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
 
-        if inst.components.targettracker ~= nil then
-            if not inst.components.targettracker:IsTracking(target) then
-                inst.components.targettracker:TrackTarget(target)
-                inst:SpawnBuffFX(owner)
-
-                inst.components.equippable.walkspeedmult = TUNING.ARMORPUNK_SPEED_MULT_STAGE0
-            end
-
-            local hat = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
-
-            if hat ~= nil and hat.components.targettracker ~= nil and not hat.components.targettracker:HasTarget() then
-                hat:SetNewTarget(target, owner)
-            end
-        end
-    else
-        if inst.fx ~= nil then
-            inst.fx.level:set(1)
-            owner.SoundEmitter:KillSound(AMB_SOUNDNAME)
+        if hat ~= nil and hat.components.targettracker ~= nil and not hat.components.targettracker:HasTarget() then
+            hat:SetNewTarget(target, owner)
         end
     end
 end

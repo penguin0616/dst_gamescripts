@@ -15,6 +15,12 @@ local function SpawnMutatedHound(inst)
 	if not inst:IsAsleep() then
 		hound.sg:GoToState("mutated_spawn")
 	end
+	local warg = inst.components.entitytracker:GetEntity("warg")
+	if warg ~= nil then
+		hound.components.follower:SetLeader(warg)
+		warg:ForgetFollowerCorpse(inst)
+		inst.components.entitytracker:ForgetEntity("warg")
+	end
 
 	inst.components.burnable.fastextinguish = true
 
@@ -81,6 +87,18 @@ local function getstatus(inst)
 			or nil
 end
 
+local function RememberWargLeader(inst, warg)
+	inst.components.entitytracker:TrackEntity("warg", warg)
+	warg:RememberFollowerCorpse(inst)
+end
+
+local function OnLoadPostPass(inst, ents, data)
+	local warg = inst.components.entitytracker:GetEntity("warg")
+	if warg ~= nil then
+		warg:RememberFollowerCorpse(inst)
+	end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -110,6 +128,8 @@ local function fn()
     inst:AddComponent("inspectable")
 	inst.components.inspectable.getstatus = getstatus
 
+	inst:AddComponent("entitytracker")
+
 	inst:AddComponent("timer")
 	inst.components.timer:StartTimer("revive", TUNING.MUTATEDHOUND_SPAWN_DELAY + math.random())
     inst:ListenForEvent("timerdone", ontimerdone)
@@ -118,6 +138,9 @@ local function fn()
 	inst.components.burnable:SetOnIgniteFn(onignite)
 
     MakeHauntableIgnite(inst)
+
+	inst.RememberWargLeader = RememberWargLeader
+	inst.OnLoadPostPass = OnLoadPostPass
 
     return inst
 end

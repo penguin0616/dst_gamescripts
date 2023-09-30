@@ -324,7 +324,11 @@ local function basefn()
     return inst
 end
 
+local function PlacerPostInit(inst)
+    inst.AnimState:OverrideSymbol("horn", "eyeball_turret_base", "horn")
+end
+
 return Prefab("eyeturret", fn, assets, prefabs),
     Prefab("eyeturret_item", itemfn, assets, prefabs),
-    MakePlacer("eyeturret_item_placer", "eyeball_turret", "eyeball_turret", "idle_place"),
+    MakePlacer("eyeturret_item_placer", "eyeball_turret", "eyeball_turret", "idle_place", nil, nil, nil, nil, nil, nil, PlacerPostInit),
     Prefab("eyeturret_base", basefn, baseassets)

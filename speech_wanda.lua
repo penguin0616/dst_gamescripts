@@ -4952,6 +4952,7 @@ return{
             GENERIC = "Feels like we're back in the ice age.",    -- Enabled.
             NOEYEBALL = "The part that makes it work is missing. Typical.",  -- Disabled.
         },
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "I think I already built this later.",
 
         SECURITY_PULSE_CAGE = "It's empty.",
         SECURITY_PULSE_CAGE_FULL = "Well, it's caught something. Now what?",

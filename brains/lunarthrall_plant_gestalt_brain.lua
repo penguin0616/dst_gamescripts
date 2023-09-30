@@ -11,7 +11,7 @@ local SCREEN_DIST_SQ = PLAYER_CAMERA_SEE_DISTANCE_SQ
 local function MoveToPointAction(inst)
 	local pos = nil
 
-	if inst.plant_target and not TheWorld.components.lunarthrall_plantspawner then
+	if inst.plant_target ~= nil and (TheWorld.components.lunarthrall_plantspawner == nil or not inst.plant_target:IsValid()) then
 		inst.plant_target = nil
 	end
 

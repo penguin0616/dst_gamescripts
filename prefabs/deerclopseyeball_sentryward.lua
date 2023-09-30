@@ -17,6 +17,8 @@ local sentryward_prefabs =
     "globalmapicon",
     "deerclops_eyeball",
     "deerclopseyeball_sentryward_fx",
+    "deerclopseyeball_sentryward_kit",
+    "deerclopseyeball_sentryward_kit_placer",
 }
 
 local fx_prefabs =
@@ -30,6 +32,8 @@ local AMB_SOUNDNAME = "amb"
 ---------------------------------------------------------------------------------------------------------------
 
 local SENTRYWARD_SCALE = 1.3
+local DEPLOYHELPER_SCALE = 1/SENTRYWARD_SCALE
+
 local EYEBALL_FACE_PLAYER_TASK_PERIOD = 1
 
 local BLOOMED_SYMBOLS_MULTCOLOUR = {0.7, 0.7, 0.7, 1}
@@ -85,6 +89,9 @@ local function CreateHelperRadiusCircle()
 
     inst.AnimState:SetScale(scale, scale)
 
+    -- NOTE(DiogoW): We are fighting against the parent's scale, which is considerably non-optimal...
+    inst.Transform:SetScale(DEPLOYHELPER_SCALE, DEPLOYHELPER_SCALE, DEPLOYHELPER_SCALE)
+
     return inst
 end
 
@@ -134,6 +141,13 @@ end
 
 ---------------------------------------------------------------------------------------------------------------
 
+local function CreateGlobalIcon(inst)
+    inst.icon = SpawnPrefab("globalmapicon")
+    inst.icon.MiniMapEntity:SetIsFogRevealer(true)
+    inst.icon:AddTag("fogrevealer")
+    inst.icon:TrackEntity(inst)
+end
+
 local function OnEyeballGiven(inst, item, giver)
     if not POPULATING then
         inst.SoundEmitter:PlaySound("rifts3/oculus_ice_radius/eyeball_place")
@@ -142,6 +156,8 @@ local function OnEyeballGiven(inst, item, giver)
     inst.SoundEmitter:PlaySound("rifts3/oculus_ice_radius/ambient_lp", AMB_SOUNDNAME)
 
     inst.components.temperatureoverrider:Enable()
+
+    inst.MiniMapEntity:SetIcon("deerclopseyeball_sentryward_enabled.png")
 
     inst._active:set(true)
     inst:OnActiveDirty()
@@ -156,8 +172,6 @@ local function OnEyeballGiven(inst, item, giver)
     inst.AnimState:PlayAnimation("place_eyeball")
     inst.AnimState:PushAnimation("idle_full_loop", true)
 
-    inst.MiniMapEntity:SetIcon("deerclopseyeball_sentryward_enabled.png")
-
     if inst.ice == nil then
         inst.ice = SpawnPrefab("deerclopseyeball_sentryward_fx")
         inst.ice.Transform:SetPosition(inst.Transform:GetWorldPosition())
@@ -166,10 +180,7 @@ local function OnEyeballGiven(inst, item, giver)
     inst.components.maprevealer:Start()
 
     if inst.icon == nil then
-        inst.icon = SpawnPrefab("globalmapicon")
-        inst.icon.MiniMapEntity:SetIsFogRevealer(true)
-        inst.icon:AddTag("fogrevealer")
-        inst.icon:TrackEntity(inst)
+        inst:DoTaskInTime(0, inst.CreateGlobalIcon)
     end
 end
 
@@ -184,6 +195,8 @@ local function OnEyeballTaken(inst, item, taker)
 
     inst.components.temperatureoverrider:Disable()
 
+    inst.MiniMapEntity:SetIcon("deerclopseyeball_sentryward_disabled.png")
+
     inst._active:set(false)
     inst:OnActiveDirty()
 
@@ -195,8 +208,6 @@ local function OnEyeballTaken(inst, item, taker)
     inst.AnimState:SetSymbolLightOverride("base_crystal", 0)
 
     inst.AnimState:PlayAnimation("idle_loop", false)
-
-    inst.MiniMapEntity:SetIcon("deerclopseyeball_sentryward_disabled.png")
 
     if inst.ice ~= nil then
         inst.ice:KillFX()
@@ -260,7 +271,7 @@ local function CLIENT_CreateEyeball(inst)
 
     inst.Transform:SetFourFaced()
 
-    inst.AnimState:SetSortOrder(3)
+    inst.AnimState:SetFinalOffset(2)
 
     inst.AnimState:SetBank("deerclopseyeball_sentryward")
     inst.AnimState:SetBuild("deerclopseyeball_sentryward")
@@ -304,6 +315,8 @@ local function OnActiveDirty(inst)
             inst.highlightchildren = { inst.eyeball }
         end
 
+        inst.MiniMapEntity:SetCanUseCache(false)
+        inst.MiniMapEntity:SetDrawOverFogOfWar(true)
     else
         local p = LIGHT_PARAMS.OFF
 
@@ -320,6 +333,9 @@ local function OnActiveDirty(inst)
             inst.eyeball = nil
             inst.highlightchildren = nil
         end
+
+        inst.MiniMapEntity:SetCanUseCache(true)
+        inst.MiniMapEntity:SetDrawOverFogOfWar(false)
     end
 end
 
@@ -346,9 +362,6 @@ local function sentrywardfn()
     inst.Light:EnableClientModulation(true)
 
     inst.MiniMapEntity:SetIcon("deerclopseyeball_sentryward_disabled.png")
-    inst.MiniMapEntity:SetCanUseCache(false)
-
-    inst.MiniMapEntity:SetDrawOverFogOfWar(true)
 
     MakeObstaclePhysics(inst, .1)
 
@@ -403,8 +416,10 @@ local function sentrywardfn()
 
     inst.OnEyeballGiven = OnEyeballGiven
     inst.OnEyeballTaken = OnEyeballTaken
+    inst.CreateGlobalIcon = CreateGlobalIcon
 
     inst.OnBuilt = OnBuilt
+    inst:ListenForEvent("onbuilt", inst.OnBuilt)
 
     inst:AddComponent("maprevealer")
     inst:AddComponent("lootdropper")
@@ -442,10 +457,10 @@ end
 local function placer_postinit_fn(inst)
     local helper = CreateHelperRadiusCircle()
 
+    inst.Transform:SetScale(SENTRYWARD_SCALE, SENTRYWARD_SCALE, SENTRYWARD_SCALE)
+
     helper.entity:SetParent(inst.entity)
     inst.components.placer:LinkEntity(helper)
-
-    inst.AnimState:SetScale(SENTRYWARD_SCALE, SENTRYWARD_SCALE, SENTRYWARD_SCALE)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -562,9 +577,14 @@ local function fxfn()
     return inst
 end
 
+local function Kit_CanDeployFn(inst, pt, mouseover, deployer, rot)
+    return TheWorld.Map:CanDeployAtPoint(pt, inst, mouseover) and TheWorld.Map:IsSurroundedByLand(pt.x, 0, pt.z, 3.5)
+end
+
 --------------------------------------------------------------------------------------------------------------------------
 
 return
         Prefab("deerclopseyeball_sentryward", sentrywardfn, sentryward_assets, sentryward_prefabs),
-        MakePlacer("deerclopseyeball_sentryward_placer", "deerclopseyeball_sentryward", "deerclopseyeball_sentryward", "idle_loop", nil, nil, nil, nil, nil, nil, placer_postinit_fn),
+        MakePlacer("deerclopseyeball_sentryward_kit_placer", "deerclopseyeball_sentryward", "deerclopseyeball_sentryward", "idle_loop", nil, nil, nil, nil, nil, nil, placer_postinit_fn),
+        MakeDeployableKitItem("deerclopseyeball_sentryward_kit", "deerclopseyeball_sentryward", "deerclopseyeball_sentryward", "deerclopseyeball_sentryward", "kit", sentryward_assets, nil, nil, nil, {deploymode = DEPLOYMODE.CUSTOM, custom_candeploy_fn=Kit_CanDeployFn}),
         Prefab("deerclopseyeball_sentryward_fx", fxfn, fx_assets, fx_prefabs)

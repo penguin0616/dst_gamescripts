@@ -4952,6 +4952,7 @@ return{
             GENERIC = "The way it just stares at me is so creepy. I love it.",    -- Enabled.
             NOEYEBALL = "Something is missing. Woby, that eyeball is not a toy!",  -- Disabled.
         },
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "Woby, wanna help me put this together?",
 
         SECURITY_PULSE_CAGE = "It's empty, Woby. Let's find something to put in there.",
         SECURITY_PULSE_CAGE_FULL = "I wonder if there is a glowing ball trapping badge.",

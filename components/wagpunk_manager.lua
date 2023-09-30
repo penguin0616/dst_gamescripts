@@ -50,21 +50,6 @@ local function OnPlayerLeft(world, player)
     world.components.wagpunk_manager:RemovePlayer(player)
 end
 
-local function OnLunarRiftOpened(world)
-    world.components.wagpunk_manager:Enable()
-end
-
-local function OnLunarRiftSettingChange(world, setting)
-    local self = world.components.wagpunk_manager
-
-    if setting == "never" then
-        self:Enable(false)
-
-    elseif setting == "always" then
-        self:Enable(true)
-    end
-end
-
 --------------------------------------------------------------------------------------------
 
 local WagpunkManager = Class(function(self, inst)
@@ -89,9 +74,6 @@ local WagpunkManager = Class(function(self, inst)
 
     self.inst:ListenForEvent("ms_playerjoined", OnPlayerJoined)
     self.inst:ListenForEvent("ms_playerleft",   OnPlayerLeft)
-
-    self.inst:ListenForEvent("lunarrift_opened", OnLunarRiftOpened)
-    self.inst:ListenForEvent("rifts_settingsenabled", OnLunarRiftSettingChange)
 end)
 
 function WagpunkManager:RemoveMachine(GUID)
@@ -225,7 +207,7 @@ end
 local WAGSTAFF_MAY = { "wagstaff_npc", "wagstaff_machine" }
 
 function WagpunkManager:TryHinting(debug)
-    local player = self._activeplayers[math.random(#self._activeplayers)]
+    local player = #self._activeplayers > 0 and self._activeplayers[math.random(#self._activeplayers)] or nil
 
     if player == nil or not (self.hintcount <= MAX_NUM_HINTS and next(self.machineGUIDS)) then
         return
@@ -327,7 +309,6 @@ end
 
 function WagpunkManager:OnSave()
     local data = {
-       enabled = self._enabled,
        nextspawntime = self.nextspawntime,
        nexthinttime = self.nexthinttime,
        hintcount = self.hintcount,
@@ -345,10 +326,6 @@ function WagpunkManager:OnLoad(data)
     self.hintcount     = data.hintcount     or self.hintcount
 
     self._currentnodeindex = data.currentnodeindex or self._currentnodeindex
-
-    if data.enabled then
-        self:Enable()
-    end
 end
 
 --------------------------------------------------------------------------------------------

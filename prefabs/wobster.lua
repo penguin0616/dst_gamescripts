@@ -408,12 +408,23 @@ local function base_land_wobster(build_name, nameoverride, fish_def, fadeout, co
 end
 
 local function wobster_land()
-    return base_land_wobster("lobster_sheller", "wobster_sheller", WOBSTER_FISH_DEF, false, "wobster_sheller_dead_cooked")
+    local inst = base_land_wobster("lobster_sheller", "wobster_sheller", WOBSTER_FISH_DEF, false, "wobster_sheller_dead_cooked")
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst:AddComponent("halloweenmoonmutable")
+    inst.components.halloweenmoonmutable:SetPrefabMutated("wobster_moonglass_land")
+
+    return inst
 end
 
 local function moonglass_land()
     local inst = base_land_wobster("lobster_moonglass", "wobster_moonglass", MOONGLASS_WOBSTER_FISH_DEF, true)
+
     inst:AddTag("lunar_aligned")
+
     return inst
 end
 

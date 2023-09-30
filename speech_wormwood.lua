@@ -4923,7 +4923,7 @@ return{
         -- Rifts 3
 
         MUTATEDDEERCLOPS = "Branch head? What in eye?",
-        MUTATEDWARG = "Wierd Woofer",
+        MUTATEDWARG = "Weird Woofer",
         MUTATEDBEARGER = "Scary fuzzy big and mean and stinky",
 
         LUNARFROG = "Ribbit?",
@@ -4956,6 +4956,7 @@ return{
             GENERIC = "Branch head eye make cold",    -- Enabled.
             NOEYEBALL = "Where branch head eye?",  -- Disabled.
         },
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "Not done yet.",
 
         SECURITY_PULSE_CAGE = "Big nothing",
         SECURITY_PULSE_CAGE_FULL = "Hello, pretty light ball",

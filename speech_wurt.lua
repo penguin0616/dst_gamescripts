@@ -4952,6 +4952,7 @@ return{
             GENERIC = "Hi Eye!",    -- Enabled.
             NOEYEBALL = "Glorp! Who take shiny eyeball?",  -- Disabled.
         },
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "Look easy to build, flort.",
 
         SECURITY_PULSE_CAGE = "Glorp! Empty!",
         SECURITY_PULSE_CAGE_FULL = "Oooh, like glowy ball.",

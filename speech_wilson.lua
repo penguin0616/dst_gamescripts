@@ -4959,9 +4959,10 @@ return {
         HOUNDSTOOTH_BLOWPIPE = "Teeth? Doesn't seem all that hygenic.",
         DEERCLOPSEYEBALL_SENTRYWARD =
         {
-            GENERIC = "How's that for a icy gaze?",    -- Enabled.
+            GENERIC = "How's that for an icy gaze?",    -- Enabled.
             NOEYEBALL = "Someone lose an eye?",  -- Disabled.
         },
+        DEERCLOPSEYEBALL_SENTRYWARD_KIT = "Stand back everyone, I am a trained scientist!",
 
         SECURITY_PULSE_CAGE = "Interesting. It's empty.",
         SECURITY_PULSE_CAGE_FULL = "Aren't you the cutest little ball of pure energy?",

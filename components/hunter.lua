@@ -84,6 +84,8 @@ local function StopHunt(hunt)
         hunt.hunttask:Cancel()
         hunt.hunttask = nil
     end
+
+    hunt.investigatedfork = nil
 end
 
 local function BeginHunt(hunt)
@@ -215,7 +217,7 @@ local function SpawnDirt(pt, hunt)
             local day = TheWorld.state.cycles
             local num_bats = math.min(3 + math.floor(day/35), 6)
             for i = 1, num_bats do
-                track:DoTaskInTime(0.2 * i + math.random() * 0.3, SpawnBat)
+                dirt:DoTaskInTime(0.2 * i + math.random() * 0.3, SpawnBat)
             end
             hunt.ambush_track_num = nil
         end
@@ -279,7 +281,7 @@ local function StartDirt(hunt, position)
     hunt.numtrackstospawn = math.random(MIN_TRACKS, MAX_TRACKS)
 
     local lunarportalactive = IsLunarPortalActive()
-    if not lunarportalactive and math.random() <= GetAlternateBeastChance(hunt) then
+    if not lunarportalactive and math.random() <= GetAlternateBeastChance(hunt) or true then
         hunt.fork_track_num = math.random(math.floor(hunt.numtrackstospawn / 2), hunt.numtrackstospawn - 2)
     end
 
