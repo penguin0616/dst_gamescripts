@@ -264,7 +264,7 @@ end
 
 --------------------------------------------------------------------------------
 local function setmaxminimapstatus(inst)
-    inst.MiniMapEntity:SetCanUseCache(true)
+    inst.MiniMapEntity:SetCanUseCache(false)
     inst.MiniMapEntity:SetDrawOverFogOfWar(true)
     inst.MiniMapEntity:SetPriority(22)
     inst.MiniMapEntity:SetIcon("lunarrift_portal_max.png")

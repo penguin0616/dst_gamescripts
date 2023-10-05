@@ -33,6 +33,8 @@ local function fn()
     inst:AddTag("notarget")
     inst:AddTag("shadow_aligned")
 
+    inst.scrapbook_inspectonseen = true
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then

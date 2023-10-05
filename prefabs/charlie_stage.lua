@@ -453,8 +453,10 @@ local function postfn()
     inst._musictype = net_tinybyte(inst.GUID, "charlie_stage._musictype")
     inst._musictype:set_local(0)
 
-    inst:AddComponent("pointofinterest")
-    inst.components.pointofinterest:SetHeight(-475)
+    if not TheNet:IsDedicated() then
+        inst:AddComponent("pointofinterest")
+        inst.components.pointofinterest:SetHeight(-90)
+    end
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then

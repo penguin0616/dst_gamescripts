@@ -76,6 +76,8 @@ local function fn()
     inst:AddTag("NOCLICK")
     inst:AddTag("DECOR")
 
+    inst.scrapbook_inspectonseen = true
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then

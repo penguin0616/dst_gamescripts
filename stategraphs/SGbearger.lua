@@ -325,6 +325,29 @@ end
 
 --------------------------------------------------------------------------
 
+local function SpawnSwipeFX(inst, offset, reverse)
+	if inst.swipefx ~= nil then
+		--spawn 3 frames early (with 3 leading blank frames) since anim is super short, and tends to get lost with network timing
+		inst.sg.statemem.fx = SpawnPrefab(inst.swipefx)
+		inst.sg.statemem.fx.entity:SetParent(inst.entity)
+		inst.sg.statemem.fx.Transform:SetPosition(offset, 0, 0)
+		if reverse then
+			inst.sg.statemem.fx:Reverse()
+		end
+	end
+end
+
+local function KillSwipeFX(inst)
+	if inst.sg.statemem.fx ~= nil then
+		if inst.sg.statemem.fx:IsValid() then
+			inst.sg.statemem.fx:Remove()
+		end
+		inst.sg.statemem.fx = nil
+	end
+end
+
+--------------------------------------------------------------------------
+
 local actionhandlers =
 {
 	--ActionHandler(ACTIONS.HAMMER, "attack"),
@@ -391,6 +414,20 @@ local function DoFootstep(inst)
 	else
 		inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/step_stomp")
 		ShakeIfClose_Footstep(inst)
+	end
+end
+
+local function EnableEightFaced(inst)
+	if not inst.sg.mem.eightfaced then
+		inst.sg.mem.eightfaced = true
+		inst.Transform:SetEightFaced()
+	end
+end
+
+local function DisableEightFaced(inst)
+	if inst.sg.mem.eightfaced then
+		inst.sg.mem.eightfaced = false
+		inst.Transform:SetFourFaced()
 	end
 end
 
@@ -542,6 +579,8 @@ local states =
 				inst.AnimState:PlayAnimation((aggro and "standing_idle" or "idle_loop")..(nofaced and "_nofaced" or ""), true)
 			end
 		end,
+
+		onexit = DisableEightFaced,
 	},
 
 	State{
@@ -745,8 +784,10 @@ local states =
 			elseif GoToStandState(inst, "bi", nil, target) then
 				inst.components.locomotor:StopMoving()
 				inst.components.combat:StartAttack()
+				EnableEightFaced(inst)
 				inst.AnimState:PlayAnimation("atk")
 				StartTrackingTarget(inst, target)
+				inst.sg.statemem.original_target = target --remember for onmissother event
 			end
 		end,
 
@@ -757,16 +798,19 @@ local states =
 			FrameEvent(4, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/attack") end),
 			FrameEvent(10, StopTrackingTarget),
 			FrameEvent(28, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh") end),
+			FrameEvent(29, function(inst)
+				SpawnSwipeFX(inst, 1)
+			end),
 			FrameEvent(32, function(inst)
 				inst.sg.statemem.targets = {}
 				DoArcAttack(inst, 1, TUNING.BEARGER_MELEE_RANGE, nil, nil, nil, inst.sg.statemem.targets)
-				inst.sg.statemem.fx = SpawnPrefab("bearger_swipe_fx")
-				inst.sg.statemem.fx.entity:SetParent(inst.entity)
-				inst.sg.statemem.fx.Transform:SetPosition(1, 0, 0)
 			end),
 			FrameEvent(33, function(inst)
 				DoArcAttack(inst, 1, TUNING.BEARGER_MELEE_RANGE, nil, nil, nil, inst.sg.statemem.targets)
 				DestroyStuff(inst, 1, TUNING.BEARGER_MELEE_RANGE)
+				if next(inst.sg.statemem.targets) == nil then
+					inst:PushEvent("onmissother", { target = inst.sg.statemem.original_target }) --for ChaseAndAttack
+				end
 			end),
 			FrameEvent(47, function(inst)
 				if inst.sg.mem.dostagger and TryStagger(inst) then
@@ -783,14 +827,16 @@ local states =
 		{
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
+					inst.sg.statemem.keepfacing = true
 					inst.sg:GoToState("idle", IDLE_FLAGS.Aggro)
 				end
 			end),
 		},
 
 		onexit = function(inst)
-			if inst.sg.statemem.fx ~= nil and inst.sg.statemem.fx:IsValid() then
-				inst.sg.statemem.fx:Remove()
+			KillSwipeFX(inst)
+			if not inst.sg.statemem.keepfacing then
+				DisableEightFaced(inst)
 			end
 		end,
 	},
@@ -806,6 +852,7 @@ local states =
 				inst.AnimState:PlayAnimation("atk1")
 				inst.AnimState:PushAnimation("atk1_pst", false)
 				StartTrackingTarget(inst, target)
+				inst.sg.statemem.original_target = target --remember for onmissother event
 			end
 		end,
 
@@ -818,18 +865,21 @@ local states =
 			FrameEvent(28, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh") end),
 			FrameEvent(27, function(inst) inst.Physics:SetMotorVelOverride(6, 0, 0) end),
 			FrameEvent(28, function(inst) inst.Physics:SetMotorVelOverride(12, 0, 0) end),
+			FrameEvent(29, function(inst)
+				SpawnSwipeFX(inst, COMBO_ARC_OFFSET)
+			end),
 			FrameEvent(32, function(inst)
 				inst.sg.statemem.targets = {}
 				ToggleOffCharacterCollisions(inst)
 				DoComboArcAttack(inst, inst.sg.statemem.targets)
-				inst.sg.statemem.fx = SpawnPrefab("bearger_swipe_fx")
-				inst.sg.statemem.fx.entity:SetParent(inst.entity)
-				inst.sg.statemem.fx.Transform:SetPosition(COMBO_ARC_OFFSET, 0, 0)
 			end),
 			FrameEvent(33, function(inst)
 				DoComboArcAttack(inst, inst.sg.statemem.targets)
 				DoComboArcWork(inst)
 				ToggleOnCharacterCollisions(inst)
+				if next(inst.sg.statemem.targets) == nil then
+					inst:PushEvent("onmissother", { target = inst.sg.statemem.original_target }) --for ChaseAndAttack
+				end
 			end),
 			FrameEvent(34, function(inst) inst.Physics:SetMotorVelOverride(6, 0, 0) end),
 			FrameEvent(35, function(inst) inst.Physics:SetMotorVelOverride(3, 0, 0) end),
@@ -879,9 +929,7 @@ local states =
 			ToggleOnCharacterCollisions(inst)
 			inst.Physics:ClearMotorVelOverride()
 			inst.Physics:Stop()
-			if inst.sg.statemem.fx ~= nil and inst.sg.statemem.fx:IsValid() then
-				inst.sg.statemem.fx:Remove()
-			end
+			KillSwipeFX(inst)
 		end,
 	},
 
@@ -896,6 +944,7 @@ local states =
 			inst.AnimState:PlayAnimation("atk2")
 			inst.AnimState:PushAnimation("atk2_pst", false)
 			StartTrackingTarget(inst, target)
+			inst.sg.statemem.original_target = target --remember for onmissother event
 		end,
 
 		onupdate = UpdateTrackingTarget,
@@ -907,19 +956,21 @@ local states =
 			FrameEvent(24, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh") end),
 			FrameEvent(23, function(inst) inst.Physics:SetMotorVelOverride(6, 0, 0) end),
 			FrameEvent(24, function(inst) inst.Physics:SetMotorVelOverride(12, 0, 0) end),
+			FrameEvent(25, function(inst)
+				SpawnSwipeFX(inst, COMBO_ARC_OFFSET, true)
+			end),
 			FrameEvent(28, function(inst)
 				inst.sg.statemem.targets = {}
 				ToggleOffCharacterCollisions(inst)
 				DoComboArcAttack(inst, inst.sg.statemem.targets)
-				inst.sg.statemem.fx = SpawnPrefab("bearger_swipe_fx")
-				inst.sg.statemem.fx.entity:SetParent(inst.entity)
-				inst.sg.statemem.fx.Transform:SetPosition(COMBO_ARC_OFFSET, 0, 0)
-				inst.sg.statemem.fx:Reverse()
 			end),
 			FrameEvent(29, function(inst)
 				DoComboArcAttack(inst, inst.sg.statemem.targets)
 				DoComboArcWork(inst)
 				ToggleOnCharacterCollisions(inst)
+				if next(inst.sg.statemem.targets) == nil then
+					inst:PushEvent("onmissother", { target = inst.sg.statemem.original_target }) --for ChaseAndAttack
+				end
 			end),
 			FrameEvent(30, function(inst) inst.Physics:SetMotorVelOverride(6, 0, 0) end),
 			FrameEvent(31, function(inst) inst.Physics:SetMotorVelOverride(3, 0, 0) end),
@@ -969,9 +1020,7 @@ local states =
 			ToggleOnCharacterCollisions(inst)
 			inst.Physics:ClearMotorVelOverride()
 			inst.Physics:Stop()
-			if inst.sg.statemem.fx ~= nil and inst.sg.statemem.fx:IsValid() then
-				inst.sg.statemem.fx:Remove()
-			end
+			KillSwipeFX(inst)
 		end,
 	},
 
@@ -986,6 +1035,7 @@ local states =
 			inst.AnimState:PlayAnimation("atk1a")
 			inst.AnimState:PushAnimation("atk1_pst", false)
 			StartTrackingTarget(inst, target)
+			inst.sg.statemem.original_target = target --remember for onmissother event
 		end,
 
 		onupdate = UpdateTrackingTarget,
@@ -997,18 +1047,21 @@ local states =
 			FrameEvent(24, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh") end),
 			FrameEvent(23, function(inst) inst.Physics:SetMotorVelOverride(6, 0, 0) end),
 			FrameEvent(24, function(inst) inst.Physics:SetMotorVelOverride(12, 0, 0) end),
+			FrameEvent(25, function(inst)
+				SpawnSwipeFX(inst, COMBO_ARC_OFFSET)
+			end),
 			FrameEvent(28, function(inst)
 				inst.sg.statemem.targets = {}
 				ToggleOffCharacterCollisions(inst)
 				DoComboArcAttack(inst, inst.sg.statemem.targets)
-				inst.sg.statemem.fx = SpawnPrefab("bearger_swipe_fx")
-				inst.sg.statemem.fx.entity:SetParent(inst.entity)
-				inst.sg.statemem.fx.Transform:SetPosition(COMBO_ARC_OFFSET, 0, 0)
 			end),
 			FrameEvent(29, function(inst)
 				DoComboArcAttack(inst, inst.sg.statemem.targets)
 				DoComboArcWork(inst)
 				ToggleOnCharacterCollisions(inst)
+				if next(inst.sg.statemem.targets) == nil then
+					inst:PushEvent("onmissother", { target = inst.sg.statemem.original_target }) --for ChaseAndAttack
+				end
 			end),
 			FrameEvent(30, function(inst) inst.Physics:SetMotorVelOverride(6, 0, 0) end),
 			FrameEvent(31, function(inst) inst.Physics:SetMotorVelOverride(3, 0, 0) end),
@@ -1058,6 +1111,7 @@ local states =
 			ToggleOnCharacterCollisions(inst)
 			inst.Physics:ClearMotorVelOverride()
 			inst.Physics:Stop()
+			KillSwipeFX(inst)
 		end,
 	},
 
@@ -1206,6 +1260,7 @@ local states =
 						dist = math.sqrt(dx * dx + dz * dz)
 					end
 				end
+				inst.sg.statemem.original_target = data.target --remember for onmissother event
 			end
 			dist = math.clamp(dist or 3, 3, 6)
 			inst.Physics:SetMotorVelOverride(-dist / inst.AnimState:GetCurrentAnimationLength(), 0, 0)
@@ -1215,14 +1270,31 @@ local states =
 		{
 			FrameEvent(1, ToggleOffCharacterCollisions),
 			FrameEvent(8, function(inst)
-				ShakeIfClose_Pound(inst)
-				inst.components.groundpounder:GroundPound()
+				local pt = inst:GetPosition()
+				local rot = inst.Transform:GetRotation() * DEGREES
+				local dist = -1
+				pt.x = pt.x + dist * math.cos(rot)
+				pt.y = 0
+				pt.z = pt.z - dist * math.sin(rot)
+
+				--ShakeIfClose_Pound(inst) --sinkhole shakes as well
+				inst.components.groundpounder:GroundPound(pt)
 				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/groundpound")
 			end),
 			FrameEvent(9, function(inst)
+				local x, y, z = inst.Transform:GetWorldPosition()
+				local rot = inst.Transform:GetRotation() * DEGREES
+				local dist = -1
+				x = x + dist * math.cos(rot)
+				z = z - dist * math.sin(rot)
+
 				inst.sg.statemem.targets = {}
-				DoAOEAttack(inst, -1, 4, 1.2, 1.5, nil, inst.sg.statemem.targets)
+				DoAOEAttack(inst, dist, 4, 1.2, 1.5, nil, inst.sg.statemem.targets)
 				ToggleOnCharacterCollisions(inst)
+
+				local sinkhole = SpawnPrefab("bearger_sinkhole")
+				sinkhole.Transform:SetPosition(x, 0, z)
+				sinkhole:PushEvent("docollapse")
 			end),
 		},
 
@@ -1231,7 +1303,10 @@ local states =
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg.statemem.butt = true
-					inst.sg:GoToState("butt_pst", inst.sg.statemem.targets)
+					inst.sg:GoToState("butt_pst", {
+						target = inst.sg.statemem.original_target,
+						targets = inst.sg.statemem.targets,
+					})
 				end
 			end),
 		},
@@ -1249,11 +1324,14 @@ local states =
 		name = "butt_pst",
 		tags = { "attack", "busy", "jumping" },
 
-		onenter = function(inst, targets)
+		onenter = function(inst, data)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("butt_pst")
-			if targets ~= nil then
-				DoAOEAttack(inst, -1, 4, 1.2, 1.5, nil, targets)
+			if data ~= nil and data.targets ~= nil then
+				DoAOEAttack(inst, -1, 4, 1.2, 1.5, nil, data.targets)
+				if next(data.targets) == nil then
+					inst:PushEvent("onmissother", { target = data.target }) --for ChaseAndAttack
+				end
 			end
 		end,
 

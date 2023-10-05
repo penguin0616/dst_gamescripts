@@ -281,7 +281,7 @@ local function StartDirt(hunt, position)
     hunt.numtrackstospawn = math.random(MIN_TRACKS, MAX_TRACKS)
 
     local lunarportalactive = IsLunarPortalActive()
-    if not lunarportalactive and math.random() <= GetAlternateBeastChance(hunt) or true then
+    if not lunarportalactive and math.random() <= GetAlternateBeastChance(hunt) then
         hunt.fork_track_num = math.random(math.floor(hunt.numtrackstospawn / 2), hunt.numtrackstospawn - 2)
     end
 

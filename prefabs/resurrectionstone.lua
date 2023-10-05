@@ -364,8 +364,10 @@ local function fn()
 
     inst.scrapbook_anim = "idle_activate"
 
-    inst:AddComponent("pointofinterest")
-    inst.components.pointofinterest:SetHeight(200)
+    if not TheNet:IsDedicated() then
+        inst:AddComponent("pointofinterest")
+        inst.components.pointofinterest:SetHeight(320)
+    end
 
     inst.entity:SetPristine()
 

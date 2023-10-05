@@ -19,7 +19,7 @@ local function fn()
     inst.AnimState:PlayAnimation("anim")
     inst.AnimState:PushAnimation("idle")
 
-    inst:DoTaskInTime(2, ErodeAway, 5)
+    inst:DoTaskInTime(3, inst.Remove)
 
     return inst
 end

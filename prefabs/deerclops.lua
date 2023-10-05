@@ -90,7 +90,8 @@ local function FindBaseToAttack(inst, target)
     local structure = GetClosestInstWithTag(STRUCTURE_TAGS, target, 40)
     if structure ~= nil then
         inst.components.knownlocations:RememberLocation("targetbase", structure:GetPosition())
-        inst.AnimState:ClearOverrideSymbol("deerclops_head")
+		inst.AnimState:Show("head_normal")
+		inst.AnimState:Hide("head_neutral")
     end
 end
 
@@ -123,7 +124,8 @@ local function AfterWorking(inst, data)
             inst.structuresDestroyed = inst.structuresDestroyed + 1
             if inst:IsSated() then
                 inst.components.knownlocations:ForgetLocation("targetbase")
-                inst.AnimState:OverrideSymbol("deerclops_head", inst.build, "deerclops_head_neutral")
+				inst.AnimState:Hide("head_normal")
+				inst.AnimState:Show("head_neutral")
             end
         end
     end
@@ -355,6 +357,7 @@ local function commonfn(build, commonfn)
     inst.AnimState:SetBank("deerclops")
     inst.AnimState:SetBuild(build)
     inst.AnimState:PlayAnimation("idle_loop", true)
+	inst.AnimState:Hide("head_neutral")
 
     if commonfn ~= nil then
         commonfn(inst)

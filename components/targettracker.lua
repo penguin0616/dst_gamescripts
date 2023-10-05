@@ -139,6 +139,8 @@ function TargetTracker:OnUpdate(dt)
 
         if self.target == nil or
             not self.target:IsValid() or
+            self.target:IsInLimbo() or
+            self.target:IsAsleep() or
             self.target.components.health == nil or
             self.target.components.health:IsDead() or
             (self.shouldkeeptrackingfn ~= nil and not self.shouldkeeptrackingfn(self.inst, self.target))

@@ -2416,6 +2416,13 @@ function d_createscrapbookdata(print_missing_icons)
             print(string.format("[!!!!]  Speech Name [ %s ] isn't defined in STRINGS.CHARACTERS.GENERIC.DESCRIBE!", t.scrapbook_speechname))
         end
 
+        if t.scrapbook_inspectonseen == nil and
+            t.components.inspectable == nil and
+            t.components.health == nil
+        then
+            print(string.format("[!!!!] [ %s ] cannot be inspected! Please add \"inst.scrapbook_inspectonseen = true\" to the prefab (common).", entry))
+        end
+
         ---------------------------------::   SANITY   ::---------------------------------
 
         if t.scrapbook_sanityaura then

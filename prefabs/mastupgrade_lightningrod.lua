@@ -150,6 +150,7 @@ local function basefn()
 
     inst.scrapbook_anim = "top"
     inst.scrapbook_specialinfo = "MASTUPGRADELIGHTNINGCONDUCTOR"
+    inst.scrapbook_inspectonseen = true
 
     inst.entity:SetPristine()
 

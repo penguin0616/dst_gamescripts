@@ -33,7 +33,8 @@ local normal_prefabs =
 local mutated_prefabs =
 {
     "bearger",
-	"bearger_swipe_fx",
+	"bearger_sinkhole",
+	"mutatedbearger_swipe_fx",
 	"groundpound_fx",
 	"groundpoundring_fx",
 	"furtuft",
@@ -505,6 +506,8 @@ local function normalfn()
         return inst
     end
 
+	inst.swipefx = "bearger_swipe_fx"
+
 	inst:AddComponent("thief")
 	inst:AddComponent("inventory")
 	inst:AddComponent("eater")
@@ -580,6 +583,7 @@ local function mutatedfn()
 
 	inst.cancombo = true
 	inst.canbutt = true
+	inst.swipefx = "mutatedbearger_swipe_fx"
 
     inst.components.health:SetMaxHealth(TUNING.MUTATED_BEARGER_HEALTH)
 

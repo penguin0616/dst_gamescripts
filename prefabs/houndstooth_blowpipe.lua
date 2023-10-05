@@ -266,8 +266,6 @@ local function ProjectileFn()
     --projectile (from projectile component) added to pristine state for optimization.
     inst:AddTag("projectile")
 
-    inst:AddTag("reloaditem_ammo") -- Action string.
-
     inst:AddTag("NOCLICK")
     inst:AddTag("NOBLOCK")
 

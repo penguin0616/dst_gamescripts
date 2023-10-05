@@ -596,8 +596,10 @@ local function fn()
     -- Server and Client component.
     inst:AddComponent("charliecutscene")
 
-    inst:AddComponent("pointofinterest")
-    inst.components.pointofinterest:SetHeight(-450)
+    if not TheNet:IsDedicated() then
+        inst:AddComponent("pointofinterest")
+        inst.components.pointofinterest:SetHeight(20)
+    end
 
     inst.entity:SetPristine()
 

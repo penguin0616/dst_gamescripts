@@ -17,7 +17,7 @@ SetSharedLootTable("wagstaff_machinery",
 {
     {'cutstone',          0.75},
     {'wagpunk_bits',      1.00},
-    {'wagpunk_bits',      0.15},
+    {'wagpunk_bits',      0.75},
     {'transistor',        0.10},
     {'trinket_6',         0.15},
     {'trinket_10',        0.01},

@@ -63,6 +63,9 @@ local WagpunkUI =  Class(Widget, function(self, owner)
 
     local function _Synch(owner,hat) self:ShowSynch(hat) end
     self.owner:ListenForEvent("wagpunkui_synch", _Synch, owner)
+
+    local function _OnUnequip(owner) self:OnUnequip() end
+    self.owner:ListenForEvent("unequip", _OnUnequip, owner)
 end)
 
 function WagpunkUI:SetTarget(target)
@@ -88,6 +91,12 @@ function WagpunkUI:ShowSynch(hat)
     if hat == self.hat then
         self.synch:GetAnimState():PlayAnimation("wagpunk_sync")
         self.synch:Show()
+    end
+end
+
+function WagpunkUI:OnUnequip()
+    if self.hat ~= nil and (not self.hat:IsValid() or self.hat._wearer:value() ~= ThePlayer) then
+        self:HatRemoved(self.hat)
     end
 end
 

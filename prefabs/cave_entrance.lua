@@ -142,10 +142,12 @@ local function closed_fn()
 
     inst.scrapbook_anim = "idle_closed"    
 
-    inst:AddComponent("pointofinterest")
-    inst.components.pointofinterest:SetHeight(175)
-    inst.components.pointofinterest.testfn = function(inst)
-        return not inst:HasTag("NOCLICK")
+    if not TheNet:IsDedicated() then
+        inst:AddComponent("pointofinterest")
+        inst.components.pointofinterest:SetHeight(200)
+        inst.components.pointofinterest:SetShouldShowFn(function(inst)
+            return not inst:HasTag("NOCLICK")
+        end)
     end
 
     if not TheWorld.ismastersim then

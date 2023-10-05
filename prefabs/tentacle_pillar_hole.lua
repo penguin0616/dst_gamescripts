@@ -134,6 +134,11 @@ local function fn()
     inst.scrapbook_anim = "idle_hole"
     inst.scrapbook_specialinfo = "TENTACLEPILLARHOLE"
 
+    if not TheNet:IsDedicated() then
+        inst:AddComponent("pointofinterest")
+        inst.components.pointofinterest:SetHeight(270)
+    end
+
     inst.no_wet_prefix = true
 
     inst.entity:SetPristine()

@@ -68,7 +68,10 @@ local function ResetBuff(inst)
     end
 
     inst.components.equippable.walkspeedmult = 1
-    inst.fx.level:set(1)
+
+    if inst.fx ~= nil then
+        inst.fx.level:set(1)
+    end
 end
 
 local function SetNewTarget(inst, target, owner)
@@ -77,7 +80,9 @@ local function SetNewTarget(inst, target, owner)
             inst.fx.level:set(1)
         end
 
-        owner.SoundEmitter:KillSound(AMB_SOUNDNAME)
+        if owner ~= nil then
+            owner.SoundEmitter:KillSound(AMB_SOUNDNAME)
+        end
 
         return
     end
@@ -129,7 +134,10 @@ local function OnAttack(owner, data)
             armor.components.targettracker:StopTracking(true)
         end
 
-        armor.fx.level:set(2)
+        if armor.fx ~= nil then
+            armor.fx.level:set(2)
+        end
+
         armor:PlayAmbientSound(owner, 0)
 
         armor._potencialtarget = data.target
@@ -146,7 +154,9 @@ local function TimeCheck(inst, targettime, lasttime)
     local owner = inst.components.inventoryitem.owner
 
     if STAGE1 <= targettime and lasttime < STAGE1 then
-        inst.fx.level:set(3)
+        if inst.fx ~= nil then
+            inst.fx.level:set(3)
+        end
         inst.components.equippable.walkspeedmult = TUNING.ARMORPUNK_SPEED_MULT_STAGE1
         if owner then
             inst:SpawnBuffFX(owner)
@@ -154,7 +164,9 @@ local function TimeCheck(inst, targettime, lasttime)
         end
     end
     if STAGE2 <= targettime and lasttime < STAGE2 then
-        inst.fx.level:set(4)
+        if inst.fx ~= nil then
+            inst.fx.level:set(4)
+        end
         inst.components.equippable.walkspeedmult = TUNING.ARMORPUNK_SPEED_MULT_STAGE2
         if owner then
             inst:SpawnBuffFX(owner)
@@ -162,7 +174,9 @@ local function TimeCheck(inst, targettime, lasttime)
         end
     end
     if STAGE3 <= targettime and lasttime < STAGE3 then
-        inst.fx.level:set(5)
+        if inst.fx ~= nil then
+            inst.fx.level:set(5)
+        end
         inst.components.equippable.walkspeedmult = TUNING.ARMORPUNK_SPEED_MULT_STAGE3
         if owner then
             inst:SpawnBuffFX(owner)
@@ -202,8 +216,11 @@ local function OnEquip(inst, owner)
     end
 
     inst.fx = SpawnPrefab("armorwagpunk_fx")
-    inst.fx:AttachToOwner(owner)
-    inst.fx.level:set(1)
+
+    if inst.fx ~= nil then
+        inst.fx:AttachToOwner(owner)
+        inst.fx.level:set(1)
+    end
 end
 
 local function OnUnequip(inst, owner)

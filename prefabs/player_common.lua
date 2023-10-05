@@ -2245,12 +2245,6 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.OnPostActivateHandshake_Client = ex_fns.OnPostActivateHandshake_Client
         inst._PostActivateHandshakeState_Client = POSTACTIVATEHANDSHAKE.NONE
 
-        inst:DoTaskInTime(0,function()
-            if ThePlayer and ThePlayer == inst then
-                TheScrapbookPartitions:SetInspectedByCharacter("multiplayer_portal", ThePlayer.prefab) 
-            end
-        end)
-
         inst.entity:SetPristine()
         if not TheWorld.ismastersim then
             return inst

@@ -195,12 +195,6 @@ local function GetFish(inst)
     return math.random() < 0.6 and "wetpouch" or "pondfish"
 end
 
-local function onnear(inst,player)
-    if ThePlayer and player == ThePlayer then
-        TheScrapbookPartitions:SetInspectedByCharacter(inst.prefab, ThePlayer.prefab)
-    end
-end
-
 local function fn()
     local inst = CreateEntity()
 
@@ -233,12 +227,12 @@ local function fn()
     inst.no_wet_prefix = true
     inst:SetDeployExtraSpacing(NO_DEPLOY_RADIUS)
 
-    inst:AddComponent("pointofinterest")    
+    if not TheNet:IsDedicated() then
+        inst:AddComponent("pointofinterest")
+        inst.components.pointofinterest:SetHeight(320)
+    end
 
-    inst:AddComponent("playerprox")
-    inst.components.playerprox:SetDist(6, 7) --15,17
-    inst.components.playerprox:SetOnPlayerNear(onnear)
-    inst.components.playerprox.LockOnPlayer = true
+    inst.scrapbook_inspectonseen = true
 
     inst.entity:SetPristine()
 

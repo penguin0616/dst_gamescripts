@@ -35,7 +35,7 @@ local SHADELINGS_BY_STAGE = {1, 2, 3}
 --------------------------------------------------------------------------------
 
 local function OnChildSpawned(inst, child)
-    child:PushEvent("onspawnedby", {portal = inst})
+    child:OnSpawnedBy(inst)
 end
 
 local function ConfigureShadelingSpawn(inst, stage)
@@ -55,7 +55,7 @@ end
 --------------------------------------------------------------------------------
 
 local function SetMaxMinimapStatus(inst)
-    inst.MiniMapEntity:SetCanUseCache(true)
+    inst.MiniMapEntity:SetCanUseCache(false)
     inst.MiniMapEntity:SetDrawOverFogOfWar(true)
     inst.MiniMapEntity:SetPriority(22)
     inst.MiniMapEntity:SetIcon("shadowrift_portal_max.png")

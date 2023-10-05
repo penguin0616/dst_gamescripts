@@ -1269,8 +1269,11 @@ local function fn()
     inst.components.talker.font = TALKINGFONT_HERMIT
 
     inst:AddComponent("npc_talker")
-    inst:AddComponent("pointofinterest")
-    inst.components.pointofinterest:SetHeight(200)
+
+    if not TheNet:IsDedicated() then
+        inst:AddComponent("pointofinterest")
+        inst.components.pointofinterest:SetHeight(220)
+    end
 
     inst.displaynamefn = displaynamefn
 

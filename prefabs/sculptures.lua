@@ -141,7 +141,7 @@ local function onshadowchessroar(inst)
     end
 end
 
-local function makesculpture(name, physics_radius, scale, second_piece_name)
+local function makesculpture(name, physics_radius, scale, second_piece_name, pointofinterest_height)
     local assets =
     {
         Asset("ANIM", "anim/sculpture_"..name..".zip"),
@@ -250,8 +250,9 @@ local function makesculpture(name, physics_radius, scale, second_piece_name)
         inst.scrapbook_anim = "full"
         inst.scrapbook_specialinfo = "SCULPTURE"
 
-        if not second_piece_name then
+        if not TheNet:IsDedicated() and not second_piece_name then
             inst:AddComponent("pointofinterest")
+            inst.components.pointofinterest:SetHeight(pointofinterest_height)
         end
 
         inst.entity:SetPristine()
@@ -301,9 +302,9 @@ local ROOK_SCALE = .7
 local KNIGHT_SCALE = 1
 local BISHOP_SCALE = 1
 
-return makesculpture("rook",   ROOK_VOLUME,   ROOK_SCALE,   nil),
+return makesculpture("rook",   ROOK_VOLUME,   ROOK_SCALE,   nil, -10),
        makesculpture("rook",   ROOK_VOLUME,   ROOK_SCALE,   "rooknose"),
-       makesculpture("knight", KNIGHT_VOLUME, KNIGHT_SCALE, nil),
+       makesculpture("knight", KNIGHT_VOLUME, KNIGHT_SCALE, nil, 170),
        makesculpture("knight", KNIGHT_VOLUME, KNIGHT_SCALE, "knighthead"),
-       makesculpture("bishop", BISHOP_VOLUME, BISHOP_SCALE, nil),
+       makesculpture("bishop", BISHOP_VOLUME, BISHOP_SCALE, nil, 100),
        makesculpture("bishop", BISHOP_VOLUME, BISHOP_SCALE, "bishophead")

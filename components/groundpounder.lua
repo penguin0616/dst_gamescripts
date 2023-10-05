@@ -31,14 +31,18 @@ function GroundPounder:GetPoints(pt)
             points[i] = {}
         end
 
-        for p = 1, numPoints do
-            local theta = (TWOPI / numPoints) * p
-            local x = pt.x + radius * math.cos(theta)
-            local z = pt.z + radius * math.sin(theta)
-            local point = Vector3(x, 0, z)
+		if numPoints > 1 then
+			for p = 1, numPoints do
+				local theta = (TWOPI / numPoints) * p
+				local x = pt.x + radius * math.cos(theta)
+				local z = pt.z + radius * math.sin(theta)
+				local point = Vector3(x, 0, z)
 
-            table.insert(points[i], point)
-        end
+				table.insert(points[i], point)
+			end
+		else
+			table.insert(points[i], Vector3(pt.x, 0, pt.z))
+		end
 
         radius = radius + self.radiusStepDistance
     end
@@ -48,6 +52,7 @@ end
 
 local WALKABLEPLATFORM_TAGS = {"walkableplatform"}
 
+--Deprecated
 function GroundPounder:DestroyPoints(points, breakobjects, dodamage, pushplatforms, pushinventoryitems)
     local getEnts = breakobjects or dodamage or pushinventoryitems
     local map = TheWorld.Map
@@ -123,7 +128,7 @@ function GroundPounder:DestroyPoints(points, breakobjects, dodamage, pushplatfor
                     local v2x, v2y, v2z = p_ent.Transform:GetWorldPosition()
                     local mx, mz = v2x - v.x, v2z - v.z
                     if mx ~= 0 or mz ~= 0 then
-                        ents_hit[p_ent] = true
+                        platforms_hit[p_ent] = true
                         local normalx, normalz = VecUtil_Normalize(mx, mz)
                         p_ent.components.boatphysics:ApplyForce(normalx, normalz, 3)
                     end
@@ -140,16 +145,161 @@ function GroundPounder:DestroyPoints(points, breakobjects, dodamage, pushplatfor
     end
 end
 
+function GroundPounder:DestroyRing(pt, radius, points, breakobjects, dodamage, pushplatforms, pushinventoryitems, ents_hit, platforms_hit)
+	local getEnts = breakobjects or dodamage or pushinventoryitems
+	local map = TheWorld.Map
+	if dodamage then
+		self.inst.components.combat:EnableAreaDamage(false)
+		self.inst.components.combat.ignorehitrange = true
+	end
+	ents_hit = ents_hit or {}
+	platforms_hit = platforms_hit or {}
+
+	if getEnts then
+		local ents = TheSim:FindEntities(pt.x, pt.y, pt.z, radius + 3, nil, self.noTags)
+		if #ents > 0 then
+			local i0
+			local min_range_sq = math.max(0, radius - 3)
+			min_range_sq = min_range_sq * min_range_sq
+			for i, v2 in ipairs(ents) do
+				if v2:GetDistanceSqToPoint(pt) >= min_range_sq then
+					i0 = i
+					break
+				end
+			end
+			if i0 ~= nil then
+				if breakobjects then
+					for i = i0, #ents do
+						local v2 = ents[i]
+						if v2 ~= self.inst and v2:IsValid() then
+							-- Don't net any insects when we do work
+							if (self.destroyer or self.workefficiency ~= nil) and
+								v2.components.workable ~= nil and
+								v2.components.workable:CanBeWorked() and
+								v2.components.workable.action ~= ACTIONS.NET
+							then
+								if self.workefficiency ~= nil then
+									v2.components.workable:WorkedBy(self.inst, self.workefficiency)
+								else
+									v2.components.workable:Destroy(self.inst)
+								end
+							end
+							if v2:IsValid() and --might've changed after work?
+								not v2:IsInLimbo() and --might've changed after work?
+								self.burner and
+								v2.components.fueled == nil and
+								v2.components.burnable ~= nil and
+								not v2.components.burnable:IsBurning() and
+								not v2:HasTag("burnt") then
+								v2.components.burnable:Ignite()
+							end
+						end
+					end
+				end
+				if dodamage then
+					for i = i0, #ents do
+						local v2 = ents[i]
+						if v2 ~= self.inst and 
+							not ents_hit[v2] and
+							v2:IsValid() and
+							v2.components.health ~= nil and
+							not v2.components.health:IsDead() and
+							self.inst.components.combat:CanTarget(v2) then
+							ents_hit[v2] = true
+							self.inst.components.combat:DoAttack(v2, nil, nil, nil, self.groundpounddamagemult)
+						end
+					end
+				end
+				if pushinventoryitems then
+					for i = i0, #ents do
+						local object = ents[i]
+						local inventoryitem = object.components.inventoryitem
+						if inventoryitem then
+							Launch(object, self.inst)
+							inventoryitem:SetLanded(false, true)
+						end
+					end
+				end
+			end
+		end
+	end
+
+	if pushplatforms then
+		local platform_radius = 3 + TUNING.MAX_WALKABLE_PLATFORM_RADIUS
+		local platform_ents = TheSim:FindEntities(pt.x, pt.y, pt.z, radius + platform_radius, WALKABLEPLATFORM_TAGS, self.noTags)
+		local i0
+		local min_range_sq = math.max(0, radius - platform_radius)
+		min_range_sq = min_range_sq * min_range_sq
+		for i, v2 in ipairs(platform_ents) do
+			if v2:GetDistanceSqToPoint(pt) >= min_range_sq then
+				i0 = i
+				break
+			end
+		end
+		if i0 ~= nil then
+			for i = i0, #platform_ents do
+				local p_ent = platform_ents[i]
+				if p_ent ~= self.inst
+						and not platforms_hit[p_ent]
+						and p_ent:IsValid()
+						and p_ent.Transform
+						and p_ent.components.boatphysics then
+					local v2x, v2y, v2z = p_ent.Transform:GetWorldPosition()
+					local mx, mz = v2x - pt.x, v2z - pt.z
+					if mx ~= 0 or mz ~= 0 then
+						platforms_hit[p_ent] = true
+						local normalx, normalz = VecUtil_Normalize(mx, mz)
+						p_ent.components.boatphysics:ApplyForce(normalx, normalz, 3)
+					end
+				end
+			end
+		end
+	end
+
+	if #points > 1 then
+		for i, v in ipairs(points) do
+			if map:IsLandTileAtPoint(v:Get()) and not map:IsDockAtPoint(v:Get()) then
+				SpawnPrefab(self.groundpoundfx).Transform:SetPosition(v.x, 0, v.z)
+			end
+		end
+	end
+
+	if dodamage then
+		self.inst.components.combat:EnableAreaDamage(true)
+		self.inst.components.combat.ignorehitrange = false
+	end
+end
+
+--Deprecated
 local function OnDestroyPoints(inst, self, points, breakobjects, dodamage, pushplatforms, pushinventoryitems)
     self:DestroyPoints(points, breakobjects, dodamage, pushplatforms, pushinventoryitems)
 end
 
+local function OnDestroyRing(inst, self, pt, radius, points, breakobjects, dodamage, pushplatforms, pushinventoryitems, ents_hit, platforms_hit)
+	self:DestroyRing(pt, radius, points, breakobjects, dodamage, pushplatforms, pushinventoryitems, ents_hit, platforms_hit)
+end
+
 function GroundPounder:GroundPound(pt)
     pt = pt or self.inst:GetPosition()
-    SpawnPrefab(self.groundpoundringfx).Transform:SetPosition(pt:Get())
+
+	local fx = SpawnPrefab(self.groundpoundringfx)
+	fx.Transform:SetPosition(pt.x, 0, pt.z)
+
+	--auto-scaling hitbox radius if it's the default fx
+	if self.groundpoundringfx == "groundpoundring_fx" then
+		local hitrings = math.max(self.destructionRings, self.damageRings)
+		local hitradius = self.initialRadius + self.radiusStepDistance * math.max(0, hitrings - 1) + 3
+		local fxscale = math.sqrt(hitradius / 12) --art radius is 12; sqrt coz of transform scale bug
+		fx.Transform:SetScale(fxscale, fxscale, fxscale)
+	end
+
     local points = self:GetPoints(pt)
     local delay = 0
+	local radius = self.initialRadius
+	local ents_hit = {}
+	local platforms_hit = {}
     for i = 1, self.numRings do
+		--[[ Deprecated
         self.inst:DoTaskInTime(
             delay, OnDestroyPoints,
             self, points[i],
@@ -158,6 +308,18 @@ function GroundPounder:GroundPound(pt)
             i <= self.platformPushingRings,
             i <= self.inventoryPushingRings
         )
+		]]
+		self.inst:DoTaskInTime(
+			delay, OnDestroyRing,
+			self, pt, radius, points[i],
+			i <= self.destructionRings,
+			i <= self.damageRings,
+			i <= self.platformPushingRings,
+			i <= self.inventoryPushingRings,
+			ents_hit,
+			platforms_hit
+		)
+		radius = radius + self.radiusStepDistance
         delay = delay + self.ringDelay
     end
 

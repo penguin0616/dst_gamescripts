@@ -371,7 +371,8 @@ local function create_common_pre(inst, bank, build, radius, max_health, item_col
     inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
     inst.AnimState:SetLayer(LAYER_BACKGROUND)
 
-    inst.scrapbook_anim = "idle_full"    
+    inst.scrapbook_anim = "idle_full"
+    inst.scrapbook_inspectonseen = true
 
     if scale then
         inst.AnimState:SetScale(scale,scale,scale)

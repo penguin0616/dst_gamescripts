@@ -246,7 +246,10 @@ local function fn()
 
     inst.entity:AddTag("statue")
 
-    inst:AddComponent("pointofinterest")
+    if not TheNet:IsDedicated() then
+        inst:AddComponent("pointofinterest")
+        inst.components.pointofinterest:SetHeight(120)
+    end
 
     inst.entity:SetPristine()
 

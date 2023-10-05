@@ -338,13 +338,6 @@ local function testforplayers(inst)
     end
 end
 
-local function onnear(inst,player)
-    print(ThePlayer,inst.status)
-    if ThePlayer and player == ThePlayer and inst.status ~= "off" then
-        TheScrapbookPartitions:SetInspectedByCharacter("archive_orchestrina_main", ThePlayer.prefab)
-    end
-end
-
 local function mainfn()
     local inst = CreateEntity()
 
@@ -369,25 +362,24 @@ local function mainfn()
     inst:AddTag("DECOR")
 
     inst.status = "off"
+    inst.scrapbook_inspectonseen = true
 
-    inst.scrapbook_specialinfo = "ORCHESTRINA"
-
-    inst:AddComponent("pointofinterest")
-    inst.components.pointofinterest:SetHeight(200)
-    inst.components.pointofinterest.testfn = function(inst)
-        return inst.status ~= "off"
+    if not TheNet:IsDedicated() then
+        inst:AddComponent("pointofinterest")
+        inst.components.pointofinterest:SetHeight(220)
+        inst.components.pointofinterest:SetShouldShowFn(function(inst)
+            return inst.status ~= "off"
+        end)
     end
-
-    inst:AddComponent("playerprox")
-    inst.components.playerprox:SetDist(10, 11) --15,17
-    inst.components.playerprox:SetOnPlayerNear(onnear)
-    inst.components.playerprox.LockOnPlayer = true
 
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst.scrapbook_specialinfo = "ORCHESTRINA"
+    inst.scrapbook_anim = "scrapbook"
 
     inst:DoTaskInTime(0,function()
         local base = SpawnPrefab("archive_orchestrina_base")

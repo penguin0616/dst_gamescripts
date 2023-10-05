@@ -838,7 +838,7 @@ local function tree(name, build, stage, data)
         MakeSnowCoveredPristine(inst)
 
         inst.scrapbook_specialinfo = "TREE"
-        inst.scrapbook_proxy = inst.prefab.."_tall"
+        inst.scrapbook_proxy = build == "twiggy" and "twiggy_tall" or inst.prefab.."_tall"
         inst.scrapbook_speechname = inst.prefab
 
         inst.entity:SetPristine()

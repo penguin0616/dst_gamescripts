@@ -176,6 +176,7 @@ local function AddChair(ret, name, bank, build, hasback)
 
 		MakeSmallBurnable(inst, nil, nil, true)
 		inst.components.burnable:SetOnBurntFn(OnChairBurnt)
+		MakeSmallPropagator(inst)
 
 		inst.OnLoad = OnLoad
 		inst.OnSave = OnSave

@@ -647,7 +647,10 @@ local function fn()
 
     inst.OnRemoveEntity = RemoveBuildingBlockers
 
-    inst:AddComponent("pointofinterest")
+    if not TheNet:IsDedicated() then
+        inst:AddComponent("pointofinterest")
+        inst.components.pointofinterest:SetHeight(70)
+    end
 
     inst.entity:SetPristine()
 

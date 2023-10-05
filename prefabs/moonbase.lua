@@ -613,8 +613,10 @@ local function fn()
 
     inst._music = net_tinybyte(inst.GUID, "moonbase._music", "musicdirty")
 
-    inst:AddComponent("pointofinterest")
-    inst.components.pointofinterest:SetHeight(200)
+    if not TheNet:IsDedicated() then
+        inst:AddComponent("pointofinterest")
+        inst.components.pointofinterest:SetHeight(320)
+    end
 
     inst.entity:SetPristine()
 

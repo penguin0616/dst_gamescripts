@@ -38,7 +38,7 @@ local AREA_EXCLUDE_TAGS = { "INLIMBO", "notarget", "noattack", "flight", "invisi
 local ICESPAWNTIME = 0.25
 local ICESPIKE_RADIUS = 1 --2/3 is more accurate, but 1 matches legacy
 
-local function DoIceSpikeAOE(inst, x, z, data)
+local function DoIceSpikeAOE(inst, target, x, z, data)
 	inst.components.combat.ignorehitrange = true
 	local ents = TheSim:FindEntities(x, 0, z, ICESPIKE_RADIUS + AOE_RANGE_PADDING, AREAATTACK_MUST_TAGS, AREA_EXCLUDE_TAGS)
 	for i, v in ipairs(ents) do
@@ -62,11 +62,11 @@ local function DoIceSpikeAOE(inst, x, z, data)
 	if data.count > 1 then
 		data.count = data.count - 1
 	elseif next(data.targets) == nil then
-		inst:PushEvent("onmissother") -- for ChaseAndAttack
+		inst:PushEvent("onmissother", { target = target }) -- for ChaseAndAttack
 	end
 end
 
-local function DoSpawnIceSpike(inst, x, z, data, hitdelay, shouldsfx)
+local function DoSpawnIceSpike(inst, target, x, z, data, hitdelay, shouldsfx)
 	local fx = table.remove(inst.icespike_pool)
 	if fx ~= nil then
 		fx:RestartFX()
@@ -79,9 +79,9 @@ local function DoSpawnIceSpike(inst, x, z, data, hitdelay, shouldsfx)
 		fx.SoundEmitter:PlaySound("dontstarve/creatures/deerclops/ice_small")
 	end
 	if hitdelay < FRAMES then
-		DoIceSpikeAOE(inst, x, z, data)
+		DoIceSpikeAOE(inst, target, x, z, data)
 	else
-		inst:DoTaskInTime(hitdelay, DoIceSpikeAOE, x, z, data)
+		inst:DoTaskInTime(hitdelay, DoIceSpikeAOE, target, x, z, data)
 	end
 end
 
@@ -91,7 +91,7 @@ end
 
 local MAX_ICESPIKE_SFX = 6
 
-local function SpawnIceFx(inst)
+local function SpawnIceFx(inst, target)
 	local data = { targets = {}, count = 0 }
 
 	local AOEarc = 35
@@ -159,7 +159,7 @@ local function SpawnIceFx(inst)
 		if shouldsfx then
 			cursfxinstance = soundidx + 1
 		end
-		inst:DoTaskInTime(delay, DoSpawnIceSpike, info.x, info.z, data, hitdelay, shouldsfx)
+		inst:DoTaskInTime(delay, DoSpawnIceSpike, target, info.x, info.z, data, hitdelay, shouldsfx)
 	end
 end
 
@@ -1027,6 +1027,7 @@ local states =
 				inst:ForceFacePoint(target.Transform:GetWorldPosition())
 				inst.sg.statemem.target = target
 			end
+			inst.sg.statemem.original_target = target --remember for onmissother event
 		end,
 
 		onupdate = function(inst)
@@ -1048,7 +1049,9 @@ local states =
 			FrameEvent(16, function(inst)
 				inst.sg.statemem.target = nil
 			end),
-			FrameEvent(31, SpawnIceFx),
+			FrameEvent(31, function(inst)
+				SpawnIceFx(inst, inst.sg.statemem.original_target)
+			end),
 			FrameEvent(34, function(inst)
 				inst.SoundEmitter:PlaySound(inst.sounds.swipe)
 				-- THE ATTACK DAMAGE COMES FROM THE DEERCLOPS SMALL ICE SPICE FX NOW.
@@ -1236,6 +1239,7 @@ local states =
 				inst.sg.statemem.targetpos = target:GetPosition()
 				inst:ForceFacePoint(inst.sg.statemem.targetpos)
 			end
+			inst.sg.statemem.original_target = target --remember for onmissother event
 		end,
 
 		onupdate = function(inst)
@@ -1318,7 +1322,7 @@ local states =
 			FrameEvent(62, function(inst)
 				DoIceLanceAOE(inst, inst.sg.statemem.targetpos, inst.sg.statemem.targets)
 				if next(inst.sg.statemem.targets) == nil then
-					inst:PushEvent("onmissother") --for ChaseAndAttack
+					inst:PushEvent("onmissother", { target = inst.sg.statemem.original_target }) --for ChaseAndAttack
 				end
 			end),
 			FrameEvent(72, function(inst)

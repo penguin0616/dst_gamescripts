@@ -29,26 +29,24 @@ local function fn()
         return inst
     end
 
+    inst:AddComponent("bait")
+    inst:AddComponent("inspectable")
+    inst:AddComponent("inventoryitem")
+
     inst:AddComponent("stackable")
     inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
 
-    inst:AddComponent("inspectable")
-
-    inst:AddComponent("inventoryitem")
-
-    inst:AddComponent("bait")
-
-    inst:AddComponent("edible")
-    inst.components.edible.foodtype = FOODTYPE.GEARS
-    inst.components.edible.healthvalue = TUNING.HEALING_HUGE
-    inst.components.edible.hungervalue = TUNING.CALORIES_HUGE
-    inst.components.edible.sanityvalue = TUNING.SANITY_HUGE
+    --inst:AddComponent("edible")
+    --inst.components.edible.foodtype = FOODTYPE.GEARS
+    --inst.components.edible.healthvalue = TUNING.HEALING_HUGE
+    --inst.components.edible.hungervalue = TUNING.CALORIES_HUGE
+    --inst.components.edible.sanityvalue = TUNING.SANITY_HUGE
 
     inst:AddComponent("repairer")
     inst.components.repairer.repairmaterial = MATERIALS.GEARS
     inst.components.repairer.workrepairvalue = TUNING.REPAIR_GEARS_WORK
 
-    MakeHauntableLaunchAndSmash(inst)
+    MakeHauntableLaunch(inst)
 
     return inst
 end

@@ -2,6 +2,8 @@ require "util"
 require "strings"
 require "constants"
 
+local DEBUG_MODE = BRANCH == "dev"
+
 --[[
 TheScrapbookPartitions:WasSeenInGame("prefab")
 TheScrapbookPartitions:SetSeenInGame("prefab")
@@ -88,7 +90,7 @@ local DESCRIPTION_STATUS_LOOKUP =
 {
 	ARCHIVE_COOKPOT = "EMPTY",
 	ARCHIVE_RUNE_STATUE = "LINE_1",
-	ARCHIVE_SWITCH = "VALID",
+	ARCHIVE_SWITCH_BASE = "VALID",
 	ATRIUM_GATE = "OFF",
 	ATRIUM_LIGHT = "OFF",
 	ATRIUM_RUBBLE = "LINE_1",
@@ -110,6 +112,7 @@ local DESCRIPTION_STATUS_LOOKUP =
 	STAGEUSHER = "SITTING",
 	TELEBASE = "VALID",
 	WORM = "WORM",
+
 }
 
 local FUELTYPE_SUBICON_LOOKUP = {
@@ -1195,7 +1198,12 @@ function ScrapbookScreen:PopulateInfoPanel(entry)
 		leftoffset = cattitle:GetRegionSize()
 	end
 
-	local name = data and STRINGS.NAMES[string.upper(data.name)] or ""
+	local name = data ~= nil and STRINGS.NAMES[string.upper(data.name)] or ""
+
+	if data and DEBUG_MODE then
+		name = string.format("%s   |   %s", name, data.prefab or "???")
+	end
+
 	height, title = settextblock(height, {font=HEADERFONT, size=25, str=name, color=UICOLOURS.WHITE, leftoffset=leftoffset})
 
 	------------------------------------

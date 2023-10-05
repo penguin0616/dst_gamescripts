@@ -36,7 +36,7 @@ local KitcoonPuppet = require "widgets/kitcoonpuppet"
 local SHOW_DST_DEBUG_HOST_JOIN = BRANCH == "dev"
 local SHOW_QUICKJOIN = false
 
-local IS_BETA = BRANCH == "staging" --or BRANCH == "dev"
+local IS_BETA = BRANCH == "staging" or BRANCH == "dev"
 local IS_DEV_BUILD = BRANCH == "dev"
 
 local function PlayBannerSound(inst, self, sound)
@@ -352,10 +352,16 @@ local function MakeMeta2Banner(self, banner_root, anim)
 end
 
 local function MakeLunarMutantsBanner(self, banner_root, anim)
-    anim:GetAnimState():SetBuild("dst_menu_rift3")
-    anim:GetAnimState():SetBank("dst_menu_rift3")
+    anim:GetAnimState():SetBuild("dst_menu_rift3_BG")
+    anim:GetAnimState():SetBank("dst_menu_rift3_BG")
     anim:GetAnimState():PlayAnimation("loop", true)
     anim:SetScale(.667)
+
+    local anim_front = banner_root:AddChild(UIAnim())
+    anim_front:GetAnimState():SetBuild("dst_menu_rift3")
+    anim_front:GetAnimState():SetBank ("dst_menu_rift3")
+    anim_front:GetAnimState():PlayAnimation("loop", true)
+    anim_front:SetScale(.667)
 end
 
 
@@ -409,10 +415,7 @@ function MakeBanner(self)
 	if IS_BETA then
 		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_BETA_TITLE
 
-        -- TODO(DiogoW): Wait until the new banner is ready.
-        MakeMeta2Banner(self, banner_root, anim)
-        --MakeLunarMutantsBanner(self, banner_root, anim)
-
+        MakeLunarMutantsBanner(self, banner_root, anim)
     elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTR) then
         MakeYOTRBanner(self, banner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then

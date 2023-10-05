@@ -872,24 +872,24 @@ local function switchbasefn()
     inst.AnimState:SetLayer(LAYER_BACKGROUND)
     inst.AnimState:SetSortOrder(1)
 
-    inst:AddComponent("pointofinterest")
-    inst.components.pointofinterest:SetHeight(200)
-    inst.scrapbook_anim = "idle_empty"
-    inst.scrapbook_bank = "archive_switch"
-    inst.scrapbook_build = "archive_switch"
-    inst.scrapbook_prefab = "archive_switch"
-    inst.scrapbook_specialinfo = "ARCHIVESWITCH"
-    --[[
-    inst.components.pointofinterest.testfn = function(inst)
-        return ThePlayer and not TheScrapbookPartitions:SetInspectedByCharacter("archive_switch", ThePlayer.prefab)
+    if not TheNet:IsDedicated() then
+        inst:AddComponent("pointofinterest")
+        inst.components.pointofinterest:SetHeight(220)
     end
-    ]]
+
+    inst.scrapbook_inspectonseen = true
 
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst.scrapbook_anim = "idle_empty"
+    inst.scrapbook_bank = "archive_switch"
+    inst.scrapbook_build = "archive_switch"
+    inst.scrapbook_prefab = "archive_switch"
+    inst.scrapbook_specialinfo = "ARCHIVESWITCH"
 
     inst:DoTaskInTime(0,function()
         local x,y,z = inst.Transform:GetWorldPosition()

@@ -57,7 +57,7 @@ local WagpunkManager = Class(function(self, inst)
 
     self.inst = inst
 
-    self._enabled = false
+    self._enabled = nil
     self._updating = false
 
     self.machineGUIDS = {}

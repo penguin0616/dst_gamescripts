@@ -3553,7 +3553,9 @@ local function MakeHat(name)
                 inst.fx.level:set(1)
             end
 
-            owner.SoundEmitter:KillSound("wagpunkambient_hat")
+            if owner ~= nil then
+                owner.SoundEmitter:KillSound("wagpunkambient_hat")
+            end
 
             return
         end
@@ -3639,7 +3641,11 @@ local function MakeHat(name)
                 if inst.fx ~= nil then
                     inst.fx.level:set(5)
                 end
-                owner.components.combat.externaldamagemultipliers:SetModifier(inst, TUNING.ARMOR_WAGPUNK_HAT_STAGE3)
+
+                if owner.components.combat ~= nil then
+                    owner.components.combat.externaldamagemultipliers:SetModifier(inst, TUNING.ARMOR_WAGPUNK_HAT_STAGE3)
+                end
+                
                 fns.wagpunk_playambient(owner,0.7)
                 -- ADD EFFECT 3
                 saystring = STRINGS.WARBIS.STAGE3
@@ -3649,7 +3655,11 @@ local function MakeHat(name)
                 if inst.fx ~= nil then
                     inst.fx.level:set(4)
                 end
-                owner.components.combat.externaldamagemultipliers:SetModifier(inst, TUNING.ARMOR_WAGPUNK_HAT_STAGE2)
+
+                if owner.components.combat ~= nil then
+                    owner.components.combat.externaldamagemultipliers:SetModifier(inst, TUNING.ARMOR_WAGPUNK_HAT_STAGE2)
+                end
+
                 fns.wagpunk_playambient(owner,0.5)
                 -- ADD EFFECT 2
                 saystring = STRINGS.WARBIS.STAGE2
@@ -3659,7 +3669,11 @@ local function MakeHat(name)
                 if inst.fx ~= nil then
                     inst.fx.level:set(3)
                 end
-                owner.components.combat.externaldamagemultipliers:SetModifier(inst, TUNING.ARMOR_WAGPUNK_HAT_STAGE1)
+
+                if owner.components.combat ~= nil then
+                    owner.components.combat.externaldamagemultipliers:SetModifier(inst, TUNING.ARMOR_WAGPUNK_HAT_STAGE1)
+                end
+
                 fns.wagpunk_playambient(owner,0.3)
                -- ADD EFFECT 1
                 fns.wagpunk_spawnbufffx(owner)

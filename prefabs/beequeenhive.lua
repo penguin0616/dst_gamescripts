@@ -464,7 +464,10 @@ local function fn()
 
     inst.physrad = net_tinybyte(inst.GUID, "beequeenhivegrown.physrad", "physraddirty")
 
-    inst:AddComponent("pointofinterest")
+    if not TheNet:IsDedicated() then
+        inst:AddComponent("pointofinterest")
+        inst.components.pointofinterest:SetHeight(200)
+    end
 
     inst.entity:SetPristine()
 
