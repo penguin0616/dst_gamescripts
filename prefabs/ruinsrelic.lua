@@ -77,6 +77,7 @@ local function item(name, animated, sound, radius)
 
 			inst:AddTag("structure")
 			inst:AddTag("limited_chair")
+            inst:AddTag("uncomfortable_chair")
 		end
 
         inst.scrapbook_proxy = "ruins_chair"

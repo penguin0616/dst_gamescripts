@@ -18,47 +18,40 @@ local function DoFoleySounds(inst)
 end
 
 local DoRunSounds = function(inst)
-    if inst.sg.mem.footsteps > 3 then
-        PlayFootstep(inst, .6, true)
-    else
-        inst.sg.mem.footsteps = inst.sg.mem.footsteps + 1
-        PlayFootstep(inst, 1, true)
-    end
+    PlayFootstep(inst, (inst.sg.mem.footsteps > 3 and 0.6) or 1.0, true)
+    inst.sg.mem.footsteps = math.min(inst.sg.mem.footsteps + 1, 4)
 end
 
 local function DoHurtSound(inst)
-    if inst.hurtsoundoverride ~= nil then
-        inst.SoundEmitter:PlaySound(inst.hurtsoundoverride, nil, inst.hurtsoundvolume)
-    else
-        inst.SoundEmitter:PlaySound("hookline_2/characters/hermit/hurt", nil, inst.hurtsoundvolume)
-    end
+    inst.SoundEmitter:PlaySound(
+        inst.hurtsoundoverride or "hookline_2/characters/hermit/hurt",
+        nil,
+        inst.hurtsoundvolume
+    )
 end
 
 local function DoTalkSound(inst)
-    if inst.talksoundoverride ~= nil then
-        inst.SoundEmitter:PlaySound(inst.talksoundoverride, "talk")
-        return true
-    else
-        inst.SoundEmitter:PlaySound("hookline_2/characters/hermit/talk", "talk")
-        return true
-    end
+    inst.SoundEmitter:PlaySound(inst.talksoundoverride or "hookline_2/characters/hermit/talk", "talk")
+    return true
 end
 
 local function StopTalkSound(inst, instant)
-    if not instant and inst.endtalksound ~= nil and inst.SoundEmitter:PlayingSound("talk") then
-        inst.SoundEmitter:PlaySound(inst.endtalksound)
+    if inst.SoundEmitter:PlayingSound("talk") then
+        if not instant and inst.endtalksound then
+            inst.SoundEmitter:PlaySound(inst.endtalksound)
+        end
+        inst.SoundEmitter:KillSound("talk")
     end
-    inst.SoundEmitter:KillSound("talk")
 end
 
 --V2C: This is for cleaning up interrupted states with legacy stuff, like
 --     freeze and pinnable, that aren't consistently controlled by either
 --     the stategraph or the component.
 local function ClearStatusAilments(inst)
-    if inst.components.freezable ~= nil and inst.components.freezable:IsFrozen() then
+    if inst.components.freezable and inst.components.freezable:IsFrozen() then
         inst.components.freezable:Unfreeze()
     end
-    if inst.components.pinnable ~= nil and inst.components.pinnable:IsStuck() then
+    if inst.components.pinnable and inst.components.pinnable:IsStuck() then
         inst.components.pinnable:Unstick()
     end
 end
@@ -75,7 +68,7 @@ end
 
 local function DoEmoteFX(inst, prefab)
     local fx = SpawnPrefab(prefab)
-    if fx ~= nil then
+    if fx then
         fx.entity:SetParent(inst.entity)
         fx.entity:AddFollower()
         fx.Follower:FollowSymbol(inst.GUID, "emotefx", 0, 0, 0)
@@ -88,14 +81,12 @@ end
 
 local function DoEmoteSound(inst, soundoverride, loop)
     --NOTE: loop only applies to soundoverride
-    loop = loop and soundoverride ~= nil and "emotesoundloop" or nil
+    loop = (loop and soundoverride ~= nil and "emotesoundloop") or nil
     local soundname = soundoverride or "emote"
     local emotesoundoverride = soundname.."soundoverride"
-    if inst[emotesoundoverride] ~= nil then
-        inst.SoundEmitter:PlaySound(inst[emotesoundoverride], loop)
-    else
-        inst.SoundEmitter:PlaySound((inst.talker_path_override or "dontstarve/characters/")..(inst.soundsname or inst.prefab).."/"..soundname, loop)
-    end
+    local sound = inst[emotesoundoverride] or
+        (inst.talker_path_override or "dontstarve/characters/")..(inst.soundsname or inst.prefab).."/"..soundname
+    inst.SoundEmitter:PlaySound(sound, loop)
 end
 
 local function ToggleOffPhysics(inst)
@@ -155,16 +146,10 @@ end
 
 local function GetWalkStateAnim(inst)
     return "walk"
-    --[[
-    return (inst.sg.statemem.heavy and "heavy_walk")
-        or (inst.sg.statemem.groggy and "idle_walk")
-        or (inst.sg.statemem.careful and "careful_walk")
-        or "walk"
-        ]]
 end
 
 local function OnRemoveCleanupTargetFX(inst)
-    if inst.sg.statemem.targetfx.KillFX ~= nil then
+    if inst.sg.statemem.targetfx.KillFX then
         inst.sg.statemem.targetfx:RemoveEventCallback("onremove", OnRemoveCleanupTargetFX, inst)
         inst.sg.statemem.targetfx:KillFX()
     else
@@ -185,7 +170,7 @@ end
 
 -- Talk functions
 local function CancelTalk_Override(inst, instant)
-	if inst.sg.statemem.talktask ~= nil then
+	if inst.sg.statemem.talktask then
 		inst.sg.statemem.talktask:Cancel()
 		inst.sg.statemem.talktask = nil
 		StopTalkSound(inst, instant)
@@ -216,22 +201,22 @@ local actionhandlers =
     ActionHandler(ACTIONS.OCEAN_FISHING_CAST, function(inst,action) inst.restocklures(inst) return "oceanfishing_cast" end),
     ActionHandler(ACTIONS.OCEAN_FISHING_REEL,
         function(inst, action)
-            local fishable = action.invobject ~= nil and action.invobject.components.oceanfishingrod.target or nil
-            if fishable ~= nil and fishable.components.oceanfishable ~= nil and fishable:HasTag("partiallyhooked") then
+            local fishable = (action.invobject ~= nil and action.invobject.components.oceanfishingrod.target) or nil
+            if fishable and fishable.components.oceanfishable and fishable:HasTag("partiallyhooked") then
                 inst.sg.statemem.continue = true
                 return "oceanfishing_sethook"
             elseif inst:HasTag("fishing_idle") and not (inst.sg:HasStateTag("reeling") and not inst.sg.statemem.allow_repeat) then
                 inst.sg.statemem.continue = true
                 return "oceanfishing_reel"
+            else
+                return nil
             end
-            return nil
         end),
 
     ActionHandler(ACTIONS.STORE, "doshortaction"),
     ActionHandler(ACTIONS.DROP,
         function(inst)
-            return inst.components.inventory:IsHeavyLifting()
-                and "heavylifting_drop"
+            return (inst.components.inventory:IsHeavyLifting() and "heavylifting_drop")
                 or "doshortaction"
         end),
 
@@ -248,17 +233,17 @@ local actionhandlers =
         end),
     ActionHandler(ACTIONS.TAKEITEM,
         function(inst, action)
-            return action.target ~= nil
-                and action.target.takeitem ~= nil --added for quagmire
-                and "give"
+            return (action.target ~= nil
+                and action.target.takeitem --added for quagmire
+                and "give")
                 or "dolongaction"
         end),
 
     ActionHandler(ACTIONS.PICKUP,
         function(inst, action)
-            return action.target ~= nil
+            return (action.target ~= nil
                 and action.target:HasTag("minigameitem")
-                and "dosilentshortaction"
+                and "dosilentshortaction")
                 or "doshortaction"
         end),
 
@@ -268,24 +253,26 @@ local actionhandlers =
             if inst.sg:HasStateTag("busy") then
                 return
             end
+
             local obj = action.target or action.invobject
-            if obj == nil then
-                return
-            elseif obj.components.edible ~= nil then
-                if not inst.components.eater:PrefersToEat(obj) then
-                    inst:PushEvent("wonteatfood", { food = obj })
-                    return
-                end
-            elseif obj.components.soul ~= nil then
-                if inst.components.souleater == nil then
-                    inst:PushEvent("wonteatfood", { food = obj })
-                    return
-                end
-            else
+            if not obj then
                 return
             end
-            return (obj.components.soul ~= nil and "eat")
-                or (obj.components.edible.foodtype == FOODTYPE.MEAT and "eat")
+            
+            local edible = obj.components.edible
+            local soul = obj.components.soul
+            if not edible and not soul then
+                return
+            end
+
+            if edible and not inst.components.eater:PrefersToEat(obj) then
+                inst:PushEvent("wonteatfood", { food = obj })
+            elseif soul and not inst.components.souleater then
+                inst:PushEvent("wonteatfood", { food = obj })
+            end
+
+            return (soul and "eat")
+                or (edible.foodtype == FOODTYPE.MEAT and "eat")
                 or "quickeat"
         end),
     ActionHandler(ACTIONS.GIVE,
@@ -318,10 +305,16 @@ local actionhandlers =
     ActionHandler(ACTIONS.WEIGH_ITEM, "use_pocket_scale"),
 
     ActionHandler(ACTIONS.COMMENT, function(inst, action)
-        if not inst.sg:HasStateTag("talking") then  --  and not inst.components.locomotor.dest
+        if not inst.sg:HasStateTag("talking") then
+            if inst.commentitemstotoss then
+                inst.itemstotoss = inst.itemstotoss or {}
+                ConcatArrays(inst.itemstotoss, inst.commentitemstotoss)
+                inst.commentitemstotoss = nil
+            end
             return "talkto"
         end
     end),
+    ActionHandler(ACTIONS.WALKTO, "fishing_ocean_pre"),
     ActionHandler(ACTIONS.WATER_TOSS, "toss"),
 	ActionHandler(ACTIONS.SITON, "start_sitting"),
 }
@@ -339,18 +332,10 @@ local events =
         local should_move = inst.components.locomotor:WantsToMoveForward()
 
         if is_moving and not should_move then
-     --       if inst.sg:HasStateTag("running") then
-      --          inst.sg:GoToState("run_stop")
-       --     else
-                inst.sg:GoToState("walk_stop")
-         --   end
+            inst.sg:GoToState("walk_stop")
         elseif not is_moving and should_move then
-           -- if inst.components.locomotor:WantsToRun() then
-            --    inst.sg:GoToState("run_start")
-           -- else
-                inst.sg:GoToState("walk_start")
-          --  end
-        elseif data.force_idle_state and not (is_moving or should_move or inst.sg:HasStateTag("idle"))  then
+            inst.sg:GoToState("walk_start")
+        elseif data.force_idle_state and not (is_moving or should_move or inst.sg:HasStateTag("idle")) then
             inst.sg:GoToState("idle")
         end
     end),
@@ -370,7 +355,8 @@ local events =
     end),
 
     EventHandler("equip", function(inst, data)
-        if data.eslot == EQUIPSLOTS.BODY and data.item ~= nil and data.item:HasTag("heavy") then
+        local item = data.item
+        if data.eslot == EQUIPSLOTS.BODY and item ~= nil and item:HasTag("heavy") then
             inst.sg:GoToState("heavylifting_start")
         elseif inst.components.inventory:IsHeavyLifting() then
             if inst.sg:HasStateTag("idle") or inst.sg:HasStateTag("moving") then
@@ -378,11 +364,11 @@ local events =
             end
         elseif (inst.sg:HasStateTag("idle") or inst.sg:HasStateTag("channeling")) and not inst:HasTag("wereplayer") then
             inst.sg:GoToState(
-                (data.item ~= nil and data.item.projectileowner ~= nil and "catch_equip") or
+                (item ~= nil and item.projectileowner ~= nil and "catch_equip") or
                 (data.eslot == EQUIPSLOTS.HANDS and "item_out") or
                 "item_hat"
             )
-        elseif data.item ~= nil and data.item.projectileowner ~= nil then
+        elseif item ~= nil and item.projectileowner ~= nil then
             SpawnPrefab("lucy_transform_fx").entity:AddFollower():FollowSymbol(inst.GUID, "swap_object", 50, -25, 0)
         end
     end),
@@ -414,15 +400,14 @@ local events =
 
     EventHandler("umbrellaranout",
         function(inst, data)
-            if inst.components.inventory:GetEquippedItem(data.equipslot) == nil then
+            if not inst.components.inventory:GetEquippedItem(data.equipslot) then
                 local sameTool = inst.components.inventory:FindItem(function(item)
                     return item:HasTag("umbrella") and
                         item.components.equippable ~= nil and
                         item.components.equippable.equipslot == data.equipslot
                 end)
-                if sameTool ~= nil then
-                    inst.components.inventory:Equip(sameTool)
-                end
+
+                inst.components.inventory:Equip(sameTool)
             end
         end),
 
@@ -434,9 +419,8 @@ local events =
                         item.components.equippable ~= nil and
                         item.components.equippable.equipslot == data.equipslot
                 end)
-                if sameTool ~= nil then
-                    inst.components.inventory:Equip(sameTool)
-                end
+
+                inst.components.inventory:Equip(sameTool)
             end
         end),
 
@@ -2476,7 +2460,6 @@ local states =
             inst.AnimState:PushAnimation("give_pst", false)
         end,
 
-
         timeline =
         {
             TimeEvent(12 * FRAMES, function(inst)
@@ -4282,6 +4265,8 @@ local states =
 			inst.Physics:Teleport(chair.Transform:GetWorldPosition())
 
             inst.sg:SetTimeout((1 + 1.5 * math.random()) * TUNING.SEG_TIME)
+
+            inst:PushEvent("onsatinchair", chair)
 		end,
 
 		events =

@@ -39,7 +39,7 @@ local function OnHit(inst, worker)
     if inst:HasTag("burnt") then return end
 
     inst.AnimState:PlayAnimation("hit_open")
-    inst.AnimState:PushAnimation("idle")
+    inst.AnimState:PushAnimation(inst.components.prototyper.on and "proximity_loop" or "idle", inst.components.prototyper.on)
 end
 
 --

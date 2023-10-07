@@ -455,10 +455,15 @@ local states =
 			inst.AnimState:PlayAnimation("twitch", true)
 			inst.sg:SetTimeout(3)
 			inst.sg.statemem.mutantprefab = mutantprefab
+			inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/twitching_LP", "loop")
 		end,
 
 		ontimeout = function(inst)
 			inst.sg:GoToState("corpse_mutate", inst.sg.statemem.mutantprefab)
+		end,
+
+		onexit = function(inst)
+			inst.SoundEmitter:KillSound("loop")
 		end,
 	},
 
@@ -475,6 +480,7 @@ local states =
 			else
 				inst.AnimState:PlayAnimation("mutate_pre")
 			end
+			inst.SoundEmitter:PlaySound("rifts3/mutated_varg/mutate_pre")
 			inst.sg.statemem.mutantprefab = mutantprefab
 		end,
 
@@ -516,6 +522,7 @@ local states =
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("mutate")
+			inst.SoundEmitter:PlaySound("rifts3/mutated_varg/mutate")
 			inst.sg.statemem.flash = 24
 		end,
 
@@ -887,12 +894,16 @@ local states =
 
 		timeline =
 		{
+			FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_varg/blast_pre_f0") end),
 			FrameEvent(16, function(inst)
 				inst.sg.statemem.target = nil
 				inst.sg.statemem.targets = {}
 			end),
 
-			FrameEvent(18, function(inst) inst.SoundEmitter:PlaySound("dontstarve/common/fireAddFuel") end),
+			FrameEvent(17, function(inst)
+				inst.SoundEmitter:PlaySound("rifts3/mutated_varg/blast_pre_f17")
+				inst.SoundEmitter:PlaySound("rifts3/mutated_varg/blast_lp", "loop")
+			end),
 			FrameEvent(19, function(inst) SpawnBreathFX(inst, -40, 4, inst.sg.statemem.targets) end),
 
 			FrameEvent(20, function(inst) inst.sg.statemem.angle = -45 end),
@@ -921,6 +932,7 @@ local states =
 			if not inst.sg.statemem.attacking then
 				inst:SwitchToSixFaced()
 				inst.components.combat:SetDefaultDamage(TUNING.WARG_DAMAGE)
+				inst.SoundEmitter:KillSound("loop")
 			end
 		end,
 	},
@@ -939,6 +951,9 @@ local states =
 			inst.components.timer:StopTimer("flamethrower_cd")
 			inst.components.timer:StartTimer("flamethrower_cd", TUNING.MUTATED_WARG_FLAMETHROWER_CD + math.random() * 2)
 			inst.components.combat:SetDefaultDamage(TUNING.MUTATED_WARG_FLAMETHROWER_DAMAGE)
+			if not inst.SoundEmitter:PlayingSound("loop") then
+				inst.SoundEmitter:PlaySound("rifts3/mutated_varg/blast_lp", "loop")
+			end
 		end,
 
 		onupdate = function(inst)
@@ -947,9 +962,6 @@ local states =
 
 		timeline =
 		{
-			FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("dontstarve/common/fireAddFuel", nil, 0.25) end),
-			FrameEvent(10, function(inst) inst.SoundEmitter:PlaySound("dontstarve/common/fireAddFuel", nil, 0.5) end),
-
 			--FrameEvent(-1, function(inst) SpawnCloseEmberFX(inst, -45) end),
 			--FrameEvent(-4, function(inst) SpawnBreathFX(inst, -45, 5, inst.sg.statemem.targets) end),
 			--FrameEvent(-1, function(inst) SpawnBreathFX(inst, -45, 7, inst.sg.statemem.targets) end),
@@ -1050,6 +1062,7 @@ local states =
 			if not inst.sg.statemem.attacking then
 				inst:SwitchToSixFaced()
 				inst.components.combat:SetDefaultDamage(TUNING.WARG_DAMAGE)
+				inst.SoundEmitter:KillSound("loop")
 			elseif not inst.sg.statemem.loop then
 				inst.components.combat:SetDefaultDamage(TUNING.WARG_DAMAGE)
 			end
@@ -1064,6 +1077,7 @@ local states =
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("atk_breath_pst")
 			inst:SwitchToEightFaced()
+			inst.SoundEmitter:PlaySound("rifts3/mutated_varg/blast_pst")
 			inst.sg.statemem.targets = targets or {}
 		end,
 
@@ -1079,6 +1093,7 @@ local states =
 				end
 				inst.sg:AddStateTag("caninterrupt")
 			end),
+			FrameEvent(6, function(inst) inst.SoundEmitter:KillSound("loop") end),
 			FrameEvent(13, function(inst)
 				inst.sg:RemoveStateTag("busy")
 			end),
@@ -1095,6 +1110,7 @@ local states =
 
 		onexit = function(inst)
 			inst:SwitchToSixFaced()
+			inst.SoundEmitter:KillSound("loop")
 		end,
 	},
 
@@ -1113,10 +1129,13 @@ local states =
 			inst.components.timer:StartTimer("stagger", TUNING.MUTATED_WARG_STAGGER_TIME)
 			inst.components.timer:StopTimer("flamethrower_cd")
 			inst.components.timer:StartTimer("flamethrower_cd", TUNING.MUTATED_WARG_STAGGER_TIME + TUNING.MUTATED_WARG_FLAMETHROWER_CD * (0.5 + math.random() * 0.5))
+			inst.SoundEmitter:PlaySound(inst.sounds.hit)
 		end,
 
 		timeline =
 		{
+			FrameEvent(16, function(inst)
+			end),
 			FrameEvent(24, function(inst)
 				inst.sg:AddStateTag("caninterrupt")
 			end),
@@ -1214,6 +1233,7 @@ local states =
 
 		timeline =
 		{
+			FrameEvent(10, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.sleep) end),
 			FrameEvent(11, function(inst)
 				inst.sg:RemoveStateTag("staggered")
 				inst.sg:RemoveStateTag("caninterrupt")
@@ -1225,6 +1245,7 @@ local states =
 				inst.sg:RemoveStateTag("nosleep")
 				inst.sg:AddStateTag("caninterrupt")
 			end),
+			FrameEvent(39, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.idle) end),
 			FrameEvent(99, function(inst)
 				inst.sg:RemoveStateTag("busy")
 			end),

@@ -81,7 +81,7 @@ function WagpunkManager:RemoveMachine(GUID)
         self.machineGUIDS[GUID] = nil
     end
 
-    if not next(self.machineGUIDS) then
+    if self._enabled and not next(self.machineGUIDS) then
         self:StartSpawnMachinesTimer()
     end
 end
@@ -106,31 +106,34 @@ end
 
 --------------------------------------------------------------------------------------------
 
-function WagpunkManager:Enable(enable)
-    enable = enable ~= false
+function WagpunkManager:Enable()
+    self._enabled = true
 
-    if self._enabled ~= enable then
-        self._enabled = enable
-
-        if self._enabled then
-            if self.nextspawntime == nil and not next(self.machineGUIDS) then
-                self:StartSpawnMachinesTimer()
-
-            elseif next(self.machineGUIDS) then
-                self:StartHintTimer()
-            end
-        else
-            self.hintcount = 0
-            self.nexthinttime = nil
-            self.nextspawntime = nil
+    if self.nexthinttime ~= nil then
+        -- Save-load path.
+        if self.hintcount <= MAX_NUM_HINTS then
+            self:StartHintTimer(self.nexthinttime)
         end
+
+    else
+        self:StartSpawnMachinesTimer(self.nextspawntime)
     end
+end
+
+function WagpunkManager:Disable()
+    self._enabled = false
+
+    self.hintcount = 0
+    self.nexthinttime = nil
+    self.nextspawntime = nil
 end
 
 --------------------------------------------------------------------------------------------
 
-function WagpunkManager:StartSpawnMachinesTimer()
-    self.nextspawntime = TUNING.WAGSTAFF_SPAWN_MACHINE_TIME + (math.random() * TUNING.WAGSTAFF_SPAWN_MACHINE_TIME_VARIATION)
+function WagpunkManager:StartSpawnMachinesTimer(timeoverride)
+    self.nextspawntime = timeoverride or (TUNING.WAGSTAFF_SPAWN_MACHINE_TIME + (math.random() * TUNING.WAGSTAFF_SPAWN_MACHINE_TIME_VARIATION))
+
+    self.nexthinttime = nil
 
     if not self._updating then
         self._updating = true
@@ -138,8 +141,10 @@ function WagpunkManager:StartSpawnMachinesTimer()
     end
 end
 
-function WagpunkManager:StartHintTimer()
-    self.nexthinttime = Lerp(TUNING.WAGSTAFF_MACHINE_HINT_TIME.min, TUNING.WAGSTAFF_MACHINE_HINT_TIME.max, self.hintcount/MAX_NUM_HINTS)
+function WagpunkManager:StartHintTimer(timeoverride)
+    self.nexthinttime = timeoverride or Lerp(TUNING.WAGSTAFF_MACHINE_HINT_TIME.min, TUNING.WAGSTAFF_MACHINE_HINT_TIME.max, self.hintcount/MAX_NUM_HINTS)
+
+    self.nextspawntime = nil
 
     if not self._updating then
         self._updating = true
@@ -209,7 +214,12 @@ local WAGSTAFF_MAY = { "wagstaff_npc", "wagstaff_machine" }
 function WagpunkManager:TryHinting(debug)
     local player = #self._activeplayers > 0 and self._activeplayers[math.random(#self._activeplayers)] or nil
 
-    if player == nil or not (self.hintcount <= MAX_NUM_HINTS and next(self.machineGUIDS)) then
+    if player == nil then
+        self:StartHintTimer()
+    end
+
+    if not (self.hintcount <= MAX_NUM_HINTS and next(self.machineGUIDS)) then
+        -- Don't restart the timer.
         return
     end
 
@@ -311,8 +321,8 @@ function WagpunkManager:OnSave()
     local data = {
        nextspawntime = self.nextspawntime,
        nexthinttime = self.nexthinttime,
-       hintcount = self.hintcount,
-       currentnodeindex = self._currentnodeindex
+       hintcount = self.hintcount > 0 and self.hintcount or nil,
+       currentnodeindex = self._currentnodeindex,
     }
 
     return data
@@ -376,12 +386,15 @@ end
 
 function WagpunkManager:GetDebugString()
     return string.format(
-        "State: %s || Next Spawn: %s || Next Hint: %s || Hint Count: %d || Num Machines: %d",
-        self._enabled and "ON" or "OFF",
+        "State: %s || Updating: %s || Next Spawn: %s || Next Hint: %s || Hint Count: %d/%d || Num Machines: %d/%d",
+        self._enabled  and "ON" or "OFF",
+        self._updating and "ON" or "OFF",
         self.nextspawntime ~= nil and string.format("%.2f", self.nextspawntime) or "???",
         self.nexthinttime ~= nil  and string.format("%.2f", self.nexthinttime)  or "???",
         self.hintcount,
-        self:MachineCount()
+        MAX_NUM_HINTS,
+        self:MachineCount(),
+        NUM_MACHINES_PER_SPAWN
     )
 end
 

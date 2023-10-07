@@ -211,6 +211,7 @@ local MainSounds =
 
     "rifts3.fev",
     "rifts3.fsb",
+    "rifts3_AMB.fsb",
 }
 
 function PreloadSoundList(list)

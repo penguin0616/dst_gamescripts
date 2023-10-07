@@ -222,7 +222,7 @@ function RiftSpawner:SetEnabledSetting(src, enabled_difficulty)
         self._worldsettingstimer:StopTimer(RIFTSPAWN_TIMERNAME)
 
         if self.inst.components.wagpunk_manager ~= nil then
-            self.inst.components.wagpunk_manager:Enable(false)
+            self.inst.components.wagpunk_manager:Disable()
         end
 
     elseif enabled_difficulty == "always" then

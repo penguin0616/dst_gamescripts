@@ -7,7 +7,7 @@ local function Reverse(inst)
 	inst.AnimState:PlayAnimation("atk2")
 end
 
-local function MakeFX(name, saturation, lightoverride, facings)
+local function MakeFX(name, saturation, lightoverride)
 	local function fn()
 		local inst = CreateEntity()
 
@@ -18,11 +18,7 @@ local function MakeFX(name, saturation, lightoverride, facings)
 		inst:AddTag("FX")
 		inst:AddTag("NOCLICK")
 
-		if facings == "eight" then
-			inst.Transform:SetEightFaced()
-		else
-			inst.Transform:SetFourFaced()
-		end
+		inst.Transform:SetEightFaced()
 
 		inst.AnimState:SetBank("bearger_mutated_actions_fx")
 		inst.AnimState:SetBuild("bearger_mutated_actions_fx")
@@ -50,5 +46,5 @@ local function MakeFX(name, saturation, lightoverride, facings)
 	return Prefab(name, fn, assets)
 end
 
-return MakeFX("bearger_swipe_fx", 0, 0, "eight"),
-	MakeFX("mutatedbearger_swipe_fx", 1, 0.1, "four")
+return MakeFX("bearger_swipe_fx", 0, 0),
+	MakeFX("mutatedbearger_swipe_fx", 1, 0.1)

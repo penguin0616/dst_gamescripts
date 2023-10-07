@@ -54,6 +54,7 @@ local normal_sounds =
 	attack = "dontstarve/creatures/deerclops/attack",
 	swipe = "dontstarve/creatures/deerclops/swipe",
 	charge = "dontstarve/creatures/deerclops/charge",
+	walk = nil,
 }
 
 local mutated_sounds =
@@ -66,6 +67,7 @@ local mutated_sounds =
 	attack = "rifts3/mutated_deerclops/attack",
 	swipe = "dontstarve/creatures/deerclops/swipe",
 	charge = "dontstarve/creatures/deerclops/charge",
+	walk = "rifts3/mutated_deerclops/walk", --this is vocalization not footstep
 }
 
 local TARGET_DIST = 16

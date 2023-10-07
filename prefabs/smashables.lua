@@ -91,6 +91,7 @@ local function MakeRelic(inst)
 		inst:AddComponent("sittable")
 		inst:AddTag("structure")
 		inst:AddTag("limited_chair")
+        inst:AddTag("uncomfortable_chair")
 	end
 	if inst.chair_shadeling_spawner then
 		inst.OnEntityWake = Chair_OnEntityWake

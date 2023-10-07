@@ -205,7 +205,6 @@ return Class(function(self, inst)
     local _umbrellarainsound = false
     local _barriersound = false
     local _barriernorainsound = false
-    local _lunarhailsound = false
     local _seasonprogress = 0
     local _groundoverlay = nil
 
@@ -257,7 +256,7 @@ return Class(function(self, inst)
     local function StartAmbientRainSound(intensity)
         if not _rainsound then
             _rainsound = true
-            _world.SoundEmitter:PlaySound("dontstarve/AMB/rain", "rain")
+            _world.SoundEmitter:PlaySound(_preciptype:value() == PRECIP_TYPES.lunarhail and "rifts3/lunarhail/lunar_rainAMB" or "dontstarve/AMB/rain", "rain")
         end
         _world.SoundEmitter:SetParameter("rain", "intensity", intensity)
     end
@@ -272,7 +271,7 @@ return Class(function(self, inst)
     local function StartTreeRainSound(intensity)
         if not _treerainsound then
             _treerainsound = true
-            TheFocalPoint.SoundEmitter:PlaySound("dontstarve_DLC001/common/rain_on_tree", "treerainsound")
+            TheFocalPoint.SoundEmitter:PlaySound(_preciptype:value() == PRECIP_TYPES.lunarhail and "rifts3/lunarhail/lunarhail_on_tree" or "dontstarve_DLC001/common/rain_on_tree", "treerainsound")
         end
         TheFocalPoint.SoundEmitter:SetParameter("treerainsound", "intensity", intensity)
     end
@@ -287,7 +286,7 @@ return Class(function(self, inst)
     local function StartUmbrellaRainSound()
         if not _umbrellarainsound then
             _umbrellarainsound = true
-            TheFocalPoint.SoundEmitter:PlaySound("dontstarve/rain/rain_on_umbrella", "umbrellarainsound")
+            TheFocalPoint.SoundEmitter:PlaySound(_preciptype:value() == PRECIP_TYPES.lunarhail and "rifts3/lunarhail/hail_on_umbrella" or "dontstarve/rain/rain_on_umbrella", "umbrellarainsound")
         end
     end
 
@@ -309,21 +308,6 @@ return Class(function(self, inst)
         if _barriersound then
             _barriersound = false
             TheFocalPoint.SoundEmitter:KillSound("barriersound")
-        end
-    end
-
-    local function StartAmbientLunarHailSound(intensity)
-        if not _lunarhailsound then
-            _lunarhailsound = true
-            _world.SoundEmitter:PlaySound("dontstarve/AMB/rain", "lunarhail")
-        end
-        _world.SoundEmitter:SetParameter("lunarhail", "intensity", intensity)
-    end
-
-    local function StopAmbientLunarHailSound()
-        if _lunarhailsound then
-            _lunarhailsound = false
-            _world.SoundEmitter:KillSound("lunarhail")
         end
     end
 
@@ -946,11 +930,16 @@ return Class(function(self, inst)
             end
         end
 
-        --Update precipitation effects
-        if _preciptype:value() == PRECIP_TYPES.rain then
-            StopAmbientLunarHailSound()
+        local preciprate_sound = nil
 
-            local preciprate_sound = preciprate
+        if _preciptype:value() == PRECIP_TYPES.rain then
+            preciprate_sound = preciprate
+
+        elseif _preciptype:value() == PRECIP_TYPES.lunarhail then
+            preciprate_sound = lunarhailrate
+        end
+
+        if preciprate_sound ~= nil then
             if _activatedplayer == nil then
                 StopTreeRainSound()
                 StopUmbrellaRainSound()
@@ -980,6 +969,10 @@ return Class(function(self, inst)
             else
                 StopAmbientRainSound()
             end
+        end
+
+        --Update precipitation effects
+        if _preciptype:value() == PRECIP_TYPES.rain then
             if _hasfx then
                 _rainfx.particles_per_tick = 5 * preciprate
                 _rainfx.splashes_per_tick = 2 * preciprate
@@ -989,36 +982,9 @@ return Class(function(self, inst)
             end
 
         elseif _preciptype:value() == PRECIP_TYPES.lunarhail then
-            StopAmbientRainSound()
-            StopTreeRainSound()
-            StopUmbrellaRainSound()
-
-            local lunarhailrate_sound = lunarhailrate
-
-            if _activatedplayer == nil then
-                StopBarrierSound()
-            elseif _activatedplayer.components.raindomewatcher ~= nil and _activatedplayer.components.raindomewatcher:IsUnderRainDome() then
-                StartBarrierSound()
-                lunarhailrate_sound = math.min(.1, lunarhailrate_sound * .5)
-            elseif _activatedplayer.replica.sheltered ~= nil and _activatedplayer.replica.sheltered:IsSheltered() then
-                StopBarrierSound()
-                lunarhailrate_sound = lunarhailrate_sound - .4
-            else
-                StopBarrierSound()
-                if _activatedplayer.replica.inventory:EquipHasTag("umbrella") then
-                    lunarhailrate_sound = lunarhailrate_sound - .4
-                end
-            end
-
-            if lunarhailrate_sound > 0 then
-                StartAmbientLunarHailSound(lunarhailrate_sound)
-            else
-                StopAmbientLunarHailSound()
-            end
-
             if _hasfx then
                 _lunarhailfx.particles_per_tick = 4 * lunarhailrate
-                _lunarhailfx.splashes_per_tick = 6 * lunarhailrate
+				_lunarhailfx.splashes_per_tick = 2 * lunarhailrate
 
                 _snowfx.particles_per_tick = 0
                 _rainfx.particles_per_tick = 0
@@ -1029,13 +995,13 @@ return Class(function(self, inst)
             StopAmbientRainSound()
             StopTreeRainSound()
             StopUmbrellaRainSound()
-            StopAmbientLunarHailSound()
 
             if _activatedplayer ~= nil and _activatedplayer.components.raindomewatcher ~= nil and _activatedplayer.components.raindomewatcher:IsUnderRainDome() then
                 StartBarrierSound()
             else
                 StopBarrierSound()
             end
+
             if _hasfx then
                 _rainfx.particles_per_tick = 0
                 _rainfx.splashes_per_tick = 0

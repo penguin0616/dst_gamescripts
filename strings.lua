@@ -5039,7 +5039,7 @@ STRINGS =
                 LOW = {"(Grumble) my shell is killing me...","Nowhere to sit around here..."},
                 MED = {"There's nowhere to sit and rest this old chitin..."},
                 HIGH = {"What this place really needs is a nice place to sit and chat."},
-            },            
+            },
     },
 
     HERMITCRAB_INVESTIGATE = {
@@ -5063,11 +5063,21 @@ STRINGS =
                 MED = {"Well, glad that's taken care of."},
                 HIGH = {"You really showed that awful plant!"},
             },
-            MAKE_CHAIR = {
+            MAKE_UNCOMFORTABLE_CHAIR = {
+                LOW = {"You expect me to sit on that rickety thing?"},
+                MED = {"Is that a chair, or an art project gone wrong?"},
+                HIGH = {"Oh. Well... I can tell you worked hard on it, dearie!"},
+            },
+            GIVE_CARPENTRY_BLUEPRINT = {
                 LOW = {"Here. Learn how to build a proper chair."},
                 MED = {"I give you credit for trying, but next time get it right."},
-                HIGH = {"I apreciate the effort, dearie. Let me give you a few pointers."},
-            },                       
+                HIGH = {"Here, let me give you a few pointers."},
+            },
+            MAKE_CHAIR = {
+                LOW = {"Hmph. Well, at least it looks like it won't fall apart."},
+                MED = {"I didn't take you for a carpenter, much less a half-competent one!"},
+                HIGH = {"It's lovely, dearie! The perfect place to rest my aching shell."},
+            },
     },
 
     HERMITCRAB_GREETING = {
@@ -5179,16 +5189,16 @@ STRINGS =
                 HIGH = {"Thank you dearie! Here, why don't you take one of these."},
             },
             MAKE_CHAIR = {
-                LOW = {"You expect me to sit on that rickety thing?"},
-                MED = {"Is that a chair, or an art project gone wrong?"},
-                HIGH = {"Oh. Well... I can tell you worked hard on it, dearie!"},
+                LOW = {"Hmph. Well, at least it looks like it won't fall apart."},
+                MED = {"I didn't take you for a carpenter, much less a half-competent one!"},
+                HIGH = {"It's lovely, dearie! The perfect place to rest my aching shell."},
             },
     },
 
-    HERMITCRAB_STORE_UNLOCK_1 = {{"So do you want to trade?","or are you just wasting my time?"}},
+    HERMITCRAB_STORE_UNLOCK_1 = {{"So do you want to trade?","Or are you just wasting my time?"}},
     HERMITCRAB_STORE_UNLOCK_2 = {{"I miiight have some lures to trade...","if you can afford them."}},
     HERMITCRAB_STORE_UNLOCK_3 = {{"Alright, you've twisted my claw."," I'll show you my GOOD lures."}},
-    HERMITCRAB_STORE_UNLOCK_4 = {{"I've got some new things to trade","but they don't come cheap!"}},
+    HERMITCRAB_STORE_UNLOCK_4 = {{"I've got some new things to trade,","but they don't come cheap!"}},
     HERMITCRAB_STORE_UNLOCK_5 = {{"This old shell must be going soft...","I put something special in the shop."}},
 
     HERMITCRAB_PLANTED_LUREPLANT_DIED = {
@@ -6459,8 +6469,27 @@ STRINGS =
     WAGSTAFF_NPC_ANALYSIS_OVER =
     {
         "Now, if you'll excuse me, I have much to do.",
+        "Farewell!",
+        "Until next time.",
+        "Best of luck to you! I must be off.",
     },
 
+    -- Random script.
+    WAGSTAFF_NPC_MUTATION_DEFEATED_AFTER_TASK_COMPLETED =
+    {
+        {
+            "I have all the data I require from this creature.",
+            "However... I suppose I mustn't let your efforts go unrewarded.",
+        },
+        {
+            "Still at it, are you? I must commend your zeal for research.",
+            "Here, a contribution to your continued studies.",
+        },
+        {
+            "I'm afraid we have nothing more to gain from analyzing this poor creature.",
+            "Take this, as a token of my gratitude for your efforts.",
+        },
+    },
 
     WAGSTAFF_GOTTOHINT = {
         "Just a bit more research... I'm close, I'm sure of it!",
@@ -8125,7 +8154,7 @@ STRINGS.UI =
 		PROTOTYPERS = "Prototypers & Stations",
 		REFINE = "Refined Materials",
 		WEAPONS = "Weapons",
-		ARMOUR = "Armour",
+		ARMOUR = "Armor",
 		CLOTHING = "Clothing",
 		RESTORATION = "Healing",
 		MAGIC = "Magic",

@@ -22,10 +22,8 @@ local _frogs = {}
 local _frogcap = 0
 local _spawntime = TUNING.FROG_RAIN_DELAY
 local _updating = false
-local _lunarfrogchance = TUNING.FROG_RAIN_LUNARFROG_CHANCE
 local _lunarriftopen = false
 
-local _chance = TUNING.FROG_RAIN_CHANCE
 local _localfrogs = {
     min = TUNING.FROG_RAIN_LOCAL_MIN,
     max = TUNING.FROG_RAIN_LOCAL_MAX,
@@ -51,7 +49,7 @@ local function GetSpawnPoint(pt)
 end
 
 local function GetFrogPrefab(spawn_point)
-    return _lunarriftopen and math.random() <= _lunarfrogchance and "lunarfrog" or "frog"
+    return _lunarriftopen and math.random() <= TUNING.FROG_RAIN_LUNARFROG_CHANCE and "lunarfrog" or "frog"
 end
 
 local function SpawnFrog(spawn_point)
@@ -136,7 +134,7 @@ end
 --------------------------------------------------------------------------
 
 local function OnIsRaining(inst, israining)
-    if israining and (math.random() < _chance) then -- only add fromgs to some rains
+    if israining and (math.random() < TUNING.FROG_RAIN_CHANCE) then -- only add fromgs to some rains
         _frogcap = math.random(_localfrogs.min, _localfrogs.max)
     else
         _frogcap = 0

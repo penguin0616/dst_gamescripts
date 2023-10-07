@@ -962,7 +962,10 @@ Recipe("shieldofterror",                {Ingredient("gears", 2), Ingredient("nig
 Recipe("potatosack",                    {Ingredient("cutgrass", 2), Ingredient("rocks", 3)}, nil, TECH.LOST, nil, nil, true)
 Recipe("lunar_forge",					{Ingredient("moonrocknugget", 5), Ingredient("moonglass", 5), Ingredient("purebrilliance", 1)}, nil, TECH.LOST, nil, nil, true)
 Recipe("shadow_forge",					{Ingredient("nightmarefuel", 5), Ingredient("dreadstone", 2), Ingredient("horrorfuel", 1)}, nil, TECH.LOST, nil, nil, true)
-Recipe("deerclopseyeball_sentryward",   {Ingredient("moonglass", 8), Ingredient("purebrilliance", 5), Ingredient("moonrocknugget", 3)}, nil, TECH.LOST, nil, nil, true)
+Recipe("deerclopseyeball_sentryward",   {Ingredient("security_pulse_cage_full", 1, nil, true), Ingredient("moonglass", 8), Ingredient("purebrilliance", 5), Ingredient("moonrocknugget", 3)}, nil, TECH.LOST, nil, nil, true)
+
+-- security_pulse_cage_full drops as security_pulse_cage when the entity is not desconstructed.
+Recipe("security_pulse_cage_full",   	{Ingredient("security_pulse_cage", 1)}, nil, TECH.LOST, {no_deconstruction=true}, nil, true)
 
 --WILSON TRANSMUTATION
 Recipe2("transmute_log",                {Ingredient("twigs", 3)}, 	TECH.NONE, 				{product="log", image="log.tex",     builder_tag="alchemist", description="transmute_log"})
@@ -1115,6 +1118,7 @@ DeconstructRecipe("thurible",						{Ingredient("cutstone", 2), Ingredient("night
 DeconstructRecipe("eyemaskhat",						{Ingredient("milkywhites", 3), Ingredient("monstermeat", 2)})
 DeconstructRecipe("shieldofterror",					{Ingredient("gears", 2), Ingredient("nightmarefuel", 3)})
 DeconstructRecipe("oar_monkey",						{Ingredient("log", 1), Ingredient("palmcone_scale", 1)})
+DeconstructRecipe("eyeturret",						{Ingredient("deerclops_eyeball", 1), Ingredient("minotaurhorn", 1), Ingredient("thulecite", 5)})
 
 -- old deprecated structures
 DeconstructRecipe("slow_farmplot",					{Ingredient("cutgrass", 8), Ingredient("poop", 4), Ingredient("log", 4)})

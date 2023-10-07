@@ -62,12 +62,6 @@ local function OnEntitySleep(inst)
     end
 end
 
-
-local function OnDroppedAsLoot(inst, data)
-    -- NOTE(DiogoW): Hmm, this can be better...
-    inst:DoTaskInTime(0, inst.Remove)
-end
-
 ------------------------------------------------------------------------------------------------------------------
 
 local function OnPossess(inst, data)
@@ -165,9 +159,6 @@ local function FullCageFn(full)
     end
 
     inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1)
-
-    inst.OnDroppedAsLoot = OnDroppedAsLoot -- Mods
-    inst:ListenForEvent("on_loot_dropped", inst.OnDroppedAsLoot)
 
     inst.OnEntityWake  = OnEntityWake
     inst.OnEntitySleep = OnEntitySleep

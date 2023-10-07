@@ -1747,27 +1747,7 @@ function ScrapbookScreen:PopulateInfoPanel(entry)
     	local gaps = 7 --10
     	local imagesize = 32
 		local imagebuffer = 5
-    	local depstoshow = {}
-    	if #data.deps > 0 then
-    		for i,dep in ipairs(data.deps) do
-
-				local ok = false
-				if self.menubuttons then
-					for i, button in ipairs (self.menubuttons) do
-						if self:GetData(dep) and button.filter == self:GetData(dep).type then
-							ok = true
-							break
-						end
-					end
-				else
-					ok = true
-				end
-
-    			if self:GetData(dep) and self:GetData(dep).knownlevel > 0 and ok then 
-    				table.insert(depstoshow,dep)
-    			end
-    		end
-    	end
+    	local depstoshow = shallowcopy(data.deps)
 
 		table.sort(depstoshow, function(a, b)
 			local a = self:GetData(a)
@@ -1777,6 +1757,10 @@ function ScrapbookScreen:PopulateInfoPanel(entry)
 			local b_name = STRINGS.NAMES[string.upper(b.name)] or FILLER
 			if a.subcat then a_name = STRINGS.SCRAPBOOK.SUBCATS[string.upper(a.subcat)] .. a_name end
 			if b.subcat then b_name = STRINGS.SCRAPBOOK.SUBCATS[string.upper(b.subcat)] .. b_name end
+
+			if a.knownlevel == 0 or b.knownlevel == 0 then
+				return a.knownlevel > b.knownlevel
+			end
 	
 			if not a_name or not b_name then
 				return false
@@ -1789,75 +1773,79 @@ function ScrapbookScreen:PopulateInfoPanel(entry)
 			return a_name < b_name
 		end)
 
-    	if #depstoshow > 0 then
-			local dep_imgsize = imagesize - imagebuffer
-			local needs_img_types = { "item", "food" }
+		local dep_imgsize = imagesize - imagebuffer
+		local needs_img_types = { "item", "food" }
 
-		    for i, dep in ipairs(depstoshow)do
-		    	local xidx = i%cols
-			    if xidx == 0 then
-			    	xidx = cols
-			    end
+		for i, dep in ipairs(depstoshow)do
+			local xidx = i%cols
+			if xidx == 0 then
+				xidx = cols
+			end
 
-				local depdata = self:GetData(dep)
+			local depdata = self:GetData(dep)
 
-		    	if depdata ~= nil then
-					local tex = depdata.tex
-					local atlas = GetScrapbookIconAtlas(tex)
-					local button = sub_root:AddChild(ImageButton(atlas or GetScrapbookIconAtlas("cactus.tex"), atlas ~= nil and tex or "cactus.tex" ))
+			if depdata ~= nil then
+				local tex = depdata.tex
+				local atlas = GetScrapbookIconAtlas(tex)
+				local button = sub_root:AddChild(ImageButton(atlas or GetScrapbookIconAtlas("cactus.tex"), atlas ~= nil and tex or "cactus.tex" ))
 
-					button.ignore_standard_scaling = true
-					button.scale_on_focus = true
-					button:SetFocusScale(1.12, 1.12, 1.12)
-					button:SetPosition(75+((imagesize+gaps)*(xidx-1)),height-imagesize/2 - ((row-1)*(imagesize+gaps)) )
-					button:ForceImageSize(imagesize+2,imagesize+2)
-					button:SetOnClick(function()
-						self.detailsroot:KillAllChildren()
-						self.details = nil
-						self.details = self.detailsroot:AddChild(self:PopulateInfoPanel(dep))
-						self:DoFocusHookups()
-						if TheInput:ControllerAttached() then
-							self.details:SetFocus()
-						end
+				button.ignore_standard_scaling = true
+				button.scale_on_focus = true
+				button.clickoffset = Vector3(0, 0, 0)
+				button:SetFocusScale(1.12, 1.12, 1.12)
+				button:SetPosition(75+((imagesize+gaps)*(xidx-1)),height-imagesize/2 - ((row-1)*(imagesize+gaps)) )
+				button:ForceImageSize(imagesize+2,imagesize+2)
+				button:SetOnClick(function()
+					self.detailsroot:KillAllChildren()
+					self.details = nil
+					self.details = self.detailsroot:AddChild(self:PopulateInfoPanel(dep))
+					self:DoFocusHookups()
+					if TheInput:ControllerAttached() then
+						self.details:SetFocus()
+					end
+				end)
+
+				if depdata.knownlevel == 1 then
+					button:SetImageNormalColour(unpack(UK_TINT))
+					button:SetImageFocusColour(unpack(UK_TINT))
+				end
+
+				if depdata.knownlevel == 0 then
+					button:SetTextures(GetScrapbookIconAtlas("unknown.tex"), "unknown.tex")
+					button:SetOnClick(function() end)
+
+				elseif table.contains(needs_img_types, depdata.type) then
+					button:SetTextures("images/scrapbook.xml", "inv_item_background.tex")
+					
+					atlas = GetInventoryItemAtlas(tex)
+
+					local img = button:AddChild(Image(atlas, tex))
+					img:ScaleToSize(dep_imgsize, dep_imgsize)
+
+					button:SetOnGainFocus(function()
+						img:ScaleToSize(dep_imgsize*button.focus_scale[1], dep_imgsize*button.focus_scale[2])
+					end)
+
+					button:SetOnLoseFocus(function()
+						img:ScaleToSize(dep_imgsize*button.normal_scale[1], dep_imgsize*button.normal_scale[2])
 					end)
 
 					if depdata.knownlevel == 1 then
-						button:SetImageNormalColour(unpack(UK_TINT))
-						button:SetImageFocusColour(unpack(UK_TINT))
+						img:SetTint(unpack(UK_TINT))
 					end
-
-					if table.contains(needs_img_types, depdata.type) then
-						button:SetTextures("images/scrapbook.xml", "inv_item_background.tex")
-						
-						atlas = GetInventoryItemAtlas(tex)
-
-			    		local img = button:AddChild(Image(atlas, tex))
-						img:ScaleToSize(dep_imgsize, dep_imgsize)
-
-						button:SetOnGainFocus(function()
-							img:ScaleToSize(dep_imgsize*button.focus_scale[1], dep_imgsize*button.focus_scale[2])
-						end)
-
-						button:SetOnLoseFocus(function()
-							img:ScaleToSize(dep_imgsize*button.normal_scale[1], dep_imgsize*button.normal_scale[2])
-						end)
-
-						if depdata.knownlevel == 1 then
-							img:SetTint(unpack(UK_TINT))
-						end
-					end
-
-					table.insert(self.depsbuttons, button)
 				end
 
-				if xidx == cols and i < #depstoshow then
-					row = row +1
-				end
+				table.insert(self.depsbuttons, button)
 			end
-		
-			height = height - ((imagesize+gaps) * row) -section_space
+
+			if xidx == cols and i < #depstoshow then
+				row = row +1
+			end
 		end
+	
+		height = height - ((imagesize+gaps) * row) -section_space
 	end
+
 
 	if #self.depsbuttons > 0 then
 

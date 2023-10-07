@@ -885,10 +885,12 @@ local MUTATATIONS_DIALOGUE_LINE_DURATION = 2.5
 local MUTATIONS_TASK_DELAYS = {
     SHOW_UP = 3,
     TAKE_NOTES = ERODEIN.time - 0.5, -- Runs at MUTATIONS_TASK_DELAYS.SHOW_UP.
-    GIVE_SECURITY_PULSE_CAGE = 2.15 * MUTATATIONS_DIALOGUE_LINE_DURATION, -- Run at MUTATIONS_TASK_DELAYS.START_TALKING.
+    GIVE_SECURITY_PULSE_CAGE = 2.15 * MUTATATIONS_DIALOGUE_LINE_DURATION,                 -- Run at MUTATIONS_TASK_DELAYS.START_TALKING.
+    GIVE_SECURITY_PULSE_CAGE_TASKCOMPLETED = 1.15 * MUTATATIONS_DIALOGUE_LINE_DURATION,   -- Run at MUTATIONS_TASK_DELAYS.START_TALKING_TASKCOMPLETED.
 }
 
 MUTATIONS_TASK_DELAYS.START_TALKING = MUTATIONS_TASK_DELAYS.SHOW_UP + MUTATIONS_TASK_DELAYS.TAKE_NOTES + MUTATIONS_TIME_TAKING_NOTES + 1.75
+MUTATIONS_TASK_DELAYS.START_TALKING_TASKCOMPLETED = MUTATIONS_TASK_DELAYS.SHOW_UP + MUTATIONS_TASK_DELAYS.TAKE_NOTES + 1
 
 
 local WAGSTAFF_MUTATIONS_DIALOGUE_LOOKUP =
@@ -899,12 +901,20 @@ local WAGSTAFF_MUTATIONS_DIALOGUE_LOOKUP =
 }
 
 local function Mutations_BuildDialogueScript()
-    local dialogue = {}
+    local dialogue = { regular = {}, task_completed = {} }
 
     for index, entry in ipairs(WAGSTAFF_MUTATIONS_DIALOGUE_LOOKUP) do
         for _, str in ipairs(STRINGS[entry]) do
-            dialogue[index] = dialogue[index] or {}
-            table.insert(dialogue[index], Line(str, nil, MUTATATIONS_DIALOGUE_LINE_DURATION))
+            dialogue.regular[index] = dialogue.regular[index] or {}
+            table.insert(dialogue.regular[index], Line(str, nil, MUTATATIONS_DIALOGUE_LINE_DURATION))
+        end
+    end
+
+    for index, tbl in ipairs(STRINGS.WAGSTAFF_NPC_MUTATION_DEFEATED_AFTER_TASK_COMPLETED) do
+        dialogue.task_completed[index] = dialogue.task_completed[index] or {}
+
+        for i, str in ipairs(tbl) do
+            table.insert(dialogue.task_completed[index], Line(str, nil, MUTATATIONS_DIALOGUE_LINE_DURATION))
         end
     end
 
@@ -926,10 +936,8 @@ local function Mutations_GiveSecurityPulseCage(inst)
         LaunchGameItem(inst, cage, GetRandomWithVariance(angle, 5) * DEGREES, true, player)
     end
 
-    local lunarriftmutationsmanager = TheWorld.components.lunarriftmutationsmanager
-
-    if lunarriftmutationsmanager ~= nil then
-        lunarriftmutationsmanager:RefreshDefeatedMutationsTable()
+    if inst._lunarriftmutationsmanager ~= nil then
+        inst._lunarriftmutationsmanager:OnRewardGiven()
     end
 
     inst.persists = false
@@ -941,9 +949,11 @@ local function ShowUp(inst)
 
     inst.sg:GoToState("idle", "idle_loop")
 
-    inst:DoTaskInTime(MUTATIONS_TASK_DELAYS.TAKE_NOTES, function(inst)
-       inst.sg:GoToState("analyzing_pre")
-    end)
+    if inst._lunarriftmutationsmanager == nil or not inst._lunarriftmutationsmanager:IsTaskCompleted() then
+        inst:DoTaskInTime(MUTATIONS_TASK_DELAYS.TAKE_NOTES, function(inst)
+            inst.sg:GoToState("analyzing_pre")
+        end)
+    end
 
     inst.SoundEmitter:PlaySound("moonstorm/common/alterguardian_contained/static_LP", "wagstaffnpc_static_loop")
 end
@@ -951,38 +961,52 @@ end
 local function _Mutations_TalkAboutMutatedCreature_Internal(inst)
     inst._talktask = nil
 
-    local lunarriftmutationsmanager = TheWorld.components.lunarriftmutationsmanager
+    if inst._lunarriftmutationsmanager ~= nil then
+        local quest_done = inst._lunarriftmutationsmanager:ShouldGiveReward()
 
-    if lunarriftmutationsmanager ~= nil then
-        local quest_done = lunarriftmutationsmanager:HasDefeatedAllMutations()
-        local num_defeated = lunarriftmutationsmanager:GetNumDefeatedMutations()
+        local giverewardtask_time
 
-        -- Making sure we are in this state, because this function can be called during analyzing state.
-        inst.sg:GoToState("analyzing_pre")
+        if not inst._lunarriftmutationsmanager:IsTaskCompleted() then
+            giverewardtask_time = MUTATIONS_TASK_DELAYS.GIVE_SECURITY_PULSE_CAGE
 
-        inst.components.talker:Say(inst._dialogue_script[num_defeated])
+            local num_defeated = inst._lunarriftmutationsmanager:GetNumDefeatedMutations()
 
-        inst.sg:GoToState("analyzing")
+            -- Making sure we are in this state, because this function can be called during analyzing state.
+            inst.sg:GoToState("analyzing_pre")
+
+            inst.components.talker:Say(inst._dialogue_script.regular[num_defeated])
+
+            inst.sg:GoToState("analyzing")
+        else
+            giverewardtask_time = MUTATIONS_TASK_DELAYS.GIVE_SECURITY_PULSE_CAGE_TASKCOMPLETED
+
+            -- Making sure we are in this state, because this function can be called during analyzing state.
+            inst.sg:GoToState("idle", "idle_loop")
+
+            inst.components.talker:Say(inst._dialogue_script.task_completed[math.random(#inst._dialogue_script.task_completed)])
+
+            inst.sg:GoToState("analyzing")
+        end
 
         if quest_done and inst._giverewardtask == nil then
-            inst._giverewardtask = inst:DoTaskInTime(MUTATIONS_TASK_DELAYS.GIVE_SECURITY_PULSE_CAGE, inst.GiveSecurityPulseCage)
+            inst._giverewardtask = inst:DoTaskInTime(giverewardtask_time, inst.GiveSecurityPulseCage)
         end
     end
 end
 
 local function Mutations_TalkAboutMutatedCreature(inst, existing)
-    local lunarriftmutationsmanager = TheWorld.components.lunarriftmutationsmanager
-
-    if lunarriftmutationsmanager ~= nil then
-        local quest_done = lunarriftmutationsmanager:HasDefeatedAllMutations()
+    if inst._lunarriftmutationsmanager ~= nil then
+        local quest_done = inst._lunarriftmutationsmanager:ShouldGiveReward()
 
         if quest_done then
             inst.persists = true
         end
 
+        local talktask_time = inst._lunarriftmutationsmanager:IsTaskCompleted() and MUTATIONS_TASK_DELAYS.START_TALKING_TASKCOMPLETED or MUTATIONS_TASK_DELAYS.START_TALKING 
+
         if not existing then
             inst:DoTaskInTime(MUTATIONS_TASK_DELAYS.SHOW_UP, ShowUp)
-            inst._talktask = inst:DoTaskInTime(MUTATIONS_TASK_DELAYS.START_TALKING, _Mutations_TalkAboutMutatedCreature_Internal)
+            inst._talktask = inst:DoTaskInTime(talktask_time, _Mutations_TalkAboutMutatedCreature_Internal)
 
         elseif inst._talktask == nil then
             _Mutations_TalkAboutMutatedCreature_Internal(inst)
@@ -993,10 +1017,8 @@ end
 local function Mutations_OnLoad(inst)
     -- Wagstaff persist only if the quest is complete.
 
-    local lunarriftmutationsmanager = TheWorld.components.lunarriftmutationsmanager
-
-    if lunarriftmutationsmanager ~= nil then
-        lunarriftmutationsmanager:RefreshDefeatedMutationsTable()
+    if inst._lunarriftmutationsmanager ~= nil then
+        inst._lunarriftmutationsmanager:OnRewardGiven()
 
         inst:DoTaskInTime(0, ReplacePrefab, "security_pulse_cage")
     else
@@ -1005,11 +1027,9 @@ local function Mutations_OnLoad(inst)
 end
 
 local function Mutations_OnEntitySleep(inst)
-    local lunarriftmutationsmanager = TheWorld.components.lunarriftmutationsmanager
-
     -- Wagstaff persist only if the quest is complete.
-    if lunarriftmutationsmanager ~= nil and inst.persists then
-        lunarriftmutationsmanager:RefreshDefeatedMutationsTable()
+    if inst._lunarriftmutationsmanager ~= nil and inst.persists then
+        inst._lunarriftmutationsmanager:OnRewardGiven()
 
         return ReplacePrefab(inst, "security_pulse_cage")
     end
@@ -1067,6 +1087,7 @@ local function MutationsQuestFn()
         return inst
     end
 
+    inst._lunarriftmutationsmanager = TheWorld.components.lunarriftmutationsmanager
     inst.TIME_TAKING_NOTES = MUTATIONS_TIME_TAKING_NOTES
 
     inst:Hide()

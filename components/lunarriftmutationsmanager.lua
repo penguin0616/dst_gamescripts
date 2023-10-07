@@ -15,6 +15,8 @@ local LunarRiftMutationsManager = Class(function(self, inst)
 
     self.inst = inst
 
+    self.task_completed = false
+
     self._MUTATIONS_NAMES = MUTATIONS_NAMES -- Mods.
     self._MUTATIONS = MUTATIONS -- Mods.
 
@@ -104,12 +106,31 @@ function LunarRiftMutationsManager:TriggerWagstaffAppearance(ent)
     end
 end
 
+function LunarRiftMutationsManager:ShouldGiveReward()
+    return self.task_completed or self:HasDefeatedAllMutations()
+end
+
+function LunarRiftMutationsManager:IsTaskCompleted()
+    return self.task_completed
+end
+
+function LunarRiftMutationsManager:OnRewardGiven()
+    self.task_completed = true
+
+    if self:HasDefeatedAllMutations() then
+        self:RefreshDefeatedMutationsTable()
+    end
+end
+
 function LunarRiftMutationsManager:OnSave()
+    local defeated_mutations = shallowcopy(self.defeated_mutations)
+
     local data = {
-        defeated_mutations = shallowcopy(self.defeated_mutations),
+        defeated_mutations = next(defeated_mutations) and defeated_mutations or nil,
+        task_completed = self.task_completed or nil
     }
 
-    return next(data.defeated_mutations) and data or nil
+    return next(data) and data or nil
 end
 
 function LunarRiftMutationsManager:OnLoad(data)
@@ -117,6 +138,10 @@ function LunarRiftMutationsManager:OnLoad(data)
 
     if data.defeated_mutations ~= nil then
         self.defeated_mutations = data.defeated_mutations
+    end
+
+    if data.task_completed then
+        self.task_completed = true
     end
 end
 
@@ -128,10 +153,11 @@ function LunarRiftMutationsManager:GetDebugString()
     end
 
     return string.format(
-        "Mutations Defeated: %d/%d   [ %s ]",
+        "Mutations Defeated: %d/%d [ %s ]  ||  Task Completed: %s",
         self:GetNumDefeatedMutations(),
         self.num_mutations,
-        table.concat(defeated, ", ")
+        table.concat(defeated, ", "),
+        self.task_completed and "YES" or "NO"
     )
 end
 

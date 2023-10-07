@@ -75,6 +75,16 @@ local sounds_clay =
     alert = "dontstarve_DLC001/creatures/together/claywarg/alert",
 }
 
+local sounds_mutated =
+{
+	idle = "rifts3/mutated_varg/idle",
+	howl = "rifts3/mutated_varg/howl",
+	hit = "rifts3/mutated_varg/hit",
+	attack = "rifts3/mutated_varg/attack",
+	death = "rifts3/mutated_varg/death",
+	sleep = "rifts3/mutated_varg/sleep",
+}
+
 SetSharedLootTable('warg',
 {
     {'monstermeat',             1.00},
@@ -854,7 +864,7 @@ local function MakeWarg(data)
 			inst.NumHoundsToSpawn = NumHoundsToSpawn
             inst.LaunchGooIcing = NoGooIcing
 
-            inst.sounds = sounds
+			inst.sounds = sounds_mutated
 			inst.flame_pool = {}
 			inst.ember_pool = {}
 			inst.canflamethrower = true

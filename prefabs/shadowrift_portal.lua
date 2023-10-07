@@ -390,6 +390,7 @@ local function portalfn()
 
     local groundpounder = inst:AddComponent("groundpounder")
     table.insert(groundpounder.noTags, "shadow_aligned")
+	groundpounder:UseRingMode()
     groundpounder.radiusStepDistance = 1.5
     groundpounder.inventoryPushingRings = 2
     groundpounder.numRings = 2

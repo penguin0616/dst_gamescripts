@@ -452,11 +452,14 @@ local function commonfn(build, commonfn)
 
     inst:AddComponent("knownlocations")
     inst:AddComponent("groundpounder")
+	inst.components.groundpounder:UseRingMode()
     inst.components.groundpounder.destroyer = true
-    inst.components.groundpounder.damageRings = 2
-    inst.components.groundpounder.destructionRings = 2
-    inst.components.groundpounder.platformPushingRings = 2
+	inst.components.groundpounder.damageRings = 3
+	inst.components.groundpounder.destructionRings = 3
+	inst.components.groundpounder.platformPushingRings = 3
     inst.components.groundpounder.numRings = 3
+	inst.components.groundpounder.radiusStepDistance = 2
+	inst.components.groundpounder.ringWidth = 1.5
     inst.components.groundpounder.groundpoundFn = OnGroundPound
     inst:AddComponent("timer")
 

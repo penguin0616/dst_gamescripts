@@ -52,14 +52,26 @@ local MIN_LIFETIME = 2
 
 --------------------------------------------------------------------------
 
-local function SpawnLunarHailDropAtXZ(x, z, fastforward)
-    local onwater = TheWorld.Map:IsOceanAtPoint(x, 0, z)
+local _next_long_fx = math.random(3)
 
-    local lunarhaildrop = SpawnPrefab(onwater and "raindrop" or "lunarhaildrop")
-    lunarhaildrop.Transform:SetPosition(x, 0, z)
+local function SpawnLunarHailDropAtXZ(x, z, fastforward)
+	local fx
+	if TheWorld.Map:IsOceanAtPoint(x, 0, z) then
+		fx = SpawnPrefab("raindrop")
+	else
+		fx = SpawnPrefab("lunarhaildrop")
+		if _next_long_fx > 0 then
+			_next_long_fx = _next_long_fx - 1
+		else
+			_next_long_fx = math.random(3, 4)
+			fx.delay = 4 + math.random()
+		end
+	end
+
+	fx.Transform:SetPosition(x, 0, z)
 
     if fastforward then
-        lunarhaildrop.AnimState:FastForward(fastforward)
+		fx.AnimState:FastForward(fastforward)
     end
 end
 

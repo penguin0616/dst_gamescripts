@@ -2179,7 +2179,7 @@ ACTIONS.INVESTIGATE.fn = function(act)
 end
 
 ACTIONS.COMMENT.fn = function(act)
-    if act.doer.components.talker ~= nil and act.doer.comment_data then
+    if act.doer.components.talker and act.doer.comment_data then
         act.doer.components.talker:Say(act.doer.comment_data.speech)
         act.doer.comment_data = nil
     end

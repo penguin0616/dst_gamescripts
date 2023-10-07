@@ -317,11 +317,11 @@ local function ChooseAttack(inst, target)
 	return true
 end
 
-local function DeerclopsFootstep(inst, moving)
+local function DeerclopsFootstep(inst, moving, noice)
 	inst.SoundEmitter:PlaySound(inst.sounds.step)
 	ShakeAllCameras(CAMERASHAKE.VERTICAL, .5, .03, 1, inst, SHAKE_DIST)
 
-	if inst.sg.mem.circle ~= nil then
+	if not noice and inst.sg.mem.circle ~= nil then
 		inst.sg.mem.circle:KillFX()
 		inst.sg.mem.circle = SpawnPrefab("deerclops_aura_circle_fx")
 		local x, y, z = inst.Transform:GetWorldPosition()
@@ -486,6 +486,9 @@ local states =
 			inst.AnimState:PlayAnimation("walk_loop", true)
 			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
 			inst.sg.statemem.canact = true
+			if inst.sounds.walk ~= nil then
+				inst.SoundEmitter:PlaySound(inst.sounds.walk)
+			end
 		end,
 
 		timeline =
@@ -790,7 +793,7 @@ local states =
 					end)
 				end
 			end),
-			FrameEvent(50, function(inst)
+			FrameEvent(48, function(inst)
 				if inst.components.burnable.nocharring then
 					inst.components.burnable:Extinguish()
 				end
@@ -897,10 +900,15 @@ local states =
 			inst.AnimState:PlayAnimation("twitch", true)
 			inst.sg:SetTimeout(3)
 			inst.sg.statemem.mutantprefab = mutantprefab
+			inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/twitching_LP", "loop")
 		end,
 
 		ontimeout = function(inst)
 			inst.sg:GoToState("corpse_mutate", inst.sg.statemem.mutantprefab)
+		end,
+
+		onexit = function(inst)
+			inst.SoundEmitter:KillSound("loop")
 		end,
 	},
 
@@ -918,12 +926,14 @@ local states =
 
 		timeline =
 		{
+			FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/mutate_pre_f0") end),
 			FrameEvent(6, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/ice_grow_4f_leadin") end),
 			FrameEvent(10, function(inst)
 				inst.components.burnable.fastextinguish = true
 				inst.components.burnable:Extinguish()
 				inst.components.burnable.fastextinguish = false
 			end),
+			FrameEvent(45, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/mutate_pre_f45") end),
 			FrameEvent(46, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/ice_grow_4f_leadin") end),
 			FrameEvent(50, function(inst)
 				inst.components.burnable.fastextinguish = true
@@ -994,6 +1004,14 @@ local states =
 				inst.AnimState:SetLightOverride(c)
 			end
 		end,
+
+		timeline =
+		{
+			FrameEvent(16, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/stunned_pst_f70") end),
+			FrameEvent(20, function(inst)
+				DeerclopsFootstep(inst, false, true)
+			end),
+		},
 
 		events =
 		{
@@ -1304,6 +1322,9 @@ local states =
 				inst.sg.mem.noice = inst.sg.mem.noice == nil and 0 or 1
 			end),
 			FrameEvent(47, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/ice_throw_f47") end),
+			FrameEvent(56, function(inst)
+				DeerclopsFootstep(inst, false, true)
+			end),
 			FrameEvent(60, function(inst)
 				inst.SoundEmitter:PlaySound(inst.sounds.attack)
 				inst.sg.statemem.ping:KillFX()
@@ -1388,6 +1409,9 @@ local states =
 
 		timeline =
 		{
+			FrameEvent(7, function(inst)
+				DeerclopsFootstep(inst, false, true)
+			end),
 			FrameEvent(9, function(inst)
 				inst.sg.statemem.burninterrupt = nil
 				inst.components.burnable:Extinguish()
@@ -1401,7 +1425,7 @@ local states =
 				end
 				inst.sg.mem.dostagger = nil
 			end),
-			FrameEvent(11, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.taunt_grrr) end),
+			FrameEvent(5, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.taunt_grrr) end),
 			FrameEvent(6, function(inst)
 				if inst.sg.mem.noice == 1 then
 					inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/ice_grow_4f_leadin")
@@ -1461,6 +1485,7 @@ local states =
 
 		onenter = function(inst)
 			inst.AnimState:PlayAnimation("ice_grow_2")
+			inst.SoundEmitter:PlaySound(inst.sounds.taunt_howl)
 		end,
 
 		events =
@@ -1513,7 +1538,13 @@ local states =
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("struggle_pre")
+			inst.SoundEmitter:PlaySound(inst.sounds.hurt)
 		end,
+
+		timeline =
+		{
+			FrameEvent(14, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.attack, nil, 0.5) end),
+		},
 
 		events =
 		{
@@ -1538,6 +1569,12 @@ local states =
 			inst.sg.statemem.loops = (loops or 0) + 1
 		end,
 
+		timeline =
+		{
+			FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.hurt) end),
+			FrameEvent(10, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.attack, nil, 0.5) end),
+		},
+
 		ontimeout = function(inst)
 			if not inst.components.burnable:IsBurning() then
 				inst.sg:GoToState("struggle_pst")
@@ -1557,10 +1594,12 @@ local states =
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("struggle_pst")
 			inst.components.burnable:Extinguish()
+			inst.SoundEmitter:PlaySound(inst.sounds.hurt)
 		end,
 
 		timeline =
 		{
+			FrameEvent(7, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.taunt_grrr, nil, .6) end),
 			FrameEvent(21, function(inst)
 				if inst.sg.statemem.doattack == nil then
 					if inst.sg.mem.dostagger and TryStagger(inst) then
@@ -1610,11 +1649,14 @@ local states =
 
 		timeline =
 		{
-			FrameEvent(6, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/common/iceboulder_smash") end),
+			FrameEvent(3, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/stunned_pre_break_f13") end),
 			FrameEvent(8, function(inst)
 				inst.components.burnable:Extinguish()
 				inst.components.burnable:SetBurnTime(10)
 				inst.sg.mem.noice = 2
+			end),
+			FrameEvent(24, function(inst)
+				DeerclopsFootstep(inst, false, true)
 			end),
 			FrameEvent(26, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/common/iceboulder_smash", nil, .5) end),
 			FrameEvent(27, function(inst)
@@ -1629,6 +1671,7 @@ local states =
 				else
 					inst.SoundEmitter:PlaySound("dontstarve/creatures/deerclops/bodyfall_dirt")
 				end
+				ShakeAllCameras(CAMERASHAKE.FULL, .7, .02, 2, inst, SHAKE_DIST)
 			end),
 			FrameEvent(46, function(inst)
 				inst.sg:AddStateTag("caninterrupt")
@@ -1766,6 +1809,7 @@ local states =
 			if inst.components.sleeper ~= nil then
 				inst.components.sleeper:WakeUp()
 			end
+			inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/stunned_pst_f0")
 		end,
 
 		timeline =
@@ -1786,6 +1830,10 @@ local states =
 				inst.SoundEmitter:KillSound("loop")
 				inst.components.burnable:SetBurnTime(10)
 				inst.sg.mem.noice = nil
+			end),
+			FrameEvent(70, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/stunned_pst_f70") end),
+			FrameEvent(73, function(inst)
+				DeerclopsFootstep(inst, false, true)
 			end),
 			CommonHandlers.OnNoSleepFrameEvent(92, function(inst)
 				if inst.sg.mem.dostagger and TryStagger(inst) then

@@ -5,10 +5,13 @@ local GroundPounder = Class(function(self, inst)
     self.ringDelay = 0.2
     self.initialRadius = 1
     self.radiusStepDistance = 4
+	self.ringWidth = 3
     self.pointDensity = .25
     self.damageRings = 2
     self.destructionRings = 3
     self.platformPushingRings = 2
+	--self.fxRings = nil --default to numRings
+	--self.fxRadiusOffset = 0 --ONLY supported for RingMode
     self.inventoryPushingRings = 0
     self.noTags = { "FX", "NOCLICK", "DECOR", "INLIMBO" }
     self.workefficiency = nil
@@ -18,14 +21,30 @@ local GroundPounder = Class(function(self, inst)
     self.groundpoundringfx = "groundpoundring_fx"
     self.groundpounddamagemult = 1
     self.groundpoundFn = nil
+
+    self.usePointMode = true --deprecated, but default for mod backward compatibility
+
+	--RingMode changes:
+	--  -Entity searches by concentric rings instead of multiple points around each ring.
+	--  -Damage range is not limited by combat attack range.
+	--  -Cannot hit the same target more than once, even if it's different rings.
 end)
+
+function GroundPounder:UseRingMode()
+	self.usePointMode = nil
+end
 
 function GroundPounder:GetPoints(pt)
     local points = {}
     local radius = self.initialRadius
+	local radiusOffset = not self.usePointMode and self.fxRadiusOffset or 0
 
     for i = 1, self.numRings do
-        local numPoints = math.floor(TWOPI * radius * self.pointDensity)
+		local r = math.max(0, radius + radiusOffset)
+		local numPoints = math.floor(TWOPI * r * self.pointDensity)
+		if i == 1 and numPoints <= 4 then
+			numPoints = 1
+		end
 
         if not points[i] then
             points[i] = {}
@@ -34,8 +53,8 @@ function GroundPounder:GetPoints(pt)
 		if numPoints > 1 then
 			for p = 1, numPoints do
 				local theta = (TWOPI / numPoints) * p
-				local x = pt.x + radius * math.cos(theta)
-				local z = pt.z + radius * math.sin(theta)
+				local x = pt.x + r * math.cos(theta)
+				local z = pt.z + r * math.sin(theta)
 				local point = Vector3(x, 0, z)
 
 				table.insert(points[i], point)
@@ -53,7 +72,7 @@ end
 local WALKABLEPLATFORM_TAGS = {"walkableplatform"}
 
 --Deprecated
-function GroundPounder:DestroyPoints(points, breakobjects, dodamage, pushplatforms, pushinventoryitems)
+function GroundPounder:DestroyPoints(points, breakobjects, dodamage, pushplatforms, pushinventoryitems, spawnfx)
     local getEnts = breakobjects or dodamage or pushinventoryitems
     local map = TheWorld.Map
     if dodamage then
@@ -63,7 +82,7 @@ function GroundPounder:DestroyPoints(points, breakobjects, dodamage, pushplatfor
     local platforms_hit = {}
     for k, v in pairs(points) do
         if getEnts then
-            local ents = TheSim:FindEntities(v.x, v.y, v.z, 3, nil, self.noTags)
+            local ents = TheSim:FindEntities(v.x, v.y, v.z, self.ringWidth, nil, self.noTags)
             if #ents > 0 then
                 if breakobjects then
                     for i, v2 in ipairs(ents) do
@@ -118,7 +137,7 @@ function GroundPounder:DestroyPoints(points, breakobjects, dodamage, pushplatfor
         end
 
         if pushplatforms then
-            local platform_ents = TheSim:FindEntities(v.x, v.y, v.z, 3 + TUNING.MAX_WALKABLE_PLATFORM_RADIUS, WALKABLEPLATFORM_TAGS, self.noTags)
+            local platform_ents = TheSim:FindEntities(v.x, v.y, v.z, self.ringWidth + TUNING.MAX_WALKABLE_PLATFORM_RADIUS, WALKABLEPLATFORM_TAGS, self.noTags)
             for i, p_ent in ipairs(platform_ents) do
                 if p_ent ~= self.inst
                         and not platforms_hit[p_ent]
@@ -136,7 +155,7 @@ function GroundPounder:DestroyPoints(points, breakobjects, dodamage, pushplatfor
             end
         end
 
-        if map:IsLandTileAtPoint(v:Get()) and not map:IsDockAtPoint(v:Get()) then
+		if spawnfx and map:IsLandTileAtPoint(v:Get()) and not map:IsDockAtPoint(v:Get()) then
             SpawnPrefab(self.groundpoundfx).Transform:SetPosition(v.x, 0, v.z)
         end
     end
@@ -145,7 +164,7 @@ function GroundPounder:DestroyPoints(points, breakobjects, dodamage, pushplatfor
     end
 end
 
-function GroundPounder:DestroyRing(pt, radius, points, breakobjects, dodamage, pushplatforms, pushinventoryitems, ents_hit, platforms_hit)
+function GroundPounder:DestroyRing(pt, radius, points, breakobjects, dodamage, pushplatforms, pushinventoryitems, spawnfx, ents_hit, platforms_hit)
 	local getEnts = breakobjects or dodamage or pushinventoryitems
 	local map = TheWorld.Map
 	if dodamage then
@@ -156,10 +175,10 @@ function GroundPounder:DestroyRing(pt, radius, points, breakobjects, dodamage, p
 	platforms_hit = platforms_hit or {}
 
 	if getEnts then
-		local ents = TheSim:FindEntities(pt.x, pt.y, pt.z, radius + 3, nil, self.noTags)
+		local ents = TheSim:FindEntities(pt.x, pt.y, pt.z, radius + self.ringWidth, nil, self.noTags)
 		if #ents > 0 then
 			local i0
-			local min_range_sq = math.max(0, radius - 3)
+			local min_range_sq = math.max(0, radius - self.ringWidth)
 			min_range_sq = min_range_sq * min_range_sq
 			for i, v2 in ipairs(ents) do
 				if v2:GetDistanceSqToPoint(pt) >= min_range_sq then
@@ -225,7 +244,7 @@ function GroundPounder:DestroyRing(pt, radius, points, breakobjects, dodamage, p
 	end
 
 	if pushplatforms then
-		local platform_radius = 3 + TUNING.MAX_WALKABLE_PLATFORM_RADIUS
+		local platform_radius = self.ringWidth + TUNING.MAX_WALKABLE_PLATFORM_RADIUS
 		local platform_ents = TheSim:FindEntities(pt.x, pt.y, pt.z, radius + platform_radius, WALKABLEPLATFORM_TAGS, self.noTags)
 		local i0
 		local min_range_sq = math.max(0, radius - platform_radius)
@@ -256,7 +275,7 @@ function GroundPounder:DestroyRing(pt, radius, points, breakobjects, dodamage, p
 		end
 	end
 
-	if #points > 1 then
+	if spawnfx then
 		for i, v in ipairs(points) do
 			if map:IsLandTileAtPoint(v:Get()) and not map:IsDockAtPoint(v:Get()) then
 				SpawnPrefab(self.groundpoundfx).Transform:SetPosition(v.x, 0, v.z)
@@ -271,12 +290,12 @@ function GroundPounder:DestroyRing(pt, radius, points, breakobjects, dodamage, p
 end
 
 --Deprecated
-local function OnDestroyPoints(inst, self, points, breakobjects, dodamage, pushplatforms, pushinventoryitems)
-    self:DestroyPoints(points, breakobjects, dodamage, pushplatforms, pushinventoryitems)
+local function OnDestroyPoints(inst, self, points, breakobjects, dodamage, pushplatforms, pushinventoryitems, spawnfx)
+	self:DestroyPoints(points, breakobjects, dodamage, pushplatforms, pushinventoryitems, spawnfx)
 end
 
-local function OnDestroyRing(inst, self, pt, radius, points, breakobjects, dodamage, pushplatforms, pushinventoryitems, ents_hit, platforms_hit)
-	self:DestroyRing(pt, radius, points, breakobjects, dodamage, pushplatforms, pushinventoryitems, ents_hit, platforms_hit)
+local function OnDestroyRing(inst, self, pt, radius, points, breakobjects, dodamage, pushplatforms, pushinventoryitems, spawnfx, ents_hit, platforms_hit)
+	self:DestroyRing(pt, radius, points, breakobjects, dodamage, pushplatforms, pushinventoryitems, spawnfx, ents_hit, platforms_hit)
 end
 
 function GroundPounder:GroundPound(pt)
@@ -286,11 +305,14 @@ function GroundPounder:GroundPound(pt)
 	fx.Transform:SetPosition(pt.x, 0, pt.z)
 
 	--auto-scaling hitbox radius if it's the default fx
-	if self.groundpoundringfx == "groundpoundring_fx" then
-		local hitrings = math.max(self.destructionRings, self.damageRings)
-		local hitradius = self.initialRadius + self.radiusStepDistance * math.max(0, hitrings - 1) + 3
+	if not self.usePointMode and self.groundpoundringfx == "groundpoundring_fx" then
+		local hitrings = math.min(self.numRings, math.max(self.damageRings, self.destructionRings))
+		local hitradius = self.initialRadius + self.radiusStepDistance * math.max(0, hitrings - 1) + self.ringWidth
 		local fxscale = math.sqrt(hitradius / 12) --art radius is 12; sqrt coz of transform scale bug
 		fx.Transform:SetScale(fxscale, fxscale, fxscale)
+		if hitrings <= 2 and fx.FastForward ~= nil then
+			fx:FastForward()
+		end
 	end
 
     local points = self:GetPoints(pt)
@@ -299,26 +321,30 @@ function GroundPounder:GroundPound(pt)
 	local ents_hit = {}
 	local platforms_hit = {}
     for i = 1, self.numRings do
-		--[[ Deprecated
-        self.inst:DoTaskInTime(
-            delay, OnDestroyPoints,
-            self, points[i],
-            i <= self.destructionRings,
-            i <= self.damageRings,
-            i <= self.platformPushingRings,
-            i <= self.inventoryPushingRings
-        )
-		]]
-		self.inst:DoTaskInTime(
-			delay, OnDestroyRing,
-			self, pt, radius, points[i],
-			i <= self.destructionRings,
-			i <= self.damageRings,
-			i <= self.platformPushingRings,
-			i <= self.inventoryPushingRings,
-			ents_hit,
-			platforms_hit
-		)
+		if self.usePointMode then
+			--Deprecated
+			self.inst:DoTaskInTime(
+				delay, OnDestroyPoints,
+				self, points[i],
+				i <= self.destructionRings,
+				i <= self.damageRings,
+				i <= self.platformPushingRings,
+				i <= self.inventoryPushingRings,
+				i <= (self.fxRings or self.numRings)
+			)
+		else
+			self.inst:DoTaskInTime(
+				delay, OnDestroyRing,
+				self, pt, radius, points[i],
+				i <= self.destructionRings,
+				i <= self.damageRings,
+				i <= self.platformPushingRings,
+				i <= self.inventoryPushingRings,
+				i <= (self.fxRings or self.numRings),
+				ents_hit,
+				platforms_hit
+			)
+		end
 		radius = radius + self.radiusStepDistance
         delay = delay + self.ringDelay
     end
@@ -329,6 +355,7 @@ function GroundPounder:GroundPound(pt)
 end
 
 -- Note(DiogoW): I don't think this is working as expected.
+--@V2C: this is deprecated and unused. code is probalby just kept around for mods
 function GroundPounder:GroundPound_Offscreen(position)
     self.inst.components.combat:EnableAreaDamage(false)
 

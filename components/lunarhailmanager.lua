@@ -171,6 +171,8 @@ return Class(function(self, inst)
                 debris.components.lighttweener:StartTween(debris.Light, 0, 0, nil, nil, 0.3)
             end
 
+            debris.SoundEmitter:PlaySound("rifts3/lunarhail/hail_land")
+
             if debris:GetTimeAlive() < 1.5 then
                 --should be our first bounce
                 debris:DoTaskInTime(.4, _BreakDebris)

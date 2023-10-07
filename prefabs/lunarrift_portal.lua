@@ -622,6 +622,7 @@ local function portalfn()
     ----------------------------------------------------------
     local groundpounder = inst:AddComponent("groundpounder")
     table.insert(groundpounder.noTags, "lunar_aligned")
+	groundpounder:UseRingMode()
     groundpounder.damageRings = 6
     groundpounder.destructionRings = 0
     groundpounder.platformPushingRings = 6
