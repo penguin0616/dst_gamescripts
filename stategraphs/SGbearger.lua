@@ -417,20 +417,6 @@ local function DoFootstep(inst)
 	end
 end
 
-local function EnableEightFaced(inst)
-	if not inst.sg.mem.eightfaced then
-		inst.sg.mem.eightfaced = true
-		inst.Transform:SetEightFaced()
-	end
-end
-
-local function DisableEightFaced(inst)
-	if inst.sg.mem.eightfaced then
-		inst.sg.mem.eightfaced = false
-		inst.Transform:SetFourFaced()
-	end
-end
-
 local function GoToStandState(inst, state, customtrans, params)
 	if inst:IsStandState(state) then
 		return true
@@ -580,7 +566,9 @@ local states =
 			end
 		end,
 
-		onexit = DisableEightFaced,
+		onexit = function(inst)
+			inst:SwitchToFourFaced()
+		end,
 	},
 
 	State{
@@ -784,7 +772,7 @@ local states =
 			elseif GoToStandState(inst, "bi", nil, target) then
 				inst.components.locomotor:StopMoving()
 				inst.components.combat:StartAttack()
-				EnableEightFaced(inst)
+				inst:SwitchToEightFaced()
 				inst.AnimState:PlayAnimation("atk")
 				StartTrackingTarget(inst, target)
 				inst.sg.statemem.original_target = target --remember for onmissother event
@@ -836,7 +824,7 @@ local states =
 		onexit = function(inst)
 			KillSwipeFX(inst)
 			if not inst.sg.statemem.keepfacing then
-				DisableEightFaced(inst)
+				inst:SwitchToFourFaced()
 			end
 		end,
 	},
@@ -849,7 +837,7 @@ local states =
 			if GoToStandState(inst, "bi", nil, target) then
 				inst.components.locomotor:Stop()
 				inst.components.combat:StartAttack()
-				EnableEightFaced(inst)
+				inst:SwitchToEightFaced()
 				inst.AnimState:PlayAnimation("atk1")
 				inst.AnimState:PushAnimation("atk1_pst", false)
 				StartTrackingTarget(inst, target)
@@ -933,7 +921,7 @@ local states =
 			inst.Physics:Stop()
 			KillSwipeFX(inst)
 			if not inst.sg.statemem.keepfacing then
-				DisableEightFaced(inst)
+				inst:SwitchToFourFaced()
 			end
 		end,
 	},
@@ -946,7 +934,7 @@ local states =
 			inst:SetStandState("bi")
 			inst.components.locomotor:Stop()
 			inst.components.combat:StartAttack()
-			EnableEightFaced(inst)
+			inst:SwitchToEightFaced()
 			inst.AnimState:PlayAnimation("atk2")
 			inst.AnimState:PushAnimation("atk2_pst", false)
 			StartTrackingTarget(inst, target)
@@ -1028,7 +1016,7 @@ local states =
 			inst.Physics:Stop()
 			KillSwipeFX(inst)
 			if not inst.sg.statemem.keepfacing then
-				DisableEightFaced(inst)
+				inst:SwitchToFourFaced()
 			end
 		end,
 	},
@@ -1041,7 +1029,7 @@ local states =
 			inst:SetStandState("bi")
 			inst.components.locomotor:Stop()
 			inst.components.combat:StartAttack()
-			EnableEightFaced(inst)
+			inst:SwitchToEightFaced()
 			inst.AnimState:PlayAnimation("atk1a")
 			inst.AnimState:PushAnimation("atk1_pst", false)
 			StartTrackingTarget(inst, target)
@@ -1123,7 +1111,7 @@ local states =
 			inst.Physics:Stop()
 			KillSwipeFX(inst)
 			if not inst.sg.statemem.keepfacing then
-				DisableEightFaced(inst)
+				inst:SwitchToFourFaced()
 			end
 		end,
 	},

@@ -14,6 +14,7 @@ local mutated_assets =
     Asset("ANIM", "anim/bearger_actions.zip"),
     Asset("ANIM", "anim/bearger_mutated_actions.zip"),
     Asset("ANIM", "anim/bearger_mutated.zip"),
+	Asset("ANIM", "anim/lunar_flame.zip"),
     Asset("SOUND", "sound/bearger.fsb"),
 }
 
@@ -368,6 +369,20 @@ local function Mutated_OnDead(inst)
     end
 end
 
+local function SwitchToEightFaced(inst)
+	if not inst._temp8faced then
+		inst._temp8faced = true
+		inst.Transform:SetEightFaced()
+	end
+end
+
+local function SwitchToFourFaced(inst)
+	if inst._temp8faced then
+		inst._temp8faced = false
+		inst.Transform:SetFourFaced()
+	end
+end
+
 local function commonfn(build, commonfn)
     local inst = CreateEntity()
 
@@ -486,6 +501,8 @@ local function commonfn(build, commonfn)
 
     inst.OnSave = OnSave
     inst.OnLoad = OnLoad
+	inst.SwitchToEightFaced = SwitchToEightFaced
+	inst.SwitchToFourFaced = SwitchToFourFaced
 
     ------------------------------------------
 
@@ -565,6 +582,60 @@ local function normalfn()
     return inst
 end
 
+local function Mutated_OnTemp8Faced(inst)
+	if inst.temp8faced:value() then
+		inst.eyeL.Transform:SetEightFaced()
+		inst.eyeR.Transform:SetEightFaced()
+	else
+		inst.eyeL.Transform:SetFourFaced()
+		inst.eyeR.Transform:SetFourFaced()
+	end
+end
+
+local function Mutated_SwitchToEightFaced(inst)
+	if not inst.temp8faced:value() then
+		inst.temp8faced:set(true)
+		if not TheNet:IsDedicated() then
+			Mutated_OnTemp8Faced(inst)
+		end
+		inst.Transform:SetEightFaced()
+	end
+end
+
+local function Mutated_SwitchToFourFaced(inst)
+	if inst.temp8faced:value() then
+		inst.temp8faced:set(false)
+		if not TheNet:IsDedicated() then
+			Mutated_OnTemp8Faced(inst)
+		end
+		inst.Transform:SetFourFaced()
+	end
+end
+
+local function Mutated_CreateEyeFlame()
+	local inst = CreateEntity()
+
+	inst:AddTag("FX")
+	--[[Non-networked entity]]
+	--inst.entity:SetCanSleep(false) --commented out; follow parent sleep instead
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+
+	inst.Transform:SetFourFaced()
+
+	inst.AnimState:SetBank("lunar_flame")
+	inst.AnimState:SetBuild("lunar_flame")
+	inst.AnimState:PlayAnimation("flameanim", true)
+	inst.AnimState:SetMultColour(1, 1, 1, 0.6)
+	inst.AnimState:SetLightOverride(0.1)
+	inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+
+	return inst
+end
+
 local function mutatedcommonfn(inst)
     inst:AddTag("lunar_aligned")
 
@@ -575,12 +646,32 @@ local function mutatedcommonfn(inst)
 	inst.AnimState:SetSymbolMultColour("gestalt_embers", 1, 1, 1, 0.6)
 	inst.AnimState:SetSymbolLightOverride("gestalt_embers", 0.1)
 	inst.AnimState:SetSymbolBloom("gestalt_embers")
+
+	inst.temp8faced = net_bool(inst.GUID, "mutatedbearger.temp8faced", "temp8faceddirty")
+
+	--Dedicated server does not need to spawn the local fx
+	if not TheNet:IsDedicated() then
+		inst.eyeL = Mutated_CreateEyeFlame()
+		inst.eyeL.entity:SetParent(inst.entity)
+		inst.eyeL.Follower:FollowSymbol(inst.GUID, "flameL", 0, 0, 0, true)
+		local frames = inst.eyeL.AnimState:GetCurrentAnimationNumFrames()
+		local rnd = math.random(frames) - 1
+		inst.eyeL.AnimState:SetFrame(rnd)
+
+		inst.eyeR = Mutated_CreateEyeFlame()
+		inst.eyeR.entity:SetParent(inst.entity)
+		inst.eyeR.Follower:FollowSymbol(inst.GUID, "flameR", 0, 0, 0, true)
+		rnd = (rnd + math.floor((0.35 + math.random() * 0.35) * frames)) % frames
+		inst.eyeR.AnimState:SetFrame(rnd)
+	end
 end
 
 local function mutatedfn()
     local inst = commonfn("bearger_mutated", mutatedcommonfn)
 
     if not TheWorld.ismastersim then
+		inst:ListenForEvent("temp8faceddirty", Mutated_OnTemp8Faced)
+
         return inst
     end
 
@@ -602,6 +693,10 @@ local function mutatedfn()
     inst.components.lootdropper:SetChanceLootTable("mutatedbearger")
 
     inst:ListenForEvent("death", Mutated_OnDead)
+
+	--Overriding these
+	inst.SwitchToEightFaced = Mutated_SwitchToEightFaced
+	inst.SwitchToFourFaced = Mutated_SwitchToFourFaced
 
     return inst
 end

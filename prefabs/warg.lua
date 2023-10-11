@@ -7,6 +7,7 @@ local prefabs_basic =
     "houndstooth",
     "wargcorpse",
     "koalefantcorpse_prop",
+    "koalefant_carcass",
     "meat",
     "trunk_summer",
     "trunk_winter",
@@ -330,13 +331,27 @@ local function OnUnhideFn_Normal(inst, player)
 end
 
 local function PropCreationFn_Normal(inst)
-    local corpse = SpawnPrefab("koalefantcorpse_prop")
+    local ent = SpawnPrefab("koalefantcorpse_prop")
     if TheWorld.state.iswinter then
-        corpse:SetAltBuild()
+        ent:SetAltBuild()
     end
-    corpse.Transform:SetPosition(inst.Transform:GetWorldPosition())
+    ent.Transform:SetPosition(inst.Transform:GetWorldPosition())
 
-    return corpse
+    return ent
+end
+
+local function CarcassCreationFn_Normal(inst, score)
+    local ent = SpawnPrefab("koalefant_carcass")
+    if TheWorld.state.iswinter then
+        ent:MakeWinter()
+    end
+    ent.Transform:SetPosition(inst.Transform:GetWorldPosition())
+
+	if ent.SetMeatPct ~= nil then
+		ent:SetMeatPct(score)
+	end
+
+    return ent
 end
 
 local function OnSpawnedForHunt_Normal(inst, data)
@@ -354,10 +369,15 @@ local function OnSpawnedForHunt_Normal(inst, data)
         -- The wrong fork set up an ambush!
         inst.components.prophider:HideWithProp()
     else
-        -- The right fork set up sleepy!
+        -- The right fork set up sleepy or meaty treat, depending on score!
         local radius = math.random() * 2 + 6
         local hounds = inst:SpawnHounds(radius)
-        inst:DoTaskInTime(0, OnForceSleep_Normal, hounds) -- NOTES(JBK): Delay a frame for initialization to complete.
+        local score = data.score or 1
+        if score <= 0 then
+            inst:DoTaskInTime(0, OnForceSleep_Normal, hounds) -- NOTES(JBK): Delay a frame for initialization to complete.
+        else
+            local carcass = CarcassCreationFn_Normal(inst, score)
+        end
     end
 end
 
@@ -595,8 +615,8 @@ local function Mutated_CreateEyeFlame()
 
 	inst.Transform:SetSixFaced()
 
-	inst.AnimState:SetBank("warg")
-	inst.AnimState:SetBuild("warg_mutated_actions")
+	inst.AnimState:SetBank("lunar_flame")
+	inst.AnimState:SetBuild("lunar_flame")
 	inst.AnimState:PlayAnimation("flameanim", true)
 	inst.AnimState:SetMultColour(1, 1, 1, 0.6)
 	inst.AnimState:SetLightOverride(0.1)
@@ -619,8 +639,8 @@ local function Mutated_CreateMouthFlame()
 
 	inst.Transform:SetSixFaced()
 
-	inst.AnimState:SetBank("warg")
-	inst.AnimState:SetBuild("warg_mutated_actions")
+	inst.AnimState:SetBank("lunar_flame")
+	inst.AnimState:SetBuild("lunar_flame")
 	inst.AnimState:PlayAnimation("mouthflameanim", true)
 	inst.AnimState:SetMultColour(1, 1, 1, 0.6)
 	inst.AnimState:SetLightOverride(0.1)
@@ -709,6 +729,7 @@ local function MakeWarg(data)
         table.insert(assets, Asset("ANIM", "anim/warg_gingerbread.zip"))
     elseif tag == "lunar_aligned" then
         table.insert(assets, Asset("ANIM", "anim/warg_mutated_actions.zip"))
+		table.insert(assets, Asset("ANIM", "anim/lunar_flame.zip"))
     end
     table.insert(assets, Asset("ANIM", "anim/"..build..".zip"))
 
@@ -805,6 +826,7 @@ local function MakeWarg(data)
         inst.components.combat:SetAttackPeriod(TUNING.WARG_ATTACKPERIOD)
         inst.components.combat:SetRetargetFunction(1, RetargetFn)
         inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
+		inst.components.combat.lastwasattackedtime = -math.huge --for brain
         inst:ListenForEvent("attacked", OnAttacked)
 
         inst:AddComponent("health")

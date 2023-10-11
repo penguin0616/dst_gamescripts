@@ -19,6 +19,8 @@ local sentryward_prefabs =
     "deerclopseyeball_sentryward_fx",
     "deerclopseyeball_sentryward_kit",
     "deerclopseyeball_sentryward_kit_placer",
+    "rock_ice",
+    "rock_ice_temperature",
 }
 
 local fx_prefabs =
@@ -178,6 +180,7 @@ local function OnEyeballGiven(inst, item, giver)
     end
 
     inst.components.maprevealer:Start()
+    inst.components.periodicspawner:Start()
 
     if inst.icon == nil then
         inst:DoTaskInTime(0, inst.CreateGlobalIcon)
@@ -215,6 +218,7 @@ local function OnEyeballTaken(inst, item, taker)
     end
 
     inst.components.maprevealer:Stop()
+    inst.components.periodicspawner:Stop()
 
     if inst.icon ~= nil then
         inst.icon:Remove()
@@ -341,6 +345,35 @@ end
 
 ---------------------------------------------------------------------------------------------------------------
 
+local function OnRockIceSpawned(spawner, ice)
+    ice:SetStage("short")
+
+    local scale = GetRandomMinMax(0.85, 1)
+    ice.Transform:SetScale(scale, scale, scale)
+end
+
+local POSITION_CANT_TAGS = { "INLIMBO", "NOBLOCK", "FX" }
+local IS_CLEAR_AREA_RADIUS = 2
+
+local function IsValidPosition(pos)
+    local x, y, z = pos:Get()
+
+    return TheSim:CountEntities(x, 0, z, IS_CLEAR_AREA_RADIUS, nil, POSITION_CANT_TAGS) <= 0 and TheWorld.Map:IsSurroundedByLand(x, 0, z, 2)
+end
+
+local function GetRockIceSpawnPoint(inst)
+    local pos = inst:GetPosition()
+    local dist = GetRandomMinMax(5, TUNING.DEERCLOPSEYEBALL_SENTRYWARD_ROCK_ICE_MAX_DENSITY_RAD)
+
+    local offset = FindWalkableOffset(pos, math.random()*TWOPI, dist, 16, nil, nil, IsValidPosition)
+
+    if offset ~= nil then
+        return pos + offset
+    end
+end
+
+---------------------------------------------------------------------------------------------------------------
+
 local function sentrywardfn()
     local inst = CreateEntity()
 
@@ -437,6 +470,14 @@ local function sentrywardfn()
     inst.components.inventoryitemholder:SetAllowedTags({ "deerclops_eyeball" })
     inst.components.inventoryitemholder:SetOnItemGivenFn(inst.OnEyeballGiven)
     inst.components.inventoryitemholder:SetOnItemTakenFn(inst.OnEyeballTaken)
+
+    inst:AddComponent("periodicspawner")
+    inst.components.periodicspawner:SetPrefab("rock_ice_temperature")
+    inst.components.periodicspawner:SetOnSpawnFn(OnRockIceSpawned)
+    inst.components.periodicspawner:SetGetSpawnPointFn(GetRockIceSpawnPoint)
+    inst.components.periodicspawner:SetRandomTimes(TUNING.DEERCLOPSEYEBALL_SENTRYWARD_ROCK_ICE_SPAWN_BASETIME, TUNING.DEERCLOPSEYEBALL_SENTRYWARD_ROCK_ICE_SPAWN_VARIANCE)
+    inst.components.periodicspawner:SetMinimumSpacing(TUNING.DEERCLOPSEYEBALL_SENTRYWARD_ROCK_ICE_MIN_SPACING)
+    inst.components.periodicspawner:SetDensityInRange(TUNING.DEERCLOPSEYEBALL_SENTRYWARD_ROCK_ICE_MAX_DENSITY_RAD, TUNING.DEERCLOPSEYEBALL_SENTRYWARD_ROCK_ICE_MAX_DENSITY)
 
     inst.components.temperatureoverrider:SetRadius(TUNING.DEERCLOPSEYEBALL_SENTRYWARD_RADIUS)
     inst.components.temperatureoverrider:SetTemperature(TUNING.DEERCLOPSEYEBALL_SENTRYWARD_TEMPERATURE_OVERRIDE)

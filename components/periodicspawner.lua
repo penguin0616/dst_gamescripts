@@ -58,6 +58,10 @@ function PeriodicSpawner:SetSpawnTestFn(fn)
     self.spawntest = fn
 end
 
+function PeriodicSpawner:SetGetSpawnPointFn(fn)
+    self.getspawnpointfn = fn
+end
+
 local PERIODICSPAWNER_CANTTAGS = { "INLIMBO" }
 function PeriodicSpawner:TrySpawn(prefab)
     prefab = prefab or self.prefab
@@ -73,6 +77,16 @@ function PeriodicSpawner:TrySpawn(prefab)
     end
 
     local x, y, z = self.inst.Transform:GetWorldPosition()
+
+    local spawnpos = Vector3(x, y , z)
+
+    if self.getspawnpointfn ~= nil then
+        spawnpos = self.getspawnpointfn(self.inst)
+
+        if spawnpos == nil then
+            return false
+        end
+    end 
 
     if self.range ~= nil or self.spacing ~= nil then
         local density = self.density or 0
@@ -90,7 +104,7 @@ function PeriodicSpawner:TrySpawn(prefab)
                 if self.range == nil or (
                     self.spacing ~= nil and (
                         self.spacing >= self.range or
-                        v:GetDistanceSqToPoint(x, y, z) < self.spacing * self.spacing
+                        v:GetDistanceSqToPoint(spawnpos.x, 0, spawnpos.z) < self.spacing * self.spacing
                     )
                 ) then
                     return false
@@ -102,19 +116,25 @@ function PeriodicSpawner:TrySpawn(prefab)
             end
         end
     end
+
     local inst = nil
+
     --V2C: using TheWorld.Map:GetPlatformAtPoint(x, z) instead of self.inst:GetCurrentPlatform()
     --     because the spawner may not detect platforms.
     --     e.g. Glommer is flying, and does not detect platforms, but spawns glommerfuel.
-    if TheWorld.components.flotsamgenerator ~= nil and not TheWorld.Map:IsVisualGroundAtPoint(x, y, z) and not TheWorld.Map:GetPlatformAtPoint(x, z) then
-        inst = TheWorld.components.flotsamgenerator:SpawnFlotsam(Vector3(x,y,z),prefab,true)
+
+
+    if TheWorld.components.flotsamgenerator ~= nil and not TheWorld.Map:IsVisualGroundAtPoint(spawnpos:Get()) and not TheWorld.Map:GetPlatformAtPoint(spawnpos.x, spawnpos.z) then
+        inst = TheWorld.components.flotsamgenerator:SpawnFlotsam(spawnpos, prefab, true)
     else
         inst = SpawnPrefab(prefab)
-        inst.Transform:SetPosition(x, y, z)
+        inst.Transform:SetPosition(spawnpos:Get())
     end
+
     if self.onspawn ~= nil then
         self.onspawn(self.inst, inst)
     end
+
     return true
 end
 

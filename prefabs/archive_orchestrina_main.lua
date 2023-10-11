@@ -361,15 +361,11 @@ local function mainfn()
     inst:AddTag("NOCLICK")
     inst:AddTag("DECOR")
 
-    inst.status = "off"
     inst.scrapbook_inspectonseen = true
 
     if not TheNet:IsDedicated() then
         inst:AddComponent("pointofinterest")
         inst.components.pointofinterest:SetHeight(220)
-        inst.components.pointofinterest:SetShouldShowFn(function(inst)
-            return inst.status ~= "off"
-        end)
     end
 
     inst.entity:SetPristine()
@@ -377,6 +373,8 @@ local function mainfn()
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst.status = "off"
 
     inst.scrapbook_specialinfo = "ORCHESTRINA"
     inst.scrapbook_anim = "scrapbook"

@@ -1,4 +1,5 @@
-local MIN_DIST_FROM_LAST_POSITION_SQ = 50 * 50
+local MIN_DIST_FROM_LAST_POSITION_SQ = 300 * 300
+local MAX_DIST_FROM_AN_PLAYER = 500
 
 local MAX_NUM_HINTS = 10
 local NUM_MACHINES_PER_SPAWN = 3
@@ -14,7 +15,7 @@ local LOCATION_CANT_TAGS = { "INLIMBO", "NOBLOCK", "FX" }
 
 local function NodeCanHaveMachine(node)
     return
-        not table.contains(node.tags, "lunacyarea") and
+        not table.contains(node.tags, "not_mainland") and
         TheWorld.Map:IsLandTileAtPoint(node.cent[1], 0, node.cent[2])
 end
 
@@ -174,7 +175,9 @@ function WagpunkManager:FindSpotForMachines()
         local new_x, new_z = new_node.cent[1], new_node.cent[2]
         local new_pos = Vector3(new_x, 0, new_z)
 
-        if current_node == nil or VecUtil_LengthSq(new_x - current_x, new_z - current_z) > MIN_DIST_FROM_LAST_POSITION_SQ then
+        if IsAnyPlayerInRange(new_x, 0, new_z, MAX_DIST_FROM_AN_PLAYER) and
+            (current_node == nil or VecUtil_LengthSq(new_x - current_x, new_z - current_z) > MIN_DIST_FROM_LAST_POSITION_SQ)
+        then
             local offset = FindWalkableOffset(new_pos, math.random()*TWOPI, math.random()*10, 16, nil, nil, IsPositionClearCenterPoint)
 
             if offset ~= nil then
@@ -216,6 +219,8 @@ function WagpunkManager:TryHinting(debug)
 
     if player == nil then
         self:StartHintTimer()
+
+        return
     end
 
     if not (self.hintcount <= MAX_NUM_HINTS and next(self.machineGUIDS)) then

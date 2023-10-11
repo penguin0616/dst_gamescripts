@@ -14,6 +14,7 @@ local RESISTANCES =
     "_combat",
     "explosive",
     "quakedebris",
+    "lunarhaildebris",
     "caveindebris",
     "trapdamage",
 }

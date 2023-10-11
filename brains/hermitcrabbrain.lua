@@ -461,7 +461,7 @@ function HermitBrain:OnStart()
             WhileNode( function() return not self.inst.sg:HasStateTag("mandatory") end, "unfriendly",
                 PriorityNode{
                     WhileNode( function() return self.inst.comment_data ~= nil end, "comment",
-                        DoAction(self.inst, DoCommentAction, "comment", true )),
+                        DoAction(self.inst, DoCommentAction, "comment", true, 10 )),
                     ChattyNode(self.inst, function(inst) return getstring(inst,STRINGS.HERMITCRAB_ATTEMPT_TRADE) end,
                         FaceEntity(self.inst, GetTraderFn, KeepTraderFn)),
                     FaceEntity(self.inst, GetTraderFn, KeepTraderFn),

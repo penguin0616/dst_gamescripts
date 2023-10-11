@@ -107,7 +107,38 @@ return Class(function(self, inst)
         debris:Remove()
     end or nil
 
+    local _DebrisTimeOver = _ismastersim and function(debris)
+        if debris._timeovertask ~= nil then
+            debris._timeovertask:Cancel()
+            debris._timeovertask = nil
+        end
+
+        if not debris:IsInLimbo() then
+            _BreakDebris(debris)
+        end
+    end or nil
+
+    local _DebrisOnEnterLimbo
+
+    _DebrisOnEnterLimbo = _ismastersim and function(debris)
+        debris:RemoveEventCallback("enterlimbo", _DebrisOnEnterLimbo)
+
+        if debris._timeovertask ~= nil then
+            debris._timeovertask:Cancel()
+            debris._timeovertask = nil
+        end
+
+        debris.Transform:SetScale(1, 1, 1)
+
+        debris.persists = true
+    end or nil
+
     local DebrisCanHitTarget = _ismastersim and function(debris, target)
+        -- FIXME(DiogoW): Temporary, until a new creature protection feature/behavior is added.
+        if not target:HasTag("player") then
+            return false
+        end
+
         if target.components.combat == nil then
             return false
         end
@@ -131,15 +162,22 @@ return Class(function(self, inst)
             local ents = TheSim:FindEntities(x, 0, z, TUNING.LUNARHAIL_DEBRIS_DAMAGE_RADIUS, nil, self.onimpact_canttags, self.onimpact_oneoftags)
             for i, v in ipairs(ents) do
                 if v ~= debris and v:IsValid() and not v:IsInLimbo() then
-                    if DebrisCanHitTarget(debris, v) then
+                    if  DebrisCanHitTarget(debris, v) then
                         v.components.combat:GetAttacked(debris, TUNING.LUNARHAIL_DEBRIS_DAMAGE, nil)
+
                     elseif v.components.inventoryitem ~= nil then
                         if v.components.mine ~= nil then
                             v.components.mine:Deactivate()
                         end
+
+                        -- Don't mess with dropped items used as decoration.
+                        if v:HasTag("lunarhaildebris") and not v.persists then
+                            Launch(v, debris, TUNING.LAUNCH_SPEED_SMALL)
+                        end
+
                     elseif v.components.farmplantstress ~= nil then
                         v.components.farmplantstress:SetStressed("happiness", true, debris)
-                    
+
                         if v.components.growable ~= nil then
                             if v.components.farmplanttendable ~= nil then
                                 v.components.farmplanttendable:SetTendable(v.components.growable:GetCurrentStageData().tendable)
@@ -166,28 +204,58 @@ return Class(function(self, inst)
             debris.updatetask:Cancel()
             debris.updatetask = nil
 
-            if debris.Light ~= nil then
-                debris:AddComponent("lighttweener")
-                debris.components.lighttweener:StartTween(debris.Light, 0, 0, nil, nil, 0.3)
-            end
-
             debris.SoundEmitter:PlaySound("rifts3/lunarhail/hail_land")
 
-            if debris:GetTimeAlive() < 1.5 then
+            if math.random() <= TUNING.LUNARHAIL_DEBRIS_KEEP_CHANCE then
+                --debris.persists = true -- Do NOT persist!
+                debris.entity:SetCanSleep(true)
+
+                debris._timeovertask = debris:DoTaskInTime(TUNING.LUNARHAIL_DEBRIS_LIFETIME, _DebrisTimeOver)
+                debris:ListenForEvent("enterlimbo", _DebrisOnEnterLimbo)
+
+                if debris._restorepickup then
+                    debris._restorepickup = nil
+                    if debris.components.inventoryitem ~= nil then
+                        debris.components.inventoryitem.canbepickedup = true
+                    end
+                end
+                debris:PushEvent("stopfalling")
+
+            elseif debris:GetTimeAlive() < 1.5 then
+                if debris.Light ~= nil then
+                    debris:AddComponent("lighttweener")
+                    debris.components.lighttweener:StartTween(debris.Light, 0, 0, nil, nil, 0.3)
+                end
+                
                 --should be our first bounce
                 debris:DoTaskInTime(.4, _BreakDebris)
             else
                 --we missed detecting our first bounce, so break immediately this time
                 _BreakDebris(debris)
             end
+
         elseif debris:GetTimeAlive() < 3 then
             if y < 2 then
                 debris.Physics:SetMotorVel(0, 0, 0)
             end
             UpdateShadowSize(debris.shadow, y)
+
         elseif debris:IsInLimbo() then
+            --failsafe, but maybe we got trapped or picked up somehow, so keep it
+            debris.persists = true
+            debris.entity:SetCanSleep(true)
             debris.shadow:Remove()
-            debris:Remove()
+            debris.shadow = nil
+            debris.updatetask:Cancel()
+            debris.updatetask = nil
+            debris.Transform:SetScale(1, 1, 1)
+            if debris._restorepickup then
+                debris._restorepickup = nil
+                if debris.components.inventoryitem ~= nil then
+                    debris.components.inventoryitem.canbepickedup = true
+                end
+            end
+            debris:PushEvent("stopfalling")
         else
             --failsafe
             _BreakDebris(debris)

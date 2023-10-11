@@ -11,6 +11,7 @@ local LootDropper = Class(function(self, inst)
     self.chanceloottable = nil
 
     self.trappable = true
+    self.droprecipeloot = true
 
     self.lootfn = nil
     self.flingtargetpos = nil
@@ -197,11 +198,13 @@ function LootDropper:GenerateLoot()
         end
     end
 
-    local recipe = AllRecipes[self.inst.prefab]
-    if recipe then
-        local recipeloot = self:GetRecipeLoot(recipe)
-        for k,v in ipairs(recipeloot) do
-            table.insert(loots, v)
+    if self.droprecipeloot then
+        local recipe = AllRecipes[self.inst.prefab]
+        if recipe then
+            local recipeloot = self:GetRecipeLoot(recipe)
+            for k,v in ipairs(recipeloot) do
+                table.insert(loots, v)
+            end
         end
     end
 

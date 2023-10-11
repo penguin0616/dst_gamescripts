@@ -931,7 +931,7 @@ local function OnClosePopups(inst)
     inst:ShowPopUp(POPUPS.PLAYERINFO, false)
 end
 
-local SCRAPBOOK_CANT_TAGS = {"FX", "DECOR", "INLIMBO"}
+local SCRAPBOOK_CANT_TAGS = { "FX", "INLIMBO" }
 local function UpdateScrapbook(inst)
 	--assert(inst = ThePlayer)
     local x, y, z = inst.Transform:GetWorldPosition()

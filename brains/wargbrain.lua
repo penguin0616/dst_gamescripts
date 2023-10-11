@@ -28,6 +28,28 @@ local function TryReanimate(self)
     end
 end
 
+--------------------------------------------------------------------------
+
+local SEE_DIST = 30
+local CARCASS_TAGS = { "meat_carcass" }
+local CARCASS_NO_TAGS = { "fire" }
+function WargBrain:SelectCarcass()
+	self.carcass = FindEntity(self.inst, SEE_DIST, nil, CARCASS_TAGS, CARCASS_NO_TAGS)
+	return self.carcass ~= nil
+end
+
+function WargBrain:CheckCarcass()
+	return not (self.carcass.components.burnable ~= nil and self.carcass.components.burnable:IsBurning())
+		and self.carcass:IsValid()
+		and self.carcass:HasTag("meat_carcass")
+end
+
+function WargBrain:GetCarcassPos()
+	return self:CheckCarcass() and self.carcass:GetPosition() or nil
+end
+
+--------------------------------------------------------------------------
+
 function WargBrain:OnStart()
     local isclay = self.inst:HasTag("clay")
 	local ismutated = self.inst:HasTag("lunar_aligned")
@@ -53,6 +75,32 @@ function WargBrain:OnStart()
                     end
                     return FAILED
                 end, "Summon Hound"))),
+
+		--Eat carcass behaviour
+		WhileNode(
+			function()
+				return not ismutated and (
+					not self.inst.components.combat:HasTarget() or
+					self.inst.components.combat:GetLastAttackedTime() + 10 < GetTime()
+				)
+			end,
+			"not attacked",
+			IfNode(function() return self:SelectCarcass() end, "eat carcass",
+				PriorityNode({
+					FailIfSuccessDecorator(
+						Leash(self.inst,
+							function() return self:GetCarcassPos() end,
+							function() return self.inst.components.combat:GetHitRange() + self.carcass:GetPhysicsRadius(0) - 0.5 end,
+							function() return self.inst.components.combat:GetHitRange() + self.carcass:GetPhysicsRadius(0) - 1 end,
+							true)),
+					IfNode(function() return self:CheckCarcass() and not self.inst.components.combat:InCooldown() end, "chomp",
+						ActionNode(function() self.inst.sg:HandleEvent("chomp", { target = self.carcass }) end)),
+					FaceEntity(self.inst,
+						function() return self.carcass end,
+						function() return self:CheckCarcass() end),
+				}, .25))),
+		--
+
         ChaseAndAttack(self.inst),
 
         IfNode(function() return isclay end, "IsClay",

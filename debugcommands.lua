@@ -2188,10 +2188,6 @@ local function Scrapbook_GetSanityAura(inst)
         sanity = inst.components.sanityaura.aurafn(inst, ThePlayer)
     end
 
-    if inst:HasTag("brightmareboss") or inst:HasTag("brightmare_guard") then
-        sanity = sanity *-1
-    end
-
     return sanity ~= 0 and sanity or nil
 end
 
@@ -2310,6 +2306,13 @@ end
 
 local prettyline = "\n_________________________________________\n"
 
+local scrapbook_finiteuses_useamount_modifiers =
+{
+    "followerherder",
+    "repellent",
+    "bedazzler",
+}
+
 function d_createscrapbookdata(print_missing_icons)
     if not TheWorld.state.isautumn or TheWorld.state.israining then
         -- Force the season (many entities change the build/animation during certain seasons).
@@ -2346,6 +2349,10 @@ function d_createscrapbookdata(print_missing_icons)
         if t == nil then
             print(string.format("[!!!!]  Aborting data creation command! Entry [%s] is not a valid prefab!", entry))
             return
+        end
+
+        if t:HasOneOfTags({"FX", "INLIMBO"}) then
+            print(string.format("[!!!!]  Prefab [%s] has one of these tags [ FX, INLIMBO ] and therefore cannot be unlocked by the scrapbook update function (UpdateScrapbook - player_common_extensions.lua)", entry))
         end
 
         t.Transform:SetRotation(90)
@@ -2540,11 +2547,19 @@ function d_createscrapbookdata(print_missing_icons)
             local count = 0
             for _ in pairs(t.components.finiteuses.consumption) do
                 count = count + 1
-        end
+            end
+
             local rate = 1
             if count == 1 then -- Only apply the modifier for if there is one consumer type.
                 local k, v = next(t.components.finiteuses.consumption)
                 rate = v
+            end
+
+            for _, cmpname in ipairs(scrapbook_finiteuses_useamount_modifiers) do
+                if t.components[cmpname] ~= nil then
+                    rate = t.components[cmpname].use_amount or rate
+                    break
+                end
             end
 
             AddInfo( "finiteuses", (t.components.finiteuses.total / rate) )

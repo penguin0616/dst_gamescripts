@@ -843,7 +843,7 @@ local function SetWereWorker(inst, mode)
         inst:RemoveComponent("groundpounder")
         inst:RemoveTag("toughworker")
 
-        if mode == WEREMODES.NONE and not inst:HasTag("playghost") then
+        if mode == WEREMODES.NONE and not inst:HasTag("playerghost") then
             inst:ListenForEvent("working", onworked)
         end
     end

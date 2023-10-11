@@ -536,6 +536,7 @@ local function fncommon(bank, build, morphlist, custombrain, tag, data)
     inst.components.combat:SetRetargetFunction(3, retargetfn)
     inst.components.combat:SetKeepTargetFunction(KeepTarget)
     inst.components.combat:SetHurtSound(inst.sounds.hurt)
+	inst.components.combat.lastwasattackedtime = -math.huge --for brain
 
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetChanceLootTable('hound')

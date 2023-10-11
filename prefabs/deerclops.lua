@@ -78,9 +78,13 @@ local function IsSated(inst)
 end
 
 local function WantsToLeave(inst)
-    return not inst.components.combat:HasTarget()
-        and inst:IsSated()
-        and inst:GetTimeAlive() >= 120
+    return
+        not TheWorld.state.iswinter or
+        (
+            not inst.components.combat:HasTarget()
+            and inst:IsSated()
+            and inst:GetTimeAlive() >= 120
+        )
 end
 
 local function CalcSanityAura(inst)

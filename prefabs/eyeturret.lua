@@ -13,6 +13,16 @@ local prefabs =
     "eyeturret_base",
 }
 
+SetSharedLootTable("eyeturret",
+{
+    {'thulecite',         1.00},
+    {'thulecite',         0.75},
+    {'thulecite_pieces',  1.00},
+    {'thulecite_pieces',  0.75},
+    {'thulecite_pieces',  0.50},
+    {'thulecite_pieces',  0.25},
+})
+
 local brain = require "brains/eyeturretbrain"
 
 local MAX_LIGHT_FRAME = 24
@@ -279,7 +289,10 @@ local function fn()
     inst.components.sanityaura.aura = -TUNING.SANITYAURA_TINY
 
     inst:AddComponent("inspectable")
+
     inst:AddComponent("lootdropper")
+    inst.components.lootdropper:SetChanceLootTable("eyeturret")
+    inst.components.lootdropper.droprecipeloot = false
 
     inst:ListenForEvent("attacked", OnAttacked)
 

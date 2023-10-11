@@ -86,6 +86,7 @@ local function StopHunt(hunt)
     end
 
     hunt.investigatedfork = nil
+    hunt.score = 0
 end
 
 local function BeginHunt(hunt)
@@ -148,6 +149,7 @@ local function CreateNewHunt()
         lastdirt_fork = nil,
         activeplayer = nil,
         investigatedfork = nil,
+        score = 0,
     }
 end
 
@@ -209,6 +211,9 @@ local function SpawnDirt(pt, hunt)
         local dirt = SpawnDirtAt(spawn_pt, hunt)
         if hunt.investigatedfork then
             SpawnClawTracksForDirt(dirt, hunt.direction)
+        end
+        if hunt.lastdirttime ~= nil and hunt.trackspawned > 1 then
+            hunt.score = hunt.score + (GetTime() - hunt.lastdirttime)
         end
         hunt.lastdirt = dirt
         hunt.lastdirttime = GetTime()
@@ -290,6 +295,7 @@ local function StartDirt(hunt, position)
 	end
 
     hunt.trackspawned = 0
+    hunt.score = 0
     hunt.direction = GetNextSpawnAngle(pt, nil, TUNING.HUNT_SPAWN_DIST)
     if hunt.direction ~= nil then
         -- it's ok if this spawn fails, because we'll keep trying every HUNT_UPDATE
@@ -426,11 +432,14 @@ local function SpawnHuntedBeast(hunt, pt)
         return false
     end
 
+    local seconds_per_node = hunt.score / (hunt.numtrackstospawn - 1)
+    local score_unclamped = (TUNING.HUNT_SCORE_TIME_PER_NODE_MAX - seconds_per_node) / (TUNING.HUNT_SCORE_TIME_PER_NODE_MAX - TUNING.HUNT_SCORE_TIME_PER_NODE)
+    hunt.score = math.clamp(score_unclamped, 0, 1)
     local beastprefab = GetHuntedBeast(hunt, spawn_pt)
     local huntedbeast = SpawnPrefab(beastprefab)
     huntedbeast.Physics:Teleport(spawn_pt:Get())
     -- NOTES(JBK): Let each prefab handle the isfork in the event specifically.
-    huntedbeast:PushEvent("spawnedforhunt", {beast = beastprefab, pt = spawn_pt, isfork = hunt.investigatedfork, iswrongfork = hunt.iswrongfork,})
+    huntedbeast:PushEvent("spawnedforhunt", {beast = beastprefab, pt = spawn_pt, isfork = hunt.investigatedfork, iswrongfork = hunt.iswrongfork, score = hunt.score})
 
     return true
 end
@@ -653,6 +662,7 @@ function self:GetDebugString()
         str = str .. (hunt.lastdirt_fork and " Fork." or " No fork.")
         str = str .. (hunt.investigatedfork and " Fork investigated." or "")
         str = str .. (hunt.iswrongfork and " WRONG Fork!" or "")
+        str = str .. "Score: " .. hunt.score
     end
     return str
 end

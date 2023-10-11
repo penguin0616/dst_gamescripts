@@ -12,9 +12,15 @@ local prefabs =
 
 SetSharedLootTable('skeleton',
 {
+    {'boneshard',      1.00},
+    {'boneshard',      1.00},
+    {'scrapbook_page', 0.10},
+})
+
+SetSharedLootTable('skeleton_player',
+{
     {'boneshard',   1.00},
     {'boneshard',   1.00},
-    {'scrapbook_page', 0.05},
 })
 
 local function getdesc(inst, viewer)
@@ -156,7 +162,6 @@ local function common_fn(custom_init)
     inst.components.inspectable:RecordViews()
 
     inst:AddComponent("lootdropper")
-    inst.components.lootdropper:SetChanceLootTable('skeleton')
 
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
@@ -178,6 +183,8 @@ local function fn()
         return inst
     end
 
+    inst.components.lootdropper:SetChanceLootTable('skeleton')
+
     inst.OnLoad = onload
     inst.OnSave = onsave
 
@@ -197,6 +204,8 @@ local function fnplayer()
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst.components.lootdropper:SetChanceLootTable('skeleton_player')
 
     inst.OnLoad = onloadplayer
     inst.OnSave = onsaveplayer

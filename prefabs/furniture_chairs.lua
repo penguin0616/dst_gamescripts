@@ -134,6 +134,7 @@ local function AddChair(ret, name, bank, build, hasback)
 
 		inst:AddTag("structure")
 		inst:AddTag("faced_chair")
+		inst:AddTag("rotatableobject")
 
 		inst.AnimState:SetBank(bank)
 		inst.AnimState:SetBuild(build)

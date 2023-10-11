@@ -193,6 +193,14 @@ local events =
         end
     end),
 
+	EventHandler("chomp", function(inst, data)
+		if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead()) and
+			data ~= nil and data.target ~= nil
+		then
+			inst.sg:GoToState("chomp", data.target)
+		end
+	end),
+
     --Clay warg
     EventHandler("becomestatue", function(inst)
         if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead()) then
@@ -596,6 +604,52 @@ local states =
 		},
 	},
 
+	State{
+		name = "chomp",
+		tags = { "busy" },
+
+		onenter = function(inst, target)
+			inst.components.locomotor:StopMoving()
+			inst.AnimState:PlayAnimation("atk")
+			inst.SoundEmitter:PlaySound(inst.sounds.attack)
+			if target ~= nil and target:IsValid() then
+				inst.components.combat:StartAttack()
+				inst:ForceFacePoint(target.Transform:GetWorldPosition())
+				inst.sg.statemem.target = target
+			end
+		end,
+
+		timeline =
+		{
+			FrameEvent(11, function(inst)
+				local target = inst.sg.statemem.target
+				if target ~= nil and target:IsValid() and
+					inst:IsNear(target, inst.components.combat:GetHitRange() + target:GetPhysicsRadius(0))
+				then
+					target:PushEvent("chomped", inst)
+				end
+			end),
+			FrameEvent(20, function(inst)
+				if inst.sg.mem.dostagger and TryStagger(inst) then
+					return
+				end
+				inst.sg:AddStateTag("caninterrupt")
+			end),
+			FrameEvent(31, function(inst)
+				inst.sg:RemoveStateTag("busy")
+			end),
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+	},
+
     State{
         name = "howl",
         tags = { "busy", "howling" },
@@ -612,7 +666,14 @@ local states =
         {
             TimeEvent(10 * FRAMES, function(inst)
                 if inst.sg.statemem.count == nil then
-                    inst:SpawnHounds()
+					local hounds = inst:SpawnHounds()
+					if hounds ~= nil then
+						local t = GetTime()
+						for i, v in ipairs(hounds) do
+							--for brain, so hounds called in mid-fight won't go for carcass right away
+							v.components.combat.lastwasattackedtime = t - math.random() * 4
+						end
+					end
                 end
             end),
 			FrameEvent(36, function(inst)

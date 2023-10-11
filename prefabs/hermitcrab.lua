@@ -118,7 +118,11 @@ local function iscoat(item)
 end
 
 local function item_is_umbrella(item)
-    return testitem:HasTag("umbrella")
+    return item:HasTag("umbrella")
+end
+
+local function is_flowersalad(inst)
+    return (inst.food_basename or inst.prefab) == "flowersalad"
 end
 
 local function ShouldAcceptItem(inst, item)
@@ -128,7 +132,7 @@ local function ShouldAcceptItem(inst, item)
     end
 
     -- Accept flower salad if we haven't had one recently.
-    if item.prefab == "flowersalad" and not inst.components.timer:TimerExists("salad") then
+    if is_flowersalad(item) and not inst.components.timer:TimerExists("salad") then
         return true
     end
 
@@ -152,7 +156,7 @@ local function ShouldAcceptItem(inst, item)
 end
 
 local function OnRefuseItem(inst, giver, item)
-    if item.prefab == "flowersalad" and inst.components.timer:TimerExists("salad") then
+    if is_flowersalad(item) and inst.components.timer:TimerExists("salad") then
         inst.components.npc_talker:Say(STRINGS.HERMITCRAB_REFUSE_SALAD[math.random(#STRINGS.HERMITCRAB_REFUSE_SALAD)])
     end
 
@@ -344,7 +348,10 @@ local function rewardcheck(inst)
         local gifts = inst.components.friendlevels:DoRewards()
 
         if #gifts > 0 then
-            inst.itemstotoss = gifts
+            inst.itemstotoss = inst.itemstotoss or {}
+
+            ConcatArrays(inst.itemstotoss, gifts)
+
             for _, gift in ipairs(gifts) do
                 inst.components.inventory:GiveItem(gift)
             end
@@ -1027,7 +1034,9 @@ local function initfriendlevellisteners(inst)
                 local weight = item.components.weighable:GetWeight()
                 str = subfmt(STRINGS.HERMITCRAB_REFUSE_SMALL_FISH[math.random(1,#STRINGS.HERMITCRAB_REFUSE_SMALL_FISH)], {weight = string.format("%0.2f", weight)})
 
-                inst.itemstotoss = {item}
+                inst.itemstotoss = inst.itemstotoss or {}
+                table.insert(inst.itemstotoss, item)
+
                 keepitem = true
             end
 
@@ -1049,7 +1058,7 @@ local function initfriendlevellisteners(inst)
         elseif iscoat(item) and TheWorld.state.issnowing then
             inst.components.inventory:Equip(item)
             inst.components.friendlevels:CompleteTask(TASKS.GIVE_PUFFY_VEST)
-        elseif item.prefab == "flowersalad" then
+        elseif is_flowersalad(item) then
             inst.components.friendlevels:CompleteTask(TASKS.GIVE_FLOWER_SALAD)
             inst.components.timer:StartTimer("salad", TUNING.TOTAL_DAY_TIME * 10 )
             inst:PushEvent("eat_food")
