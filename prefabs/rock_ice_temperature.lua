@@ -224,15 +224,18 @@ local function OnTimerDone(inst, data)
     if data ~= nil and data.name == UPDATE_STAGE_TIMERNAME then
         local shouldgrow = GetLocalTemperature(inst) <= 0
         local offset = shouldgrow and 1 or -1
-    
+
         local currentindex = STAGE_INDICES[inst.stage]
-        local targetindex = currentindex + offset
-    
-        if targetindex >= 1 and targetindex <= #STAGES then
-            local targetstage = STAGES[targetindex].name
-            local source = shouldgrow and "grow" or "melt"
-    
-            inst:SetStage(targetstage, source)
+
+        if currentindex ~= nil then
+            local targetindex = currentindex + offset
+
+            if targetindex >= 1 and targetindex <= #STAGES then
+                local targetstage = STAGES[targetindex].name
+                local source = shouldgrow and "grow" or "melt"
+
+                inst:SetStage(targetstage, source)
+            end
         end
 
         inst.components.timer:StartTimer(UPDATE_STAGE_TIMERNAME, TUNING.ROCK_ICE_TEMPERATURE_GROW_MELT_TIME)

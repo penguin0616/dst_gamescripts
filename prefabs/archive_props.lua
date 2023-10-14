@@ -982,6 +982,8 @@ local function portalfn()
         return inst
     end
 
+    inst.scrapbook_anim = "working"
+
     inst:AddComponent("inspectable")
     inst.components.inspectable.getstatus = getstatusportal
 

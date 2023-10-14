@@ -1844,6 +1844,9 @@ return {
         CHESSPIECE_EYEOFTERROR = "It's giving me a stony stare.",
         CHESSPIECE_TWINSOFTERROR = "That was a terrible night of very uncomfortable eye contact.",
         CHESSPIECE_DAYWALKER = "Now he's off who-knows-were.",
+        CHESSPIECE_DEERCLOPS_MUTATED = "This sculpture is a bit of an eyesore.",
+        CHESSPIECE_WARG_MUTATED = "It's just missing that horrible breath.",
+        CHESSPIECE_BEARGER_MUTATED = "Somehow it seems crankier than the real one.",
 
         CHESSJUNK1 = "A pile of broken chess pieces.",
         CHESSJUNK2 = "Another pile of broken chess pieces.",
@@ -2220,6 +2223,7 @@ return {
 		KNIGHT = "Check it out!",
 		KOALEFANT_SUMMER = "Adorably delicious.",
 		KOALEFANT_WINTER = "It looks warm and full of meat.",
+		KOALEFANT_CARCASS = "Adorably dead.",
 		KRAMPUS = "He's going after my stuff!",
 		KRAMPUS_SACK = "Ew. It has Krampus slime all over it.",
 		LEIF = "He's huge!",

@@ -433,6 +433,9 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"chesspiece_catcoon_builder",
 	"chesspiece_manrabbit_builder",
 	"chesspiece_daywalker_builder",
+	"chesspiece_deerclops_mutated_builder",
+	"chesspiece_warg_mutated_builder",
+	"chesspiece_bearger_mutated_builder",
 
 	-- wintersfeastoven
 	"wintercooking_berrysauce",

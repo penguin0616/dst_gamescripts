@@ -1834,6 +1834,9 @@ return{
         CHESSPIECE_EYEOFTERROR = "I shall feast my eyes upon this trophy!",
         CHESSPIECE_TWINSOFTERROR = "A battle I shan't soon forget.",
         CHESSPIECE_DAYWALKER = "The beast proved himself to be a worthy adversary!",
+        CHESSPIECE_DEERCLOPS_MUTATED = "T'was an unnatural thing. Slaying it was a kindness.",
+        CHESSPIECE_WARG_MUTATED = "T'was no match for my spear.",
+        CHESSPIECE_BEARGER_MUTATED = "May the beast now be at peace.",
 
         CHESSJUNK1 = "It's only a pile of fallen warriors.",
         CHESSJUNK2 = "More fallen mechanical warriors.",
@@ -2210,6 +2213,7 @@ return{
 		KNIGHT = "I taste a battle on the breeze!",
 		KOALEFANT_SUMMER = "Dearest creature... I am going to eat you.",
 		KOALEFANT_WINTER = "Poor unsuspecting meat beast.",
+		KOALEFANT_CARCASS = "This creature is no more.",
 		KRAMPUS = "You don't scare me, goat!",
 		KRAMPUS_SACK = "The sack itself is the present.",
 		LEIF = "That is an ancient woodland being.",

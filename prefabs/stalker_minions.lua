@@ -191,6 +191,8 @@ local function MakeMinion(name, data, prefabs)
 
         inst:SetPrefabNameOverride("stalker_minion")
 
+        inst.scrapbook_proxy = "stalker_minion"
+
         inst.entity:SetPristine()
 
         if not TheWorld.ismastersim then

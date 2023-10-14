@@ -99,14 +99,17 @@ local function ShouldGrowIce(inst)
 	local burning = inst.components.burnable:IsBurning()
 	if not inst.components.combat:HasTarget() then
 		--out of combat: regrow missing ice when not burning
-		return not burning and inst.sg.mem.noice ~= nil and inst._disengagetask == nil
+		return not burning and inst._disengagetask == nil
+			and (	inst.sg.mem.noice ~= nil or
+					(inst.sg.mem.noeyeice and not (inst.hasfrenzy and inst:ShouldStayFrenzied()))
+				)
 	end
 	--in combat:
 	--  -when EYE spike is NOT burning
 	--    -either summon circle if needed (can be burning)
 	--    -or regrow ice when both are missing and when not burning
-	return not (burning and inst.sg.mem.noice == 1)
-		and (	(inst.hasiceaura and inst.sg.mem.circle == nil) or
+	return not (burning and inst.sg.mem.noice == 1 and not inst.sg.mem.noeyeice)
+		and (	(inst.hasiceaura and inst.sg.mem.circle == nil and not (inst.hasfrenzy and inst:ShouldStayFrenzied())) or
 				(not burning and inst.sg.mem.noice == 1)
 			)
 end

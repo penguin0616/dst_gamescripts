@@ -180,7 +180,7 @@ local function OnEyeballGiven(inst, item, giver)
     end
 
     inst.components.maprevealer:Start()
-    inst.components.periodicspawner:Start()
+    inst.components.periodicspawner:SafeStart()
 
     if inst.icon == nil then
         inst:DoTaskInTime(0, inst.CreateGlobalIcon)

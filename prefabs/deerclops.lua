@@ -15,6 +15,7 @@ local mutated_assets =
     Asset("ANIM", "anim/deerclops_actions.zip"),
     Asset("ANIM", "anim/deerclops_mutated_actions.zip"),
     Asset("ANIM", "anim/deerclops_mutated.zip"),
+	Asset("ANIM", "anim/lunar_flame.zip"),
     Asset("SOUND", "sound/deerclops.fsb"),
 }
 
@@ -42,6 +43,7 @@ local mutated_prefabs =
 	"spoiled_food",
 	"purebrilliance",
 	"ice",
+	"chesspiece_deerclops_mutated_sketch",
 }
 
 local normal_sounds =
@@ -187,7 +189,7 @@ local function OnHitOther(inst, data)
     if other ~= nil then
         if not (other.components.health ~= nil and other.components.health:IsDead()) then
             if other.components.freezable ~= nil then
-				other.components.freezable:AddColdness(inst.sg.statemem.freezepower or 2)
+				other.components.freezable:AddColdness(inst.sg.statemem.freezepower or inst.freezepower or 2)
             end
             if other.components.temperature ~= nil then
                 local mintemp = math.max(other.components.temperature.mintemp, 0)
@@ -288,7 +290,7 @@ local function Mutated_OnDead(inst)
 end
 
 local function Mutated_OnIgnite(inst, source, doer)
-	if inst.components.burnable.burntime ~= 0 and inst.spikefire == nil and inst.sg.mem.noice ~= 2 then
+	if inst.components.burnable.burntime ~= 0 and inst.spikefire == nil and not (inst.sg.mem.noice == 1 and inst.sg.mem.noeyeice) then
 		inst.spikefire = SpawnPrefab("deerclops_spikefire_fx")
 		inst.spikefire.Follower:FollowSymbol(inst.GUID,
 			(inst.sg.mem.noice == 1 and "swap_fire_2") or
@@ -325,15 +327,30 @@ SetSharedLootTable("deerclops",
 
 SetSharedLootTable("mutateddeerclops",
 {
-	{ "spoiled_food",				1.0 },
-	{ "spoiled_food",				1.0 },
-	{ "spoiled_food",				1.0 },
-	{ "spoiled_food",				0.5 },
-	{ "purebrilliance",				1.0 },
-	{ "purebrilliance",				0.75 },
-	{ "ice",						1.0 },
-	{ "ice",						0.75 },
+	{ "spoiled_food",			        	 1.0  },
+	{ "spoiled_food",			        	 1.0  },
+	{ "spoiled_food",			        	 1.0  },
+	{ "spoiled_food",			        	 0.5  },
+	{ "purebrilliance",				         1.0  },
+	{ "purebrilliance",				         0.75 },
+	{ "ice",						         1.0  },
+	{ "ice",						         0.75 },
+    {'chesspiece_deerclops_mutated_sketch',  1.0  },
 })
+
+local function SwitchToEightFaced(inst)
+	if not inst._temp8faced then
+		inst._temp8faced = true
+		inst.Transform:SetEightFaced()
+	end
+end
+
+local function SwitchToFourFaced(inst)
+	if inst._temp8faced then
+		inst._temp8faced = false
+		inst.Transform:SetFourFaced()
+	end
+end
 
 local function commonfn(build, commonfn)
     local inst = CreateEntity()
@@ -374,6 +391,8 @@ local function commonfn(build, commonfn)
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst.scrapbook_hide = { "head_neutral" }
 
     inst.Physics:SetCollisionCallback(oncollide)
 
@@ -442,6 +461,8 @@ local function commonfn(build, commonfn)
     inst.OnLoad = OnLoad
     inst.IsSated = IsSated
     inst.WantsToLeave = WantsToLeave
+	inst.SwitchToEightFaced = SwitchToEightFaced
+	inst.SwitchToFourFaced = SwitchToFourFaced
 
     return inst
 end
@@ -494,22 +515,127 @@ local function normalfn()
     return inst
 end
 
+--------------------------------------------------------------------------
+
+local function Mutated_OnTemp8Faced(inst)
+	if inst.temp8faced:value() then
+		inst.gestalt.Transform:SetEightFaced()
+	else
+		inst.gestalt.Transform:SetFourFaced()
+	end
+end
+
+local function Mutated_SwitchToEightFaced(inst)
+	if not inst.temp8faced:value() then
+		inst.temp8faced:set(true)
+		if not TheNet:IsDedicated() then
+			Mutated_OnTemp8Faced(inst)
+		end
+		inst.Transform:SetEightFaced()
+	end
+end
+
+local function Mutated_SwitchToFourFaced(inst)
+	if inst.temp8faced:value() then
+		inst.temp8faced:set(false)
+		if not TheNet:IsDedicated() then
+			Mutated_OnTemp8Faced(inst)
+		end
+		inst.Transform:SetFourFaced()
+	end
+end
+
+local function Mutated_CreateGestaltFlame()
+	local inst = CreateEntity()
+
+	inst:AddTag("FX")
+	--[[Non-networked entity]]
+	--inst.entity:SetCanSleep(false) --commented out; follow parent sleep instead
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+
+	inst.Transform:SetFourFaced()
+
+	inst.AnimState:SetBank("lunar_flame")
+	inst.AnimState:SetBuild("lunar_flame")
+	inst.AnimState:PlayAnimation("gestalt_eye", true)
+	inst.AnimState:SetMultColour(1, 1, 1, 0.6)
+	inst.AnimState:SetLightOverride(0.1)
+	inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+	inst.AnimState:UsePointFiltering(true)
+
+	return inst
+end
+
+local function Mutated_SetFrenzied(inst, frenzied)
+	if frenzied then
+		if not inst.frenzied then
+			inst.frenzied = true
+			inst.frenzy_starttime = GetTime()
+			inst.frenzy_starthp = inst.components.health:GetPercent()
+		end
+	elseif inst.frenzied then
+		inst.frenzied = nil
+		inst.frenzy_starttime = nil
+		inst.frenzy_starthp = nil
+	end
+end
+
+local function Mutated_ShouldStayFrenzied(inst)
+	if not inst.frenzied then
+		return false
+	end
+	local t = GetTime()
+	return inst.frenzy_starttime + TUNING.MUTATED_DEERCLOPS_FRENZY_MIN_TIME > t
+		or (	inst.frenzy_starttime + TUNING.MUTATED_DEERCLOPS_FRENZY_MAX_TIME > t and
+				inst.frenzy_starthp - inst.components.health:GetPercent() < TUNING.MUTATED_DEERCLOPS_FRENZY_HP
+			)
+end
+
+local function Mutated_PushMusic(inst)
+	if inst.AnimState:IsCurrentAnimation("mutate") then
+		inst._playingmusic = false
+	elseif ThePlayer == nil then
+		inst._playingmusic = false
+	elseif ThePlayer:IsNear(inst, inst._playingmusic and 40 or 20) then
+		inst._playingmusic = true
+		ThePlayer:PushEvent("triggeredevent", { name = "gestaltmutant" })
+	elseif inst._playingmusic and not ThePlayer:IsNear(inst, 50) then
+		inst._playingmusic = false
+	end
+end
+
 local function mutatedcommonfn(inst)
     inst:AddTag("lunar_aligned")
 
-	inst.AnimState:SetSymbolMultColour("gestalt_ball", 1, 1, 1, 0.6)
-	inst.AnimState:SetSymbolLightOverride("gestalt_ball", 0.1)
-	inst.AnimState:SetSymbolBloom("gestalt_ball")
+	inst.AnimState:Hide("gestalt_eye")
 
-	inst.AnimState:SetSymbolMultColour("gestalt_embers", 1, 1, 1, 0.6)
-	inst.AnimState:SetSymbolLightOverride("gestalt_embers", 0.1)
-	inst.AnimState:SetSymbolBloom("gestalt_embers")
+	inst.temp8faced = net_bool(inst.GUID, "mutatedbearger.temp8faced", "temp8faceddirty")
+
+	--Dedicated server does not need to trigger music
+	--Dedicated server does not need to spawn the local fx
+	if not TheNet:IsDedicated() then
+		inst._playingmusic = false
+		inst:DoPeriodicTask(1, Mutated_PushMusic, 0)
+
+		inst.gestalt = Mutated_CreateGestaltFlame()
+		inst.gestalt.entity:SetParent(inst.entity)
+		inst.gestalt.Follower:FollowSymbol(inst.GUID, "swap_gestalt_flame", 0, 0, 0, true)
+		local frames = inst.gestalt.AnimState:GetCurrentAnimationNumFrames()
+		local rnd = math.random(frames) - 1
+		inst.gestalt.AnimState:SetFrame(rnd)
+	end
 end
 
 local function mutatedfn()
     local inst = commonfn("deerclops_mutated", mutatedcommonfn)
 
     if not TheWorld.ismastersim then
+		inst:ListenForEvent("temp8faceddirty", Mutated_OnTemp8Faced)
+
         return inst
     end
 
@@ -517,6 +643,8 @@ local function mutatedfn()
 	inst.hasiceaura = true
 	inst.hasknockback = true
 	inst.hasicelance = true
+	inst.hasfrenzy = true
+	inst.freezepower = 3
 
     inst:AddComponent("timer")
 
@@ -539,6 +667,13 @@ local function mutatedfn()
 
 	inst:ListenForEvent("droppedtarget", Mutated_OnDroppedTarget)
     inst:ListenForEvent("death", Mutated_OnDead)
+
+	--Overriding these
+	inst.SwitchToEightFaced = Mutated_SwitchToEightFaced
+	inst.SwitchToFourFaced = Mutated_SwitchToFourFaced
+
+	inst.SetFrenzied = Mutated_SetFrenzied
+	inst.ShouldStayFrenzied = Mutated_ShouldStayFrenzied
 
     return inst
 end

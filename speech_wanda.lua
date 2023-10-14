@@ -1834,6 +1834,9 @@ return{
         CHESSPIECE_EYEOFTERROR = "Certainly an eye to behold.",
         CHESSPIECE_TWINSOFTERROR = "I'd be quite happy to never lay eyes on them again.",
         CHESSPIECE_DAYWALKER = "Ah yes, how could I forget that time I was nearly smashed to bits?",
+        CHESSPIECE_DEERCLOPS_MUTATED = "What an unpleasant subject for a statue.",
+        CHESSPIECE_WARG_MUTATED = "That's one memory I'd be happy not to revisit.",
+        CHESSPIECE_BEARGER_MUTATED = "Oh, wonderful. It's even worse than I remembered.",
 
         CHESSJUNK1 = "I don't see much in the way of proper clockwork in there.",
         CHESSJUNK2 = "I have a suspicion these were held together with more magic than craftsmanship.",
@@ -2210,6 +2213,7 @@ return{
 		KNIGHT = "Clockwork and I usually get along just fine...",
 		KOALEFANT_SUMMER = "It's in the spring of its life.",
 		KOALEFANT_WINTER = "It's grown a warm winter coat.",
+		KOALEFANT_CARCASS = "Its time has ended.",
 		KRAMPUS = "He really puts a damper on this time of year.",
 		KRAMPUS_SACK = "For me? You shouldn't have!",
 		LEIF = "Even the trees are out to get me!",

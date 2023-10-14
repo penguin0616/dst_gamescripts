@@ -80,8 +80,6 @@ local function item(name, animated, sound, radius)
             inst:AddTag("uncomfortable_chair")
 		end
 
-        inst.scrapbook_proxy = "ruins_chair"
-
         inst.entity:SetPristine()
 
         if not TheWorld.ismastersim then

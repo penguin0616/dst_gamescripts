@@ -2777,8 +2777,9 @@ function d_createscrapbookdata(print_missing_icons)
 
         if t.components.fueled then
             AddInfo( "fueledmax",    t.scrapbook_fueled_max or t.components.fueled.maxfuel  )
-            AddInfo( "fueledrate",   t.components.fueled.rate     )
+            AddInfo( "fueledrate",   t.scrapbook_fueled_rate or t.components.fueled.rate    )
             AddInfo( "fueledtype1",  t.components.fueled.fueltype )
+            AddInfo( "fueleduses",   t.scrapbook_fueled_uses )
 
             if t.components.fueled.secondaryfueltype then
                 AddInfo( "fueledtype2",  t.components.fueled.secondaryfueltype )
@@ -3010,8 +3011,12 @@ function d_createscrapbookdata(print_missing_icons)
         deps[entry] = nil
 
         for dep, _ in pairs(shallowcopy(deps)) do
-            if checkstring(dep) and dep:find("_blueprint") and not deps.blueprint then
+            if checkstring(dep) and dep:find("_blueprint") then
                 deps.blueprint = true
+            end
+
+            if checkstring(dep) and dep:find("_sketch") then
+                deps.sketch = true
             end
 
             if not scrapbookprefabs[dep] then

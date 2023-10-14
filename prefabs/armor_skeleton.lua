@@ -218,6 +218,9 @@ local function fn()
         return inst
     end
 
+    inst.scrapbook_fueled_rate = TUNING.MED_FUEL
+    inst.scrapbook_fueled_uses = true
+
     inst:AddComponent("inspectable")
 
     inst:AddComponent("inventoryitem")

@@ -222,6 +222,9 @@ local function fn()
         return inst
     end
 
+    inst.scrapbook_fueled_rate = TUNING.HEATROCK_NUMUSES
+    inst.scrapbook_fueled_uses = true
+
     inst:AddComponent("inspectable")
     inst.components.inspectable.getstatus = GetStatus
 

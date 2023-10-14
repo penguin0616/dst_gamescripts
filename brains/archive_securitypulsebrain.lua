@@ -105,7 +105,7 @@ function Archive_SecurityPulseBrain:OnStart()
     local root = PriorityNode(
     {
         WhileNode(function() return self.inst.patrol == true end, "find power point",
-            Follow(self.inst, FindPowerPoint, MIN_FOLLOW_POWERPOINT, TARGET_FOLLOW_POWERPOINT, MAX_FOLLOW, false)),
+            Follow(self.inst, FindPowerPoint, MIN_FOLLOW_POWERPOINT, TARGET_FOLLOW_POWERPOINT, MAX_FOLLOW, false, nil, true)),
         WhileNode(function() return self.inst.patrol == true end, "find waypoints",
             Follow(self.inst, findwaypoint, MIN_FOLLOW, TARGET_FOLLOW, MAX_FOLLOW, false)),
         StandStill(self.inst),

@@ -169,6 +169,8 @@ function rosefn()
     inst.scrapbook_damage = TUNING.ROSE_DAMAGE
     inst.scrapbook_speechname = "FLOWER"
 
+    inst.scrapbook_proxy = "flower_rose"
+
     if not TheWorld.ismastersim then
         return inst
     end

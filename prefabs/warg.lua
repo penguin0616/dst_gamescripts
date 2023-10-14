@@ -41,6 +41,7 @@ local prefabs_mutated =
 	"warg_mutated_ember_fx",
 	"spoiled_food",
 	"purebrilliance",
+    "chesspiece_warg_mutated_sketch",
 }
 
 local brain = require("brains/wargbrain")
@@ -135,11 +136,12 @@ SetSharedLootTable('gingerbreadwarg',
 
 SetSharedLootTable('mutatedwarg',
 {
-	{ "spoiled_food",				1.0 },
-	{ "spoiled_food",				1.0 },
-	{ "spoiled_food",				0.5 },
-	{ "purebrilliance",				1.0 },
-	{ "purebrilliance",				0.75 },
+	{ "spoiled_food",				  1.0  },
+	{ "spoiled_food",				  1.0  },
+	{ "spoiled_food",				  0.5  },
+	{ "purebrilliance",				  1.0  },
+	{ "purebrilliance",				  0.75 },
+    {'chesspiece_warg_mutated_sketch',1.00},
 })
 
 local scrapbook_removedeps_basic =
@@ -310,7 +312,7 @@ local function OnForceSleep_Normal(inst, hounds)
 end
 
 local function OnVisibleFn_Normal(inst)
-    inst.sg:GoToState("howl")
+	inst.sg:GoToState("spawn_shake")
 end
 
 local function WillUnhideFn_Normal(inst)
@@ -569,11 +571,13 @@ end
 
 local function Mutated_OnTemp8Faced(inst)
 	if inst.temp8faced:value() then
+		inst.gestalt.Transform:SetEightFaced()
 		inst.eyeL.Transform:SetEightFaced()
 		inst.eyeR.Transform:SetEightFaced()
 		inst.mouthL.Transform:SetEightFaced()
 		inst.mouthR.Transform:SetEightFaced()
 	else
+		inst.gestalt.Transform:SetSixFaced()
 		inst.eyeL.Transform:SetSixFaced()
 		inst.eyeR.Transform:SetSixFaced()
 		inst.mouthL.Transform:SetSixFaced()
@@ -599,6 +603,31 @@ local function Mutated_SwitchToSixFaced(inst)
 		end
 		inst.Transform:SetSixFaced()
 	end
+end
+
+local function Mutated_CreateGestaltFlame()
+	local inst = CreateEntity()
+
+	inst:AddTag("FX")
+	--[[Non-networked entity]]
+	--inst.entity:SetCanSleep(false) --commented out; follow parent sleep instead
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+
+	inst.Transform:SetSixFaced()
+
+	inst.AnimState:SetBank("lunar_flame")
+	inst.AnimState:SetBuild("lunar_flame")
+	inst.AnimState:PlayAnimation("gestalt_eye", true)
+	inst.AnimState:SetMultColour(1, 1, 1, 0.6)
+	inst.AnimState:SetLightOverride(0.1)
+	inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+	inst.AnimState:UsePointFiltering(true)
+
+	return inst
 end
 
 local function Mutated_CreateEyeFlame()
@@ -647,6 +676,19 @@ local function Mutated_CreateMouthFlame()
 	inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 
 	return inst
+end
+
+local function Mutated_PushMusic(inst)
+	if inst.AnimState:IsCurrentAnimation("mutate") then
+		inst._playingmusic = false
+	elseif ThePlayer == nil then
+		inst._playingmusic = false
+	elseif ThePlayer:IsNear(inst, inst._playingmusic and 40 or 20) then
+		inst._playingmusic = true
+		ThePlayer:PushEvent("triggeredevent", { name = "gestaltmutant" })
+	elseif inst._playingmusic and not ThePlayer:IsNear(inst, 50) then
+		inst._playingmusic = false
+	end
 end
 
 local function SpawnHounds(inst, radius_override)
@@ -766,13 +808,24 @@ local function MakeWarg(data)
 				inst.AnimState:SetSymbolBloom("breath_02")
 				inst.AnimState:SetSymbolBrightness("breath_02", 1.5)
 
+				--Dedicated server does not need to trigger music
 				--Dedicated server does not need to spawn the local fx
 				if not TheNet:IsDedicated() then
+					inst._playingmusic = false
+					inst:DoPeriodicTask(1, Mutated_PushMusic, 0)
+
+					inst.gestalt = Mutated_CreateGestaltFlame()
+					inst.gestalt.entity:SetParent(inst.entity)
+					inst.gestalt.Follower:FollowSymbol(inst.GUID, "swap_gestalt_flame", 0, 0, 0, true)
+					local frames = inst.gestalt.AnimState:GetCurrentAnimationNumFrames()
+					local rnd = math.random(frames) - 1
+					inst.gestalt.AnimState:SetFrame(rnd)
+
 					inst.eyeL = Mutated_CreateEyeFlame()
 					inst.eyeL.entity:SetParent(inst.entity)
 					inst.eyeL.Follower:FollowSymbol(inst.GUID, "flameL", 0, 0, 0, true)
-					local frames = inst.eyeL.AnimState:GetCurrentAnimationNumFrames()
-					local rnd = math.random(frames) - 1
+					frames = inst.eyeL.AnimState:GetCurrentAnimationNumFrames()
+					rnd = math.random(frames) - 1
 					inst.eyeL.AnimState:SetFrame(rnd)
 
 					inst.eyeR = Mutated_CreateEyeFlame()

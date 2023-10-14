@@ -1657,6 +1657,10 @@ local PREFABS =
     ["wood_table_round"] = true,
     ["wood_table_square"] = true,
 
+    ["chesspiece_deerclops_mutated"] = true,
+    ["chesspiece_warg_mutated"] = true,
+    ["chesspiece_bearger_mutated"] = true,
+
 
     --[[POI]]
     ["charlie_stage_post"] = true,

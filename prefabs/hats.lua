@@ -381,6 +381,7 @@ local function MakeHat(name)
 
         inst:AddComponent("resistance")
         inst.components.resistance:AddResistance("quakedebris")
+        inst.components.resistance:AddResistance("lunarhaildebris")
         inst.components.resistance:SetOnResistDamageFn(fns.woodcarved_onhitbyquakedebris)
 
         inst:AddComponent("armor")
@@ -3536,10 +3537,16 @@ local function MakeHat(name)
         fns.wagpunk_dosayindelay(inst, STRINGS.WARBIS.STOP)
 
         local owner = inst.components.inventoryitem.owner
-        if owner then
-            owner.components.combat.externaldamagemultipliers:SetModifier(inst, TUNING.ARMOR_WAGPUNK_HAT_STAGE0)
+        if owner ~= nil then
+            if owner.components.combat ~= nil then
+                owner.components.combat.externaldamagemultipliers:SetModifier(inst, TUNING.ARMOR_WAGPUNK_HAT_STAGE0)
+            end
+
             fns.wagpunk_spawnsteam(owner,"wagpunksteam_hat_down")
-            owner.SoundEmitter:KillSound("wagpunkambient_hat")
+
+            if owner.SoundEmitter ~= nil then
+                owner.SoundEmitter:KillSound("wagpunkambient_hat")
+            end
         end
 
         if inst.fx ~= nil then
@@ -3553,7 +3560,7 @@ local function MakeHat(name)
                 inst.fx.level:set(1)
             end
 
-            if owner ~= nil then
+            if owner ~= nil and owner.SoundEmitter ~= nil then
                 owner.SoundEmitter:KillSound("wagpunkambient_hat")
             end
 
@@ -3587,6 +3594,8 @@ local function MakeHat(name)
     end
 
     fns.wagpunk_playambient = function(owner,level)
+        if not owner.SoundEmitter then return end
+
         if not owner.SoundEmitter:PlayingSound("wagpunkambient_hat") then
             owner.SoundEmitter:PlaySound("rifts3/wagpunk_armor/wagpunk_armor_hat_lp","wagpunkambient_hat")
         end
@@ -3718,17 +3727,20 @@ local function MakeHat(name)
     end
 
     fns.wagpunk_onunequip = function(inst, owner)
-        _onunequip(inst, owner)        
+        _onunequip(inst, owner)
+
         inst:RemoveEventCallback("onattackother", fns.wagpunk_OnAttack, owner)
-        if owner and owner.components.combat then
+
+        if owner ~= nil and owner.components.combat ~= nil then
             owner.components.combat.externaldamagemultipliers:RemoveModifier(inst)
         end
-        
+
         inst.components.targettracker:StopTracking()
-        if owner then
+
+        if owner ~= nil and owner.SoundEmitter ~= nil then
             owner.SoundEmitter:KillSound("wagpunkambient_hat")
         end
-        
+
         if inst.fx ~= nil then
             inst.fx.level:set(1)
             inst.fx:Remove()

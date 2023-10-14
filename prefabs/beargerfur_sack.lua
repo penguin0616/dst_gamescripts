@@ -22,9 +22,13 @@ local PREFABS_FX =
 
 local sounds =
 {
-    open = "hookline_2/characters/hermit/tacklebox/large_open",
-    close = "hookline_2/characters/hermit/tacklebox/large_close",
+    open = "rifts3/bearger_sack/open_f5_loopstart",
+    close = "rifts3/bearger_sack/close",
 }
+
+local OPEN_SOUNDNAME = "openloop"
+
+-----------------------------------------------------------------------------------------------
 
 local function ToggleFrostFX(inst, start, remove)
     if inst._opentask ~= nil then
@@ -48,9 +52,23 @@ local function ToggleFrostFX(inst, start, remove)
     end
 end
 
+local function StartOpenSound(inst)
+    if inst._startsoundtask ~= nil then
+        inst._startsoundtask:Cancel()
+        inst._startsoundtask = nil
+    end
+
+    inst.SoundEmitter:PlaySound(inst._sounds.open, OPEN_SOUNDNAME)
+end
+
 local function OnOpen(inst)
     inst.AnimState:PlayAnimation("open")
-    inst.SoundEmitter:PlaySound(inst._sounds.open)
+
+    if inst._startsoundtask ~= nil then
+        inst._startsoundtask:Cancel()
+    end
+
+    inst._startsoundtask = inst:DoTaskInTime(5*FRAMES, inst.StartOpenSound)
 
     if inst._opentask ~= nil then
         inst._opentask:Cancel()
@@ -63,7 +81,12 @@ end
 local function OnClose(inst)
     inst.AnimState:PlayAnimation("close")
     inst.AnimState:PushAnimation("closed", false)
-    inst.SoundEmitter:PlaySound(inst._sounds.close)
+
+    inst.SoundEmitter:KillSound(OPEN_SOUNDNAME)
+
+    if not inst:IsInLimbo() then
+        inst.SoundEmitter:PlaySound(inst._sounds.close)
+    end
 
     inst:ToggleFrostFX(false)
 end
@@ -103,7 +126,10 @@ local function fn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
+    inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
+
+    inst.MiniMapEntity:SetIcon("beargerfur_sack.png")
 
     inst.AnimState:SetBank("beargerfur_sack")
     inst.AnimState:SetBuild("beargerfur_sack")
@@ -119,6 +145,8 @@ local function fn()
 
     MakeInventoryFloatable(inst, "small", 0.35, 1.15, nil, nil, floatable_swap_data)
 
+    inst:AddTag("portablestorage")
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
@@ -129,6 +157,7 @@ local function fn()
     inst._frostfx = nil
 
     inst.ToggleFrostFX = ToggleFrostFX
+    inst.StartOpenSound = StartOpenSound
 
     inst:AddComponent("inspectable")
 

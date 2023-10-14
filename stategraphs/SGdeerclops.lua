@@ -239,14 +239,14 @@ local function TryIceGrow(inst)
 	local shouldgrowice
 	if not inst.components.combat:HasTarget() then
 		--out of combat: regrow missing ice when not burning
-		shouldgrowice = not burning and inst.sg.mem.noice ~= nil
+		shouldgrowice = not burning and (inst.sg.mem.noice ~= nil or inst.sg.mem.noeyeice)
 	else
 		--in combat:
 		--  -when EYE spike is NOT burning
 		--    -either summon circle if needed (can be burning)
 		--    -or regrow missing ice when not burning
 		shouldgrowice =
-			not (burning and inst.sg.mem.noice == 1) and
+			not (burning and inst.sg.mem.noice == 1 and not inst.sg.mem.noeyeice) and
 			(
 				(inst.hasiceaura and inst.sg.mem.circle == nil) or
 				(not burning and inst.sg.mem.noice ~= nil)
@@ -262,26 +262,12 @@ local function TryIceGrow(inst)
 end
 
 local function TryStagger(inst)
-	if inst.sg.mem.noice == 1 and inst.components.burnable:IsBurning() then
+	if inst.sg.mem.noice == 1 and not inst.sg.mem.noeyeice and inst.components.burnable:IsBurning() then
 		inst.sg:GoToState("struggle_pre")
 		return true
 	end
 	inst.sg.mem.dostagger = nil
 	return false
-end
-
-local function EnableEightFaced(inst)
-    if not inst.sg.mem.eightfaced then
-        inst.sg.mem.eightfaced = true
-        inst.Transform:SetEightFaced()
-    end
-end
-
-local function DisableEightFaced(inst)
-    if inst.sg.mem.eightfaced then
-        inst.sg.mem.eightfaced = false
-        inst.Transform:SetFourFaced()
-    end
 end
 
 local function ChooseAttack(inst, target)
@@ -315,6 +301,34 @@ local function ChooseAttack(inst, target)
 	end
 	inst.sg:GoToState("attack", target)
 	return true
+end
+
+local function StartAttackCooldown(inst)
+	if inst.sg.mem.combo ~= nil then
+		inst.sg.mem.combo = inst.sg.mem.combo + 1
+		if inst.sg.mem.combo == 1 then
+			inst.components.combat:SetAttackPeriod(1)
+		elseif inst.sg.mem.combo == 3 or math.random() < 0.5 then
+			inst.sg.mem.combo = 0
+			inst.components.combat:SetAttackPeriod(TUNING.MUTATED_DEERCLOPS_COMBO_ATTACK_PERIOD)
+		end
+	end
+	inst.components.combat:StartAttack()
+end
+
+local function StartFrenzy(inst)
+	if inst.hasfrenzy and not inst.frenzied then
+		inst:SetFrenzied(true)
+		inst.sg.mem.combo = 0
+	end
+end
+
+local function StopFrenzy(inst)
+	if inst.frenzied then
+		inst:SetFrenzied(false)
+		inst.sg.mem.combo = nil
+		inst.components.combat:SetAttackPeriod(TUNING.MUTATED_DEERCLOPS_ATTACK_PERIOD)
+	end
 end
 
 local function DeerclopsFootstep(inst, moving, noice)
@@ -377,7 +391,7 @@ local events =
 		end
 	end),
 	EventHandler("onignite", function(inst)
-		if inst.sg.mem.noice == 1 and inst.components.burnable:IsBurning() and
+		if inst.sg.mem.noice == 1 and not inst.sg.mem.noeyeice and inst.components.burnable:IsBurning() and
 			not (inst.sg:HasStateTag("staggered") or inst.components.health:IsDead())
 		then
 			if inst.sg:HasStateTag("busy") and not inst.sg:HasStateTag("caninterrupt") then
@@ -416,7 +430,9 @@ local states =
             end
         end,
 
-        onexit = DisableEightFaced,
+		onexit = function(inst)
+			inst:SwitchToFourFaced()
+		end,
     },
 
 	State{
@@ -1040,7 +1056,7 @@ local states =
 			inst.SoundEmitter:PlaySound(inst.sounds.attack)
 			if target ~= nil and target:IsValid() then
 				if inst.components.combat:TargetIs(target) then
-					inst.components.combat:StartAttack()
+					StartAttackCooldown(inst)
 				end
 				inst:ForceFacePoint(target.Transform:GetWorldPosition())
 				inst.sg.statemem.target = target
@@ -1116,10 +1132,10 @@ local states =
         onenter = function(inst, target)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("atk2")
-            EnableEightFaced(inst)
+			inst:SwitchToEightFaced()
             if target ~= nil and target:IsValid() then
                 if inst.components.combat:TargetIs(target) then
-                    inst.components.combat:StartAttack()
+					StartAttackCooldown(inst)
                 end
                 inst:ForceFacePoint(target.Transform:GetWorldPosition())
                 inst.sg.statemem.target = target
@@ -1227,7 +1243,7 @@ local states =
             SetLightValueAndOverride(inst, 1, 0)
             SetLightColour(inst, 1)
             if not inst.sg.statemem.keepfacing then
-                DisableEightFaced(inst)
+				inst:SwitchToFourFaced()
             end
         end,
     },
@@ -1239,7 +1255,7 @@ local states =
 
 		onenter = function(inst, target)
 			inst.components.locomotor:Stop()
-			EnableEightFaced(inst)
+			inst:SwitchToEightFaced()
 			if inst.sg.mem.noice == nil then
 				inst.AnimState:PlayAnimation("throw")
 			else
@@ -1251,7 +1267,7 @@ local states =
 			end
 			if target ~= nil and target:IsValid() then
 				if inst.components.combat:TargetIs(target) then
-					inst.components.combat:StartAttack()
+					StartAttackCooldown(inst)
 				end
 				inst.sg.statemem.target = target
 				inst.sg.statemem.targetpos = target:GetPosition()
@@ -1369,7 +1385,7 @@ local states =
 
 		onexit = function(inst)
 			if not inst.sg.statemem.keepfacing then
-				DisableEightFaced(inst)
+				inst:SwitchToFourFaced()
 			end
 			if inst.sg.mem.noice == 0 then
 				inst.AnimState:Hide("ice_0")
@@ -1392,6 +1408,7 @@ local states =
 			inst.sg.mem.doicegrow = nil
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("ice_grow")
+			local growice
 			if inst.sg.mem.noice == nil then
 				inst.AnimState:Hide("grow_ice_0")
 				inst.AnimState:Hide("grow_ice_1")
@@ -1402,6 +1419,13 @@ local states =
 				else
 					inst.AnimState:Hide("grow_ice_1")
 				end
+				growice = true
+			end
+			if inst.sg.mem.noeyeice and not (inst.hasfrenzy and inst:ShouldStayFrenzied()) then
+				inst.sg.statemem.groweyeice = true
+				growice = true
+			end
+			if growice then
 				inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/ice_crackling_LP", "loop")
 			end
 			inst.sg.statemem.burninterrupt = true
@@ -1416,7 +1440,7 @@ local states =
 				inst.sg.statemem.burninterrupt = nil
 				inst.components.burnable:Extinguish()
 				inst.components.burnable:SetBurnTime(0)
-				if inst.hasiceaura and inst.sg.mem.circle == nil and inst.components.combat:HasTarget() then
+				if inst.hasiceaura and inst.sg.mem.circle == nil and (not inst.frenzied or inst.sg.statemem.groweyeice) and inst.components.combat:HasTarget() then
 					inst.sg.mem.circle = SpawnPrefab("deerclops_aura_circle_fx")
 					local x, y, z = inst.Transform:GetWorldPosition()
 					inst.sg.mem.circle.Transform:SetPosition(x, 0, z)
@@ -1444,9 +1468,15 @@ local states =
 			FrameEvent(13, function(inst)
 				if inst.sg.mem.noice == 0 then
 					inst.sg.mem.noice = nil
-					inst.SoundEmitter:KillSound("loop")
+					if not inst.sg.statemem.groweyeice then
+						inst.SoundEmitter:KillSound("loop")
+					end
 				end
-				inst.components.burnable:SetBurnTime(10)
+			end),
+			FrameEvent(35, function(inst)
+				if inst.sg.statemem.groweyeice then
+					inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/ice_grow_4f_leadin")
+				end
 			end),
 		},
 
@@ -1460,14 +1490,17 @@ local states =
 			end),
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
-					inst.sg.statemem.icegrow = true
-					inst.sg:GoToState(inst.sg.statemem.newcircle and "icegrow2" or "icegrow_pst")
+					if inst.sg.statemem.newcircle or inst.sg.statemem.groweyeice then
+						inst.sg.statemem.icegrow = true
+						inst.sg:GoToState("icegrow2")
+					else
+						inst.sg:GoToState("icegrow_pst")
+					end
 				end
 			end),
 		},
 
 		onexit = function(inst)
-			inst.SoundEmitter:KillSound("loop")
 			if inst.sg.mem.noice ~= 1 then
 				inst.AnimState:Show("ice_1")
 				if inst.sg.mem.noice ~= 0 then
@@ -1475,7 +1508,10 @@ local states =
 				end
 				inst.components.combat:SetRange(TUNING.MUTATED_DEERCLOPS_ATTACK_RANGE)
 			end
-			inst.components.burnable:SetBurnTime(10)
+			if not inst.sg.statemem.icegrow then
+				inst.SoundEmitter:KillSound("loop")
+				inst.components.burnable:SetBurnTime(10)
+			end
 		end,
 	},
 
@@ -1486,7 +1522,29 @@ local states =
 		onenter = function(inst)
 			inst.AnimState:PlayAnimation("ice_grow_2")
 			inst.SoundEmitter:PlaySound(inst.sounds.taunt_howl)
+			if not inst.SoundEmitter:PlayingSound("loop") then
+				inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/ice_crackling_LP", "loop")
+			end
+			if inst.sg.mem.noeyeice then
+				inst.AnimState:Show("grow_ice_2")
+				inst.AnimState:Hide("gestalt_eye")
+			else
+				inst.AnimState:Hide("grow_ice_2")
+			end
 		end,
+
+		timeline =
+		{
+			FrameEvent(3, function(inst)
+				inst.sg.mem.noeyeice = nil
+				StopFrenzy(inst)
+			end),
+			FrameEvent(8, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/ice_grow_4f_leadin", nil, 0.5) end),
+			FrameEvent(17, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/ice_grow_4f_leadin", nil, 0.6) end),
+			FrameEvent(21, function(inst)
+				inst.SoundEmitter:KillSound("loop")
+			end),
+		},
 
 		events =
 		{
@@ -1496,6 +1554,16 @@ local states =
 				end
 			end),
 		},
+
+		onexit = function(inst)
+			if inst.sg.mem.noeyeice then
+				inst.AnimState:Show("gestalt_eye")
+			else
+				inst.AnimState:Show("ice_2")
+			end
+			inst.components.burnable:SetBurnTime(10)
+			inst.SoundEmitter:KillSound("loop")
+		end,
 	},
 
 	State{
@@ -1539,6 +1607,11 @@ local states =
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("struggle_pre")
 			inst.SoundEmitter:PlaySound(inst.sounds.hurt)
+			if inst.sg.mem.noice ~= 1 then
+				inst.sg.mem.noice = 1
+				inst.AnimState:Hide("ice_0")
+				inst.AnimState:Hide("ice_1")
+			end
 		end,
 
 		timeline =
@@ -1567,6 +1640,11 @@ local states =
 			end
 			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
 			inst.sg.statemem.loops = (loops or 0) + 1
+			if inst.sg.mem.noice ~= 1 then
+				inst.sg.mem.noice = 1
+				inst.AnimState:Hide("ice_0")
+				inst.AnimState:Hide("ice_1")
+			end
 		end,
 
 		timeline =
@@ -1595,6 +1673,11 @@ local states =
 			inst.AnimState:PlayAnimation("struggle_pst")
 			inst.components.burnable:Extinguish()
 			inst.SoundEmitter:PlaySound(inst.sounds.hurt)
+			if inst.sg.mem.noice ~= 1 then
+				inst.sg.mem.noice = 1
+				inst.AnimState:Hide("ice_0")
+				inst.AnimState:Hide("ice_1")
+			end
 		end,
 
 		timeline =
@@ -1645,15 +1728,25 @@ local states =
 				inst.components.burnable:SetBurnTime(8 * FRAMES)
 				inst.components.burnable:ExtendBurning()
 			end
+			if inst.sg.mem.noice ~= 1 then
+				inst.sg.mem.noice = 1
+				inst.AnimState:Hide("ice_0")
+				inst.AnimState:Hide("ice_1")
+			end
 		end,
 
 		timeline =
 		{
-			FrameEvent(3, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/stunned_pre_break_f13") end),
+			FrameEvent(3, function(inst)
+				if not inst.sg.mem.noeyeice then
+					inst.sg.statemem.shatter = true
+					inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/stunned_pre_break_f13")
+				end
+			end),
 			FrameEvent(8, function(inst)
 				inst.components.burnable:Extinguish()
 				inst.components.burnable:SetBurnTime(10)
-				inst.sg.mem.noice = 2
+				inst.sg.mem.noeyeice = true
 			end),
 			FrameEvent(24, function(inst)
 				DeerclopsFootstep(inst, false, true)
@@ -1689,12 +1782,9 @@ local states =
 		},
 
 		onexit = function(inst)
-			if not inst.sg.statemem.staggered and inst.sg.mem.noice == 2 then
-				inst.sg.mem.noice = 1
-			end
-			if inst.sg.mem.noice == 1 or inst.sg.mem.noice == 2 then
-				inst.AnimState:Hide("ice_0")
-				inst.AnimState:Hide("ice_1")
+			if inst.sg.noeyeice then
+				inst.AnimState:Hide("ice_2")
+				inst.AnimState:Show("gestalt_eye")
 			end
 			inst.components.burnable:SetBurnTime(10)
 		end,
@@ -1711,10 +1801,15 @@ local states =
 				return
 			end
 			inst.AnimState:PlayAnimation("stagger", true)
-			if inst.sg.mem.noice ~= 2 then
-				inst.sg.mem.noice = 2
+			if inst.sg.mem.noice ~= 1 then
+				inst.sg.mem.noice = 1
 				inst.AnimState:Hide("ice_0")
 				inst.AnimState:Hide("ice_1")
+			end
+			if not inst.sg.mem.noeyeice then
+				inst.sg.mem.noeyeice = true
+				inst.AnimState:Hide("ice_2")
+				inst.AnimState:Show("gestalt_eye")
 			end
 			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
 		end,
@@ -1728,12 +1823,6 @@ local states =
 				end
 			end),
 		},
-
-		onexit = function(inst)
-			if not inst.sg.statemem.staggered then
-				inst.sg.mem.noice = 1
-			end
-		end,
 	},
 
 	State{
@@ -1743,10 +1832,15 @@ local states =
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("stagger_hit")
-			if inst.sg.mem.noice ~= 2 then
-				inst.sg.mem.noice = 2
+			if inst.sg.mem.noice ~= 1 then
+				inst.sg.mem.noice = 1
 				inst.AnimState:Hide("ice_0")
 				inst.AnimState:Hide("ice_1")
+			end
+			if not inst.sg.mem.noeyeice then
+				inst.sg.mem.noeyeice = true
+				inst.AnimState:Hide("ice_2")
+				inst.AnimState:Show("gestalt_eye")
 			end
 		end,
 
@@ -1786,12 +1880,6 @@ local states =
 				end
 			end),
 		},
-
-		onexit = function(inst)
-			if not inst.sg.statemem.staggered then
-				inst.sg.mem.noice = 1
-			end
-		end,
 	},
 
 	State{
@@ -1802,7 +1890,17 @@ local states =
 			inst.AnimState:PlayAnimation("stagger_pst")
 			inst.AnimState:Show("ice_0")
 			inst.AnimState:Show("ice_1")
-			inst.sg.mem.noice = 2
+			inst.sg.statemem.groweyeice = false --hard-coded toggle
+			if inst.sg.statemem.groweyeice then
+				inst.AnimState:Show("ice_2")
+				inst.AnimState:Hide("gestalt_eye")
+			else
+				inst.AnimState:Hide("ice_2")
+				inst.AnimState:Show("gestalt_eye")
+				inst.sg.mem.doicegrow = nil
+			end
+			inst.sg.mem.noice = 1
+			inst.sg.mem.noeyeice = true
 			if not nohit then
 				inst.sg:AddStateTag("caninterrupt")
 			end
@@ -1819,16 +1917,26 @@ local states =
 				inst.sg:RemoveStateTag("caninterrupt")
 				inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/ice_crackling_LP", "loop")
 			end),
-			FrameEvent(51, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/ice_grow_4f_leadin") end),
+			FrameEvent(51, function(inst)
+				if inst.sg.statemem.groweyeice then
+					inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/ice_grow_4f_leadin")
+				end
+			end),
 			FrameEvent(55, function(inst)
-				inst.components.burnable:Extinguish()
-				inst.components.burnable:SetBurnTime(0)
-				inst.sg.mem.noice = 1
+				if inst.sg.statemem.groweyeice then
+					inst.components.burnable:Extinguish()
+					inst.components.burnable:SetBurnTime(0)
+					inst.sg.mem.noeyeice = nil
+				end
 			end),
 			FrameEvent(52, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/ice_grow_4f_leadin") end),
 			FrameEvent(56, function(inst)
 				inst.SoundEmitter:KillSound("loop")
-				inst.components.burnable:SetBurnTime(10)
+				if inst.sg.statemem.groweyeice then
+					inst.components.burnable:SetBurnTime(10)
+				else
+					inst.components.burnable:Extinguish()
+				end
 				inst.sg.mem.noice = nil
 			end),
 			FrameEvent(70, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/stunned_pst_f70") end),
@@ -1844,6 +1952,10 @@ local states =
 			end),
 			FrameEvent(100, function(inst)
 				inst.sg:RemoveStateTag("busy")
+				if inst.sg.mem.noeyeice then
+					StartFrenzy(inst)
+					inst.sg.mem.doicegrow = nil
+				end
 			end),
 		},
 
@@ -1858,14 +1970,22 @@ local states =
 
 		onexit = function(inst)
 			inst.SoundEmitter:KillSound("loop")
-			if not inst.sg.statemem.staggered and inst.sg.mem.noice == 2 then
-				inst.sg.mem.noice = 1
-			end
 			if inst.sg.mem.noice ~= nil then
 				inst.AnimState:Hide("ice_0")
 				if inst.sg.mem.noice ~= 0 then
 					inst.AnimState:Hide("ice_1")
 				end
+			end
+			if inst.sg.mem.noeyeice then
+				inst.AnimState:Hide("ice_2")
+				inst.AnimState:Show("gestalt_eye")
+				if not inst.sg:HasStateTag("staggered") then
+					StartFrenzy(inst)
+					inst.sg.mem.doicegrow = nil
+				end
+			else
+				inst.AnimState:Show("ice_2")
+				inst.AnimState:Hide("gestalt_eye")
 			end
 			inst.components.burnable:SetBurnTime(10)
 		end,

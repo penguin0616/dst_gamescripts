@@ -76,6 +76,8 @@ local function MakeTackleContainer(name, bank, build, assets)
 
         inst.entity:SetPristine()
 
+        inst:AddTag("portablestorage")
+
         if not TheWorld.ismastersim then
             return inst
         end

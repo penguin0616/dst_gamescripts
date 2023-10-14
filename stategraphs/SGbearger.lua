@@ -1516,14 +1516,17 @@ local states =
 
 		onenter = function(inst, mutantprefab)
 			inst.AnimState:PlayAnimation("twitch", true)
-			inst.sg:SetTimeout(3)
 			inst.sg.statemem.mutantprefab = mutantprefab
 			inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/twitching_LP", "loop")
 		end,
 
-		ontimeout = function(inst)
-			inst.sg:GoToState("corpse_mutate", inst.sg.statemem.mutantprefab)
-		end,
+		timeline =
+		{
+			FrameEvent(82, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_bearger/mutate_pre_cracks_f0") end),
+			TimeEvent(3, function(inst)
+				inst.sg:GoToState("corpse_mutate", inst.sg.statemem.mutantprefab)
+			end),
+		},
 
 		onexit = function(inst)
 			inst.SoundEmitter:KillSound("loop")
@@ -1537,12 +1540,15 @@ local states =
 		onenter = function(inst, mutantprefab)
 			inst.AnimState:OverrideSymbol("bearger_rib", "bearger_mutated", "bearger_rib")
 			inst.AnimState:PlayAnimation("mutate_pre")
-			inst.SoundEmitter:PlaySound("rifts3/mutated_bearger/mutate_pre_f0")
+			inst.SoundEmitter:PlaySound("rifts3/mutated_bearger/mutate_pre_tone_f0")
 			inst.sg.statemem.mutantprefab = mutantprefab
 		end,
 
 		timeline =
 		{
+			FrameEvent(68, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/step_soft") end),
+			FrameEvent(70, function(inst) ShakeAllCameras(CAMERASHAKE.FULL, .35, .02, .5, inst, 30) end),
+			FrameEvent(125, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_bearger/mutate") end),
 			FrameEvent(149, function(inst)
 				inst.AnimState:SetAddColour(.5, .5, .5, 0)
 				inst.AnimState:SetLightOverride(.5)
@@ -1579,7 +1585,7 @@ local states =
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("mutate")
-			inst.SoundEmitter:PlaySound("rifts3/mutated_bearger/mutate")
+			inst.SoundEmitter:PlaySound("rifts3/mutated_bearger/taunt")
 			inst.sg.statemem.flash = 24
 			inst:SetStandState("bi")
 		end,
@@ -1596,6 +1602,8 @@ local states =
 
 		timeline =
 		{
+			FrameEvent(25, DoFootstep),
+			FrameEvent(27, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/step_soft") end),
 			FrameEvent(28, function(inst)
 				inst:SetStandState("quad")
 			end),

@@ -616,6 +616,16 @@ function PlayerProfile:SetScrapbookHudDisplay(enabled)
 	end
 end
 
+function PlayerProfile:GetScrapbookColumnsSetting()
+	return tonumber(self:GetValue("scrapbookcolumnssetting") or 3)
+end
+
+function PlayerProfile:SetScrapbookColumnsSetting(setting)
+	self:SetValue("scrapbookcolumnssetting", setting)
+	self.dirty = true
+	self:Save()
+end
+
 function PlayerProfile:SetCraftingMenuSensitivity(sensitivity)
  	if USE_SETTINGS_FILE then
 		TheSim:SetSetting("misc", "craftingmenusensitivity", tostring(sensitivity))

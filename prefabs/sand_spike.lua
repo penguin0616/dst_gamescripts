@@ -282,6 +282,8 @@ local function MakeSpikeFn(shape, size)
         inst:AddTag("object")
         inst:AddTag("stone")
 
+        inst.scrapbook_proxy = shape == "spike" and "sandspike" or nil
+
         inst.entity:SetPristine()
 
         if not TheWorld.ismastersim then

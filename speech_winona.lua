@@ -1840,6 +1840,9 @@ return{
         CHESSPIECE_EYEOFTERROR = "An eye (statue) for an eye (monster)!",
         CHESSPIECE_TWINSOFTERROR = "A fresh pair of eyes is just what we needed around here!",
         CHESSPIECE_DAYWALKER = "It's so lifelike, I can almost smell the bad breath.",
+        CHESSPIECE_DEERCLOPS_MUTATED = "She's almost a looker.",
+        CHESSPIECE_WARG_MUTATED = "Now this is a pooch I could play with.",
+        CHESSPIECE_BEARGER_MUTATED = "That was one ornery son of a beast.",
 
         CHESSJUNK1 = "A heap of spare parts.",
         CHESSJUNK2 = "A heap of spare parts.",
@@ -2216,6 +2219,7 @@ return{
 		KNIGHT = "Incredible! Let me look at those gears!",
 		KOALEFANT_SUMMER = "Hey! You look tasty!",
 		KOALEFANT_WINTER = "Hey! You look tasty!",
+		KOALEFANT_CARCASS = "Poor thing's dead as a doornail.",
 		KRAMPUS = "Some sort of... festive devil?",
 		KRAMPUS_SACK = "I could carry a whole warehouse in that thing!",
 		LEIF = "The trees have eyes!!",

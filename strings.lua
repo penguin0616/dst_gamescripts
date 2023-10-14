@@ -1777,6 +1777,7 @@ STRINGS =
 
         ANIMAL_TRACK = "Animal Track",
         DIRTPILE = "Suspicious Dirt Pile",
+		KOALEFANT_CARCASS = "Koalefant Carcass",
         KOALEFANT_SUMMER = "Koalefant",
         KOALEFANT_WINTER = "Koalefant",
         TRUNK_SUMMER = "Koalefant Trunk",
@@ -2242,6 +2243,9 @@ STRINGS =
 		CHESSPIECE_EYEOFTERROR = "Eye Of Terror Figure",
         CHESSPIECE_TWINSOFTERROR = "Twins of Terror Figure",
         CHESSPIECE_DAYWALKER = "Nightmare Werepig Figure",
+        CHESSPIECE_DEERCLOPS_MUTATED = "Crystal Deerclops Figure",
+        CHESSPIECE_WARG_MUTATED = "Possessed Varg Figure",
+        CHESSPIECE_BEARGER_MUTATED = "Armored Bearger Figure",
 
         CHESSPIECE_PAWN_BUILDER = "Pawn Figure",
         CHESSPIECE_ROOK_BUILDER = "Rook Figure",
@@ -2277,6 +2281,9 @@ STRINGS =
 		CHESSPIECE_EYEOFTERROR_BUILDER = "Eye Of Terror Figure",
         CHESSPIECE_TWINSOFTERROR_BUILDER = "Twins of Terror Figure",
         CHESSPIECE_DAYWALKER_BUILDER = "Nightmare Werepig Figure",
+        CHESSPIECE_DEERCLOPS_MUTATED_BUILDER = "Crystal Deerclops Figure",
+        CHESSPIECE_WARG_MUTATED_BUILDER = "Possessed Varg Figure",
+        CHESSPIECE_BEARGER_MUTATED_BUILDER = "Armored Bearger Figure",
 
 
         CHESSPIECE_BUTTERFLY_SKETCH = "Moon Moth Figure Sketch",
@@ -2291,6 +2298,9 @@ STRINGS =
         CHESSPIECE_GUARDIANPHASE3_SKETCH = "Celestial Champion Figure Sketch",
         CHESSPIECE_MANRABBIT_SKETCH = "Bunnyman Figure Sketch",
         CHESSPIECE_DAYWALKER_SKETCH = "Nightmare Werepig Sketch",
+        CHESSPIECE_DEERCLOPS_MUTATED_SKETCH = "Crystal Deerclops Sketch",
+        CHESSPIECE_WARG_MUTATED_SKETCH = "Possessed Varg Sketch",
+        CHESSPIECE_BEARGER_MUTATED_SKETCH = "Armored Bearger Sketch",
 
         SHADOW_ROOK = "Shadow Rook",
         SHADOW_KNIGHT = "Shadow Knight",
@@ -4235,6 +4245,9 @@ STRINGS =
 		CHESSPIECE_EYEOFTERROR_BUILDER = "Its stony gaze reminds you of an evil presence.",
         CHESSPIECE_TWINSOFTERROR_BUILDER = "Double the eyes, double the terror.",
         CHESSPIECE_DAYWALKER_BUILDER = "A stone likeness of a pig-headed prisoner.",
+        CHESSPIECE_DEERCLOPS_MUTATED_BUILDER = "A truly eye-catching sculpture.",
+        CHESSPIECE_WARG_MUTATED_BUILDER = "A rather fetching statue.",
+        CHESSPIECE_BEARGER_MUTATED_BUILDER = "A soul-bearing rendition of a ferocious favorite.",
 
         CHESSPIECE_BUTTERFLY_SKETCH = "A sculpture sketch of a Moon Moth.",
         CHESSPIECE_ANCHOR_SKETCH = "A sculpture sketch of an anchor.",

@@ -1838,6 +1838,9 @@ return{
         CHESSPIECE_EYEOFTERROR = "Its stony gaze will glare for eternity.",
         CHESSPIECE_TWINSOFTERROR = "I still remember watching the light leave their eyes.",
         CHESSPIECE_DAYWALKER = "A reminder that kindness only leads to pain.",
+        CHESSPIECE_DEERCLOPS_MUTATED = "The beast came back even colder than before.",
+        CHESSPIECE_WARG_MUTATED = "Why was it able to come back? It's not fair...",
+        CHESSPIECE_BEARGER_MUTATED = "Its new lease on life was, well, short-lived.",
 
         CHESSJUNK1 = "Cold, dead artificial life.",
         CHESSJUNK2 = "Cold, dead artificial life.",
@@ -2214,6 +2217,7 @@ return{
 		KNIGHT = "A cold, soulless horse.",
 		KOALEFANT_SUMMER = "A beast of solitude.",
 		KOALEFANT_WINTER = "It stands against the cruel elements.",
+		KOALEFANT_CARCASS = "Somehow, it comforts me.",
 		KRAMPUS = "Hello, foul creature of the underworld.",
 		KRAMPUS_SACK = "It smells of goat.",
 		LEIF = "A lumbering beast.",

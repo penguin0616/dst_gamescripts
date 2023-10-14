@@ -1840,6 +1840,9 @@ return{
         CHESSPIECE_EYEOFTERROR = "He's gone, no matter how you look at it, hyuyu!",
         CHESSPIECE_TWINSOFTERROR = "What an eye-catching statue, hyuyu!",
         CHESSPIECE_DAYWALKER = "A boorish boar's bust!",
+        CHESSPIECE_DEERCLOPS_MUTATED = "She got quite the eyeful.",
+        CHESSPIECE_WARG_MUTATED = "Must we memorialize the mutated mutt?",
+        CHESSPIECE_BEARGER_MUTATED = "It bears a strong resemblance.",
 
         CHESSJUNK1 = "It looks quite broke, and that's no joke!",
         CHESSJUNK2 = "It looks quite broke, and that's no joke!",
@@ -2216,6 +2219,7 @@ return{
 		KNIGHT = "A knight in rusted armor!",
 		KOALEFANT_SUMMER = "A gentle beast with tiny horns.",
 		KOALEFANT_WINTER = "How do you do? Why are you blue?",
+		KOALEFANT_CARCASS = "Once gentle beast, now someone's feast.",
 		KRAMPUS = "Heh heh. No hard feelings?",
 		KRAMPUS_SACK = "He should have known I would not hold back.",
 		LEIF = "No need to fight, my great tree friend!",

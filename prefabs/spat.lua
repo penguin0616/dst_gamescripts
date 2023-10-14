@@ -138,7 +138,7 @@ local function OnForceSleep(inst)
 end
 
 local function OnVisibleFn(inst)
-    inst.sg:GoToState("bellow", {count = 2,})
+	inst.sg:GoToState("spawn_shake")
 end
 
 local function WillUnhideFn(inst)
@@ -152,7 +152,7 @@ end
 
 local function OnUnhideFn(inst, player)
     if inst.components.periodicspawner ~= nil then
-        inst.components.periodicspawner:Start()
+        inst.components.periodicspawner:SafeStart()
     end
     if inst.components.combat ~= nil then
         -- NOTES(JBK): ReturnToScene can activate a brain and cause the warg to target something else clear it by force now.

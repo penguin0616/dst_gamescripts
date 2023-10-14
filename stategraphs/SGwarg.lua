@@ -341,6 +341,35 @@ local states =
 	},
 
 	State{
+		name = "spawn_shake",
+		tags = { "busy", "invisible", "noattack", "temp_invincible" },
+
+		onenter = function(inst)
+			inst.components.locomotor:StopMoving()
+			inst.AnimState:PlayAnimation("spawn_shake")
+			inst.SoundEmitter:PlaySound("dontstarve/common/deathpoof")
+		end,
+
+		timeline =
+		{
+			FrameEvent(3, function(inst)
+				inst.sg:RemoveStateTag("invisible")
+				inst.sg:RemoveStateTag("noattack")
+				inst.sg:RemoveStateTag("temp_invincible")
+			end),
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("howl")
+				end
+			end),
+		},
+	},
+
+	State{
 		name = "death",
 		tags = { "dead", "busy", "noattack" },
 
@@ -467,11 +496,14 @@ local states =
 		end,
 
 		ontimeout = function(inst)
+			inst.sg.statemem.mutating = true
 			inst.sg:GoToState("corpse_mutate", inst.sg.statemem.mutantprefab)
 		end,
 
 		onexit = function(inst)
-			inst.SoundEmitter:KillSound("loop")
+			if not inst.sg.statemem.mutating then
+				inst.SoundEmitter:KillSound("loop")
+			end
 		end,
 	},
 
@@ -488,12 +520,15 @@ local states =
 			else
 				inst.AnimState:PlayAnimation("mutate_pre")
 			end
-			inst.SoundEmitter:PlaySound("rifts3/mutated_varg/mutate_pre")
+			inst.SoundEmitter:PlaySound("rifts3/mutated_varg/mutate_pre_f0")
 			inst.sg.statemem.mutantprefab = mutantprefab
 		end,
 
 		timeline =
 		{
+			FrameEvent(14, function(inst) inst.SoundEmitter:KillSound("loop") end),
+			FrameEvent(14, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_varg/mutate_pre_f14") end),
+			FrameEvent(106, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_varg/mutate") end),
 			FrameEvent(111, function(inst)
 				inst.AnimState:SetAddColour(.5, .5, .5, 0)
 				inst.AnimState:SetLightOverride(.5)
@@ -518,6 +553,7 @@ local states =
 			inst.AnimState:ClearAllOverrideSymbols()
 			inst.AnimState:SetAddColour(0, 0, 0, 0)
 			inst.AnimState:SetLightOverride(0)
+			inst.SoundEmitter:KillSound("loop")
 		end,
 	},
 
@@ -530,7 +566,6 @@ local states =
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("mutate")
-			inst.SoundEmitter:PlaySound("rifts3/mutated_varg/mutate")
 			inst.sg.statemem.flash = 24
 		end,
 

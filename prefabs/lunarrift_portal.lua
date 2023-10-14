@@ -372,6 +372,10 @@ local function on_portal_removed(inst)
     local ix, iy, iz = inst.Transform:GetWorldPosition()
     local portal_tile_x, portal_tile_y = _map:GetTileCoordsAtPoint(ix, iy, iz)
 
+    if inst._terraformer ~= nil then
+        inst._terraformer:OnParentRemoved()
+    end
+
     inst._terraformer = inst._terraformer or make_terraformer_proxy(inst, ix, iy, iz)
     inst._terraformer:AddTerraformTask(portal_tile_x, portal_tile_y, 0, {0, 0}, true)
 

@@ -42,6 +42,7 @@ local mutated_prefabs =
 	"collapse_small",
 	"spoiled_food",
 	"purebrilliance",
+	"chesspiece_bearger_mutated_sketch",
 }
 
 local brain = require("brains/beargerbrain")
@@ -62,12 +63,13 @@ SetSharedLootTable( 'bearger',
 
 SetSharedLootTable( 'mutatedbearger',
 {
-	{ "spoiled_food",				1.0 },
-	{ "spoiled_food",				1.0 },
-	{ "spoiled_food",				1.0 },
-	{ "spoiled_food",				0.5 },
-	{ "purebrilliance",				1.0 },
+	{ "spoiled_food",				1.0  },
+	{ "spoiled_food",				1.0  },
+	{ "spoiled_food",				1.0  },
+	{ "spoiled_food",				0.5  },
+	{ "purebrilliance",				1.0  },
 	{ "purebrilliance",				0.75 },
+    {'chesspiece_bearger_mutated_sketch',   1.00 },
 })
 
 local TARGET_DIST = 7.5
@@ -584,9 +586,11 @@ end
 
 local function Mutated_OnTemp8Faced(inst)
 	if inst.temp8faced:value() then
+		inst.gestalt.Transform:SetEightFaced()
 		inst.eyeL.Transform:SetEightFaced()
 		inst.eyeR.Transform:SetEightFaced()
 	else
+		inst.gestalt.Transform:SetFourFaced()
 		inst.eyeL.Transform:SetFourFaced()
 		inst.eyeR.Transform:SetFourFaced()
 	end
@@ -610,6 +614,31 @@ local function Mutated_SwitchToFourFaced(inst)
 		end
 		inst.Transform:SetFourFaced()
 	end
+end
+
+local function Mutated_CreateGestaltFlame()
+	local inst = CreateEntity()
+
+	inst:AddTag("FX")
+	--[[Non-networked entity]]
+	--inst.entity:SetCanSleep(false) --commented out; follow parent sleep instead
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+
+	inst.Transform:SetFourFaced()
+
+	inst.AnimState:SetBank("lunar_flame")
+	inst.AnimState:SetBuild("lunar_flame")
+	inst.AnimState:PlayAnimation("gestalt_eye", true)
+	inst.AnimState:SetMultColour(1, 1, 1, 0.6)
+	inst.AnimState:SetLightOverride(0.1)
+	inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+	inst.AnimState:UsePointFiltering(true)
+
+	return inst
 end
 
 local function Mutated_CreateEyeFlame()
@@ -636,26 +665,42 @@ local function Mutated_CreateEyeFlame()
 	return inst
 end
 
+local function Mutated_PushMusic(inst)
+	if inst.AnimState:IsCurrentAnimation("mutate") then
+		inst._playingmusic = false
+	elseif ThePlayer == nil then
+		inst._playingmusic = false
+	elseif ThePlayer:IsNear(inst, inst._playingmusic and 40 or 20) then
+		inst._playingmusic = true
+		ThePlayer:PushEvent("triggeredevent", { name = "gestaltmutant" })
+	elseif inst._playingmusic and not ThePlayer:IsNear(inst, 50) then
+		inst._playingmusic = false
+	end
+end
+
 local function mutatedcommonfn(inst)
     inst:AddTag("lunar_aligned")
 
-	inst.AnimState:SetSymbolMultColour("gestalt_ball", 1, 1, 1, 0.6)
-	inst.AnimState:SetSymbolLightOverride("gestalt_ball", 0.1)
-	inst.AnimState:SetSymbolBloom("gestalt_ball")
-
-	inst.AnimState:SetSymbolMultColour("gestalt_embers", 1, 1, 1, 0.6)
-	inst.AnimState:SetSymbolLightOverride("gestalt_embers", 0.1)
-	inst.AnimState:SetSymbolBloom("gestalt_embers")
-
 	inst.temp8faced = net_bool(inst.GUID, "mutatedbearger.temp8faced", "temp8faceddirty")
 
+	--Dedicated server does not need to trigger music
 	--Dedicated server does not need to spawn the local fx
 	if not TheNet:IsDedicated() then
+		inst._playingmusic = false
+		inst:DoPeriodicTask(1, Mutated_PushMusic, 0)
+
+		inst.gestalt = Mutated_CreateGestaltFlame()
+		inst.gestalt.entity:SetParent(inst.entity)
+		inst.gestalt.Follower:FollowSymbol(inst.GUID, "swap_gestalt_flame", 0, 0, 0, true)
+		local frames = inst.gestalt.AnimState:GetCurrentAnimationNumFrames()
+		local rnd = math.random(frames) - 1
+		inst.gestalt.AnimState:SetFrame(rnd)
+
 		inst.eyeL = Mutated_CreateEyeFlame()
 		inst.eyeL.entity:SetParent(inst.entity)
 		inst.eyeL.Follower:FollowSymbol(inst.GUID, "flameL", 0, 0, 0, true)
-		local frames = inst.eyeL.AnimState:GetCurrentAnimationNumFrames()
-		local rnd = math.random(frames) - 1
+		frames = inst.eyeL.AnimState:GetCurrentAnimationNumFrames()
+		rnd = math.random(frames) - 1
 		inst.eyeL.AnimState:SetFrame(rnd)
 
 		inst.eyeR = Mutated_CreateEyeFlame()

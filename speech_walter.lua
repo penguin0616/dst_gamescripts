@@ -1834,6 +1834,9 @@ return{
         CHESSPIECE_EYEOFTERROR = "Nothing to see here, folks! Ha ha, get it Woby?",
         CHESSPIECE_TWINSOFTERROR = "Is this one of those sculptures where the eyes follow you around the room?",
         CHESSPIECE_DAYWALKER = "I sure hope we get to see him again!",
+        CHESSPIECE_DEERCLOPS_MUTATED = "I still feel kind of bad for her.",
+        CHESSPIECE_WARG_MUTATED = "They weren't nearly as nice as you, Woby.",
+        CHESSPIECE_BEARGER_MUTATED = "We bearly escaped! Get it?",
 
         CHESSJUNK1 = "I don't think they're going to get up anytime soon.",
         CHESSJUNK2 = "I don't think they're going to get up anytime soon.",
@@ -2210,6 +2213,7 @@ return{
 		KNIGHT = "Just horsing around...",
 		KOALEFANT_SUMMER = "The trail led us right to it.",
 		KOALEFANT_WINTER = "So you're the one who left those tracks!",
+		KOALEFANT_CARCASS = "Should we say a few words, Woby?",
 		KRAMPUS = "Hey! Did you rifle through my supplies?",
 		KRAMPUS_SACK = "It smells... goat-y.",
 		LEIF = "They've come to take their revenge!",

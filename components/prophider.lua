@@ -165,7 +165,7 @@ function PropHider:ShowFromProp()
     end
 
     if self.prop and self.prop:IsValid() then
-        ErodeAway(self.prop)
+		self.prop:PushEvent("propreveal", self.inst)
     end
     self.prop = nil
 end

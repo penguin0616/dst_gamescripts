@@ -1841,6 +1841,9 @@ return{
         CHESSPIECE_EYEOFTERROR = "I still feel an evil presence watching me...",
         CHESSPIECE_TWINSOFTERROR = "Great, another creepy statue.",
         CHESSPIECE_DAYWALKER = "How come jerks always seem to get statues?",
+        CHESSPIECE_DEERCLOPS_MUTATED = "We kicked its butt, and then we kicked it again.",
+        CHESSPIECE_WARG_MUTATED = "I SAID we should've burned it, but nope, nobody listens to me...",
+        CHESSPIECE_BEARGER_MUTATED = "I guess I'd be cranky too if I was woken up from the Big Sleep.",
 
         CHESSJUNK1 = "Dead windup horsey.",
         CHESSJUNK2 = "Dead windup priest.",
@@ -2217,6 +2220,7 @@ return{
 		KNIGHT = "It's a pony!",
 		KOALEFANT_SUMMER = "We will be great friends!",
 		KOALEFANT_WINTER = "He sure looks warm...",
+		KOALEFANT_CARCASS = "It's dead. Shall I do the honors?",
 		KRAMPUS = "Stay back, you big jerk!",
 		KRAMPUS_SACK = "The holidays came early this year!",
 		LEIF = "He looks flammable!",

@@ -1834,6 +1834,9 @@ return{
         CHESSPIECE_EYEOFTERROR = "A trophy that doubles as a useful anatomical model.",
         CHESSPIECE_TWINSOFTERROR = "A stone rendition of a pair of mechanical marvels.",
         CHESSPIECE_DAYWALKER = "An accurate stone model of that ill-behaved creature.",
+        CHESSPIECE_DEERCLOPS_MUTATED = "Such a strange and grotesque affliction...",
+        CHESSPIECE_WARG_MUTATED = "There is much I still don't understand about this beast.",
+        CHESSPIECE_BEARGER_MUTATED = "The artist truly captured its ferocity!",
 
         CHESSJUNK1 = "The magician's unfinished projects?",
         CHESSJUNK2 = "The magician's unfinished projects?",
@@ -2210,6 +2213,7 @@ return{
 		KNIGHT = "An automatic equine.",
 		KOALEFANT_SUMMER = "Koalefanta Proboscidea.",
 		KOALEFANT_WINTER = "Koalefanta Proboscidea in thick winter pelage.",
+		KOALEFANT_CARCASS = "This creature has expired.",
 		KRAMPUS = "It's a mythological holiday monster.",
 		KRAMPUS_SACK = "It seems bigger inside than out.",
 		LEIF = "I... don't even know.",

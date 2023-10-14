@@ -1834,6 +1834,9 @@ return{
         CHESSPIECE_EYEOFTERROR = "Oh no... got dried out, glorp...",
         CHESSPIECE_TWINSOFTERROR = "Ha ha, they just rocks now!",
         CHESSPIECE_DAYWALKER = "Grrr... why we have nasty Pig statue?!",
+        CHESSPIECE_DEERCLOPS_MUTATED = "Bye bye deer. No more eye pokey",
+        CHESSPIECE_WARG_MUTATED = "Poor doggy. Not so bad",
+        CHESSPIECE_BEARGER_MUTATED = "Remember bad teddy",
 
         CHESSJUNK1 = "It all broken.",
         CHESSJUNK2 = "Didn't do it!!",
@@ -2210,6 +2213,7 @@ return{
 		KNIGHT = "Springy Ironfolk.",
 		KOALEFANT_SUMMER = "What big ears you have!",
 		KOALEFANT_WINTER = "What big ears you have!",
+		KOALEFANT_CARCASS = "Glurgh... stinky dead thing!",
 		KRAMPUS = "Big meanie!!",
 		KRAMPUS_SACK = "It jingles!",
 		LEIF = "Treebeast!!",

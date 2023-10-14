@@ -646,7 +646,7 @@ function MultiplayerMainScreen:DoInit()
     self.kit_puppet = self.fixed_root:AddChild(KitcoonPuppet( Profile, nil, kit_puppet_positions ))
 
 	if TheFrontEnd.MotdManager:IsEnabled() then
-		local motd_panel = MainMenuMotdPanel({font = self.info_font, x = 100, y = -150,
+		local motd_panel = MainMenuMotdPanel({font = self.info_font, x = 100, y = -180,
 			on_no_focusforward = self.menu,
 			on_to_skins_cb = function( filter_info ) self:GotoShop( filter_info ) end,
 			})

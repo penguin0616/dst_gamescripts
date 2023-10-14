@@ -1834,6 +1834,9 @@ return{
         CHESSPIECE_EYEOFTERROR = "Did it just blink?",
         CHESSPIECE_TWINSOFTERROR = "They weren't the most polite guests, non?",
         CHESSPIECE_DAYWALKER = "I have to admit, I think I prefer him this way.",
+        CHESSPIECE_DEERCLOPS_MUTATED = "Brr... it still gives me the shivers...",
+        CHESSPIECE_WARG_MUTATED = "I'm relieved it's just a statue.",
+        CHESSPIECE_BEARGER_MUTATED = "A second course of monster that I didn't ask for!",
 
         CHESSJUNK1 = "Broken chess pieces?",
         CHESSJUNK2 = "More broken chess pieces?",
@@ -2210,6 +2213,7 @@ return{
 		KNIGHT = "A tricky cheval!",
 		KOALEFANT_SUMMER = "Ah, you have fattened up nicely!",
 		KOALEFANT_WINTER = "You can't get attached to cute cuts of meat.",
+		KOALEFANT_CARCASS = "Sadly it is past its expiry date.",
 		KRAMPUS = "What the devil!",
 		KRAMPUS_SACK = "Infinite pocket space!",
 		LEIF = "I'm out of my element!",

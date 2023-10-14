@@ -1835,6 +1835,9 @@ return{
         CHESSPIECE_EYEOFTERROR = "No like the way it look at Wolfgang.",
         CHESSPIECE_TWINSOFTERROR = "Brrr, still sends chill down Wolfgang's spine.",
         CHESSPIECE_DAYWALKER = "Wolfgang has bigger muscles, see?",
+        CHESSPIECE_DEERCLOPS_MUTATED = "Wolfgang not scared of statue, but be careful with pointy part.",
+        CHESSPIECE_WARG_MUTATED = "Cute doggy, but dead is better.",
+        CHESSPIECE_BEARGER_MUTATED = "Wolfgang stronger than bear. Just have off day.",
 
         CHESSJUNK1 = "Metal junk.",
         CHESSJUNK2 = "Metal junk.",
@@ -2211,6 +2214,7 @@ return{
 		KNIGHT = "Horsey horse!",
 		KOALEFANT_SUMMER = "Nose meat!",
 		KOALEFANT_WINTER = "So soft, I want to squish it!",
+		KOALEFANT_CARCASS = "No nose meat for Wolfgang. So sad.",
 		KRAMPUS = "Scary goat man! Run!",
 		KRAMPUS_SACK = "Goat man finally give up his sack!",
 		LEIF = "Wood man!",

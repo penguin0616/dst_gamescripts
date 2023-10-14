@@ -143,11 +143,17 @@ local ScrapbookScreen = Class(Screen, function( self, prev_screen, default_secti
         self.sync_status:SetPosition(-w/2 - 2, -h/2 - 2) -- 2 Pixel padding, top right screen justification.
     end
 
+	if DEBUG_MODE then
+        self.debugentry = self.root:AddChild(Text(HEADERFONT, 24, "", UICOLOURS.WHITE))
+        self.debugentry:SetVAnchor(ANCHOR_BOTTOM)
+        self.debugentry:SetHAnchor(ANCHOR_RIGHT)
+	end
+
     self:SetPlayerKnowledge()
 	self:LinkDeps()
 
 	self.closing = false
-	self.columns_setting = 3
+	self.columns_setting = Profile:GetScrapbookColumnsSetting()
 	self.current_dataset = self:CollectType(dataset,"creature")
 	self.current_view_data = self:CollectType(dataset,"creature")
 
@@ -620,6 +626,8 @@ function ScrapbookScreen:MakeBottomBar()
 	end
 end
 
+
+
 function ScrapbookScreen:MakeTopBar()
 	self.search_text = ""
 
@@ -636,6 +644,8 @@ function ScrapbookScreen:MakeTopBar()
 		if self.columns_setting ~= 1 then
 			self.columns_setting = 1
 			self:SetGrid()
+
+			Profile:SetScrapbookColumnsSetting(self.columns_setting)
 		end
 	end)
 
@@ -649,8 +659,10 @@ function ScrapbookScreen:MakeTopBar()
 		if self.columns_setting ~= 2 then
 			self.columns_setting = 2
 			self:SetGrid()
+
+			Profile:SetScrapbookColumnsSetting(self.columns_setting)
 		end
-		end)
+	end)
 
 	self.display_col_3_button = self.root:AddChild(ImageButton("images/scrapbook.xml", "sort3.tex"))
 	self.display_col_3_button:SetPosition(220+(SEARCH_BOX_WIDTH/2)+28+28+28, PANEL_HEIGHT/2 +33)
@@ -662,8 +674,10 @@ function ScrapbookScreen:MakeTopBar()
 		if self.columns_setting ~= 3 then
 			self.columns_setting = 3
 			self:SetGrid()
+
+			Profile:SetScrapbookColumnsSetting(self.columns_setting)
 		end
-		end)
+	end)
 
 	self.display_col_grid_button = self.root:AddChild(ImageButton("images/scrapbook.xml", "sort4.tex"))
 	self.display_col_grid_button:SetPosition(220+(SEARCH_BOX_WIDTH/2)+28+28+28+28, PANEL_HEIGHT/2 +33)
@@ -675,8 +689,10 @@ function ScrapbookScreen:MakeTopBar()
 		if self.columns_setting ~= 7 then
 			self.columns_setting = 7
 			self:SetGrid()
+
+			Profile:SetScrapbookColumnsSetting(self.columns_setting)
 		end
-		end)
+	end)
 
 	self.topbuttons = {}
 	table.insert(self.topbuttons, self.searchbox)
@@ -1200,10 +1216,6 @@ function ScrapbookScreen:PopulateInfoPanel(entry)
 
 	local name = data ~= nil and STRINGS.NAMES[string.upper(data.name)] or ""
 
-	if data and DEBUG_MODE then
-		name = string.format("%s   |   %s", name, data.prefab or "???")
-	end
-
 	height, title = settextblock(height, {font=HEADERFONT, size=25, str=name, color=UICOLOURS.WHITE, leftoffset=leftoffset})
 
 	------------------------------------
@@ -1458,7 +1470,8 @@ function ScrapbookScreen:PopulateInfoPanel(entry)
 
 			data.fueledrate = data.fueledrate == 0 and 1 or data.fueledrate
 
-			local time_str = GetPeriodString(data.fueledmax/data.fueledrate)
+			local time = data.fueledmax/data.fueledrate
+			local time_str = data.fueleduses and (math.floor(time)..STRINGS.SCRAPBOOK.DATA_USES) or GetPeriodString(time)
 
 			if not table.contains(FUELTYPE_SUBICONS, data.fueledtype1) then
 				makeentry(icon, time_str)
@@ -2096,6 +2109,15 @@ function ScrapbookScreen:PopulateInfoPanel(entry)
 		self.scroll_area.focus_forward = self.depsbuttons[1]
 	end
 
+	if self.debugentry ~= nil and data ~= nil then
+		local msg = string.format("DEBUG - Entry:\n%s", tostring(page.entry or "???"))
+
+		self.debugentry:SetString(msg)
+
+        local w, h = self.debugentry:GetRegionSize()
+        self.debugentry:SetPosition(-w/2 - 10, h/2 + 10) -- 10 Pixel padding, bottom right screen justification.
+	end
+
     return page
 end
 
@@ -2143,7 +2165,7 @@ function ScrapbookScreen:OnControl(control, down)
 			return true
 		end
 
-	    if control == CONTROL_PAUSE then
+	    if control == CONTROL_PAUSE and TheInput:ControllerAttached() then
 			if self.columns_setting == 1 then
 				self.columns_setting = 2
 			elseif self.columns_setting == 2 then
@@ -2157,6 +2179,8 @@ function ScrapbookScreen:OnControl(control, down)
 			TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
 
 			self:SetGrid()
+
+			Profile:SetScrapbookColumnsSetting(self.columns_setting)
 
 			return true
 		end

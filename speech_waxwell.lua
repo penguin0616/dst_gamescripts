@@ -1834,6 +1834,9 @@ return{
         CHESSPIECE_EYEOFTERROR = "An eye could never best a master of illusion such as I.",
         CHESSPIECE_TWINSOFTERROR = "The most troublesome pair I've ever seen.",
         CHESSPIECE_DAYWALKER = "Seems like anyone can get a statue these days.",
+        CHESSPIECE_DEERCLOPS_MUTATED = "I take great offense to anyone trying to improve on my designs.",
+        CHESSPIECE_WARG_MUTATED = "It was a bad dog.",
+        CHESSPIECE_BEARGER_MUTATED = "It'll scare away anyone with good taste.",
 
         CHESSJUNK1 = "There's a reason I never finished that.",
         CHESSJUNK2 = "That one was a jerk.",
@@ -2210,6 +2213,7 @@ return{
 		KNIGHT = "Such quality workmanship!",
 		KOALEFANT_SUMMER = "A distant cousin of the beefalo.",
 		KOALEFANT_WINTER = "It has its winter coat on.",
+		KOALEFANT_CARCASS = "What else can I say about this dirty carcass?",
 		KRAMPUS = "You won't catch me!",
 		KRAMPUS_SACK = "It's really light.",
 		LEIF = "Disgusting creature!",

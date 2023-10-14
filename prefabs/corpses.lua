@@ -240,7 +240,6 @@ local function MakeCreatureCorpse_Prop(data)
 
         inst.entity:AddTransform()
         inst.entity:AddAnimState()
-        inst.entity:AddSoundEmitter()
         inst.entity:AddDynamicShadow()
         inst.entity:AddNetwork()
 
@@ -271,6 +270,10 @@ local function MakeCreatureCorpse_Prop(data)
         end
 
         inst:AddComponent("inspectable")
+
+		if data.onrevealfn ~= nil then
+			inst:ListenForEvent("propreveal", data.onrevealfn)
+		end
 
         inst.SetAltBuild = SetAltBuild
         inst.OnSave = OnSave
@@ -327,5 +330,11 @@ return
             nameoverride = "koalefant_summer",
             faces = FACES.SIX,
             shadowsize = {4.5, 2},
+			onrevealfn = function(inst, revealer)
+				inst.persists = false
+				inst:AddTag("NOCLICK")
+				inst:ListenForEvent("animover", inst.Remove)
+				inst.AnimState:PlayAnimation("carcass_fake")
+			end,
         })
 

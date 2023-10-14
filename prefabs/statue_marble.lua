@@ -154,6 +154,8 @@ function specificfn(id)
     return function()
         local inst = fn()
 
+        inst.scrapbook_proxy = id == 1 and "statue_marble_muse" or "statue_marble_pawn"
+
         if not TheWorld.ismastersim then
             return inst
         end

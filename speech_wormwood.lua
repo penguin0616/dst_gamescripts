@@ -1838,6 +1838,9 @@ return{
         CHESSPIECE_EYEOFTERROR = "Not watching?",
         CHESSPIECE_TWINSOFTERROR = "Can't see now",
         CHESSPIECE_DAYWALKER = "Hello? Can't talk?",
+        CHESSPIECE_DEERCLOPS_MUTATED = "Eye ouchie still ouchie?",
+        CHESSPIECE_WARG_MUTATED = "Woofer, stay",
+        CHESSPIECE_BEARGER_MUTATED = "Fuzzy hungry?",
 
         CHESSJUNK1 = "Machine stuff",
         CHESSJUNK2 = "Lots of machine stuff",
@@ -2214,6 +2217,7 @@ return{
 		KNIGHT = "Neigh machine",
 		KOALEFANT_SUMMER = "Bruamp! Bruamp!",
 		KOALEFANT_WINTER = "Bruamp! Bruamp!",
+		KOALEFANT_CARCASS = "Braump...? Not anymore",
 		KRAMPUS = "Mean Branch Head",
 		KRAMPUS_SACK = "Full of stuff?",
 		LEIF = "Hello!... Hello?",

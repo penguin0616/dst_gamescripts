@@ -201,6 +201,8 @@ end
 local function fnplayer()
     local inst = common_fn(player_custominit)
 
+    inst.scrapbook_proxy = "skeleton"
+
     if not TheWorld.ismastersim then
         return inst
     end

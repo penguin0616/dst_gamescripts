@@ -147,6 +147,9 @@ local function fn()
         return inst
     end
 
+    inst.scrapbook_fueled_rate = TUNING.TINY_FUEL
+    inst.scrapbook_fueled_uses = true
+
     inst:AddComponent("inventoryitem")
     inst:AddComponent("lootdropper")
 	

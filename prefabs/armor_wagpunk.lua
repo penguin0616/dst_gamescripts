@@ -64,7 +64,9 @@ local function ResetBuff(inst)
             inst:SpawnSteamFX(owner, "wagpunksteam_armor_down")
         end
 
-        owner.SoundEmitter:KillSound(AMB_SOUNDNAME)
+        if owner.SoundEmitter ~= nil then
+            owner.SoundEmitter:KillSound(AMB_SOUNDNAME)
+        end
     end
 
     inst.components.equippable.walkspeedmult = 1
@@ -80,7 +82,7 @@ local function SetNewTarget(inst, target, owner)
             inst.fx.level:set(1)
         end
 
-        if owner ~= nil then
+        if owner ~= nil and owner.SoundEmitter ~= nil then
             owner.SoundEmitter:KillSound(AMB_SOUNDNAME)
         end
 
@@ -110,12 +112,12 @@ local function SetNewTarget(inst, target, owner)
 end
 
 local function PlayAmbientSound(inst, owner, level)
-    if not owner.SoundEmitter:PlayingSound(AMB_SOUNDNAME) then
-        owner.SoundEmitter:PlaySound("rifts3/wagpunk_armor/wagpunk_armor_hat_lp", AMB_SOUNDNAME)
-    end
+    if not owner.SoundEmitter then return end
 
-    -- TODO(DiogoW): Missing armor sound levels...
-    --owner.SoundEmitter:SetParameter(AMB_SOUNDNAME, "param00", level)
+    if not owner.SoundEmitter:PlayingSound(AMB_SOUNDNAME) then
+        owner.SoundEmitter:PlaySound("rifts3/wagpunk_armor/wagpunk_armor_body_lp", AMB_SOUNDNAME)
+    end
+    owner.SoundEmitter:SetParameter(AMB_SOUNDNAME, "param00", level)
 end
 
 local function OnAttack(owner, data)
@@ -190,7 +192,9 @@ local function ShouldKeepTarget(inst, target)
 end
 
 local function OnBlocked(owner)
-    owner.SoundEmitter:PlaySound("dontstarve/wilson/hit_armour")
+    if owner ~= nil and owner.SoundEmitter ~= nil then
+        owner.SoundEmitter:PlaySound("dontstarve/wilson/hit_armour")
+    end
 end
 
 local function OnEquip(inst, owner)
@@ -236,7 +240,7 @@ local function OnUnequip(inst, owner)
 
     inst.components.targettracker:StopTracking()
 
-    if owner ~= nil then
+    if owner ~= nil and owner.SoundEmitter ~= nil then
         owner.SoundEmitter:KillSound(AMB_SOUNDNAME)
     end
 

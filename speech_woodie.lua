@@ -1835,6 +1835,9 @@ return{
         CHESSPIECE_EYEOFTERROR = "That's the worst case of cataract I've ever seen.",
         CHESSPIECE_TWINSOFTERROR = "They make a good lookin' statue, eh?",
         CHESSPIECE_DAYWALKER = "Not lookin' so tough now, eh?",
+        CHESSPIECE_DEERCLOPS_MUTATED = "She'd look great up on the mantle.",
+        CHESSPIECE_WARG_MUTATED = "There's a good dog.",
+        CHESSPIECE_BEARGER_MUTATED = "We sure showed big boy, eh Luce?",
 
         CHESSJUNK1 = "Dead metal.",
         CHESSJUNK2 = "Dead metal.",
@@ -2211,6 +2214,7 @@ return{
 		KNIGHT = "Never did care for horses.",
 		KOALEFANT_SUMMER = "He looks tasty.",
 		KOALEFANT_WINTER = "They get tastier in the winter.",
+		KOALEFANT_CARCASS = "Looks like somethin' else got to it first.",
 		KRAMPUS = "Back off, hoser!",
 		KRAMPUS_SACK = "Seems wrong to take someone else's sack.",
 		LEIF = "I'm sorry aboot all of those trees!",

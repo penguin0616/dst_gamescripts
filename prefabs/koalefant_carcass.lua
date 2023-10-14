@@ -65,7 +65,7 @@ end
 
 local function OnSave(inst, data)
 	data.meat = inst.meat < TUNING.KOALEFANT_CARCASS_MEAT_PER_LEVEL * NUM_LEVELS and inst.meat or nil
-	data.winter = inst._winter:value() or nil
+	data.winter = inst.winter or nil
 end
 
 local function OnLoad(inst, data)
@@ -79,13 +79,8 @@ local function OnLoad(inst, data)
 	end
 end
 
-local function OnWinterDirty(inst)
-	inst:SetPrefabNameOverride(inst._winter:value() and "koalefant_winter" or "koalefant_summer")
-end
-
 local function MakeWinter(inst)
-	inst._winter:set(true)
-	OnWinterDirty(inst)
+	inst.winter = true
 	inst.AnimState:SetBuild("koalefant_winter_build")
 end
 
@@ -110,15 +105,9 @@ local function fn()
 
 	inst:AddTag("meat_carcass")
 
-	inst._winter = net_bool(inst.GUID, "koalefant_carcass._winter", "winterdirty")
-
-	inst:SetPrefabNameOverride("koalefant_summer")
-
 	inst.entity:SetPristine()
 
 	if not TheWorld.ismastersim then
-		inst:ListenForEvent("winterdirty", OnWinterDirty)
-
 		return inst
 	end
 
