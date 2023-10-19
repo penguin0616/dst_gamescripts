@@ -1679,6 +1679,35 @@ function mast_clear_fn(inst, build_name)
     inst.AnimState:SetBuild("boat_mast2_wip")
 end
 
+--------------------------------------------------------------------------
+--[[ record skin functions ]]
+--------------------------------------------------------------------------
+record_init_fn = function(inst, build_name, trackname)
+    basic_init_fn(inst, build_name, "records")
+
+    inst.nameoverride = build_name
+
+    if not TheWorld.ismastersim then
+        return
+    end
+
+    if trackname then
+        inst.songToPlay_skin = trackname
+    end
+
+    inst.linked_skinname = build_name
+    AddSkinSounds(inst)
+end
+record_clear_fn = function(inst)
+    basic_clear_fn(inst, "records")
+
+    inst.nameoverride = nil
+
+    inst.songToPlay_skin = nil
+
+    inst.linked_skinname = nil
+    RemoveSkinSounds(inst)
+end
 
 --------------------------------------------------------------------------
 --[[ Mast Malbatross skin functions ]] 

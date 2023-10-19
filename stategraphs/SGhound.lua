@@ -48,6 +48,14 @@ local events =
         end
     end),
 
+	EventHandler("chomp", function(inst, data)
+		if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead()) and
+			data ~= nil and data.target ~= nil
+		then
+			inst.sg:GoToState("chomp", data.target)
+		end
+	end),
+
     --Moon hounds
     EventHandler("workmoonbase", function(inst, data)
         if data ~= nil and data.moonbase ~= nil and not (inst.components.health:IsDead() or inst.sg:HasStateTag("busy")) then
@@ -201,6 +209,49 @@ local states =
         },
     },
 
+	State{
+		name = "chomp",
+		tags = { "busy" },
+
+		onenter = function(inst, target)
+			inst.components.locomotor:Stop()
+			inst.AnimState:PlayAnimation("atk_pre")
+			inst.AnimState:PushAnimation("atk", false)
+			if target ~= nil and target:IsValid() then
+				inst.components.combat:StartAttack()
+				inst:ForceFacePoint(target.Transform:GetWorldPosition())
+				inst.sg.statemem.target = target
+			end
+		end,
+
+		timeline =
+		{
+			FrameEvent(14, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.bite) end),
+			FrameEvent(16, function(inst)
+				local target = inst.sg.statemem.target
+				if target ~= nil and target:IsValid() and
+					inst:IsNear(target, inst.components.combat:GetHitRange() + target:GetPhysicsRadius(0))
+				then
+					target:PushEvent("chomped", inst)
+				end
+			end),
+		},
+
+		events =
+		{
+			EventHandler("animqueueover", function(inst)
+				if inst.AnimState:AnimDone() then
+					if math.random() < 0.333 then
+						inst.components.combat:SetTarget(nil)
+						inst.sg:GoToState("taunt")
+					else
+						inst.sg:GoToState("idle", "atk_pst")
+					end
+				end
+			end),
+		},
+	},
+
     State{
         name = "hit",
         tags = { "busy", "hit" },
@@ -352,7 +403,11 @@ local states =
         {
             EventHandler("animover", function(inst)
 				if inst._CanMutateFromCorpse ~= nil and inst:_CanMutateFromCorpse() then
-					SpawnPrefab("houndcorpse").Transform:SetPosition(inst.Transform:GetWorldPosition())
+					local corpse = SpawnPrefab("houndcorpse")
+					corpse.Transform:SetPosition(inst.Transform:GetWorldPosition())
+					if inst.wargleader ~= nil and not inst.wargleader.components.health:IsDead() and inst.wargleader:IsValid() then
+						corpse:RememberWargLeader(inst.wargleader)
+					end
 					inst:Remove()
 				end
             end),

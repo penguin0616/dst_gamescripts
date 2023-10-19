@@ -6,13 +6,23 @@ local assets =
     Asset("ANIM", "anim/splash.zip"),
 }
 
-local prefabs =
+local prefabs_normal =
 {
     "marsh_plant",
-	"pondfish",
-	"pondeel",
+    "pondfish",
     "frog",
+}
+
+local prefabs_mos =
+{
+    "marsh_plant",
+    "pondfish",
     "mosquito",
+}
+
+local prefabs_cave =
+{
+    "pondeel",
     "nitre",
     "nitre_formation",
 }
@@ -289,6 +299,8 @@ end
 local function pondmos()
     local inst = commonfn("_mos")
 
+    inst.scrapbook_anim = "idle_mos"
+
     if not TheWorld.ismastersim then
         return inst
     end
@@ -453,6 +465,8 @@ local function pondcave()
     local inst = commonfn("_cave")
 
 	inst.displaynamefn = PondCaveDisplayNameFn
+    inst.scrapbook_anim = "idle_cave"
+    inst.scrapbook_specialinfo = "PONDCAVE"
 
     if not TheWorld.ismastersim then
         return inst
@@ -485,6 +499,7 @@ local function pondcave()
     return inst
 end
 
-return Prefab("pond", pondfrog, assets, prefabs),
-    Prefab("pond_mos", pondmos, assets, prefabs),
-    Prefab("pond_cave", pondcave, assets, prefabs)
+return
+        Prefab( "pond",      pondfrog, assets, prefabs_normal ),
+        Prefab( "pond_mos",  pondmos,  assets, prefabs_mos    ),
+        Prefab( "pond_cave", pondcave, assets, prefabs_cave   )
