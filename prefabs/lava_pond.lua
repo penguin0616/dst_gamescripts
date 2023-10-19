@@ -152,15 +152,7 @@ local function fn()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
-	local phys = inst.entity:AddPhysics()
-	phys:SetMass(0) --Bullet wants 0 mass for static objects
-	phys:SetCollisionGroup(COLLISION.LAND_OCEAN_LIMITS)
-	phys:ClearCollisionMask()
-	phys:CollidesWith(COLLISION.ITEMS)
-	phys:CollidesWith(COLLISION.CHARACTERS)
-	phys:CollidesWith(COLLISION.GIANTS)
-	phys:SetCapsule(1.95, 2)
-	inst:AddTag("blocker")
+	MakePondPhysics(inst, 1.95)
 
     inst.AnimState:SetBuild("lava_tile")
     inst.AnimState:SetBank("lava_tile")

@@ -28,6 +28,9 @@ local HOUSE_RETURN_DIST = 50
 local SIT_BOY_DIST = 10
 
 local function EatFoodAction(inst)
+	if inst.sg:HasStateTag("busy") and not inst.sg:HasStateTag("wantstoeat") then
+		return
+	end
     local target = FindEntity(inst, SEE_DIST, function(item) return inst.components.eater:CanEat(item) and item:IsOnPassablePoint(true) end)
     return target ~= nil and BufferedAction(inst, target, ACTIONS.EAT) or nil
 end
@@ -182,7 +185,7 @@ function HoundBrain:OnStart()
 					BrainCommon.PanicTrigger(self.inst),
                     WhileNode(function() return GetLeader(self.inst) == nil end, "NoLeader", AttackWall(self.inst)),
 
-					--Eat carcass behaviour
+					--Eat carcass behaviour (for non-mutated hounds)
 					WhileNode(
 						function()
 							return not ismutated and (
@@ -213,7 +216,8 @@ function HoundBrain:OnStart()
 
                     Leash(self.inst, GetNoLeaderLeashPos, HOUSE_MAX_DIST, HOUSE_RETURN_DIST),
 
-                    DoAction(self.inst, EatFoodAction, "eat food", true),
+					IfNode(function() return not ismutated end, "non-mutated hound eat food",
+						DoAction(self.inst, EatFoodAction, "eat food", true)),
                     Follow(self.inst, GetLeader, MIN_FOLLOW_LEADER, TARGET_FOLLOW_LEADER, MAX_FOLLOW_LEADER),
                     FaceEntity(self.inst, GetLeader, GetLeader),
 

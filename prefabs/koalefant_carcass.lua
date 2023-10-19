@@ -31,12 +31,12 @@ end
 
 local function SetMeatPct(inst, pct)
 	local maxmeat = TUNING.KOALEFANT_CARCASS_MEAT_PER_LEVEL * NUM_LEVELS
-	local meat = math.floor(Remap(pct, 0, 1, TUNING.KOALEFANT_CARCASS_MEAT_PER_LEVEL, maxmeat) + 0.5)
-	SetMeat(inst, math.clamp(meat, 0, maxmeat))
+	SetMeat(inst, math.clamp(pct * maxmeat, 0, maxmeat))
 end
 
-local function OnChomped(inst, eater)
-	SetMeat(inst, math.max(0, inst.meat - (eater ~= nil and eater:HasTag("warg") and 2 or 1)))
+local function OnChomped(inst, data)
+	local amount = data ~= nil and data.amount or 1
+	SetMeat(inst, math.max(0, inst.meat - amount))
 
 	local anim = "carcass"..tostring(inst.level)
 	local anim_shake = anim.."_shake"
@@ -64,7 +64,7 @@ local function OnTimerDone(inst, data)
 end
 
 local function OnSave(inst, data)
-	data.meat = inst.meat < TUNING.KOALEFANT_CARCASS_MEAT_PER_LEVEL * NUM_LEVELS and inst.meat or nil
+	data.meat = inst.meat < TUNING.KOALEFANT_CARCASS_MEAT_PER_LEVEL * NUM_LEVELS and math.floor(inst.meat * 10 + 0.5) * 0.1 or nil
 	data.winter = inst.winter or nil
 end
 

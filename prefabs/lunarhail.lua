@@ -47,8 +47,7 @@ end
 
 --------------------------------------------------------------------------
 
-local MAX_LIFETIME = 3
-local MIN_LIFETIME = 2
+local MAX_LIFETIME = 0.7
 
 --------------------------------------------------------------------------
 
@@ -129,7 +128,7 @@ local function fn()
         local vy = -1 + UnitRand() * -2
         local vz = 0
         local vx = dx
-        local lifetime = MIN_LIFETIME + (MAX_LIFETIME - MIN_LIFETIME) * UnitRand()
+        local lifetime = MAX_LIFETIME * (.9 + UnitRand() * .1)
         local px, py, pz = emitter_shape()
         local px1 = x + px
         local pz1 = z + pz

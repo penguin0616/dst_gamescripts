@@ -2017,6 +2017,7 @@ local SCRAPBOOK_NAME_LOOKUP =
     mooseegg = "mooseegg1",
     moose = "moose1",
     ruins_chair = "relic",
+    archive_switch_base = "archive_switch",
     chessjunk1 = "chessjunk1",
     chessjunk2 = "chessjunk1",
     chessjunk3 = "chessjunk1",
@@ -2027,19 +2028,7 @@ local SCRAPBOOK_NAME_LOOKUP =
 }
 
 local function Scrapbook_DefineName(t)
-    if t.scrapbook_prefab then
-        return t.scrapbook_prefab
-    end
-
-    if SCRAPBOOK_NAME_LOOKUP[t.prefab] then
-        return SCRAPBOOK_NAME_LOOKUP[t.prefab]
-    end
-
-    local name = t.nameoverride or t.prefab
-
-    if t:HasTag("farm_plant") then
-        name = t.prefab
-    end
+    local name = t.scrapbook_prefab or SCRAPBOOK_NAME_LOOKUP[t.prefab] or (t:HasTag("farm_plant") and t.prefab) or t.nameoverride or t.prefab
 
     if not STRINGS.NAMES[string.upper(name)] then
         print(string.format("[!!!!]  Name [ %s ] isn't defined in STRINGS.NAMES!", name))
@@ -2425,7 +2414,8 @@ function d_createscrapbookdata(print_missing_icons)
 
         if t.scrapbook_inspectonseen == nil and
             t.components.inspectable == nil and
-            t.components.health == nil
+            t.components.health == nil and
+            t.prefab ~= "archive_switch_base"
         then
             print(string.format("[!!!!] [ %s ] cannot be inspected! Please add \"inst.scrapbook_inspectonseen = true\" to the prefab (common).", entry))
         end

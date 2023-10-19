@@ -57,7 +57,7 @@ local function ChooseAttack(inst, target)
 	end
 
 	if target == nil then
-		return
+		return false
 	end
 
     -- Clear out the inventory if he got interrupted
@@ -65,18 +65,27 @@ local function ChooseAttack(inst, target)
 
 	if target:HasTag("beehive") then
 		inst.sg:GoToState("attack", target)
-        return
+		return true
     end
 
     if inst.sg:HasStateTag("running") then
-        inst.sg:GoToState("pound")
+		if inst.canrunningbutt then
+			inst.Transform:SetRotation(inst.Transform:GetRotation() + 180)
+			inst.sg:GoToState("running_butt_pre", target)
+			return true
+		else
+			inst.sg:GoToState("pound")
+			return true
+		end
 	elseif inst.components.sleeper ~= nil and inst:HasTag("hibernation") and not (inst.components.timer:TimerExists("Yawn") or inst.sg:HasStateTag("yawn")) then
         inst.sg:GoToState("yawn")
+		return true
 	elseif not inst.components.timer:TimerExists("GroundPound") then
         inst.sg:GoToState("pound")
-    else
-		inst.sg:GoToState("attack", target)
+		return true
     end
+	inst.sg:GoToState("attack", target)
+	return true
 end
 
 --------------------------------------------------------------------------
@@ -311,7 +320,9 @@ local function ShouldButtTarget(inst, target)
 end
 
 local function TryButt(inst)
-	if ShouldButtTarget(inst, inst.sg.statemem.target) then
+	if inst:IsButtRecovering() then
+		return false
+	elseif ShouldButtTarget(inst, inst.sg.statemem.target) then
 		inst.sg:GoToState("butt_pre", inst.sg.statemem.target)
 		return true
 	end
@@ -1230,6 +1241,77 @@ local states =
 	},
 
 	State{
+		name = "running_butt_pre",
+		tags = { "attack", "busy" },
+
+		onenter = function(inst, target)
+			inst:SetStandState("bi")
+			inst.components.locomotor:Stop()
+			local left
+			if target ~= nil and target:IsValid() then
+				local x1, y1, z1 = target.Transform:GetWorldPosition()
+				local rot = inst.Transform:GetRotation()
+				local rot1 = inst:GetAngleToPoint(x1, y1, z1) + 180
+				local drot = ReduceAngle(rot1 - rot)
+				if drot ~= 0 and math.abs(drot) < TRACKING_ARC then
+					left = drot > 0
+					inst.sg.statemem.left = left
+					inst.sg.statemem.target = target
+					inst.sg.statemem.targetpos = target:GetPosition()
+				end
+			end
+			if left == nil then
+				left = math.random() < 0.5
+			end
+			inst.AnimState:PlayAnimation(left and "butt_pre_L" or "butt_pre_R")
+			inst.AnimState:SetFrame(22)
+		end,
+
+		timeline =
+		{
+			FrameEvent(1, function(inst)
+				local p = inst.sg.statemem.targetpos
+				if p ~= nil then
+					local rot2
+					local target = inst.sg.statemem.target
+					if target ~= nil and target:IsValid() then
+						local x1, y1, z1 = target.Transform:GetWorldPosition()
+						local rot = inst.Transform:GetRotation()
+						local rot1 = inst:GetAngleToPoint(x1, y1, z1) + 180
+						local drot = ReduceAngle(rot1 - rot)
+						local left = drot > 0
+						if drot ~= 0 and math.abs(drot) < (left == inst.sg.statemem.left and TRACKING_ARC or TRACKING_ARC / 3) then
+							rot2 = rot + drot / 2
+							p.x, p.y, p.z = x1, y1, z1
+						end
+					end
+					if rot2 == nil then
+						rot2 = inst:GetAngleToPoint(p) + 180
+					end
+					inst.Transform:SetRotation(rot2)
+				end
+			end),
+			FrameEvent(3, function(inst)
+				inst:SetStandState("quad")
+			end),
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					local data = inst.sg.statemem.targetpos ~= nil and {
+						targetpos = inst.sg.statemem.targetpos,
+						target = inst.sg.statemem.target,
+						running = true,
+					} or nil
+					inst.sg:GoToState("butt", data)
+				end
+			end),
+		},
+	},
+
+	State{
 		name = "butt",
 		tags = { "attack", "busy", "jumping", "nointerrupt" },
 
@@ -1240,26 +1322,30 @@ local states =
 			inst.AnimState:PlayAnimation("butt")
 			local dist
 			if data ~= nil then
-				local x, y, z = inst.Transform:GetWorldPosition()
-				if data.target ~= nil and data.target:IsValid() then
-					local x1, y1, z1 = data.target.Transform:GetWorldPosition()
-					local dx = x1 - x
-					local dz = z1 - z
-					if dx ~= 0 or dz ~= 0 then
-						local rot = inst.Transform:GetRotation() * DEGREES
-						local rot1 = math.atan2(-dz, dx) + PI
-						local diff = DiffAngleRad(rot, rot1)
-						if diff < PI / 4 then
-							dist = math.sqrt(dx * dx + dz * dz)
-							dist = dist * math.cos(diff)
+				if data.running then
+					dist = 6
+				else
+					local x, y, z = inst.Transform:GetWorldPosition()
+					if data.target ~= nil and data.target:IsValid() then
+						local x1, y1, z1 = data.target.Transform:GetWorldPosition()
+						local dx = x1 - x
+						local dz = z1 - z
+						if dx ~= 0 or dz ~= 0 then
+							local rot = inst.Transform:GetRotation() * DEGREES
+							local rot1 = math.atan2(-dz, dx) + PI
+							local diff = DiffAngleRad(rot, rot1)
+							if diff < PI / 4 then
+								dist = math.sqrt(dx * dx + dz * dz)
+								dist = dist * math.cos(diff)
+							end
 						end
 					end
-				end
-				if dist == nil and data.targetpos ~= nil then
-					local dx = data.targetpos.x - x
-					local dz = data.targetpos.z - z
-					if dx ~= 0 or dz ~= 0 then
-						dist = math.sqrt(dx * dx + dz * dz)
+					if dist == nil and data.targetpos ~= nil then
+						local dx = data.targetpos.x - x
+						local dz = data.targetpos.z - z
+						if dx ~= 0 or dz ~= 0 then
+							dist = math.sqrt(dx * dx + dz * dz)
+						end
 					end
 				end
 				inst.sg.statemem.original_target = data.target --remember for onmissother event
@@ -2256,6 +2342,7 @@ local states =
 			FrameEvent(67, function(inst)
 				inst.sg:RemoveStateTag("busy")
 				inst.sg:AddStateTag("canrotate")
+				inst:StartButtRecovery()
 			end),
 		},
 
@@ -2267,6 +2354,10 @@ local states =
 				end
 			end),
 		},
+
+		onexit = function(inst)
+			inst:StartButtRecovery()
+		end,
 	},
 
 	--------------------------------------------------------------------------

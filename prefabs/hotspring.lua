@@ -239,7 +239,7 @@ local function hotspring()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
-    MakeSmallObstaclePhysics(inst, 1)
+	MakePondPhysics(inst, 1)
 
     inst.AnimState:SetBuild("crater_pool")
     inst.AnimState:SetBank("crater_pool")

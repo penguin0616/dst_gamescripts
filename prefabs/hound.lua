@@ -2,17 +2,19 @@ local assets =
 {
     Asset("ANIM", "anim/hound_basic.zip"),
     Asset("ANIM", "anim/hound_basic_water.zip"),
-    Asset("ANIM", "anim/hound.zip"),
     Asset("ANIM", "anim/hound_ocean.zip"),
-    Asset("PKGREF", "anim/hound_red.zip"),
     Asset("ANIM", "anim/hound_red_ocean.zip"),
-    Asset("PKGREF", "anim/hound_ice.zip"),
     Asset("ANIM", "anim/hound_ice_ocean.zip"),
     Asset("ANIM", "anim/hound_mutated.zip"),
     Asset("ANIM", "anim/hound_hedge_ocean.zip"),
     Asset("ANIM", "anim/hound_hedge_action.zip"),
     Asset("ANIM", "anim/hound_hedge_action_water.zip"),
     Asset("SOUND", "sound/hound.fsb"),
+
+	--DEPRECATED builds!!!
+	Asset("PKGREF", "anim/hound.zip"), --NOTE: unfortunately houndcorpse still uses this
+	Asset("PKGREF", "anim/hound_red.zip"),
+	Asset("PKGREF", "anim/hound_ice.zip"),
 }
 
 local assets_clay =
@@ -689,9 +691,9 @@ local function OnMoonTransformed(inst, data)
 end
 
 local function fnmoon()
-    local inst = fncommon("hound", "hound", nil, moonbrain, "moonbeast", false)
+	local inst = fncommon("hound", "hound_ocean", nil, moonbrain, "moonbeast", false)
 
-    inst:SetPrefabNameOverride("hound")    
+	inst:SetPrefabNameOverride("hound")
 
     if not TheWorld.ismastersim then
         return inst

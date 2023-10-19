@@ -843,8 +843,6 @@ local function switchpadfn()
     inst.AnimState:SetLayer(LAYER_BACKGROUND)
     inst.AnimState:SetSortOrder(2)
 
-    inst.scrapbook_proxy = "archive_switch_base"
-
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
@@ -877,8 +875,6 @@ local function switchbasefn()
         inst.components.pointofinterest:SetHeight(220)
     end
 
-    inst.scrapbook_inspectonseen = true
-
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
@@ -888,8 +884,8 @@ local function switchbasefn()
     inst.scrapbook_anim = "idle_empty"
     inst.scrapbook_bank = "archive_switch"
     inst.scrapbook_build = "archive_switch"
-    inst.scrapbook_prefab = "archive_switch"
     inst.scrapbook_specialinfo = "ARCHIVESWITCH"
+    inst.scrapbook_speechname = "archive_switch"
 
     inst:DoTaskInTime(0,function()
         local x,y,z = inst.Transform:GetWorldPosition()
@@ -982,7 +978,8 @@ local function portalfn()
         return inst
     end
 
-    inst.scrapbook_anim = "working"
+    inst.scrapbook_anim = "scrapbook"
+    inst.scrapbook_overridedata = { "archive_portal_base_01", "archive_portal_base", "archive_portal_base_01" }
 
     inst:AddComponent("inspectable")
     inst.components.inspectable.getstatus = getstatusportal

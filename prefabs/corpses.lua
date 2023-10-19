@@ -177,6 +177,7 @@ local function MakeCreatureCorpse(data)
         inst.AnimState:SetBank(data.bank)
         inst.AnimState:SetBuild(BUILDS[creature].default)
         inst.AnimState:PlayAnimation("corpse")
+		inst.AnimState:SetFinalOffset(1)
 
         inst.creature = creature
         inst.nameoverride = nameoverride
@@ -259,6 +260,10 @@ local function MakeCreatureCorpse_Prop(data)
         inst.AnimState:SetBuild(BUILDS[creature].default)
         inst.AnimState:PlayAnimation("corpse")
 
+		if data.tag ~= nil then
+			inst:AddTag(data.tag)
+		end
+
         inst.creature = creature
         inst.nameoverride = nameoverride
         inst.displaynamefn = DisplayNameFn
@@ -297,6 +302,7 @@ return
             physicsradius = .5,
             shadowsize = {6, 3.5},
             scale = 1.65,
+			tag = "deerclops",
         }),
 
         -- For search: wargcorpse
@@ -321,6 +327,7 @@ return
             faces = FACES.FOUR,
             physicsradius = 1.5,
             shadowsize = {6, 3.5},
+			tag = "bearger_blocker",
         }),
 
         -- For search: koalefantcorpse_prop

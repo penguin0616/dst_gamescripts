@@ -350,7 +350,7 @@ local function CarcassCreationFn_Normal(inst, score)
     ent.Transform:SetPosition(inst.Transform:GetWorldPosition())
 
 	if ent.SetMeatPct ~= nil then
-		ent:SetMeatPct(score)
+		ent:SetMeatPct(Remap(score, 0, 1, 1 / 3, 1))
 	end
 
     return ent
@@ -757,6 +757,7 @@ local function MakeWarg(data)
     local build    = data.build
     local prefabs  = data.prefabs
     local tag      = data.tag
+	local epic     = data.epic
 
     local assets =
     {
@@ -795,6 +796,10 @@ local function MakeWarg(data)
         inst:AddTag("scarytoprey")
         inst:AddTag("houndfriend")
         inst:AddTag("largecreature")
+
+		if epic then
+			inst:AddTag("epic")
+		end
 
         if tag ~= nil then
             inst:AddTag(tag)
@@ -1041,4 +1046,5 @@ return
             build = "warg_mutated_actions",
             prefabs = prefabs_mutated,
             tag = "lunar_aligned",
+			epic = true,
         })

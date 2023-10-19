@@ -263,7 +263,7 @@ function BeargerBrain:OnStart()
 
 				WhileNode(
 					function()
-						if self.inst.components.timer:TimerExists("GroundPound") then
+						if not self.inst.canrunningbutt and self.inst.components.timer:TimerExists("GroundPound") then
 							return false
 						end
 						local target = self.inst.components.combat.target

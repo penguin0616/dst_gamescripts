@@ -95,6 +95,9 @@ end
 
 local STRUCTURE_TAGS = {"structure"}
 local function FindBaseToAttack(inst, target)
+	if inst.ignorebase then
+		return
+	end
     local structure = GetClosestInstWithTag(STRUCTURE_TAGS, target, 40)
     if structure ~= nil then
         inst.components.knownlocations:RememberLocation("targetbase", structure:GetPosition())
@@ -149,15 +152,19 @@ end
 
 local function OnEntitySleep(inst)
     if inst:WantsToLeave() then
-        inst.structuresDestroyed = 0 -- reset this for the stored version
-        TheWorld:PushEvent("storehassler", inst)
+		if not inst.ignorebase then
+			inst.structuresDestroyed = 0 -- reset this for the stored version
+			TheWorld:PushEvent("storehassler", inst)
+		end
         inst:Remove()
     end
 end
 
 local function OnStopWinter(inst)
     if inst:IsAsleep() then
-        TheWorld:PushEvent("storehassler", inst)
+		if not inst.ignorebase then
+			TheWorld:PushEvent("storehassler", inst)
+		end
         inst:Remove()
     end
 end
@@ -585,12 +592,10 @@ local function Mutated_SetFrenzied(inst, frenzied)
 end
 
 local function Mutated_ShouldStayFrenzied(inst)
-	if not inst.frenzied then
-		return false
-	end
-	local t = GetTime()
-	return inst.frenzy_starttime + TUNING.MUTATED_DEERCLOPS_FRENZY_MIN_TIME > t
-		or (	inst.frenzy_starttime + TUNING.MUTATED_DEERCLOPS_FRENZY_MAX_TIME > t and
+	--frenzy ends after losing enough hp
+	--frenzy must last minimum duration (even if hp requirement is met)
+	return inst.frenzied
+		and (	inst.frenzy_starttime + TUNING.MUTATED_DEERCLOPS_FRENZY_MIN_TIME > GetTime() or
 				inst.frenzy_starthp - inst.components.health:GetPercent() < TUNING.MUTATED_DEERCLOPS_FRENZY_HP
 			)
 end
@@ -645,6 +650,7 @@ local function mutatedfn()
 	inst.hasicelance = true
 	inst.hasfrenzy = true
 	inst.freezepower = 3
+	inst.ignorebase = true
 
     inst:AddComponent("timer")
 

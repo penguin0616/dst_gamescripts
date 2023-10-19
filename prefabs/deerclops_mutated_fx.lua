@@ -169,6 +169,12 @@ local function impact_OnPostUpdateExplosion(inst)
 	end
 end
 
+--@V2C #HACK: first time a world sound is played before positioned, it won't be heard.
+local impact_firstplayhack = true
+local function impact_DoSound(inst)
+	inst.SoundEmitter:PlaySound("dontstarve/common/break_iceblock")
+end
+
 local function impact_CreateExplosion()
 	local inst = CreateEntity()
 
@@ -186,7 +192,12 @@ local function impact_CreateExplosion()
 	inst.AnimState:SetBuild("deerclops_mutated")
 	inst.AnimState:PlayAnimation("ice_impact")
 
-	inst.SoundEmitter:PlaySound("dontstarve/common/break_iceblock")
+	if impact_firstplayhack then
+		impact_firstplayhack = nil
+		inst:DoTaskInTime(0, impact_DoSound)
+	else
+		impact_DoSound(inst)
+	end
 
 	if not TheWorld.ismastersim then
 		inst:AddComponent("updatelooper")

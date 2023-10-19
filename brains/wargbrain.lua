@@ -1,3 +1,8 @@
+--------------------------------------------------------------------------
+-- *** WARNING ***
+--  This brain is also used by warglet, which uses SGhound
+--------------------------------------------------------------------------
+
 require "behaviours/standstill"
 require "behaviours/chaseandattack"
 require "behaviours/leash"

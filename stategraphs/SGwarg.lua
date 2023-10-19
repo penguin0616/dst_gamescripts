@@ -194,10 +194,12 @@ local events =
     end),
 
 	EventHandler("chomp", function(inst, data)
-		if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead()) and
-			data ~= nil and data.target ~= nil
-		then
-			inst.sg:GoToState("chomp", data.target)
+		if data ~= nil and data.target ~= nil and not inst.components.health:IsDead() then
+			if inst.sg:HasStateTag("chewing") then
+				inst.sg:GoToState("chomp_pre_from_loop", data.target)
+			elseif not inst.sg:HasStateTag("busy") then
+				inst.sg:GoToState("chomp_pre", data.target)
+			end
 		end
 	end),
 
@@ -640,12 +642,12 @@ local states =
 	},
 
 	State{
-		name = "chomp",
+		name = "chomp_pre",
 		tags = { "busy" },
 
 		onenter = function(inst, target)
 			inst.components.locomotor:StopMoving()
-			inst.AnimState:PlayAnimation("atk")
+			inst.AnimState:PlayAnimation("eat_pre")
 			inst.SoundEmitter:PlaySound(inst.sounds.attack)
 			if target ~= nil and target:IsValid() then
 				inst.components.combat:StartAttack()
@@ -656,21 +658,106 @@ local states =
 
 		timeline =
 		{
-			FrameEvent(11, function(inst)
+			FrameEvent(1, function(inst)
+				inst.sg:GoToState("chomp_pre_timeline_from_frame1", inst.sg.statemem.target)
+			end),
+		},
+	},
+
+	State{
+		name = "chomp_pre_from_loop",
+
+		onenter = function(inst, target)
+			inst.components.locomotor:StopMoving()
+			inst.AnimState:PlayAnimation("eat_pre")
+			inst.SoundEmitter:PlaySound(inst.sounds.attack, nil, 0.75)
+			if target ~= nil and target:IsValid() then
+				inst.components.combat:StartAttack()
+				inst:ForceFacePoint(target.Transform:GetWorldPosition())
+			else
+				target = nil
+			end
+			inst.AnimState:SetFrame(1)
+			inst.sg:GoToState("chomp_pre_timeline_from_frame1", target)
+		end,
+	},
+
+	State{
+		name = "chomp_pre_timeline_from_frame1",
+		tags = { "busy" },
+
+		onenter = function(inst, target)
+			inst.sg.statemem.target = target
+		end,
+
+		timeline =
+		{
+			FrameEvent(12 - 1, function(inst)
 				local target = inst.sg.statemem.target
 				if target ~= nil and target:IsValid() and
 					inst:IsNear(target, inst.components.combat:GetHitRange() + target:GetPhysicsRadius(0))
 				then
-					target:PushEvent("chomped", inst)
+					target:PushEvent("chomped", { eater = inst, amount = 2 })
+				else
+					inst.sg.statemem.target = nil
+				end
+				inst:ClearBufferedAction()
+			end),
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					if inst.sg.mem.dostagger and TryStagger(inst) then
+						return
+					end
+					inst.sg:GoToState(inst.sg.statemem.target ~= nil and "chomp_loop" or "chomp_pst")
 				end
 			end),
-			FrameEvent(20, function(inst)
-				if inst.sg.mem.dostagger and TryStagger(inst) then
+		},
+	},
+
+	State{
+		name = "chomp_loop",
+		tags = { "chewing", "busy", "caninterrupt" },
+
+		onenter = function(inst, numlooped)
+			inst.sg.statemem.numlooped = numlooped or 1
+			inst.components.locomotor:StopMoving()
+			if not inst.AnimState:IsCurrentAnimation("eat_loop") then
+				inst.AnimState:PlayAnimation("eat_loop", true)
+			end
+			inst.SoundEmitter:PlaySound("rifts3/chewing/warg")
+			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
+		end,
+
+		ontimeout = function(inst)
+			if inst.sg.statemem.numlooped > 1 and inst.sg.mem.dohowl then
+				inst.sg:GoToState("chomp_pst")
+			elseif inst.sg.statemem.numlooped < 4 then
+				inst.sg:GoToState("chomp_loop", inst.sg.statemem.numlooped + 1)
+			else
+				inst.sg:GoToState("chomp_pst")
+			end
+		end,
+	},
+
+	State{
+		name = "chomp_pst",
+		tags = { "busy", "caninterrupt" },
+
+		onenter = function(inst)
+			inst.components.locomotor:StopMoving()
+			inst.AnimState:PlayAnimation("eat_pst")
+		end,
+
+		timeline =
+		{
+			FrameEvent(8, function(inst)
+				if inst.sg.mem.dohowl and TryHowl(inst) then
 					return
 				end
-				inst.sg:AddStateTag("caninterrupt")
-			end),
-			FrameEvent(31, function(inst)
 				inst.sg:RemoveStateTag("busy")
 			end),
 		},

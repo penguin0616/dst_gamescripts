@@ -3,6 +3,7 @@ local wagpunkui_distmeter = require "widgets/wagpunkui_distmeter"
 local wagpunkui_overlay = require "widgets/wagpunkui_overlay"
 local Widget = require "widgets/widget"
 
+local SOUNDRATE = 0.2
 
 local WagpunkUI =  Class(Widget, function(self, owner)
     self.owner = owner
@@ -66,6 +67,7 @@ local WagpunkUI =  Class(Widget, function(self, owner)
 
     local function _OnUnequip(owner) self:OnUnequip() end
     self.owner:ListenForEvent("unequip", _OnUnequip, owner)
+
 end)
 
 function WagpunkUI:SetTarget(target)
@@ -193,6 +195,27 @@ function WagpunkUI:OnUpdate(dt)
         local dist = self.owner:GetDistanceSqToInst(self.target)
         local percent = math.clamp(dist / (TUNING.WAGPUNK_MAXRANGE * TUNING.WAGPUNK_MAXRANGE),0,1)
 
+        if self.lastdist then
+            
+            if not self.soundtime or self.soundtime <= 0 then
+                -- PLAY SOUND
+               -- print(dist,self.lastdist,math.abs(self.lastdist-dist))
+                if dist > self.lastdist then
+                   -- print("FARTHER")
+                    TheFocalPoint.SoundEmitter:PlaySound("rifts3/wagpunk_armor/lockon_farther")
+                elseif dist < self.lastdist then
+                    --print("CLOSER")
+                    TheFocalPoint.SoundEmitter:PlaySound("rifts3/wagpunk_armor/lockon_closer")
+                end
+                self.soundtime = SOUNDRATE
+            else
+                self.soundtime = self.soundtime - dt
+            end
+
+        end
+       
+        self.lastdist = dist
+
         if self.crosshairDist:GetAnimState():IsCurrentAnimation("distance_meter") then
             self.crosshairDist:GetAnimState():SetPercent("distance_meter",percent)
         end
@@ -209,6 +232,12 @@ function WagpunkUI:OnUpdate(dt)
         self.crosshair:Hide()
         self.crosshairDist:Hide()
         self.distmeter:Hide()
+        if self.lastdist then
+            self.lastdist = nil
+        end
+        if self.soundtime then
+            self.soundtime = nil
+        end
     end
 end
 

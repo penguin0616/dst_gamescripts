@@ -632,6 +632,19 @@ function MakeSmallHeavyObstaclePhysics(inst, rad, height)
     return phys
 end
 
+function MakePondPhysics(inst, rad, height)
+	inst:AddTag("blocker")
+	local phys = inst.entity:AddPhysics()
+	phys:SetMass(0) --Bullet wants 0 mass for static objects
+	phys:SetCollisionGroup(COLLISION.OBSTACLES)
+	phys:ClearCollisionMask()
+	phys:CollidesWith(COLLISION.ITEMS)
+	phys:CollidesWith(COLLISION.CHARACTERS)
+	phys:CollidesWith(COLLISION.GIANTS)
+	phys:SetCapsule(rad, height or 2)
+	return phys
+end
+
 function RemovePhysicsColliders(inst)
     local physics = inst.Physics
     if not physics then

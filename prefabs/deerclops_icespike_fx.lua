@@ -16,9 +16,9 @@ local function SetFXOwner(inst, owner)
 	inst.owner = owner
 end
 
-local function RestartFX(inst)
+local function RestartFX(inst, big, variation)
 	inst:ReturnToScene()
-	inst.AnimState:PlayAnimation("spike"..tostring(4))
+	inst.AnimState:PlayAnimation((big and "spike_big" or "spike")..tostring(variation or math.random(4)))
 end
 
 local function fn()
@@ -32,6 +32,8 @@ local function fn()
 	inst:AddTag("FX")
 	inst:AddTag("NOCLICK")
 
+	inst.Transform:SetFourFaced()
+
 	inst.AnimState:SetBank("deerclops_icespike")
 	inst.AnimState:SetBuild("deerclops_icespike")
 	inst.AnimState:PlayAnimation("spike1")
@@ -40,11 +42,6 @@ local function fn()
 
 	if not TheWorld.ismastersim then
 		return inst
-	end
-
-	local variation = math.random(4)
-	if variation ~= 1 then
-		inst.AnimState:PlayAnimation("spike"..tostring(variation))
 	end
 
 	inst:ListenForEvent("animover", OnAnimOver)

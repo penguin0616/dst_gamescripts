@@ -66,22 +66,22 @@ local function DoIceSpikeAOE(inst, target, x, z, data)
 	end
 end
 
-local function DoSpawnIceSpike(inst, target, x, z, data, hitdelay, shouldsfx)
+local function DoSpawnIceSpike(inst, target, rot, info, data, hitdelay, shouldsfx)
 	local fx = table.remove(inst.icespike_pool)
-	if fx ~= nil then
-		fx:RestartFX()
-	else
+	if fx == nil then
 		fx = SpawnPrefab("deerclops_icespike_fx")
 		fx:SetFXOwner(inst)
 	end
-	fx.Transform:SetPosition(x, 0, z)
+	fx.Transform:SetPosition(info.x, 0, info.z)
+	fx.Transform:SetRotation(rot)
+	fx:RestartFX(info.big, info.variation)
 	if shouldsfx then
 		fx.SoundEmitter:PlaySound("dontstarve/creatures/deerclops/ice_small")
 	end
 	if hitdelay < FRAMES then
-		DoIceSpikeAOE(inst, target, x, z, data)
+		DoIceSpikeAOE(inst, target, info.x, info.z, data)
 	else
-		inst:DoTaskInTime(hitdelay, DoIceSpikeAOE, target, x, z, data)
+		inst:DoTaskInTime(hitdelay, DoIceSpikeAOE, target, info.x, info.z, data)
 	end
 end
 
@@ -100,15 +100,17 @@ local function SpawnIceFx(inst, target)
     local angle = inst.Transform:GetRotation()
 	local spikeinfo = {}
 
+	local theta = angle * DEGREES
+	local cos_theta = math.cos(theta)
+	local sin_theta = math.sin(theta)
     local num = 3
 	data.count = data.count + num
 	for i = 1, num do
-        local theta =  inst.Transform:GetRotation()*DEGREES
 		local radius = TUNING.DEERCLOPS_ATTACK_RANGE / num * i
 		table.insert(spikeinfo,
 		{
-			x = x + radius * math.cos(theta),
-			z = z - radius * math.sin(theta),
+			x = x + radius * cos_theta,
+			z = z - radius * sin_theta,
 			radius = radius,
 		})
     end
@@ -143,6 +145,7 @@ local function SpawnIceFx(inst, target)
 	table.sort(spikeinfo, SpikeInfoNearToFar)
 
 	num = data.count
+	local nextbig = 1
 	local delayvar = ICESPAWNTIME / (num - 1) * 0.3
 	local cursfxinstance = 0
 	for i = 1, num do
@@ -159,7 +162,12 @@ local function SpawnIceFx(inst, target)
 		if shouldsfx then
 			cursfxinstance = soundidx + 1
 		end
-		inst:DoTaskInTime(delay, DoSpawnIceSpike, target, info.x, info.z, data, hitdelay, shouldsfx)
+		if math.floor(i * 4 / num) == nextbig then
+			info.big = true
+			info.variation = nextbig
+			nextbig = nextbig + 1
+		end
+		inst:DoTaskInTime(delay, DoSpawnIceSpike, target, angle, info, data, hitdelay, shouldsfx)
 	end
 end
 
@@ -1054,10 +1062,8 @@ local states =
 			inst.components.locomotor:StopMoving()
 			inst.AnimState:PlayAnimation("atk")
 			inst.SoundEmitter:PlaySound(inst.sounds.attack)
+			StartAttackCooldown(inst)
 			if target ~= nil and target:IsValid() then
-				if inst.components.combat:TargetIs(target) then
-					StartAttackCooldown(inst)
-				end
 				inst:ForceFacePoint(target.Transform:GetWorldPosition())
 				inst.sg.statemem.target = target
 			end
@@ -1133,10 +1139,8 @@ local states =
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("atk2")
 			inst:SwitchToEightFaced()
+			StartAttackCooldown(inst)
             if target ~= nil and target:IsValid() then
-                if inst.components.combat:TargetIs(target) then
-					StartAttackCooldown(inst)
-                end
                 inst:ForceFacePoint(target.Transform:GetWorldPosition())
                 inst.sg.statemem.target = target
             end
@@ -1265,10 +1269,8 @@ local states =
 				end
 				inst.AnimState:PlayAnimation("throw_2")
 			end
+			StartAttackCooldown(inst)
 			if target ~= nil and target:IsValid() then
-				if inst.components.combat:TargetIs(target) then
-					StartAttackCooldown(inst)
-				end
 				inst.sg.statemem.target = target
 				inst.sg.statemem.targetpos = target:GetPosition()
 				inst:ForceFacePoint(inst.sg.statemem.targetpos)
@@ -1482,10 +1484,10 @@ local states =
 
 		events =
 		{
-			EventHandler("attacked", function(inst)
-				if inst.sg.statemem.burninterrupt and inst.components.burnable:IsBurning() then
+			EventHandler("onignite", function(inst)
+				if inst.sg.statemem.burninterrupt and inst.sg.mem.noice == 1 and not inst.sg.mem.noeyeice and inst.components.burnable:IsBurning() then
 					inst.sg:GoToState("hit")
-					return true
+					--don't return true, let stategraph "onignite" handler manage stagger
 				end
 			end),
 			EventHandler("animover", function(inst)
@@ -1782,7 +1784,7 @@ local states =
 		},
 
 		onexit = function(inst)
-			if inst.sg.noeyeice then
+			if inst.sg.mem.noeyeice then
 				inst.AnimState:Hide("ice_2")
 				inst.AnimState:Show("gestalt_eye")
 			end

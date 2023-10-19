@@ -584,6 +584,8 @@ local function normalfn()
     return inst
 end
 
+--------------------------------------------------------------------------
+
 local function Mutated_OnTemp8Faced(inst)
 	if inst.temp8faced:value() then
 		inst.gestalt.Transform:SetEightFaced()
@@ -665,6 +667,29 @@ local function Mutated_CreateEyeFlame()
 	return inst
 end
 
+local function Mutated_OnRecoveryHealthDelta(inst, data)
+	local hp = data ~= nil and data.newpercent or inst.components.health:GetPercent()
+	if inst.recovery_starthp - hp > TUNING.MUTATED_BEARGER_RECOVERY_HP then
+		inst.recovery_starthp = nil
+		inst:RemoveEventCallback("healthdelta", Mutated_OnRecoveryHealthDelta)
+		inst.canrunningbutt = not inst.recovery_norunningbutt
+		inst.recovery_norunningbutt = nil
+	end
+end
+
+local function Mutated_StartButtRecovery(inst, norunningbutt)
+	if inst.recovery_starthp == nil then
+		inst.recovery_starthp = inst.components.health:GetPercent()
+		inst:ListenForEvent("healthdelta", Mutated_OnRecoveryHealthDelta)
+		inst.canrunningbutt = false
+	end
+	inst.recovery_norunningbutt = norunningbutt
+end
+
+local function Mutated_IsButtRecovering(inst)
+	return inst.recovery_starthp ~= nil
+end
+
 local function Mutated_PushMusic(inst)
 	if inst.AnimState:IsCurrentAnimation("mutate") then
 		inst._playingmusic = false
@@ -680,6 +705,7 @@ end
 
 local function mutatedcommonfn(inst)
     inst:AddTag("lunar_aligned")
+	inst:AddTag("bearger_blocker")
 
 	inst.temp8faced = net_bool(inst.GUID, "mutatedbearger.temp8faced", "temp8faceddirty")
 
@@ -722,6 +748,7 @@ local function mutatedfn()
 
 	inst.cancombo = true
 	inst.canbutt = true
+	inst.canrunningbutt = false
 	inst.swipefx = "mutatedbearger_swipe_fx"
 
     inst.components.health:SetMaxHealth(TUNING.MUTATED_BEARGER_HEALTH)
@@ -742,6 +769,11 @@ local function mutatedfn()
 	--Overriding these
 	inst.SwitchToEightFaced = Mutated_SwitchToEightFaced
 	inst.SwitchToFourFaced = Mutated_SwitchToFourFaced
+
+	inst.StartButtRecovery = Mutated_StartButtRecovery
+	inst.IsButtRecovering = Mutated_IsButtRecovering
+
+	inst:StartButtRecovery(true) --norunningbutt = true for initial recovery
 
     return inst
 end
