@@ -21,10 +21,10 @@ local HUNT_UPDATE = 2
 local MIN_TRACKS = 6
 local MAX_TRACKS = 12
 
-local FORK_ANGLE_MIN = PI / 10
-local FORK_ANGLE_MAX = PI / 14
+local MONSTER_ANGLE_MIN = PI / 10
+local MONSTER_ANGLE_MAX = PI / 14
 
-local FORK_PRINTS_ANGLE_DEVIATION = PI / 7
+local MONSTER_PRINTS_ANGLE_DEVIATION = PI / 7
 
 --------------------------------------------------------------------------
 --[[ Member variables ]]
@@ -67,25 +67,14 @@ local function RemoveDirt(hunt)
     end
 end
 
-local function RemoveDirtFork(hunt)
-    if hunt.lastdirt_fork ~= nil then
-        inst:RemoveEventCallback("onremove", hunt.lastdirt_fork._ondirtremove, hunt.lastdirt_fork)
-        hunt.lastdirt_fork:Remove()
-        hunt.lastdirt_fork = nil
-        hunt.direction_fork = nil
-    end
-end
-
 local function StopHunt(hunt)
     RemoveDirt(hunt)
-    RemoveDirtFork(hunt)
 
     if hunt.hunttask ~= nil then
         hunt.hunttask:Cancel()
         hunt.hunttask = nil
     end
 
-    hunt.investigatedfork = nil
     hunt.score = 0
 end
 
@@ -133,8 +122,6 @@ local function StartCooldown(inst, hunt, cooldown)
         hunt.activeplayer = nil
         hunt.lastdirt = nil
         hunt.lastdirttime = nil
-        hunt.lastdirt_fork = nil
-        hunt.direction_fork = nil
 
         hunt.cooldowntask = inst:DoTaskInTime(cooldown, OnCooldownEnd, hunt)
         hunt.cooldowntime = GetTime() + cooldown
@@ -146,9 +133,7 @@ local function CreateNewHunt()
     return {
         lastdirt = nil,
         direction = nil,
-        lastdirt_fork = nil,
         activeplayer = nil,
-        investigatedfork = nil,
         score = 0,
     }
 end
@@ -190,7 +175,7 @@ local function SpawnClawTracksForDirt(dirt, direction)
 
     local total_tracks = math.random(2, 4)
     for i = 1, total_tracks do
-        local newdirection = direction + (math.random() * 2 - 1) * FORK_PRINTS_ANGLE_DEVIATION - PI/2
+        local newdirection = direction + (math.random() * 2 - 1) * MONSTER_PRINTS_ANGLE_DEVIATION - PI/2
         local radius = math.random() + i * 2
         local dx, dz = radius * math.sin(newdirection), radius * math.cos(newdirection)
 
@@ -209,7 +194,7 @@ local function SpawnDirt(pt, hunt)
     local spawn_pt = GetSpawnPoint(pt, hunt.direction, TUNING.HUNT_SPAWN_DIST, hunt)
     if spawn_pt ~= nil then
         local dirt = SpawnDirtAt(spawn_pt, hunt)
-        if hunt.investigatedfork then
+        if hunt.monster_track_num and hunt.trackspawned >= hunt.monster_track_num then
             SpawnClawTracksForDirt(dirt, hunt.direction)
         end
         if hunt.lastdirttime ~= nil and hunt.trackspawned > 1 then
@@ -229,25 +214,10 @@ local function SpawnDirt(pt, hunt)
         
         local function ondirtremove()
             hunt.lastdirt = nil
-            hunt.lastdirt_fork = nil
-            hunt.direction_fork = nil
             ResetHunt(hunt)
         end
         dirt._ondirtremove = ondirtremove
         inst:ListenForEvent("onremove", dirt._ondirtremove, dirt)
-
-        -- NOTES(JBK): Does not matter if fork is a success or failure it is only bonus if it succeeds.
-        spawn_pt = GetSpawnPoint(pt, hunt.direction_fork, TUNING.HUNT_SPAWN_DIST, hunt)
-        if spawn_pt ~= nil then
-            local dirt_fork = SpawnDirtAt(spawn_pt, hunt)
-            if not hunt.investigatedfork then
-                SpawnClawTracksForDirt(dirt_fork, hunt.direction_fork)
-            end
-            hunt.lastdirt_fork = dirt_fork
-
-            dirt_fork._ondirtremove = ondirtremove
-            inst:ListenForEvent("onremove", dirt_fork._ondirtremove, dirt_fork)
-        end
 
         return true
     end
@@ -256,21 +226,16 @@ local function SpawnDirt(pt, hunt)
 end
 
 local function GetRunAngle(pt, angle, radius)
-    local offset, result_angle = FindWalkableOffset(pt, angle, radius, 14, true)
+    -- NOTES(JBK): These angles tested should create spots that are able to be tile precision in size for a given radius so the attempts will scale up on that.
+    -- The reason for this is to give the hunt the maximum probability of success since it is one try.
+    local attempts = math.ceil(PI2 / math.asin(TILE_SCALE / radius))
+    local offset, result_angle = FindWalkableOffset(pt, angle, radius, attempts, true)
     return result_angle
 end
 
-local function GetNextSpawnAngle(pt, direction, radius, attempts)
+local function GetNextSpawnAngle(pt, direction, radius)
     local base_angle = direction or math.random() * 2 * PI
-
-    if attempts == 1 then
-        -- NOTES(JBK): Only check if the point is above land here do not fan out the checks we want fixed deviation angles precalculated to direction.
-        local dx, dz = radius * math.cos(base_angle), -radius * math.sin(base_angle)
-        return TheWorld.Map:IsAboveGroundAtPoint(pt.x + dx, pt.y, pt.z + dz) and base_angle or nil
-    end
-
     local deviation = (math.random() * 2 - 1) * TUNING.TRACK_ANGLE_DEVIATION * DEGREES
-
     local start_angle = base_angle + deviation
     --print(string.format("   original: %2.2f, deviation: %2.2f, starting angle: %2.2f", base_angle/DEGREES, deviation/DEGREES, start_angle/DEGREES))
 
@@ -279,15 +244,17 @@ end
 
 local function StartDirt(hunt, position)
     RemoveDirt(hunt)
-    RemoveDirtFork(hunt)
 
     local pt = position
 
     hunt.numtrackstospawn = math.random(MIN_TRACKS, MAX_TRACKS)
 
-    local lunarportalactive = IsLunarPortalActive()
-    if not lunarportalactive and math.random() <= GetAlternateBeastChance(hunt) then
-        hunt.fork_track_num = math.random(math.floor(hunt.numtrackstospawn / 2), hunt.numtrackstospawn - 2)
+    if IsLunarPortalActive() then
+        hunt.monster_track_num = 0
+    elseif math.random() <= GetAlternateBeastChance(hunt) then
+        hunt.monster_track_num = math.random(math.floor(hunt.numtrackstospawn / 2), hunt.numtrackstospawn - 2)
+    else
+        hunt.monster_track_num = nil
     end
 
     if IsSpecialEventActive(SPECIAL_EVENTS.HALLOWED_NIGHTS) then
@@ -301,9 +268,6 @@ local function StartDirt(hunt, position)
         -- it's ok if this spawn fails, because we'll keep trying every HUNT_UPDATE
         local spawnRelativeTo = pt
         SpawnDirt(spawnRelativeTo, hunt)
-        if lunarportalactive then
-            hunt.investigatedfork = true
-        end
     end
 end
 
@@ -411,11 +375,11 @@ local function GetHuntedBeast(hunt, spawn_pt)
         return "lightninggoat"
     end
 
-    if hunt.investigatedfork and IsLunarPortalActive() then
-        return "warg"
-    end
+    if hunt.monster_track_num then
+        if IsLunarPortalActive() then
+            return "warg"
+        end
 
-    if hunt.investigatedfork or math.random() <= GetAlternateBeastChance(hunt) then
         return GetRandomItem(ALTERNATE_BEASTS)
     end
 
@@ -426,7 +390,7 @@ local function GetHuntedBeast(hunt, spawn_pt)
     return "koalefant_summer"
 end
 
-local function SpawnHuntedBeast(hunt, pt)
+local function SpawnHuntedBeast(hunt, pt, doer)
     local spawn_pt = GetSpawnPoint(pt, hunt.direction, TUNING.HUNT_SPAWN_DIST, hunt)
     if spawn_pt == nil then
         return false
@@ -435,30 +399,33 @@ local function SpawnHuntedBeast(hunt, pt)
     local seconds_per_node = hunt.score / (hunt.numtrackstospawn - 1)
     local score_unclamped = (TUNING.HUNT_SCORE_TIME_PER_NODE_MAX - seconds_per_node) / (TUNING.HUNT_SCORE_TIME_PER_NODE_MAX - TUNING.HUNT_SCORE_TIME_PER_NODE)
     hunt.score = math.clamp(score_unclamped, 0, 1)
+    --print("scoring:", seconds_per_node, score_unclamped, hunt.score)
+
+    local action -- NOTES(JBK): Centralize the action type here and make creatures doing post spawn things handle the action.
+    local ismonster = hunt.monster_track_num ~= nil
+    if ismonster then
+        if hunt.score < TUNING.HUNT_SCORE_PROP_RATIO then
+            action = HUNT_ACTIONS.PROP
+            doer:PushEvent("huntwrongfork")
+        elseif hunt.score < TUNING.HUNT_SCORE_SLEEP_RATIO then
+            action = HUNT_ACTIONS.SLEEP
+            doer:PushEvent("huntbeastnearby")
+        else
+            action = HUNT_ACTIONS.SUCCESS
+            doer:PushEvent("huntsuccessfulfork")
+        end
+    else
+        action = HUNT_ACTIONS.SUCCESS
+        doer:PushEvent("huntbeastnearby")
+    end
+
     local beastprefab = GetHuntedBeast(hunt, spawn_pt)
     local huntedbeast = SpawnPrefab(beastprefab)
     huntedbeast.Physics:Teleport(spawn_pt:Get())
-    -- NOTES(JBK): Let each prefab handle the isfork in the event specifically.
-    huntedbeast:PushEvent("spawnedforhunt", {beast = beastprefab, pt = spawn_pt, isfork = hunt.investigatedfork, iswrongfork = hunt.iswrongfork, score = hunt.score})
+    -- NOTES(JBK): Let each prefab handle the action in the event specifically.
+    huntedbeast:PushEvent("spawnedforhunt", {beast = beastprefab, pt = spawn_pt, action = action, score = hunt.score})
 
     return true
-end
-
-local function TryToSpawnFork(spawn_pt, hunt, tries)
-    local spawn_dist = TUNING.HUNT_SPAWN_DIST
-    for i = 1, tries do
-        local deviation = (FORK_ANGLE_MAX - FORK_ANGLE_MIN) * math.random() + FORK_ANGLE_MIN
-        if math.random() < 0.5 then -- NOTES(JBK): Remove deviation bias to a specific direction.
-            deviation = -deviation
-        end
-        local fork_angle = GetNextSpawnAngle(spawn_pt, hunt.direction + deviation, spawn_dist, 1) or  -- + deviation
-                           GetNextSpawnAngle(spawn_pt, hunt.direction - deviation, spawn_dist, 1)     -- - deviation
-        if fork_angle ~= nil then
-            hunt.direction_fork = fork_angle
-            return true
-        end
-    end
-    return false
 end
 
 local function SpawnTrack(spawn_pt, hunt)
@@ -467,10 +434,6 @@ local function SpawnTrack(spawn_pt, hunt)
         if next_angle ~= nil then
             hunt.direction = next_angle
             hunt.trackspawned = hunt.trackspawned + 1
-
-            if hunt.fork_track_num and hunt.trackspawned >= hunt.fork_track_num then
-                TryToSpawnFork(spawn_pt, hunt, 5) -- NOTES(JBK): If this fails the fork will not appear try another hunt!
-            end
 
             local track = SpawnPrefab("animal_track")
             track.Transform:SetPosition(spawn_pt:Get())
@@ -546,32 +509,11 @@ function self:OnDirtInvestigated(pt, doer)
     -- find the hunt this pile belongs to
     for i, v in ipairs(_activehunts) do
         local islastdirt = v.lastdirt ~= nil and v.lastdirt:GetPosition() == pt
-        local islastdirt_fork = v.lastdirt_fork ~= nil and v.lastdirt_fork:GetPosition() == pt
-        if islastdirt or islastdirt_fork then
+        if islastdirt then
             hunt = v
-            if islastdirt then
-                inst:RemoveEventCallback("onremove", hunt.lastdirt._ondirtremove, hunt.lastdirt)
-                RemoveDirtFork(hunt)
-                if not hunt.investigatedfork and hunt.fork_track_num and hunt.trackspawned == hunt.fork_track_num then
-                    -- The player investigated a non-fork and there was a fork clear forks from this path entirely.
-                    hunt.fork_track_num = nil
-                    doer:PushEvent("huntavoidfork")
-                end
-            else -- islastdirt_fork
-                inst:RemoveEventCallback("onremove", hunt.lastdirt_fork._ondirtremove, hunt.lastdirt_fork)
-                RemoveDirt(hunt)
-                -- Set the fork to the original and modify rates.
-                hunt.lastdirt = hunt.lastdirt_fork
-                hunt.lastdirt_fork = nil
-                hunt.direction_fork = nil
-                if hunt.investigatedfork then
-                    -- The player investigated a fork and then went for a non-fork mark this as a wrong path.
-                    hunt.iswrongfork = true
-                    doer:PushEvent("huntwrongfork")
-                else
-                    hunt.investigatedfork = true
-                    doer:PushEvent("huntstartfork")
-                end
+            inst:RemoveEventCallback("onremove", hunt.lastdirt._ondirtremove, hunt.lastdirt)
+            if hunt.trackspawned == hunt.monster_track_num then
+                doer:PushEvent("huntstartfork")
             end
             break
         end
@@ -593,12 +535,7 @@ function self:OnDirtInvestigated(pt, doer)
                     ResetHunt(hunt)
                 end
             elseif hunt.trackspawned == hunt.numtrackstospawn then
-                if SpawnHuntedBeast(hunt, pt) then
-                    if hunt.investigatedfork and not hunt.iswrongfork and not IsLunarPortalActive() then
-                        doer:PushEvent("huntsuccessfulfork")
-                    else
-                        doer:PushEvent("huntbeastnearby")
-                    end
+                if SpawnHuntedBeast(hunt, pt, doer) then
                     StartCooldown(inst, hunt)
                 else
                     ResetHunt(hunt)
@@ -648,7 +585,7 @@ function self:GetDebugString()
     for i, hunt in ipairs(_activehunts) do
         str = str.." Cooldown: ".. (hunt.cooldowntime and string.format("%2.2f", math.max(1, hunt.cooldowntime - GetTime())) or "-")
 		if hunt.trackspawned ~= nil then
-			str = str .. " Track # " .. tostring(hunt.trackspawned) .. "/" .. tostring(hunt.numtrackstospawn) .. (hunt.fork_track_num ~= nil and (" fork at " .. tostring(hunt.fork_track_num)) or "") .. (hunt.ambush_track_num ~= nil and (" ambush at " .. tostring(hunt.ambush_track_num)) or "")
+			str = str .. " Track # " .. tostring(hunt.trackspawned) .. "/" .. tostring(hunt.numtrackstospawn) .. (hunt.monster_track_num ~= nil and (" monster at " .. tostring(hunt.monster_track_num)) or "") .. (hunt.ambush_track_num ~= nil and (" ambush at " .. tostring(hunt.ambush_track_num)) or "")
 		end
         if not hunt.lastdirt then
             str = str.." No last dirt."
@@ -659,10 +596,7 @@ function self:GetDebugString()
             --str = str.." Distance: ".. (playerdata.distance and string.format("%2.2f", playerdata.distance) or "-")
             --str = str.."/"..tostring(TUNING.MAX_DIRT_DISTANCE)
         end
-        str = str .. (hunt.lastdirt_fork and " Fork." or " No fork.")
-        str = str .. (hunt.investigatedfork and " Fork investigated." or "")
-        str = str .. (hunt.iswrongfork and " WRONG Fork!" or "")
-        str = str .. "Score: " .. hunt.score
+        str = str .. " Score: " .. hunt.score
     end
     return str
 end

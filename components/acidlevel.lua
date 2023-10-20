@@ -39,11 +39,17 @@ local function DoAcidRainDamageOnEquipped(item, damage)
 
     if item.components.armor then
         item.components.armor:TakeDamage(damage)
+        if not item:IsValid() then
+            return
+        end
         dosizzle = true
     end
 
     if item.components.fueled and item.components.fueled.fueltype == FUELTYPE.USAGE then
         item.components.fueled:DoDelta(-damage * TUNING.ACIDRAIN_DAMAGE_FUELED_SCALER)
+        if not item:IsValid() then
+            return
+        end
         dosizzle = true
     end
 
@@ -61,6 +67,9 @@ local function DoAcidRainRotOnAllItems(item, percent)
 
     if item.components.perishable then
         item.components.perishable:ReducePercent(percent)
+        if not item:IsValid() then
+            return
+        end
         dosizzle = true
     end
 

@@ -81,7 +81,7 @@ local function AddChair(ret, name, bank, build, hasback)
 	if hasback then
 		local function OnBackReplicated(inst)
 			local parent = inst.entity:GetParent()
-			if parent ~= nil and (parent.prefab == inst.prefab:sub(1, -5)) then
+			if parent ~= nil and (parent.prefab == inst.prefab:sub(1, -6)) then
 				parent.highlightchildren = { inst }
 			end
 		end

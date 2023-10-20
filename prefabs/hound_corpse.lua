@@ -12,6 +12,7 @@ local prefabs =
 local function SpawnMutatedHound(inst)
 	local hound = SpawnPrefab("mutatedhound")
 	hound.Transform:SetPosition(inst.Transform:GetWorldPosition())
+	hound.Transform:SetRotation(inst.Transform:GetRotation())
 	if not inst:IsAsleep() then
 		hound.sg:GoToState("mutated_spawn")
 	end
@@ -105,9 +106,13 @@ local function fn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
+	inst.entity:AddDynamicShadow()
     inst.entity:AddNetwork()
 
     MakeInventoryPhysics(inst)
+
+	inst.DynamicShadow:SetSize(2.5, 1.5)
+	inst.Transform:SetFourFaced()
 
     inst.AnimState:SetRayTestOnBB(true)
     inst.AnimState:SetBank("hound")

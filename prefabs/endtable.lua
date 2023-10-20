@@ -83,12 +83,18 @@ local function GiveFlower(inst, flowerid, lifespan, giver)
     else
         inst.AnimState:SetLightOverride(0)
         inst.Light:Enable(false)
+
+        -- FLOWERS WITH NO LIGHT WILL NOT WILT, THEY ARE JUST DECORATION
+        lifespan = nil        
     end
 
     if inst.task ~= nil then
         inst.task:Cancel()
     end
-    inst.task = inst:DoTaskInTime(lifespan, WiltFlower)
+
+    if lifespan then
+        inst.task = inst:DoTaskInTime(lifespan, WiltFlower)
+    end
 end
 
 local function ondeconstructstructure(inst)

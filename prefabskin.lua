@@ -154,8 +154,24 @@ wood_table_square_init_fn = function(inst, build_name) basic_init_fn(inst, build
 wood_table_square_clear_fn = function(inst) basic_clear_fn(inst, "wood_table_square") end
 wood_stool_init_fn = function(inst, build_name) basic_init_fn(inst, build_name, "wood_chair_stool") end
 wood_stool_clear_fn = function(inst) basic_clear_fn(inst, "wood_chair_stool") end
-wood_chair_init_fn = function(inst, build_name) basic_init_fn(inst, build_name, "wood_chair_chair") end
-wood_chair_clear_fn = function(inst) basic_clear_fn(inst, "wood_chair_chair") end
+wood_chair_init_fn = function(inst, build_name)
+    basic_init_fn(inst, build_name, "wood_chair_chair")
+    if not TheWorld.ismastersim then
+        return
+    end
+    if inst.back then
+        inst.back.AnimState:OverrideItemSkinSymbol("chair01_parts", build_name, "chair01_parts", inst.GUID, "wood_chair_chair")
+    end
+end
+wood_chair_clear_fn = function(inst)
+    basic_clear_fn(inst, "wood_chair_chair")
+    if not TheWorld.ismastersim then
+        return
+    end
+    if inst.back then
+        inst.back.AnimState:ClearOverrideSymbol("chair01_parts")
+    end
+end
 decor_centerpiece_init_fn = function(inst, build_name) basic_init_fn(inst, build_name, "decor_centerpiece") end
 decor_centerpiece_clear_fn = function(inst) basic_clear_fn(inst, "decor_centerpiece") end
 decor_flowervase_init_fn = function(inst, build_name) basic_init_fn(inst, build_name, "decor_flowervase") end

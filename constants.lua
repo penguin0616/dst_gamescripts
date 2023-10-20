@@ -2525,6 +2525,12 @@ STORM_TYPES =
     MOONSTORM = 2,
 }
 
+HUNT_ACTIONS = {
+    SUCCESS = 0,
+    PROP = 1,
+    SLEEP = 2,
+}
+
 LOADING_SCREEN_TIP_OPTIONS =
 {
     ALL = 1,

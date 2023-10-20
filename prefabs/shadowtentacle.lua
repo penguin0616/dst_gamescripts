@@ -41,6 +41,8 @@ local function fn()
         return inst
     end
 
+	--inst.owner is set when spawned from ruins_bat, slingshotammo
+
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(TUNING.TENTACLE_HEALTH)
 

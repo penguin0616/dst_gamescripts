@@ -401,15 +401,14 @@ local function OnStopFollowing(inst)
 end
 
 local function CanMutateFromCorpse(inst)
-	if inst.forcemutate then
+	if inst.components.amphibiouscreature ~= nil and inst.components.amphibiouscreature.in_water then
+		return false
+	elseif inst.forcemutate then
 		return true
-	end
-    if not TUNING.SPAWN_MUTATED_HOUNDS then return false end
-	if (inst.components.amphibiouscreature == nil or not inst.components.amphibiouscreature.in_water)
-		and math.random() <= TUNING.MUTATEDHOUND_SPAWN_CHANCE then
-
-		local x, y, z = inst.Transform:GetWorldPosition()
-		return TheWorld.Map:IsInLunacyArea(x, y, z)
+	elseif not TUNING.SPAWN_MUTATED_HOUNDS then
+		return false
+	elseif math.random() <= TUNING.MUTATEDHOUND_SPAWN_CHANCE then
+		return TheWorld.Map:IsInLunacyArea(inst.Transform:GetWorldPosition())
 	end
 	return false
 end

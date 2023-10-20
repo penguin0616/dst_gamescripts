@@ -316,10 +316,17 @@ local states =
 		{
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
+					inst.sg.statemem.chewing = true
 					inst.sg:GoToState("eat_pst", true)
 				end
 			end),
 		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.chewing then
+				inst.SoundEmitter:KillSound("loop")
+			end
+		end,
 	},
 
 	State{
@@ -682,6 +689,8 @@ local states =
 				if inst._CanMutateFromCorpse ~= nil and inst:_CanMutateFromCorpse() then
 					local corpse = SpawnPrefab("houndcorpse")
 					corpse.Transform:SetPosition(inst.Transform:GetWorldPosition())
+					corpse.Transform:SetRotation(inst.Transform:GetRotation())
+					corpse.AnimState:MakeFacingDirty() -- Not needed for clients.
 					if inst.wargleader ~= nil and not inst.wargleader.components.health:IsDead() and inst.wargleader:IsValid() then
 						corpse:RememberWargLeader(inst.wargleader)
 					end

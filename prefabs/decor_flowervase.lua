@@ -79,6 +79,9 @@ local function flower_vase_set_flower(inst, flower_id, wilt_time, giver)
     else
         inst.AnimState:SetLightOverride(0)
         inst.Light:Enable(false)
+
+        -- FLOWERS WITH NO LIGHT WILL NOT WILT, THEY ARE JUST DECORATION
+        wilt_time = nil        
     end
 
     if wilt_time then

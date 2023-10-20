@@ -165,15 +165,9 @@ return Class(function(self, inst)
                     if  DebrisCanHitTarget(debris, v) then
                         v.components.combat:GetAttacked(debris, TUNING.LUNARHAIL_DEBRIS_DAMAGE, nil)
 
-                    elseif v.components.inventoryitem ~= nil then
-                        if v.components.mine ~= nil then
-                            v.components.mine:Deactivate()
-                        end
-
-                        -- Don't mess with dropped items used as decoration.
-                        if v:HasTag("lunarhaildebris") and not v.persists then
-                            Launch(v, debris, TUNING.LAUNCH_SPEED_SMALL)
-                        end
+                    -- Don't mess with dropped items used as decoration.
+                    elseif v:HasTag("lunarhaildebris") and not v.persists and v.components.inventoryitem ~= nil then
+                        Launch(v, debris, TUNING.LAUNCH_SPEED_SMALL)
 
                     elseif v.components.farmplantstress ~= nil then
                         v.components.farmplantstress:SetStressed("happiness", true, debris)

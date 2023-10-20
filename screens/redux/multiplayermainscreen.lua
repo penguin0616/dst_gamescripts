@@ -415,6 +415,11 @@ function MakeBanner(self)
 	if IS_BETA then
 		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_BETA_TITLE
 
+		--*** !!! ***
+		--REMINDER: Banner changes in beta need to go in the default "else" block below too!
+		--
+		--REMINDER: Check MakeBannerFront as well!
+		--
         MakeLunarMutantsBanner(self, banner_root, anim)
     elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTR) then
         MakeYOTRBanner(self, banner_root, anim)
@@ -429,6 +434,9 @@ function MakeBanner(self)
         --MakeMeta2Banner(self, banner_root, anim)
         MakeCawnivalBanner(self, banner_root, anim)
 	else
+		--*** !!! ***
+		--REMINDER: Check MakeBannerFront as well!
+		--
         MakeLunarMutantsBanner(self, banner_root, anim)
 		--MakeMeta2Banner(self, banner_root, anim)
         --MakeDramaBanner(self, banner_root, anim)
@@ -492,14 +500,19 @@ end
 -- For drawing things in front of the MOTD panels
 local function MakeBannerFront(self)
     if IS_BETA then
-        local banner_front = Widget("banner_front")
+		--*** !!! ***
+		--REMINDER: Banner changes in beta need to go in the default "else" block below too!
+		--
+
+        --[[local banner_front = Widget("banner_front")
         banner_front:SetPosition(0, 0)
         banner_front:SetClickable(false)
         local anim = banner_front:AddChild(UIAnim())
 
         MakeDramaBannerFront(self, banner_front, anim)
 
-        return banner_front
+        return banner_front]]
+		return nil
 
     elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
         return nil

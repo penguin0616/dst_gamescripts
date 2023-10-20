@@ -357,29 +357,34 @@ local function CarcassCreationFn_Normal(inst, score)
 end
 
 local function OnSpawnedForHunt_Normal(inst, data)
-    if data == nil or not data.isfork then
+    if data == nil then
         return
     end
 
-    -- NOTES(JBK): This came from a fork investigation so let us make it a bit more special.
+    -- NOTES(JBK): This came from a hunt investigation so let us make it a bit more special.
 
     -- First spawn meats from a fake koalefant.
     SimulateKoalefantDrops(inst)
 
     -- Then check if this is spring loaded.
-    if data.iswrongfork and inst.components.prophider ~= nil then
-        -- The wrong fork set up an ambush!
-        inst.components.prophider:HideWithProp()
-    else
-        -- The right fork set up sleepy or meaty treat, depending on score!
+    if data.action == HUNT_ACTIONS.PROP then
+        -- Took too long, make it an ambush!
+        if inst.components.prophider ~= nil then
+            inst.components.prophider:HideWithProp()
+        end
+    elseif data.action == HUNT_ACTIONS.SLEEP then
         local radius = math.random() * 2 + 6
         local hounds = inst:SpawnHounds(radius)
-        local score = data.score or 1
-        if score <= 0 then
-            inst:DoTaskInTime(0, OnForceSleep_Normal, hounds) -- NOTES(JBK): Delay a frame for initialization to complete.
-        else
-            local carcass = CarcassCreationFn_Normal(inst, score)
-        end
+
+        inst:DoTaskInTime(0, OnForceSleep_Normal, hounds) -- NOTES(JBK): Delay a frame for initialization to complete.
+    elseif data.action == HUNT_ACTIONS.SUCCESS then
+        local radius = math.random() * 2 + 6
+        local hounds = inst:SpawnHounds(radius)
+
+        local rescaled_score = (data.score - TUNING.HUNT_SCORE_SLEEP_RATIO) / (1 - TUNING.HUNT_SCORE_SLEEP_RATIO) -- Back to 0 to 1.
+        CarcassCreationFn_Normal(inst, rescaled_score)
+    else
+        -- FIXME(JBK): Unhandled state.
     end
 end
 

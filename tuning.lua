@@ -932,8 +932,10 @@ function Tune(overrides)
         HUNT_COOLDOWNDEVIATION = total_day_time*0.3,
         HUNT_ALTERNATE_BEAST_CHANCE_MIN = 0.05,
         HUNT_ALTERNATE_BEAST_CHANCE_MAX = 0.33,
-        HUNT_SCORE_TIME_PER_NODE = 10,
-        HUNT_SCORE_TIME_PER_NODE_MAX = 20, -- Keep below 1.25 * SEG_TIME
+        HUNT_SCORE_TIME_PER_NODE = 8,
+        HUNT_SCORE_TIME_PER_NODE_MAX = 10, -- Keep below 1.25 * SEG_TIME
+        HUNT_SCORE_PROP_RATIO = 0.25,
+        HUNT_SCORE_SLEEP_RATIO = 0.4, -- Keep bigger than HUNT_SCORE_PROP_RATIO.
 
         HUNT_RESET_TIME = 5,
         HUNT_SPRING_RESET_TIME = total_day_time * 3,

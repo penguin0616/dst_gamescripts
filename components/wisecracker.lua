@@ -181,7 +181,7 @@ local Wisecracker = Class(function(self, inst)
 		inst.components.talker:Say(GetString(inst, "ANNOUNCE_HUNT_WRONG_FORK"))
 	end)
 
-	inst:ListenForEvent("huntavoidfork", function(inst)
+	inst:ListenForEvent("huntavoidfork", function(inst) -- TODO(JBK): Add this for other hunt mechanics.
 		inst.components.talker:Say(GetString(inst, "ANNOUNCE_HUNT_AVOID_FORK"))
 	end)
 
