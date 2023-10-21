@@ -18088,6 +18088,11 @@ local states =
 			ToggleOffPhysics(inst)
 		end,
 
+		timeline =
+		{
+			FrameEvent(11, function(inst) inst.SoundEmitter:PlaySound("dontstarve/movement/bodyfall_dirt", nil, 0.5) end),
+		},
+
 		events =
 		{
 			EventHandler("animover", function(inst)
@@ -18195,11 +18200,23 @@ local states =
 				inst.AnimState:SetBankAndPlayAnimation(bank, "sit"..tostring(math.random(2)).."_loop", true)
 			end
 			inst.Physics:Teleport(chair.Transform:GetWorldPosition())
+
+			inst.sg.statemem.interrupt_emote = function(inst)
+				if inst.sg.statemem.emotefxtask ~= nil then
+					inst.sg.statemem.emotefxtask:Cancel()
+					inst.sg.statemem.emotefxtask = nil
+				end
+				if inst.sg.statemem.emotesoundtask ~= nil then
+					inst.sg.statemem.emotesoundtask:Cancel()
+					inst.sg.statemem.emotesoundtask = nil
+				end
+			end
 		end,
 
 		events =
 		{
 			EventHandler("ontalk", function(inst)
+				inst.sg.statemem.interrupt_emote(inst)
 				local duration = inst.sg.statemem.talktask ~= nil and GetTaskRemaining(inst.sg.statemem.talktask) or 1.5 + math.random() * .5
 				inst.AnimState:PlayAnimation("sit_dial", true)
 				if inst.sg.statemem.sittalktask ~= nil then
@@ -18224,15 +18241,18 @@ local states =
 				return OnDoneTalking_Override(inst)
 			end),
 			EventHandler("equip", function(inst, data)
+				inst.sg.statemem.interrupt_emote(inst)
 				inst.AnimState:PlayAnimation(data.eslot == EQUIPSLOTS.HANDS and "sit_item_out" or "sit_item_hat")
 				inst.AnimState:PushAnimation("sit"..tostring(math.random(2)).."_loop")
 			end),
 			EventHandler("unequip", function(inst, data)
+				inst.sg.statemem.interrupt_emote(inst)
 				inst.AnimState:PlayAnimation(data.eslot == EQUIPSLOTS.HANDS and "sit_item_in" or "sit_item_hat")
 				inst.AnimState:PushAnimation("sit"..tostring(math.random(2)).."_loop")
 			end),
 			EventHandler("performaction", function(inst, data)
 				if data ~= nil and data.action ~= nil and data.action.action == ACTIONS.DROP then
+					inst.sg.statemem.interrupt_emote(inst)
 					inst.AnimState:PlayAnimation("sit_item_hat")
 					inst.AnimState:PushAnimation("sit"..tostring(math.random(2)).."_loop")
 				end
@@ -18255,6 +18275,8 @@ local states =
 						TheInventory:CheckClientOwnership(inst.userid, data.item_type)
 					)
 				then
+					inst.sg.statemem.interrupt_emote(inst)
+
 					--Not supported
 					assert(data.tags == nil)
 
@@ -18284,7 +18306,6 @@ local states =
 						end
 					end
 
-					--[[ @V2C: #TODO
 					if data.fx then --fx might be a boolean, so don't do ~= nil
 						if data.fxdelay == nil or data.fxdelay == 0 then
 							DoEmoteFX(inst, data.fx)
@@ -18307,7 +18328,7 @@ local states =
 						else
 							inst.sg.statemem.emotesoundtask = inst:DoTaskInTime(data.sounddelay, DoEmoteSound, data.soundoverride, data.soundlooped)
 						end
-					end]]
+					end
 				end
 				return true
 			end),
@@ -18354,6 +18375,9 @@ local states =
 				inst.sg.statemem.sittalktask:Cancel()
 			end
 			CancelTalk_Override(inst)
+			if inst.sg.statemem.interrupt_emote ~= nil then
+				inst.sg.statemem.interrupt_emote(inst)
+			end
 		end,
 	},
 
@@ -18485,6 +18509,11 @@ local states =
 			end
 		end,
 
+		timeline =
+		{
+			FrameEvent(11, PlayFootstep),
+		},
+
 		events =
 		{
 			EventHandler("animover", function(inst)
@@ -18493,7 +18522,7 @@ local states =
 						inst.Physics:Teleport(inst.sg.statemem.safepos.x, 0, inst.sg.statemem.safepos.z)
 					end
 					inst.sg.statemem.stop = true
-					inst.sg:GoToState("stop_sitting_pst")
+					inst.sg:GoToState("stop_sitting_pst", true)
 				end
 			end),
 		},
@@ -18521,9 +18550,12 @@ local states =
 		name = "stop_sitting_pst",
 		tags = { "idle", "overridelocomote" },
 
-		onenter = function(inst)
+		onenter = function(inst, skipsound)
 			inst.components.locomotor:StopMoving()
 			inst.AnimState:SetBankAndPlayAnimation("wilson", "sit_off_pst")
+			if not skipsound then
+				PlayFootstep(inst)
+			end
 		end,
 
 		timeline =

@@ -33,6 +33,15 @@ end
 
 -- FLOWER WILT/SET
 local function flower_vase_wilt_flower(inst)
+    if inst._hack_do_not_wilt then
+        if inst._wilttask ~= nil then
+            inst._wilttask:Cancel()
+            inst._wilttask = nil
+        end
+        inst._wilttask = inst:DoTaskInTime(inst._hack_do_not_wilt, flower_vase_wilt_flower)
+        return
+    end
+
     inst.AnimState:ShowSymbol("swap_flower")
     inst.AnimState:OverrideSymbol("swap_flower", "swap_flower", "f"..tostring(inst._flower_id).."_wilt")
     inst.AnimState:PlayAnimation("hit")
@@ -76,12 +85,11 @@ local function flower_vase_set_flower(inst, flower_id, wilt_time, giver)
         inst.AnimState:SetLightOverride(0.3)
         inst.Light:Enable(true)
         inst._lighttask = inst:DoPeriodicTask(TUNING.ENDTABLE_LIGHT_UPDATE + math.random(), flower_vase_updatelight, 0)
+        inst._hack_do_not_wilt = nil
     else
         inst.AnimState:SetLightOverride(0)
         inst.Light:Enable(false)
-
-        -- FLOWERS WITH NO LIGHT WILL NOT WILT, THEY ARE JUST DECORATION
-        wilt_time = nil        
+        inst._hack_do_not_wilt = wilt_time
     end
 
     if wilt_time then
@@ -122,6 +130,7 @@ end
 local function onignite(inst)
     inst.components.vase:Disable()
     if inst._flower_id then
+        inst._hack_do_not_wilt = nil
         flower_vase_wilt_flower(inst)
     end
 

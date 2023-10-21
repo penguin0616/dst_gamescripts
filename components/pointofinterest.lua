@@ -225,26 +225,39 @@ function PointOfInterest:UpdateRemovePulse(dt)
 end
 
 function PointOfInterest:OnUpdate(dt)
+
+    if self.marker then       
+        if Profile:GetPOIDisplay() then
+            self.marker:Show()
+        else
+            self.marker:Hide()
+        end
+    end
+
     if ThePlayer ~= nil and
         ThePlayer.HUD ~= nil and
         not self._removing and
-        (self.shouldshowfn == nil or self.shouldshowfn(self.inst))
+        (self.shouldshowfn == nil or self.shouldshowfn(self.inst))        
     then
-        local dist = math.sqrt(ThePlayer:GetDistanceSqToInst(self.inst))
+        if Profile:GetPOIDisplay() then
+            local dist = math.sqrt(ThePlayer:GetDistanceSqToInst(self.inst))
 
-        if TheScrapbookPartitions:GetLevelFor(self.inst) < 2 then
-            self:CreateWorldIndicator()
+            if TheScrapbookPartitions:GetLevelFor(self.inst) < 2  then
+                self:CreateWorldIndicator()
 
-            if not self:ShouldShowHudIndicator(dist) then
-                self:RemoveHudIndicator()
+                if not self:ShouldShowHudIndicator(dist) then
+                    self:RemoveHudIndicator()
 
-            elseif not self._showinghud then
-                self._showinghud = true
-                ThePlayer.HUD:AddTargetIndicator(self.inst, HUD_INDICATOR_DATA)
-            end
+                elseif not self._showinghud then
+                    self._showinghud = true
+                    ThePlayer.HUD:AddTargetIndicator(self.inst, HUD_INDICATOR_DATA)
+                end
 
+            else
+                self:TriggerRemove()
+            end 
         else
-            self:TriggerRemove()
+            self:RemoveHudIndicator()
         end
     end
 
