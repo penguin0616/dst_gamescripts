@@ -395,6 +395,8 @@ return{
 		CASTAOE =
 		{
 --fallback to speech_wilson.lua 			NO_MAX_SANITY = "only_used_by_waxwell",
+            NOT_ENOUGH_EMBERS = "I need more embers! Heh. Better get back to burning.",
+            NO_TARGETS = "There was nothing scary to burn nearby.",  -- [[TODO]]
 		},
     },
 
@@ -799,8 +801,10 @@ return{
 	},
 
 --fallback to speech_wilson.lua     ANNOUNCE_NOINSPIRATION = "only_used_by_wathgrithr",
+--fallback to speech_wilson.lua     ANNOUNCE_NOTSKILLEDENOUGH = "only_used_by_wathgrithr",
 --fallback to speech_wilson.lua     ANNOUNCE_BATTLESONG_INSTANT_TAUNT_BUFF = "only_used_by_wathgrithr",
 --fallback to speech_wilson.lua     ANNOUNCE_BATTLESONG_INSTANT_PANIC_BUFF = "only_used_by_wathgrithr",
+--fallback to speech_wilson.lua     ANNOUNCE_BATTLESONG_INSTANT_REVIVE_BUFF = "only_used_by_wathgrithr",
 
 --fallback to speech_wilson.lua     ANNOUNCE_WANDA_YOUNGTONORMAL = "only_used_by_wanda",
 --fallback to speech_wilson.lua     ANNOUNCE_WANDA_NORMALTOOLD = "only_used_by_wanda",
@@ -5030,6 +5034,28 @@ return{
         WAGPUNKBITS_KIT = "Nice doodad.",
 
         WAGSTAFF_MUTATIONS_NOTE = "Looks important. I'll burn it later.",
+
+        -- Meta 3
+
+        BATTLESONG_INSTANT_REVIVE = "Hey look, fancy kindling!",
+
+        WATHGRITHR_IMPROVEDHAT = "I don't think I could pull it off like she does.",
+        SPEAR_WATHGRITHR_LIGHTNING = "Zapping is almost as fun as burning.",
+
+        BATTLESONG_CONTAINER = "A kindling container!",
+
+        SADDLE_WATHGRITHR = "Think of how cool I'd look riding into battle on that!",
+
+        WATHGRITHR_SHIELD = "If I know Wigfrid, she'll still find a way to use it as a weapon.",
+
+        BATTLESONG_SHADOWALIGNED = "Hey look, fancy kindling!",
+        BATTLESONG_LUNARALIGNED = "Hey look, fancy kindling!",
+
+		SHARKBOI = "Fire beats ice any day of the week.",
+        BOOTLEG = "Ugh, it smells like old feet!",
+        OCEANWHIRLPORTAL = "Er, can't we take the scenic route instead?",
+
+        WILLOW_EMBER = "Aren't they beautiful?",
     },
 
     DESCRIBE_GENERIC = "I have no idea what that is!",

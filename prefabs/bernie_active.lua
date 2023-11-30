@@ -1,3 +1,4 @@
+local commonfn =  require "prefabs/bernie_common"
 local brain = require("brains/berniebrain")
 
 local assets =
@@ -6,6 +7,7 @@ local assets =
     Asset("ANIM", "anim/bernie_build.zip"),
     Asset("SOUND", "sound/together.fsb"),
 	Asset("MINIMAP_IMAGE", "bernie"),
+    Asset("SCRIPT", "scripts/prefabs/bernie_common.lua"),
 }
 
 local prefabs =
@@ -35,7 +37,7 @@ local function goinactive(inst)
     end
 end
 
-local function gobig(inst)
+local function gobig(inst,leader)
     local skin_name = nil
     if inst:GetSkinName() ~= nil then
         skin_name = string.gsub(inst:GetSkinName(), "_active", "_big")
@@ -44,10 +46,14 @@ local function gobig(inst)
     local big = SpawnPrefab("bernie_big", skin_name, inst.skin_id, nil)
     if big ~= nil then
         --Rescale health %
-        big.components.health:SetPercent(inst.components.health:GetPercent())
+        
         big.Transform:SetPosition(inst.Transform:GetWorldPosition())
         big.Transform:SetRotation(inst.Transform:GetRotation())
+        big.components.health:SetPercent(inst.components.health:GetPercent())
+
         inst:Remove()
+
+        big.CheckForAllegiances(big,leader)
         return big
     end
 end
@@ -133,6 +139,7 @@ local function fn()
     inst.GoBig = gobig
     inst.OnEntitySleep = OnEntitySleep
     inst.OnEntityWake = OnEntityWake
+    inst.isleadercrazy = commonfn.isleadercrazy
 
     return inst
 end

@@ -125,6 +125,7 @@ function Tune(overrides)
         CONTROLLER_BLINKFOCUS_DISTANCESQ_MIN = 4,
         CONTROLLER_BLINKFOCUS_DISTANCE = 8,
         CONTROLLER_BLINKFOCUS_ANGLE = 30, -- Angle is for both sides of the facing direction so cone total size is double this value.
+        CONTROLLER_OCEANFISHINGFOCUS_ANGLE = 50, -- Angle is for both sides of the facing direction so cone total size is double this value.
 
         -- WX78 Refresh: WX78 min and max health variables kept for backwards compatibility & mods
         WX78_MIN_HEALTH = 150,
@@ -833,9 +834,9 @@ function Tune(overrides)
         PETRIFIED_TREE_TALL = 4,
         PETRIFIED_TREE_OLD = 1,
 
-        BEEFALO_HEALTH = 500 * 2, -- harder for multiplayer
+        BEEFALO_HEALTH = 500 * 2, -- harder for multiplayer.,
         BEEFALO_HEALTH_REGEN_PERIOD = 10,
-        BEEFALO_HEALTH_REGEN = (500*2)/(total_day_time*3)*10,
+        BEEFALO_HEALTH_REGEN = (500 * 2)/(total_day_time*3)*10,
         BEEFALO_DAMAGE =
         {
             DEFAULT = 34,
@@ -4670,6 +4671,7 @@ function Tune(overrides)
 			5/6,
 		},
 		BATTLESONG_INSTANT_COST = 100 * 1/6, -- INSPIRATION_MAX * BATTLESONG_THRESHOLDS[1]
+		BATTLESONG_INSTANT_COST_HIGH = 100 * 3/6, -- INSPIRATION_MAX * BATTLESONG_THRESHOLDS[2]
 
         BATTLEBORN_STORE_TIME = 3,
         BATTLEBORN_DECAY_TIME = 5,
@@ -4677,6 +4679,7 @@ function Tune(overrides)
 
         WATHGRITHR_BATTLEBORN_BONUS = 0.25,
         REGULAR_BATTLEBORN_BONUS = 0.1,
+        BATTLEBORN_REPAIR_EQUIPMENT_MULT = 2.5,
 
         BATTLESONG_DURABILITY_MOD = 0.75,
         BATTLESONG_NEG_SANITY_AURA_MOD = 0.5,
@@ -6560,6 +6563,43 @@ function Tune(overrides)
 		SHADOW_LEECH_RUNSPEED = 6,
 		SHADOW_LEECH_HEALTH = 100,
 
+		SHARKBOI_HEALTH = 8000,
+		SHARKBOI_WALKSPEED = 2.3,
+		SHARKBOI_RUNSPEED = 8,
+		SHARKBOI_FINSPEED = 6,
+		SHARKBOI_DAMAGE = 75,
+		SHARKBOI_ATTACK_PERIOD = 3,
+		SHARKBOI_MELEE_RANGE = 4.5,
+		SHARKBOI_ATTACK_RANGE = 8,
+		SHARKBOI_TORPEDO_CD = 20,
+		SHARKBOI_STANDING_DIVE_CD = 30,
+
+		SHARKBOI_AGGRO_DIST = 15,
+		SHARKBOI_KEEP_AGGRO_DIST = 12,
+		SHARKBOI_DEAGGRO_DIST = 24,
+
+		SHARKBOI_ICE_MINE = 2,
+		SHARKBOI_ICE_LARGE_MINE = 3,
+
+        SHARKBOI_ARENA_COOLDOWN_DAYS = 20 * total_day_time,
+        SHARKBOI_ARENA_SHRINK_TICK_TIME = 2,
+        SHARKBOI_ARENA_SHRINK_DISTANCE = 0.1,
+
+        ICEFISHING_HOLE_ODDS_TO_HOOK_FISH = 0.2,
+        ICEFISHING_HOLE_TIME_PER_HOOK_CHANCE = 1,
+        ICEFISHING_HOLE_FISH_NEEDED_TO_SPAWN = 3,
+        ICEFISHING_HOLE_PUNT_DETECT_RADIUS = 5,
+        ICEFISHING_HOLE_PUNT_PUSH_RADIUS = 2,
+
+        OCEANWHIRLPORTAL_KEEPALIVE_DURATION = 60,
+        OCEANWHIRLPORTAL_BOAT_INTERACT_DISTANCE = 4,
+        OCEANWHIRLPORTAL_ADD_WETNESS = 20,
+        OCEANWHIRLPORTAL_ADD_COLDNESS = 1,
+        OCEANWHIRLPORTAL_TEMP_REDUCTION = 5,
+        OCEANWHIRLPORTAL_EXTINGUISH_HEAT_PERCENT = -4,
+        OCEANWHIRLPORTAL_PROTECTION_TIME = 60,
+        OCEANWHIRLPORTAL_BOAT_PUSH_FORCE = 3,
+
         -- WILSON REFRESH wilson_refresh
         SKILL_THRESHOLDS = {
             5, --1
@@ -6702,6 +6742,64 @@ function Tune(overrides)
             WOLFGANG_OVERBUFF_3 = 30,
             WOLFGANG_OVERBUFF_4 = 40,
             WOLFGANG_OVERBUFF_5 = 50,
+
+            WILLOW_BERNIEHEALTH_1 = 1.15,
+            WILLOW_BERNIEHEALTH_2 = 1.30,
+
+            WILLOW_BERNIESPEED_1 = 1.15,
+            WILLOW_BERNIESPEED_2 = 1.30,
+
+            WILLOW_BERNIESANITY_1 = 60/200,
+            WILLOW_BERNIESANITY_2 = 100/200,
+
+            WILLOW_BERNIE_HEALTH_REGEN_PERIOD = 1,
+            WILLOW_BERNIE_HEALTH_REGEN_1 = 0.5,
+            WILLOW_BERNIE_HEALTH_REGEN_2 = 1,
+
+            -- Lighter fuel consumption multiplier.
+            WILLOW_CONSUMPTION_1 = 0.84,
+            WILLOW_CONSUMPTION_2 = 0.68,
+            WILLOW_CONSUMPTION_3 = 0.5,
+
+            -- Lighter light radius.
+            WILLOW_BRIGHTNESS_1 = 2.5,
+            WILLOW_BRIGHTNESS_2 = 4,
+
+            WATHGRITHR = {
+                BATTLESONG_INSTANT_COOLDOWN = 30,
+                BATTLESONG_INSTANT_COOLDOWN_HIGH = 360, -- 5 min.
+
+                INSTANTSONG_CD_UNLOCK_COUNT = 10,
+                BATTLESONGS_CONTAINER_NUM_BATTLESONGS_TO_UNLOCK = 6,
+
+                INSPIRATION_GAIN_MULT = {
+                    1.25,
+                    1.50,
+                },
+
+                WATHGRITHRHAT_DURABILITY_MOD = {
+                    0.90,
+                    0.80,
+                },
+
+                WATHGRITHRHAT_BEEFALO_DOMESTICATION_MOD = 1.15,
+                WATHGRITHR_BEEFALO_BUCK_TIME_MOD = 1.3,
+                WATHGRITHR_BEEFALO_BONUS_PLANAR_DAMAGE = 10,
+
+                BONUS_PLANAR_DEF = 5,
+
+                HELM_PLANAR_DEF = 8,
+                SHIELD_PARRY_DURATION_MULT = 2.5,
+
+                SHIELD_PARRY_BONUS_DAMAGE = 10,
+                SHIELD_PARRY_BONUS_DAMAGE_DURATION = 5,
+
+                ALLEGIANCE_SHADOW_RESIST = 0.9,
+                ALLEGIANCE_VS_LUNAR_BONUS = 1.1,
+                ALLEGIANCE_LUNAR_RESIST = 0.9,
+                ALLEGIANCE_VS_SHADOW_BONUS = 1.1,
+            },
+          
         },
 
         WILSON_BEARD_BITS ={
@@ -7095,6 +7193,86 @@ function Tune(overrides)
 
         WAGSTAFF_SPAWN_MACHINE_TIME = 4 * total_day_time,
         WAGSTAFF_SPAWN_MACHINE_TIME_VARIATION = 3 * total_day_time,
+
+        -- Meta 3
+
+        SPEAR_WATHGRITHR_LIGHTNING_USES = 150,
+        SPEAR_WATHGRITHR_LIGHTNING_DAMAGE = wilson_attack * 1.75,
+        SPEAR_WATHGRITHR_LIGHTNING_WET_DAMAGE_MULT = 0.5, -- It's actually 1.5
+
+        SPEAR_WATHGRITHR_LIGHTNING_LUNGE_COOLDOWN = 3.5,
+        SPEAR_WATHGRITHR_LIGHTNING_LUNGE_COOLDOWN_ONEQUIP = 2.5,
+        SPEAR_WATHGRITHR_LIGHTNING_LUNGE_DAMAGE = wilson_attack * 2,
+
+        SPEAR_WATHGRITHR_LIGHTNING_CHARGED_USES = 150,
+        SPEAR_WATHGRITHR_LIGHTNING_CHARGED_DAMAGE = wilson_attack * 1.75,
+        SPEAR_WATHGRITHR_LIGHTNING_CHARGED_PLANAR_DAMAGE = 20,
+        SPEAR_WATHGRITHR_LIGHTNING_CHARGED_SPEED_MULT = 1.2,
+        SPEAR_WATHGRITHR_LIGHTNING_CHARGED_LUNGE_REPAIR_AMOUNT = 3,
+        SPEAR_WATHGRITHR_LIGHTNING_CHARGED_MAX_REPAIRS_PER_LUNGE = 2, -- Max repair value: SPEAR_WATHGRITHR_LIGHTNING_CHARGED_LUNGE_REPAIR_AMOUNT * SPEAR_WATHGRITHR_LIGHTNING_CHARGED_MAX_REPAIRS_PER_LUNGE
+
+        ARMOR_WATHGRITHR_IMPROVEDHAT = wilson_health * 6 * multiplayer_armor_durability_modifier,
+        ARMOR_WATHGRITHR_IMPROVEDHAT_ABSORPTION = .8 * multiplayer_armor_absorption_modifier,
+
+        WATHGRITHR_SHIELD_DAMAGE = wilson_attack * 1.5,
+        WATHGRITHR_SHIELD_ABSORPTION = .85 * multiplayer_armor_absorption_modifier,
+        WATHGRITHR_SHIELD_ARMOR = wilson_health * 4 * multiplayer_armor_durability_modifier,
+        WATHGRITHR_SHIELD_USEDAMAGE = 4,
+
+        WATHGRITHR_SHIELD_PARRY_ARC = 178,
+
+        WATHGRITHR_SHIELD_COOLDOWN = 10,
+        WATHGRITHR_SHIELD_COOLDOWN_ONEQUIP = 2.5,
+        WATHGRITHR_SHIELD_PARRY_DURATION = 1,
+        WATHGRITHR_SHIELD_COOLDOWN_ONPARRY_REDUCTION = 0.6, -- Advances to 60% cooldown, so the new cooldown is 40% of WATHGRITHR_SHIELD_COOLDOWN.
+
+        SADDLE_WATHGRITHR_BONUS_DAMAGE = 5,
+        SADDLE_WATHGRITHR_USES = 6,
+        SADDLE_WATHGRITHR_SPEEDMULT = 1.20,
+        SADDLE_WATHGRITHR_ABSORPTION = 0.4 * multiplayer_armor_absorption_modifier,
+
+        BATTLESONG_SHADOWALIGNED_SHADOW_RESIST = 0.95,
+        BATTLESONG_SHADOWALIGNED_VS_LUNAR_BONUS = 1.05,
+
+        BATTLESONG_LUNARALIGNED_LUNAR_RESIST = 0.95,
+        BATTLESONG_LUNARALIGNED_VS_SHADOW_BONUS = 1.05,
+
+        EMBER_STAR_DURATION = total_day_time,
+        WILLOW_EMBER_THROW = 1,
+        WILLOW_EMBER_BURST = 4,
+        WILLOW_EMBER_BALL = 2,
+        WILLOW_EMBER_FRENZY = 2,
+        WILLOW_EMBER_LUNAR = 5,
+        WILLOW_EMBER_SHADOW = 5,
+
+        WILLOW_FIREFRENZY_DURATION = 5, --seg_time*2,
+        WILLOW_FIREFRENZY_MULT = 1.25,
+
+        WILLOW_LUNAR_FIRE_TIME = 5,
+        WILLOW_LUNAR_FIRE_DAMAGE = 20,
+        WILLOW_LUNAR_FIRE_PLANAR_DAMAGE = 30,
+
+        WILLOW_EMBERDROP_RANGE = 40, --die within this range of willow to spawn an ember
+
+        WILLOW_EMBER_DURATION = total_day_time,
+        CONTROLLED_BURN_DAMAGE_MULT = 1.5,
+        CONTROLLED_BURN_DURATION_CREATURE_MULT = 3,
+        CONTROLLED_BURN_DURATION_STRUCTURE_MULT = 0.5,
+        FIRE_BURST_RANGE = 10,
+        
+        BERNIE_PLANAR_DAMAGE = 5,
+        BERNIE_PLANAR_DEFENCE = 15,
+
+        BERNIE_BURNING_REFLECT_DAMAGE = 50,
+
+		CHANNELCAST_SPEED_MOD = 2 / 3,
+
+        -- Ocean Ice
+        OCEAN_ICE_RADIUS = 1.6,
+        OCEAN_ICE_HEALTH = 30,
+        OCEAN_ICE_TILE_HEALTH = 200,
+        OCEAN_ICE_BREAK_FORCE = 1.15,
+
     }
 
     TUNING_MODIFIERS = {}
@@ -7120,3 +7298,4 @@ function Tune(overrides)
 end
 
 Tune()
+

@@ -221,8 +221,14 @@ local states =
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("death")
+			inst.AnimState:PushAnimation("death_pst", false)
             inst.Transform:SetNoFaced()
+			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationTime())
         end,
+
+		ontimeout = function(inst)
+			inst.AnimState:SetBuild("bernie_build")
+		end,
 
         timeline =
         {
@@ -259,7 +265,7 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst)
+			EventHandler("animqueueover", function(inst)
                 if inst.AnimState:AnimDone() then
                     inst:GoInactive()
                 end
@@ -343,10 +349,16 @@ local states =
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("deactivate")
+			inst.AnimState:PushAnimation("deactivate_pst", false)
             inst.Transform:SetNoFaced()
             inst.components.health:SetInvincible(true)
             inst.SoundEmitter:PlaySound("dontstarve/creatures/together/bernie_big/deactivate")
+			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationTime())
         end,
+
+		ontimeout = function(inst)
+			inst.AnimState:SetBuild("bernie_build")
+		end,
 
         timeline =
         {
@@ -374,7 +386,7 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst)
+			EventHandler("animqueueover", function(inst)
                 if inst.AnimState:AnimDone() then
                     inst:GoInactive()
                 end

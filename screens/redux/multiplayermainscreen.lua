@@ -473,7 +473,7 @@ function MakeBanner(self)
 	if title_str then
 		if title_str ~= nil then
 			local x = 170
-			local y = 75
+			local y = 15
 			local text_width = 880
 
 			local font_size = 22

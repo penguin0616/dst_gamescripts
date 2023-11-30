@@ -94,6 +94,12 @@ function Wheel:SetItems( dataset, radius, focus_radius, dataset_name )
 		w.ongainfocus = function()
 				w:MoveTo(v.pos, v.focus_pos, 0.1)
 				self.selected_label:SetString(v.label)
+
+				local offset = Vector3(0,50,0)
+				local newpos = v.pos + offset
+				local newfocuspos = v.focus_pos + offset
+
+				self.selected_label:MoveTo(newpos, newfocuspos, 0.1)
 				if v.onfocus ~= nil then
 					v.onfocus()
 				end

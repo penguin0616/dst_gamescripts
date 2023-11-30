@@ -283,6 +283,14 @@ local function IsCarefulWalking(inst)
     return inst.player_classified ~= nil and inst.player_classified.iscarefulwalking:value()
 end
 
+fns.IsChannelCasting = function(inst)
+	return inst.player_classified and inst.player_classified.ischannelcasting:value()
+end
+
+fns.IsChannelCastingItem = function(inst)
+	return inst.player_classified and inst.player_classified.ischannelcastingitem:value()
+end
+
 local function ShouldAcceptItem(inst, item)
     if inst:HasTag("playerghost") then
         return item.prefab == "reviver" and inst:IsOnPassablePoint()
@@ -1433,6 +1441,14 @@ fns.ResetMinimapOffset = function(inst) -- NOTES(JBK): Please use this only when
     end
 end
 
+fns.CloseMinimap = function(inst) -- NOTES(JBK): Please use this only when necessary.
+    if TheWorld.ismastersim then
+        --Forces a netvar to be dirty regardless of value
+        inst.player_classified.minimapclose:set_local(false)
+        inst.player_classified.minimapclose:set(false)
+    end
+end
+
 local function SetCameraDistance(inst, distance)
     if TheWorld.ismastersim then
         inst.player_classified.cameradistance:set(distance or 0)
@@ -1789,7 +1805,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_receive_gift.zip"),
         Asset("ANIM", "anim/shadow_skinchangefx.zip"),
         Asset("ANIM", "anim/player_townportal.zip"),
-        Asset("ANIM", "anim/player_channel.zip"),
+        Asset("ANIM", "anim/player_channel.zip"), --channeling scene entity
         Asset("ANIM", "anim/player_construct.zip"),
         Asset("SOUND", "sound/sfx.fsb"),
         Asset("SOUND", "sound/wilson.fsb"),
@@ -1819,6 +1835,10 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_encumbered.zip"),
         Asset("ANIM", "anim/player_encumbered_fast.zip"),
         Asset("ANIM", "anim/player_encumbered_jump.zip"),
+		Asset("ANIM", "anim/player_channelcast_basic.zip"), --channelcast using held item (can walk)
+		Asset("ANIM", "anim/player_channelcast_hit.zip"),
+		Asset("ANIM", "anim/player_channelcast_oh_basic.zip"), --channelcast using off-hand (can walk)
+		Asset("ANIM", "anim/player_channelcast_oh_hit.zip"),
 
         Asset("ANIM", "anim/player_sandstorm.zip"),
         Asset("ANIM", "anim/player_tiptoe.zip"),
@@ -1953,6 +1973,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 		inst.IsInMiasma = fns.IsInMiasma -- Didn't want to make miasmawatcher a networked component
 		inst.IsInAnyStormOrCloud = fns.IsInAnyStormOrCloud -- Use this instead of GetStormLevel, to include things like Miasma clouds
         inst.IsCarefulWalking = IsCarefulWalking -- Didn't want to make carefulwalking a networked component
+		inst.IsChannelCasting = fns.IsChannelCasting -- Didn't want to make channelcaster a networked component
+		inst.IsChannelCastingItem = fns.IsChannelCastingItem -- Didn't want to make channelcaster a networked component
         inst.EnableMovementPrediction = EnableMovementPrediction
         inst.EnableBoatCamera = fns.EnableBoatCamera
         inst.ShakeCamera = ShakeCamera
@@ -2471,6 +2493,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
         inst:AddComponent("stageactor")
 
+		inst:AddComponent("channelcaster")
+
         inst:AddComponent("experiencecollector")
 
         inst:AddInherentAction(ACTIONS.PICK)
@@ -2487,6 +2511,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.ShowHUD = ShowHUD
         inst.ShowPopUp = fns.ShowPopUp
         inst.ResetMinimapOffset = fns.ResetMinimapOffset
+        inst.CloseMinimap = fns.CloseMinimap
         inst.SetCameraDistance = SetCameraDistance
         inst.SetCameraZoomed = SetCameraZoomed
         inst.SnapCamera = SnapCamera

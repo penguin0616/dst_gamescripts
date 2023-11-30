@@ -11,7 +11,7 @@ function MakePlacer(name, bank, build, anim, onground, snap, metersnap, scale, f
 
         inst.entity:AddTransform()
         inst.entity:AddAnimState()
-        if anim ~= nil then
+        if anim then
             inst.AnimState:SetBank(bank)
             inst.AnimState:SetBuild(build)
             inst.AnimState:PlayAnimation(anim, true)
@@ -28,17 +28,18 @@ function MakePlacer(name, bank, build, anim, onground, snap, metersnap, scale, f
             inst.Transform:SetEightFaced()
         end
 
-        inst:AddComponent("placer")
-        inst.components.placer.snaptogrid = snap
-        inst.components.placer.snap_to_meters = metersnap
-        inst.components.placer.fixedcameraoffset = fixedcameraoffset
-        inst.components.placer.onground = onground
-        -- If the user clicks when the placement is invalid this gets called
-        inst.components.placer.onfailedplacement = onfailedplacement
+        local placer = inst:AddComponent("placer")
+        placer.snaptogrid = snap
+        placer.snap_to_meters = metersnap
+        placer.fixedcameraoffset = fixedcameraoffset
+        placer.onground = onground
 
-        if offset ~= nil then
-            inst.components.placer.offset = offset
-        end
+        -- If the user clicks when the placement is invalid this gets called
+        placer.onfailedplacement = onfailedplacement
+
+        -- If offset is nil, we just assign nil; the placer component
+        -- doesn't have a property change listener on this.
+        placer.offset = offset
 
         if scale ~= nil and scale ~= 1 then
             inst.Transform:SetScale(scale, scale, scale)
@@ -48,7 +49,7 @@ function MakePlacer(name, bank, build, anim, onground, snap, metersnap, scale, f
             inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
         end
 
-        if postinit_fn ~= nil then
+        if postinit_fn then
             postinit_fn(inst)
         end
 

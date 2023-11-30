@@ -155,13 +155,13 @@ local function fn()
     inst.AnimState:SetBuild("cookiecutter_build")
     inst.AnimState:PlayAnimation("idle")
 
+	inst.no_wet_prefix = true
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
         return inst
     end
-
-	inst.no_wet_prefix = true
 
     inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
 	inst.components.locomotor.runspeed = TUNING.COOKIECUTTER.RUN_SPEED

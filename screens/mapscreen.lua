@@ -282,6 +282,41 @@ function MapScreen:ProcessRMBDecorations(rmb, fresh)
             decor1.text:SetString(tostring(rmb.distancecount))
             decor1.text:SetColour(alphascale1, alphascale1, alphascale1, alphascale1)
         end
+    elseif rmb.action == ACTIONS.TOSS_MAP then
+        local decor
+        if fresh then
+            local owner = self.owner
+            local inventory = owner.replica.inventory
+            local equippedhands = inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+            if equippedhands then
+                local image = equippedhands.replica.inventoryitem:GetImage()
+                local atlas = GetInventoryItemAtlas(image)
+                decor = self.decorationrootrmb:AddChild(Image(atlas, image))
+                self.decorationdata.rmbents[1] = decor
+            end
+        else
+            decor = self.decorationdata.rmbents[1]
+        end
+
+        if decor == nil then
+            return
+        end
+        
+        local rmb_pos = rmb:GetActionPoint()
+        local px, py, pz = 0, 0, 0
+        if rmb.doer then
+            px, py, pz = rmb.doer.Transform:GetWorldPosition()
+        end
+        local dx, dz = rmb_pos.x - px, rmb_pos.z - pz
+        local zoomscale = 1 / self.minimap:GetZoom()
+        local w, h = TheSim:GetScreenSize()
+        w, h = w * 0.5, h * 0.5
+        
+        local r = 1
+        local ndx, ndz = dx * r + px, dz * r + pz
+        local x, y = self.minimap:WorldPosToMapPos(ndx, ndz, 0)
+        decor:SetPosition(x * w, y * h)
+        decor:SetScale(zoomscale, zoomscale, 1)
     end
 end
 
@@ -312,6 +347,12 @@ function MapScreen:UpdateMapActionsDecorations(x, y, z, LMBaction, RMBaction)
 end
 
 function MapScreen:OnUpdate(dt)
+    if self._hack_ignore_held_controls then
+        self._hack_ignore_held_controls = self._hack_ignore_held_controls - dt
+        if self._hack_ignore_held_controls < 0 then
+            self._hack_ignore_held_controls = nil
+        end
+    end
     local s = -100 * dt -- now per second, not per repeat
 
     -- NOTES(JBK): Controllers apply smooth analog input so use it for more precision with joysticks.
@@ -376,6 +417,15 @@ end
 
 function MapScreen:OnControl(control, down)
     if MapScreen._base.OnControl(self, control, down) then return true end
+
+    if down and self._hack_ignore_held_controls then
+        self._hack_ignore_ups_for[control] = true
+        return true
+    end
+    if not down and self._hack_ignore_ups_for and self._hack_ignore_ups_for[control] then
+        self._hack_ignore_ups_for[control] = nil
+        return true
+    end
 
     if not down and (control == CONTROL_MAP or control == CONTROL_CANCEL) then
         TheFrontEnd:PopScreen()
