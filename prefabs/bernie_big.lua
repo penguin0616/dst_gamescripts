@@ -252,39 +252,39 @@ end
 local function onLeaderChanged(inst,leader)
     if inst.bernieleader ~= leader then
         inst.bernieleader = leader
-   
-        local percent = inst.components.health:GetPercent()
-        if leader and leader.components.skilltreeupdater:IsActivated("willow_berniehealth_2") then
-            inst.components.health:SetMaxHealth(TUNING.BERNIE_HEALTH * TUNING.SKILLS.WILLOW_BERNIEHEALTH_2)
-        elseif leader and leader.components.skilltreeupdater:IsActivated("willow_berniehealth_1") then
-            inst.components.health:SetMaxHealth(TUNING.BERNIE_HEALTH * TUNING.SKILLS.WILLOW_BERNIEHEALTH_1)
-        else
-            inst.components.health:SetMaxHealth(TUNING.BERNIE_HEALTH)
-        end 
-        inst.components.health:SetPercent(percent)
-
-        if leader and leader.components.skilltreeupdater:IsActivated("willow_berniespeed_2") then
-            inst.components.locomotor.walkspeed = TUNING.BERNIE_BIG_WALK_SPEED * TUNING.SKILLS.WILLOW_BERNIESPEED_2
-            inst.components.locomotor.runspeed = TUNING.BERNIE_BIG_RUN_SPEED * TUNING.SKILLS.WILLOW_BERNIESPEED_2
-        elseif leader and leader.components.skilltreeupdater:IsActivated("willow_berniespeed_1") then
-            inst.components.locomotor.walkspeed = TUNING.BERNIE_BIG_WALK_SPEED * TUNING.SKILLS.WILLOW_BERNIESPEED_1
-            inst.components.locomotor.runspeed = TUNING.BERNIE_BIG_RUN_SPEED * TUNING.SKILLS.WILLOW_BERNIESPEED_1
-        else
-            inst.components.locomotor.walkspeed = TUNING.BERNIE_BIG_WALK_SPEED
-            inst.components.locomotor.runspeed = TUNING.BERNIE_BIG_RUN_SPEED
-        end
-
-        inst.components.health:StopRegen()
-        if leader and leader.components.skilltreeupdater:IsActivated("willow_bernieregen_2") then
-            inst.components.health:StartRegen(TUNING.SKILLS.WILLOW_BERNIE_HEALTH_REGEN_2, TUNING.SKILLS.WILLOW_BERNIE_HEALTH_REGEN_PERIOD)
-        elseif leader and leader.components.skilltreeupdater:IsActivated("willow_bernieregen_1") then
-            inst.components.health:StartRegen(TUNING.SKILLS.WILLOW_BERNIE_HEALTH_REGEN_1, TUNING.SKILLS.WILLOW_BERNIE_HEALTH_REGEN_PERIOD)
-        end        
-
-        if leader then 
-            inst:CheckForAllegiances(leader)
-        end
     end
+
+    if leader and leader.components.skilltreeupdater:IsActivated("willow_berniespeed_2") then
+        inst.components.locomotor.walkspeed = TUNING.BERNIE_BIG_WALK_SPEED * TUNING.SKILLS.WILLOW_BERNIESPEED_2
+        inst.components.locomotor.runspeed = TUNING.BERNIE_BIG_RUN_SPEED * TUNING.SKILLS.WILLOW_BERNIESPEED_2
+    elseif leader and leader.components.skilltreeupdater:IsActivated("willow_berniespeed_1") then
+        inst.components.locomotor.walkspeed = TUNING.BERNIE_BIG_WALK_SPEED * TUNING.SKILLS.WILLOW_BERNIESPEED_1
+        inst.components.locomotor.runspeed = TUNING.BERNIE_BIG_RUN_SPEED * TUNING.SKILLS.WILLOW_BERNIESPEED_1
+    else
+        inst.components.locomotor.walkspeed = TUNING.BERNIE_BIG_WALK_SPEED
+        inst.components.locomotor.runspeed = TUNING.BERNIE_BIG_RUN_SPEED
+    end
+
+    inst.components.health:StopRegen()
+    if leader and leader.components.skilltreeupdater:IsActivated("willow_bernieregen_2") then
+        inst.components.health:StartRegen(TUNING.SKILLS.WILLOW_BERNIE_HEALTH_REGEN_2, TUNING.SKILLS.WILLOW_BERNIE_HEALTH_REGEN_PERIOD)
+    elseif leader and leader.components.skilltreeupdater:IsActivated("willow_bernieregen_1") then
+        inst.components.health:StartRegen(TUNING.SKILLS.WILLOW_BERNIE_HEALTH_REGEN_1, TUNING.SKILLS.WILLOW_BERNIE_HEALTH_REGEN_PERIOD)        
+    end        
+
+    if leader then 
+        inst:CheckForAllegiances(leader)
+    end
+
+    local percent = inst.components.health:GetPercent()
+    if leader and leader.components.skilltreeupdater:IsActivated("willow_berniehealth_2") then 
+        inst.components.health:SetMaxHealth(TUNING.BERNIE_BIG_HEALTH * TUNING.SKILLS.WILLOW_BERNIEHEALTH_2)
+    elseif leader and leader.components.skilltreeupdater:IsActivated("willow_berniehealth_1") then
+        inst.components.health:SetMaxHealth(TUNING.BERNIE_BIG_HEALTH * TUNING.SKILLS.WILLOW_BERNIEHEALTH_1)
+    else
+        inst.components.health:SetMaxHealth(TUNING.BERNIE_BIG_HEALTH)
+    end 
+    inst.components.health:SetPercent(percent)
 
     if leader and leader.components.skilltreeupdater:IsActivated("willow_burnignbernie") then
         inst:AddTag("canlight")
@@ -298,37 +298,35 @@ local function OnColourChanged(inst, r, g, b, a)
     end
 end
 
-local function CheckForAllegiances(inst,leader)
+local function CheckForAllegiances(inst, leader)
+    local shadow = leader.components.skilltreeupdater:IsActivated("willow_allegiance_shadow_bernie")
+    local lunar = leader.components.skilltreeupdater:IsActivated("willow_allegiance_lunar_bernie")
 
-    if leader.components.skilltreeupdater:IsActivated("willow_allegiance_shadow_bernie") then
-
-        inst:AddComponent("planarentity")
-        inst:AddComponent("planardamage")
-        inst.components.planardamage:SetBaseDamage(TUNING.BERNIE_PLANAR_DAMAGE)
-        
-        inst:AddComponent("planardefense")
-        inst.components.planardefense:SetBaseDefense(TUNING.BERNIE_PLANAR_DEFENCE)        
-
-        inst.AnimState:SetBuild("bernie_shadow_build")
-
-        inst:AddTag("shadow_aligned")
-        inst.current_allegiance:set(BERNIEALLEGIANCE.SHADOW)
-    elseif leader.components.skilltreeupdater:IsActivated("willow_allegiance_lunar_bernie") then
-        
-        inst:AddComponent("planarentity")
-        inst:AddComponent("planardamage")
-        inst.components.planardamage:SetBaseDamage(TUNING.BERNIE_PLANAR_DAMAGE)
-        
-        inst:AddComponent("planardefense")
-        inst.components.planardefense:SetBaseDefense(TUNING.BERNIE_PLANAR_DEFENCE)
-
-        inst.AnimState:SetBuild("bernie_lunar_build")
-
-        inst.AnimState:SetSymbolBloom("blob_body")
-
-        inst:AddTag("lunar_aligned")
-        inst.current_allegiance:set(BERNIEALLEGIANCE.LUNAR)
+    if not shadow and not lunar then
+        return
     end
+
+    inst.AnimState:SetBuild(shadow and "bernie_shadow_build" or "bernie_lunar_build")
+    inst.AnimState:SetSymbolBloom("blob_body")
+
+    inst:AddTag(shadow and "shadow_aligned" or "lunar_aligned")
+
+    inst.current_allegiance:set(shadow and BERNIEALLEGIANCE.SHADOW or BERNIEALLEGIANCE.LUNAR)
+
+    if inst.components.planarentity == nil then
+        inst:AddComponent("planarentity")
+    end
+
+    if inst.components.planardamage == nil then
+        inst:AddComponent("planardamage")
+    end
+
+    if inst.components.planardefense == nil then
+        inst:AddComponent("planardefense")
+    end
+
+    inst.components.planardamage:SetBaseDamage(TUNING.BERNIE_PLANAR_DAMAGE)
+    inst.components.planardefense:SetBaseDefense(TUNING.BERNIE_PLANAR_DEFENCE)
 end
 
 local function CreateFlameFx(bank,build,anim,override,bloomsymbols)

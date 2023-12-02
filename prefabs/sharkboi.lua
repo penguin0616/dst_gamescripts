@@ -72,9 +72,6 @@ local function OnNewState(inst)
 			inst.Physics:SetMass(FIN_MASS)
 		else
 			inst.Physics:SetMass(STANDING_MASS)
-			--stunned out of digging?
-			inst.components.timer:StopTimer("standing_dive_cd")
-			inst.components.timer:StartTimer("standing_dive_cd", TUNING.SHARKBOI_STANDING_DIVE_CD / 2)
 		end
 	else
 		dochangemass = true
@@ -105,8 +102,6 @@ local function OnNewState(inst)
 		ChangeRadius(inst, STANDING_RADIUS)
 		inst.components.health:SetInvincible(false)
 		inst.components.locomotor.runspeed = TUNING.SHARKBOI_RUNSPEED
-		inst.components.timer:StopTimer("standing_dive_cd")
-		inst.components.timer:StartTimer("standing_dive_cd", TUNING.SHARKBOI_STANDING_DIVE_CD)
 	end
 end
 

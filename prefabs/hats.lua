@@ -3706,6 +3706,11 @@ local function MakeHat(name)
     end
 
     fns.wagpunk_OnAttack = function(owner, data)
+        if data.target == owner then
+            -- Don't track us.
+            return
+        end
+
         local hat = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
         if hat._targettask and hat._potencialtarget == data.target then
             return

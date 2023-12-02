@@ -113,6 +113,9 @@ local function fn()
 	inst:AddComponent("planardamage")
 	inst.components.planardamage:SetBaseDamage(TUNING.WILLOW_LUNAR_FIRE_PLANAR_DAMAGE)
 
+	inst:AddComponent("damagetypebonus")
+	inst.components.damagetypebonus:AddBonus("shadow_aligned", inst, TUNING.WILLOW_LUNAR_FIRE_BONUS)	
+
 	inst.SetFlamethrowerAttacker = SetFlamethrowerAttacker
 	inst.KillFX = KillFX
 	inst.OnRemoveEntity = OnRemoveEntity

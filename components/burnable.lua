@@ -345,8 +345,7 @@ function Burnable:Ignite(immediate, source, doer)
 
         if controlled_burn_source then
             self.controlled_burn = {
-                duration_creature = controlled_burn_source.components.skilltreeupdater:IsActivated("willow_controlled_burn_2") and TUNING.CONTROLLED_BURN_DURATION_CREATURE_MULT or nil,
-                duration_structure = controlled_burn_source.components.skilltreeupdater:IsActivated("willow_controlled_burn_2") and TUNING.CONTROLLED_BURN_DURATION_STRUCTURE_MULT or nil,
+                duration_creature = controlled_burn_source.components.skilltreeupdater:IsActivated("willow_controlled_burn_2") and TUNING.CONTROLLED_BURN_DURATION_CREATURE_MULT or nil,                
                 damage = controlled_burn_source.components.skilltreeupdater:IsActivated("willow_controlled_burn_3") and TUNING.CONTROLLED_BURN_DAMAGE_MULT or nil
             }
         else
@@ -379,8 +378,6 @@ end
 function Burnable:CalculateControlledBurnDuration()
     if self.controlled_burn.duration_creature and self.inst.components.health then
         return self.controlled_burn.duration_creature
-    elseif self.controlled_burn.duration_structure then
-        return self.controlled_burn.duration_structure
     end
 end
 

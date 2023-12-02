@@ -103,6 +103,8 @@ local function OnTakeDrowningDamage(inst)
     inst.components.singinginspiration:SetInspiration(0)
 end
 
+-------------------------------------------------------------------------------------------------------
+
 local function PlayRidingMusic(inst)
     inst:PushEvent("playrideofthevalkyrie")
 end
@@ -125,6 +127,28 @@ local function OnRidingDirty(inst)
         inst._play_riding_music_task = nil
     end
 end
+
+-------------------------------------------------------------------------------------------------------
+
+local function OnSave(inst, data)
+    data.shieldmaker = inst:HasTag("wathgrithrshieldmaker") or nil
+    data.spearlighting_upgradeuser = inst:HasTag(UPGRADETYPES.SPEAR_LIGHTNING.."_upgradeuser") or nil
+end
+
+-- To maintain restricted equipment equipped.
+local function OnPreLoad(inst, data)
+    if data == nil then return end
+
+    if data.shieldmaker ~= nil then
+        inst:AddTag("wathgrithrshieldmaker")
+    end
+
+    if data.spearlighting_upgradeuser ~= nil then
+        inst:AddTag(UPGRADETYPES.SPEAR_LIGHTNING.."_upgradeuser")
+    end
+end
+
+-------------------------------------------------------------------------------------------------------
 
 local function common_postinit(inst)
     inst:AddTag("valkyrie")
@@ -195,6 +219,9 @@ local function master_postinit(inst)
 
         inst.components.combat.damagemultiplier = TUNING.WATHGRITHR_DAMAGE_MULT
         inst.components.health:SetAbsorptionAmount(TUNING.WATHGRITHR_ABSORPTION)
+
+        inst.OnSave = OnSave
+        inst.OnPreLoad = OnPreLoad
 
         inst:ListenForEvent("killed", onkilled)
     end

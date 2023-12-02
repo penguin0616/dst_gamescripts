@@ -464,14 +464,14 @@ local function IsBoatEdgeOverLand(inst, override_position_pt)
         local angle0 = angle - segment_span / 2
         local x0 = math.cos(angle0) * radius
         local z0 = math.sin(angle0) * radius
-        if map:IsVisualGroundAtPoint(x + x0, 0, z + z0) then
+        if not map:IsOceanTileAtPoint(x + x0, 0, z + z0) then
             return true
         end
 
         local angle1 = angle + segment_span / 2
         local x1 = math.cos(angle1) * radius
         local z1 = math.sin(angle1) * radius
-        if map:IsVisualGroundAtPoint(x + x1, 0, z + z1) then
+        if not map:IsOceanTileAtPoint(x + x1, 0, z + z1) then
             return true
         end
     end

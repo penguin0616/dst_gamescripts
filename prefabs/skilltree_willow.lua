@@ -274,7 +274,7 @@ local function BuildSkillsData(SkillTreeFns)
             onactivate = function(inst, fromload)
                     if inst.bigbernies then
                         for bern, val in pairs(inst.bigbernies)do
-                            bern.onLeaderChanged(bern,inst)
+                            bern:onLeaderChanged(inst)
                         end
                     end
                 end,
@@ -294,7 +294,7 @@ local function BuildSkillsData(SkillTreeFns)
             onactivate = function(inst, fromload)
                     if inst.bigbernies then
                         for bern, val in pairs(inst.bigbernies)do
-                            bern.onLeaderChanged(bern,inst)
+                            bern:onLeaderChanged(inst)
                         end
                     end
                 end,     
@@ -334,7 +334,7 @@ local function BuildSkillsData(SkillTreeFns)
             onactivate = function(inst, fromload)
                     if inst.bigbernies then
                         for bern, val in pairs(inst.bigbernies)do
-                            bern.onLeaderChanged(bern,inst)
+                            bern:onLeaderChanged(inst)
                         end
                     end
                 end,
@@ -353,7 +353,7 @@ local function BuildSkillsData(SkillTreeFns)
             onactivate = function(inst, fromload)
                     if inst.bigbernies then
                         for bern, val in pairs(inst.bigbernies)do
-                            bern.onLeaderChanged(bern,inst)
+                            bern:onLeaderChanged(inst)
                         end
                     end
                 end,               
@@ -410,7 +410,7 @@ local function BuildSkillsData(SkillTreeFns)
             onactivate = function(inst, fromload)
                     if inst.bigbernies then
                         for bern, val in pairs(inst.bigbernies)do
-                            bern.onLeaderChanged(bern,inst)
+                            bern:onLeaderChanged(inst)
                         end
                     end
                 end,

@@ -35,7 +35,6 @@ local function UpdateSnuff(inst, owner)
 			elseif v.components.burnable then
 				if v.components.burnable:IsBurning() then
 					v.components.burnable:Extinguish()                    
-					inst.components.fueled:SetPercent( inst.components.fueled:GetPercent() +0.01 )
                     fx = "channel_absorb_fire"
 				elseif v.components.burnable:IsSmoldering() then
 					v.components.burnable:SmotherSmolder()
@@ -339,6 +338,10 @@ local function OnRemoveEntity(inst)
 	end
 end
 
+local function ontakefuel(inst)
+   inst.SoundEmitter:PlaySound("meta3/willow_lighter/ember_absorb")
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -410,6 +413,10 @@ local function fn()
     inst.components.fueled:InitializeFuelLevel(TUNING.LIGHTER_FUEL)
     inst.components.fueled:SetDepletedFn(inst.Remove)
     inst.components.fueled:SetFirstPeriod(TUNING.TURNON_FUELED_CONSUMPTION, TUNING.TURNON_FULL_FUELED_CONSUMPTION)
+    inst.components.fueled.fueltype = FUELTYPE.LIGHTER
+    inst.components.fueled.accepting = true
+    inst.components.fueled:SetTakeFuelFn(ontakefuel)
+    
 
     inst.applyskilleffect = applyskilleffect
     inst.testforattunedskill = testforattunedskill

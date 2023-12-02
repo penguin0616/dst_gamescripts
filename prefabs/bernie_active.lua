@@ -53,7 +53,8 @@ local function gobig(inst,leader)
 
         inst:Remove()
 
-        big.CheckForAllegiances(big,leader)
+        big:CheckForAllegiances(leader)
+
         return big
     end
 end

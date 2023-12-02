@@ -3,6 +3,7 @@ local fns
 
 local function HasEmbers(victim)
     return victim.components.burnable and victim.components.burnable:IsBurning() and 
+    not victim:HasTag("noember") and
         (victim:HasTag("animal") or
          victim:HasTag("character") or
          victim:HasTag("largecreature") or
@@ -63,22 +64,31 @@ local CREATURES_CAN = {"monster","smallcreature","largecreature","animal"}
 local CREATURES_CANT = {"FX","INLIMBO","DECOR","playerghost","NOCLICK"}
 
 local function GetBurstTargets(player)
-    local pos = Vector3(player.Transform:GetWorldPosition())
-    local ents = TheSim:FindEntities(pos.x, pos.y, pos.z,  TUNING.FIRE_BURST_RANGE, CREATURES_MUST,CREATURES_CANT,CREATURES_CAN)
+    if player == ThePlayer then
+        local pos = Vector3(player.Transform:GetWorldPosition())
+        local ents = TheSim:FindEntities(pos.x, pos.y, pos.z,  TUNING.FIRE_BURST_RANGE, CREATURES_MUST,CREATURES_CANT,CREATURES_CAN)
 
-    for i=#ents,1,-1 do
-        if player.components.combat:IsAlly(ents[i]) or player.components.combat:TargetHasFriendlyLeader(ents[i]) then
-            table.remove(ents,i)
+        for i=#ents,1,-1 do
+            if not ents[i]:HasTag("canlight") and not ents[i]:HasTag("nolight") and not ents[i]:HasTag("fire")  then
+                table.remove(ents,i)
+            end
         end
+
+        for i=#ents,1,-1 do
+            if player.replica.combat:IsAlly(ents[i]) or player.replica.combat:TargetHasFriendlyLeader(ents[i]) then
+                table.remove(ents,i)
+            end
+        end
+
+        for i=#ents,1,-1 do
+            if not ents[i]:HasTag("hostile") and (ents[i].replica.combat.GetTarget and ents[i].replica.combat:GetTarget() ~= player or ents[i].components.combat.target ~= player) then
+                table.remove(ents,i)
+            end
+        end 
+
+
+        return ents
     end
-
-    for i=#ents,1,-1 do
-        if not ents[i]:HasTag("hostile") and (ents[i].components.combat.GetTarget and ents[i].components.combat:GetTarget() ~= player or ents[i].components.combat.target ~= player) then
-            table.remove(ents,i)
-        end
-    end 
-
-    return ents
 end
 
 fns = {

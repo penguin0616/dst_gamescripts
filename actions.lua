@@ -2969,7 +2969,7 @@ ACTIONS_MAP_REMAP[ACTIONS.TOSS.code] = function(act, targetpos)
         end
     end
 
-    if TheWorld.Map:IsAboveGroundAtPoint(targetpos.x, targetpos.y, targetpos.z) then
+    if not TheWorld.Map:IsOceanTileAtPoint(targetpos.x, targetpos.y, targetpos.z) then
         return nil
     end
 

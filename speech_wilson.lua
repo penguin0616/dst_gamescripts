@@ -5058,6 +5058,7 @@ return {
         BOOTLEG = "Somewhere out there, a pirate is missing their bootie.",
         OCEANWHIRLPORTAL = "I'll give it a whirl.",
 
+        EMBERLIGHT = "TODO",
         WILLOW_EMBER = "only_used_by_willow",
     },
 

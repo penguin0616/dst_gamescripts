@@ -40,7 +40,9 @@ function SharkboiBrain:OnStart()
 						if target and not self.inst.components.combat:InCooldown() and
 							self.inst:IsNear(target, TUNING.SHARKBOI_ATTACK_RANGE + target:GetPhysicsRadius(0))
 						then
+							self.inst.components.combat.ignorehitrange = true
 							self.inst.components.combat:TryAttack(target)
+							self.inst.components.combat.ignorehitrange = false
 						end
 						return false
 					end),

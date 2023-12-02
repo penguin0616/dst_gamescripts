@@ -458,8 +458,21 @@ local states =
 				elseif inst.sg.statemem.nextstateparams then
 					inst.sg:GoToState(unpack(inst.sg.statemem.nextstateparams))
 					return
-				elseif inst.sg.statemem.doattack and ChooseAttack(inst, inst.sg.statemem.doattack) then
-					return
+				elseif inst.sg.statemem.doattack then
+					if ChooseAttack(inst, inst.sg.statemem.doattack) then
+						return
+					end
+					--stunlocked at range? (melee attack didn't trigger)
+					local cd = inst.components.timer:GetTimeLeft("standing_dive_cd")
+					if cd then
+						local delta = TUNING.SHARKBOI_STANDING_DIVE_CD / 5
+						print("Reduced!", cd, cd - delta)
+						if cd > delta then
+							inst.components.timer:SetTimeLeft("standing_dive_cd", cd - delta)
+						else
+							inst.components.timer:StopTimer("standing_dive_cd")
+						end
+					end
 				end
 				inst.sg:RemoveStateTag("busy")
 			end),
@@ -1265,8 +1278,12 @@ local states =
 		tags = { "busy", "jumping" },
 
 		onenter = function(inst, pos)
+			inst.components.timer:StopTimer("standing_dive_cd")
 			if inst.sg.lasttags and inst.sg.lasttags["fastdig"] then
 				inst.sg:AddStateTag("fastdig")
+				inst.components.timer:StartTimer("standing_dive_cd", TUNING.SHARKBOI_STANDING_DIVE_CD / 2)
+			else
+				inst.components.timer:StartTimer("standing_dive_cd", TUNING.SHARKBOI_STANDING_DIVE_CD)
 			end
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("icedive_jump")

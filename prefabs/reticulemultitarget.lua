@@ -29,16 +29,18 @@ local function OnUpdate(inst, dt)
         onremove(inst)
     end
 
-    local ents = willow_ember_common.GetBurstTargets(ThePlayer)
+    if ThePlayer then
+        local ents = willow_ember_common.GetBurstTargets(ThePlayer)
 
-    for i, ent in ipairs(ents) do
-        if not inst._targets then
-            inst._targets = {}
+        for i, ent in ipairs(ents) do
+            if not inst._targets then
+                inst._targets = {}
+            end
+
+            local newfx = SpawnPrefab("reticulemultitargetsub")
+            ent:AddChild(newfx)
+            table.insert(inst._targets,newfx)
         end
-
-        local newfx = SpawnPrefab("reticulemultitargetsub")
-        ent:AddChild(newfx)
-        table.insert(inst._targets,newfx)
     end
 end
 
@@ -66,7 +68,7 @@ local function pingfn()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
-    inst.entity:AddNetwork()    
+
 
     inst:AddTag("FX")
     inst:AddTag("NOCLICK")
@@ -98,8 +100,6 @@ local function main()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
-    inst.entity:AddNetwork()
-
 
     inst:AddTag("FX")
     inst:AddTag("NOCLICK")
@@ -118,7 +118,7 @@ local function main()
     inst.AnimState:SetSortOrder(3)
     inst.AnimState:SetScale(1.15, 1.15)
     inst:Hide()
-
+    
     inst:AddComponent("updatelooper")
     inst.components.updatelooper:AddOnUpdateFn(OnUpdate)
 
@@ -132,7 +132,6 @@ local function sub()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
-    inst.entity:AddNetwork()
 
     inst:AddTag("FX")
     inst:AddTag("NOCLICK")

@@ -15085,14 +15085,14 @@ STRINGS.SKILLTREE = {
         WILLOW_CONTROLLED_BURN_1_TITLE = "Controlled Burning",
         WILLOW_CONTROLLED_BURN_1_DESC = "Fires you set won't spread, and burnable loot will just smolder.\nItems like torches and Willow's lighter have a 100% chance to ignite targets.",
         WILLOW_CONTROLLED_BURN_2_TITLE = "Burn Duration",
-        WILLOW_CONTROLLED_BURN_2_DESC = "Objects burn down faster, and creatures burn for longer.",
+        WILLOW_CONTROLLED_BURN_2_DESC = "Creatures burn for a longer time.",
         WILLOW_CONTROLLED_BURN_3_TITLE = "Fire Fighter",
         WILLOW_CONTROLLED_BURN_3_DESC = "Your fires deal more damage to creatures over time.",
 
         WILLOW_ATTUNED_LIGHTER_TITLE = "Hungry Lighter",
-        WILLOW_ATTUNED_LIGHTER_DESC = "Absorb fires (even when they're only smoldering) with your lighter to refuel it.",
+        WILLOW_ATTUNED_LIGHTER_DESC = "Stop things from burning by absorbing the flame (even when they're only smoldering) with your lighter.",
         WILLOW_EMBERS_TITLE = "Ember Tender",
-        WILLOW_EMBERS_DESC = "Collect and use Embers to perform Pyrokinetic effects.\nYou can collect Embers from burned creatures with your lighter.",
+        WILLOW_EMBERS_DESC = "Collect and use Embers to perform Pyrokinetic effects.\nYou can collect Embers from burned creatures with your lighter.\nUse Embers to refuel the lighter.",
 
         WILLOW_FIRE_BURST_TITLE = "Spontaneous Combustion",
         WILLOW_FIRE_BURST_DESC = "Use Embers to ignite creatures in an area near you.",

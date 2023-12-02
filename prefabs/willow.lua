@@ -150,7 +150,9 @@ local function updatelighters(inst)
         end)
 
         for i,lighter in ipairs(lighters)do
-            lighter:testforattunedskill(inst)
+            if lighter.testforattunedskill ~= nil then
+                lighter:testforattunedskill(inst)
+            end
         end
     end
 end
@@ -177,7 +179,6 @@ end
 
 local function CustomCombatDamage(inst, target, weapon, multiplier, mount)
     if target.components.burnable and target.components.burnable:IsBurning() and inst:HasTag("firefrenzy") then
-        print("DO MORE DAMAGE")
         return TUNING.WILLOW_FIREFRENZY_MULT
     end
 end

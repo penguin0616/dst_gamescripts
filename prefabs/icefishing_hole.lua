@@ -87,6 +87,7 @@ local function fn()
     inst:AddTag("oceanfishingfocus")
 
     inst:AddTag("groundhole")
+    inst:AddTag("ignorewalkableplatforms") -- Just in case.
 
     inst:SetDeployExtraSpacing(2)
 

@@ -1058,6 +1058,8 @@ TileManager.AddTile(
         snowsound="dontstarve/movement/run_ice",
         mudsound="dontstarve/movement/run_ice",
         nogroundoverlays = true,
+        cannotbedug = true,
+        hard = true,
         istemptile = true,
     },
     {

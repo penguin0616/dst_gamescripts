@@ -774,6 +774,9 @@ local function fn()
         inst:DoTaskInTime(0,DoOnClientInit)
         return inst
     end
+    inst:AddComponent("fuel")
+    inst.components.fuel.fueltype = FUELTYPE.LIGHTER
+    inst.components.fuel.fuelvalue = TUNING.HUGE_FUEL
 
     inst:AddComponent("aoespell")
 

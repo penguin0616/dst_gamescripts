@@ -1595,6 +1595,7 @@ function Tune(overrides)
         MED_FUEL = seg_time * 1.5,
         MED_LARGE_FUEL = seg_time * 3,
         LARGE_FUEL = seg_time * 6,
+        HUGE_FUEL = seg_time * 9,
 
         TINY_BURNTIME = seg_time*.1,
         SMALL_BURNTIME = seg_time*.25,
@@ -6572,7 +6573,7 @@ function Tune(overrides)
 		SHARKBOI_MELEE_RANGE = 4.5,
 		SHARKBOI_ATTACK_RANGE = 8,
 		SHARKBOI_TORPEDO_CD = 20,
-		SHARKBOI_STANDING_DIVE_CD = 30,
+		SHARKBOI_STANDING_DIVE_CD = 24,
 
 		SHARKBOI_AGGRO_DIST = 15,
 		SHARKBOI_KEEP_AGGRO_DIST = 12,
@@ -7245,7 +7246,10 @@ function Tune(overrides)
         WILLOW_EMBER_LUNAR = 5,
         WILLOW_EMBER_SHADOW = 5,
 
-        WILLOW_FIREFRENZY_DURATION = 5, --seg_time*2,
+        WILLOW_LUNAR_FIRE_BONUS = 1.1,
+        WILLOW_SHADOW_FIRE_BONUS = 1.1,        
+
+        WILLOW_FIREFRENZY_DURATION = seg_time*2,
         WILLOW_FIREFRENZY_MULT = 1.25,
 
         WILLOW_LUNAR_FIRE_TIME = 5,
@@ -7257,7 +7261,7 @@ function Tune(overrides)
         WILLOW_EMBER_DURATION = total_day_time,
         CONTROLLED_BURN_DAMAGE_MULT = 1.5,
         CONTROLLED_BURN_DURATION_CREATURE_MULT = 3,
-        CONTROLLED_BURN_DURATION_STRUCTURE_MULT = 0.5,
+
         FIRE_BURST_RANGE = 10,
         
         BERNIE_PLANAR_DAMAGE = 5,
