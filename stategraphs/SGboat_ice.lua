@@ -61,6 +61,7 @@ local states =
 
     State{
         name = "ready_to_snap",
+		tags = { "dead" },
         onenter = function(inst)
             local ents = inst.components.walkableplatform:GetEntitiesOnPlatform()
             for ent in pairs(ents) do
@@ -77,6 +78,7 @@ local states =
 
     State{
         name = "snapping",
+		tags = { "dead" },
         onenter = function(inst)
             if inst.boat_crackle then
                 local fx_boat_crackle = SpawnPrefab(inst.boat_crackle)
@@ -88,8 +90,6 @@ local states =
             for player_on_platform in pairs(players_on_platform) do
                 player_on_platform:PushEvent("onpresink")
             end
-
-            inst.sg:SetTimeout(1)
         end,
 
         events =

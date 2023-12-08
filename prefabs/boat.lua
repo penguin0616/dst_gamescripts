@@ -902,6 +902,18 @@ local function ice_floe_deploy_blocker_fn()
     return inst
 end
 
+local function ice_ondeath(inst)
+	if inst:IsAsleep() then
+		if not inst.sg:HasStateTag("dead") then
+			for ent in pairs(inst.components.walkableplatform:GetEntitiesOnPlatform()) do
+				ent:PushEvent("abandon_ship")
+			end
+		end
+		inst.sinkloot_asleep()
+		inst:Remove()
+	end
+end
+
 local function ice_fn()
     local inst = CreateEntity()
 
@@ -946,6 +958,7 @@ local function ice_fn()
     inst = create_master_pst(inst, OCEANICE_BOAT_DATA)
 
 	inst:ListenForEvent("spawnnewboatleak", OnSpawnNewBoatLeak)
+	inst:ListenForEvent("death", ice_ondeath)
 
     inst.components.hullhealth:SetSelfDegrading(1)
     inst.components.hullhealth.leakproof = true
@@ -977,6 +990,19 @@ local function ice_fn()
             SpawnFragment(locus_point, "degrade_fx_ice", math.cos(t) * r, 0, math.sin(t) * r)
         end
     end
+	inst.sinkloot_asleep = function()
+		local num_loot = math.random(3) - 1
+		if num_loot > 0 then
+			local locus_point = inst:GetPosition()
+			local loot_angle = PI2/num_loot
+			local loot_radius = (OCEANICE_BOAT_DATA.radius/2)
+			for i = 1, num_loot do
+				local r = (1 + math.sqrt(math.random()))*loot_radius
+				local t = (i + 2 * math.random()) * loot_angle
+				SpawnFragment(locus_point, "ice", math.cos(t) * r, 0, math.sin(t) * r, false)
+			end
+		end
+	end
     inst.postsinkfn = function(inst)
         local break_fx = SpawnPrefab("mining_ice_fx")
         break_fx.Transform:SetPosition(inst.Transform:GetWorldPosition())

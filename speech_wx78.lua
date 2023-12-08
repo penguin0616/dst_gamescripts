@@ -396,6 +396,7 @@ return{
 		{
 			NO_MAX_SANITY = "only_used_by_waxwell",
             NOT_ENOUGH_EMBERS = "only_used_by_willow",
+            NO_TARGETS = "only_used_by_willow",
 		},
     },
 
@@ -5047,6 +5048,7 @@ return{
         BOOTLEG = "SCANNING FOR VIRUSES",
         OCEANWHIRLPORTAL = "I HATE THIS I HATE THIS I HATE THIS",
 
+        EMBERLIGHT = "EVERY ONCE IN A WHILE MY MINIONS MANAGE TO MAKE SOMETHING USEFUL",
         WILLOW_EMBER = "only_used_by_willow",
     },
 

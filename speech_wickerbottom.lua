@@ -396,6 +396,7 @@ return{
 		{
 --fallback to speech_wilson.lua 			NO_MAX_SANITY = "only_used_by_waxwell",
             NOT_ENOUGH_EMBERS = "only_used_by_willow",
+            NO_TARGETS = "only_used_by_willow",
 		},
     },
 
@@ -5047,6 +5048,7 @@ return{
         BOOTLEG = "As far as teleportation methods go, it's quite unrefined.",
         OCEANWHIRLPORTAL = "One typically avoids sailing into a whirlpool, but sense and reason seem to mean nothing in this place.",
 
+        EMBERLIGHT = "Nothing like some unnatural fire to warm yourself with on a chilly day.",
         WILLOW_EMBER = "only_used_by_willow",
     },
 

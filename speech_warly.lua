@@ -396,6 +396,7 @@ return{
 		{
 --fallback to speech_wilson.lua 			NO_MAX_SANITY = "only_used_by_waxwell",
             NOT_ENOUGH_EMBERS = "only_used_by_willow",
+            NO_TARGETS = "only_used_by_willow",
 		},
     },
 
@@ -5047,6 +5048,7 @@ return{
         BOOTLEG = "Oh... oh my, was this someone's actual leg?",
         OCEANWHIRLPORTAL = "Someone is really stirring the soup.",
 
+        EMBERLIGHT = "Willow left this burner unattended.",
         WILLOW_EMBER = "only_used_by_willow",
     },
 

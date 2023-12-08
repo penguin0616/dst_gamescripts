@@ -1001,16 +1001,21 @@ local states =
             end),
 
             --groggy
+			--channelcast
             TimeEvent(1 * FRAMES, function(inst)
                 if inst.sg.statemem.groggy or
-                    inst.sg.statemem.goose then
+					inst.sg.statemem.channelcast or
+					inst.sg.statemem.goose
+				then
                     DoRunSounds(inst)
                     DoFoleySounds(inst)
                 end
             end),
             TimeEvent(12 * FRAMES, function(inst)
                 if inst.sg.statemem.groggy or
-                    inst.sg.statemem.sandstorm then
+					inst.sg.statemem.channelcast or
+					inst.sg.statemem.sandstorm
+				then
                     DoRunSounds(inst)
                     DoFoleySounds(inst)
                 end

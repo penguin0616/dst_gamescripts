@@ -407,6 +407,8 @@ return {
 			NO_MAX_SANITY = "only_used_by_waxwell",
             NOT_ENOUGH_EMBERS = "only_used_by_willow",
             NO_TARGETS = "only_used_by_willow",
+            CANT_SPELL_MOUNTED = "only_used_by_willow",
+            SPELL_ON_COOLDOWN = "only_used_by_willow", 
 		},
     },
 
@@ -5058,7 +5060,7 @@ return {
         BOOTLEG = "Somewhere out there, a pirate is missing their bootie.",
         OCEANWHIRLPORTAL = "I'll give it a whirl.",
 
-        EMBERLIGHT = "TODO",
+        EMBERLIGHT = "A fire without fuel? No matter.",
         WILLOW_EMBER = "only_used_by_willow",
     },
 

@@ -45,7 +45,7 @@ local function onthrown(inst, attacker, targetpos)
     inst.Physics:ClearCollisionMask()
     inst.Physics:CollidesWith(COLLISION.GROUND)
 
-    inst._oceanwhirlpool_spawnpos = Vector3(targetpos.x, 0, targetpos.z)
+    inst._oceanwhirlportal_spawnpos = Vector3(targetpos.x, 0, targetpos.z)
 end
 
 local function onhit(inst, attacker, target)
@@ -55,12 +55,12 @@ local function onhit(inst, attacker, target)
         inst.persists = true
         MakeInventoryPhysics(inst)
         inst.AnimState:PlayAnimation("idle")
-        inst._oceanwhirlpool_spawnpos = nil
+        inst._oceanwhirlportal_spawnpos = nil
         inst.SoundEmitter:PlaySound("dontstarve/common/together/infection_burst")
         SpawnPrefab("dirt_puff").Transform:SetPosition(x, y, z)
         return
     end
-    inst:CreateOceanWhirlportal(Vector3(x, 0, z), inst._oceanwhirlpool_spawnpos)
+    inst:CreateOceanWhirlportal(Vector3(x, 0, z), inst._oceanwhirlportal_spawnpos)
     inst.Physics:Teleport(x, 0, z)
     inst.persists = false
     inst.AnimState:PlayAnimation("used")
@@ -75,6 +75,36 @@ local function CanTossOnMap(inst, doer)
     end
 
     return true
+end
+
+local function InitMapDecorations(inst) -- NOTES(JBK): This is used in mapscreen and has access to minimap icons.
+    return {
+        {
+            atlas = GetInventoryItemAtlas("bootleg.tex"),
+            image = "bootleg.tex",
+            scale = 0.75,
+        },
+        {
+            atlas = "minimap/minimap_data.xml",
+            image = "oceanwhirlportal.png",
+            --scale = 1.0,
+        },
+    }
+end
+
+local function CalculateMapDecorations(inst, rmbents, px, pz, rmbx, rmbz)
+    local dx, dz = rmbx - px, rmbz - pz
+    if dx == 0 and dz == 0 then
+        dx = 1
+    end
+
+    local dist = math.sqrt(dx * dx + dz * dz)
+
+    rmbents[1].worldx = dx * (ACTIONS.TOSS.distance / dist) + px
+    rmbents[1].worldz = dz * (ACTIONS.TOSS.distance / dist) + pz
+
+    rmbents[2].worldx = dx + px
+    rmbents[2].worldz = dz + pz
 end
 
 local function fn()
@@ -99,6 +129,8 @@ local function fn()
     inst.map_remap_min_dist = ACTIONS.TOSS.distance + TUNING.OCEANWHIRLPORTAL_BOAT_INTERACT_DISTANCE * 2
     inst.CanTossInWorld = CanTossOnMap
     inst.CanTossOnMap = CanTossOnMap
+    inst.InitMapDecorations = InitMapDecorations
+    inst.CalculateMapDecorations = CalculateMapDecorations
 
     inst.entity:SetPristine()
 

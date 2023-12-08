@@ -396,6 +396,7 @@ return{
 		{
 --fallback to speech_wilson.lua 			NO_MAX_SANITY = "only_used_by_waxwell",
             NOT_ENOUGH_EMBERS = "only_used_by_willow",
+            NO_TARGETS = "only_used_by_willow",
 		},
     },
 
@@ -5047,6 +5048,7 @@ return{
         BOOTLEG = "Someone forgot their foot inside!",
         OCEANWHIRLPORTAL = "We love spinny boat rides!",
 
+        EMBERLIGHT = "We like it warm and toasty!",
         WILLOW_EMBER = "only_used_by_willow",
     },
 

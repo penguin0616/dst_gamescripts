@@ -9,6 +9,12 @@ local assets_lightning =
     Asset("ANIM", "anim/spear_wathgrithr_lightning.zip"),
 }
 
+local assets_lightning_charged =
+{
+    Asset("ANIM", "anim/spear_wathgrithr_lightning.zip"),
+    Asset("INV_IMAGE", "itemtile_lightning"),
+}
+
 local assets_lightning_lunge_fx =
 {
     Asset("ANIM", "anim/elec_lunge_fx.zip"),
@@ -60,7 +66,7 @@ local function OnEquip(inst, owner)
 
     if skin_build ~= nil then
         owner:PushEvent("equipskinneditem", inst:GetSkinName())
-        owner.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, inst._swapbuild, inst.GUID, inst._swapbuild)
+        owner.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, inst._swapsymbol, inst.GUID, inst._swapbuild)
     else
         owner.AnimState:OverrideSymbol("swap_object", inst._swapbuild, inst._swapsymbol)
     end
@@ -70,9 +76,9 @@ local function OnEquip(inst, owner)
     if inst.components.aoetargeting ~= nil and
         inst.components.aoetargeting:IsEnabled() and
         inst.components.rechargeable ~= nil and
-        inst.components.rechargeable:GetTimeToCharge() < TUNING.SPEAR_WATHGRITHR_LIGHTNING_LUNGE_COOLDOWN_ONEQUIP
+        inst.components.rechargeable:GetTimeToCharge() < inst._cooldown
     then
-        inst.components.rechargeable:Discharge(TUNING.SPEAR_WATHGRITHR_LIGHTNING_LUNGE_COOLDOWN_ONEQUIP)
+        inst.components.rechargeable:Discharge(inst._cooldown)
     end
 
     if inst.fx ~= nil then
@@ -125,7 +131,7 @@ local function Lightning_OnLunged(inst, doer, startingpos, targetpos)
     fx.Transform:SetPosition(targetpos:Get())
     fx.Transform:SetRotation(doer:GetRotation())
 
-    inst.components.rechargeable:Discharge(TUNING.SPEAR_WATHGRITHR_LIGHTNING_LUNGE_COOLDOWN)
+    inst.components.rechargeable:Discharge(inst._cooldown)
 
     inst._lunge_hit_count = nil
 end
@@ -226,14 +232,18 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------
 
-local function Lightning_CanBeUpgrated(inst, item)
+local function Lightning_CanBeUpgraded(inst, item)
     return not inst.components.equippable:IsEquipped()
 end
 
-local function Lightning_OnUpgrated(inst, upgrader, item)
-    local spear = SpawnPrefab("spear_wathgrithr_lightning_charged")
+local function Lightning_OnUpgraded(inst, upgrader, item)
+    local skin_build, skin_id = inst:GetSkinBuild(), inst.skin_id
+    if skin_build == nil or skin_build == "" or skin_id == 0 then
+        skin_build, skin_id = nil, nil
+    end
+    local spear = SpawnPrefab("spear_wathgrithr_lightning_charged", skin_build, skin_id)
 
-    spear.components.rechargeable:Discharge(TUNING.SPEAR_WATHGRITHR_LIGHTNING_LUNGE_COOLDOWN)
+    spear.components.rechargeable:Discharge(spear._cooldown)
     spear.components.rechargeable:SetPercent(inst.components.rechargeable:GetPercent())
 
     spear.components.finiteuses:SetPercent(inst.components.finiteuses:GetPercent())
@@ -252,22 +262,46 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------
 
+local FX_OFFSETS = { -- NOTES(JBK): Similar offsets done for reskin_tool the y position positive goes down.
+    DEFAULT = {0, 0, 0},
+    ["spear_wathgrithr_lightning_lunar"]    = {0,  20, 0},
+    ["spear_wathgrithr_lightning_valkyrie"] = {0,   0, 0},
+    ["spear_wathgrithr_lightning_wrestle"]  = {0, -20, 0},
+    ["spear_wathgrithr_lightning_northern"] = {0, -10, 0},
+}
+
 local function LightningCharged_SetFxOwner(inst, owner)
     if inst._fxowner ~= nil and inst._fxowner.components.colouradder ~= nil then
         inst._fxowner.components.colouradder:DetachChild(inst.fx)
     end
+
     inst._fxowner = owner
+
+    local skin_build = inst:GetSkinBuild()
+    if skin_build ~= nil then
+        inst.fx.AnimState:OverrideItemSkinSymbol("swap_spear_wathgrithr_lightning", skin_build, "swap_spear_wathgrithr_lightning", inst.GUID, "swap_spear_wathgrithr_lightning")
+        inst.fx.AnimState:PlayAnimation("swap_straight_loop", true)
+    else
+        inst.fx.AnimState:ClearOverrideSymbol("swap_spear_wathgrithr_lightning")
+        inst.fx.AnimState:PlayAnimation("swap_loop", true)
+    end
+
+    local offset = FX_OFFSETS[skin_build] or FX_OFFSETS.DEFAULT
+
     if owner ~= nil then
         inst.fx.entity:SetParent(owner.entity)
-        inst.fx.Follower:FollowSymbol(owner.GUID, "swap_object", nil, nil, nil, true)
+
+        inst.fx.Follower:FollowSymbol(owner.GUID, "swap_object", offset[1], offset[2], offset[3], true)
         inst.fx.components.highlightchild:SetOwner(owner)
+
         if owner.components.colouradder ~= nil then
             owner.components.colouradder:AttachChild(inst.fx)
         end
     else
         inst.fx.entity:SetParent(inst.entity)
-        --For floating
-        inst.fx.Follower:FollowSymbol(inst.GUID, "swap_spear", nil, nil, nil, true)
+
+        -- For floating.
+        inst.fx.Follower:FollowSymbol(inst.GUID, "swap_spear", offset[1], offset[2], offset[3], true)
         inst.fx.components.highlightchild:SetOwner(inst)
     end
 end
@@ -415,6 +449,8 @@ local function LightningSpearCommonFn_Charged(inst)
     inst.AnimState:SetSymbolLightOverride("bolt_f", .5)
     inst.AnimState:SetSymbolLightOverride("glow", .25)
     inst.AnimState:SetLightOverride(.1)
+
+    inst.itemtile_lightning = true
 end
 
 local function LightningSpearPostInitFn_Base(inst)
@@ -423,6 +459,7 @@ local function LightningSpearPostInitFn_Base(inst)
     inst.CanElectrocuteTarget = Lightning_CanElectrocuteTarget
 
     inst.is_lightning_spear = true
+    inst._cooldown = TUNING.SPEAR_WATHGRITHR_LIGHTNING_LUNGE_COOLDOWN
 
     inst.components.weapon:SetOnAttack(Lightning_OnAttack)
     inst.components.weapon:SetElectric(1, TUNING.SPEAR_WATHGRITHR_LIGHTNING_WET_DAMAGE_MULT)
@@ -452,14 +489,18 @@ local function LightningSpearPostInitFn_Normal(inst)
 
     inst:AddComponent("upgradeable")
     inst.components.upgradeable.upgradetype = UPGRADETYPES.SPEAR_LIGHTNING
-    inst.components.upgradeable:SetOnUpgradeFn(Lightning_OnUpgrated)
-    inst.components.upgradeable:SetCanUpgradeFn(Lightning_CanBeUpgrated)
+    inst.components.upgradeable:SetOnUpgradeFn(Lightning_OnUpgraded)
+    inst.components.upgradeable:SetCanUpgradeFn(Lightning_CanBeUpgraded)
 end
 
 local SPEAR_LIGHTNING_CHARGED_SWAP_DATA = { sym_build = "spear_wathgrithr_lightning", sym_name = "swap_spear_wathgrithr_lightning", bank = "spear_wathgrithr_lightning", anim = "idle_loop" }
 
 local function LightningSpearPostInitFn_Charged(inst)
     LightningSpearPostInitFn_Base(inst)
+
+    inst.scrapbook_tex = "spear_wathgrithr_lightning_charged"
+
+    inst._cooldown = TUNING.SPEAR_WATHGRITHR_LIGHTNING_CHARGED_LUNGE_COOLDOWN
 
     inst.SetFxOwner = LightningCharged_SetFxOwner
     inst.OnStopFloating = LightningCharged_OnStopFloating
@@ -474,7 +515,10 @@ local function LightningSpearPostInitFn_Charged(inst)
 
     inst:SetFxOwner(nil)
 
+    inst.components.aoeweapon_lunge:SetSound("meta3/wigfrid/spear_lighting_lunge_thunder")
+
     inst.components.inspectable:SetNameOverride("spear_wathgrithr_lightning")
+    inst.components.inventoryitem:ChangeImageName("spear_wathgrithr_lightning")
 
     inst.components.equippable.restrictedtag = UPGRADETYPES.SPEAR_LIGHTNING.."_upgradeuser"
     inst.components.equippable.walkspeedmult = TUNING.SPEAR_WATHGRITHR_LIGHTNING_CHARGED_SPEED_MULT
@@ -611,6 +655,7 @@ local function FxFn()
     inst.AnimState:SetSymbolLightOverride("bolt_f", .5)
     inst.AnimState:SetSymbolLightOverride("glow", .25)
     inst.AnimState:SetLightOverride(.1)
+    inst.AnimState:HideSymbol("swap_spear_wathgrithr_lightning")
 
     inst:AddComponent("highlightchild")
 
@@ -633,6 +678,6 @@ end
 return
         Prefab("spear_wathgrithr",                      BasicSpearFn,            assets_basic,                  prefabs_basic             ),
         Prefab("spear_wathgrithr_lightning",            LightningSpearFn,        assets_lightning,              prefabs_lightning         ),
-        Prefab("spear_wathgrithr_lightning_charged",    LightningSpearChargedFn, assets_lightning,              prefabs_lightning_charged ),
-        Prefab("spear_wathgrithr_lightning_lunge_fx",   LungueTrailFxFn,         assets_lightning_lunge_fx                               ),
+        Prefab("spear_wathgrithr_lightning_charged",    LightningSpearChargedFn, assets_lightning_charged,      prefabs_lightning_charged ),
+        Prefab("spear_wathgrithr_lightning_lunge_fx",   LungueTrailFxFn,         assets_lightning_lunge_fx                                ),
         Prefab("spear_wathgrithr_lightning_fx",         FxFn,                    assets_lightning_fx                                      )

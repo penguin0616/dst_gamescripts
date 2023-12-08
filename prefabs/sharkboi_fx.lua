@@ -170,7 +170,39 @@ end
 
 --------------------------------------------------------------------------
 
+local function icehole_fn()
+	local inst = CreateEntity()
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddNetwork()
+
+	inst:AddTag("FX")
+	inst:AddTag("NOCLICK")
+
+	inst.AnimState:SetBank("sharkboi_trail")
+	inst.AnimState:SetBuild("sharkboi_trail")
+	inst.AnimState:PlayAnimation("icehole_pst")
+	inst.AnimState:SetLayer(LAYER_BACKGROUND)
+	inst.AnimState:SetSortOrder(3)
+	--NOT ground oriented
+
+	inst.entity:SetPristine()
+
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	inst.persists = false
+	inst:ListenForEvent("animover", inst.Remove)
+
+	return inst
+end
+
+--------------------------------------------------------------------------
+
 return Prefab("sharkboi_swipe_fx", swipe_fn, swipe_assets),
 	Prefab("sharkboi_iceplow_fx", iceplow_fn, iceplow_assets),
 	Prefab("sharkboi_iceimpact_fx", iceimpact_fn, iceplow_assets),
-	Prefab("sharkboi_icetrail_fx", icetrail_fn, icetrail_assets)
+	Prefab("sharkboi_icetrail_fx", icetrail_fn, icetrail_assets),
+	Prefab("sharkboi_icehole_fx", icehole_fn, icetrail_assets)

@@ -396,6 +396,7 @@ return{
 		{
 --fallback to speech_wilson.lua 			NO_MAX_SANITY = "only_used_by_waxwell",
             NOT_ENOUGH_EMBERS = "only_used_by_willow",
+            NO_TARGETS = "only_used_by_willow",
 		},
     },
 
@@ -5053,6 +5054,7 @@ return{
         BOOTLEG = "Guess I'd better shake a leg. Ha!",
         OCEANWHIRLPORTAL = "Alright, time to sink or swim!",
 
+        EMBERLIGHT = "Nice and toasty.",
         WILLOW_EMBER = "only_used_by_willow",
     },
 

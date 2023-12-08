@@ -37,9 +37,9 @@ function MakePlacer(name, bank, build, anim, onground, snap, metersnap, scale, f
         -- If the user clicks when the placement is invalid this gets called
         placer.onfailedplacement = onfailedplacement
 
-        -- If offset is nil, we just assign nil; the placer component
-        -- doesn't have a property change listener on this.
-        placer.offset = offset
+        if offset ~= nil then
+            inst.components.placer.offset = offset
+        end
 
         if scale ~= nil and scale ~= 1 then
             inst.Transform:SetScale(scale, scale, scale)

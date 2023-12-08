@@ -1114,6 +1114,20 @@ PREFAB_SKINS = {
 		"spear_wathgrithr_valkyrie",
 		"spear_wathgrithr_wrestle",
 	},
+	spear_wathgrithr_lightning =
+	{
+		"spear_wathgrithr_lightning_lunar",
+		"spear_wathgrithr_lightning_northern",
+		"spear_wathgrithr_lightning_valkyrie",
+		"spear_wathgrithr_lightning_wrestle",
+	},
+	spear_wathgrithr_lightning_charged =
+	{
+		"spear_wathgrithr_lightning_charged_lunar",
+		"spear_wathgrithr_lightning_charged_northern",
+		"spear_wathgrithr_lightning_charged_valkyrie",
+		"spear_wathgrithr_lightning_charged_wrestle",
+	},
 	stagehand =
 	{
 		"stagehand_carpet",
@@ -1403,6 +1417,12 @@ PREFAB_SKINS = {
 		"wathgrithr_victorian",
 		"wathgrithr_wrestler",
 		"wathgrithr_yule",
+	},
+	wathgrithr_improvedhat =
+	{
+		"wathgrithr_improvedhat_lunar",
+		"wathgrithr_improvedhat_valkyrie",
+		"wathgrithr_improvedhat_wrestle",
 	},
 	wathgrithrhat =
 	{

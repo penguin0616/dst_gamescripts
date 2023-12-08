@@ -9,7 +9,6 @@ local prefabs =
 {
     "lighterfire",
 	"channel_absorb_fire_fx",
-	"flamethrower_fx",
     "channel_absorb_fire",
     "channel_absorb_smoulder",
     "channel_absorb_embers",
@@ -19,12 +18,11 @@ local prefabs =
 
 local SNUFF_ONEOF_TAGS = { "smolder", "fire", "willow_ember" }
 local SNUFF_NO_TAGS = { "INLIMBO","snuffed" }
-
-DEBUG_FLAMETHROWER = false
+local ABSORB_RANGE = 2.2
 
 local function UpdateSnuff(inst, owner)
 	local x, y, z = owner.Transform:GetWorldPosition()
-	for i, v in ipairs(TheSim:FindEntities(x, 0, z, 1, nil, SNUFF_NO_TAGS, SNUFF_ONEOF_TAGS)) do
+	for i, v in ipairs(TheSim:FindEntities(x, 0, z, ABSORB_RANGE, nil, SNUFF_NO_TAGS, SNUFF_ONEOF_TAGS)) do
 		if v:IsValid() and not v:IsInLimbo() then
             local fx = nil
             local giveember = nil
@@ -77,12 +75,6 @@ local function OnStartChanneling(inst, user)
 	end
 	inst.snuff_fx = SpawnPrefab("channel_absorb_fire_fx")
 	inst.snuff_fx.Follower:FollowSymbol(user.GUID, "swap_object", 56, -40, 0)
-
-	if DEBUG_FLAMETHROWER and inst.flamethrower_fx == nil then
-		inst.flamethrower_fx = SpawnPrefab("flamethrower_fx")
-		inst.flamethrower_fx.entity:SetParent(user.entity)
-		inst.flamethrower_fx:SetFlamethrowerAttacker(user)
-	end
 end
 
 local function OnStopChanneling(inst, user)
@@ -97,10 +89,6 @@ local function OnStopChanneling(inst, user)
 	if inst.snuff_fx then
 		inst.snuff_fx:KillFX()
 		inst.snuff_fx = nil
-	end
-	if inst.flamethrower_fx then
-		inst.flamethrower_fx:KillFX()
-		inst.flamethrower_fx = nil
 	end
 end
 
@@ -163,10 +151,14 @@ local function removeskilleffects(inst,brightnessvalue)
 end
 
 local function testforattunedskill(inst,owner)
-    if owner.components.skilltreeupdater:IsActivated("willow_attuned_lighter") and inst.components.channelcastable == nil then
-        inst:AddComponent("channelcastable")
-        inst.components.channelcastable:SetOnStartChannelingFn(OnStartChanneling)
-        inst.components.channelcastable:SetOnStopChannelingFn(OnStopChanneling)
+    if owner.components.skilltreeupdater:IsActivated("willow_attuned_lighter") then
+        if inst.components.channelcastable == nil then
+            inst:AddComponent("channelcastable")
+            inst.components.channelcastable:SetOnStartChannelingFn(OnStartChanneling)
+            inst.components.channelcastable:SetOnStopChannelingFn(OnStopChanneling)
+        end
+    else
+        inst:RemoveComponent("channelcastable")
     end
 end
 
@@ -186,7 +178,7 @@ local function onequip(inst, owner)
 
     owner.SoundEmitter:PlaySound("dontstarve/wilson/lighter_on")
 
-    testforattunedskill(inst,owner)
+    inst:testforattunedskill(owner)
 
     if inst.fires == nil then
         inst.fires = {}
@@ -331,10 +323,6 @@ local function OnRemoveEntity(inst)
 	if inst.snuff_fx then
 		inst.snuff_fx:KillFX()
 		inst.snuff_fx = nil
-	end
-	if inst.flamethrower_fx then
-		inst.flamethrower_fx:KillFX()
-		inst.flamethrower_fx = nil
 	end
 end
 

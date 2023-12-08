@@ -142,6 +142,14 @@ ITEM_DISPLAY_BLACKLIST =
 	researchlab4_tophat_spiked = true,
 	researchlab4_tophat_wizard = true,
 	researchlab4_witch_pyre = true,
+	spear_wathgrithr_lightning_charged_lunar = true,
+	spear_wathgrithr_lightning_charged_northern = true,
+	spear_wathgrithr_lightning_charged_valkyrie = true,
+	spear_wathgrithr_lightning_charged_wrestle = true,
+	spear_wathgrithr_lightning_lunar = true,
+	spear_wathgrithr_lightning_northern = true,
+	spear_wathgrithr_lightning_valkyrie = true,
+	spear_wathgrithr_lightning_wrestle = true,
 	stagehand_carpet = true,
 	stagehand_cawnival = true,
 	stagehand_cawnival_alt = true,
@@ -160,5 +168,8 @@ ITEM_DISPLAY_BLACKLIST =
 	wall_stone_gothicitem = true,
 	wall_stone_victorianitem = true,
 	wall_wood_ornateitem = true,
+	wathgrithr_improvedhat_lunar = true,
+	wathgrithr_improvedhat_valkyrie = true,
+	wathgrithr_improvedhat_wrestle = true,
 }
 

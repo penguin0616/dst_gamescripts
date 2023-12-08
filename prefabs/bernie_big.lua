@@ -249,7 +249,7 @@ local function OnLighterLight(inst)
 end
 
 -- called bu the brain
-local function onLeaderChanged(inst,leader)
+local function onLeaderChanged(inst,leader)    
     if inst.bernieleader ~= leader then
         inst.bernieleader = leader
     end
@@ -431,6 +431,7 @@ local function fn()
     inst:AddTag("companion")
     inst:AddTag("soulless")
     inst:AddTag("crazy")
+    inst:AddTag("bigbernie")
 
     inst:AddComponent("colouraddersync")
     inst.current_allegiance = net_tinybyte(inst.GUID, "bernie_big.current_allegiance", "current_allegiancedirty")

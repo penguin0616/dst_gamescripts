@@ -262,15 +262,21 @@ local song_defs =
     {
         ONINSTANT = function(singer, target)
             if target:HasTag("playerghost") then
-                target:DoTaskInTime(math.random() * 1, DoRevive, singer)
+                target:DoTaskInTime(0.5 + (math.random() * 2.5), DoRevive, singer)
             end
         end,
 
         CUSTOMTARGETFN = function(singer)
+            if TheNet:GetPVPEnabled() then
+                return nil
+            end
+
             local x, y, z = singer.Transform:GetWorldPosition()
             local radius = singer.components.singinginspiration.attach_radius
 
-            return not TheNet:GetPVPEnabled() and FindPlayersInRange(x, y, z, radius, false) or nil
+            local players = FindPlayersInRange(x, y, z, radius, false)
+
+            return PickSome(TUNING.BATTLESONG_INSTANT_REVIVE_NUM_PLAYERS, players)
         end,
 
         INSTANT = true,

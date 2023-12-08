@@ -774,6 +774,9 @@ STRINGS =
             LAVAARENA_LUCY = "Chuck Lucy",
             LAVAARENA_FIREBOMB = "Hearthsfire Bomb",
             LAVAARENA_HEAVYBLADE = "Parry",
+            WATHGRITHR_SHIELD = "Block",
+            SPEAR_WATHGRITHR_LIGHTNING = "Lightning Strike",
+            SPEAR_WATHGRITHR_LIGHTNING_CHARGED = "Lightning Strike",
         },
         DISMANTLE = "Dismantle",
         TACKLE = "Charge",
@@ -3842,8 +3845,8 @@ STRINGS =
         BATTLESONG_INSTANT_REVIVE = "Warrior's Reprise",
 
         WATHGRITHR_IMPROVEDHAT = "Commander's Helm",
-        SPEAR_WATHGRITHR_LIGHTNING = "Lightning Spear",
-        SPEAR_WATHGRITHR_LIGHTNING_CHARGED = "Charged Lightning Spear",
+        SPEAR_WATHGRITHR_LIGHTNING = "Elding Spear",
+        SPEAR_WATHGRITHR_LIGHTNING_CHARGED = "Charged Elding Spear",
 
         BATTLESONG_CONTAINER = "Battle Call Canister",
 
@@ -5442,11 +5445,19 @@ STRINGS =
     PIG_TALK_CONTEST_PANIC = {"MUST CHOOSE!","CHOICE HARD!"},
 
 	--NOTE: Limit to 63 strings per table! (Using net_smallbyte for NPC chatter)
+	SHARKBOI_TALK_IDLE = {"HUH? WHAT HAPPENED?","HEY! WHATSA MATTER WITH YOU?","I FEEL LIKE A FISH OUTTA WATER...","I WAS JUST LOOKIN' FOR A QUICK BITE.","WHADAYA LOOKIN' AT?","YOU WANT A PIECE OF ME, TOUGH GUY?","YOU CRUISIN' FOR A BRUISIN?","WHY I OUGHTA..."},
 	SHARKBOI_TALK_FIGHT = {"TOUGH GUY, EH?","YOU'LL NEVER CATCH ME, SEE.","YOUSE DON'T STAND A CHANCE.","IT'S BITIN' TIME!","YOU'RE A REAL PIECE OF WORK, BUDDY.","YOU DON'T GET NO PASS.","I'LL PUT YOUSE ON ICE!","FREEZE!","YOUSE ON THIN ICE NOW!","YOU'LL BE SLEEPIN' WITH THE FISHES!","I'M NOT GONNA LET THIS SLIDE!","ICE TO EAT YA! HEH HEH."},
 	SHARKBOI_TALK_CHEER = {"PUT 'EM ON ICE!","WHACK 'EM!","GIVE 'EM THE OL' ONE-TWO!","FROSTBITE!","CHOMP! CHOMP!","CLIP 'EM!","ICE 'EM!","THEY AIN'T NO FRIEND OF OURS!","THIS IS OUR TURF!","FIN-ISH 'EM!"},
 	SHARKBOI_TALK_GLOAT = {"YOUSE BEEN ICED.","SEE YOUSE IN THE NEXT LIFE.","FUHGEDDABOUDIT.","END OF THE LINE.","YOU GOT CAUGHT.","YOU'RE FIN-ISHED.","BELLY-UP.","GAVE 'EM A BURIAL AT SEA.","HOOK, LINE AND SINKER.","VICTORY TASTES GOOD.","GUTTED.","SLEEPIN' WITH THE FISHES.","YOU'RE DONE, CHUM.","WHERE YOU BELONG, BOTTOM-FEEDER.","I GOT BIGGER FISH TO FRY.","LOOKIN' A LIL' GREEN AROUND THE GILLS THERE, MAC."},
 	SHARKBOI_TALK_GIVEUP = {"I BIT OFF MORE THAN I CAN CHEW.","I WAS OUTTA MY DEPTH.","UNCLE! UNCLE!","CAN'T WE WORK SOMETHIN' OUT?","YOU GOT ME BY THE GILLS.","I'M FIN-ISHED.","I FEEL S- SO COLD...","COLD-BLOODED, ACE. COLD-BLOODED.","I'M A FISH OUTTA WATER.","SPARE ME. I DIDN'T KNOW YOUSE WAS SO STRONG.","I GIVE UP, I GIVE UP. YEESH.","HOW DO YA FEEL ABOUT CATCH AND RELEASE?","ALRIGHT IT'S YOUR TURF NOW, BOSS.","OKAY, YOU CAUGHT ME FAIR AND SQUARE.","HOW'S ABOUT A TRUCE?","I CAN'T GO BACK INSIDE, LEMME WORK FOR YOU, BOSS.","MERCY, MERCY! YOU GOT ME.","OWW. YOU GOT WATER IN MY EYE. THAT REALLY HURT.","I SURRENDER, QUIT WHALE'N ON ME."},
 	SHARKBOI_TALK_FOLLOWWILSON = {"SURE, SKIP!","OK, BOSS!","AY CAP'N!","TIL MY LAST BREATH!","EASY PEASY.","WHATCHA NEED, BOSS?","YOU'RE A FRIEND OF OURS.","YOU GOT IT, BOSS.","WHY SO GLUM, CHUM?","LEMME AT 'EM.","I'D NEVER EAT YOU, BOSS.","JUST SAY THE WORD, BOSS.","I GOT YOUR BACK.","YOU SAY SOMETHIN', BOSS?","BOSS IS THE BEST.","WHO WE WHACKIN' BOSS?","LOOKIN' SHARP, BOSS.","WHERE TO, SKIP?"},
+    SHARKBOI_TALK_FRIENDLY = {"WOAH, WOAH! NO HARD FEELINGS, ALRIGHT?","I CAN MAKE YOUSE AN OFFER... IF YOUSE GOT THE GOODS.","LET'S COME TO AN ARRANGEMENT, IF YOU CATCH MY DRIFT.","LISTEN, MAYBE YOUSE AND ME AIN'T SO DIFFERENT.","I THINK WE COULD DO SOME BUSINESS, YOU AND ME.","HOWSABOUT YOU SCRATCH MY FIN AND I SCRATCH YOURS?","WHADAYA SAY TO A LIL' SQUID PRO QUO?","I AIN'T ONE TO REFUSE A NICE JUICY FISH. BIGGER THE BETTER.","DON'T WANT NO STINKIN' POND SCUM.","I'M ON A SEA FOOD DIET. I ONLY EATS IT IF IT'S FROM THE SEA."},
+	SHARKBOI_TALK_ATTEMPT_TRADE = {"INTERESTIN', REEL INTERESTIN'.","WHAT WE GOT HERE?","LET'S SEA WHATCHA GOT.","WHATCHA FISHIN' FOR?","HOPE YOUSE AIN'T WASTIN' MY TIME.","BETTER NOT BE NO RAW DEAL.","I DON'T WANT NO BAIT N' SWITCH.","OKAY, YOU REELED ME IN. WHATCHA GOT?"},
+	SHARKBOI_ACCEPT_OCEANFISH = {"NOW, THAT IS A BEAUTIFUL FISH."},
+	SHARKBOI_ACCEPT_BIG_OCEANFISH = {"HOLY MACKEREL, THAT'S A BIG ONE."},
+	SHARKBOI_REFUSE_NOT_OCEANFISH = {"IF IT AIN'T A FISH FROM THE OCEAN, I DON'T WANT IT."},
+	SHARKBOI_REFUSE_TOO_SMALL = {"DON'T INSULT ME WITH THIS PUNY THING. GIMME A BIG ONE."},
+	SHARKBOI_REFUSE_EMPTY = {"AIN'T GOT NO MORE. I'M CLEANED OUT."},
 
     --NOTE: Limit to 63 strings per table! (Using net_smallbyte for NPC chatter)
     RABBIT_BATTLECRY = { "HOP!", "KILL!", "DIE!" },
@@ -15165,14 +15176,14 @@ STRINGS.SKILLTREE = {
         WATHGRITHR_ARSENAL_SPEAR_2_TITLE = "Bragi's Blessing II",
         WATHGRITHR_ARSENAL_SPEAR_2_DESC = "Inspiration gain rate will increase a fair amount when attacking using Battle Spears.",
 
-        WATHGRITHR_ARSENAL_SPEAR_3_TITLE = "Lightning Spear",
-        WATHGRITHR_ARSENAL_SPEAR_3_DESC = "Learn to craft the Lightning Spear: an electric weapon that does more damage to wet targets.",
+        WATHGRITHR_ARSENAL_SPEAR_3_TITLE = "Elding Spear",
+        WATHGRITHR_ARSENAL_SPEAR_3_DESC = "Learn to craft the Elding Spear: an electric weapon that does more damage to wet targets.",
 
-        WATHGRITHR_ARSENAL_SPEAR_4_TITLE = "Lightning Spear Enhancement I",
-        WATHGRITHR_ARSENAL_SPEAR_4_DESC = "The Lightning Spear can now perform a special attack.\nThis attack repairs Charged Lightning Spears if it hits a target.",
+        WATHGRITHR_ARSENAL_SPEAR_4_TITLE = "Elding Spear Enhancement I",
+        WATHGRITHR_ARSENAL_SPEAR_4_DESC = "The Elding Spear can now perform a special attack.\nThis attack repairs Charged Elding Spears if it hits a target.",
 
-        WATHGRITHR_ARSENAL_SPEAR_5_TITLE = "Lightning Spear Enhancement II",
-        WATHGRITHR_ARSENAL_SPEAR_5_DESC = "Upgrade the Lightning Spear using Restrained Static to deal +20 Planar Damage.",
+        WATHGRITHR_ARSENAL_SPEAR_5_TITLE = "Elding Spear Enhancement II",
+        WATHGRITHR_ARSENAL_SPEAR_5_DESC = "Upgrade the Elding Spear using Restrained Static to deal +20 Planar Damage.",
 
         ----------------------------------------------------------------------------
 
@@ -15201,7 +15212,7 @@ STRINGS.SKILLTREE = {
         WATHGRITHR_ARSENAL_SHIELD_2_DESC = "The duration of the Battle Rönd's ability to block attacks will be increased.",
 
         WATHGRITHR_ARSENAL_SHIELD_3_TITLE = "Battle Rönd Enhancement II",
-        WATHGRITHR_ARSENAL_SHIELD_3_DESC = "After blocking an attack with the Battle Rönd, your next attack within 5 seconds will deal +10 damage.",
+        WATHGRITHR_ARSENAL_SHIELD_3_DESC = "After blocking an attack with the Battle Rönd, your next attack within 5 seconds will deal +15-30 damage based on the damage blocked.",
 
         ----------------------------------------------------------------------------
 
@@ -15434,9 +15445,9 @@ STRINGS.SCRAPBOOK = {
         BATTLESONG_FIRERESISTANCE = "Reduce fire damage by 34%.\n\nThis is a Battle Song. Wigfrid must continue to sing for its benefit.",
         BATTLESONG_INSTANT_TAUNT = "Draw the attention of nearby enemies.\n\nThis is a Battle Stinger as it completes in an instant.",
         BATTLESONG_INSTANT_PANIC = "Panic nearby enemies.\n\nThis is a Battle Stinger as it completes in an instant.",
-        BATTLESONG_INSTANT_REVIVE = "Revive nearby allied players.\n\nThis is a Battle Stinger as it completes in an instant.",
-        BATTLESONG_SHADOWALIGNED = "Allies take 5% less damage from Shadow Aligned enemies and deal 5% bonus damage to Lunar Aligned enemies.\n\nThis is a Battle Song. Wigfrid must continue to sing for its benefit.",
-        BATTLESONG_LUNARALIGNED = "Allies take 5% less damage from Lunar Aligned enemies and deal 5% bonus damage to Shadow Aligned enemies.\n\nThis is a Battle Song. Wigfrid must continue to sing for its benefit.",
+        BATTLESONG_INSTANT_REVIVE = "Revive up to 2 nearby allied players.\n\nThis is a Battle Stinger as it completes in an instant.",
+        BATTLESONG_SHADOWALIGNED = "Allies take 10% less damage from Shadow Aligned enemies and deal 5% bonus damage to Lunar Aligned enemies.\n\nThis is a Battle Song. Wigfrid must continue to sing for its benefit.",
+        BATTLESONG_LUNARALIGNED = "Allies take 10% less damage from Lunar Aligned enemies and deal 5% bonus damage to Shadow Aligned enemies.\n\nThis is a Battle Song. Wigfrid must continue to sing for its benefit.",
         BEEFBELL = "Name and bond with one Beefalo at a time. Bonded Beefalo will follow the holder, even into caves and offline.",
         PLANTABLE_FERTILIZE = "This needs some fertilizing after planting.",
         SCANDATA = "Data is used to craft Circuits for WX-78.",
@@ -15666,7 +15677,7 @@ STRINGS.SCRAPBOOK = {
         ATRIUMGATE = "A broken stone ring that has an empty socket at the base.",
         ATRIUMRUBBLE = "A crumbling object with writing that can be inspected.",
         ANIMALTRACK = "A footprint of an animal that was walking somewhere.",
-        ARCHIVERESONATOR = "An mysterious device that burns arrows into the dirt.",
+        ARCHIVERESONATOR = "A mysterious device that burns arrows into the dirt.",
         TENTACLEPILLARHOLE = "A hole leading to a tunnel that leads somewhere else.",
         BOATCANNON = "Can be loaded with cannoballs.\n\nOnce loaded, it can be aimed to fire. The direction can be changed by standing next it from differnet sides before aiming.",
         SACREDCHEST = "A container with 6 slots. Could be a 6 item combination lock, only Metheus knows.",
@@ -15817,8 +15828,8 @@ STRINGS.SCRAPBOOK = {
         WAGSTAFF_MUTATIONS_NOTE = "\n\"Day 56 - Lunar Mutations Study\"\n\n\"It seems as though these strange entities that emerged from the rifts are in search of living hosts... or perhaps once living.\"\n\n\"NOTE: The following creatures warrant immediate study as I suspect they may be the most viable as hosts:\"\n\n• Frog\n• Pengull\n• Varg\n• Koalefant\n• Deerclops\n\n\"Other possible Rift entity host candidates:\"\n\n• Grass Gekko\n• Hound\n• Bearger\n• Mosling\n",
 
         SPEAR_WATHGRITHR_LIGHTNING = "Does electrical damage which does more damage to wet targets.",
-        SPEAR_WATHGRITHR_LIGHTNING_CHARGED = "Does electrical damage which does more damage to wet targets.\n\nIncreases movement speed by 20% when held.\n\nIt can only be equipped by Wigfrids who have the \"Lightning Spear Enhancement II\" skill.",
-        WATHGRITHR_SHIELD = "Can be used to block attacks.\n\nIt can only be equipped by Wigfrids who have the \"Battle Rönd\" skill.",
+        SPEAR_WATHGRITHR_LIGHTNING_CHARGED = "Does electrical damage which does more damage to wet targets.\n\nIncreases movement speed by 20% when held.\n\nIt can only be equipped by Wigfrids who have the \"Elding Spear Enhancement II\" skill.",
+        WATHGRITHR_SHIELD = "Can be used to block attacks. Successfully blocking an attack decreases the block cooldown.\n\nIt can only be equipped by Wigfrids who have the \"Battle Rönd\" skill.",
         BATTLESONG_CONTAINER = "A carriable container with 8 slots that can hold Battle Songs and Battle Stingers.",
         EMBERLIGHT = "Works like a campfire for its duration, creating light and heat and will ignite things nearby. It can also be used to cook food.",
         BOOTLEG = "Can be thrown into the sea to create a pair of connected Whirlportals. Boats sailing close to them will be brought to the other entrance.",

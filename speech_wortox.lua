@@ -396,6 +396,7 @@ return{
 		{
 --fallback to speech_wilson.lua 			NO_MAX_SANITY = "only_used_by_waxwell",
             NOT_ENOUGH_EMBERS = "only_used_by_willow",
+            NO_TARGETS = "only_used_by_willow",
 		},
     },
 
@@ -5053,6 +5054,7 @@ return{
         BOOTLEG = "Hyuyu! Who cobbled this together?",
         OCEANWHIRLPORTAL = "Oooh goodie! A watery vortex for little ol' Wortox!",
 
+        EMBERLIGHT = "Aren't you a bit big for a will-o'-the-wisp?",
         WILLOW_EMBER = "only_used_by_willow",
     },
 

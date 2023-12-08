@@ -396,6 +396,7 @@ return{
 		{
 --fallback to speech_wilson.lua 			NO_MAX_SANITY = "only_used_by_waxwell",
             NOT_ENOUGH_EMBERS = "only_used_by_willow",
+            NO_TARGETS = "only_used_by_willow",
 		},
     },
 
@@ -5047,6 +5048,7 @@ return{
         BOOTLEG = "Sorry Woby, that bone isn't for you.",
         OCEANWHIRLPORTAL = "I don't think my water safety badge prepared me for that.",
 
+        EMBERLIGHT = "There's no wood in this campfire. Oh well.",
         WILLOW_EMBER = "only_used_by_willow",
     },
 

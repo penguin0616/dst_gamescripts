@@ -125,7 +125,9 @@ function MapScreen:OnDestroy()
     --V2C: Don't set pause in multiplayer, all it does is change the
     --     audio settings, which we don't want to do now
     --SetPause(false)
-    SetAutopaused(false)
+    if not self.quitting then
+        SetAutopaused(false)
+    end
 
 	MapScreen._base.OnDestroy(self)
 end
@@ -283,17 +285,47 @@ function MapScreen:ProcessRMBDecorations(rmb, fresh)
             decor1.text:SetColour(alphascale1, alphascale1, alphascale1, alphascale1)
         end
     elseif rmb.action == ACTIONS.TOSS_MAP then
+        local equippedhands = self.owner.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+        if equippedhands == nil then
+            return
+        end
+        
+        local does_custom = equippedhands.InitMapDecorations ~= nil and equippedhands.CalculateMapDecorations ~= nil
+        if does_custom then
+            if fresh then
+                local decordatas = equippedhands:InitMapDecorations()
+                for i, decordata in ipairs(decordatas) do
+                    self.decorationdata.rmbents[i] = self.decorationrootrmb:AddChild(Image(decordata.atlas, decordata.image))
+                    self.decorationdata.rmbents[i].scale = decordata.scale
+                end
+            end
+
+            local zoomscale = 1 / self.minimap:GetZoom()
+            local w, h = TheSim:GetScreenSize()
+            w, h = w * 0.5, h * 0.5
+
+            local rmb_pos = rmb:GetActionPoint()
+            local px, py, pz = 0, 0, 0
+            if rmb.doer then
+                px, py, pz = rmb.doer.Transform:GetWorldPosition()
+            end
+            equippedhands:CalculateMapDecorations(self.decorationdata.rmbents, px, pz, rmb_pos.x, rmb_pos.z)
+            for _, decor in ipairs(self.decorationdata.rmbents) do
+                local scaler = decor.scale or 1
+                local x, y = self.minimap:WorldPosToMapPos(decor.worldx, decor.worldz, 0)
+                decor:SetPosition(x * w, y * h)
+                decor:SetScale(zoomscale * scaler, zoomscale * scaler, 1)
+            end
+            return
+        end
+
+
+        -- Default behaviour is one default icon to toss towards a point.
         local decor
         if fresh then
-            local owner = self.owner
-            local inventory = owner.replica.inventory
-            local equippedhands = inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-            if equippedhands then
-                local image = equippedhands.replica.inventoryitem:GetImage()
-                local atlas = GetInventoryItemAtlas(image)
-                decor = self.decorationrootrmb:AddChild(Image(atlas, image))
-                self.decorationdata.rmbents[1] = decor
-            end
+            local image = equippedhands.replica.inventoryitem:GetImage()
+            decor = self.decorationrootrmb:AddChild(Image(GetInventoryItemAtlas(image), image))
+            self.decorationdata.rmbents[1] = decor
         else
             decor = self.decorationdata.rmbents[1]
         end
@@ -450,6 +482,10 @@ function MapScreen:OnControl(control, down)
         local x, y, z = self:GetWorldPositionAtCursor()
         local _, RMBaction = self:UpdateMapActions(x, y, z)
         if RMBaction then
+            if not self.quitting and RMBaction.invobject ~= nil and RMBaction.invobject:HasTag("action_pulls_up_map") then
+                SetAutopaused(false)
+                self.quitting = true
+            end
             pc:OnMapAction(RMBaction.action.code, Vector3(x, y, z))
         end
     else

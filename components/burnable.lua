@@ -464,6 +464,8 @@ function Burnable:Extinguish(resetpropagator, heatpct, smotherer)
             end
         end
 
+        self.controlled_burn = nil
+
         self.burning = false
         self:KillFX()
         if self.inst.components.fueled ~= nil and not self.ignorefuel then

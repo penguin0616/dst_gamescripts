@@ -396,6 +396,7 @@ return{
 		{
 --fallback to speech_wilson.lua 			NO_MAX_SANITY = "only_used_by_waxwell",
             NOT_ENOUGH_EMBERS = "only_used_by_willow",
+            NO_TARGETS = "only_used_by_willow",
 		},
     },
 
@@ -5047,6 +5048,7 @@ return{
         BOOTLEG = "Retreat is the way of cowards!",
         OCEANWHIRLPORTAL = "Oh, beautiful maelström. Into thy hungry mouth we doth sail.",
 
+        EMBERLIGHT = "My ally's flame burns bright as her fighting spirit.",
         WILLOW_EMBER = "only_used_by_willow",
     },
 

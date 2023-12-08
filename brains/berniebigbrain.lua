@@ -36,6 +36,7 @@ local function SetLeader(self, leader)
             else
                 leader.bigbernies[self.inst] = true
             end
+
             self.inst:onLeaderChanged(leader)
         end
         self._leader = leader      
@@ -58,16 +59,14 @@ local function ShouldDeactivate(self)
             return false
         end
 
-        SetLeader(self, nil) --V2C: not redundant, this will clear .bigbernies
     end
-
 
     local closestleader = nil
     local iscrazy = false
     local rangesq = FIND_LEADER_DIST_SQ
     local x, y, z = self.inst.Transform:GetWorldPosition()
     for i, v in ipairs(AllPlayers) do
-        if v:HasTag("bernieowner") and v.bigbernies == nil and (v.entity:IsVisible() or (v.sg ~= nil and v.sg.currentstate.name == "quicktele")) then  -- or (v.components.skilltreeupdater:IsActivated("willow_berniedouble") and countbigbernies(v) < 2 ) ) 
+        if v:HasTag("bernieowner") and (v.bigbernies == nil or v.bigbernies[self.inst]) and (v.entity:IsVisible() or (v.sg ~= nil and v.sg.currentstate.name == "quicktele")) then
             if self.inst.isleadercrazy(self.inst,v) then
                 local distsq = v:GetDistanceSqToPoint(x, y, z)
                 if distsq < (iscrazy and rangesq or FIND_LEADER_DIST_SQ) then
@@ -85,9 +84,11 @@ local function ShouldDeactivate(self)
         end
     end
 
-    SetLeader(self, closestleader)
+    if self._leader ~= closestleader then
+        SetLeader(self, closestleader)
+    end
 
-    if self._leader and -- and self._leader ~= nil        
+    if self._leader and
        (( self._leader.components.skilltreeupdater:IsActivated("willow_allegiance_shadow_bernie") and self.inst.AnimState:GetBuild() ~= "bernie_shadow_build") or 
        ( self._leader.components.skilltreeupdater:IsActivated("willow_allegiance_lunar_bernie") and self.inst.AnimState:GetBuild() ~= "bernie_lunar_build")) then
         return true
@@ -102,6 +103,7 @@ local function ShouldDeactivate(self)
             return false
         end
     end
+
     return self.inst:GetTimeAlive() >= MIN_ACTIVE_TIME
 end
 

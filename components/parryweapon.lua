@@ -61,7 +61,7 @@ function ParryWeapon:TryParry(doer, attacker, damage, weapon, stimuli)
         end
     end
     if self.onparryfn ~= nil then
-        self.onparryfn(self.inst, doer, attacker)
+        self.onparryfn(self.inst, doer, attacker, damage)
     end
     return true
 end

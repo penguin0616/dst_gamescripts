@@ -60,8 +60,6 @@ local function OnEquip(inst, owner)
         owner.AnimState:OverrideSymbol("swap_shield",     "swap_wathgrithr_shield", "swap_shield")
     end
 
-    owner:ListenForEvent("onattackother", inst._weaponused_callback)
-
     if inst.components.rechargeable:GetTimeToCharge() < TUNING.WATHGRITHR_SHIELD_COOLDOWN_ONEQUIP then
         inst.components.rechargeable:Discharge(TUNING.WATHGRITHR_SHIELD_COOLDOWN_ONEQUIP)
     end
@@ -80,8 +78,6 @@ local function OnUnequip(inst, owner)
     if skin_build ~= nil then
         owner:PushEvent("unequipskinneditem", inst:GetSkinName())
     end
-
-    owner:RemoveEventCallback("onattackother", inst._weaponused_callback)
 end
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -97,8 +93,8 @@ local function SpellFn(inst, doer, pos)
     inst.components.rechargeable:Discharge(TUNING.WATHGRITHR_SHIELD_COOLDOWN)
 end
 
-local function OnParry(inst, doer, attacker)
-    doer:ShakeCamera(CAMERASHAKE.SIDE, 0.1, 0.03, 0.2)
+local function OnParry(inst, doer, attacker, damage)
+    doer:ShakeCamera(CAMERASHAKE.SIDE, 0.1, 0.03, 0.3)
 
     if inst.components.rechargeable:GetPercent() < TUNING.WATHGRITHR_SHIELD_COOLDOWN_ONPARRY_REDUCTION then
         inst.components.rechargeable:SetPercent(TUNING.WATHGRITHR_SHIELD_COOLDOWN_ONPARRY_REDUCTION)
@@ -106,19 +102,27 @@ local function OnParry(inst, doer, attacker)
 
     if doer.components.skilltreeupdater ~= nil and doer.components.skilltreeupdater:IsActivated("wathgrithr_arsenal_shield_3") then
         inst._lastparrytime = GetTime()
+
+        local tuning = TUNING.SKILLS.WATHGRITHR.SHIELD_PARRY_BONUS_DAMAGE
+        local scale =  TUNING.SKILLS.WATHGRITHR.SHIELD_PARRY_BONUS_DAMAGE_SCALE
+
+        inst._bonusdamage = math.clamp(damage * scale, tuning.min, tuning.max)
     end
 end
 
 local function DamageFn(inst)
     if inst._lastparrytime ~= nil and (inst._lastparrytime + TUNING.SKILLS.WATHGRITHR.SHIELD_PARRY_BONUS_DAMAGE_DURATION) >= GetTime() then
-        inst._lastparrytime = nil
-
-        return TUNING.WATHGRITHR_SHIELD_DAMAGE + TUNING.SKILLS.WATHGRITHR.SHIELD_PARRY_BONUS_DAMAGE
+        return TUNING.WATHGRITHR_SHIELD_DAMAGE + (inst._bonusdamage or 0)
     end
 
-    inst._lastparrytime = nil
-
     return TUNING.WATHGRITHR_SHIELD_DAMAGE
+end
+
+local function OnAttackFn(inst, attacker, target)
+    inst._lastparrytime = nil
+    inst._bonusdamage = nil
+
+    inst.components.armor:TakeDamage(TUNING.WATHGRITHR_SHIELD_USEDAMAGE)
 end
 
 local function OnDischarged(inst)
@@ -181,17 +185,12 @@ local function fn()
 
     inst.scrapbook_weapondamage = TUNING.WATHGRITHR_SHIELD_DAMAGE
 
-    inst._weaponused_callback = function(_, data)
-        if data.weapon ~= nil and data.weapon == inst then
-            inst.components.armor:TakeDamage(TUNING.WATHGRITHR_SHIELD_USEDAMAGE)
-        end
-    end
-
     inst:AddComponent("inspectable")
     inst:AddComponent("inventoryitem")
 
     inst:AddComponent("weapon")
     inst.components.weapon:SetDamage(DamageFn)
+    inst.components.weapon:SetOnAttack(OnAttackFn)
 
     inst:AddComponent("armor")
     inst.components.armor:InitCondition(TUNING.WATHGRITHR_SHIELD_ARMOR, TUNING.WATHGRITHR_SHIELD_ABSORPTION)

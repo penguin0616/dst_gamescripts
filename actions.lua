@@ -2960,12 +2960,18 @@ ACTIONS_MAP_REMAP[ACTIONS.TOSS.code] = function(act, targetpos)
     local min_dist = act.invobject.map_remap_min_dist
     local max_dist = act.invobject.map_remap_max_dist
     if min_dist or max_dist then
-        local dist = act.doer:GetPosition():Dist(targetpos)
-        if min_dist and dist <= min_dist then
-            return nil
+        local x, y, z = act.doer.Transform:GetWorldPosition()
+        local dx, dz = targetpos.x - x, targetpos.z - z
+        if dx == 0 and dz == 0 then
+            dx = 1
         end
-        if max_dist and dist >= max_dist then
-            return nil
+        local dist = math.sqrt(dx * dx + dz * dz)
+        if min_dist and dist <= min_dist then
+            targetpos.x = x + dx * (min_dist / dist)
+            targetpos.z = z + dz * (min_dist / dist)
+        elseif max_dist and dist >= max_dist then
+            targetpos.x = x + dx * (max_dist / dist)
+            targetpos.z = z + dz * (max_dist / dist)
         end
     end
 

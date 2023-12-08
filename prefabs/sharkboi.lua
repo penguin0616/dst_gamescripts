@@ -8,6 +8,7 @@ local assets =
 
 local prefabs =
 {
+	"sharkboi_icehole_fx",
 	"sharkboi_iceimpact_fx",
 	"sharkboi_iceplow_fx",
 	"sharkboi_icespike",
@@ -20,12 +21,18 @@ local prefabs =
 
 local brain = require("brains/sharkboibrain")
 
-SetSharedLootTable("sharkboi",
+--[[SetSharedLootTable("sharkboi",
 {
 	{ "bootleg", 1 },
 	{ "bootleg", 1 },
 	{ "bootleg", 0.5 },
-})
+})]]
+
+local MAX_TRADES = 5
+local MIN_REWARDS = 1
+local MAX_REWARDS = 2
+
+local OFFSCREEN_DESPAWN_DELAY = 60
 
 local FIN_MASS = 99999
 local FIN_RADIUS = 0.5
@@ -62,10 +69,17 @@ local function ChangeRadius(inst, radius)
 end
 
 local function OnNewState(inst)
+	if inst.sg:HasAnyStateTag("fin", "digging", "dizzy", "jumping", "invisible", "sleeping", "waking") and not inst.sg:HasStateTag("cantalk") then
+		inst.components.talker:IgnoreAll("busycombat")
+	else
+		inst.components.talker:StopIgnoringAll("busycombat")
+	end
+
 	local dochangemass
 	if inst.sg:HasStateTag("digging") then
 		if not (inst.sg.lasttags and inst.sg.lasttags["digging"]) then
 			inst.Physics:SetMass(0)
+			inst.components.talker:ShutUp()
 		end
 	elseif inst.sg.lasttags and inst.sg.lasttags["digging"] then
 		if inst.sg:HasStateTag("fin") then
@@ -89,6 +103,7 @@ local function OnNewState(inst)
 			inst.components.health:SetInvincible(true)
 			inst.components.combat:RestartCooldown()
 			inst.components.locomotor.runspeed = TUNING.SHARKBOI_FINSPEED
+			inst.components.talker:ShutUp()
 		end
 	elseif inst.finmode:value() then
 		inst.finmode:set(false)
@@ -112,6 +127,12 @@ local function teleport_override_fn(inst)
     end
 
     return sharkboimanager:FindWalkableOffsetInArena(inst)
+end
+
+local function OnTalk(inst)
+	if not inst.sg:HasStateTag("notalksound") then
+		inst.SoundEmitter:PlaySound("meta3/sharkboi/talk")
+	end
 end
 
 --------------------------------------------------------------------------
@@ -217,7 +238,7 @@ local function StopAggro(inst)
 end
 
 local function OnAttacked(inst, data)
-	if data.attacker and not inst.looted then
+	if data.attacker and inst.components.trader == nil then
 		local target = inst.components.combat.target
 		if not (target and
 				target:HasTag("player") and
@@ -231,34 +252,160 @@ local function OnAttacked(inst, data)
 	end
 end
 
+local function EndGloat(inst)
+	inst.components.talker:StopIgnoringAll("gloat")
+end
+
+local function OnKilledOther(inst, data)
+	if data and data.victim and data.victim:HasTag("player") then
+		if not inst:HasTag("ignoretalking") then
+			inst.components.talker:Chatter("SHARKBOI_TALK_GLOAT", math.random(#STRINGS.SHARKBOI_TALK_GLOAT), nil, true)
+			inst.components.talker:IgnoreAll("gloat")
+			inst:DoTaskInTime(3, EndGloat)
+		end
+	end
+end
+
+--------------------------------------------------------------------------
+
+local function ShouldSleep(inst)
+	return false
+end
+
+local function ShouldWake(inst)
+	return true
+end
+
+--------------------------------------------------------------------------
+
+local function AcceptTest(inst, item)
+	return inst.pendingreward == nil
+		and inst.stock > 0
+		and item:HasTag("oceanfish")
+		and item.components.weighable
+		and item.components.weighable:GetWeight() >= 150
+end
+
+local function OnGivenItem(inst, giver, item)
+	if item.components.weighable and item.components.weighable:GetWeightPercent() >= TUNING.WEIGHABLE_HEAVY_WEIGHT_PERCENT then
+		inst.pendingreward = MAX_REWARDS
+	else
+		inst.pendingreward = MIN_REWARDS
+	end
+end
+
+local function OnRefuseItem(inst, giver, item)
+	local reason
+	if inst.stock <= 0 then
+		reason = "EMPTY"
+	elseif item then
+		reason = item:HasTag("oceanfish") and "TOO_SMALL" or "NOT_OCEANFISH"
+	end
+	inst:PushEvent("onrefuseitem", { giver = giver, reason = reason })
+end
+
+local function MakeTrader(inst)
+	if inst.components.trader == nil then
+		inst:AddComponent("trader")
+		inst.components.trader:SetAcceptTest(AcceptTest)
+		inst.components.trader.onaccept = OnGivenItem
+		inst.components.trader.onrefuse = OnRefuseItem
+
+		inst.stock = MAX_TRADES
+
+		inst:AddTag("notarget")
+
+		if inst:IsAsleep() and inst.sleeptask == nil then
+			inst.sleeptask = inst:DoTaskInTime(OFFSCREEN_DESPAWN_DELAY, inst.Remove)
+		end
+	end
+end
+
+local function GiveReward(inst, target)
+	if inst.pendingreward then
+		if target and not target:IsValid() then
+			target = nil
+		end
+		inst.stock = inst.stock - 1
+		for i = 1, inst.pendingreward do
+			LaunchAt(SpawnPrefab("bootleg"), inst, target, 1, 2, 1)
+		end
+		inst.SoundEmitter:PlaySound("dontstarve/common/dropGeneric")
+		inst.pendingreward = nil
+	end
+end
+
+local function EndTradeTalkTask(inst)
+	inst._tradetalktask = nil
+	inst.components.talker:StopIgnoringAll("trading")
+end
+
+local function SetIsTradingFlag(inst, flag, timeout)
+	if inst._tradingtask then
+		inst._tradingtask:Cancel()
+		inst._tradingtask = nil
+	end
+
+	if flag then
+		if not inst.trading then
+			inst.trading = true
+			inst._tradingtask = inst:DoTaskInTime(timeout, SetIsTradingFlag, false)
+
+			--make sure talking is not suppressed when entering trading brain node
+			if inst._tradetalktask then
+				inst._tradetalktask:Cancel()
+				EndTradeTalkTask(inst)
+			end
+		end
+	elseif inst.trading then
+		inst.trading = false
+
+		--suppress talking for a few seconds after leaving the trading brain node
+		if inst._tradetalktask then
+			inst._tradetalktask:Cancel()
+		else
+			inst.components.talker:IgnoreAll("trading")
+		end
+		inst._tradetalktask = inst:DoTaskInTime(3, EndTradeTalkTask)
+	end
+end
+
 --------------------------------------------------------------------------
 
 local function OnSave(inst, data)
 	data.aggro = inst.aggro or nil
-	data.looted = inst.looted or nil
+	data.reward = inst.pendingreward or nil
+	if inst.stock and inst.stock < MAX_TRADES then
+		data.stock = inst.stock
+	end
 end
 
 local function OnLoad(inst, data)
-	inst.looted = data and data.looted or false
 	if inst.components.health.currenthealth <= inst.components.health.minhealth then
-		--defeated
-		if inst.looted then
-			inst:AddTag("notarget")
-		else
-			inst.sg:GoToState("defeat_loop")
+		MakeTrader(inst)
+		if data then
+			if data.reward then
+				inst.pendingreward = math.clamp(data.reward, MIN_REWARDS, MAX_REWARDS)
+			end
+			if data.stock and data.stock < MAX_TRADES then
+				inst.stock = data.stock
+			end
 		end
-	elseif data and data.aggro and not inst.looted then
+	elseif data and data.aggro then
 		StartAggro(inst)
 	end
 end
 
 local function OnEntitySleep(inst)
 	StopAggro(inst)
-	if inst.sg:HasAnyStateTag("fin", "digging") then
+	if inst.sg:HasAnyStateTag("fin", "digging", "busy") then
 		inst.sg:GoToState("idle")
+		if inst.components.health.currenthealth <= inst.components.health.minhealth then
+			MakeTrader(inst)
+		end
 	end
-	if inst.looted and inst.sleeptask == nil then
-		inst.sleeptask = inst:DoTaskInTime(1, inst.Remove)
+	if inst.components.trader and inst.sleeptask == nil then
+		inst.sleeptask = inst:DoTaskInTime(OFFSCREEN_DESPAWN_DELAY, inst.Remove)
 	end
 end
 
@@ -304,6 +451,14 @@ local function fn()
 	inst.AnimState:SetBuild("sharkboi_build")
 	inst.AnimState:PlayAnimation("idle", true)
 
+	inst:AddComponent("talker")
+	inst.components.talker.fontsize = 40
+	inst.components.talker.font = TALKINGFONT
+	inst.components.talker.colour = Vector3(unpack(WET_TEXT_COLOUR))
+	inst.components.talker.offset = Vector3(0, -400, 0)
+	inst.components.talker.symbol = "sharkboi_cloak"
+	inst.components.talker:MakeChatter()
+
 	inst.finmode = net_bool(inst.GUID, "sharkboi.finmode", "finmodedirty")
 
 	inst.entity:SetPristine()
@@ -323,13 +478,21 @@ local function fn()
 
 	inst:AddComponent("inspectable")
 
-	inst:AddComponent("lootdropper")
+	inst.components.talker.ontalk = OnTalk
+
+	--[[inst:AddComponent("lootdropper")
 	inst.components.lootdropper:SetChanceLootTable("sharkboi")
 	inst.components.lootdropper.min_speed = 1
 	inst.components.lootdropper.max_speed = 3
 	inst.components.lootdropper.y_speed = 14
 	inst.components.lootdropper.y_speed_variance = 4
-	inst.components.lootdropper.spawn_loot_inside_prefab = true
+	inst.components.lootdropper.spawn_loot_inside_prefab = true]]
+
+	inst:AddComponent("sleeper")
+	inst.components.sleeper:SetResistance(4)
+	inst.components.sleeper:SetSleepTest(ShouldSleep)
+	inst.components.sleeper:SetWakeTest(ShouldWake)
+	inst.components.sleeper.diminishingreturns = true
 
 	inst:AddComponent("locomotor")
 	inst.components.locomotor.walkspeed = TUNING.SHARKBOI_WALKSPEED
@@ -366,10 +529,14 @@ local function fn()
 
 	inst:ListenForEvent("newstate", OnNewState)
 	inst:ListenForEvent("attacked", OnAttacked)
+	inst:ListenForEvent("killed", OnKilledOther)
 
 	inst.aggro = false
-	inst.looted = false
+	inst.trading = false
 	inst.StopAggro = StopAggro
+	inst.MakeTrader = MakeTrader
+	inst.GiveReward = GiveReward
+	inst.SetIsTradingFlag = SetIsTradingFlag
 	inst.OnSave = OnSave
 	inst.OnLoad = OnLoad
 	inst.OnEntitySleep = OnEntitySleep

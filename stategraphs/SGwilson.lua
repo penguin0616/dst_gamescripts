@@ -8916,8 +8916,11 @@ local states =
             end),
 
             --groggy
+			--channelcast
             TimeEvent(1 * FRAMES, function(inst)
-                if inst.sg.statemem.groggy then
+				if inst.sg.statemem.groggy or
+					inst.sg.statemem.channelcast
+				then
                     DoRunSounds(inst)
                     DoFoleySounds(inst)
                 elseif inst.sg.statemem.goose then
@@ -8928,7 +8931,9 @@ local states =
             end),
             TimeEvent(12 * FRAMES, function(inst)
                 if inst.sg.statemem.groggy or
-                    inst.sg.statemem.sandstorm then
+					inst.sg.statemem.channelcast or
+					inst.sg.statemem.sandstorm
+				then
                     DoRunSounds(inst)
                     DoFoleySounds(inst)
                 end
@@ -12985,7 +12990,10 @@ local states =
                 if data.weapon.components.aoeweapon_lunge:DoLunge(inst, pos, data.targetpos) then
                     inst.SoundEmitter:PlaySound(data.weapon.components.aoeweapon_lunge.sound or "dontstarve/common/lava_arena/fireball")
                     inst.Physics:Teleport(data.targetpos.x, 0, data.targetpos.z)
-                    if not data.skipflash then
+
+                    -- aoeweapon_lunge:DoLunge can get us out of the state!
+                    -- And then, if onexit is run before this: bugs!
+                    if not data.skipflash and inst.sg.currentstate == "combat_lunge" then
                         inst.components.bloomer:PushBloom("lunge", "shaders/anim.ksh", -2)
                         inst.components.colouradder:PushColour("lunge", 1, 1, 0, 0)
                         inst.sg.statemem.flash = 1
@@ -15240,8 +15248,8 @@ local states =
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
-			inst.AnimState:PlayAnimation(inst:IsChannelCastingItem() and "channelcast_idle_pre" or "channelcast_oh_idle_pre")
 			inst:PerformBufferedAction()
+			inst.AnimState:PlayAnimation(inst:IsChannelCastingItem() and "channelcast_idle_pre" or "channelcast_oh_idle_pre")
 			inst.sg:GoToState("idle", true)
 		end,
 	},

@@ -14,6 +14,7 @@ local function ChooseAttack(inst, target)
 
 	if inst.sg:HasStateTag("fin") then
 		if inst.sg:HasStateTag("moving") then
+			inst.sg.statemem.fin = true
 			inst.sg:GoToState("fin_stop", { "dive_jump_delay", target })
 		elseif inst.sg.currentstate.name == "fin_stop" then
 			if inst.sg.nextstateparams then
@@ -47,6 +48,8 @@ end
 local events =
 {
 	CommonHandlers.OnFreeze(),
+	CommonHandlers.OnSleepEx(),
+	CommonHandlers.OnWakeEx(),
 
 	EventHandler("locomote", function(inst)
 		if inst.components.locomotor:WantsToMoveForward() then
@@ -65,10 +68,12 @@ local events =
 			end
 		elseif inst.sg:HasStateTag("moving") then
 			--stop moving
-			inst.sg:GoToState(
-				(inst.sg:HasStateTag("fin") and "fin_stop") or
-				(inst.sg:HasStateTag("running") and "run_stop" or "walk_stop")
-			)
+			if inst.sg:HasStateTag("fin") then
+				inst.sg.statemem.fin = true
+				inst.sg:GoToState("fin_stop")
+			else
+				inst.sg:GoToState(inst.sg:HasStateTag("running") and "run_stop" or "walk_stop")
+			end
 		end
 	end),
 	EventHandler("attacked", function(inst)
@@ -84,30 +89,50 @@ local events =
 			elseif inst.sg:HasStateTag("dizzy") then
 				local hits = (inst.sg.statemem.hits or 0) + 1
 				inst.sg:GoToState("hit", { hits > 2 and "torpedo_pst" or "torpedo_dizzy", hits })
+			elseif inst.sg:HasStateTag("torpedoready") then
+				inst.sg:GoToState("hit", { "torpedo_pre", inst.sg.statemem.target })
 			elseif not CommonHandlers.HitRecoveryDelay(inst) then
 				inst.sg:GoToState("hit")
 			end
 		end
 	end),
 	EventHandler("minhealth", function(inst)
-		if not (inst.looted or inst.sg:HasStateTag("defeated")) and (
+		if not (inst.components.trader or inst.sg:HasStateTag("defeated")) and (
 			not inst.sg:HasStateTag("busy") or
 			inst.sg:HasStateTag("caninterrupt") or
 			inst.sg:HasStateTag("candefeat") or
 			inst.sg:HasStateTag("frozen")
 		) then
-			if inst.sg:HasStateTag("digging") then
-				inst.sg:GoToState("dive_dig_hit", inst.sg.statemem.hits)
-			elseif inst.sg:HasStateTag("dizzy") then
-				inst.sg:GoToState("hit")
-			elseif ShouldBeDefeated(inst) or not CommonHandlers.HitRecoveryDelay(inst) then
-				inst.sg:GoToState("hit")
-			end
+			inst.sg:GoToState(inst.sg:HasStateTag("digging") and "dive_dig_hit" or "hit")
 		end
 	end),
 	EventHandler("doattack", function(inst, data)
 		if not (inst.sg:HasStateTag("busy") or ShouldBeDefeated(inst)) then
 			ChooseAttack(inst, data and data.target or nil)
+		end
+	end),
+	EventHandler("ontalk", function(inst)
+		inst.sg.mem.lasttalktime = GetTime()
+		if not (inst.aggro or inst.trading or inst.pendingreward or inst.sg:HasStateTag("busy")) then
+			inst.sg.statemem.keepsixfaced = true
+			inst.sg:GoToState("talk", inst.sg:HasStateTag("talking"))
+		end
+	end),
+	EventHandler("trade", function(inst, data)
+		if inst.pendingreward then
+			if not inst.sg:HasStateTag("busy") then
+				inst.sg.mem.pendinggiver = nil
+				inst.sg.statemem.keepsixfaced = true
+				inst.sg:GoToState("give", data and data.giver or nil)
+			else
+				inst.sg.mem.pendinggiver = data and data.giver or nil
+			end
+		end
+	end),
+	EventHandler("onrefuseitem", function(inst, data)
+		if not inst.sg:HasStateTag("busy") then
+			inst.sg.statemem.keepsixfaced = true
+			inst.sg:GoToState("refuse", data)
 		end
 	end),
 }
@@ -365,8 +390,11 @@ local function SpawnIcePlowFX(inst, sideoffset)
 	fx.Transform:SetPosition(x, 0, z)
 end
 
-local function SpawnIceImpactFX(inst)
-	local x, y, z = inst.Transform:GetWorldPosition()
+local function SpawnIceImpactFX(inst, x, z)
+	if x == nil then
+		local y
+		x, y, z = inst.Transform:GetWorldPosition()
+	end
 	local fx = SpawnPrefab("sharkboi_iceimpact_fx")
 	fx.Transform:SetPosition(x, 0, z)
 end
@@ -376,6 +404,16 @@ local function SpawnIceTrailFX(inst)
 	local fx = SpawnPrefab("sharkboi_icetrail_fx")
 	fx.Transform:SetPosition(x, 0, z)
 	fx.Transform:SetRotation(inst.Transform:GetRotation())
+end
+
+local function SpawnIceHoleFX(inst, x, z)
+	if x == nil then
+		local y
+		x, y, z = inst.Transform:GetWorldPosition()
+	end
+	local fx = SpawnPrefab("sharkboi_icehole_fx")
+	fx.Transform:SetPosition(x, 0, z)
+	return fx
 end
 
 --------------------------------------------------------------------------
@@ -391,25 +429,225 @@ end
 
 --------------------------------------------------------------------------
 
+local CHATTER_DELAYS =
+{
+	--NOTE: len must work for (net_tinybyte)
+	["SHARKBOI_TALK_GIVEUP"] =			{ delay = 3, len = 2 },
+	["SHARKBOI_ACCEPT_OCEANFISH"] =		{ delay = 3 },
+	--["SHARKBOI_ACCEPT_BIG_OCEANFISH"] =	{ delay = 3 }, --no delay for the big one
+	["SHARKBOI_REFUSE_NOT_OCEANFISH"] =	{ delay = 3 },
+	["SHARKBOI_REFUSE_TOO_SMALL"] =		{ delay = 3 },
+	["SHARKBOI_REFUSE_EMPTY"] =			{ delay = 3 },
+}
+
+local function TryChatter(inst, strtblname, index, ignoredelay, force)
+	local t = GetTime()
+	local delays = CHATTER_DELAYS[strtblname]
+	if ignoredelay or (inst.sg.mem.lastchatter or 0) + (delays and delays.delay or 0) < t then
+		inst.sg.mem.lastchatter = t
+		inst.components.talker:Chatter(strtblname, index or math.random(#STRINGS[strtblname]), delays and delays.len or nil, force)
+	end
+end
+
+--------------------------------------------------------------------------
+
 local states =
 {
 	State{
 		name = "idle",
 		tags = { "idle", "canrotate" },
 
-		onenter = function(inst)
-			if inst.aggro and ShouldBeDefeated(inst) then
+		onenter = function(inst, norotate)
+			if inst.sg.mem.sleeping then
+				inst.sg:GoToState("sleep")
+				return
+			elseif inst.pendingreward then
+				inst.sg.statemem.keepsixfaced = true
+				inst.sg:GoToState("give", inst.sg.mem.pendinggiver)
+				return
+			elseif inst.aggro and ShouldBeDefeated(inst) then
 				inst.sg:GoToState("defeat")
 				return
+			elseif norotate then
+				inst.sg:RemoveStateTag("canrotate")
 			end
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("idle", true)
+		end,
+
+		onexit = function(inst)
+			if not inst.sg.statemem.keepsixfaced then
+				inst.Transform:SetFourFaced()
+			end
+		end,
+	},
+
+	State{
+		name = "talk",
+		tags = { "talking", "idle", "canrotate" },
+
+		onenter = function(inst, noanim)
+			inst.components.locomotor:Stop()
+			inst.Transform:SetSixFaced()
+			if not noanim then
+				inst.AnimState:PlayAnimation("sharkboi_talk_pre")
+				inst.AnimState:PushAnimation("sharkboi_talk", true)
+			end
+			inst.sg:SetTimeout(5)
+		end,
+
+		ontimeout = function(inst)
+			inst.sg.statemem.keepsixfaced = true
+			inst.sg:GoToState("talk_pst")
+		end,
+
+		onexit = function(inst)
+			if not inst.sg.statemem.keepsixfaced then
+				inst.Transform:SetFourFaced()
+			end
+		end,
+	},
+
+	State{
+		name = "talk_pst",
+		tags = { "idle", "canrotate" },
+
+		onenter = function(inst)
+			inst.components.locomotor:Stop()
+			inst.Transform:SetSixFaced()
+			inst.AnimState:PlayAnimation("sharkboi_talk_pst")
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					--maintain 6 faced to idle!
+					inst.sg.statemem.keepsixfaced = true
+					inst.sg:GoToState("idle", true)
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.keepsixfaced then
+				inst.Transform:SetFourFaced()
+			end
+		end,
+	},
+
+	State{
+		name = "refuse",
+		tags = { "busy", "caninterrupt" },
+
+		onenter = function(inst, data)
+			inst.components.locomotor:Stop()
+			inst.Transform:SetSixFaced()
+			inst.AnimState:PlayAnimation("sharkboi_reject")
+			if data then
+				if data.giver and data.giver:IsValid() then
+					inst:ForceFacePoint(data.giver.Transform:GetWorldPosition())
+				end
+				if data.reason == "NOT_OCEANFISH" then
+					TryChatter(inst, "SHARKBOI_REFUSE_NOT_OCEANFISH", nil, nil, true)
+				elseif data.reason == "TOO_SMALL" then
+					TryChatter(inst, "SHARKBOI_REFUSE_TOO_SMALL", nil, nil, true)
+				elseif data.reason == "EMPTY" then
+					TryChatter(inst, "SHARKBOI_REFUSE_EMPTY", nil, nil, true)
+				end
+			end
+		end,
+
+		timeline =
+		{
+			FrameEvent(26, function(inst)
+				if inst.pendingreward then
+					inst.sg.statemem.keepsixfaced = true
+					inst.sg:GoToState("give", inst.sg.mem.pendinggiver)
+					return
+				end
+				inst.sg:RemoveStateTag("busy")
+			end),
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.keepsixfaced then
+				inst.Transform:SetFourFaced()
+			end
+		end,
+	},
+
+	State{
+		name = "give",
+		tags = { "busy" },
+
+		onenter = function(inst, giver)
+			inst.components.locomotor:Stop()
+			inst.Transform:SetSixFaced()
+			inst.AnimState:PlayAnimation("sharkboi_take")
+			inst.sg.statemem.giver = giver
+			if inst.pendingreward then
+				TryChatter(inst, inst.pendingreward > 1 and "SHARKBOI_ACCEPT_BIG_OCEANFISH" or "SHARKBOI_ACCEPT_OCEANFISH", nil, nil, true)
+			end
+		end,
+
+		onupdate = function(inst)
+			if inst.sg.statemem.giver then
+				if inst.sg.statemem.giver:IsValid() then
+					inst:ForceFacePoint(inst.sg.statemem.giver.Transform:GetWorldPosition())
+				else
+					inst.sg.statemem.giver = nil
+				end
+			end
+		end,
+
+		timeline =
+		{
+			FrameEvent(6, function(inst)
+				if inst.pendingreward then
+					inst:GiveReward(inst.sg.statemem.giver)
+				end
+				inst.sg.statemem.giver = nil
+				inst.sg.mem.pendinggiver = nil
+			end),
+			FrameEvent(13, function(inst)
+				if inst.pendingreward then
+					inst.sg.statemem.keepsixfaced = true
+					inst.sg:GoToState("give", inst.sg.mem.pendinggiver)
+					return
+				end
+				inst.sg:RemoveStateTag("busy")
+			end),
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.keepsixfaced then
+				inst.Transform:SetFourFaced()
+			end
 		end,
 	},
 
 	State{
 		name = "spawn",
-		tags = { "busy", "noattack", "temp_invincible" },
+		tags = { "busy", "nosleep", "noattack", "temp_invincible" },
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
@@ -417,12 +655,15 @@ local states =
 			inst.SoundEmitter:PlaySound("turnoftides/common/together/water/emerge/large")
 			local x, y, z = inst.Transform:GetWorldPosition()
 			SpawnPrefab("splash_green_large").Transform:SetPosition(x, 0, z)
+			TryChatter(inst, "SHARKBOI_TALK_IDLE", nil, true, true)
+			inst.components.talker:IgnoreAll("spawn")
 		end,
 
 		timeline =
 		{
-			FrameEvent(24, function(inst)
+			CommonHandlers.OnNoSleepFrameEvent(24, function(inst)
 				inst.sg:RemoveStateTag("busy")
+				inst.sg:RemoveStateTag("nosleep")
 				inst.sg:RemoveStateTag("noattack")
 				inst.sg:RemoveStateTag("temp_invincible")
 			end),
@@ -436,6 +677,10 @@ local states =
 				end
 			end),
 		},
+
+		onexit = function(inst)
+			inst.components.talker:StopIgnoringAll("spawn")
+		end,
 	},
 
 	State{
@@ -447,6 +692,9 @@ local states =
 			inst.AnimState:PlayAnimation("hit")
 			inst.SoundEmitter:PlaySound("meta3/sharkboi/hit")
 			inst.sg.statemem.nextstateparams = nextstateparams
+			if inst.sg.lasttags and inst.sg.lasttags["dizzy"] then
+				inst.sg:AddStateTag("dizzy")
+			end
 		end,
 
 		timeline =
@@ -466,7 +714,6 @@ local states =
 					local cd = inst.components.timer:GetTimeLeft("standing_dive_cd")
 					if cd then
 						local delta = TUNING.SHARKBOI_STANDING_DIVE_CD / 5
-						print("Reduced!", cd, cd - delta)
 						if cd > delta then
 							inst.components.timer:SetTimeLeft("standing_dive_cd", cd - delta)
 						else
@@ -745,7 +992,7 @@ local states =
 
 	State{
 		name = "ice_summon",
-		tags = { "busy", "candefeat" },
+		tags = { "busy", "candefeat", "torpedoready" },
 
 		onenter = function(inst, target)
 			inst.components.locomotor:Stop()
@@ -783,6 +1030,7 @@ local states =
 			FrameEvent(10, function(inst) inst.SoundEmitter:PlaySound("meta3/sharkboi/attack_small") end),
 			FrameEvent(35, function(inst)
 				inst.SoundEmitter:PlaySound("meta3/sharkboi/attack_big")
+				inst.sg.statemem.target = nil
 				inst.sg.statemem.targetpos = nil
 
 				local x, y, z = inst.Transform:GetWorldPosition()
@@ -792,6 +1040,9 @@ local states =
 				inst.sg.statemem.fx = SpawnPrefab("sharkboi_icetunnel_fx")
 				inst.sg.statemem.fx.Transform:SetPosition(x, 0, z)
 				inst.sg.statemem.fx.Transform:SetRotation(inst.Transform:GetRotation())
+			end),
+			FrameEvent(58, function(inst)
+				inst.sg:AddStateTag("caninterrupt")
 			end),
 		},
 
@@ -823,6 +1074,10 @@ local states =
 		onenter = function(inst, target)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("torpedo_pre")
+			if inst.sg.lasttags and inst.sg.lasttags["hit"] then
+				inst.sg.statemem.quick = true
+				inst.AnimState:SetFrame(16)
+			end
 			inst.SoundEmitter:PlaySound("meta3/sharkboi/attack_small")
 
 			if target and target:IsValid() then
@@ -854,7 +1109,16 @@ local states =
 
 		timeline =
 		{
-			FrameEvent(25, PlayFootstep),
+			FrameEvent(30 - 16, function(inst)
+				if inst.sg.statemem.quick then
+					PlayFootstep(inst)
+				end
+			end),
+			FrameEvent(30, function(inst)
+				if not inst.sg.statemem.quick then
+					PlayFootstep(inst)
+				end
+			end),
 		},
 
 		events =
@@ -869,7 +1133,7 @@ local states =
 
 	State{
 		name = "torpedo_jump",
-		tags = { "attack", "busy", "jumping" },
+		tags = { "attack", "busy", "jumping", "nosleep", "cantalk" },
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
@@ -916,9 +1180,10 @@ local states =
 
 	State{
 		name = "torpedo",
-		tags = { "attack", "busy", "jumping" },
+		tags = { "attack", "busy", "jumping", "nosleep" },
 
 		onenter = function(inst, targets)
+			inst.components.talker:ShutUp()
 			inst.components.locomotor:Stop()
 			inst.Transform:SetEightFaced()
 			inst.AnimState:PlayAnimation("torpedo_loop", true)
@@ -966,7 +1231,7 @@ local states =
 
 	State{
 		name = "torpedo_climb",
-		tags = { "busy", "dizzy" },
+		tags = { "busy", "dizzy", "nosleep" },
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
@@ -975,11 +1240,13 @@ local states =
 
 		timeline =
 		{
-			FrameEvent(36, function(inst)
+			FrameEvent(32, function(inst) inst.SoundEmitter:PlaySound("meta3/sharkboi/hit") end),
+			CommonHandlers.OnNoSleepFrameEvent(36, function(inst)
 				if ShouldBeDefeated(inst) then
 					inst.sg:GoToState("defeat")
 					return
 				end
+				inst.sg:RemoveStateTag("nosleep")
 				inst.sg:AddStateTag("caninterrupt")
 			end),
 		},
@@ -1002,10 +1269,20 @@ local states =
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("torpedo_dizzy")
 			if hits then
-				inst.AnimState:SetFrame(22)
+				inst.AnimState:SetFrame(23)
+				inst.SoundEmitter:PlaySound("meta3/sharkboi/hit", nil, 0.6)
 				inst.sg.statemem.hits = hits
 			end
 		end,
+
+		timeline =
+		{
+			FrameEvent(22, function(inst)
+				if inst.sg.statemem.hits == nil then
+					inst.SoundEmitter:PlaySound("meta3/sharkboi/hit")
+				end
+			end),
+		},
 
 		events =
 		{
@@ -1019,13 +1296,15 @@ local states =
 
 	State{
 		name = "torpedo_pst",
-		tags = { "busy" },
+		tags = { "busy", "notalksound" },
 
 		onenter = function(inst, hits)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("torpedo_pst")
 			if hits then
 				inst.AnimState:SetFrame(19)
+				inst.SoundEmitter:PlaySound("meta3/sharkboi/talk", nil, 0.4)
+				inst.SoundEmitter:PlaySound("meta3/sharkboi/hit", nil, 0.6)
 			else
 				inst.sg:AddStateTag("dizzy")
 				inst.sg:AddStateTag("caninterrupt")
@@ -1039,9 +1318,20 @@ local states =
 			FrameEvent(34 - 19, function(inst)
 				if not inst.sg:HasStateTag("dizzy") then
 					inst.sg:AddStateTag("caninterrupt")
+
+					--in case we were silenced for too long while dizzy
+					if (inst.sg.mem.lasttalktime or 0) + 3 < GetTime() then
+						TryChatter(inst, "SHARKBOI_TALK_FIGHT", nil, true, true)
+					end
 				end
 			end),
 			--timeline from frame 0
+			FrameEvent(16, function(inst)
+				if inst.sg:HasStateTag("dizzy") then
+					inst.SoundEmitter:PlaySound("meta3/sharkboi/talk", nil, 0.4)
+					inst.SoundEmitter:PlaySound("meta3/sharkboi/hit", nil, 0.6)
+				end
+			end),
 			FrameEvent(19, function(inst)
 				if inst.sg:HasStateTag("dizzy") then
 					inst.sg:RemoveStateTag("dizzy")
@@ -1050,6 +1340,11 @@ local states =
 			end),
 			FrameEvent(34, function(inst)
 				inst.sg:AddStateTag("caninterrupt")
+
+				--in case we were silenced for too long while dizzy
+				if (inst.sg.mem.lasttalktime or 0) + 3 < GetTime() then
+					TryChatter(inst, "SHARKBOI_TALK_FIGHT", nil, true, true)
+				end
 			end),
 		},
 
@@ -1122,7 +1417,7 @@ local states =
 
 	State{
 		name = "dive_jump_delay",
-		tags = { "fin", "busy", "noattack", "invisible", "temp_invincible", "jumping" },
+		tags = { "fin", "busy", "nosleep", "noattack", "invisible", "temp_invincible", "jumping" },
 
 		onenter = function(inst, target)
 			inst.components.locomotor:Stop()
@@ -1186,7 +1481,7 @@ local states =
 
 	State{
 		name = "dive_jump_pre",
-		tags = { "busy", "noattack", "invisible", "temp_invincible" },
+		tags = { "busy", "nosleep", "noattack", "invisible", "temp_invincible" },
 
 		onenter = function(inst, data)
 			inst.components.locomotor:Stop()
@@ -1275,21 +1570,24 @@ local states =
 
 	State{
 		name = "dive_jump",
-		tags = { "busy", "jumping" },
+		tags = { "busy", "jumping", "nosleep" },
 
 		onenter = function(inst, pos)
+			inst.components.locomotor:Stop()
+			inst.AnimState:PlayAnimation("icedive_jump")
+			inst.SoundEmitter:PlaySound("meta3/sharkboi/attack_big")
+			inst.components.combat:StartAttack()
+
+			local x, y, z = inst.Transform:GetWorldPosition()
 			inst.components.timer:StopTimer("standing_dive_cd")
 			if inst.sg.lasttags and inst.sg.lasttags["fastdig"] then
 				inst.sg:AddStateTag("fastdig")
 				inst.components.timer:StartTimer("standing_dive_cd", TUNING.SHARKBOI_STANDING_DIVE_CD / 2)
 			else
 				inst.components.timer:StartTimer("standing_dive_cd", TUNING.SHARKBOI_STANDING_DIVE_CD)
+				SpawnIceHoleFX(inst, x, z)
 			end
-			inst.components.locomotor:Stop()
-			inst.AnimState:PlayAnimation("icedive_jump")
-			inst.SoundEmitter:PlaySound("meta3/sharkboi/attack_big")
-			inst.components.combat:StartAttack()
-			local x, y, z = inst.Transform:GetWorldPosition()
+
 			local theta = inst.Transform:GetRotation() * DEGREES
 			local costheta = math.cos(theta)
 			local sintheta = math.sin(theta)
@@ -1343,7 +1641,7 @@ local states =
 
 	State{
 		name = "dive_dig_pre",
-		tags = { "digging", "busy", "caninterrupt" },
+		tags = { "digging", "busy", "caninterrupt", "nosleep" },
 
 		onenter = function(inst, targets)
 			inst.components.locomotor:Stop()
@@ -1351,7 +1649,7 @@ local states =
 			inst.SoundEmitter:PlaySound("meta3/sharkboi/divedown")
 			SpawnIceImpactFX(inst)
 			DoAOEAttackAndDig(inst, 0, 2, nil, 1, nil, targets)
-			if ShouldBeDefeated(inst) then
+			if inst.sg.mem.sleeping or ShouldBeDefeated(inst) then
 				inst.sg:GoToState("dive_dig_hit")
 			elseif inst.sg.lasttags and inst.sg.lasttags["fastdig"] then
 				inst.sg:AddStateTag("fastdig")
@@ -1370,7 +1668,7 @@ local states =
 
 	State{
 		name = "dive_dig_loop",
-		tags = { "digging", "busy", "caninterrupt" },
+		tags = { "digging", "busy", "caninterrupt", "nosleep" },
 
 		onenter = function(inst, hits)
 			inst.components.locomotor:Stop()
@@ -1383,6 +1681,7 @@ local states =
 				inst.AnimState:PlayAnimation("icedive_dig_loop", true)
 				inst.sg:SetTimeout(2 * inst.AnimState:GetCurrentAnimationLength())
 			end
+			inst.SoundEmitter:PlaySound("meta3/sharkboi/feetsies_wiggle_LP", "loop")
 		end,
 
 		ontimeout = function(inst)
@@ -1397,11 +1696,15 @@ local states =
 				end
 			end),
 		},
+
+		onexit = function(inst)
+			inst.SoundEmitter:KillSound("loop")
+		end,
 	},
 
 	State{
 		name = "dive_dig_hit",
-		tags = { "digging", "hit", "busy" },
+		tags = { "digging", "hit", "busy", "nosleep" },
 
 		onenter = function(inst, hits)
 			inst.components.locomotor:Stop()
@@ -1412,7 +1715,7 @@ local states =
 		timeline =
 		{
 			FrameEvent(3, function(inst)
-				if inst.sg.statemem.hits >= 3 or ShouldBeDefeated(inst) then
+				if inst.sg.statemem.hits >= 3 or inst.sg.mem.sleeping or ShouldBeDefeated(inst) then
 					inst.sg:GoToState("dive_dig_stun")
 				end
 			end),
@@ -1430,21 +1733,28 @@ local states =
 
 	State{
 		name = "dive_dig_pst",
-		tags = { "digging", "busy" },
+		tags = { "digging", "busy", "nosleep" },
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("icedive_dig_pst")
+			inst.sg.statemem.fx = SpawnIceHoleFX(inst)
+			inst.sg.statemem.fx.AnimState:Pause()
 		end,
 
 		timeline =
 		{
+			FrameEvent(2, function(inst) inst.SoundEmitter:PlaySound("meta3/sharkboi/popup") end),
 			FrameEvent(4, function(inst)
 				inst.sg:AddStateTag("noattack")
 				inst.sg:AddStateTag("temp_invincible")
 				ToggleOffAllObjectCollisions(inst)
 				inst.DynamicShadow:Enable(false)
 				SpawnIcePlowFX(inst)
+			end),
+			FrameEvent(10, function(inst)
+				inst.sg.statemem.fx.AnimState:Resume()
+				inst.sg.statemem.fx = nil
 			end),
 		},
 
@@ -1464,27 +1774,51 @@ local states =
 				ToggleOnAllObjectCollisionsAt(inst, x, z)
 				inst.DynamicShadow:Enable(true)
 			end
+			if inst.sg.statemem.fx then
+				inst.sg.statemem.fx.AnimState:Resume()
+			end
 		end,
 	},
 
 	State{
 		name = "dive_dig_stun",
-		tags = { "busy", "dizzy" },
+		tags = { "busy", "dizzy", "jumping", "nosleep" },
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("icedive_stun")
 			inst.SoundEmitter:PlaySound("meta3/sharkboi/popup")
-			SpawnIceImpactFX(inst)
+			local x, y, z = inst.Transform:GetWorldPosition()
+			SpawnIceImpactFX(inst, x, z)
+			SpawnIceHoleFX(inst, x, z)
+			inst.Physics:SetMotorVelOverride(4, 0, 0)
 		end,
 
 		timeline =
 		{
-			FrameEvent(47, function(inst)
+			--Bounce
+			FrameEvent(9, PlayFootstep),
+			FrameEvent(12, function(inst) inst.Physics:SetMotorVelOverride(2, 0, 0) end),
+
+			--Bounce
+			FrameEvent(17, PlayFootstep),
+			FrameEvent(20, function(inst) inst.Physics:SetMotorVelOverride(1, 0, 0) end),
+			FrameEvent(21, function(inst) inst.Physics:SetMotorVelOverride(0.5, 0, 0) end),
+			FrameEvent(22, function(inst) inst.Physics:SetMotorVelOverride(0.25, 0, 0) end),
+			FrameEvent(23, function(inst)
+				inst.Physics:ClearMotorVelOverride()
+				inst.Physics:Stop()
+			end),
+
+			FrameEvent(29, function(inst) PlayFootstep(inst, 0.5) end),
+			FrameEvent(36, function(inst) PlayFootstep(inst, 0.5) end),
+			FrameEvent(59, function(inst) PlayFootstep(inst, 0.75) end),
+			CommonHandlers.OnNoSleepFrameEvent(59, function(inst)
 				if ShouldBeDefeated(inst) then
 					inst.sg:GoToState("defeat")
 					return
 				end
+				inst.sg:RemoveStateTag("nosleep")
 				inst.sg:AddStateTag("caninterrupt")
 			end),
 		},
@@ -1497,6 +1831,11 @@ local states =
 				end
 			end),
 		},
+
+		onexit = function(inst)
+			inst.Physics:ClearMotorVelOverride()
+			inst.Physics:Stop()
+		end,
 	},
 
 	--------------------------------------------------------------------------
@@ -1504,7 +1843,7 @@ local states =
 
 	State{
 		name = "fin_idle",
-		tags = { "fin", "idle", "canrotate", "noattack", "invisible" },
+		tags = { "fin", "idle", "canrotate", "nosleep", "noattack", "invisible" },
 
 		onenter = function(inst)
 			inst.components.locomotor:StopMoving()
@@ -1526,11 +1865,14 @@ local states =
 
 	State{
 		name = "fin_start",
-		tags = { "fin", "moving", "running", "canrotate", "noattack" },
+		tags = { "fin", "moving", "running", "canrotate", "nosleep", "noattack" },
 
 		onenter = function(inst)
 			inst.components.locomotor:RunForward()
 			inst.AnimState:PlayAnimation("fin_pre")
+			if not inst.SoundEmitter:PlayingSound("loop") then
+				inst.SoundEmitter:PlaySound("meta3/sharkboi/movement_thru_ice", "loop")
+			end
 		end,
 
 		timeline =
@@ -1544,20 +1886,30 @@ local states =
 		{
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
+					inst.sg.statemem.fin = true
 					inst.sg:GoToState("fin")
 				end
 			end),
 		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.fin then
+				inst.SoundEmitter:KillSound("loop")
+			end
+		end,
 	},
 
 	State{
 		name = "fin",
-		tags = { "fin", "moving", "running", "canrotate", "noattack" },
+		tags = { "fin", "moving", "running", "canrotate", "nosleep", "noattack" },
 
 		onenter = function(inst)
 			inst.components.locomotor:RunForward()
 			if not inst.AnimState:IsCurrentAnimation("fin_loop") then
 				inst.AnimState:PlayAnimation("fin_loop", true)
+			end
+			if not inst.SoundEmitter:PlayingSound("loop") then
+				inst.SoundEmitter:PlaySound("meta3/sharkboi/movement_thru_ice", "loop")
 			end
 			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
 		end,
@@ -1587,23 +1939,38 @@ local states =
 		},
 
 		ontimeout = function(inst)
+			inst.sg.statemem.fin = true
 			inst.sg:GoToState("fin")
+		end,
+
+		onexit = function(inst)
+			if not inst.sg.statemem.fin then
+				inst.SoundEmitter:KillSound("loop")
+			end
 		end,
 	},
 
 	State{
 		name = "fin_stop",
-		tags = { "fin", "canrotate", "noattack" },
+		tags = { "fin", "canrotate", "nosleep", "noattack" },
 
 		onenter = function(inst, nextstateparams)
 			inst.components.locomotor:RunForward()
 			inst.AnimState:PlayAnimation("fin_pst")
+			if not inst.SoundEmitter:PlayingSound("loop") then
+				inst.SoundEmitter:PlaySound("meta3/sharkboi/movement_thru_ice", "loop")
+			end
 			if nextstateparams then
 				inst.sg.statemem.nextstateparams = nextstateparams
 				inst.sg:AddStateTag("jumping")
 			end
 			SpawnIceTrailFX(inst)
 		end,
+
+		timeline =
+		{
+			FrameEvent(5, function(inst) inst.SoundEmitter:KillSound("loop") end),
+		},
 
 		events =
 		{
@@ -1620,6 +1987,7 @@ local states =
 
 		onexit = function(inst)
 			inst.components.locomotor:StopMoving()
+			inst.SoundEmitter:KillSound("loop")
 		end,
 	},
 
@@ -1634,6 +2002,7 @@ local states =
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("defeated_pre")
 			inst:StopAggro()
+			TryChatter(inst, "SHARKBOI_TALK_GIVEUP", nil, true)
 		end,
 
 		timeline =
@@ -1648,10 +2017,17 @@ local states =
 		{
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
+					inst.sg.statemem.defeat = true
 					inst.sg:GoToState("defeat_loop")
 				end
 			end),
 		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.defeat and ShouldBeDefeated(inst) then
+				inst:MakeTrader()
+			end
+		end,
 	},
 
 	State{
@@ -1671,6 +2047,7 @@ local states =
 				end
 				inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength() * 2)
 			end
+			TryChatter(inst, "SHARKBOI_TALK_GIVEUP")
 		end,
 
 		ontimeout = function(inst)
@@ -1680,7 +2057,7 @@ local states =
 
 		onexit = function(inst)
 			if not inst.sg.statemem.defeat and ShouldBeDefeated(inst) then
-				inst:AddTag("notarget")
+				inst:MakeTrader()
 			end
 		end,
 	},
@@ -1701,6 +2078,7 @@ local states =
 				inst.sg.statemem.hits = hits - alt + 10
 			end
 			inst.SoundEmitter:PlaySound("meta3/sharkboi/hit")
+			TryChatter(inst, "SHARKBOI_TALK_GIVEUP")
 		end,
 
 		timeline =
@@ -1724,7 +2102,7 @@ local states =
 
 		onexit = function(inst)
 			if not inst.sg.statemem.defeat and ShouldBeDefeated(inst) then
-				inst:AddTag("notarget")
+				inst:MakeTrader()
 			end
 		end,
 	},
@@ -1746,9 +2124,8 @@ local states =
 			FrameEvent(12, PlayFootstep),
 			FrameEvent(14, function(inst)
 				inst.sg:AddStateTag("caninterrupt")
-				if ShouldBeDefeated(inst) and not inst.looted then
-					inst.looted = true
-					inst.components.lootdropper:DropLoot(inst:GetPosition())
+				if ShouldBeDefeated(inst) then
+					inst:MakeTrader()
 				end
 			end),
 		},
@@ -1757,10 +2134,17 @@ local states =
 		{
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
+					inst.sg.statemem.defeat = true
 					inst.sg:GoToState("idle")
 				end
 			end),
 		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.defeat and ShouldBeDefeated(inst) then
+				inst:MakeTrader()
+			end
+		end,
 	},
 }
 
@@ -1816,6 +2200,46 @@ nil, nil, nil,
 			inst.sg.mem.lastfootstep = t
 			PlayFootstep(inst, 0.5)
 		end
+	end,
+})
+
+CommonStates.AddSleepExStates(states,
+{
+	starttimeline =
+	{
+		FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("meta3/sharkboi/hit", nil, 0.3) end),
+		FrameEvent(25, function(inst) inst.SoundEmitter:PlaySound("meta3/sharkboi/hit", nil, 0.2) end),
+		FrameEvent(43, PlayFootstep),
+		FrameEvent(45, function(inst)
+			inst.sg:RemoveStateTag("caninterrupt")	
+			inst.SoundEmitter:PlaySound("meta3/sharkboi/hit", nil, 0.2)
+		end),
+		FrameEvent(48, PlayFootstep),
+	},
+	sleeptimeline =
+	{
+		FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("meta3/sharkboi/talk", nil, 0.3) end),
+	},
+	waketimeline =
+	{
+		FrameEvent(4, function(inst) PlayFootstep(inst, 0.4) end),
+		FrameEvent(14, function(inst) PlayFootstep(inst, 0.8) end),
+		CommonHandlers.OnNoSleepFrameEvent(23, function(inst)
+			if ShouldBeDefeated(inst) then
+				inst.sg:GoToState("defeat")
+				return
+			end
+			inst.sg:RemoveStateTag("nosleep")
+			inst.sg:AddStateTag("caninterrupt")
+		end),
+		FrameEvent(25, function(inst)
+			inst.sg:RemoveStateTag("busy")
+		end),
+	},
+},
+{
+	onsleep = function(inst)
+		inst.sg:AddStateTag("caninterrupt")
 	end,
 })
 

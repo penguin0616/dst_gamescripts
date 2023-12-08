@@ -364,8 +364,8 @@ end
 
 local SPAWN_PERIOD = 0
 local MAX_COUNT = 20
-local MAX_ICESPIKE_SFX = 6
-local SFX_PERIOD = math.ceil(MAX_COUNT / MAX_ICESPIKE_SFX * 2)
+local MAX_ICESPIKE_SFX = 10
+local SFX_PERIOD = math.ceil(MAX_COUNT / (MAX_ICESPIKE_SFX / 2 - 1))
 local SPACING = RADIUS * 2 + 0.05
 local TUNNEL_RADIUS = 3
 local MIN_DRIFT = 0.25
@@ -387,7 +387,7 @@ end
 --set it to a large sized variation.
 local function DoSpawnSpike(inst, data, variations, targets, flip)
 	local rot = inst.Transform:GetRotation()
-	local spike, final
+	local spike, final, shouldsfx
 	if data.queued_x then
 		spike = SpawnPrefab("sharkboi_icespike")
 		spike.Transform:SetPosition(data.queued_x, 0, data.queued_z)
@@ -398,7 +398,7 @@ local function DoSpawnSpike(inst, data, variations, targets, flip)
 			data.next_sfx = data.next_sfx - 1
 		else
 			data.next_sfx = SFX_PERIOD
-			spike.SoundEmitter:PlaySound("dontstarve/creatures/deerclops/ice_small")
+			shouldsfx = true
 		end
 
 		data.count = data.count + 1
@@ -439,6 +439,9 @@ local function DoSpawnSpike(inst, data, variations, targets, flip)
 
 	if spike then
 		spike:SetVariation(final and NUM_VARIATIONS + 1--[[large]] or variations:GetNext())
+		if final or shouldsfx then
+			spike.SoundEmitter:PlaySound("meta3/sharkboi/ice_spike")
+		end
 	end
 	if final then
 		EndTask(inst, flip)

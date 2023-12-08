@@ -11,7 +11,7 @@ local assets =
     Asset("SCRIPT", "scripts/prefabs/willow_ember_common.lua"),
 }
 
-local retucleassets = 
+local retucleassets =
 {
     Asset("ANIM", "anim/reticuleaoe.zip"),
 }
@@ -20,7 +20,7 @@ local prefabs =
 {
     "spell_fire_throw",
     "firesplash_fx",
-    "firering_fx", 
+    "firering_fx",
     "flamethrower_fx",
     "willow_shadow_flame",
     "willow_throw_flame",
@@ -44,26 +44,30 @@ local SPELLCOSTS = {
 
 local function KillEmber(inst)
     inst:ListenForEvent("animover", inst.Remove)
+
     inst.AnimState:PlayAnimation("idle_pst")
     inst.SoundEmitter:PlaySound("dontstarve/characters/wortox/soul/spawn", nil, .5)
 end
 
 local function toground(inst)
     inst.persists = false
+
     if inst._task == nil then
         inst._task = inst:DoTaskInTime(TUNING.WILLOW_EMBER_DURATION, KillEmber) -- NOTES(JBK): This is 1.1 max keep it in sync with "[WST]"
     end
+
     if inst.AnimState:IsCurrentAnimation("idle_loop") then
 		inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1)
     end
-    --onturnoff(inst, true)
 end
 
 local EMBER_TAGS = { "willow_ember" }
+
 local function OnDropped(inst)
     if inst.components.stackable ~= nil and inst.components.stackable:IsStack() then
         local x, y, z = inst.Transform:GetWorldPosition()
-        local num = 10 - #TheSim:FindEntities(x, y, z, 4, EMBER_TAGS)
+        local num = 10 - TheSim:CountEntities(x, y, z, 4, EMBER_TAGS)
+
         if num > 0 then
             for i = 1, math.min(num, inst.components.stackable:StackSize()) do
                 local ember = inst.components.stackable:Get()
@@ -77,10 +81,8 @@ end
 ------------------------------------------
 -- MAGIC STUFF
 
-local function CheckStackSize(inst, spell)
-    if inst.replica.stackable and inst.replica.stackable:StackSize() >= SPELLCOSTS[spell]  then
-        return true
-    end
+local function CheckStackSize(inst, doer, spell)
+    return doer.replica.inventory ~= nil and doer.replica.inventory:Has(inst.prefab, SPELLCOSTS[spell])
 end
 
 local function OnOpenSpellBook(inst)
@@ -89,7 +91,7 @@ local function OnOpenSpellBook(inst)
         inventoryitem:OverrideImage("willow_ember_open")
     end
 
-    TheFocalPoint.SoundEmitter:PlaySound("meta3/willow/ember_container_open","willow_ember_open")    
+    TheFocalPoint.SoundEmitter:PlaySound("meta3/willow/ember_container_open","willow_ember_open")
 end
 
 local function OnCloseSpellBook(inst)
@@ -97,34 +99,65 @@ local function OnCloseSpellBook(inst)
     if inventoryitem ~= nil then
         inventoryitem:OverrideImage(nil)
     end
-    
+
     TheFocalPoint.SoundEmitter:KillSound("willow_ember_open")
 end
 
-local ENTS_CANT = {"INLIMBO","FX","NOCLICK"}
+local SPAWN_FIRE_CANT =     { "player", "INLIMBO", "FX", "NOCLICK" }
+local SPAWN_FIRE_CANT_PVP = { "INLIMBO", "FX", "NOCLICK" }
 
-local function spawnfire(inst,owner,pos)
-    local fire = SpawnPrefab("willow_throw_flame")
-    fire.Transform:SetPosition(pos.x,pos.y,pos.z)
+local function ThrowFire_SpawnFire(inst, doer, pos)
+    local x, y, z = pos:Get()
 
-    local ents = TheSim:FindEntities(pos.x,pos.y,pos.z, 2, nil, ENTS_CANT)
-    for i, ent in ipairs(ents)do
-        if owner and ent.components.burnable and ent ~= owner then
-            ent.components.burnable:Ignite(nil, inst, owner)
+    SpawnPrefab("willow_throw_flame").Transform:SetPosition(x, 0, z)
+
+    local ents = TheSim:FindEntities(x, 0, z, 2, nil, TheNet:GetPVPEnabled() and SPAWN_FIRE_CANT_PVP or SPAWN_FIRE_CANT)
+
+    if doer == nil or ents == nil then
+        return
+    end
+
+    for i, target in ipairs(ents) do
+        if target ~= doer and
+            target.components.burnable ~= nil
+        then
+            if target.components.freezable ~= nil and target.components.freezable:IsFrozen() then
+                target.components.freezable:Unfreeze()
+
+            elseif target.components.fueled == nil or (
+                target.components.fueled.fueltype ~= FUELTYPE.BURNABLE and
+                target.components.fueled.secondaryfueltype ~= FUELTYPE.BURNABLE
+            ) then
+                -- Does not take burnable fuel, so just burn it.
+                if target.components.burnable.canlight or target.components.combat ~= nil then
+                    target.components.burnable:Ignite(true, inst, doer)
+                end
+
+            elseif target.components.fueled.accepting then
+                -- Takes burnable fuel, so fuel it.
+                local fuel = SpawnPrefab("boards")
+
+                if fuel ~= nil then
+                    if fuel.components.fuel ~= nil and
+                        fuel.components.fuel.fueltype == FUELTYPE.BURNABLE
+                    then
+                        target.components.fueled:TakeFuelItem(fuel)
+                    else
+                        fuel:Remove()
+                    end
+                end
+            end
         end
     end
 end
 
 local function TryThrowFire(inst, doer, pos)
-    if CheckStackSize(inst, "firethrow") then
-        --local fire = SpawnPrefab("houndfire")
-        --fire.Transform:SetPosition(pos.x,pos.y,pos.z)
-        local owner = inst.components.inventoryitem.owner
-
-        spawnfire(inst,owner,pos)
+    if CheckStackSize(inst, doer, "firethrow") then
+        ThrowFire_SpawnFire(inst, doer, pos)
 
         return true
     end
+
     return false
 end
 
@@ -137,43 +170,48 @@ local function spawnfirefx(pos)
     for i=1,4 do
         local radius = 4
         local newtheta = theta  + (PI/2*i)
-        local offset = Vector3(radius * math.cos( newtheta ), 0, -radius * math.sin( newtheta ))    
+        local offset = Vector3(radius * math.cos( newtheta ), 0, -radius * math.sin( newtheta ))
         local puff = SpawnPrefab("firesplash_fx")
         local newpos = pos+offset
         puff.Transform:SetPosition(newpos.x, newpos.y, newpos.z)
     end
 end
 
-local function TryBurstFire(inst)
-    if CheckStackSize(inst, "fireburst") then
-        local owner = inst.components.inventoryitem.owner
-        if owner then
-            local pos = Vector3(owner.Transform:GetWorldPosition())
-            local success = false
-            local ents = willow_ember_common.GetBurstTargets(owner)
-            for i, ent in ipairs(ents)do
-                local distsq = owner:GetDistanceSqToInst(ent)
-                if owner and ent ~= owner then
-                    local time = Remap(distsq, 0, TUNING.FIRE_BURST_RANGE*TUNING.FIRE_BURST_RANGE, 0, 0.5)                
-                    inst:DoTaskInTime(time,function()                     
-                        ent.components.burnable:Ignite(nil, inst, owner)                    
-                    end)
-                    success = true                    
-                end
-            end
+local function TryBurstFire(inst, doer, pos)
+    if CheckStackSize(inst, doer, "fireburst") then
+        local ents = willow_ember_common.GetBurstTargets(doer)
+        local success = false
 
-            if success == true then
-                return true
-            else
-                return false
+        if ents == nil then
+            return false
+        end
+
+        for i, ent in ipairs(ents) do
+            local distsq = doer:GetDistanceSqToInst(ent)
+
+            if ent ~= doer then
+                local time = Remap(distsq, 0, TUNING.FIRE_BURST_RANGE*TUNING.FIRE_BURST_RANGE, 0, 0.5)
+
+                inst:DoTaskInTime(time, function()
+                    if ent.components.burnable then
+                        ent.components.burnable:Ignite(nil, inst, doer)
+                    else
+                        ent:PushEvent("onlighterlight")
+                    end
+                end)
+
+                success = true
             end
         end
+
+        return success
     end
+
     return false
 end
 
 local function TryBallFire(inst, doer, pos)
-    if CheckStackSize(inst, "fireball") then
+    if CheckStackSize(inst, doer, "fireball") then
         local ball= SpawnPrefab("emberlight")
         ball.Transform:SetPosition(pos.x,pos.y,pos.z)
         return true
@@ -188,7 +226,7 @@ local function EndLunarFire(fx, doer)
 end
 
 local function TryLunarFire(inst, doer, pos)
-	if CheckStackSize(inst, "lunarfire") and
+    if CheckStackSize(inst, doer, "lunarfire") and
 		doer.components.channelcaster and
 		not doer.components.channelcaster:IsChanneling()
 	then
@@ -206,6 +244,10 @@ local function TryLunarFire(inst, doer, pos)
 			end
 		end, doer)
 
+        if inst.components.spellbook then
+            inst.components.spellbook:StartCooldown(inst.components.spellbook:GetSelectedSpell(),TUNING.WILLOW_LUNAR_FIRE_COOLDOWN)
+        end
+
 		if doer.components.channelcaster:StartChanneling() then
 			return true
 		end
@@ -217,14 +259,14 @@ local function TryLunarFire(inst, doer, pos)
 end
 
 local function TryShadowFire(inst, doer, pos)
-    if CheckStackSize(inst, "shadowfire") then
+    if CheckStackSize(inst, doer, "shadowfire") then
 
         local startangle = inst:GetAngleToPoint(pos.x,pos.y,pos.z)*DEGREES
 
         local burst = 5
 
         for i=1,burst do
-            local radius = 2 
+            local radius = 2
             local theta = startangle + (PI*2/burst*i) - (PI*2/burst)
             local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
 
@@ -236,13 +278,17 @@ local function TryShadowFire(inst, doer, pos)
             fire:settarget(nil,50,doer)
         end
 
+        if inst.components.spellbook then
+            inst.components.spellbook:StartCooldown(inst.components.spellbook:GetSelectedSpell(),TUNING.WILLOW_SHADOW_FIRE_COOLDOWN)
+        end
+
         return true
     end
     return false
 end
 
 local function TryFireFrenzy(inst, doer, pos)
-    if CheckStackSize(inst, "firefrenzy") then
+    if CheckStackSize(inst, doer, "firefrenzy") then
 
         doer:AddDebuff("buff_firefrenzy", "buff_firefrenzy")
 
@@ -251,79 +297,68 @@ local function TryFireFrenzy(inst, doer, pos)
     return false
 end
 
-local function FireBurstSpellFn(inst)
-    if not CheckStackSize(inst, "fireburst") then
+local function FireBurstSpellFn(inst, doer, pos)
+    if not CheckStackSize(inst, doer, "fireburst") then
         return false, "NOT_ENOUGH_EMBERS"
-    elseif TryBurstFire(inst) then
-        inst.components.stackable:SetStackSize( inst.components.stackable:StackSize() - SPELLCOSTS["fireburst"] )
-        if inst.components.stackable:StackSize() <= 0 then
-            inst:Remove()
-        end
+    elseif TryBurstFire(inst, doer, pos) then
+        doer.components.inventory:ConsumeByName(inst.prefab, SPELLCOSTS["fireburst"])
+
         return true
     end
     return false, "NO_TARGETS"
 end
 
 local function FireThrowSpellFn(inst, doer, pos)
-    if not CheckStackSize(inst, "firethrow") then
+    if not CheckStackSize(inst, doer, "firethrow") then
         return false, "NOT_ENOUGH_EMBERS"
     elseif TryThrowFire(inst, doer, pos) then
-        inst.components.stackable:SetStackSize( inst.components.stackable:StackSize() - SPELLCOSTS["firethrow"] )
-        if inst.components.stackable:StackSize() <= 0 then
-            inst:Remove()
-        end
+        doer.components.inventory:ConsumeByName(inst.prefab, SPELLCOSTS["firethrow"])
         return true
     end
     return false
 end
 
 local function FireBallSpellFn(inst, doer, pos)
-    if not CheckStackSize(inst, "fireball") then
+    if not CheckStackSize(inst, doer, "fireball") then
         return false, "NOT_ENOUGH_EMBERS"
     elseif TryBallFire(inst, doer, pos) then
-        inst.components.stackable:SetStackSize( inst.components.stackable:StackSize() - SPELLCOSTS["fireball"] )
-        if inst.components.stackable:StackSize() <= 0 then
-            inst:Remove()
-        end
+        doer.components.inventory:ConsumeByName(inst.prefab, SPELLCOSTS["fireball"])
         return true
     end
     return false
 end
 
 local function LunarFireSpellFn(inst, doer, pos)
-    if not CheckStackSize(inst, "lunarfire") then
+    if inst.components.spellbook:CheckCooldown(inst.components.spellbook:GetSelectedSpell()) then
+        return false, "SPELL_ON_COOLDOWN"
+    elseif doer.components.rider:IsRiding() then
+        return false, "CANT_SPELL_MOUNTED"
+    elseif not CheckStackSize(inst, doer, "lunarfire") then
         return false, "NOT_ENOUGH_EMBERS"
     elseif TryLunarFire(inst, doer, pos) then
-        inst.components.stackable:SetStackSize( inst.components.stackable:StackSize() - SPELLCOSTS["lunarfire"] )
-        if inst.components.stackable:StackSize() <= 0 then
-            inst:Remove()
-        end
+        doer.components.inventory:ConsumeByName(inst.prefab, SPELLCOSTS["lunarfire"])
         return true
     end
     return false
 end
 
 local function ShadowFireSpellFn(inst, doer, pos)
-    if not CheckStackSize(inst, "shadowfire") then
+    if inst.components.spellbook:CheckCooldown(inst.components.spellbook:GetSelectedSpell()) then
+        return false, "SPELL_ON_COOLDOWN"    
+    elseif not CheckStackSize(inst, doer, "shadowfire") then
         return false, "NOT_ENOUGH_EMBERS"
     elseif TryShadowFire(inst, doer, pos) then
-        inst.components.stackable:SetStackSize( inst.components.stackable:StackSize() - SPELLCOSTS["shadowfire"] )
-        if inst.components.stackable:StackSize() <= 0 then
-            inst:Remove()
-        end
+        doer.components.inventory:ConsumeByName(inst.prefab, SPELLCOSTS["shadowfire"])
         return true
     end
     return false
 end
 
 local function FireFrenzySpellFn(inst, doer, pos)
-    if not CheckStackSize(inst, "firefrenzy") then
+    if not CheckStackSize(inst, doer, "firefrenzy") then
         return false, "NOT_ENOUGH_EMBERS"
     elseif TryFireFrenzy(inst, doer, pos) then
-        inst.components.stackable:SetStackSize( inst.components.stackable:StackSize() - SPELLCOSTS["firefrenzy"] )
-        if inst.components.stackable:StackSize() <= 0 then
-            inst:Remove()
-        end
+        doer.components.inventory:ConsumeByName(inst.prefab, SPELLCOSTS["firefrenzy"])
         return true
     end
     return false
@@ -352,38 +387,38 @@ local function StartAOETargeting(inst)
 end
 
 local function ShouldRepeatFireThrow(inst, doer)
-    return CheckStackSize(inst, "firethrow")
+    return CheckStackSize(inst, doer, "firethrow")
 end
 
 local function ShouldRepeatFireBurst(inst, doer)
-    return CheckStackSize(inst, "fireburst")
+    return CheckStackSize(inst, doer, "fireburst")
 end
 
 local function ShouldRepeatFireBall(inst, doer)
-    return CheckStackSize(inst, "fireball")
+    return CheckStackSize(inst, doer, "fireball")
 end
 
 local function ShouldRepeatFireFrenzy(inst, doer)
-    return CheckStackSize(inst, "firefrenzy")
+    return CheckStackSize(inst, doer, "firefrenzy")
 end
 
 local function ShouldRepeatShadowFire(inst, doer)
-    return CheckStackSize(inst, "shadowfire")
+    return CheckStackSize(inst, doer, "shadowfire")
 end
 
 local function ShouldRepeatLunarFire(inst, doer)
-    return CheckStackSize(inst, "lunarfire")
+    return CheckStackSize(inst, doer, "lunarfire")
 end
 
 -------------------------------------------------------------
-local function burst_reticule_mouse_target_function(inst, mousepos)    
+local function burst_reticule_mouse_target_function(inst, mousepos)
     if mousepos == nil then
         return nil
     end
 
     local owner = inst.replica.inventoryitem:IsHeldBy(ThePlayer) and ThePlayer
     if owner then
-        local pos = Vector3(owner.Transform:GetWorldPosition())    
+        local pos = Vector3(owner.Transform:GetWorldPosition())
         return pos
     end
 end
@@ -395,7 +430,7 @@ local function burst_reticule_target_function(inst)
             local pos = Vector3(owner.Transform:GetWorldPosition())
             return pos
         end
-    end  
+    end
 end
 
 local function burst_reticule_update_position_function(inst, pos, reticule, ease, smoothing, dt)
@@ -415,7 +450,7 @@ local function single_reticule_mouse_target_function(inst, mousepos)
     end
     local owner = inst.replica.inventoryitem:IsHeldBy(ThePlayer) and ThePlayer
     if owner then
-        local pos = Vector3(owner.Transform:GetWorldPosition())    
+        local pos = Vector3(owner.Transform:GetWorldPosition())
         return pos
     end
 end
@@ -488,7 +523,7 @@ local FIRE_THROW =
     {
         label = STRINGS.PYROMANCY.FIRE_THROW,
         onselect = function(inst)
-            inst.components.spellbook:SetSpellName(STRINGS.PYROMANCY.FIRE_THROW)
+            inst.components.spellbook:SetSpellName(STRINGS.PYROMANCY.FIRE_THROW)            
             inst.components.aoetargeting:SetDeployRadius(0)
             inst.components.aoetargeting:SetShouldRepeatCastFn(ShouldRepeatFireThrow)
             inst.components.aoetargeting.reticule.reticuleprefab = "reticuleaoefiretarget_1" --"reticuleaoe_1d2_12"
@@ -509,7 +544,7 @@ local FIRE_THROW =
         normal = "fire_throw.tex",
         widget_scale = ICON_SCALE,
         hit_radius = ICON_RADIUS,
-    },  
+    },
 }
 
 local FIRE_BURST =
@@ -660,7 +695,7 @@ local SHADOW_FIRE =
 local function updatespells(inst,owner)
 
     local spells = deepcopy(BASESPELLS)
-    
+
     if owner and owner.components.skilltreeupdater:IsActivated("willow_embers") then
         ConcatArrays(spells,FIRE_THROW)
     end
@@ -671,19 +706,19 @@ local function updatespells(inst,owner)
 
     if owner and owner.components.skilltreeupdater:IsActivated("willow_fire_ball") then
         ConcatArrays(spells,FIRE_BALL)
-    end  
+    end
 
     if owner and owner.components.skilltreeupdater:IsActivated("willow_fire_frenzy") then
         ConcatArrays(spells,FIRE_FRENZY)
-    end  
+    end
 
     if owner and owner.components.skilltreeupdater:IsActivated("willow_allegiance_lunar_fire") then
         ConcatArrays(spells,LUNAR_FIRE)
-    end  
+    end
 
     if owner and owner.components.skilltreeupdater:IsActivated("willow_allegiance_shadow_fire") then
         ConcatArrays(spells,SHADOW_FIRE)
-    end  
+    end
 
     inst.components.spellbook:SetItems(spells)
 end
@@ -716,7 +751,7 @@ local function topocket(inst, owner)
         inst._task:Cancel()
         inst._task = nil
     end
-    
+
     inst._updatespells:push()
     updatespells(inst,owner)
 end
@@ -755,7 +790,7 @@ local function fn()
     inst.components.spellbook:SetOnOpenFn(OnOpenSpellBook)
     inst.components.spellbook:SetOnCloseFn(OnCloseSpellBook)
     inst.components.spellbook.closesound = "meta3/willow/ember_container_close"
-    
+
     inst:AddComponent("aoetargeting")
     inst.components.aoetargeting:SetAllowWater(true)
     inst.components.aoetargeting.reticule.targetfn = ReticuleTargetAllowWaterFn
@@ -787,10 +822,10 @@ local function fn()
 
     inst:AddComponent("locomotor")
 
-    --inst.components.inventoryitem:ChangeImageName("willow_ember")    
+    --inst.components.inventoryitem:ChangeImageName("willow_ember")
 
     inst:AddComponent("stackable")
-    inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM    
+    inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
 
     inst:AddComponent("inspectable")
 
@@ -813,69 +848,84 @@ local function fn()
     return inst
 end
 
-local function MakeBuff(name, onattachedfn, onextendedfn, ondetachedfn, duration, priority, prefabs)
+local function Buff_OnKill(inst)
+    inst.components.debuff:Stop()
+end
 
-    local function OnTimerDone(inst, data)
-        if data.name == "buffover" then
-            inst.components.debuff:Stop()
-        end
-    end
+local function Buff_OnAttached(inst, target)
+    inst.entity:SetParent(target.entity)
+    inst.Transform:SetPosition(0, 0, 0) --in case of loading
 
-    local function OnAttached(inst, target)
+    inst:ListenForEvent("death", function()
+        inst.components.debuff:Stop()
+    end, target)
+
+    inst.bufftask = inst:DoTaskInTime(TUNING.WILLOW_FIREFRENZY_DURATION, Buff_OnKill)
+
+    if target ~= nil and target:IsValid() then
         target:AddTag("firefrenzy")
+
         local fx = SpawnPrefab("willow_frenzy")
-        target:AddChild(fx)        
-        inst.fx = fx
+        fx.entity:SetParent(target.entity)
+
+        inst.bufffx = fx
     end
+end
 
-    local function OnDetached(inst, target)
-        if inst.fx then
-            inst.fx:frenzydone()
-        end
-
+local function Buff_OnDetached(inst, target)
+    if target ~= nil and target:IsValid() then
         target:RemoveTag("firefrenzy")
-        inst:Remove()
     end
 
-    local function fn()
-        local inst = CreateEntity()
+    if inst.bufffx and inst.bufffx:IsValid() then
+        inst.bufffx:Kill()
+    end
 
-        if not TheWorld.ismastersim then
-            --Not meant for client!
-            inst:DoTaskInTime(0, inst.Remove)
-            return inst
-        end
+    inst.bufffx = nil
+    inst:Remove()
+end
 
-        inst.entity:AddTransform()
+local function Buff_OnExtended(inst, target)
+    if inst.bufftask ~= nil then
+        inst.bufftask:Cancel()
+        inst.bufftask = inst:DoTaskInTime(TUNING.WILLOW_FIREFRENZY_DURATION, Buff_OnKill)
+    end
+end
 
-        --[[Non-networked entity]]
-        --inst.entity:SetCanSleep(false)
-        inst.entity:Hide()
-        inst.persists = false
+local function bufffn()
+    local inst = CreateEntity()
 
-        inst:AddTag("CLASSIFIED")
-
-        inst:AddComponent("debuff")
-        inst.components.debuff:SetAttachedFn(OnAttached)
-        inst.components.debuff:SetDetachedFn(OnDetached)
-        inst.components.debuff.keepondespawn = true
-
-        inst:AddComponent("timer")
-        inst.components.timer:StartTimer("buffover", duration)
-        inst:ListenForEvent("timerdone", OnTimerDone)
-
+    if not TheWorld.ismastersim then
+        --Not meant for client!
+        inst:DoTaskInTime(0, inst.Remove)
         return inst
     end
 
-    return Prefab("buff_"..name, fn, nil, prefabs)
+    inst.entity:AddTransform()
+
+    --[[Non-networked entity]]
+    --inst.entity:SetCanSleep(false)
+    inst.entity:Hide()
+    inst.persists = false
+
+    inst:AddTag("CLASSIFIED")
+
+    inst:AddComponent("debuff")
+    inst.components.debuff:SetAttachedFn(Buff_OnAttached)
+    inst.components.debuff:SetDetachedFn(Buff_OnDetached)
+    inst.components.debuff:SetExtendedFn(Buff_OnExtended)
+    inst.components.debuff.keepondespawn = true
+
+    return inst
 end
+
 
 local function reticulefn()
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
-    --inst.entity:AddNetwork()aaas
+    --inst.entity:AddNetwork()
 
     MakeInventoryPhysics(inst)
     RemovePhysicsColliders(inst)
@@ -886,11 +936,11 @@ local function reticulefn()
     inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGroundFixed)
     inst.AnimState:SetLayer(LAYER_WORLD_BACKGROUND)
     inst.AnimState:SetSortOrder(3)
-    inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")    
+    inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 
     inst:AddTag("FX")
     inst:AddTag("NOCLICK")
-    
+
     inst.entity:SetCanSleep(false)
     inst.persists = false
 
@@ -899,5 +949,5 @@ end
 
 return Prefab("willow_ember", fn, assets, prefabs),
        Prefab("willow_ember_burst_target_reticule", reticulefn, retucleassets),
-       MakeBuff("firefrenzy", nil, nil, nil, TUNING.WILLOW_FIREFRENZY_DURATION, 1)
+       Prefab("buff_firefrenzy", bufffn, nil, prefabs)
 

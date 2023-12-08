@@ -396,6 +396,7 @@ return{
 		{
 			NO_MAX_SANITY = "I fear my mind can't take the strain...",
             NOT_ENOUGH_EMBERS = "only_used_by_willow",
+            NO_TARGETS = "only_used_by_willow",
 		},
     },
 
@@ -5047,6 +5048,7 @@ return{
         BOOTLEG = "Best not to think about where it's been.",
         OCEANWHIRLPORTAL = "Is it safe? We should send Wilson in first.",
 
+        EMBERLIGHT = "Neat trick.",
         WILLOW_EMBER = "only_used_by_willow",
     },
 

@@ -24,7 +24,6 @@ local function onremove(inst)
 end
 
 local function OnUpdate(inst, dt)
-
     if inst._targets then
         onremove(inst)
     end
@@ -32,14 +31,16 @@ local function OnUpdate(inst, dt)
     if ThePlayer then
         local ents = willow_ember_common.GetBurstTargets(ThePlayer)
 
-        for i, ent in ipairs(ents) do
-            if not inst._targets then
-                inst._targets = {}
-            end
+        if ents ~= nil then
+            for i, ent in ipairs(ents) do
+                if not inst._targets then
+                    inst._targets = {}
+                end
 
-            local newfx = SpawnPrefab("reticulemultitargetsub")
-            ent:AddChild(newfx)
-            table.insert(inst._targets,newfx)
+                local newfx = SpawnPrefab("reticulemultitargetsub")
+                ent:AddChild(newfx)
+                table.insert(inst._targets,newfx)
+            end
         end
     end
 end

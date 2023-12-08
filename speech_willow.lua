@@ -396,7 +396,9 @@ return{
 		{
 --fallback to speech_wilson.lua 			NO_MAX_SANITY = "only_used_by_waxwell",
             NOT_ENOUGH_EMBERS = "I need more embers! Heh. Better get back to burning.",
-            NO_TARGETS = "There was nothing scary to burn nearby.",  -- [[TODO]]
+            NO_TARGETS = "There is nothing scary to burn nearby.",
+            CANT_SPELL_MOUNTED = "My beast is too flamable for that kind of fun.", --[[TODO]]
+            SPELL_ON_COOLDOWN = "I need to give it a moment.", --[[TODO]]            
 		},
     },
 
@@ -5055,6 +5057,7 @@ return{
         BOOTLEG = "Ugh, it smells like old feet!",
         OCEANWHIRLPORTAL = "Er, can't we take the scenic route instead?",
 
+        EMBERLIGHT = "I made that. No big deal.",
         WILLOW_EMBER = "Aren't they beautiful?",
     },
 

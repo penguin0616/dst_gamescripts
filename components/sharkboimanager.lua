@@ -312,7 +312,7 @@ function self:CooldownArena()
         self.arena.cooldowntask:Cancel()
         self.arena.cooldowntask = nil
     end
-    self.arena.cooldowntask = self.inst:DoTaskInTime(TUNING.SHARKBOI_ARENA_COOLDOWN_DAYS)
+    self.arena.cooldowntask = self.inst:DoTaskInTime(TUNING.SHARKBOI_ARENA_COOLDOWN_DAYS, self.OnCooldownEnd)
 end
 
 function self:ForceCleanup()

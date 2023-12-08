@@ -396,6 +396,7 @@ return{
 		{
 --fallback to speech_wilson.lua 			NO_MAX_SANITY = "only_used_by_waxwell",
             NOT_ENOUGH_EMBERS = "only_used_by_willow",
+            NO_TARGETS = "only_used_by_willow",
 		},
     },
 
@@ -5047,6 +5048,7 @@ return{
         BOOTLEG = "Hmph. That's no proper spacial displacement device, just a cheap knockoff!",
         OCEANWHIRLPORTAL = "If it's the quickest way out of here, I suppose I can't be picky.",
 
+        EMBERLIGHT = "Saves me the trouble of finding firewood.",
         WILLOW_EMBER = "only_used_by_willow",
     },
 

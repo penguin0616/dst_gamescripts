@@ -396,6 +396,7 @@ return{
 		{
 --fallback to speech_wilson.lua 			NO_MAX_SANITY = "only_used_by_waxwell",
             NOT_ENOUGH_EMBERS = "only_used_by_willow",
+            NO_TARGETS = "only_used_by_willow",
 		},
     },
 
@@ -5048,6 +5049,7 @@ return{
         BOOTLEG = "How aboot we leg it out of here, eh?",
         OCEANWHIRLPORTAL = "Hold your breath, Lucy!",
 
+        EMBERLIGHT = "Just keep it away from the trees, eh?",
         WILLOW_EMBER = "only_used_by_willow",
     },
 

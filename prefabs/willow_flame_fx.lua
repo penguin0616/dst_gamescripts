@@ -70,9 +70,9 @@ local function settarget(inst,target,life,source)
                         local ent = ents[i]
                         if (
                                 ent:HasTag("hostile") or
-                                (ent.components.combat and ent.components.combat.target and ent.components.combat.target == source) 
+                                (ent.components.combat and ent.components.combat.target and ent.components.combat.target == source)
                             ) and
-                            (not ent.components.follower or not ent.components.follower.leader or ent.components.follower.leader ~= source ) 
+                            (not ent.components.follower or not ent.components.follower.leader or ent.components.follower.leader ~= source )
                             and not targets[ent]
                         then
                             --keep
@@ -80,11 +80,11 @@ local function settarget(inst,target,life,source)
                             table.remove(ents,i)
                         end
                     end
-                
-                    target = ents[1]    
+
+                    target = ents[1]
                     inst.shadow_ember_target = target
                 end
-                
+
             end
             if target then
                 local dist = inst:GetDistanceSqToInst(target)
@@ -109,13 +109,13 @@ local function settarget(inst,target,life,source)
                 else
                     local pt = Vector3(target.Transform:GetWorldPosition())
                     local angle = inst:GetAngleToPoint(pt.x,pt.y,pt.z)
-                    local anglediff = angle - inst.Transform:GetRotation() 
+                    local anglediff = angle - inst.Transform:GetRotation()
                     if anglediff > 180 then
                         anglediff = anglediff - 360
                     elseif anglediff < -180 then
                         anglediff = anglediff + 360
                     end
-                    if math.abs(anglediff) > maxdeflect then 
+                    if math.abs(anglediff) > maxdeflect then
                         anglediff = math.clamp(anglediff, -maxdeflect, maxdeflect)
                     end
 
@@ -189,7 +189,7 @@ local function shadowfn()
 
 
     inst:AddComponent("damagetypebonus")
-    inst.components.damagetypebonus:AddBonus("lunar_aligned", inst, TUNING.WILLOW_SHADOW_FIRE_BONUS)        
+    inst.components.damagetypebonus:AddBonus("lunar_aligned", inst, TUNING.WILLOW_SHADOW_FIRE_BONUS)
 
 
     inst:ListenForEvent("animover", function()
@@ -233,13 +233,13 @@ local function throwfn()
     inst.components.firefx.levels = throwfirelevels
 
     inst.components.firefx:SetLevel(1)
-    inst:DoTaskInTime(10/30,function() 
+    inst:DoTaskInTime(10/30,function()
             local x,y,z= inst.Transform:GetWorldPosition()
             SpawnPrefab("deerclops_laserscorch").Transform:SetPosition(x, 0, z)
     end)
 
     inst:ListenForEvent("animover", function()
-        if inst.AnimState:IsCurrentAnimation("pre") then            
+        if inst.AnimState:IsCurrentAnimation("pre") then
             inst:Remove()
         end
     end)
@@ -251,16 +251,16 @@ end
 
 ---- FRENZY
 
+local function FrenzyOnUpdate(inst,dt)
+    local rate = 15
+    local rot = inst.Transform:GetRotation()
 
-local function onloopfrenzy(inst,dt)
-    local rate = 10
-    inst.Transform:SetRotation(inst.Transform:GetRotation()+(rate*dt))
-    if inst._frenzyparent:IsValid() then
-        inst.Transform:SetPosition(inst._frenzyparent.Transform:GetWorldPosition())
-    end
+    inst.Transform:SetRotation(rot + (rate * dt))
 end
 
-local function AddFrenzyFX(parent)
+local FRENZY_SCALE = 0.85
+
+local function AddFrenzyFX()
     local inst = CreateEntity()
 
     inst:AddTag("NOCLICK")
@@ -273,77 +273,66 @@ local function AddFrenzyFX(parent)
 
     inst.AnimState:SetBank("frenzy_fx")
     inst.AnimState:SetBuild("frenzy_fx")
-    inst.AnimState:PlayAnimation("pre",false)
-    inst.AnimState:PlayAnimation("loop",true)
+    inst.AnimState:PlayAnimation("pre", false)
+    inst.AnimState:PlayAnimation("loop", true)
     inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
     inst.AnimState:SetLayer(LAYER_BACKGROUND)
     inst.AnimState:SetSortOrder(3)
 
-    inst.AnimState:SetMultColour(1,1,1,0.2)
+    inst.AnimState:SetMultColour(1, 1, 1, 0.2)
 
-    inst:ListenForEvent("animover", function()
-        if inst.AnimState:IsCurrentAnimation("post") then            
-            inst:Remove()
-        end
-    end)
+    inst.Transform:SetScale(FRENZY_SCALE, FRENZY_SCALE, FRENZY_SCALE)
 
     inst:AddComponent("updatelooper")
-    inst.components.updatelooper:AddOnUpdateFn(onloopfrenzy)
+    inst.components.updatelooper:AddOnUpdateFn(FrenzyOnUpdate)
 
-    inst._frenzyparent = parent
     return inst
 end
 
-
 local function FrenzyDoOnClientInit(inst)
-    inst.fx = AddFrenzyFX(inst)
-    inst.fx.entity:AddFollower()
-    inst.fx.Follower:FollowSymbol(inst.GUID, "circle", 0, 0, 0)
+    inst.fx = AddFrenzyFX()
+
+    inst:AddChild(inst.fx)
 end
 
-
-local function OnFrenzyEnd(inst)
-    if inst._end:value() == true then
-        inst.fx.AnimState:PlayAnimation("post")
-        inst:DoTaskInTime(2,function() inst:Remove() end)
-    end
+local function OnFrenzyKilled(inst)
+    inst.fx.AnimState:PlayAnimation("post")
+    inst:DoTaskInTime(inst.fx.AnimState:GetCurrentAnimationLength() + FRAMES, inst.Remove)
 end
 
-local function frenzydone(inst)
-    inst._end:set(true)    
+local function FrenzyKill(inst)
+    inst._kill:push()
+    inst:OnFrenzyKilled()
 end
 
 local function frenzyfn()
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
-    inst.entity:AddAnimState()
     inst.entity:AddNetwork()
-
-    inst.AnimState:SetBank("frenzy_fx")
-    inst.AnimState:SetBuild("frenzy_fx")
-    inst.AnimState:PlayAnimation("pre",false)
-    inst.AnimState:SetMultColour(1,1,1,0)
 
     inst:AddTag("FX")
     inst:AddTag("NOCLICK")
 
-    inst._end = net_bool(inst.GUID, "frenzyfn._end", "enddirty")
-    inst._end:set(false)
+    inst._kill = net_event(inst.GUID, "willow_frenzy._kill", "killdirty")
 
-    inst.entity:SetPristine()    
+    inst.OnFrenzyKilled = OnFrenzyKilled
+    inst.FrenzyDoOnClientInit = FrenzyDoOnClientInit
 
     --Dedicated server does not need the fx
     if not TheNet:IsDedicated() then
-        inst:ListenForEvent("enddirty", OnFrenzyEnd)
-        FrenzyDoOnClientInit(inst)
+        inst:ListenForEvent("killdirty", inst.OnFrenzyKilled)
+
+        inst:FrenzyDoOnClientInit()
     end
 
-    if not TheWorld.ismastersim then        
-        return inst
-    end    
+    inst.entity:SetPristine()
 
-    inst.frenzydone = frenzydone
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst.Kill = FrenzyKill
 
     inst.persists = false
 

@@ -1431,11 +1431,14 @@ local function MakeHat(name)
 
         inst.components.planardefense:RemoveBonus(inst, "wathgrithr_arsenal_helmet_4")
         inst:RemoveTag("battleborn_repairable")
-        inst:RemoveTag("heavyarmor")
     end
 
     fns.wathgrithr_onequip = function(inst, owner)
-        _onequip(inst, owner)
+        if inst:HasTag("open_top_hat") then
+            fns.opentop_onequip(inst, owner)
+        else
+            _onequip(inst, owner)
+        end
 
         inst:ApplySkillsChanges(owner)
     end
