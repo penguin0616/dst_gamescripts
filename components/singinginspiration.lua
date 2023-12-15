@@ -31,7 +31,7 @@ local SingingInspiration = Class(function(self, inst)
     self.max_enemy_health = 5000
     self.inspiration_gain_bonus = 750
 
-    self.gainratemultipliers = SourceModifierList(self.inst)
+    self.gainratemultipliers = SourceModifierList(self.inst) -- Only used in SingingInspiration:OnHitOther.
 
     self.inst:ListenForEvent("onhitother", function(inst, data) self:OnHitOther(data)   end)
     self.inst:ListenForEvent("attacked",   function(inst, data) self:OnAttacked(data) end)
@@ -124,6 +124,27 @@ function SingingInspiration:OnHitOther(data)
 
         delta = delta * self.gainratemultipliers:Get()
 
+        self:DoDelta(delta)
+    end
+end
+
+function SingingInspiration:OnRidingTick(dt)
+    self.is_draining = false
+    self.last_attack_time = GetTime()
+
+    local max = TUNING.INSPIRATION_RIDING_GAIN_MAX
+
+    if self.current >= max then
+        return
+    end
+
+    local delta = TUNING.INSPIRATION_RIDING_GAIN_RATE * dt
+
+    if (self.current + delta) > max then
+        delta = max - self.current
+    end
+
+    if delta > 0 then
         self:DoDelta(delta)
     end
 end

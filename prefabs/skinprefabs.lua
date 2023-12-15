@@ -1096,6 +1096,7 @@ table.insert(prefs, CreatePrefabSkin("bernie_cat",
 	init_fn = function(inst) bernie_inactive_init_fn(inst, "bernie_cat") end,
 	skin_tags = { "BERNIE", "HAUNTEDDOLL", "CRAFTABLE", },
 	release_group = 65,
+	granted_items = { "bernie_cat_lunar_build", "bernie_cat_shadow_build", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("bernie_cat_active",
@@ -1120,6 +1121,30 @@ table.insert(prefs, CreatePrefabSkin("bernie_cat_big",
 	init_fn = function(inst) bernie_big_init_fn(inst, "bernie_cat") end,
 	skin_tags = { },
 	release_group = 65,
+}))
+
+table.insert(prefs, CreatePrefabSkin("bernie_cat_lunar_build",
+{
+	base_prefab = "bernie_big",
+	type = "item",
+	build_name_override = "bernie_cat",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) bernie_big_init_fn(inst, "bernie_cat") end,
+	skin_tags = { },
+	release_group = 149,
+}))
+
+table.insert(prefs, CreatePrefabSkin("bernie_cat_shadow_build",
+{
+	base_prefab = "bernie_big",
+	type = "item",
+	build_name_override = "bernie_cat",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) bernie_big_init_fn(inst, "bernie_cat") end,
+	skin_tags = { },
+	release_group = 149,
 }))
 
 table.insert(prefs, CreatePrefabSkin("birdcage_circus",

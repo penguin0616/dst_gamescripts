@@ -68,8 +68,8 @@ local function GiveEmbers(inst, num, pos)
 end
 
 local CREATURES_MUST = { "_combat" }
-local CREATURES_CAN  = { "monster", "smallcreature", "largecreature", "animal", "bigbernie" }
-local CREATURES_CANT = { "FX", "INLIMBO", "DECOR", "playerghost", "NOCLICK"}
+local CREATURES_CAN  = { "monster", "smallcreature", "largecreature", "animal", "bigbernie", "character" }
+local CREATURES_CANT = { "FX", "INLIMBO", "DECOR", "playerghost", "NOCLICK", "player", "ghost", "companion"}
 
 -- Is also called from the client-side.
 local function GetBurstTargets(player)

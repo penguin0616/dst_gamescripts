@@ -275,15 +275,16 @@ local song_defs =
             local radius = singer.components.singinginspiration.attach_radius
 
             local players = FindPlayersInRange(x, y, z, radius, false)
+            local num = players ~= nil and math.min(#players, TUNING.BATTLESONG_INSTANT_REVIVE_NUM_PLAYERS) or nil
 
-            return PickSome(TUNING.BATTLESONG_INSTANT_REVIVE_NUM_PLAYERS, players)
+            return num ~= nil and PickSome(num, players) or nil
         end,
 
         INSTANT = true,
         DELTA = TUNING.BATTLESONG_INSTANT_COST_HIGH,
         COOLDOWN = TUNING.SKILLS.WATHGRITHR.BATTLESONG_INSTANT_COOLDOWN_HIGH,
         ATTACH_FX = "battlesong_instant_electric_fx",
-        SOUND = "meta3/wigfrid/battlesong_instant_revive",
+        SOUND = "dontstarve_DLC001/characters/wathgrithr/song/revive",
         RESTRICTED_TAG = "battlesonginstantrevivemaker",
     },
 }

@@ -80,9 +80,9 @@ local function tryreanimate(inst)
         end
     end
     if target ~= nil then
-        local skin_name = nil
-        if inst:GetSkinName() ~= nil then
-            skin_name = inst:GetSkinName().."_active"
+        local skin_name = inst:GetSkinName()
+        if skin_name ~= nil then
+            skin_name = skin_name:gsub("_shadow_build", ""):gsub("_lunar_build", "") .. "_active"
         end
         local active = SpawnPrefab("bernie_active", skin_name, inst.skin_id, nil)
         if active ~= nil then

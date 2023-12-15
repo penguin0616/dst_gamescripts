@@ -58,39 +58,52 @@ local function ShouldDeactivate(self)
         if self.inst.sg:HasStateTag("busy") then
             return false
         end
-
     end
 
+    local x, y, z = self.inst.Transform:GetWorldPosition()
     local closestleader = nil
     local iscrazy = false
     local rangesq = FIND_LEADER_DIST_SQ
-    local x, y, z = self.inst.Transform:GetWorldPosition()
-    for i, v in ipairs(AllPlayers) do
-        if v:HasTag("bernieowner") and (v.bigbernies == nil or v.bigbernies[self.inst]) and (v.entity:IsVisible() or (v.sg ~= nil and v.sg.currentstate.name == "quicktele")) then
-            if self.inst.isleadercrazy(self.inst,v) then
-                local distsq = v:GetDistanceSqToPoint(x, y, z)
-                if distsq < (iscrazy and rangesq or FIND_LEADER_DIST_SQ) then
-                    iscrazy = true
-                    rangesq = distsq
-                    closestleader = v
-                end
-            elseif not iscrazy and v.components.sanity:GetPercent() < FOLLOWER_SANITY_THRESHOLD then
-                local distsq = v:GetDistanceSqToPoint(x, y, z)
-                if distsq < rangesq then
-                    rangesq = distsq
-                    closestleader = v
+
+    if self._leader then
+        local distsq = self._leader:GetDistanceSqToPoint(x, y, z)
+        if distsq > LOSE_LEADER_DIST_SQ then
+            SetLeader(self, nil)
+        end
+
+        if self._leader and self.inst:isleadercrazy( self._leader ) then
+            iscrazy = true
+        else
+            SetLeader(self, nil)
+        end
+    end
+    
+    if not self._leader then
+        
+        for i, v in ipairs(AllPlayers) do
+            if v:HasTag("bernieowner") and (v.bigbernies == nil or v.bigbernies[self.inst]) and (v.entity:IsVisible() or (v.sg ~= nil and v.sg.currentstate.name == "quicktele")) then
+                if self.inst.isleadercrazy(self.inst,v) then
+                    local distsq = v:GetDistanceSqToPoint(x, y, z)
+                    if distsq < (iscrazy and rangesq or FIND_LEADER_DIST_SQ) then
+                        iscrazy = true
+                        rangesq = distsq
+                        closestleader = v
+                    end
+                elseif not iscrazy and v.components.sanity:GetPercent() < FOLLOWER_SANITY_THRESHOLD then
+                    local distsq = v:GetDistanceSqToPoint(x, y, z)
+                    if distsq < rangesq then
+                        rangesq = distsq
+                        closestleader = v
+                    end
                 end
             end
         end
-    end
-
-    if self._leader ~= closestleader then
+       
         SetLeader(self, closestleader)
     end
 
-    if self._leader and
-       (( self._leader.components.skilltreeupdater:IsActivated("willow_allegiance_shadow_bernie") and self.inst.AnimState:GetBuild() ~= "bernie_shadow_build") or 
-       ( self._leader.components.skilltreeupdater:IsActivated("willow_allegiance_lunar_bernie") and self.inst.AnimState:GetBuild() ~= "bernie_lunar_build")) then
+    if self.inst.should_shrink then
+        self.inst.should_shrink = nil
         return true
     end
 

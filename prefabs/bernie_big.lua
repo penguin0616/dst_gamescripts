@@ -76,9 +76,9 @@ local function endthornsfire(inst)
 end
 
 local function goinactive(inst)
-    local skin_name = nil
-    if inst:GetSkinName() ~= nil then
-        skin_name = string.gsub(inst:GetSkinName(), "_big", "")
+    local skin_name = inst:GetSkinName()
+    if skin_name ~= nil then
+        skin_name = skin_name:gsub("_shadow_build", ""):gsub("_lunar_build", ""):gsub("_big", "")
     end
     local inactive = SpawnPrefab("bernie_inactive", skin_name, inst.skin_id, nil)
     if inactive ~= nil then
@@ -92,7 +92,6 @@ local function goinactive(inst)
     end
 
     endthornsfire(inst)
-
 end
 
 -- 
@@ -110,9 +109,12 @@ local function IsTauntable(inst, target)
                     (
                         inst.bernieleader and  inst.bernieleader.components.skilltreeupdater:IsActivated("willow_bernieai") and 
                         (
-                            target:HasTag("brightmare") or 
-                            target:HasTag("lunar_aligned") or 
-                            target:HasTag("shadow_aligned") 
+                            target:HasTag("hostile") and
+                            (
+                                target:HasTag("brightmare") or 
+                                target:HasTag("lunar_aligned") or 
+                                target:HasTag("shadow_aligned")
+                            ) 
                         )  
                     )   
                 ) or
@@ -134,9 +136,12 @@ local function IsTargetable(inst, target)
                     (
                         inst.bernieleader and  inst.bernieleader.components.skilltreeupdater:IsActivated("willow_bernieai") and 
                         (
-                        target:HasTag("brightmare") or 
-                            target:HasTag("lunar_aligned") or 
-                            target:HasTag("shadow_aligned") 
+                            target:HasTag("hostile") and
+                            (
+                                target:HasTag("brightmare") or 
+                                target:HasTag("lunar_aligned") or 
+                                target:HasTag("shadow_aligned") 
+                            )
                         )  
                     )   
                 ) or
@@ -298,35 +303,102 @@ local function OnColourChanged(inst, r, g, b, a)
     end
 end
 
+local BERNIE_SKIN_SYMBOLS = {
+    "blob_body",
+    "big_tail",
+    "big_strand",
+    "big_leg_upper",
+    "big_leg_lower",
+    "big_head",
+    "big_hand",
+    "big_fluff",
+    "big_ear",
+    "big_body",
+    "big_arm_upper",
+    "big_arm_lower",
+}
+local BERNIE_SMALL_SKIN_SYMBOLS = {
+    "bernie_torso",
+    "bernie_tail",
+    "bernie_legupper",
+    "bernie_leglower",
+    "bernie_inactive",
+    "bernie_headbase",
+    "bernie_head",
+    "bernie_hand",
+    "bernie_face",
+    "bernie_ear",
+    "bernie_armupper",
+    "bernie_armlower",
+}
 local function CheckForAllegiances(inst, leader)
+    inst.should_shrink = nil
+    local allegiance = inst.current_allegiance:value()
     local shadow = leader.components.skilltreeupdater:IsActivated("willow_allegiance_shadow_bernie")
     local lunar = leader.components.skilltreeupdater:IsActivated("willow_allegiance_lunar_bernie")
 
     if not shadow and not lunar then
+        if allegiance ~= 0 then
+            inst.should_shrink = true
+            inst.AnimState:ClearSymbolBloom("blob_body")
+            inst:RemoveTag("shadow_aligned")
+            inst:RemoveTag("lunar_aligned")
+            inst.current_allegiance:set(0)
+            if inst.components.planarentity ~= nil then
+                inst:RemoveComponent("planarentity")
+            end
+            if inst.components.planardamage ~= nil then
+                inst:RemoveComponent("planardamage")
+            end
+            if inst.components.planardefense ~= nil then
+                inst:RemoveComponent("planardefense")
+            end
+        end
         return
     end
 
-    inst.AnimState:SetBuild(shadow and "bernie_shadow_build" or "bernie_lunar_build")
-    inst.AnimState:SetSymbolBloom("blob_body")
+    if allegiance == 0 and (shadow or lunar) then -- and (inst:HasTag("shadow_aligned") or inst:HasTag("lunar_aligned")) 
+        inst.should_shrink = true
+        local base_build = shadow and "bernie_shadow_build" or "bernie_lunar_build"
+        inst.AnimState:SetBuild(base_build)
+        local skin_build = inst:GetSkinBuild()
+        if skin_build ~= nil then
+            local modified_skin_build = skin_build .. (shadow and "_shadow_build" or "_lunar_build")
+            for _, symbol in ipairs(BERNIE_SKIN_SYMBOLS) do
+                inst.AnimState:OverrideItemSkinSymbol(symbol, modified_skin_build, symbol, inst.GUID, base_build)
+            end
+            for _, symbol in ipairs(BERNIE_SMALL_SKIN_SYMBOLS) do
+                inst.AnimState:OverrideItemSkinSymbol(symbol, skin_build, symbol, inst.GUID, skin_build)
+            end
+        else
+            for _, symbol in ipairs(BERNIE_SKIN_SYMBOLS) do
+                inst.AnimState:ClearOverrideSymbol(symbol)
+            end
+            for _, symbol in ipairs(BERNIE_SMALL_SKIN_SYMBOLS) do
+                inst.AnimState:ClearOverrideSymbol(symbol)
+            end
+        end
+        inst.AnimState:SetSymbolBloom("blob_body")
 
-    inst:AddTag(shadow and "shadow_aligned" or "lunar_aligned")
+        inst:AddTag(shadow and "shadow_aligned" or "lunar_aligned")
 
-    inst.current_allegiance:set(shadow and BERNIEALLEGIANCE.SHADOW or BERNIEALLEGIANCE.LUNAR)
+        inst.current_allegiance:set(shadow and BERNIEALLEGIANCE.SHADOW or BERNIEALLEGIANCE.LUNAR)
 
-    if inst.components.planarentity == nil then
-        inst:AddComponent("planarentity")
+        if inst.components.planarentity == nil then
+            inst:AddComponent("planarentity")
+        end
+
+        if inst.components.planardamage == nil then
+            inst:AddComponent("planardamage")
+        end
+
+        if inst.components.planardefense == nil then
+            inst:AddComponent("planardefense")
+        end
+
+        inst.components.planardamage:SetBaseDamage(TUNING.BERNIE_PLANAR_DAMAGE)
+        inst.components.planardefense:SetBaseDefense(TUNING.BERNIE_PLANAR_DEFENCE)
     end
-
-    if inst.components.planardamage == nil then
-        inst:AddComponent("planardamage")
-    end
-
-    if inst.components.planardefense == nil then
-        inst:AddComponent("planardefense")
-    end
-
-    inst.components.planardamage:SetBaseDamage(TUNING.BERNIE_PLANAR_DAMAGE)
-    inst.components.planardefense:SetBaseDefense(TUNING.BERNIE_PLANAR_DEFENCE)
 end
 
 local function CreateFlameFx(bank,build,anim,override,bloomsymbols)
@@ -395,14 +467,86 @@ local function dolunarbernieart(inst)
     end
 end
 
+local function clearshadowlunarbernieart(inst)
+    --Dedicated server does not need to remove the local fx
+    if not TheNet:IsDedicated() then
+        if inst.highlightchildren ~= nil then -- NOTES(JBK): Assuming the highlightchildren are all safe to remove from above code.
+            for _, child in ipairs(inst.highlightchildren) do
+                if child:IsValid() then
+                    child:Remove()
+                end
+            end
+            inst.highlightchildren = nil
+        end
+        inst.components.colouraddersync:SetColourChangedFn(nil)
+    end
+end
+
 local function current_allegiancedirty(inst)
     if inst.current_allegiance:value() then
         if inst.current_allegiance:value() == BERNIEALLEGIANCE.SHADOW then
             doshadowbernieart(inst)
         elseif inst.current_allegiance:value() == BERNIEALLEGIANCE.LUNAR then
             dolunarbernieart(inst)
+        else
+            clearshadowlunarbernieart(inst)
         end
     end
+end
+
+local RESKIN_MUST_HAVE_LUNAR = {"_lunar_build",}
+local RESKIN_MUST_HAVE_SHADOW = {"_shadow_build",}
+local RESKIN_MUST_NOT_HAVE_LUNARSHADOW = {"_lunar_build", "_shadow_build",}
+local function ReskinToolFilterFn(inst)
+    local build = inst.AnimState:GetBuild()
+    local must_have, must_not_have
+    if build:find("_lunar_build") then
+        return RESKIN_MUST_HAVE_LUNAR, nil
+    elseif build:find("_shadow_build") then
+        return RESKIN_MUST_HAVE_SHADOW, nil
+    end
+    return nil, RESKIN_MUST_NOT_HAVE_LUNARSHADOW
+end
+local function SetBernieSkinBuild(inst, skin_build)
+    local leader = inst.bernieleader
+    if leader then
+        local shadow = leader.components.skilltreeupdater:IsActivated("willow_allegiance_shadow_bernie")
+        local lunar = leader.components.skilltreeupdater:IsActivated("willow_allegiance_lunar_bernie")
+    
+        if shadow or lunar then
+            local base_build = shadow and "bernie_shadow_build" or "bernie_lunar_build"
+            inst.AnimState:SetBuild(base_build)
+            if skin_build ~= nil then
+                local modified_skin_build = skin_build .. (shadow and "_shadow_build" or "_lunar_build")
+                for _, symbol in ipairs(BERNIE_SKIN_SYMBOLS) do
+                    inst.AnimState:OverrideItemSkinSymbol(symbol, modified_skin_build, symbol, inst.GUID, base_build)
+                end
+                for _, symbol in ipairs(BERNIE_SMALL_SKIN_SYMBOLS) do
+                    inst.AnimState:OverrideItemSkinSymbol(symbol, skin_build, symbol, inst.GUID, skin_build)
+                end
+            end
+            return
+        end
+    end
+end
+local function ClearBernieSkinBuild(inst)
+    for _, symbol in ipairs(BERNIE_SKIN_SYMBOLS) do
+        inst.AnimState:ClearOverrideSymbol(symbol)
+    end
+    for _, symbol in ipairs(BERNIE_SMALL_SKIN_SYMBOLS) do
+        inst.AnimState:ClearOverrideSymbol(symbol)
+    end
+    local leader = inst.bernieleader
+    if leader then
+        local shadow = leader.components.skilltreeupdater:IsActivated("willow_allegiance_shadow_bernie")
+        local lunar = leader.components.skilltreeupdater:IsActivated("willow_allegiance_lunar_bernie")
+    
+        if shadow or lunar then
+            inst.AnimState:SetBuild(shadow and "bernie_shadow_build" or "bernie_lunar_build")
+            return
+        end
+    end
+    inst.AnimState:SetBuild("bernie_build")
 end
 
 local function fn()
@@ -447,6 +591,9 @@ local function fn()
     end
 
     inst.scrapbook_specialinfo = "BERNIE"
+    inst.ReskinToolFilterFn = ReskinToolFilterFn
+    inst.SetBernieSkinBuild = SetBernieSkinBuild
+    inst.ClearBernieSkinBuild = ClearBernieSkinBuild
 
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(TUNING.BERNIE_BIG_HEALTH)

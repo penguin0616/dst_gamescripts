@@ -474,7 +474,7 @@ local function LightningSpearPostInitFn_Base(inst)
     inst.components.aoeweapon_lunge:SetOnHitFn(Lightning_OnLungedHit)
     inst.components.aoeweapon_lunge:SetStimuli("electric")
     inst.components.aoeweapon_lunge:SetWorkActions()
-    inst.components.aoeweapon_lunge:SetTags()
+    inst.components.aoeweapon_lunge:SetTags("_combat")
 
     inst:AddComponent("aoespell")
     inst.components.aoespell:SetSpellFn(Lightning_SpellFn)

@@ -78,7 +78,7 @@ function CrewMember:Row()
         if bc and (not platform or not platform:IsValid()) then return end
 
         local platform_boatphysics = platform.components.boatphysics
-        if platform_boatphysics then return end
+        if not platform_boatphysics then return end
 
         local can_stop = false
         local platform_boatcrew = platform.components.boatcrew

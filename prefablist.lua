@@ -1020,6 +1020,7 @@ PREFABFILES = {
   "spear_gungnir",
   "spear_lance",
   "spear_wathgrithr",
+  "spellbookcooldown",
   "spellmasterybuff",
   "spicepack",
   "spices",

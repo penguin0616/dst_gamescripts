@@ -647,12 +647,13 @@ local states =
 
 	State{
 		name = "spawn",
-		tags = { "busy", "nosleep", "noattack", "temp_invincible" },
+		tags = { "busy", "nosleep", "noattack", "temp_invincible", "notalksound" },
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("spawn")
 			inst.SoundEmitter:PlaySound("turnoftides/common/together/water/emerge/large")
+			inst.SoundEmitter:PlaySound("meta3/sharkboi/spawn")
 			local x, y, z = inst.Transform:GetWorldPosition()
 			SpawnPrefab("splash_green_large").Transform:SetPosition(x, 0, z)
 			TryChatter(inst, "SHARKBOI_TALK_IDLE", nil, true, true)
@@ -1996,11 +1997,12 @@ local states =
 
 	State{
 		name = "defeat",
-		tags = { "defeated", "busy" },
+		tags = { "defeated", "busy", "notalksound" },
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("defeated_pre")
+			inst.SoundEmitter:PlaySound("meta3/sharkboi/stunned_pre")
 			inst:StopAggro()
 			TryChatter(inst, "SHARKBOI_TALK_GIVEUP", nil, true)
 		end,
@@ -2064,7 +2066,7 @@ local states =
 
 	State{
 		name = "defeat_hit",
-		tags = { "defeated", "hit", "busy" },
+		tags = { "defeated", "hit", "busy", "notalksound" },
 
 		onenter = function(inst, hits)
 			inst.components.locomotor:Stop()
@@ -2077,7 +2079,7 @@ local states =
 				inst.AnimState:PlayAnimation("defeated_hit1")
 				inst.sg.statemem.hits = hits - alt + 10
 			end
-			inst.SoundEmitter:PlaySound("meta3/sharkboi/hit")
+			inst.SoundEmitter:PlaySound("meta3/sharkboi/stunned_hit")
 			TryChatter(inst, "SHARKBOI_TALK_GIVEUP")
 		end,
 
@@ -2114,6 +2116,7 @@ local states =
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("defeated_pst")
+			inst.SoundEmitter:PlaySound("meta3/sharkboi/stunned_pst")
 			if ShouldBeDefeated(inst) then
 				inst:AddTag("notarget")
 			end
@@ -2207,21 +2210,16 @@ CommonStates.AddSleepExStates(states,
 {
 	starttimeline =
 	{
-		FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("meta3/sharkboi/hit", nil, 0.3) end),
-		FrameEvent(25, function(inst) inst.SoundEmitter:PlaySound("meta3/sharkboi/hit", nil, 0.2) end),
+		FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("meta3/sharkboi/sleep_pre") end),
 		FrameEvent(43, PlayFootstep),
 		FrameEvent(45, function(inst)
 			inst.sg:RemoveStateTag("caninterrupt")	
-			inst.SoundEmitter:PlaySound("meta3/sharkboi/hit", nil, 0.2)
 		end),
 		FrameEvent(48, PlayFootstep),
 	},
-	sleeptimeline =
-	{
-		FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("meta3/sharkboi/talk", nil, 0.3) end),
-	},
 	waketimeline =
 	{
+		FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("meta3/sharkboi/sleep_pst") end),
 		FrameEvent(4, function(inst) PlayFootstep(inst, 0.4) end),
 		FrameEvent(14, function(inst) PlayFootstep(inst, 0.8) end),
 		CommonHandlers.OnNoSleepFrameEvent(23, function(inst)
@@ -2240,6 +2238,12 @@ CommonStates.AddSleepExStates(states,
 {
 	onsleep = function(inst)
 		inst.sg:AddStateTag("caninterrupt")
+	end,
+	onsleeping = function(inst)
+		inst.SoundEmitter:PlaySound("meta3/sharkboi/sleep_lp", "loop")
+	end,
+	onexitsleeping = function(inst)
+		inst.SoundEmitter:KillSound("loop")
 	end,
 })
 

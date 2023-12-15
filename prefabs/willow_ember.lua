@@ -3,17 +3,11 @@ local willow_ember_common = require("prefabs/willow_ember_common")
 local assets =
 {
     Asset("ANIM", "anim/willow_embers.zip"),
+	Asset("ANIM", "anim/spell_icons_willow.zip"),
 
-    Asset("ATLAS", "images/spell_icons.xml"),
-    Asset("IMAGE", "images/spell_icons.tex"),
     Asset("INV_IMAGE", "willow_ember"),
     Asset("INV_IMAGE", "willow_ember_open"),
     Asset("SCRIPT", "scripts/prefabs/willow_ember_common.lua"),
-}
-
-local retucleassets =
-{
-    Asset("ANIM", "anim/reticuleaoe.zip"),
 }
 
 local prefabs =
@@ -244,9 +238,9 @@ local function TryLunarFire(inst, doer, pos)
 			end
 		end, doer)
 
-        if inst.components.spellbook then
-            inst.components.spellbook:StartCooldown(inst.components.spellbook:GetSelectedSpell(),TUNING.WILLOW_LUNAR_FIRE_COOLDOWN)
-        end
+		if doer.components.spellbookcooldowns then
+			doer.components.spellbookcooldowns:RestartSpellCooldown("lunar_fire", TUNING.WILLOW_LUNAR_FIRE_COOLDOWN)
+		end
 
 		if doer.components.channelcaster:StartChanneling() then
 			return true
@@ -278,9 +272,9 @@ local function TryShadowFire(inst, doer, pos)
             fire:settarget(nil,50,doer)
         end
 
-        if inst.components.spellbook then
-            inst.components.spellbook:StartCooldown(inst.components.spellbook:GetSelectedSpell(),TUNING.WILLOW_SHADOW_FIRE_COOLDOWN)
-        end
+		if doer.components.spellbookcooldowns then
+			doer.components.spellbookcooldowns:RestartSpellCooldown("shadow_fire", TUNING.WILLOW_SHADOW_FIRE_COOLDOWN)
+		end
 
         return true
     end
@@ -329,9 +323,9 @@ local function FireBallSpellFn(inst, doer, pos)
 end
 
 local function LunarFireSpellFn(inst, doer, pos)
-    if inst.components.spellbook:CheckCooldown(inst.components.spellbook:GetSelectedSpell()) then
+	if doer.components.spellbookcooldowns and doer.components.spellbookcooldowns:IsInCooldown("lunar_fire") then
         return false, "SPELL_ON_COOLDOWN"
-    elseif doer.components.rider:IsRiding() then
+	elseif doer.components.rider and doer.components.rider:IsRiding() then
         return false, "CANT_SPELL_MOUNTED"
     elseif not CheckStackSize(inst, doer, "lunarfire") then
         return false, "NOT_ENOUGH_EMBERS"
@@ -343,7 +337,7 @@ local function LunarFireSpellFn(inst, doer, pos)
 end
 
 local function ShadowFireSpellFn(inst, doer, pos)
-    if inst.components.spellbook:CheckCooldown(inst.components.spellbook:GetSelectedSpell()) then
+	if doer.components.spellbookcooldowns and doer.components.spellbookcooldowns:IsInCooldown("shadow_fire") then
         return false, "SPELL_ON_COOLDOWN"    
     elseif not CheckStackSize(inst, doer, "shadowfire") then
         return false, "NOT_ENOUGH_EMBERS"
@@ -377,6 +371,14 @@ local function ReticuleTargetAllowWaterFn()
         end
     end
     return pos
+end
+
+local function ReticuleFireBallTargetFn()
+    return Vector3(ThePlayer.entity:LocalToWorldSpace(5, 0.001, 0)) -- Raised this off the ground a touch so it wont have any z-fighting with the ground biome transition tiles.
+end
+
+local function ReticuleFireThrowTargetFn(inst)
+    return Vector3(ThePlayer.entity:LocalToWorldSpace(7, 0.001, 0)) -- Raised this off the ground a touch so it wont have any z-fighting with the ground biome transition tiles.
 end
 
 local function StartAOETargeting(inst)
@@ -415,8 +417,8 @@ local function burst_reticule_mouse_target_function(inst, mousepos)
     if mousepos == nil then
         return nil
     end
-
-    local owner = inst.replica.inventoryitem:IsHeldBy(ThePlayer) and ThePlayer
+    local inventoryitem = inst.replica.inventoryitem
+    local owner = inventoryitem and inventoryitem:IsGrandOwner(ThePlayer) and ThePlayer
     if owner then
         local pos = Vector3(owner.Transform:GetWorldPosition())
         return pos
@@ -425,7 +427,8 @@ end
 
 local function burst_reticule_target_function(inst)
     if ThePlayer and ThePlayer.components.playercontroller ~= nil and ThePlayer.components.playercontroller.isclientcontrollerattached then
-        local owner = inst.components.inventoryitem.owner
+        local inventoryitem = inst.replica.inventoryitem
+        local owner =  inventoryitem and inventoryitem:IsGrandOwner(ThePlayer) and ThePlayer
         if owner then
             local pos = Vector3(owner.Transform:GetWorldPosition())
             return pos
@@ -434,7 +437,8 @@ local function burst_reticule_target_function(inst)
 end
 
 local function burst_reticule_update_position_function(inst, pos, reticule, ease, smoothing, dt)
-    local owner = inst.replica.inventoryitem:IsHeldBy(ThePlayer) and ThePlayer
+    local inventoryitem = inst.replica.inventoryitem
+    local owner = inventoryitem and inventoryitem:IsGrandOwner(ThePlayer) and ThePlayer
 
     if owner then
         reticule.Transform:SetPosition(Vector3(owner.Transform:GetWorldPosition()):Get())
@@ -448,7 +452,8 @@ local function single_reticule_mouse_target_function(inst, mousepos)
     if mousepos == nil then
         return nil
     end
-    local owner = inst.replica.inventoryitem:IsHeldBy(ThePlayer) and ThePlayer
+    local inventoryitem = inst.replica.inventoryitem
+    local owner = inventoryitem:IsHeldBy(ThePlayer) and ThePlayer
     if owner then
         local pos = Vector3(owner.Transform:GetWorldPosition())
         return pos
@@ -457,7 +462,8 @@ end
 
 local function single_reticule_target_function(inst)
     if ThePlayer and ThePlayer.components.playercontroller ~= nil and ThePlayer.components.playercontroller.isclientcontrollerattached then
-        local owner = inst.components.inventoryitem.owner
+        local inventoryitem = inst.replica.inventoryitem
+        local owner = inventoryitem and inventoryitem:IsGrandOwner(ThePlayer) and ThePlayer
         if owner then
             local pos = Vector3(owner.Transform:GetWorldPosition())
             return pos
@@ -466,7 +472,9 @@ local function single_reticule_target_function(inst)
 end
 
 local function single_reticule_update_position_function(inst, pos, reticule, ease, smoothing, dt)
-    local owner = inst.replica.inventoryitem:IsHeldBy(ThePlayer) and ThePlayer
+
+    local inventoryitem = inst.replica.inventoryitem
+    local owner = inventoryitem and inventoryitem:IsGrandOwner(ThePlayer) and ThePlayer
 
     if owner then
         reticule.Transform:SetPosition(Vector3(owner.Transform:GetWorldPosition()):Get())
@@ -478,7 +486,8 @@ end
 
 local function line_reticule_target_function(inst)
     if ThePlayer and ThePlayer.components.playercontroller ~= nil and ThePlayer.components.playercontroller.isclientcontrollerattached then
-        local owner = inst.components.inventoryitem.owner
+        local inventoryitem = inst.replica.inventoryitem
+        local owner =  inventoryitem and inventoryitem:IsGrandOwner(ThePlayer) and ThePlayer
         if owner then
             local pos = Vector3(owner.Transform:GetWorldPosition())
             return pos
@@ -501,7 +510,8 @@ local function line_reticule_mouse_target_function(inst, mousepos)
 end
 
 local function line_reticule_update_position_function(inst, pos, reticule, ease, smoothing, dt)
-    local owner = inst.replica.inventoryitem:IsHeldBy(ThePlayer) and ThePlayer
+    local inventoryitem = inst.replica.inventoryitem
+    local owner = inventoryitem and inventoryitem:IsHeldBy(ThePlayer) and ThePlayer
 
     if owner then
         reticule.Transform:SetPosition(Vector3(owner.Transform:GetWorldPosition()):Get())
@@ -518,20 +528,21 @@ local SPELLBOOK_RADIUS = 100
 local SPELLBOOK_FOCUS_RADIUS = SPELLBOOK_RADIUS + 2
 local BASESPELLS = {}
 
-local FIRE_THROW =
+local SKILLTREE_SPELL_DEFS =
 {
+	["willow_embers"] =
     {
         label = STRINGS.PYROMANCY.FIRE_THROW,
         onselect = function(inst)
-            inst.components.spellbook:SetSpellName(STRINGS.PYROMANCY.FIRE_THROW)            
+            inst.components.spellbook:SetSpellName(STRINGS.PYROMANCY.FIRE_THROW)
             inst.components.aoetargeting:SetDeployRadius(0)
             inst.components.aoetargeting:SetShouldRepeatCastFn(ShouldRepeatFireThrow)
-            inst.components.aoetargeting.reticule.reticuleprefab = "reticuleaoefiretarget_1" --"reticuleaoe_1d2_12"
-            inst.components.aoetargeting.reticule.pingprefab = "reticuleaoefiretarget_1ping" --"reticuleaoeping_1d2_12"
+            inst.components.aoetargeting.reticule.reticuleprefab = "reticuleaoefiretarget_1"
+            inst.components.aoetargeting.reticule.pingprefab = "reticuleaoefiretarget_1ping"
 
-            inst.components.aoetargeting.reticule.mousetargetfn = nil -- throw_reticule_mouse_target_function
-            inst.components.aoetargeting.reticule.targetfn = nil -- throw_reticule_target_function
-            inst.components.aoetargeting.reticule.updatepositionfn = nil --throw_reticule_update_position_function
+            inst.components.aoetargeting.reticule.mousetargetfn = nil
+            inst.components.aoetargeting.reticule.targetfn = ReticuleFireThrowTargetFn 
+            inst.components.aoetargeting.reticule.updatepositionfn = nil
 
             if TheWorld.ismastersim then
                 inst.components.aoetargeting:SetTargetFX("reticuleaoefiretarget_1")
@@ -540,15 +551,18 @@ local FIRE_THROW =
             end
         end,
         execute = StartAOETargeting,
-        atlas = "images/spell_icons.xml",
-        normal = "fire_throw.tex",
+		bank = "spell_icons_willow",
+		build = "spell_icons_willow",
+		anims =
+		{
+			idle = { anim = "fire_throw" },
+			focus = { anim = "fire_throw_focus", loop = true },
+			down = { anim = "fire_throw_pressed" },
+		},
         widget_scale = ICON_SCALE,
-        hit_radius = ICON_RADIUS,
     },
-}
 
-local FIRE_BURST =
-{
+	["willow_fire_burst"] =
     {
         label = STRINGS.PYROMANCY.FIRE_BURST,
         onselect = function(inst)
@@ -569,27 +583,31 @@ local FIRE_BURST =
             end
         end,
         execute = StartAOETargeting,
-        atlas = "images/spell_icons.xml",
-        normal = "fire_burst.tex",
+		bank = "spell_icons_willow",
+		build = "spell_icons_willow",
+		anims =
+		{
+			idle = { anim = "fire_burst" },
+			focus = { anim = "fire_burst_focus", loop = true },
+			down = { anim = "fire_burst_pressed" },
+		},
         widget_scale = ICON_SCALE,
-        hit_radius = ICON_RADIUS,
     },
-}
 
-local FIRE_BALL =
-{
+	["willow_fire_ball"] =
     {
         label = STRINGS.PYROMANCY.FIRE_BALL,
         onselect = function(inst)
             inst.components.spellbook:SetSpellName(STRINGS.PYROMANCY.FIRE_BALL)
             inst.components.aoetargeting:SetDeployRadius(0)
             inst.components.aoetargeting:SetShouldRepeatCastFn(ShouldRepeatFireBall)
+            
             inst.components.aoetargeting.reticule.reticuleprefab = "reticuleaoefiretarget_1"
             inst.components.aoetargeting.reticule.pingprefab = "reticuleaoefiretarget_1ping"
 
             inst.components.aoetargeting.reticule.mousetargetfn = nil
-            inst.components.aoetargeting.reticule.targetfn = nil
             inst.components.aoetargeting.reticule.updatepositionfn = nil
+            inst.components.aoetargeting.reticule.targetfn = ReticuleFireBallTargetFn
 
             if TheWorld.ismastersim then
                 inst.components.aoetargeting:SetTargetFX("reticuleaoefiretarget_1")
@@ -598,15 +616,18 @@ local FIRE_BALL =
             end
         end,
         execute = StartAOETargeting,
-        atlas = "images/spell_icons.xml",
-        normal = "fire_ball.tex",
+		bank = "spell_icons_willow",
+		build = "spell_icons_willow",
+		anims =
+		{
+			idle = { anim = "fire_ball" },
+			focus = { anim = "fire_ball_focus", loop = true },
+			down = { anim = "fire_ball_pressed" },
+		},
         widget_scale = ICON_SCALE,
-        hit_radius = ICON_RADIUS,
     },
-}
 
-local FIRE_FRENZY =
-{
+	["willow_fire_frenzy"] =
     {
         label = STRINGS.PYROMANCY.FIRE_FRENZY,
         onselect = function(inst)
@@ -627,15 +648,18 @@ local FIRE_FRENZY =
             end
         end,
         execute = StartAOETargeting,
-        atlas = "images/spell_icons.xml",
-        normal = "fire_frenzy.tex",
+		bank = "spell_icons_willow",
+		build = "spell_icons_willow",
+		anims =
+		{
+			idle = { anim = "fire_frenzy" },
+			focus = { anim = "fire_frenzy_focus", loop = true },
+			down = { anim = "fire_frenzy_pressed" },
+		},
         widget_scale = ICON_SCALE,
-        hit_radius = ICON_RADIUS,
     },
-}
 
-local LUNAR_FIRE =
-{
+	["willow_allegiance_lunar_fire"] =
     {
         label = STRINGS.PYROMANCY.LUNAR_FIRE,
         onselect = function(inst)
@@ -656,15 +680,33 @@ local LUNAR_FIRE =
             end
         end,
         execute = StartAOETargeting,
-        atlas = "images/spell_icons.xml",
-        normal = "lunar_fire.tex",
+		bank = "spell_icons_willow",
+		build = "spell_icons_willow",
+		anims =
+		{
+			idle = { anim = "lunar_fire" },
+			focus = { anim = "lunar_fire_focus", loop = true },
+			down = { anim = "lunar_fire_pressed" },
+			disabled = { anim = "lunar_fire_disabled" },
+			cooldown = { anim = "lunar_fire_cooldown" },
+		},
         widget_scale = ICON_SCALE,
-        hit_radius = ICON_RADIUS,
+		checkenabled = function(user)
+			--client safe
+			local rider = user and user.replica.rider
+			return not (rider and rider:IsRiding())
+		end,
+		checkcooldown = function(user)
+			--client safe
+			return user
+				and user.components.spellbookcooldowns
+				and user.components.spellbookcooldowns:GetSpellCooldownPercent("lunar_fire")
+				or nil
+		end,
+		cooldowncolor = { 0.65,0.65,0.65, 0.75 },
     },
-}
 
-local SHADOW_FIRE =
-{
+	["willow_allegiance_shadow_fire"] =
     {
         label = STRINGS.PYROMANCY.SHADOW_FIRE,
         onselect = function(inst)
@@ -685,41 +727,46 @@ local SHADOW_FIRE =
             end
         end,
         execute = StartAOETargeting,
-        atlas = "images/spell_icons.xml",
-        normal = "shadow_fire.tex",
+		bank = "spell_icons_willow",
+		build = "spell_icons_willow",
+		anims =
+		{
+			idle = { anim = "shadow_fire" },
+			focus = { anim = "shadow_fire_focus", loop = true },
+			down = { anim = "shadow_fire_pressed" },
+			cooldown = { anim = "shadow_fire_cooldown" },
+		},
         widget_scale = ICON_SCALE,
-        hit_radius = ICON_RADIUS,
+		checkcooldown = function(user)
+			--client safe
+			return user
+				and user.components.spellbookcooldowns
+				and user.components.spellbookcooldowns:GetSpellCooldownPercent("shadow_fire")
+				or nil
+		end,
+		cooldowncolor = { 0.5,0.5,0.5, 0.75 },
     },
 }
 
+local SKILLTREE_SPELL_ORDER =
+{
+	"willow_embers",
+	"willow_fire_burst",
+	"willow_fire_ball",
+	"willow_fire_frenzy",
+	"willow_allegiance_lunar_fire",
+	"willow_allegiance_shadow_fire",
+}
+
 local function updatespells(inst,owner)
-
-    local spells = deepcopy(BASESPELLS)
-
-    if owner and owner.components.skilltreeupdater:IsActivated("willow_embers") then
-        ConcatArrays(spells,FIRE_THROW)
-    end
-
-    if owner and owner.components.skilltreeupdater:IsActivated("willow_fire_burst") then
-        ConcatArrays(spells,FIRE_BURST)
-    end
-
-    if owner and owner.components.skilltreeupdater:IsActivated("willow_fire_ball") then
-        ConcatArrays(spells,FIRE_BALL)
-    end
-
-    if owner and owner.components.skilltreeupdater:IsActivated("willow_fire_frenzy") then
-        ConcatArrays(spells,FIRE_FRENZY)
-    end
-
-    if owner and owner.components.skilltreeupdater:IsActivated("willow_allegiance_lunar_fire") then
-        ConcatArrays(spells,LUNAR_FIRE)
-    end
-
-    if owner and owner.components.skilltreeupdater:IsActivated("willow_allegiance_shadow_fire") then
-        ConcatArrays(spells,SHADOW_FIRE)
-    end
-
+    local spells = shallowcopy(BASESPELLS)
+	if owner then
+		for i, v in ipairs(SKILLTREE_SPELL_ORDER) do
+			if owner.components.skilltreeupdater:IsActivated(v) then
+				table.insert(spells, SKILLTREE_SPELL_DEFS[v])
+			end
+		end
+	end
     inst.components.spellbook:SetItems(spells)
 end
 
@@ -785,7 +832,7 @@ local function fn()
     inst:AddComponent("spellbook")
     inst.components.spellbook:SetRequiredTag("ember_master")
     inst.components.spellbook:SetRadius(SPELLBOOK_RADIUS)
-    inst.components.spellbook:SetFocusRadius(SPELLBOOK_FOCUS_RADIUS)
+    inst.components.spellbook:SetFocusRadius(SPELLBOOK_RADIUS)--UIAnimButton don't use focus radius SPELLBOOK_FOCUS_RADIUS)
     inst.components.spellbook:SetItems(BASESPELLS)
     inst.components.spellbook:SetOnOpenFn(OnOpenSpellBook)
     inst.components.spellbook:SetOnCloseFn(OnCloseSpellBook)
@@ -919,35 +966,5 @@ local function bufffn()
     return inst
 end
 
-
-local function reticulefn()
-    local inst = CreateEntity()
-
-    inst.entity:AddTransform()
-    inst.entity:AddAnimState()
-    --inst.entity:AddNetwork()
-
-    MakeInventoryPhysics(inst)
-    RemovePhysicsColliders(inst)
-
-    inst.AnimState:SetBank("reticuleaoe")
-    inst.AnimState:SetBuild("reticuleaoe")
-    inst.AnimState:PlayAnimation("idle_target_1")
-    inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGroundFixed)
-    inst.AnimState:SetLayer(LAYER_WORLD_BACKGROUND)
-    inst.AnimState:SetSortOrder(3)
-    inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
-
-    inst:AddTag("FX")
-    inst:AddTag("NOCLICK")
-
-    inst.entity:SetCanSleep(false)
-    inst.persists = false
-
-    return inst
-end
-
 return Prefab("willow_ember", fn, assets, prefabs),
-       Prefab("willow_ember_burst_target_reticule", reticulefn, retucleassets),
        Prefab("buff_firefrenzy", bufffn, nil, prefabs)
-

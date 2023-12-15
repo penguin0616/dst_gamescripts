@@ -102,46 +102,8 @@ end
 function SpellBook:CastSpell(user)
 	if self.spellfn == nil then
 		return false
-	end	
+	end
 	return self.spellfn(self.inst, user)
-end
-
-function SpellBook:StartCooldown(id,time)
-	self.items[id].cooldownremaining = time
-	self.inst:StartUpdatingComponent(self)
-end
-
-function SpellBook:CheckCooldown(id)
-	return self.items[id].cooldownremaining and true or false
-end
-
-function SpellBook:OnUpdate(dt)
-	local stop = true
-	for i,spell in pairs(self.items)do
-		if spell.cooldownremaining then
-			spell.cooldownremaining = spell.cooldownremaining - dt
-			if spell.cooldownremaining <= 0 then
-				spell.cooldownremaining = nil
-			else
-				stop = false
-			end
-		end
-	end
-
-	if stop then
-		self.inst:StopUpdatingComponent(self)
-	end
-end
-
-function SpellBook:LongUpdate(dt)
-	for i,spell in pairs(self.items)do
-		if spell.cooldownremaining then
-			spell.cooldownremaining = spell.cooldownremaining - dt
-			if spell.cooldownremaining <= 0 then
-				spell.cooldownremaining = nil
-			end
-		end
-	end
 end
 
 return SpellBook

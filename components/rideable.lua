@@ -17,6 +17,15 @@ end
 local function RiddenTick(inst, dt)
     inst.components.rideable.lastridetime = GetTime()
     inst:PushEvent("beingridden", dt)
+
+    ------------------------
+
+    local _rider = inst.components.rideable:GetRider()
+    local _skilltreeupdater = _rider ~= nil and _rider.components.skilltreeupdater or nil
+
+    if _skilltreeupdater ~= nil and _skilltreeupdater:HasSkillTag("beefaloinspiration") and _rider.components.singinginspiration ~= nil then
+        _rider.components.singinginspiration:OnRidingTick(dt)
+    end
 end
 
 local function StartRiddenTick(self)
@@ -175,14 +184,6 @@ function Rideable:SetRider(rider)
     end
 
     self.inst:PushEvent("riderchanged", { oldrider = oldrider, newrider = self.rider })
-
-    if self.inst.components.planardamage ~= nil then
-        if self.rider ~= nil and self.rider.components.skilltreeupdater ~= nil and self.rider.components.skilltreeupdater:HasSkillTag("beefalodamage") then
-            self.inst.components.planardamage:AddBonus(self.inst, TUNING.SKILLS.WATHGRITHR.WATHGRITHR_BEEFALO_BONUS_PLANAR_DAMAGE, "skill")
-        else
-            self.inst.components.planardamage:RemoveBonus(self.inst, "skill")
-        end
-    end
 end
 
 function Rideable:GetRider()

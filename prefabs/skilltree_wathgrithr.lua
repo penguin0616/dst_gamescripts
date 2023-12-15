@@ -412,10 +412,10 @@ local function BuildSkillsData(SkillTreeFns)
             connects = { "wathgrithr_beefalo_3" },
         },
 
-        -- Attacking using a beefalo will deal +15 Planar Damage.
+        -- Riding a beefalo will make your inspiration slowly rise until it reaches the halfway mark.
         wathgrithr_beefalo_3 = {
             group = "beefalo",
-            tags = { "beefalodamage" },
+            tags = { "beefaloinspiration" },
 
             connects = { "wathgrithr_beefalo_saddle" },
         },
@@ -464,7 +464,7 @@ local function BuildSkillsData(SkillTreeFns)
             ondeactivate = CreateRemoveTagFn("battlesongcontainermaker"),
         },
 
-        -- Description.
+        -- Play a Beefalo Horn to unlock.
         wathgrithr_songs_revivewarrior_lock = {
             group = "songs",
 

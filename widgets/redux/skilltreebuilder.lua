@@ -149,8 +149,8 @@ local function GetFocusChangeButton(self, current, fn, boost_dir)
 
 	if #list > 0 then
 		for i=#list, 1, -1 do
-			local xdiff = math.abs(list[i].x - current.x) * (boost_dir == "X" and 0.5 or 1)
-			local ydiff = math.abs(list[i].y - current.y) * (boost_dir == "Y" and 0.5 or 1)
+			local xdiff = math.abs(list[i].x - current.x) * (boost_dir == "X" and 0.65 or 1)
+			local ydiff = math.abs(list[i].y - current.y) * (boost_dir == "Y" and 0.65 or 1)
 			local dist = (xdiff*xdiff) + (ydiff*ydiff)
 
 			if dist < currentdist then

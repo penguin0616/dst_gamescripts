@@ -3489,9 +3489,14 @@ function Tune(overrides)
             ANTLION          = {basic=1, special="winter_ornament_boss_antlion"},
             MALBATROSS       = {basic=1, special="winter_ornament_boss_malbatross"},
             EYEOFTERROR      = {basic=1},
-            TWINOFTERROR1     = {basic=1, special="winter_ornament_boss_eyeofterror1"},
-            TWINOFTERROR2     = {basic=1, special="winter_ornament_boss_eyeofterror2"},
+            TWINOFTERROR1    = {basic=1, special="winter_ornament_boss_eyeofterror1"},
+            TWINOFTERROR2    = {basic=1, special="winter_ornament_boss_eyeofterror2"},
             ALTERGUARDIAN_PHASE3 = {basic=2},
+    
+            DAYWALKER        = {basic=1, special="winter_ornament_boss_daywalker"},
+            MUTATEDDEERCLOPS = {basic=1, special="winter_ornament_boss_mutateddeerclops"},
+            MUTATEDBEARGER   = {basic=1, special="winter_ornament_boss_mutatedbearger"},
+            MUTATEDWARG      = {basic=1, special="winter_ornament_boss_mutatedwarg"},
         },
 
         WINTERS_FEAST_LOOT_EXCLUSION =
@@ -4657,6 +4662,8 @@ function Tune(overrides)
 
         INSPIRATION_MAX = 100,
         INSPIRATION_GAIN_RATE = 0.024,
+        INSPIRATION_RIDING_GAIN_RATE = 0.35,
+        INSPIRATION_RIDING_GAIN_MAX = 100 * 3/6, -- INSPIRATION_MAX * BATTLESONG_THRESHOLDS[2]
         INSPIRATION_GAIN_EPIC_BONUS = 3,
         INSPIRATION_DRAIN_RATE = -2,
         INSPIRATION_DRAIN_BUFFER_TIME = 7.5,
@@ -4671,8 +4678,9 @@ function Tune(overrides)
 			3/6,
 			5/6,
 		},
+
 		BATTLESONG_INSTANT_COST = 100 * 1/6, -- INSPIRATION_MAX * BATTLESONG_THRESHOLDS[1]
-		BATTLESONG_INSTANT_COST_HIGH = 95,
+		BATTLESONG_INSTANT_COST_HIGH = 100 * 5/6, -- INSPIRATION_MAX * BATTLESONG_THRESHOLDS[3]
 
         BATTLEBORN_STORE_TIME = 3,
         BATTLEBORN_DECAY_TIME = 5,
@@ -4680,11 +4688,11 @@ function Tune(overrides)
 
         WATHGRITHR_BATTLEBORN_BONUS = 0.25,
         REGULAR_BATTLEBORN_BONUS = 0.1,
-        BATTLEBORN_REPAIR_EQUIPMENT_MULT = 2.5,
+        BATTLEBORN_REPAIR_EQUIPMENT_MULT = 3.5,
 
         BATTLESONG_DURABILITY_MOD = 0.75,
         BATTLESONG_NEG_SANITY_AURA_MOD = 0.5,
-        BATTLESONG_FIRE_RESIST_MOD = 0.66,
+        BATTLESONG_FIRE_RESIST_MOD = 0, -- Full resistenace.
         BATTLESONG_PANIC_TIME = 4,
 
         BATTLESONG_HEALTHGAIN_DELTA = 1,
@@ -6787,7 +6795,6 @@ function Tune(overrides)
 
                 WATHGRITHRHAT_BEEFALO_DOMESTICATION_MOD = 1.15,
                 WATHGRITHR_BEEFALO_BUCK_TIME_MOD = 1.3,
-                WATHGRITHR_BEEFALO_BONUS_PLANAR_DAMAGE = 10,
 
                 BONUS_PLANAR_DEF = 5,
 
@@ -7215,7 +7222,7 @@ function Tune(overrides)
         SPEAR_WATHGRITHR_LIGHTNING_CHARGED_LUNGE_REPAIR_AMOUNT = 4,
         SPEAR_WATHGRITHR_LIGHTNING_CHARGED_MAX_REPAIRS_PER_LUNGE = 2, -- Max repair value: SPEAR_WATHGRITHR_LIGHTNING_CHARGED_LUNGE_REPAIR_AMOUNT * SPEAR_WATHGRITHR_LIGHTNING_CHARGED_MAX_REPAIRS_PER_LUNGE
 
-        ARMOR_WATHGRITHR_IMPROVEDHAT = wilson_health * 6 * multiplayer_armor_durability_modifier,
+        ARMOR_WATHGRITHR_IMPROVEDHAT = wilson_health * 6.5 * multiplayer_armor_durability_modifier,
         ARMOR_WATHGRITHR_IMPROVEDHAT_ABSORPTION = .8 * multiplayer_armor_absorption_modifier,
 
         WATHGRITHR_SHIELD_DAMAGE = wilson_attack * 1.5,
@@ -7277,8 +7284,8 @@ function Tune(overrides)
         WILLOW_ALLEGIANCE_LUNAR_RESIST = 0.9,
         WILLOW_ALLEGIANCE_VS_SHADOW_BONUS = 1.1,
 
-        WILLOW_SHADOW_FIRE_COOLDOWN = 14,
-        WILLOW_LUNAR_FIRE_COOLDOWN = 20,
+        WILLOW_SHADOW_FIRE_COOLDOWN = 8,
+        WILLOW_LUNAR_FIRE_COOLDOWN = 13,
 
 		CHANNELCAST_SPEED_MOD = 2 / 3,
 

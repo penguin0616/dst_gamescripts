@@ -1498,7 +1498,10 @@ local function MakeHat(name)
         inst.components.equippable:SetOnUnequip(fns.wathgrithr_onunequip)
 
         inst:AddComponent("waterproofer")
-        inst.components.waterproofer:SetEffectiveness(TUNING.WATERPROOFNESS_SMALL)
+        inst.components.waterproofer:SetEffectiveness(TUNING.WATERPROOFNESS_SMALLMED)
+
+        inst:AddComponent("insulator")
+        inst.components.insulator:SetInsulation(TUNING.INSULATION_SMALL)
 
         return inst
     end

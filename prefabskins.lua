@@ -176,6 +176,8 @@ PREFAB_SKINS = {
 	bernie_big =
 	{
 		"bernie_cat_big",
+		"bernie_cat_lunar_build",
+		"bernie_cat_shadow_build",
 	},
 	bernie_inactive =
 	{

@@ -1870,9 +1870,18 @@ function bernie_big_init_fn(inst, build_name)
         return
     end
     inst.AnimState:SetSkin(build_name, "bernie_build")
+    if inst.SetBernieSkinBuild ~= nil then
+        inst:SetBernieSkinBuild(build_name)
+    else
+        inst.AnimState:SetBuild("bernie_build")
+    end
 end
 function bernie_big_clear_fn(inst)
-    inst.AnimState:SetBuild("bernie_build")
+    if inst.ClearBernieSkinBuild ~= nil then
+        inst:ClearBernieSkinBuild()
+    else
+        inst.AnimState:SetBuild("bernie_build")
+    end
 end
 
 --------------------------------------------------------------------------

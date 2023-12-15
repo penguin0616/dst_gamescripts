@@ -17,9 +17,9 @@ local prefabs =
 }
 
 local function goinactive(inst)
-    local skin_name = nil
-    if inst:GetSkinName() ~= nil then
-        skin_name = string.gsub(inst:GetSkinName(), "_active", "")
+    local skin_name = inst:GetSkinName()
+    if skin_name ~= nil then
+        skin_name = skin_name:gsub("_shadow_build", ""):gsub("_lunar_build", ""):gsub("_active", "")
     end
 
     local inactive = SpawnPrefab("bernie_inactive", skin_name, inst.skin_id, nil)
@@ -38,9 +38,9 @@ local function goinactive(inst)
 end
 
 local function gobig(inst,leader)
-    local skin_name = nil
-    if inst:GetSkinName() ~= nil then
-        skin_name = string.gsub(inst:GetSkinName(), "_active", "_big")
+    local skin_name = inst:GetSkinName()
+    if skin_name ~= nil then
+        skin_name = skin_name:gsub("_shadow_build", ""):gsub("_lunar_build", ""):gsub("_active", "_big")
     end
 
     local big = SpawnPrefab("bernie_big", skin_name, inst.skin_id, nil)

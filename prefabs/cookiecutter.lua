@@ -76,7 +76,7 @@ local function ValidateTargetWood(inst)
 end
 
 local FINDEDIBLE_CANT_TAGS = { "INLIMBO", "fire", "smolder" }
-local FINDEDIBLE_ONEOF_TAGS = { "boat", "edible_WOOD" }
+local FINDEDIBLE_ONEOF_TAGS = { "wood", "edible_WOOD" }
 local function CheckForBoats(inst)
 	if inst.sg ~= nil and not (inst.sg:HasStateTag("drilling") or inst.sg:HasStateTag("jumping") or inst.sg:HasStateTag("busy")) then
 		if not CanTargetBoats(inst) then

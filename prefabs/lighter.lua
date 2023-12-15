@@ -18,7 +18,7 @@ local prefabs =
 
 local SNUFF_ONEOF_TAGS = { "smolder", "fire", "willow_ember" }
 local SNUFF_NO_TAGS = { "INLIMBO","snuffed" }
-local ABSORB_RANGE = 2.2
+local ABSORB_RANGE = 2.5
 
 local function UpdateSnuff(inst, owner)
 	local x, y, z = owner.Transform:GetWorldPosition()

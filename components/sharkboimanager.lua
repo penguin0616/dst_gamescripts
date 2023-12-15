@@ -8,6 +8,29 @@ local _map = _world.Map
 
 assert(_world.ismastersim, "sharkboimanager should not exist on client")
 
+--self.updatenetvarstask = nil
+local function UpdateNetvars(inst)
+    if self.updatenetvarstask ~= nil then -- Let this function repeat entry safe.
+        self.updatenetvarstask:Cancel()
+        self.updatenetvarstask = nil
+    end
+
+    if _world.net == nil or _world.net.components.sharkboimanagerhelper == nil then
+        self.updatenetvarstask = inst:DoTaskInTime(0, UpdateNetvars) -- Reschedule.
+        return
+    end
+    local sharkboimanagerhelper = _world.net.components.sharkboimanagerhelper
+    if self.arena == nil then
+        sharkboimanagerhelper.arena_origin_x:set(0)
+        sharkboimanagerhelper.arena_origin_z:set(0)
+        sharkboimanagerhelper.arena_radius:set(0)
+        return
+    end
+    sharkboimanagerhelper.arena_origin_x:set(self.arena.origin.x)
+    sharkboimanagerhelper.arena_origin_z:set(self.arena.origin.z)
+    sharkboimanagerhelper.arena_radius:set(self.arena.radius)
+end
+
 self.inst = inst
 --self.arena = nil
 self.fishingplayertasks = {} -- Temp data do not save.
@@ -187,6 +210,7 @@ end
 
 function self:SetDesiredArenaRadius(radius)
     self.arena.radius = math.clamp(radius or self:GetDesiredArenaRadius(), 0, self.MAX_ARENA_SIZE)
+    UpdateNetvars(_world)
 end
 
 function self:StopShrinking()
@@ -304,6 +328,7 @@ self.OnCooldownEnd = function(world)
     self.arena.cooldowntask = nil
     self:ForceCleanup()
     self.arena = nil
+    UpdateNetvars(_world)
     self:FindAndPlaceOceanArenaOverTime()
 end
 
@@ -554,7 +579,7 @@ function self:PlaceOceanArenaAtPosition(x, y, z)
         origin = Vector3(x, y, z),
         caughtfish = 0,
     }
-    self.arena.radius = self:GetDesiredArenaRadius()
+    self:SetDesiredArenaRadius(self:GetDesiredArenaRadius())
 
     -- Ice first for a platform to stand on.
     self:ForEachTileInBetween(0, self.arena.radius, self.CreateIceTileAtPoint)

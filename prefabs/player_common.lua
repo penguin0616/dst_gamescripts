@@ -1922,6 +1922,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         "player_classified",
         "inventory_classified",
         "wonkey",
+        "spellbookcooldown",
     }
 
     if starting_inventory ~= nil or customprefabs ~= nil then
@@ -2194,6 +2195,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
         inst:AddComponent("walkableplatformplayer")
         inst:AddComponent("boatcannonuser")
+
+		inst:AddComponent("spellbookcooldowns")
 
 		if TheNet:GetServerGameMode() == "lavaarena" then
             inst:AddComponent("healthsyncer")

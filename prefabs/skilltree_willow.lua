@@ -537,7 +537,6 @@ local function BuildSkillsData(SkillTreeFns)
             tags = {"allegiance","shadow_favor"},
             locks = {"willow_allegiance_lock_1", "willow_allegiance_lock_2"},
             onactivate = function(inst, fromload)
-
                     if not inst.components.skilltreeupdater:IsActivated("willow_allegiance_shadow_fire") then
                         inst:AddTag("player_shadow_aligned")
                         local damagetyperesist = inst.components.damagetyperesist
@@ -547,6 +546,11 @@ local function BuildSkillsData(SkillTreeFns)
                         local damagetypebonus = inst.components.damagetypebonus
                         if damagetypebonus then
                             damagetypebonus:AddBonus("lunar_aligned", inst, TUNING.SKILLS.WILLOW_ALLEGIANCE_VS_LUNAR_BONUS, "willow_allegiance_shadow")
+                        end
+                    end
+                    if inst.bigbernies then
+                        for bernie, _ in pairs(inst.bigbernies) do
+                            bernie.should_shrink = true
                         end
                     end
                 end,
@@ -675,6 +679,11 @@ local function BuildSkillsData(SkillTreeFns)
                         local damagetypebonus = inst.components.damagetypebonus
                         if damagetypebonus then
                             damagetypebonus:AddBonus("shadow_aligned", inst, TUNING.SKILLS.WILLOW_ALLEGIANCE_VS_SHADOW_BONUS, "willow_allegiance_lunar")
+                        end
+                    end
+                    if inst.bigbernies then
+                        for bernie, _ in pairs(inst.bigbernies) do
+                            bernie.should_shrink = true
                         end
                     end
                 end,

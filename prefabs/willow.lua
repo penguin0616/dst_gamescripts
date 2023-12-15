@@ -166,7 +166,6 @@ local function common_postinit(inst)
     inst:AddTag("heatresistant") --less overheat damage
 
     inst.AnimState:AddOverrideBuild("willow_pyrocast")
-    inst.AnimState:AddOverrideBuild("willow_mount_pyrocast")
 
     if TheNet:GetServerGameMode() == "lavaarena" then
         inst:AddTag("bernie_reviver")

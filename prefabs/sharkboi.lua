@@ -131,7 +131,11 @@ end
 
 local function OnTalk(inst)
 	if not inst.sg:HasStateTag("notalksound") then
-		inst.SoundEmitter:PlaySound("meta3/sharkboi/talk")
+		if inst.sg:HasStateTag("defeated") then
+			inst.SoundEmitter:PlaySound("meta3/sharkboi/stunned_hit")
+		else
+			inst.SoundEmitter:PlaySound("meta3/sharkboi/talk")
+		end
 	end
 end
 
@@ -418,6 +422,19 @@ end
 
 --------------------------------------------------------------------------
 
+local function PushMusic(inst)
+	if ThePlayer == nil or not inst:HasTag("hostile") then
+		inst._playingmusic = false
+	elseif ThePlayer:IsNear(inst, inst._playingmusic and 40 or 20) then
+		inst._playingmusic = true
+		ThePlayer:PushEvent("triggeredevent", { name = "sharkboi" })
+	elseif inst._playingmusic and not ThePlayer:IsNear(inst, 50) then
+		inst._playingmusic = false
+	end
+end
+
+--------------------------------------------------------------------------
+
 local function fn()
 	local inst = CreateEntity()
 
@@ -440,7 +457,7 @@ local function fn()
 	inst:AddTag("shark")
 	inst:AddTag("wet")
 	inst:AddTag("epic")
-	--inst:AddTag("noepicmusic") --add this when we have custom music!
+	inst:AddTag("noepicmusic") --add this when we have custom music!
 
 	inst.no_wet_prefix = true
 
@@ -462,6 +479,12 @@ local function fn()
 	inst.finmode = net_bool(inst.GUID, "sharkboi.finmode", "finmodedirty")
 
 	inst.entity:SetPristine()
+
+	--Dedicated server does not need to trigger music
+	if not TheNet:IsDedicated() then
+		inst._playingmusic = false
+		inst:DoPeriodicTask(1, PushMusic, 0)
+	end
 
 	if not TheWorld.ismastersim then
 		inst:ListenForEvent("finmodedirty", OnFinModeDirty)

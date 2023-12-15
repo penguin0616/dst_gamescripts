@@ -223,11 +223,13 @@ local states =
             inst.AnimState:PlayAnimation("death")
 			inst.AnimState:PushAnimation("death_pst", false)
             inst.Transform:SetNoFaced()
-			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationTime())
+			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
         end,
 
 		ontimeout = function(inst)
-			inst.AnimState:SetBuild("bernie_build")
+            if inst:GetSkinName() == nil then
+			    inst.AnimState:SetBuild("bernie_build")
+            end
 		end,
 
         timeline =
@@ -353,11 +355,13 @@ local states =
             inst.Transform:SetNoFaced()
             inst.components.health:SetInvincible(true)
             inst.SoundEmitter:PlaySound("dontstarve/creatures/together/bernie_big/deactivate")
-			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationTime())
+			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
         end,
 
 		ontimeout = function(inst)
-			inst.AnimState:SetBuild("bernie_build")
+            if inst:GetSkinName() == nil then
+    			inst.AnimState:SetBuild("bernie_build")
+            end
 		end,
 
         timeline =

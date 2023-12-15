@@ -46,7 +46,7 @@ local function settarget(inst,target,life,source)
 
     if life > 0 then
 
-        inst:DoTaskInTime(0.1,function()
+        inst.shadowfire_task = inst:DoTaskInTime(0.1,function()
 
             local theta = inst.Transform:GetRotation() * DEGREES
             local radius = CLOSERANGE
@@ -63,7 +63,6 @@ local function settarget(inst,target,life,source)
                         targets[flame.shadow_ember_target] = true
                     end
                 end
-
 
                 if #ents > 0 then
                     for i=#ents,1,-1 do
@@ -83,10 +82,11 @@ local function settarget(inst,target,life,source)
 
                     target = ents[1]
                     inst.shadow_ember_target = target
+                else
+                    target = nil
                 end
-
             end
-            if target then
+            if target and target:IsValid() and not target.components.health:IsDead() then
                 local dist = inst:GetDistanceSqToInst(target)
 
                 if dist<CLOSERANGE*CLOSERANGE then
@@ -160,7 +160,6 @@ local function shadowfn()
     inst.AnimState:SetBuild("shadow_fire_fx")
     inst.AnimState:PlayAnimation("anim"..math.random(1,3),false)
 
-    --inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
     inst.AnimState:SetMultColour(0, 0, 0, .6)
     inst.AnimState:SetFinalOffset(3)
 
@@ -244,8 +243,6 @@ local function throwfn()
         end
     end)
 
-    inst.settarget = settarget
-
     return inst
 end
 
@@ -296,8 +293,13 @@ local function FrenzyDoOnClientInit(inst)
 end
 
 local function OnFrenzyKilled(inst)
-    inst.fx.AnimState:PlayAnimation("post")
-    inst:DoTaskInTime(inst.fx.AnimState:GetCurrentAnimationLength() + FRAMES, inst.Remove)
+    if inst.fx ~= nil then
+        inst.fx.AnimState:PlayAnimation("post")
+    end
+
+    if TheWorld.ismastersim then
+        inst:DoTaskInTime(16 * FRAMES, inst.Remove)
+    end
 end
 
 local function FrenzyKill(inst)
@@ -319,7 +321,7 @@ local function frenzyfn()
     inst.OnFrenzyKilled = OnFrenzyKilled
     inst.FrenzyDoOnClientInit = FrenzyDoOnClientInit
 
-    --Dedicated server does not need the fx
+    -- Dedicated server does not need the fx.
     if not TheNet:IsDedicated() then
         inst:ListenForEvent("killdirty", inst.OnFrenzyKilled)
 

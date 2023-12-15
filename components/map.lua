@@ -1018,3 +1018,11 @@ end
 -- Ocean
 ----------------------------------------------------------------------------------------
 
+function Map:IsPointInSharkBoiArena(x, y, z)
+    local world = TheWorld
+    if world.net == nil or world.net.components.sharkboimanagerhelper == nil then
+        return false
+    end
+
+    return world.net.components.sharkboimanagerhelper:IsPointInArena(x, y, z)
+end

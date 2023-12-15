@@ -125,13 +125,13 @@ Recipe2("battlesong_instant_taunt",		{Ingredient("papyrus", 1), Ingredient("feat
 Recipe2("battlesong_instant_panic",		{Ingredient("papyrus", 1), Ingredient("featherpencil", 1), Ingredient("purplegem", 1)}, 								TECH.NONE,		{builder_tag="battlesinger"})
 
 -- Wathgrithr skill tree
-Recipe2("battlesong_instant_revive",	{Ingredient("papyrus", 1), Ingredient("featherpencil", 1), Ingredient("goose_feather", 3)},										TECH.NONE,		{builder_tag="battlesonginstantrevivemaker"  })
-Recipe2("battlesong_lunaraligned",		{Ingredient("papyrus", 1), Ingredient("featherpencil", 1), Ingredient("purebrilliance", 5)}, 									TECH.NONE,		{builder_tag="battlesonglunaralignedmaker"   })
-Recipe2("battlesong_shadowaligned",		{Ingredient("papyrus", 1), Ingredient("featherpencil", 1), Ingredient("horrorfuel", 5)}, 										TECH.NONE,		{builder_tag="battlesongshadowalignedmaker"  })
-Recipe2("spear_wathgrithr_lightning",	{Ingredient("twigs", 2), Ingredient("lightninggoathorn", 2), Ingredient("beefalowool", 1)},										TECH.NONE,		{builder_tag="spearwathgrithrlightningmaker" })
-Recipe2("wathgrithr_improvedhat",		{Ingredient("goldnugget", 2), Ingredient("beefalowool", 2), Ingredient("feather_robin_winter", 3)},								TECH.NONE,		{builder_tag="wathgrithrimprovedhatmaker"    })
-Recipe2("saddle_wathgrithr",			{Ingredient("goldnugget", 5), Ingredient("rocks", 5), Ingredient("feather_robin_winter", 8)},									TECH.NONE,		{builder_tag="saddlewathgrithrmaker"         })
-Recipe2("battlesong_container",			{Ingredient("boards", 2), Ingredient("goldnugget", 3), Ingredient("feather_robin_winter", 2), Ingredient("beeswax", 2)},		TECH.NONE,		{builder_tag="battlesongcontainermaker"      })
+Recipe2("battlesong_instant_revive",	{Ingredient("papyrus", 1),    Ingredient("featherpencil", 1),     Ingredient("goose_feather", 3)},								TECH.NONE,		{builder_tag="battlesonginstantrevivemaker"  })
+Recipe2("battlesong_lunaraligned",		{Ingredient("papyrus", 1),    Ingredient("featherpencil", 1),     Ingredient("purebrilliance", 3)}, 							TECH.NONE,		{builder_tag="battlesonglunaralignedmaker"   })
+Recipe2("battlesong_shadowaligned",		{Ingredient("papyrus", 1),    Ingredient("featherpencil", 1),     Ingredient("horrorfuel", 3)}, 								TECH.NONE,		{builder_tag="battlesongshadowalignedmaker"  })
+Recipe2("spear_wathgrithr_lightning",	{Ingredient("twigs", 2),      Ingredient("lightninggoathorn", 2), Ingredient("beefalowool", 1)},								TECH.NONE,		{builder_tag="spearwathgrithrlightningmaker" })
+Recipe2("wathgrithr_improvedhat",		{Ingredient("goldnugget", 2), Ingredient("beefalowool", 2),       Ingredient("marble", 1)},										TECH.NONE,		{builder_tag="wathgrithrimprovedhatmaker"    })
+Recipe2("saddle_wathgrithr",			{Ingredient("goldnugget", 4), Ingredient("marble", 3),            Ingredient("feather_robin_winter", 6)},						TECH.NONE,		{builder_tag="saddlewathgrithrmaker"         })
+Recipe2("battlesong_container",			{Ingredient("boards", 2),     Ingredient("goldnugget", 3), Ingredient("feather_robin_winter", 2), Ingredient("beeswax", 2)},	TECH.NONE,		{builder_tag="battlesongcontainermaker"      })
 Recipe2("wathgrithr_shield",			{Ingredient("goldnugget", 4), Ingredient("beefalowool", 3)},																	TECH.NONE,		{builder_tag="wathgrithrshieldmaker"         })
 
 -- Walter

@@ -450,7 +450,7 @@ end
 local function IsBoatEdgeOverLand(inst, override_position_pt)
     local map = TheWorld.Map
     local radius = inst:GetSafePhysicsRadius()
-    local segment_count = BOAT_COLLISION_SEGMENT_COUNT
+    local segment_count = BOAT_COLLISION_SEGMENT_COUNT * 2
     local segment_span = math.pi * 2 / segment_count
     local x, y, z
     if override_position_pt then
@@ -464,14 +464,14 @@ local function IsBoatEdgeOverLand(inst, override_position_pt)
         local angle0 = angle - segment_span / 2
         local x0 = math.cos(angle0) * radius
         local z0 = math.sin(angle0) * radius
-        if not map:IsOceanTileAtPoint(x + x0, 0, z + z0) then
+        if not map:IsOceanTileAtPoint(x + x0, 0, z + z0) or map:IsVisualGroundAtPoint(x + x0, 0, z + z0) then
             return true
         end
 
         local angle1 = angle + segment_span / 2
         local x1 = math.cos(angle1) * radius
         local z1 = math.sin(angle1) * radius
-        if not map:IsOceanTileAtPoint(x + x1, 0, z + z1) then
+        if not map:IsOceanTileAtPoint(x + x1, 0, z + z1) or map:IsVisualGroundAtPoint(x + x1, 0, z + z1) then
             return true
         end
     end
@@ -928,6 +928,8 @@ local function ice_fn()
     }
 
     inst = create_common_pre(inst, bank, build, OCEANICE_BOAT_DATA)
+
+    inst:RemoveTag("wood") -- Cookie Cutters should not eat it.
 
     inst.material = "ice"
     inst.walksound = "ice"
