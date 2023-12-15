@@ -426,7 +426,6 @@ local prefabs =
     "terrarium",
 
     -- Pirates
-    "boat_pirate",
     "powder_monkey",
     "prime_mate",
     "monkeyisland_center",
@@ -464,16 +463,13 @@ local prefabs =
     "scrapbook_page",
 
     -- Rifts 3
+    "phonograph",
+
+    "armorwagpunk",
+    "wagpunkhat",
     "wagstaff_machinery",
     "lunarfrog",
     "scrapbook_page_special",
-
-    --
-    "boat_ice",
-    "oceanice_damage",
-    "degrade_fx_ice",
-	"sharkboi",
-    "icefishing_hole",
 }
 
 local FISH_DATA = require("prefabs/oceanfishdef")
@@ -599,9 +595,6 @@ local function master_postinit(inst)
 
     inst:AddComponent("riftspawner")
     inst:AddComponent("lunarthrall_plantspawner")
-
-    inst:AddComponent("oceanicemanager")
-    inst:AddComponent("sharkboimanager") -- Needs oceanicemanager.
 
     inst:AddComponent("lunarhailmanager")
     inst:AddComponent("lunarriftmutationsmanager")

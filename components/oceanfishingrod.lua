@@ -352,8 +352,6 @@ function OceanFishingRod:CatchFish()
 			self.ondonefishing(self.inst, "success", false, self.fisher, fish)
 		end
 
-        self.fisher:PushEvent("fishcaught", {fish = fish,})
-
 		self:SetTarget(nil)
 	else
 		self:StopFishing()

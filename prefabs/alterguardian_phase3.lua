@@ -455,8 +455,7 @@ local function fn()
     MakeHugeFreezableCharacter(inst)
     inst.components.freezable:SetResistance(8)
 
-	inst:AddComponent("hauntable")
-	inst.components.hauntable:SetHauntValue(TUNING.HAUNT_TINY)
+    MakeHauntableGoToStateWithChanceFunction(inst, "atk_stab", hauntchancefn, TUNING.ALTERGUARDIAN_PHASE3_ATTACK_PERIOD, TUNING.HAUNT_SMALL)
 
     inst.DoTraps = do_traps
     inst.TrackTrap = track_trap

@@ -79,7 +79,6 @@ local function fn()
 
     inst:AddTag("fulllighter")
     inst:AddTag("lightcontainer")
-    inst:AddTag("portablestorage")
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then

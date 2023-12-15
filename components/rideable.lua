@@ -17,15 +17,6 @@ end
 local function RiddenTick(inst, dt)
     inst.components.rideable.lastridetime = GetTime()
     inst:PushEvent("beingridden", dt)
-
-    ------------------------
-
-    local _rider = inst.components.rideable:GetRider()
-    local _skilltreeupdater = _rider ~= nil and _rider.components.skilltreeupdater or nil
-
-    if _skilltreeupdater ~= nil and _skilltreeupdater:HasSkillTag("beefaloinspiration") and _rider.components.singinginspiration ~= nil then
-        _rider.components.singinginspiration:OnRidingTick(dt)
-    end
 end
 
 local function StartRiddenTick(self)

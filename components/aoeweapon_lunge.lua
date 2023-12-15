@@ -12,8 +12,6 @@ local AOEWeapon_Lunge = Class(AOEWeapon_Base, function(self, inst)
     --self.onprelungefn = nil
     --self.onlungedfn = nil
 
-    --self.sound = nil
-    
     --V2C: Recommended to explicitly add tag to prefab pristine state
     inst:AddTag("aoeweapon_lunge")
 end)
@@ -33,10 +31,6 @@ end
 function AOEWeapon_Lunge:SetTrailFX(prefab, spacing)
     self.fxprefab = prefab
     self.fxspacing = spacing
-end
-
-function AOEWeapon_Lunge:SetSound(path)
-    self.sound = path
 end
 
 local TOSS_MUSTTAGS = { "_inventoryitem" }
@@ -117,12 +111,12 @@ function AOEWeapon_Lunge:DoLunge(doer, startingpos, targetpos)
     end
 
     doer_combat:EnableAreaDamage(true)
-    if weapon then
+    if weapon_component then
         if attackwear ~= 0 then
-            weapon.attackwear = attackwear
+            weapon_component.attackwear = attackwear
         end
         if damage ~= self.damage then
-            weapon:SetDamage(damage)
+            weapon_component:SetDamage(damage)
         end
     end
 

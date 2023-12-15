@@ -206,7 +206,6 @@ local function fn()
     inst:AddTag("animal")
     inst:AddTag("largecreature")
     inst:AddTag("shark")
-	inst:AddTag("wet")
 
     inst.scrapbook_deps = {"fishmeat"}
 
@@ -240,7 +239,7 @@ local function fn()
 
     inst:AddComponent("inspectable")
 
-    --MakeLargeBurnableCharacter(inst, "shark_parts")
+    MakeLargeBurnableCharacter(inst, "shark_parts")
     MakeLargeFreezableCharacter(inst, "shark_parts")
 
     inst:AddComponent("timer")

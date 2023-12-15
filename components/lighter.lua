@@ -22,7 +22,6 @@ function Lighter:Light(target, doer)
             self.onlight(self.inst, target)
         end
     end
-    target:PushEvent("onlighterlight")
 end
 
 return Lighter

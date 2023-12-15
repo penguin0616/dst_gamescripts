@@ -42,9 +42,6 @@ function ListCursor:OnControl(control, down)
         if down then
             TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
             self.down = true
-			if self.whiledown then
-				self:StartUpdating()
-			end
             if self.ondown then
                 self.ondown()
             end
@@ -54,7 +51,6 @@ function ListCursor:OnControl(control, down)
                 if self.onclick then
                     self.onclick()
                 end
-				self:StopUpdating()
             end
         end
 
@@ -81,6 +77,14 @@ function ListCursor:SetSelected(selected)
         self.selectedimage:SetTint(1,1,1,0)
         self.selected = false
     end
+end
+
+function ListCursor:Enable()
+	ListCursor._base.Enable(self)
+end
+
+function ListCursor:Disable()
+	ListCursor._base.Disable(self)
 end
 
 function ListCursor:GetSize()

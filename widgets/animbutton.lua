@@ -20,7 +20,7 @@ end)
 function AnimButton:OnGainFocus()
 	AnimButton._base.OnGainFocus(self)
 
-	if self:IsEnabled() and not self:IsSelected() then
+    if self:IsEnabled() then
 		self.anim:GetAnimState():PlayAnimation(self.animstates and self.animstates.over or "over")
 	end
 end
@@ -28,7 +28,7 @@ end
 function AnimButton:OnLoseFocus()
 	AnimButton._base.OnLoseFocus(self)
 
-	if not (self:IsSelected() or self:IsDisabledState()) then
+	if self:IsEnabled() then
 		self.anim:GetAnimState():PlayAnimation(self.animstates and self.animstates.idle or "idle")
     end
 end

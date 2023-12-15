@@ -31,7 +31,6 @@ function HighlightChild:OnChangeOwner(owner)
 	--Dedicated server does not need highlighting
 	if not TheNet:IsDedicated() then
 		if self.owner ~= nil then
-			self.inst.AnimState:SetHighlightColour()
 			table.removearrayvalue(self.owner.highlightchildren, self.inst)
 		end
 		self.owner = owner

@@ -261,7 +261,7 @@ function Eater:Eat(food, feeder)
 
         self.inst:PushEvent("oneat", { food = food, feeder = feeder })
         if self.oneatfn ~= nil then
-            self.oneatfn(self.inst, food, feeder)
+            self.oneatfn(self.inst, food)
         end
 
         if food.components.edible ~= nil then

@@ -426,11 +426,6 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
         --Initialize map
         for i, data in ipairs(GroundTiles.ground) do
             local tile_id, layer_properties = unpack(data)
-            if GROUND_NOGROUNDOVERLAYS[tile_id] then
-                if getmetatable(TileGroupManager).__index.SetNoGroundOverlays ~= nil then -- FIXME(JBK): Remove this check once things are updated.
-                    TileGroupManager:SetNoGroundOverlays(tile_id) -- NOTES(JBK): Do not call this after the map finalizes a crashing race condition may occur!
-                end
-            end
             local handle = MapLayerManager:CreateRenderLayer(
                 tile_id, --embedded map array value
                 layer_properties.atlas or resolvefilepath(GroundAtlas(layer_properties.name)),

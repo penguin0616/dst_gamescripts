@@ -31,8 +31,6 @@ local SingingInspiration = Class(function(self, inst)
     self.max_enemy_health = 5000
     self.inspiration_gain_bonus = 750
 
-    self.gainratemultipliers = SourceModifierList(self.inst) -- Only used in SingingInspiration:OnHitOther.
-
     self.inst:ListenForEvent("onhitother", function(inst, data) self:OnHitOther(data)   end)
     self.inst:ListenForEvent("attacked",   function(inst, data) self:OnAttacked(data) end)
 
@@ -122,29 +120,6 @@ function SingingInspiration:OnHitOther(data)
             delta = delta * TUNING.INSPIRATION_GAIN_EPIC_BONUS --3
         end
 
-        delta = delta * self.gainratemultipliers:Get()
-
-        self:DoDelta(delta)
-    end
-end
-
-function SingingInspiration:OnRidingTick(dt)
-    self.is_draining = false
-    self.last_attack_time = GetTime()
-
-    local max = TUNING.INSPIRATION_RIDING_GAIN_MAX
-
-    if self.current >= max then
-        return
-    end
-
-    local delta = TUNING.INSPIRATION_RIDING_GAIN_RATE * dt
-
-    if (self.current + delta) > max then
-        delta = max - self.current
-    end
-
-    if delta > 0 then
         self:DoDelta(delta)
     end
 end
@@ -173,18 +148,8 @@ function SingingInspiration:DoDelta(delta, forceupdate)
     end
 end
 
-function SingingInspiration:CanAddSong(songdata, inst)
-    if songdata.RESTRICTED_TAG ~= nil and not self.inst:HasTag(songdata.RESTRICTED_TAG) then
-        return false
-    end
-
-    if songdata.INSTANT then
-        return self.current >= songdata.DELTA and (
-            inst == nil or inst.components.rechargeable == nil or inst.components.rechargeable:IsCharged()
-        )
-    end
-
-    return #self.active_songs < self.available_slots
+function SingingInspiration:CanAddSong(songdata)
+	return songdata.INSTANT and (self.current >= songdata.DELTA) or (#self.active_songs < self.available_slots)
 end
 
 function SingingInspiration:DisplayFx()
@@ -235,23 +200,11 @@ function SingingInspiration:DisplayFx()
     self.display_fx_task = self.inst:DoTaskInTime(next_display_time, function() self:DisplayFx() end)
 end
 
-function SingingInspiration:OnAddInstantSong(songdata, inst)
-    if not self.inst.components.skilltreeupdater:IsActivated("wathgrithr_songs_instantsong_cd") then
-        self:DoDelta(-songdata.DELTA)
-
-        SendRPCToClient(CLIENT_RPC.UpdateCountAccomplishment, self.inst.userid, "wathgrithr_instantsong_uses", TUNING.SKILLS.WATHGRITHR.INSTANTSONG_CD_UNLOCK_COUNT)
-
-    elseif inst ~= nil and inst.components.rechargeable ~= nil then
-        inst.components.rechargeable:Discharge(songdata.COOLDOWN or TUNING.SKILLS.WATHGRITHR.BATTLESONG_INSTANT_COOLDOWN)
-    end
-
-    self:InstantInspire(songdata)
-end
-
-function SingingInspiration:AddSong(songdata, skip_inspire, inst)
-    if self:CanAddSong(songdata, inst) then
+function SingingInspiration:AddSong(songdata, skip_inspire)
+    if self:CanAddSong(songdata) then
         if songdata.INSTANT then
-            self:OnAddInstantSong(songdata, inst)
+            self:DoDelta(-songdata.DELTA)
+            self:InstantInspire(songdata)
         else
             table.insert(self.active_songs, songdata)
 			local slot = #self.active_songs
@@ -371,28 +324,16 @@ function SingingInspiration:InstantInspire(songdata)
 	local fn = songdata.ONINSTANT
 	if fn ~= nil then
 		local x, y, z = self.inst.Transform:GetWorldPosition()
+		local entities_near_me = TheSim:FindEntities(x, y, z, self.attach_radius, INSTANT_TARGET_MUST_HAVE_TAGS, INSTANT_TARGET_CANTHAVE_TAGS)
+		for _, ent in ipairs(entities_near_me) do
+			if self.inst.components.combat:CanTarget(ent)
+				and not HasFriendlyLeader(ent, self.inst, PVP_enabled)
+				and (not ent:HasTag("prey") or (ent:HasTag("prey") and ent:HasTag("hostile")))
+				then
 
-        if songdata.CUSTOMTARGETFN then
-            local targets = songdata.CUSTOMTARGETFN(self.inst)
-
-            if targets ~= nil then
-                for _, ent in ipairs(targets) do
-                    fn(self.inst, ent)
-                end
-            end
-        else
-            local entities_near_me = TheSim:FindEntities(x, y, z, self.attach_radius, INSTANT_TARGET_MUST_HAVE_TAGS, INSTANT_TARGET_CANTHAVE_TAGS)
-
-            for _, ent in ipairs(entities_near_me) do
-                if self.inst.components.combat:CanTarget(ent)
-                    and not HasFriendlyLeader(ent, self.inst, PVP_enabled)
-                    and (not ent:HasTag("prey") or (ent:HasTag("prey") and ent:HasTag("hostile")))
-                    then
-
-                    fn(self.inst, ent)
-                end
-            end
-        end
+				fn(self.inst, ent)
+			end
+		end
 	end
 end
 

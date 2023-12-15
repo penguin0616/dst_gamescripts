@@ -605,8 +605,8 @@ function StateGraphInstance:HasStateTag(tag)
 end
 
 function StateGraphInstance:HasAnyStateTag(...)
-	for i = 1, select("#", ...) do
-		if self.tags[select(i, ...)] then
+	for _, tag in ipairs({...}) do
+		if self.tags[tag] then
             return true
         end
     end

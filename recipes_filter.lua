@@ -138,9 +138,7 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 
 	-- Wathgrithr / Wigfrid
 	"spear_wathgrithr",
-	"spear_wathgrithr_lightning",
 	"wathgrithrhat",
-	"wathgrithr_improvedhat",
 	"battlesong_durability",
 	"battlesong_healthgain",
 	"battlesong_sanitygain",
@@ -148,12 +146,6 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"battlesong_fireresistance",
 	"battlesong_instant_taunt",
 	"battlesong_instant_panic",
-	"battlesong_instant_revive",
-	"battlesong_lunaraligned",
-	"battlesong_shadowaligned",
-	"battlesong_container",
-	"saddle_wathgrithr",
-	"wathgrithr_shield",
 
 	-- Walter
 	"slingshot",
@@ -232,6 +224,8 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"livinglog",
 	"armor_bramble",
 	"trap_bramble",
+    "lunarplant_wormwoodhat",
+    "armor_lunarplant_wormwood",
     "wormwood_sapling",
     "wormwood_berrybush",
     "wormwood_berrybush2",
@@ -708,14 +702,12 @@ CRAFTING_FILTERS.WEAPONS.recipes =
 	"winona_catapult",
 	"spear",
 	"spear_wathgrithr",
-	"spear_wathgrithr_lightning",
 	"boomerang",
 	"hambat",
 	"batbat",
 	"whip",
 	"nightstick",
 	"nightsword",
-	"wathgrithr_shield",
 	"sleepbomb",
 	"blowdart_pipe",
 	"blowdart_fire",
@@ -747,14 +739,12 @@ CRAFTING_FILTERS.ARMOUR.recipes =
 	"woodcarvedhat",
 	"footballhat",
 	"wathgrithrhat",
-	"wathgrithr_improvedhat",
 	"cookiecutterhat",
 	"beehat",
 	"armordreadstone",
 	"dreadstonehat",
 	"armorwagpunk",
 	"wagpunkhat",
-	"wathgrithr_shield",
 }
 
 CRAFTING_FILTERS.CLOTHING.recipes =
@@ -970,7 +960,6 @@ CRAFTING_FILTERS.CONTAINERS.recipes =
 	"icebox",
 	"saltbox",
 	"fish_box",
-	"battlesong_container",
 }
 
 CRAFTING_FILTERS.STRUCTURES.recipes =
@@ -1119,7 +1108,6 @@ CRAFTING_FILTERS.RIDING.recipes =
 	"saddlehorn",
 	"saddle_basic",
 	"saddle_war",
-	"saddle_wathgrithr",
 	"saddle_race",
 	"beefalo_groomer",
 }

@@ -15,7 +15,6 @@ function ExperienceCollector:SetTask(time)
 end
 
 function ExperienceCollector:UpdateXp()
-
     if not skilltreedefs.SKILLTREE_DEFS[self.inst.prefab] then
         return nil
     end 
@@ -29,23 +28,19 @@ function ExperienceCollector:LongUpdate(dt)
         timeremaining = GetTaskRemaining(self.inst.xpgeneration_task)
     end
 
-    if dt < timeremaining then
+    if dt < timeremaining then        
         timeremaining = timeremaining - dt
-
     else
-        dt = dt + (self.xp_period - timeremaining)
-
-        local cycles, remaining = math.modf(dt/self.xp_period)
+        local cycles,remaining = math.modf(dt/self.xp_period)
         
         if cycles > 0 then
-            for i=1, cycles do
+            for i=1,cycles do
                 self:UpdateXp()
             end
         end
 
-        timeremaining = self.xp_period - (remaining * self.xp_period)
+        timeremaining = remaining * self.xp_period
     end
-
     self:SetTask(timeremaining)
 end
 

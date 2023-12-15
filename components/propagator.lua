@@ -99,7 +99,7 @@ function Propagator:GetHeatResistance()
         or 1
 end
 
-function Propagator:AddHeat(amount,source)
+function Propagator:AddHeat(amount)
     if self.delay ~= nil or self.inst:HasTag("fireimmune") then
         return
     end
@@ -119,12 +119,8 @@ function Propagator:AddHeat(amount,source)
 
     if self.currentheat > self.flashpoint then
         self.pauseheating = true
-
-        -- controlled burning will not spread fire.
-        if not source or not source.components.burnable or not source.components.burnable:GetControlledBurn() then
-            if self.onflashpoint ~= nil then
-                self.onflashpoint(self.inst)
-            end
+        if self.onflashpoint ~= nil then
+            self.onflashpoint(self.inst)
         end
     end
 end
@@ -168,7 +164,7 @@ function Propagator:OnUpdate(dt)
                             v.components.propagator.acceptsheat and
                             not v.components.propagator.pauseheating then
                             local percent_heat = math.max(.1, 1 - dsq / prop_range_sq)
-                            v.components.propagator:AddHeat(self.heatoutput * percent_heat * dt, self.inst)
+                            v.components.propagator:AddHeat(self.heatoutput * percent_heat * dt)
                         end
 
                         if v.components.freezable ~= nil then
