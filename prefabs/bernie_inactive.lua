@@ -71,7 +71,7 @@ local function tryreanimate(inst)
     local rangesq = 256 --[[16 * 16]]
     local x, y, z = inst.Transform:GetWorldPosition()
     for i, v in ipairs(AllPlayers) do
-        if commonfn.isleadercrazy(inst,v) and v.entity:IsVisible() then
+        if ( commonfn.isleadercrazy(inst,v) or inst:hotheaded(v) ) and v.entity:IsVisible() then
             local distsq = v:GetDistanceSqToPoint(x, y, z)
             if distsq < rangesq then
                 rangesq = distsq
@@ -298,6 +298,7 @@ local function fn()
 
     inst.OnEntitySleep = deactivate
     inst.OnEntityWake = onentitywake
+    inst.hotheaded = commonfn.hotheaded
     inst.isleadercrazy = commonfn.isleadercrazy
 
     inst.OnLoad = onload

@@ -37,7 +37,7 @@ local throwfirelevels =
 local CLOSERANGE = 1
 
 local TARGETS_MUST = {"_health"}
-local TARGETS_CANT = {"player"}
+local TARGETS_CANT = {"player","invisible"}
 
 local FLAME_MUST = {"willow_shadow_flame"}
 
@@ -51,7 +51,7 @@ local function settarget(inst,target,life,source)
             local theta = inst.Transform:GetRotation() * DEGREES
             local radius = CLOSERANGE
 
-            if not target or not target:IsValid() or target.components.health:IsDead() then
+            if not target or not target:IsValid() or target.components.health:IsDead() or target.sg:HasStateTag("noattack") then
                 inst.shadow_ember_target = nil
                 local pos = Vector3(inst.Transform:GetWorldPosition())
                 local ents = TheSim:FindEntities(pos.x, pos.y, pos.z, 20, TARGETS_MUST,TARGETS_CANT)
@@ -67,12 +67,11 @@ local function settarget(inst,target,life,source)
                 if #ents > 0 then
                     for i=#ents,1,-1 do
                         local ent = ents[i]
-                        if (
-                                ent:HasTag("hostile") or
-                                (ent.components.combat and ent.components.combat.target and ent.components.combat.target == source)
-                            ) and
-                            (not ent.components.follower or not ent.components.follower.leader or ent.components.follower.leader ~= source )
-                            and not targets[ent]
+                        if  (    ent:HasTag("hostile") or
+                                (ent.components.combat and ent.components.combat.target and ent.components.combat.target == source)        ) and
+                            (not ent.components.follower or not ent.components.follower.leader or ent.components.follower.leader ~= source ) and 
+                            not targets[ent] and 
+                            not ent.sg:HasStateTag("noattack")
                         then
                             --keep
                         else

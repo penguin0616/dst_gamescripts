@@ -179,6 +179,9 @@ local function OnWork(inst, worker, workleft)
 	if workleft <= 0 then
 		if worker and (worker:HasTag("groundspike") or worker:HasTag("shark")) then
 			inst.components.lootdropper:SetChanceLootTable("sharkboi_icespike_low")
+			inst.SoundEmitter:PlaySound("meta3/sharkboi/ice_spike_break")
+		else
+			inst.SoundEmitter:PlaySound("dontstarve_DLC001/common/iceboulder_smash")
 		end
 		local pos = inst:GetPosition()
 		inst.components.lootdropper:DropLoot(pos)
@@ -194,7 +197,6 @@ local function OnWork(inst, worker, workleft)
 		if math.random() < 0.5 then
 			inst.AnimState:SetScale(-1, 1)
 		end
-		inst.SoundEmitter:PlaySound("dontstarve_DLC001/common/iceboulder_smash")
 		inst:ListenForEvent("animqueueover", inst.Remove)
 	else
 		RefreshWorkLevel(inst, workleft)
@@ -406,13 +408,23 @@ local function DoSpawnSpike(inst, data, variations, targets, flip)
 			if data.next_drift_change > 1 then
 				data.next_drift_change = data.next_drift_change - 1
 			else
-				data.next_drift_change = math.random(2, 3)
 				local max_drift_dist = flip and INNER_DRIFT_LIMIT or OUTER_DRIFT_LIMIT
 				local min_drift_dist = flip and -OUTER_DRIFT_LIMIT or -INNER_DRIFT_LIMIT
-				local drift_dir =
-					(data.drift_dist > max_drift_dist and -1) or
-					(data.drift_dist < -min_drift_dist and 1) or
-					data.drift > 0 and -1 or 1
+				local mid_drift_dist = (min_drift_dist + max_drift_dist) / 2
+				local drift_dir
+				if flip and data.drift_dist > mid_drift_dist and data.drift < 0 then
+					drift_dir = -1 --favour outward a bit
+					data.next_drift_change = 1
+				elseif not flip and data.drift_dist < mid_drift_dist and data.drift > 0 then
+					drift_dir = 1 --favour outward a bit
+					data.next_drift_change = 1
+				else
+					drift_dir =
+						(data.drift_dist > max_drift_dist and -1) or
+						(data.drift_dist < min_drift_dist and 1) or
+						data.drift > 0 and -1 or 1
+					data.next_drift_change = math.random(2, 3)
+				end
 				data.drift = drift_dir * (MIN_DRIFT + math.random() * DRIFT_VAR)
 			end
 			data.drift_dist = data.drift_dist + data.drift

@@ -183,7 +183,7 @@ local function UpdatePlayerTargets(inst)
 end
 
 local function RetargetFn(inst)
-	if not inst.aggro then
+	if not inst:HasTag("hostile") then
 		return
 	end
 
@@ -211,7 +211,7 @@ local function RetargetFn(inst)
 end
 
 local function KeepTargetFn(inst, target)
-	if inst.aggro and inst.components.combat:CanTarget(target) then
+	if inst:HasTag("hostile") and inst.components.combat:CanTarget(target) then
 		local sharkboimanager = TheWorld.components.sharkboimanager
 		if sharkboimanager and sharkboimanager:IsPointInArena(inst.Transform:GetWorldPosition()) then
 			return sharkboimanager:IsPointInArena(target.Transform:GetWorldPosition())
@@ -222,8 +222,7 @@ local function KeepTargetFn(inst, target)
 end
 
 local function StartAggro(inst)
-	if not inst.aggro then
-		inst.aggro = true
+	if not inst:HasTag("hostile") then
         inst:AddTag("hostile")
 		inst.components.timer:StopTimer("standing_dive_cd")
 		inst.components.timer:StartTimer("standing_dive_cd", TUNING.SHARKBOI_STANDING_DIVE_CD / 2)
@@ -233,8 +232,7 @@ local function StartAggro(inst)
 end
 
 local function StopAggro(inst)
-	if inst.aggro then
-		inst.aggro = false
+	if inst:HasTag("hostile") then
         inst:RemoveTag("hostile")
 		inst.components.timer:StopTimer("standing_dive_cd")
 		inst.components.timer:StopTimer("torpedo_cd")
@@ -377,7 +375,7 @@ end
 --------------------------------------------------------------------------
 
 local function OnSave(inst, data)
-	data.aggro = inst.aggro or nil
+	data.aggro = inst:HasTag("hostile") or nil
 	data.reward = inst.pendingreward or nil
 	if inst.stock and inst.stock < MAX_TRADES then
 		data.stock = inst.stock
@@ -425,11 +423,22 @@ end
 local function PushMusic(inst)
 	if ThePlayer == nil or not inst:HasTag("hostile") then
 		inst._playingmusic = false
-	elseif ThePlayer:IsNear(inst, inst._playingmusic and 40 or 20) then
-		inst._playingmusic = true
-		ThePlayer:PushEvent("triggeredevent", { name = "sharkboi" })
-	elseif inst._playingmusic and not ThePlayer:IsNear(inst, 50) then
-		inst._playingmusic = false
+	else
+		--client safe
+		local sharkboimanagerhelper = TheWorld and TheWorld.net and TheWorld.net.components.sharkboimanagerhelper
+		if sharkboimanagerhelper and sharkboimanagerhelper:IsPointInArena(inst.Transform:GetWorldPosition()) then
+			if sharkboimanagerhelper:IsPointInArena(ThePlayer.Transform:GetWorldPosition()) then
+				inst._playingmusic = true
+				ThePlayer:PushEvent("triggeredevent", { name = "sharkboi" })
+			else
+				inst._playingmusic = false
+			end
+		elseif ThePlayer:IsNear(inst, inst._playingmusic and 40 or 20) then
+			inst._playingmusic = true
+			ThePlayer:PushEvent("triggeredevent", { name = "sharkboi" })
+		elseif inst._playingmusic and not ThePlayer:IsNear(inst, 50) then
+			inst._playingmusic = false
+		end
 	end
 end
 
@@ -554,7 +563,6 @@ local function fn()
 	inst:ListenForEvent("attacked", OnAttacked)
 	inst:ListenForEvent("killed", OnKilledOther)
 
-	inst.aggro = false
 	inst.trading = false
 	inst.StopAggro = StopAggro
 	inst.MakeTrader = MakeTrader

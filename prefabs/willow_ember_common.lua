@@ -69,7 +69,7 @@ end
 
 local CREATURES_MUST = { "_combat" }
 local CREATURES_CAN  = { "monster", "smallcreature", "largecreature", "animal", "bigbernie", "character" }
-local CREATURES_CANT = { "FX", "INLIMBO", "DECOR", "playerghost", "NOCLICK", "player", "ghost", "companion"}
+local CREATURES_CANT = { "FX", "INLIMBO", "DECOR", "playerghost", "NOCLICK", "ghost"}
 
 -- Is also called from the client-side.
 local function GetBurstTargets(player)
@@ -77,32 +77,37 @@ local function GetBurstTargets(player)
 
     local ents = TheSim:FindEntities(x, 0, z, TUNING.FIRE_BURST_RANGE, CREATURES_MUST, CREATURES_CANT, CREATURES_CAN)
 
+
+    --filter out not burnables, things burning
     for i=#ents, 1, -1 do
         if not ents[i]:HasTag("canlight") and not ents[i]:HasTag("nolight") and not ents[i]:HasTag("fire")  then
             table.remove(ents,i)
         end
     end
     
+    -- filter out things that are allies or followers of allies, but not burnable bernie
     for i=#ents, 1, -1 do
-        if not ents[i]:HasTag("bigbernie") and not ents[i]:HasTag("canlight") then
-            if player.replica.combat:IsAlly(ents[i]) or player.replica.combat:TargetHasFriendlyLeader(ents[i]) then
-                table.remove(ents,i)
-            end
+        local should_remove = false
+
+        -- remove alies
+        if player.replica.combat:IsAlly(ents[i]) or player.replica.combat:TargetHasFriendlyLeader(ents[i]) then
+            should_remove = true     
+        end
+        -- remove companions
+        if ents[i]:HasTag("companion") then
+            should_remove = true
+        end
+
+        -- bring back a friendly burnable burnie
+        if ents[i]:HasTag("bigbernie") and ents[i]:HasTag("canlight") and player.replica.combat:IsAlly(ents[i]) then
+             should_remove = false
+        end
+        
+        if should_remove then
+            table.remove(ents,i)
         end
     end
 
-    for i=#ents, 1, -1 do
-        if not ents[i]:HasTag("hostile") then
-            if not ents[i]:HasTag("bigbernie") and not ents[i]:HasTag("canlight") then
-                local target = (ents[i].replica.combat ~= nil and ents[i].replica.combat:GetTarget()) or (ents[i].components.combat ~= nil and ents[i].components.combat.target) or nil
-
-                if target ~= player then
-                    table.remove(ents,i)
-                end
-            end
-        end
-    end
-    
     return ents
 end
 

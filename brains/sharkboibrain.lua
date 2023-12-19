@@ -99,7 +99,7 @@ function SharkboiBrain:OnStart()
 						ChaseAndAttack(self.inst),
 					}),
 				--Sharkboi won the battle? (or all targets deaggroed?)
-				IfNode(function() return self.inst.aggro end, "Gloating",
+				IfNode(function() return self.inst:HasTag("hostile") end, "Gloating",
 					ChattyNode(self.inst, "SHARKBOI_TALK_GLOAT",
 						Wander(self.inst))),
 				--Out of stock (after defeated)

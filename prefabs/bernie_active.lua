@@ -140,6 +140,7 @@ local function fn()
     inst.GoBig = gobig
     inst.OnEntitySleep = OnEntitySleep
     inst.OnEntityWake = OnEntityWake
+    inst.hotheaded = commonfn.hotheaded
     inst.isleadercrazy = commonfn.isleadercrazy
 
     return inst

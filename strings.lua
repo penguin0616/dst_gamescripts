@@ -591,6 +591,7 @@ STRINGS =
             PICK_FLOWER = "Pick Flower From",
             EQUIPMENTSWAP = "Swap Clothes",
             SPIN = "Spin",
+            CALM = "Calm",
         },
 
 		OPEN_CRAFTING =
@@ -3857,7 +3858,7 @@ STRINGS =
         BATTLESONG_SHADOWALIGNED = "Dark Lament",
         BATTLESONG_LUNARALIGNED = "Enlightened Lullaby",
 
-        WILLOW_EMBER = "Hot Embers",
+        WILLOW_EMBER = "Ethereal Ember",
         EMBERLIGHT = "Fire Ball",
 
         SHARKBOI = "Frostjaw",
@@ -15110,7 +15111,7 @@ STRINGS.SKILLTREE = {
         WILLOW_FIRE_BALL_TITLE = "Fire Ball",
         WILLOW_FIRE_BALL_DESC = "Use Embers to create a ball of flame for heat and light.",
         WILLOW_FIRE_FRENZY_TITLE = "Burning Frenzy",
-        WILLOW_FIRE_FRENZY_DESC = "For 30 seconds, add 25% weapon damage when attacking burning targets.",
+        WILLOW_FIRE_FRENZY_DESC = "For 60 seconds, add 25% weapon damage when attacking burning targets.",
 
         WILLOW_LIGHTRADIUS_1_TITLE = "Brighter Lighter I",
         WILLOW_LIGHTRADIUS_1_DESC = "Increase your lighter's brightness a little.",
@@ -15126,7 +15127,10 @@ STRINGS.SKILLTREE = {
         WILLOW_BERNIESANITY_1_TITLE = "Bearly Sane I",
         WILLOW_BERNIESANITY_1_DESC = "Bernie will become animated at a higher sanity threshold.",
         WILLOW_BERNIESANITY_2_TITLE = "Bearly Sane II",
-        WILLOW_BERNIESANITY_2_DESC = "Bernie will become animated at an even higher sanity threshold.", 
+        WILLOW_BERNIESANITY_2_DESC = "Bernie will become animated at an even higher sanity threshold.",
+        WILLOW_BERNIEAI_TITLE = "Hot-Headed",
+        WILLOW_BERNIEAI_DESC = "Bernie will activate to fight hostile lunar and shadow aligned creatures regardless of Willow's sanity.",
+
         
         WILLOW_BERNIEREGEN_1_TITLE = "Patch Up I",
         WILLOW_BERNIEREGEN_1_DESC = "Bernie's health regenerates slowly.",
@@ -15145,8 +15149,6 @@ STRINGS.SKILLTREE = {
         WILLOW_BURNINGBERNIE_TITLE = "Burning Bernie",
         WILLOW_BURNINGBERNIE_DESC = "Igniting Bernie will give him a firey aura for a short time.\nEnemies that attack an ignited Bernie will take damage back.",
 
-        WILLOW_BERNIEAI_TITLE = "Hot-Headed",
-        WILLOW_BERNIEAI_DESC = "Bernie will take it upon himself to taunt and attack any nearby lunar-aligned or shadow-aligned creatures.",
 
         -- ALLIEGIANCE
         WILLOW_ALLEGIANCE_LOCK_1_DESC = "Find and defeat the Ancient Fuelweaver.\nHave no Lunar Allegiance Skills.",

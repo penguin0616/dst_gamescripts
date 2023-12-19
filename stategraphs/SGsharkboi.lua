@@ -4,6 +4,18 @@
 
 require("stategraphs/commonstates")
 
+local function DoImpactShake(inst)
+	ShakeAllCameras(CAMERASHAKE.VERTICAL, 1, 0.02, 0.3, inst, 30)
+end
+
+local function DoJumpOutShake(inst)
+	ShakeAllCameras(CAMERASHAKE.FULL, 0.6, 0.02, 0.2, inst, 30)
+end
+
+local function DoDiggingShake(inst)
+	ShakeAllCameras(CAMERASHAKE.FULL, 0.6, 0.015, 0.15, inst, 30)
+end
+
 --------------------------------------------------------------------------
 
 local function ChooseAttack(inst, target)
@@ -113,7 +125,7 @@ local events =
 	end),
 	EventHandler("ontalk", function(inst)
 		inst.sg.mem.lasttalktime = GetTime()
-		if not (inst.aggro or inst.trading or inst.pendingreward or inst.sg:HasStateTag("busy")) then
+		if not (inst:HasTag("hostile") or inst.trading or inst.pendingreward or inst.sg:HasStateTag("busy")) then
 			inst.sg.statemem.keepsixfaced = true
 			inst.sg:GoToState("talk", inst.sg:HasStateTag("talking"))
 		end
@@ -465,7 +477,7 @@ local states =
 				inst.sg.statemem.keepsixfaced = true
 				inst.sg:GoToState("give", inst.sg.mem.pendinggiver)
 				return
-			elseif inst.aggro and ShouldBeDefeated(inst) then
+			elseif inst:HasTag("hostile") and ShouldBeDefeated(inst) then
 				inst.sg:GoToState("defeat")
 				return
 			elseif norotate then
@@ -658,6 +670,7 @@ local states =
 			SpawnPrefab("splash_green_large").Transform:SetPosition(x, 0, z)
 			TryChatter(inst, "SHARKBOI_TALK_IDLE", nil, true, true)
 			inst.components.talker:IgnoreAll("spawn")
+			DoImpactShake(inst)
 		end,
 
 		timeline =
@@ -1194,6 +1207,8 @@ local states =
 			inst.sg.statemem.targets = targets or {}
 			inst.sg.statemem.icedelay = 0
 			inst.sg.statemem.traildelay = 0
+			inst.sg.statemem.shakedelay = 8
+			DoImpactShake(inst)
 			if not inst.SoundEmitter:PlayingSound("drill") then
 				inst.SoundEmitter:PlaySound("meta3/sharkboi/torpedo_drill", "drill")
 			end
@@ -1214,6 +1229,12 @@ local states =
 			else
 				inst.sg.statemem.traildelay = 2
 				SpawnIceTrailFX(inst)
+			end
+			if inst.sg.statemem.shakedelay > 0 then
+				inst.sg.statemem.shakedelay = inst.sg.statemem.shakedelay - 1
+			else
+				inst.sg.statemem.shakedelay = 6
+				DoDiggingShake(inst)
 			end
 		end,
 
@@ -1501,6 +1522,7 @@ local states =
 				end
 			end
 			ToggleOffAllObjectCollisions(inst)
+			DoDiggingShake(inst)
 		end,
 
 		onupdate = function(inst)
@@ -1547,6 +1569,7 @@ local states =
 				inst.sg.statemem.targets = {}
 				inst.SoundEmitter:PlaySound("meta3/sharkboi/popup")
 				SpawnIceImpactFX(inst)
+				DoJumpOutShake(inst)
 			end),
 		},
 
@@ -1649,6 +1672,7 @@ local states =
 			inst.AnimState:PlayAnimation("icedive_dig_pre")
 			inst.SoundEmitter:PlaySound("meta3/sharkboi/divedown")
 			SpawnIceImpactFX(inst)
+			DoImpactShake(inst)
 			DoAOEAttackAndDig(inst, 0, 2, nil, 1, nil, targets)
 			if inst.sg.mem.sleeping or ShouldBeDefeated(inst) then
 				inst.sg:GoToState("dive_dig_hit")
@@ -1746,6 +1770,7 @@ local states =
 		timeline =
 		{
 			FrameEvent(2, function(inst) inst.SoundEmitter:PlaySound("meta3/sharkboi/popup") end),
+			FrameEvent(3, DoDiggingShake),
 			FrameEvent(4, function(inst)
 				inst.sg:AddStateTag("noattack")
 				inst.sg:AddStateTag("temp_invincible")
@@ -1792,6 +1817,7 @@ local states =
 			local x, y, z = inst.Transform:GetWorldPosition()
 			SpawnIceImpactFX(inst, x, z)
 			SpawnIceHoleFX(inst, x, z)
+			DoDiggingShake(inst)
 			inst.Physics:SetMotorVelOverride(4, 0, 0)
 		end,
 
@@ -1800,6 +1826,7 @@ local states =
 			--Bounce
 			FrameEvent(9, PlayFootstep),
 			FrameEvent(12, function(inst) inst.Physics:SetMotorVelOverride(2, 0, 0) end),
+			FrameEvent(12, DoDiggingShake),
 
 			--Bounce
 			FrameEvent(17, PlayFootstep),

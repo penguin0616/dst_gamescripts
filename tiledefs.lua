@@ -1053,10 +1053,10 @@ TileManager.AddTile(
     {
         name="ocean_ice",
         noise_texture="noise_oceanice",
-        runsound="dontstarve/movement/run_ice",
-        walksound="dontstarve/movement/run_ice",
-        snowsound="dontstarve/movement/run_ice",
-        mudsound="dontstarve/movement/run_ice",
+		runsound="dontstarve/movement/run_iceslab",
+		walksound="dontstarve/movement/walk_iceslab",
+		snowsound="dontstarve/movement/run_iceslab", --shouldn't actually be used:
+		mudsound="dontstarve/movement/run_iceslab", --nogroundoverlays flag should ignore snow/mud levels
         nogroundoverlays = true,
         cannotbedug = true,
         hard = true,

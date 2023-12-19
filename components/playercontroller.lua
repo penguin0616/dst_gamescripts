@@ -3973,8 +3973,11 @@ function PlayerController:OnRightClick(down)
 			end
 		end
 		if not closed then
-			self.inst.replica.inventory:ReturnActiveItem()
-			self:TryAOETargeting()
+			local rider = self.inst.replica.rider
+			if not (rider and rider:IsRiding()) then
+				self.inst.replica.inventory:ReturnActiveItem()
+				self:TryAOETargeting()
+			end
 		end
     elseif act.invobject ~= nil and act.invobject:HasTag("action_pulls_up_map") then
         if self.inst.HUD ~= nil then

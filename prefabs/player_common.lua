@@ -291,6 +291,32 @@ fns.IsChannelCastingItem = function(inst)
 	return inst.player_classified and inst.player_classified.ischannelcastingitem:value()
 end
 
+--Solve for a resultmult so that:
+--    resultmult * mult = MIN(recalcmult, mult)
+local function MinMult(recalcmult, mult)
+	return recalcmult < mult and recalcmult / mult or 1
+end
+
+fns.OnStartChannelCastingItem = function(inst, item)
+	--channelcaster speedmult stacks with other status speedmults
+	--but we don't actually want that
+	--so temporarily adjust the other mults so that when stacked, will equal the min
+	local mult = TUNING.CHANNELCAST_SPEED_MOD
+	inst.components.grogginess:SetSpeedModMultiplier(1 / math.max(TUNING.MAX_GROGGY_SPEED_MOD, mult))
+	inst.components.sandstormwatcher:SetSandstormSpeedMultiplier(MinMult(TUNING.SANDSTORM_SPEED_MOD, mult))
+	inst.components.moonstormwatcher:SetMoonstormSpeedMultiplier(MinMult(TUNING.MOONSTORM_SPEED_MOD, mult))
+	inst.components.miasmawatcher:SetMiasmaSpeedMultiplier(MinMult(TUNING.MIASMA_SPEED_MOD, mult))
+	inst.components.carefulwalker:SetCarefulWalkingSpeedMultiplier(MinMult(TUNING.CAREFUL_SPEED_MOD, mult))
+end
+
+fns.OnStopChannelCastingItem = function(inst)
+	inst.components.grogginess:SetSpeedModMultiplier(1)
+	inst.components.sandstormwatcher:SetSandstormSpeedMultiplier(TUNING.SANDSTORM_SPEED_MOD)
+	inst.components.moonstormwatcher:SetMoonstormSpeedMultiplier(TUNING.MOONSTORM_SPEED_MOD)
+	inst.components.miasmawatcher:SetMiasmaSpeedMultiplier(TUNING.MIASMA_SPEED_MOD)
+	inst.components.carefulwalker:SetCarefulWalkingSpeedMultiplier(TUNING.CAREFUL_SPEED_MOD)
+end
+
 local function ShouldAcceptItem(inst, item)
     if inst:HasTag("playerghost") then
         return item.prefab == "reviver" and inst:IsOnPassablePoint()
@@ -1799,6 +1825,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/shadow_hands.zip"),
         Asset("ANIM", "anim/player_wrap_bundle.zip"),
         Asset("ANIM", "anim/player_hideseek.zip"),
+		Asset("ANIM", "anim/player_slip.zip"),
 
         Asset("ANIM", "anim/player_wardrobe.zip"),
         Asset("ANIM", "anim/player_skin_change.zip"),
@@ -2322,6 +2349,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         end
 
 		inst.components.areaaware:StartWatchingTile(WORLD_TILES.RIFT_MOON)
+		inst.components.areaaware:StartWatchingTile(WORLD_TILES.OCEAN_ICE)
 
         inst:AddComponent("bloomer")
         inst:AddComponent("colouradder")
@@ -2469,6 +2497,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.components.grogginess:SetResistance(3)
         inst.components.grogginess:SetKnockOutTest(ex_fns.ShouldKnockout)
 
+		inst:AddComponent("slipperyfeet")
+
         inst:AddComponent("sleepingbaguser")
 
         inst:AddComponent("colourtweener")
@@ -2497,6 +2527,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:AddComponent("stageactor")
 
 		inst:AddComponent("channelcaster")
+		inst.components.channelcaster:SetOnStartChannelingFn(fns.OnStartChannelCastingItem)
+		inst.components.channelcaster:SetOnStopChannelingFn(fns.OnStopChannelCastingItem)
 
         inst:AddComponent("experiencecollector")
 

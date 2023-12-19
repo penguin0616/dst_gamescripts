@@ -865,7 +865,7 @@ local function pirate_fn()
         local num_loot = 3
         local loot_angle = PI2/num_loot
         for i = 1, num_loot do
-            local r = math.sqrt(math.random())*(PIRATE_BOAT.radius-2) + 1.5
+            local r = math.sqrt(math.random())*(PIRATE_BOAT_DATA.radius-2) + 1.5
             local t = (i + 2 * math.random()) * loot_angle
             SpawnFragment(locus_point, "boards", math.cos(t) * r,  0, math.sin(t) * r, ignitefragments)
         end

@@ -1688,12 +1688,6 @@ local PREFABS =
     ["winter_ornament_boss_mutatedbearger"] = true,
     ["winter_ornament_boss_mutatedwarg"] = true,
 
-    ["winter_ornament_boss_daywalker"] = true,
-    ["winter_ornament_shadowthralls"] = true,
-    ["winter_ornament_boss_mutateddeerclops"] = true,
-    ["winter_ornament_boss_mutatedbearger"] = true,
-    ["winter_ornament_boss_mutatedwarg"] = true,
-
     --[[POI]]
     ["charlie_stage_post"] = true,
     ["beequeenhivegrown"] = true,

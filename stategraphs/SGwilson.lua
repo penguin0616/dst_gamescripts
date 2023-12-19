@@ -333,6 +333,7 @@ local function ConfigureRunState(inst)
         inst.sg.statemem.riding = true
         inst.sg.statemem.groggy = inst:HasTag("groggy")
         inst.sg:AddStateTag("nodangle")
+		inst.sg:AddStateTag("noslip")
 
         local mount = inst.components.rider:GetMount()
         inst.sg.statemem.ridingwoby = mount and mount:HasTag("woby")
@@ -340,11 +341,14 @@ local function ConfigureRunState(inst)
     elseif inst.components.inventory:IsHeavyLifting() then
         inst.sg.statemem.heavy = true
 		inst.sg.statemem.heavy_fast = inst.components.mightiness ~= nil and inst.components.mightiness:IsMighty()
+		inst.sg:AddStateTag("noslip")
 	elseif inst:IsChannelCasting() then
 		inst.sg.statemem.channelcast = true
 		inst.sg.statemem.channelcastitem = inst:IsChannelCastingItem()
     elseif inst:HasTag("wereplayer") then
         inst.sg.statemem.iswere = true
+		inst.sg:AddStateTag("noslip")
+
         if inst:HasTag("weremoose") then
             if inst:HasTag("groggy") then
                 inst.sg.statemem.moosegroggy = true
@@ -368,6 +372,7 @@ local function ConfigureRunState(inst)
         inst.sg.statemem.groggy = true
     elseif inst:IsCarefulWalking() then
         inst.sg.statemem.careful = true
+		inst.sg:AddStateTag("noslip")
     else
         inst.sg.statemem.normal = true
         inst.sg.statemem.normalwonkey = inst:HasTag("wonkey") or nil
@@ -1251,6 +1256,12 @@ local events =
 	EventHandler("devoured", function(inst, data)
 		if not inst.components.health:IsDead() and data ~= nil and data.attacker ~= nil and data.attacker:IsValid() then
 			inst.sg:GoToState("devoured", data.attacker)
+		end
+	end),
+
+	EventHandler("feetslipped", function(inst)
+		if inst.sg:HasStateTag("running") and not inst.sg:HasStateTag("noslip") then
+			inst.sg:GoToState("slip")
 		end
 	end),
 
@@ -18750,7 +18761,277 @@ local states =
 			end),
 		},
 	},
+
 	--------------------------------------------------------------------------
+	--Slipping states
+
+	State{
+		name = "slip",
+		tags = { "busy", "nopredict", "nomorph", "jumping", "overridelocomote" },
+
+		onenter = function(inst)
+			ForceStopHeavyLifting(inst)
+			inst.components.locomotor:Stop()
+			inst:ClearBufferedAction()
+
+			if inst.components.slipperyfeet then
+				inst.components.slipperyfeet:SetCurrent(0)
+			end
+
+			inst.AnimState:PlayAnimation("slip_pre")
+			inst.AnimState:PushAnimation("slip_loop", false)
+
+			inst.sg.statemem.speed = inst.components.locomotor:GetRunSpeed()
+			inst.Physics:SetMotorVel(inst.sg.statemem.speed * 0.6, 0, 0)
+
+			inst.player_classified.busyremoteoverridelocomote:set(true)
+			inst.sg.statemem.trackcontrol = true
+		end,
+
+		onupdate = function(inst)
+			if inst.sg.statemem.trackcontrol then
+				if inst.HUD then
+					local deadzone = TUNING.CONTROLLER_DEADZONE_RADIUS
+					if math.abs(TheInput:GetAnalogControlValue(CONTROL_MOVE_RIGHT) - TheInput:GetAnalogControlValue(CONTROL_MOVE_LEFT)) >= deadzone or
+						math.abs(TheInput:GetAnalogControlValue(CONTROL_MOVE_UP) - TheInput:GetAnalogControlValue(CONTROL_MOVE_DOWN)) >= deadzone
+					then
+						if inst.sg.statemem.checkfall then
+							inst.sg.statemem.slipping = true
+							inst.sg:GoToState("slip_fall", inst.sg.statemem.speed * 0.25)
+							return
+						end
+						inst.sg.statemem.controltick = GetTick()
+					end
+				end
+
+				if inst.sg.statemem.trystoptracking and GetTick() - inst.sg.statemem.controltick > 10 then
+					inst.sg.statemem.trackcontrol = false
+				end
+			end
+		end,
+
+		timeline =
+		{
+			FrameEvent(6, function(inst) inst.Physics:SetMotorVel(inst.sg.statemem.speed * 0.3, 0, 0) end),
+			FrameEvent(12, function(inst) inst.Physics:SetMotorVel(inst.sg.statemem.speed * 0.25, 0, 0) end),
+			FrameEvent(18, function(inst) inst.Physics:SetMotorVel(inst.sg.statemem.speed * 0.2, 0, 0) end),
+
+			FrameEvent(18, function(inst)
+				inst.sg.statemem.checkfall = true
+			end),
+			FrameEvent(20, function(inst)
+				if inst.sg.statemem.controltick then
+					inst.sg.statemem.trystoptracking = true
+				else
+					inst.sg.statemem.trackcontrol = false
+				end
+			end),
+		},
+
+		events =
+		{
+			EventHandler("locomote", function(inst, data)
+				if inst.sg.statemem.trackcontrol and data and data.remoteoverridelocomote or inst.components.locomotor:WantsToMoveForward() then
+					if inst.sg.statemem.checkfall then
+						inst.sg.statemem.slipping = true
+						inst.sg:GoToState("slip_fall", inst.sg.statemem.speed * 0.25)
+						return
+					end
+					inst.sg.statemem.controltick = GetTick()
+				end
+				return true
+			end),
+			EventHandler("animqueueover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg.statemem.slipping = true
+					inst.sg:GoToState("slip_pst", inst.sg.statemem.speed)
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.slipping then
+				inst.Physics:SetMotorVel(0, 0, 0)
+				inst.Physics:Stop()
+			end
+			inst.player_classified.busyremoteoverridelocomote:set(false)
+		end,
+	},
+
+	State{
+		name = "slip_pst",
+		tags = { "busy", "nopredict", "nomorph", "jumping" },
+
+		onenter = function(inst, speed)
+			inst.AnimState:PlayAnimation("slip_pst")
+			inst.sg.statemem.speed = speed or inst.components.locomotor:GetRunSpeed()
+			inst.Physics:SetMotorVel(inst.sg.statemem.speed * 0.15, 0, 0)
+		end,
+
+		timeline =
+		{
+			FrameEvent(2, function(inst) inst.Physics:SetMotorVel(inst.sg.statemem.speed * 0.1, 0, 0) end),
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			inst.Physics:SetMotorVel(0, 0, 0)
+			inst.Physics:Stop()
+		end,
+	},
+
+	State{
+		name = "slip_fall",
+		tags = { "busy", "nopredict", "nomorph", "jumping" },
+
+		onenter = function(inst, speed)
+			ForceStopHeavyLifting(inst)
+			inst.components.locomotor:Stop()
+			inst:ClearBufferedAction()
+
+			if inst.components.slipperyfeet then
+				inst.components.slipperyfeet:SetCurrent(0)
+			end
+
+			inst.AnimState:PlayAnimation("slip_fall_pre")
+
+			if speed then
+				inst.sg.statemem.speed = speed
+				inst.Physics:SetMotorVel(speed * 0.8, 0, 0)
+			end
+		end,
+
+		timeline =
+		{
+			FrameEvent(9, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve/movement/bodyfall_dirt")
+				PlayFootstep(inst)
+			end),
+			FrameEvent(11, function(inst)
+				DoHurtSound(inst)
+				if inst.sg.statemem.speed then
+					inst.Physics:SetMotorVel(inst.sg.statemem.speed * 0.64, 0, 0)
+				end
+			end),
+			--held 2 frames on purpose =P
+			FrameEvent(13, function(inst)
+				if inst.sg.statemem.speed then
+					inst.Physics:SetMotorVel(inst.sg.statemem.speed * 0.32, 0, 0)
+				end
+			end),
+			FrameEvent(14, function(inst)
+				if inst.sg.statemem.speed then
+					inst.Physics:SetMotorVel(inst.sg.statemem.speed * 0.16, 0, 0)
+				end
+			end),
+			FrameEvent(15, function(inst)
+				if inst.sg.statemem.speed then
+					inst.Physics:SetMotorVel(inst.sg.statemem.speed * 0.08, 0, 0)
+				end
+			end),
+			FrameEvent(16, function(inst)
+				if inst.sg.statemem.speed then
+					inst.Physics:SetMotorVel(inst.sg.statemem.speed * 0.04, 0, 0)
+				end
+			end),
+			FrameEvent(17, function(inst)
+				if inst.sg.statemem.speed then
+					inst.Physics:SetMotorVel(0, 0, 0)
+					inst.Physics:Stop()
+				end
+			end),
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("slip_fall_loop")
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			if inst.sg.statemem.speed then
+				inst.Physics:SetMotorVel(0, 0, 0)
+				inst.Physics:Stop()
+			end
+		end,
+	},
+
+	State{
+		name = "slip_fall_loop",
+		tags = { "busy", "nomorph", "overridelocomote" },
+
+		onenter = function(inst)
+			ForceStopHeavyLifting(inst)
+			inst.components.locomotor:Stop()
+			inst:ClearBufferedAction()
+
+			if inst.components.slipperyfeet then
+				inst.components.slipperyfeet:SetCurrent(0)
+			end
+
+			inst.AnimState:PlayAnimation("slip_fall_idle")
+
+			inst.player_classified.busyremoteoverridelocomote:set(true)
+		end,
+
+		onupdate = function(inst)
+			if inst.HUD then
+				local deadzone = TUNING.CONTROLLER_DEADZONE_RADIUS
+				if math.abs(TheInput:GetAnalogControlValue(CONTROL_MOVE_RIGHT) - TheInput:GetAnalogControlValue(CONTROL_MOVE_LEFT)) >= deadzone or
+					math.abs(TheInput:GetAnalogControlValue(CONTROL_MOVE_UP) - TheInput:GetAnalogControlValue(CONTROL_MOVE_DOWN)) >= deadzone
+				then
+					inst.sg:GoToState("slip_fall_pst")
+				end
+			end
+		end,
+
+		events =
+		{
+			EventHandler("locomote", function(inst, data)
+				if data ~= nil and data.remoteoverridelocomote or inst.components.locomotor:WantsToMoveForward() then
+					inst.sg:GoToState("slip_fall_pst")
+				end
+				return true
+			end),
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("slip_fall_pst")
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			inst.player_classified.busyremoteoverridelocomote:set(false)
+		end,
+	},
+
+	State{
+		name = "slip_fall_pst",
+		tags = { "busy", "nomorph" },
+
+		onenter = function(inst)
+			inst.AnimState:PlayAnimation("slip_fall_pst")
+		end,
+
+		timeline =
+		{
+			FrameEvent(6, function(inst) PlayFootstep(inst, 0.6) end),
+			FrameEvent(12, function(inst)
+				inst.sg:GoToState("idle", true)
+			end),
+		},
+	},
 }
 
 local hop_timelines =

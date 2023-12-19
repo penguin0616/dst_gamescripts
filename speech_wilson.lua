@@ -77,6 +77,7 @@ return {
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "I think that's enough for one day.",
             MANNEQUIN_EQUIPSWAPFAILED = "I don't think he can wear this.",
             PILLOWFIGHT_NO_HANDPILLOW = "I need a pillow to fight with!",
+            NOTMYBERNIE = "My stuffed toy isn't so scary.",
 		},
 		OPEN_CRAFTING =
 		{

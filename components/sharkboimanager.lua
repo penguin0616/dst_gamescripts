@@ -663,6 +663,18 @@ function self:FindAndPlaceOceanArenaOverTime()
     self:TryToPlaceOceanArena()
 end
 
+function self:LongUpdate(dt)
+    if self.arena ~= nil then
+        if self.arena.cooldowntask ~= nil then
+            local remaining = GetTaskRemaining(self.arena.cooldowntask)
+            self.arena.cooldowntask:Cancel()
+            self.arena.cooldowntask = nil
+            local scheduledtime = math.max(remaining - dt, 0)
+            self.arena.cooldowntask = self.inst:DoTaskInTime(scheduledtime, self.OnCooldownEnd)
+        end
+    end
+end
+
 --------------------------------------------------------------------------
 --[[ Save/Load ]]
 --------------------------------------------------------------------------

@@ -127,6 +127,7 @@ function Wheel:SetItems( dataset, radius, focus_radius, dataset_name )
 				if w:IsEnabled() and not (w:IsSelected() or w:IsDisabledState()) then
 					w:MoveTo(v.pos, v.focus_pos, 0.1)
 					self.selected_label:SetString(v.label)
+					self.selected_label._currentwidget = w
 
 					local offset = Vector3(0,50,0)
 					local newpos = v.pos + offset
@@ -143,9 +144,11 @@ function Wheel:SetItems( dataset, radius, focus_radius, dataset_name )
 				if w:IsEnabled() and not (w:IsSelected() or w:IsDisabledState()) then
 					w:MoveTo( v.focus_pos, v.pos, 0.25 )
 				end
-				self.selected_label:SetString("")
+				if self.selected_label._currentwidget == w then
+					self.selected_label:SetString("")
+				end
 			end
-		
+
 		if v.helptext ~= nil then
 			w:SetHelpTextMessage(v.helptext)
 		end
@@ -189,11 +192,13 @@ function Wheel:Open(dataset_name)
 	self:Show()
 	self:Disable()
 	self:SetClickable(false)
-	self.cur_cell_index = 1
+	self.cur_cell_index = 0
 
-	self.selected_label:SetPosition(0, self.activeitems[1].pos.y * -0.5 )
+	self.selected_label:SetPosition(0, 0)
+	self.selected_label:SetString("")
+	self.selected_label._currentwidget = nil
 
-	local selected = self.activeitems[1]
+	local selected
 	for i, v in ipairs(self.activeitems) do
 		local disabled = v.checkenabled and not v.checkenabled(self.owner)
 		if v.checkcooldown then
@@ -204,12 +209,18 @@ function Wheel:Open(dataset_name)
 					if forceinit or v.widget.enabled then
 						v.widget:Disable()
 					end
+					if self.cur_cell_index == i then
+						self.cur_cell_index = 0
+					end
 					cooldown:GetAnimState():SetPercent("cooldown", math.clamp(1 - cd, 0, 1))
 					cooldown:Show()
 				else
 					if disabled then
 						if forceinit or v.widget.enabled then
 							v.widget:Disable()
+						end
+						if self.cur_cell_index == i then
+							self.cur_cell_index = 0
 						end
 					elseif forceinit or not v.widget.enabled then
 						v.widget:Enable()
@@ -225,22 +236,24 @@ function Wheel:Open(dataset_name)
 		else
 			v.widget:Enable()
 		end
-		if v.selected then
+		if (v.selected or selected == nil) and v.widget.enabled then
 			selected = v
+			self.cur_cell_index = i
 		end
 		v.widget:MoveTo( Vector3(0,0,0), v.pos, 0.25 )
 		v.widget:Show()
 	end
 	if selected ~= nil then
-		local focus = selected.widget.enabled and self.iscontroller
-		if focus then
-			selected.widget:SetFocus()
-		end
-		selected.widget:MoveTo( Vector3(0,0,0), focus and selected.focus_pos or selected.pos, 0.25,
+		selected.widget:MoveTo(Vector3(0,0,0), self.iscontroller and not selected.widget:IsDisabledState() and selected.focus_pos or selected.pos, 0.25,
 			function()
 				self:SetClickable(true)
 				self:Enable()
 				if self.iscontroller then
+					if not selected.widget:IsDisabledState() then
+						selected.widget:SetFocus()
+					elseif self.activeitems[self.cur_cell_index] == selected then
+						self.cur_cell_index = 0
+					end
 					self:StartUpdating()
 				end
 			end)

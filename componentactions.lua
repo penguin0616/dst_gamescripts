@@ -1613,6 +1613,12 @@ local COMPONENT_ACTIONS =
     {
         aoespell = function(inst, doer, pos, actions, right, target)
 			if right then
+				if doer.HUD and doer.components.playercontroller and not doer.components.playercontroller:IsAOETargeting() then
+					--@V2C: #FORGE_AOE_RCLICK *searchable*
+					--      -Forge used to strip all r.click actions even before starting aoe targeting,
+					--       so this early out was not needed until now.
+					return
+				end
 				local inventory = doer.replica.inventory
 				if inventory ~= nil and inventory:GetActiveItem() ~= nil then
 					return

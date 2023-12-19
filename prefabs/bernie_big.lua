@@ -150,11 +150,15 @@ local function IsTargetable(inst, target)
                         target.components.combat.target:HasTag("companion")
                     )
                 )
+                or
+                (   inst.bernieleader and 
+                    inst.bernieleader.components.combat:HasTarget() and
+                    inst.bernieleader.components.combat.target == target  )
             )
 end
 
 local TAUNT_MUST_TAGS = { "_combat" }
-local TAUNT_CANT_TAGS = { "INLIMBO", "player", "companion", "epic", "notaunt" }
+local TAUNT_CANT_TAGS = { "INLIMBO", "player", "companion", "epic", "notaunt"}
 local TAUNT_ONEOF_TAGS = { "locomotor", "lunarthrall_plant" }
 local function TauntCreatures(inst)
     if not inst.components.health:IsDead() then
@@ -174,8 +178,8 @@ local function OnLoad(inst)
 end
 
 local RETARGET_MUST_TAGS = { "_combat" }
-local RETARGET_CANT_TAGS = { "INLIMBO", "player", "companion" }
-local RETARGET_ONEOF_TAGS = { "locomotor", "epic", "lunarthrall_plant_end"}
+local RETARGET_CANT_TAGS = { "INLIMBO", "player", "companion", "retaliates"}
+local RETARGET_ONEOF_TAGS = { "locomotor", "epic", "NPCcanaggro"}
 
 local function RetargetFn(inst)
     if inst.components.combat:HasTarget() then
@@ -190,7 +194,7 @@ local function RetargetFn(inst)
 end
 
 local function KeepTargetFn(inst, target)
-    return inst.components.combat:CanTarget(target) and inst:IsNear(target, TARGET_DIST)
+    return inst.components.combat:CanTarget(target) and inst:IsNear(target, TARGET_DIST) and not target:HasTag("retaliates")
 end
 
 local function OnAttacked(inst, data)
@@ -549,6 +553,22 @@ local function ClearBernieSkinBuild(inst)
     inst.AnimState:SetBuild("bernie_build")
 end
 
+local function canactivate(inst,doer)
+    if doer ~= inst.bernieleader then
+        return false, "NOTMYBERNIE"
+    end
+    return true
+end
+
+local function GetVerb()
+    return "CALM"
+end
+
+local function OnActivate(inst, doer)    
+    inst.should_shrink = true
+    return true
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -570,6 +590,8 @@ local function fn()
     inst.AnimState:PlayAnimation("idle_loop", true)
 
     inst.MiniMapEntity:SetIcon("bernie.png")
+
+    inst.GetActivateVerb = GetVerb
 
     inst:AddTag("largecreature")
     inst:AddTag("companion")
@@ -620,6 +642,12 @@ local function fn()
 
     inst:AddComponent("timer")
 
+    inst:AddComponent("activatable")
+    inst.components.activatable.CanActivateFn = canactivate
+    inst.components.activatable.OnActivate = OnActivate
+    
+    inst.components.activatable.quickaction = true
+
     inst:AddComponent("hauntable")
     inst.components.hauntable:SetHauntValue(TUNING.HAUNT_TINY)
 
@@ -636,6 +664,7 @@ local function fn()
     inst.onLeaderChanged = onLeaderChanged
     inst.isleadercrazy = commonfn.isleadercrazy
     inst.CheckForAllegiances = CheckForAllegiances
+    inst.hotheaded = commonfn.hotheaded
 
     inst:ListenForEvent("attacked", OnAttacked)
 

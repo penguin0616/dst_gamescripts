@@ -189,7 +189,7 @@ local song_defs =
         ATTACH_FX = "battlesong_attach",
         LOOP_FX = "battlesong_lunaraligned_fx",
         DETACH_FX = "battlesong_detach",
-        SOUND = "meta3/wigfrid/battlesong_lunar",
+        SOUND = "dontstarve_DLC001/characters/wathgrithr/song/lunar",
         RESTRICTED_TAG = "battlesonglunaralignedmaker",
     },
 
@@ -218,7 +218,7 @@ local song_defs =
         ATTACH_FX = "battlesong_attach",
         LOOP_FX = "battlesong_shadowaligned_fx",
         DETACH_FX = "battlesong_detach",
-        SOUND = "meta3/wigfrid/battlesong_shadow",
+        SOUND = "dontstarve_DLC001/characters/wathgrithr/song/shadow",
         RESTRICTED_TAG = "battlesongshadowalignedmaker",
     },
 

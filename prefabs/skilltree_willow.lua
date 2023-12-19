@@ -270,6 +270,21 @@ local function BuildSkillsData(SkillTreeFns)
             pos = {CAT2+WGAP+B1X,TOP-HGAP+B1Y-4},
             group = "bernie",
             tags = {"bernie"},
+            connects = {
+                "willow_bernieai",
+            }
+        },
+
+        willow_bernieai = {
+            title = STRINGS.SKILLTREE.WILLOW.WILLOW_BERNIEAI_TITLE,
+            desc = STRINGS.SKILLTREE.WILLOW.WILLOW_BERNIEAI_DESC,
+            icon = "willow_bernieai",
+            pos = {CAT2+WGAP+B1X,TOP-HGAP-HGAP+B1Y-8},
+            group = "bernie",
+            tags = {"bernie"},
+            onactivate = function(inst, fromload)
+
+                end,
         },
 
         willow_berniespeed_1 = {
@@ -365,21 +380,6 @@ local function BuildSkillsData(SkillTreeFns)
                         end
                     end
                 end,               
-        },
-
-
-        willow_bernieai = {
-            title = STRINGS.SKILLTREE.WILLOW.WILLOW_BERNIEAI_TITLE,
-            desc = STRINGS.SKILLTREE.WILLOW.WILLOW_BERNIEAI_DESC,
-            icon = "willow_bernieai",
-            pos = {CAT2+WGAP+B2X,TOP-HGAP-HGAP-HGAP-HGAP+B2Y+20},
-            --pos = {1,0},
-            group = "bernie",
-            tags = {"bernie"},
-            onactivate = function(inst, fromload)
-                    --inst:AddTag("alchemist")
-                end,
-            root = true,
         },
 
         willow_bernie_lock_2 = {

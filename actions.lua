@@ -2273,9 +2273,16 @@ ACTIONS.RESETMINE.fn = function(act)
 end
 
 ACTIONS.ACTIVATE.fn = function(act)
-    if act.target.components.activatable ~= nil and (act.target.components.burnable == nil or not (act.target.components.burnable:IsSmoldering() or act.target.components.burnable:IsBurning())) and act.target.components.activatable:CanActivate(act.doer) then
-        local success, msg = act.target.components.activatable:DoActivate(act.doer)
-        return (success ~= false), msg -- note: for legacy reasons, nil will be true
+    
+    if act.target.components.activatable ~= nil and (act.target.components.burnable == nil or not (act.target.components.burnable:IsSmoldering() or act.target.components.burnable:IsBurning())) then
+
+        local success, msg = act.target.components.activatable:CanActivate(act.doer)
+        if success == false then
+            return false, msg        
+        else
+            success, msg = act.target.components.activatable:DoActivate(act.doer)
+            return (success ~= false), msg -- note: for legacy reasons, nil will be true
+        end
     end
 end
 

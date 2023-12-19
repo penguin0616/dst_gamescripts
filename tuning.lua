@@ -6775,6 +6775,11 @@ function Tune(overrides)
             -- Lighter light radius.
             WILLOW_BRIGHTNESS_1 = 2.5,
             WILLOW_BRIGHTNESS_2 = 4,
+            
+            WILLOW_ALLEGIANCE_SHADOW_RESIST = 0.9,
+            WILLOW_ALLEGIANCE_VS_LUNAR_BONUS = 1.1,
+            WILLOW_ALLEGIANCE_LUNAR_RESIST = 0.9,
+            WILLOW_ALLEGIANCE_VS_SHADOW_BONUS = 1.1,            
 
             WATHGRITHR = {
                 BATTLESONG_INSTANT_COOLDOWN = 15,
@@ -6809,6 +6814,7 @@ function Tune(overrides)
                 ALLEGIANCE_VS_LUNAR_BONUS = 1.1,
                 ALLEGIANCE_LUNAR_RESIST = 0.9,
                 ALLEGIANCE_VS_SHADOW_BONUS = 1.1,
+
             },
           
         },
@@ -7279,10 +7285,6 @@ function Tune(overrides)
 
         BERNIE_BURNING_REFLECT_DAMAGE = 50,
 
-        WILLOW_ALLEGIANCE_SHADOW_RESIST = 0.9,
-        WILLOW_ALLEGIANCE_VS_LUNAR_BONUS = 1.1,
-        WILLOW_ALLEGIANCE_LUNAR_RESIST = 0.9,
-        WILLOW_ALLEGIANCE_VS_SHADOW_BONUS = 1.1,
 
         WILLOW_SHADOW_FIRE_COOLDOWN = 8,
         WILLOW_LUNAR_FIRE_COOLDOWN = 13,
