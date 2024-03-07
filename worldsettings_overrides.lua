@@ -2900,6 +2900,41 @@ local applyoverrides_pre = {
         }
         OverrideTuningVariables(tuning_vars[difficulty])
     end,
+    lunarhail_frequency = function(difficulty)
+        local tuning_vars =
+        {
+            never = {
+                LUNARHAIL_EVENT_COOLDOWN = NEVER_TIME,
+            },
+            rare = {
+                LUNARHAIL_EVENT_COOLDOWN = 25 * TUNING.TOTAL_DAY_TIME,
+            },
+            --[[default = {
+                LUNARHAIL_EVENT_COOLDOWN = 10 * TUNING.TOTAL_DAY_TIME,
+            },]]
+            often = {
+                LUNARHAIL_EVENT_COOLDOWN = 5 * TUNING.TOTAL_DAY_TIME,
+            },
+            always = {
+                LUNARHAIL_EVENT_COOLDOWN = 1,
+            },
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
+    acidrain_enabled = function(difficulty)
+        local tuning_vars =
+        {
+            none = {
+                ACIDRAIN_ENALBED = false
+            },
+            --[[
+            always = {
+                ACIDRAIN_ENALBED = true,
+            },
+            ]]
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
 
     --survivors
 	extrastartingitems = function(difficulty)

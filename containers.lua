@@ -784,6 +784,8 @@ params.treasurechest =
         slotpos = {},
         animbank = "ui_chest_3x3",
         animbuild = "ui_chest_3x3",
+        animbank_upgraded = "ui_chest_upgraded_3x3",
+        animbuild_upgraded = "ui_chest_upgraded_3x3",
         pos = Vector3(0, 200, 0),
         side_align_tip = 160,
     },

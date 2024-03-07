@@ -523,6 +523,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "My brain's grown three sizes this day!",
 	ANNOUNCE_HOUNDS = "The beasts are baying!",
 	ANNOUNCE_WORMS = "Something approaches from beneath!",
+    ANNOUNCE_ACIDBATS = "That sounds like bats.",
 	ANNOUNCE_HUNGRY = "Oh no, I'm hungry again.",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "I love a game of hide and seek!",
 	ANNOUNCE_HUNT_LOST_TRAIL = "You win this round!",
@@ -908,6 +909,8 @@ return{
     ANNOUNCE_SCRAPBOOK_FULL = "I already know everything there is to know, hyuyu!",
 
     ANNOUNCE_CHAIR_ON_FIRE = "This is fine.",
+
+    ANNOUNCE_HEALINGSALVE_ACIDBUFF_DONE = "Oh what a pain, I'm not safe from acid rain!",
 
     ANNOUNCE_COACH = 
     {
@@ -1450,18 +1453,25 @@ return{
         {
             GENERIC = "A massive mushroom! Did I quaff a shrinking potion?",
             BLOOM = "Delightfully disgusting!",
+            ACIDCOVERED = "Me thinks it stinks.",
         },
         MUSHTREE_MEDIUM =
         {
             GENERIC = "A massive mushroom! Did I quaff a shrinking potion?",
             BLOOM = "How wonderfully un-wonderful!",
+            ACIDCOVERED = "Me thinks it stinks.",
         },
         MUSHTREE_SMALL =
         {
             GENERIC = "A massive mushroom! Did I quaff a shrinking potion?",
             BLOOM = "Hyuyu! How wretched!",
+            ACIDCOVERED = "Me thinks it stinks.",
         },
-        MUSHTREE_TALL_WEBBED = "She's shy so she's wearing her veil.",
+        MUSHTREE_TALL_WEBBED =
+        {
+            GENERIC = "She's shy so she's wearing her veil.",
+            ACIDCOVERED = "Me thinks it stinks.",
+        },
         SPORE_TALL =
         {
             GENERIC = "Dazzling!",
@@ -2592,6 +2602,7 @@ return{
 		SILK = "A present from the spider's ilk.",
 		SKELETON = "The soul is long gone.",
 		SCORCHED_SKELETON = "Someone had a whoopsie.",
+        SKELETON_NOTPLAYER = "Love to stay and chew the fat, but you seem lacking of that.",
 		SKULLCHEST = "Let me take a peek inside!", --removed
 		SMALLBIRD =
 		{
@@ -2708,8 +2719,10 @@ return{
 		{
 			GENERIC = "A storage place for bits and bobs.",
 			BURNT = "Oh no, our treasure!",
+            UPGRADED_STACKSIZE = "There's room to spare for things in there.",
 		},
 		TREASURECHEST_TRAP = "What have we here?",
+        CHESTUPGRADE_STACKSIZE = "Now that's bending the rules a little, hyuyu!", -- Describes the kit upgrade item.
 		SACRED_CHEST =
 		{
 			GENERIC = "Ooohoohoo, it's probably cursed!",
@@ -3008,6 +3021,8 @@ return{
 		WALL_MOONROCK_ITEM = "It's of no use there on the ground.",
 		WALL_DREADSTONE = "To keep you out, or keep me in?",
 		WALL_DREADSTONE_ITEM = "It's of no use there on the ground.",
+        WALL_SCRAP = "Who would have thunk? A wall of junk.",
+        WALL_SCRAP_ITEM = "Who would have thunk? A wall of junk.",
 		FENCE = "To keep you out, or keep me in?",
         FENCE_ITEM = "It's of no use there on the ground.",
         FENCE_GATE = "For temporary visiting.",
@@ -4118,6 +4133,7 @@ return{
         DUSTMERINGUE = "Hyuyuyu! The pranks I could pull with these!",
 
         SHROOMCAKE = "There's no room in my stomach, I'm afraid.",
+        SHROOMBAIT = "As sure as the oozing, this'll have you snoozing.",
 
         NIGHTMAREGROWTH = "Methinks we'd best be on our way!",
 
@@ -4848,6 +4864,12 @@ return{
 			GENERIC = "A terrible fate, to be locked in this state.",
 			EXPOSED = "Why hide this stone inside?",
 		},
+		DAYWALKER2 =
+		{
+			GENERIC = "Freed indeed.",
+			BURIED = "Just my luck to find him stuck… again.",
+			HOSTILE = "Not to belabor, but you've a pattern of behavior.",
+		},
 		ARMORDREADSTONE = "All blows will be blocked by this armor of rock.",
 		DREADSTONEHAT = "A stone fortress for my brain.",
 
@@ -5100,6 +5122,22 @@ return{
         MASTUPGRADE_LAMP_ITEM_YOTD = "A light to lead us through the night.",
         WALKINGPLANK_YOTD = "A last resort, dressed up for sport.",
         CHESSPIECE_YOTD = "From hot to stone cold.",
+
+        -- Rifts / Meta QoL
+
+        HEALINGSALVE_ACID = "It'll heal, seal, even congeal! Get Slimy Salve today! What a steal!",
+
+        BEESWAX_SPRAY = "A frightful fragrance for freezing flora!",
+        WAXED_PLANT = "It's kept fresh with fear.", -- Used for all waxed plants, from farm plants to trees.
+
+        STORAGE_ROBOT = {
+            GENERIC = "Ol' Kramps would love this.",
+            BROKEN = "It either starts, or we harvest for parts!",
+        },
+
+        FENCE_JUNK = "A metal fence for our defense.",
+        JUNK_PILE = "Could it hide a surprise inside?",
+        JUNK_PILE_BIG = "I won't fall for that, hyuyu!",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",

@@ -331,6 +331,7 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"moonrockidol",
 	"multiplayer_portal_moonrock_constr_plans",
 	"lunar_forge_kit",
+	"moon_mushroomhat",
 
 	----MOON_ALTAR-----
 	"moonglassaxe",
@@ -361,6 +362,7 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"voidcloth_umbrella",
 	"voidcloth_scythe",
 	"voidcloth_kit",
+	"beeswax_spray",
 
 	-- Hermit Crab
 	"hermitshop_hermit_bundle_shells",
@@ -695,6 +697,7 @@ CRAFTING_FILTERS.PROTOTYPERS.recipes =
 	"yotb_beefaloshrine",
 	"yot_catcoonshrine",
 	"yotr_rabbitshrine",
+	"yotd_dragonshrine",
 }
 
 CRAFTING_FILTERS.REFINE.recipes =
@@ -834,6 +837,7 @@ CRAFTING_FILTERS.RESTORATION.recipes =
     "wx78module_bee",
 
 	"healingsalve",
+	"healingsalve_acid",
 	"bandage",
 	"tillweedsalve",
 	"compostwrap",
@@ -983,6 +987,7 @@ CRAFTING_FILTERS.CONTAINERS.recipes =
 	"seedpouch",
 	"candybag",
 	"treasurechest",
+    "chestupgrade_stacksize",
 	"dragonflychest",
 	"magician_chest",
 	"icebox",
@@ -1004,6 +1009,7 @@ CRAFTING_FILTERS.STRUCTURES.recipes =
 	"yotb_beefaloshrine",
 	"yot_catcoonshrine",
 	"yotr_rabbitshrine",
+	"yotd_dragonshrine",
 
 	"researchlab",
 	"researchlab2",
@@ -1077,8 +1083,10 @@ CRAFTING_FILTERS.STRUCTURES.recipes =
 	"wall_hay_item",
 	"wall_wood_item",
 	"wall_stone_item",
-	"wall_moonrock_item",
+	"wall_scrap_item",
+	"wall_moonrock_item",	
 	"wall_dreadstone_item",
+
 
 	"homesign",
 	"arrowsign_post",

@@ -1245,6 +1245,23 @@ PREFAB_SKINS = {
 		"treasurechest_steamertrunk",
 		"treasurechest_traincase",
 		"treasurechest_traveltrunk",
+		"treasurechest_upgraded_ancient",
+		"treasurechest_upgraded_cake",
+		"treasurechest_upgraded_carpetbag",
+		"treasurechest_upgraded_corruption",
+		"treasurechest_upgraded_cotl_basic",
+		"treasurechest_upgraded_cotl_fancy",
+		"treasurechest_upgraded_crimson",
+		"treasurechest_upgraded_cupid",
+		"treasurechest_upgraded_gingerbread",
+		"treasurechest_upgraded_monster",
+		"treasurechest_upgraded_posh",
+		"treasurechest_upgraded_poshprint",
+		"treasurechest_upgraded_sacred",
+		"treasurechest_upgraded_steamertrunk",
+		"treasurechest_upgraded_traincase",
+		"treasurechest_upgraded_traveltrunk",
+		"treasurechest_upgraded_vintage",
 		"treasurechest_vintage",
 	},
 	trophyscale_fish =
@@ -1897,6 +1914,27 @@ PREFAB_SKINS = {
 	},
 
 }
+
+PREFAB_SKINS_SHOULD_NOT_SELECT = {
+	["treasurechest_upgraded_ancient"] = true,
+	["treasurechest_upgraded_cake"] = true,
+	["treasurechest_upgraded_carpetbag"] = true,
+	["treasurechest_upgraded_corruption"] = true,
+	["treasurechest_upgraded_cotl_basic"] = true,
+	["treasurechest_upgraded_cotl_fancy"] = true,
+	["treasurechest_upgraded_crimson"] = true,
+	["treasurechest_upgraded_cupid"] = true,
+	["treasurechest_upgraded_gingerbread"] = true,
+	["treasurechest_upgraded_monster"] = true,
+	["treasurechest_upgraded_posh"] = true,
+	["treasurechest_upgraded_poshprint"] = true,
+	["treasurechest_upgraded_sacred"] = true,
+	["treasurechest_upgraded_steamertrunk"] = true,
+	["treasurechest_upgraded_traincase"] = true,
+	["treasurechest_upgraded_traveltrunk"] = true,
+	["treasurechest_upgraded_vintage"] = true,
+}
+
 
 PREFAB_SKINS_IDS = {}
 for prefab,skins in pairs(PREFAB_SKINS) do

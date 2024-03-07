@@ -288,6 +288,9 @@ Recipe2("archive_resonator_item",			{Ingredient("moonrocknugget", 1), Ingredient
 
 
 Recipe2("healingsalve",						{Ingredient("ash", 2), Ingredient("rocks", 1), Ingredient("spidergland",1)},							TECH.SCIENCE_ONE)
+-- NOTES(JBK): The healingsalve_acid recipe must keep slurtleslime as an ingredient for side effect of passifying Snurtle and Slurtle.
+-- Marble is used for the mortar and pestle. Nitre for the resistance.
+Recipe2("healingsalve_acid",				{Ingredient("healingsalve", 1), Ingredient("nitre", 1), Ingredient("marble", 1), Ingredient("slurtleslime", 1)},					TECH.SCIENCE_TWO)
 Recipe2("tillweedsalve",					{Ingredient("tillweed", 4), Ingredient("petals", 4), Ingredient("charcoal", 1)}, 						TECH.SCIENCE_TWO)
 Recipe2("bandage",							{Ingredient("papyrus", 1), Ingredient("honey", 2)},														TECH.SCIENCE_TWO)
 Recipe2("reviver",							{Ingredient("cutgrass", 3), Ingredient("spidergland", 1), Ingredient(CHARACTER_INGREDIENT.HEALTH, 40)},	TECH.NONE)
@@ -426,11 +429,13 @@ Recipe2("beargervest", 						{Ingredient("bearger_fur", 1), Ingredient("sweaterv
 Recipe2("eyebrellahat", 					{Ingredient("deerclops_eyeball", 1), Ingredient("twigs", 15), Ingredient("boneshard", 4)}, 		TECH.SCIENCE_TWO)
 Recipe2("red_mushroomhat", 					{Ingredient("red_cap", 6)}, 																	TECH.LOST)
 Recipe2("green_mushroomhat",				{Ingredient("green_cap", 6)},																	TECH.LOST)
-Recipe2("blue_mushroomhat",					{Ingredient("blue_cap", 6)}, 																	TECH.LOST)
+Recipe2("blue_mushroomhat",					{Ingredient("blue_cap", 6)},																	TECH.LOST)
+Recipe2("moon_mushroomhat",					{Ingredient("moon_cap", 4), Ingredient("red_mushroomhat",1)},									TECH.CELESTIAL_ONE)
 Recipe2("polly_rogershat",					{Ingredient("monkey_mediumhat", 1),Ingredient("feather_canary", 1),Ingredient("blackflag",1)},	TECH.LOST)
 
 Recipe2("treasurechest",					{Ingredient("boards", 3)},																		TECH.SCIENCE_ONE,			{placer="treasurechest_placer",		min_spacing=1})
 Recipe2("dragonflychest",					{Ingredient("dragon_scales", 1), Ingredient("boards", 4), Ingredient("goldnugget", 10)},		TECH.SCIENCE_TWO,			{placer="dragonflychest_placer",	min_spacing=1.5})
+Recipe2("chestupgrade_stacksize",			{Ingredient("wagpunk_bits", 4), Ingredient("purebrilliance", 2), Ingredient("alterguardianhatshard", 1)},		TECH.LOST)
 Recipe2("icebox",							{Ingredient("goldnugget", 2), Ingredient("gears", 1), Ingredient("cutstone", 1)},				TECH.SCIENCE_TWO,			{placer="icebox_placer",			min_spacing=1.5})
 Recipe2("saltbox",							{Ingredient("saltrock", 10), Ingredient("bluegem", 1), Ingredient("cutstone", 1)},				TECH.SCIENCE_TWO,			{placer="saltbox_placer",			min_spacing=1.5})
 
@@ -460,7 +465,7 @@ Recipe2("scarecrow",						{Ingredient("pumpkin", 1), Ingredient("boards", 3), In
 Recipe2("sewing_mannequin",					{Ingredient("silk", 2), Ingredient("boards", 2), Ingredient("cutgrass", 3)},							TECH.SCIENCE_ONE,			{placer="sewing_mannequin_placer", min_spacing=1.5})
 Recipe2("endtable",							{Ingredient("marble", 2), Ingredient("boards", 2), Ingredient("turf_carpetfloor", 2)},					TECH.LOST,					{placer="endtable_placer", min_spacing=1.5})
 
-Recipe2("moon_device_construction1",		{Ingredient("moonstorm_static_item", 1),Ingredient("moonstorm_spark", 5),Ingredient("transistor", 2)}, TECH.LOST,				{placer="moon_device_construction1_placer", min_spacing=0, no_deconstruction=true})
+Recipe2("moon_device_construction1",		{Ingredient("wagpunk_bits", 4),Ingredient("moonstorm_spark", 5),Ingredient("transistor", 2)}, 			TECH.LOST,					{placer="moon_device_construction1_placer", min_spacing=0, no_deconstruction=true})
 
 Recipe2("fence_gate_item",					{Ingredient("boards", 2), Ingredient("rope", 1)},														TECH.SCIENCE_TWO)
 Recipe2("wall_hay_item",					{Ingredient("cutgrass", 4), Ingredient("twigs", 2)},													TECH.SCIENCE_ONE,			{numtogive=4})
@@ -469,6 +474,7 @@ Recipe2("wall_wood_item",					{Ingredient("boards", 2), Ingredient("rope", 1)},	
 Recipe2("wall_stone_item",					{Ingredient("cutstone", 2)},																			TECH.SCIENCE_TWO,			{numtogive=6})
 Recipe2("wall_moonrock_item",				{Ingredient("moonrocknugget", 4)},																		TECH.SCIENCE_TWO,			{numtogive=4})
 Recipe2("wall_dreadstone_item",				{Ingredient("dreadstone", 4)},																			TECH.LOST,					{numtogive=4})
+Recipe2("wall_scrap_item",					{Ingredient("wagpunk_bits", 4)},																		TECH.SCIENCE_TWO,			{numtogive=4})
 
 Recipe2("fence_rotator",					{Ingredient("spear", 1), Ingredient("flint", 2) },														TECH.SCIENCE_TWO)
 
@@ -689,6 +695,7 @@ Recipe2("voidclothhat",						{Ingredient("horrorfuel", 4), Ingredient("voidcloth
 Recipe2("voidcloth_umbrella",				{Ingredient("horrorfuel", 5), Ingredient("voidcloth", 1)},												TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
 Recipe2("voidcloth_scythe",					{Ingredient("horrorfuel", 3), Ingredient("voidcloth", 1)},												TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
 Recipe2("voidcloth_kit",					{Ingredient("horrorfuel", 1), Ingredient("voidcloth", 1)},												TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
+Recipe2("beeswax_spray",					{Ingredient("beeswax",    3), Ingredient("horrorfuel", 5), Ingredient("mosquitosack", 2)},				TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
 
 ----SCULPTING----
 Recipe2("chesspiece_hornucopia_builder",	{Ingredient(TECH_INGREDIENT.SCULPTING, 2), Ingredient("rocks", 2)},										TECH.SCULPTING_ONE,			{nounlock = true, actionstr="SCULPTING", image="chesspiece_hornucopia.tex"})
@@ -745,7 +752,7 @@ Recipe2("hermitshop_oceanfishinglure_hermit_drowsy",	{Ingredient("messagebottlee
 Recipe2("hermitshop_oceanfishinglure_hermit_heavy",		{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_FIVE,	{nounlock = true, sg_state="give", product="oceanfishinglure_hermit_heavy"})
 Recipe2("hermitshop_oceanfishingbobber_goose",			{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_SEVEN,	{nounlock = true, sg_state="give", product="oceanfishingbobber_goose"})
 Recipe2("hermitshop_oceanfishingbobber_malbatross",		{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_SEVEN,	{nounlock = true, sg_state="give", product="oceanfishingbobber_malbatross"})
-Recipe2("hermitshop_chum",								{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_SEVEN,	{nounlock = true, sg_state="give", product="chum",						image="chum.tex"})
+Recipe2("hermitshop_chum",								{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_SEVEN,	{nounlock = true, sg_state="give", product="chum",						image="chum.tex", numtogive=3})
 Recipe2("hermitshop_supertacklecontainer",				{Ingredient("messagebottleempty", 6)},														TECH.LOST,					{nounlock = true, sg_state="give", product="supertacklecontainer"})
 Recipe2("hermitshop_winter_ornament_boss_hermithouse",	{Ingredient("messagebottleempty", 4)},														TECH.LOST,					{nounlock = true, sg_state="give", product="winter_ornament_boss_hermithouse"})
 Recipe2("hermitshop_winter_ornament_boss_pearl",		{Ingredient("messagebottleempty", 8)}, 														TECH.LOST,					{nounlock = true, sg_state="give", product="winter_ornament_boss_pearl"})
@@ -935,7 +942,7 @@ Recipe2("yotc_carratshrine",			{Ingredient("goldnugget", 4), Ingredient("boards"
 Recipe2("yotb_beefaloshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTB,						{placer="yotb_beefaloshrine_placer", hint_msg = "NEEDSYOTB"})
 Recipe2("yot_catcoonshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOT_CATCOON,				{placer="yot_catcoonshrine_placer", hint_msg = "NEEDSYOTCATCOON"})
 Recipe2("yotr_rabbitshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTR,						{placer="yotr_rabbitshrine_placer", hint_msg = "NEEDSYOTR"})
-Recipe2("yotd_dragonshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOT_DRAGON,				{placer="yotd_dragonshrine_placer", hint_msg = "NEEDSYOTD"})
+Recipe2("yotd_dragonshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTD,						{placer="yotd_dragonshrine_placer", hint_msg = "NEEDSYOTD"})
 
 --this is so you can use deconstruction staff on the deployed item
 Recipe("yotb_post",  {Ingredient("boards", 2), Ingredient("goldnugget", 1)}, nil, TECH.LOST, nil, nil, true)
@@ -1045,7 +1052,9 @@ CONSTRUCTION_PLANS =
 	["hermithouse_construction2"] = { Ingredient("marble", 10), Ingredient("cutstone", 5), Ingredient("lightbulb", 3) },
 	["hermithouse_construction3"] = { Ingredient("moonrocknugget", 10), Ingredient("rope", 5), Ingredient("turf_carpetfloor", 5) },
 
-	["moon_device_construction1"] = { Ingredient("moonstorm_static_item", 1), Ingredient("moonstorm_spark", 10), Ingredient("moonglass_charged", 10) },
+
+
+	["moon_device_construction1"] = { Ingredient("wagpunk_bits", 4),Ingredient("moonstorm_spark", 10), Ingredient("moonglass_charged", 10) },
 	["moon_device_construction2"] = { Ingredient("moonstorm_static_item", 1), Ingredient("moonglass_charged", 20), Ingredient("moonrockseed", 1) },
 
 	["charlie_hand"] =				{ Ingredient("dreadstone", 5) },

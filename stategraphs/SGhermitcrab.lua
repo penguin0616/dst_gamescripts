@@ -2204,7 +2204,7 @@ local states =
             if inst.bufferedaction ~= nil then
                 inst.sg.statemem.action = inst.bufferedaction
                 if inst.bufferedaction.target ~= nil and inst.bufferedaction.target:IsValid() then
-                    inst.bufferedaction.target:PushEvent("startlongaction")
+					inst.bufferedaction.target:PushEvent("startlongaction", inst)
                 end
             end
         end,
@@ -2257,7 +2257,7 @@ local states =
             if inst.bufferedaction ~= nil then
                 inst.sg.statemem.action = inst.bufferedaction
                 if inst.bufferedaction.target ~= nil and inst.bufferedaction.target:IsValid() then
-                    inst.bufferedaction.target:PushEvent("startlongaction")
+					inst.bufferedaction.target:PushEvent("startlongaction", inst)
                 end
             end
         end,

@@ -1121,8 +1121,6 @@ local function wagpunk_ShowUp(inst)
     inst:Show()
     inst:PushEvent("doerode", ERODEIN)
 
-    inst.sg:GoToState("analyzing_pre")
-
     inst.SoundEmitter:PlaySound("moonstorm/common/alterguardian_contained/static_LP", "wagstaffnpc_static_loop")
 end
 
@@ -1178,7 +1176,18 @@ local function WagpunkFn()
 
     inst.persists = false
 
+    ------------------------------------------
+    inst:AddComponent("timer")
+    inst:ListenForEvent("timerdone", ontimerdone)
+
+    ------------------------------------------
+    inst:AddComponent("knownlocations")
+    ------------------------------------------
+
     --inst._dialogue_script = Mutations_BuildDialogueScript()
+
+    inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
+    inst.components.locomotor.walkspeed = 3
 
     inst:AddComponent("inspectable")
 
@@ -1187,6 +1196,7 @@ local function WagpunkFn()
     inst:ListenForEvent("doerode", donpcerode)
 
     inst:SetStateGraph("SGwagstaff_npc")
+    inst:SetBrain(wagstaff_npcbrain)    
     
     inst.erode = erode
 

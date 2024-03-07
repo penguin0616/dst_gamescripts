@@ -3,6 +3,7 @@ local easing = require("easing")
 local PlayerHud = require("screens/playerhud")
 local ex_fns = require "prefabs/player_common_extensions"
 local skilltreedefs = require "prefabs/skilltree_defs"
+local SourceModifierList = require("util/sourcemodifierlist")
 
 local BEEFALO_COSTUMES = require("yotb_costumes")
 
@@ -307,6 +308,8 @@ fns.OnStartChannelCastingItem = function(inst, item)
 	inst.components.moonstormwatcher:SetMoonstormSpeedMultiplier(MinMult(TUNING.MOONSTORM_SPEED_MOD, mult))
 	inst.components.miasmawatcher:SetMiasmaSpeedMultiplier(MinMult(TUNING.MIASMA_SPEED_MOD, mult))
 	inst.components.carefulwalker:SetCarefulWalkingSpeedMultiplier(MinMult(TUNING.CAREFUL_SPEED_MOD, mult))
+
+	inst.components.locomotor:StartStrafing()
 end
 
 fns.OnStopChannelCastingItem = function(inst)
@@ -315,6 +318,8 @@ fns.OnStopChannelCastingItem = function(inst)
 	inst.components.moonstormwatcher:SetMoonstormSpeedMultiplier(TUNING.MOONSTORM_SPEED_MOD)
 	inst.components.miasmawatcher:SetMiasmaSpeedMultiplier(TUNING.MIASMA_SPEED_MOD)
 	inst.components.carefulwalker:SetCarefulWalkingSpeedMultiplier(TUNING.CAREFUL_SPEED_MOD)
+
+	inst.components.locomotor:StopStrafing()
 end
 
 local function ShouldAcceptItem(inst, item)
@@ -447,23 +452,12 @@ end
 --Audio events
 --------------------------------------------------------------------------
 
-local PICKUPSOUNDS = {
-    ["wood"] = "aqol/new_test/wood",
-    ["gem"] = "aqol/new_test/gem",
-    ["cloth"] = "aqol/new_test/cloth",
-    ["metal"] = "aqol/new_test/metal",
-    ["rock"] = "aqol/new_test/rock",
-    ["vegetation_firm"] = "aqol/new_test/vegetation_firm",
-    ["vegetation_grassy"] = "aqol/new_test/vegetation_grassy",    
-    ["squidgy"] = "aqol/new_test/squidgy",
-    ["grainy"] = "aqol/new_test/grainy",
-    ["DEFAULT_FALLBACK"] = "dontstarve/HUD/collect_resource",
-}
+-- Uses global table PICKUPSOUNDS from constants.
 
 local function OnGotNewItem(inst, data)
     if data.slot ~= nil or data.eslot ~= nil or data.toactiveitem ~= nil then
         local sound = data.item and data.item.pickupsound or "DEFAULT_FALLBACK"
-        TheFocalPoint.SoundEmitter:PlaySound(inst._PICKUPSOUNDS[sound])
+        TheFocalPoint.SoundEmitter:PlaySound(PICKUPSOUNDS[sound])
     end
 end
 
@@ -623,7 +617,7 @@ end
 
 local function RegisterActivePlayerEventListeners(inst)
     --HUD Audio events
-    inst._PICKUPSOUNDS = PICKUPSOUNDS -- NOTES(JBK): For client mods to get access to.
+    inst._PICKUPSOUNDS = PICKUPSOUNDS -- NOTES(JBK): Deprecated but kept for client mods to get access to. Mods can use the table directly from constants.
     inst:ListenForEvent("gotnewitem", OnGotNewItem)
     inst:ListenForEvent("equip", OnEquip)
 end
@@ -693,12 +687,14 @@ local function AddActivePlayerComponents(inst)
     inst:AddComponent("hudindicatorwatcher")
     inst:AddComponent("playerhearing")
 	inst:AddComponent("raindomewatcher")
+	inst:AddComponent("strafer")
 end
 
 local function RemoveActivePlayerComponents(inst)
     inst:RemoveComponent("hudindicatorwatcher")
     inst:RemoveComponent("playerhearing")
 	inst:RemoveComponent("raindomewatcher")
+	inst:RemoveComponent("strafer")
 end
 
 local function ActivateHUD(inst)
@@ -853,6 +849,9 @@ local function EnableMovementPrediction(inst, enable)
                 else
                     ex_fns.ConfigurePlayerLocomotor(inst)
                 end
+				if inst.player_classified and inst.player_classified.isstrafing:value() then
+					inst.components.locomotor:SetStrafing(true)
+				end
 
                 if inst.components.playercontroller ~= nil then
                     inst.components.playercontroller.locomotor = inst.components.locomotor
@@ -1481,6 +1480,22 @@ local function SetCameraDistance(inst, distance)
     end
 end
 
+function fns.AddCameraExtraDistance(inst, source, distance, key)
+    if TheWorld.ismastersim and inst.cameradistancebonuses ~= nil then
+        inst.cameradistancebonuses:SetModifier(source, distance, key)
+
+        inst.player_classified.cameraextramaxdist:set(inst.cameradistancebonuses:Get())
+    end
+end
+
+function fns.RemoveCameraExtraDistance(inst, source, key)
+    if TheWorld.ismastersim and inst.cameradistancebonuses ~= nil then
+        inst.cameradistancebonuses:RemoveModifier(source, key)
+
+        inst.player_classified.cameraextramaxdist:set(inst.cameradistancebonuses:Get())
+    end
+end
+
 local function SetCameraZoomed(inst, iszoomed)
     if TheWorld.ismastersim then
         inst.player_classified.iscamerazoomed:set(iszoomed)
@@ -1763,6 +1778,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_actions_cannon.zip"),
 		Asset("ANIM", "anim/player_actions_scythe.zip"),
 		Asset("ANIM", "anim/player_actions_deploytoss.zip"),
+		Asset("ANIM", "anim/player_actions_spray.zip"),
 
         Asset("ANIM", "anim/player_boat.zip"),
         Asset("ANIM", "anim/player_boat_plank.zip"),
@@ -1901,6 +1917,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_mount_cointoss.zip"),
         Asset("ANIM", "anim/player_mount_hornblow.zip"),
         Asset("ANIM", "anim/player_mount_strum.zip"),
+		Asset("ANIM", "anim/player_mount_deploytoss.zip"),
 
         Asset("ANIM", "anim/player_mighty_gym.zip"),
         Asset("ANIM", "anim/mighty_gym.zip"),
@@ -2176,6 +2193,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:AddTag("lightningtarget")
         inst:AddTag(UPGRADETYPES.WATERPLANT.."_upgradeuser")
         inst:AddTag(UPGRADETYPES.MAST.."_upgradeuser")
+        inst:AddTag(UPGRADETYPES.CHEST.."_upgradeuser")
         inst:AddTag("usesvegetarianequipment")
 
 		SetInstanceFunctions(inst)
@@ -2304,6 +2322,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         if not TheWorld.ismastersim then
             return inst
         end
+
+        inst.cameradistancebonuses = SourceModifierList(inst, 0, SourceModifierList.additive)
 
         inst.OnPostActivateHandshake_Server = ex_fns.OnPostActivateHandshake_Server
         inst._PostActivateHandshakeState_Server = POSTACTIVATEHANDSHAKE.NONE
@@ -2549,6 +2569,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.ResetMinimapOffset = fns.ResetMinimapOffset
         inst.CloseMinimap = fns.CloseMinimap
         inst.SetCameraDistance = SetCameraDistance
+        inst.AddCameraExtraDistance = fns.AddCameraExtraDistance
+        inst.RemoveCameraExtraDistance = fns.RemoveCameraExtraDistance
         inst.SetCameraZoomed = SetCameraZoomed
         inst.SnapCamera = SnapCamera
         inst.ScreenFade = ScreenFade

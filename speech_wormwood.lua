@@ -523,6 +523,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "Smarter now",
 	ANNOUNCE_HOUNDS = "Woofers!",
 	ANNOUNCE_WORMS = "Wigglies are coming",
+    ANNOUNCE_ACIDBATS = "Flying Claws?",
 	ANNOUNCE_HUNGRY = "Need stuff for belly",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "Prints!",
 	ANNOUNCE_HUNT_LOST_TRAIL = "Prints gone",
@@ -907,6 +908,8 @@ return{
     ANNOUNCE_SCRAPBOOK_FULL = "Book filled up!",
 
     ANNOUNCE_CHAIR_ON_FIRE = "This fine",
+
+    ANNOUNCE_HEALINGSALVE_ACIDBUFF_DONE = "Burny Rain is burny again",
 
     ANNOUNCE_COACH = 
     {
@@ -1449,18 +1452,25 @@ return{
         {
             GENERIC = "Growing nicely",
             BLOOM = "Pretty!",
+            ACIDCOVERED = "Friend smells sour",
         },
         MUSHTREE_MEDIUM =
         {
             GENERIC = "Fun guy",
             BLOOM = "Fancy!",
+            ACIDCOVERED = "Friend smells sour",
         },
         MUSHTREE_SMALL =
         {
             GENERIC = "Hi there!",
             BLOOM = "Looking good",
+            ACIDCOVERED = "Friend smells sour",
         },
-        MUSHTREE_TALL_WEBBED = "It's trapped!",
+        MUSHTREE_TALL_WEBBED =
+        {
+            GENERIC = "It's trapped!",
+            ACIDCOVERED = "Friend smells sour",
+        },
         SPORE_TALL =
         {
             GENERIC = "Where you going?",
@@ -2590,6 +2600,7 @@ return{
 		SILK = "Soft",
 		SKELETON = "Still alive?",
 		SCORCHED_SKELETON = "Oh. Oh no",
+        SKELETON_NOTPLAYER = "Sleeping?",
 		SKULLCHEST = "Stuff inside", --removed
 		SMALLBIRD =
 		{
@@ -2706,8 +2717,10 @@ return{
 		{
 			GENERIC = "Stuff!",
 			BURNT = "(sigh)",
+            UPGRADED_STACKSIZE = "More stuff!",
 		},
 		TREASURECHEST_TRAP = "Hmm...",
+        CHESTUPGRADE_STACKSIZE = "Make space streeeetch!", -- Describes the kit upgrade item.
 		SACRED_CHEST =
 		{
 			GENERIC = "Put stuff in there!",
@@ -3006,6 +3019,8 @@ return{
 		WALL_MOONROCK_ITEM = "For the ground",
 		WALL_DREADSTONE = "Sparkly",
 		WALL_DREADSTONE_ITEM = "For the ground",
+        WALL_SCRAP = "Why wall? All friends welcome",
+        WALL_SCRAP_ITEM = "Why wall? All friends welcome",
 		FENCE = "Made of friends",
         FENCE_ITEM = "Put in ground",
         FENCE_GATE = "Door made of friends",
@@ -4116,6 +4131,7 @@ return{
         DUSTMERINGUE = "Sweep Sweep belly stuff",
 
         SHROOMCAKE = "Squishy",
+        SHROOMBAIT = "Smells like sleepy.",
 
         NIGHTMAREGROWTH = "Bad things",
 
@@ -4846,6 +4862,12 @@ return{
 			GENERIC = "Where you grow from?",
 			EXPOSED = "Where you grow from?",
 		},
+		DAYWALKER2 =
+		{
+			GENERIC = "Nice Twirly Tail?",
+			BURIED = "Twirly Tail stuck again",
+			HOSTILE = "Why always mad?",
+		},
 		ARMORDREADSTONE = "Pretty rock clothes",
 		DREADSTONEHAT = "Rock for head",
 
@@ -5098,6 +5120,22 @@ return{
         MASTUPGRADE_LAMP_ITEM_YOTD = "Night light",
         WALKINGPLANK_YOTD = "Splashy jump spot",
         CHESSPIECE_YOTD = "Fire! Oh... is rock",
+
+        -- Rifts / Meta QoL
+
+        HEALINGSALVE_ACID = "Gloop! Thanks, slimy friends!",
+
+        BEESWAX_SPRAY = "Scary...",
+        WAXED_PLANT = "Screaming! Friends are screaming!", -- Used for all waxed plants, from farm plants to trees.
+
+        STORAGE_ROBOT = {
+            GENERIC = "Go, grabby friend!",
+            BROKEN = "Help! Grabby friend is hurt!",
+        },
+
+        FENCE_JUNK = "Friends wearing metal clothes",
+        JUNK_PILE = "Pile of stuff",
+        JUNK_PILE_BIG = "Not safe...",
     },
 
     DESCRIBE_GENERIC = "Friend?",

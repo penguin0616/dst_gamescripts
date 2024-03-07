@@ -15,6 +15,17 @@ local function DefaultRangeCheck(doer, target)
     return dst <= 16
 end
 
+local function PhysicsPaddedRangeCheck(doer, target)
+    if target == nil then
+        return
+    end
+    local target_x, target_y, target_z = target.Transform:GetWorldPosition()
+    local doer_x, doer_y, doer_z = doer.Transform:GetWorldPosition()
+    local target_r = target:GetPhysicsRadius(0) + 4
+    local dst = distsq(target_x, target_z, doer_x, doer_z)
+    return dst <= target_r * target_r
+end
+
 local function CheckFishingOceanRange(doer, dest)
 	local doer_pos = doer:GetPosition()
 	local target_pos = Vector3(dest:GetPoint())
@@ -129,7 +140,23 @@ local function ExtraDropDist(doer, dest, bufferedaction)
         if is_on_water then
             return 1.75
         end
+
+        local invobject = bufferedaction and bufferedaction.invobject or nil
+
+        -- Extra drop dist to items that collide with doer.
+        if invobject ~= nil and doer ~= nil and invobject.Physics ~= nil and doer.Physics ~= nil then
+            if not checkbit(invobject.Physics:GetCollisionMask(), doer.Physics:GetCollisionGroup()) then
+                return 0
+            end
+
+            local physics_rad = invobject:GetPhysicsRadius(0)
+
+            if physics_rad > 0 then
+                return physics_rad + 0.5
+            end
+        end
     end
+
     return 0
 end
 
@@ -181,6 +208,7 @@ Action = Class(function(self, data, instant, rmb, distance, ghost_valid, ghost_e
     self.rmb = data.rmb or nil -- note! This actually only does something for tools, everything tests 'right' in componentactions
     self.distance = data.distance or nil
     self.mindistance = data.mindistance or nil
+    self.arrivedist = data.arrivedist or nil
     self.ghost_exclusive = data.ghost_exclusive or false
     self.ghost_valid = self.ghost_exclusive or data.ghost_valid or false -- If it's ghost-exclusive, then it must be ghost-valid
     self.mount_valid = data.mount_valid or false
@@ -225,7 +253,7 @@ ACTIONS =
 	CHOP = Action({ distance=1.75, invalid_hold_action=true }),
 	ATTACK = Action({priority=2, canforce=true, mount_valid=true, invalid_hold_action=true }), -- No custom range check, attack already handles that
     EAT = Action({ mount_valid=true }),
-    PICK = Action({ canforce=true, rangecheckfn=DefaultRangeCheck, extra_arrive_dist=ExtraPickupRange, mount_valid = true }),
+    PICK = Action({ canforce=true, rangecheckfn=PhysicsPaddedRangeCheck, extra_arrive_dist=ExtraPickupRange, mount_valid = true }),
     PICKUP = Action({ priority=1, extra_arrive_dist=ExtraPickupRange, mount_valid=true }),
 	MINE = Action({ invalid_hold_action=true }),
 	DIG = Action({ rmb=true, invalid_hold_action=true }),
@@ -264,7 +292,7 @@ ACTIONS =
     SHAVE = Action({ mount_valid=true }),
     STORE = Action(),
     RUMMAGE = Action({ priority=-1, mount_valid=true }),
-    DEPLOY = Action({distance=1.1, extra_arrive_dist=ExtraDeployDist }),
+	DEPLOY = Action({distance=1.1, mount_valid=true, extra_arrive_dist=ExtraDeployDist }),
     DEPLOY_TILEARRIVE = Action({customarrivecheck=CheckTileWithinRange, theme_music = "farming"}), -- Note: If this is used for non-farming in the future, this would need to be swapped to theme_music_fn
     PLAY = Action({ mount_valid=true }),
     CREATE = Action(),
@@ -312,7 +340,7 @@ ACTIONS =
     BLINK = Action({ priority=HIGH_ACTION_PRIORITY, rmb=true, distance=36, mount_valid=true }),
     BLINK_MAP = Action({ priority=HIGH_ACTION_PRIORITY, customarrivecheck=ArriveAnywhere, rmb=true, mount_valid=true, map_action=true, }),
     COMBINESTACK = Action({ mount_valid=true, extra_arrive_dist=ExtraPickupRange }),
-    TOGGLE_DEPLOY_MODE = Action({ priority=HIGH_ACTION_PRIORITY, instant=true }),
+	TOGGLE_DEPLOY_MODE = Action({ priority=HIGH_ACTION_PRIORITY, instant=true, mount_valid=true }),
     SUMMONGUARDIAN = Action({ rmb=false, distance=5 }),
     HAUNT = Action({ rmb=false, mindistance=2, ghost_valid=true, ghost_exclusive=true, canforce=true, rangecheckfn=DefaultRangeCheck }),
     UNPIN = Action(),
@@ -320,7 +348,7 @@ ACTIONS =
     MAKEMOLEHILL = Action({ priority=4, rmb=false, distance=0 }),
     MOLEPEEK = Action({ rmb=false, distance=1 }),
     FEED = Action({ rmb=true, mount_valid=true }),
-    UPGRADE = Action({ rmb=true }),
+    UPGRADE = Action({ rmb=true, priority=1 }),
     HAIRBALL = Action({ rmb=false, distance=3 }),
     CATPLAYGROUND = Action({ rmb=false, distance=1 }),
     CATPLAYAIR = Action({ rmb=false, distance=2 }),
@@ -412,7 +440,7 @@ ACTIONS =
     MOUNT_PLANK = Action({ distance=0.5, invalid_hold_action = true }),
     DISMOUNT_PLANK = Action({ distance=2.5 }),
     REPAIR_LEAK = Action({ distance=2.5, invalid_hold_action = true }),
-    STEER_BOAT = Action({ distance=0.1, invalid_hold_action = true }),
+    STEER_BOAT = Action({ arrivedist=0.1, invalid_hold_action = true }),
     SET_HEADING = Action({distance=9999, do_not_locomote=true}),
     STOP_STEERING_BOAT = Action({ instant = true }),
     CAST_NET = Action({ priority=HIGH_ACTION_PRIORITY, rmb=true, distance=12, mount_valid=true, disable_platform_hopping=true }),
@@ -430,7 +458,7 @@ ACTIONS =
     ATTACKPLANT = Action(),
     PLANTWEED = Action(),
     ADDCOMPOSTABLE = Action(),
-    WAX = Action({ encumbered_valid = true, }),
+    WAX = Action({ encumbered_valid = true, distance=1.5 }),
     APPRAISE = Action(),
     UNLOAD_WINCH = Action({rmb=true, priority=3}),
     USE_HEAVY_OBSTACLE = Action({encumbered_valid=true, rmb=true, priority=1}),
@@ -784,7 +812,7 @@ ACTIONS.RUMMAGE.fn = function(act)
             return false, "INUSE"
         elseif targ.components.container.canbeopened and (proxy == nil or proxy.components.container_proxy:CanBeOpened()) then
             local owner = targ.components.inventoryitem ~= nil and targ.components.inventoryitem:GetGrandOwner() or nil
-            if owner ~= nil and (targ.components.quagmire_stewer ~= nil or targ.components.container.droponopen) then
+            if owner ~= nil and (targ.components.quagmire_stewer ~= nil or targ.components.container.droponopen and not owner:HasTag("player")) then
                 if owner == act.doer then
                     owner.components.inventory:DropItem(targ, true, true)
 				elseif owner:HasTag("pocketdimension_container") then
@@ -1394,7 +1422,8 @@ ACTIONS.REEL.strfn = function(act)
 end
 
 ACTIONS.PICK.strfn = function(act)
-	return act.target ~= nil and act.target:HasTag("pickable_harvest_str") and "HARVEST"
+	return act.target ~= nil and act.target:HasTag("pickable_harvest_str") and "HARVEST" or
+           act.target ~= nil and act.target:HasTag("pickable_rummage_str") and "RUMMAGE"
 			or nil
 end
 
@@ -1692,18 +1721,40 @@ ACTIONS.GIVE.fn = function(act)
         if act.target:HasTag("playbill_lecturn") and act.invobject.components.playbill then
             act.target.components.playbill_lecturn:SwapPlayBill(act.invobject, act.doer)
             return true
+
         elseif act.target.components.ghostlyelixirable ~= nil and act.invobject.components.ghostlyelixir ~= nil then
             return act.invobject.components.ghostlyelixir:Apply(act.doer, act.target)
+
         elseif act.target.components.trader ~= nil then
-            local able, reason = act.target.components.trader:AbleToAccept(act.invobject, act.doer)
+            local count
+
+            if act.target.components.trader:IsAcceptingStacks() then
+                count = (
+                    act.target.components.inventory ~= nil and
+                    act.target.components.inventory:CanAcceptCount(act.invobject)
+                ) or (
+                    act.invobject.components.stackable ~= nil and
+                    act.invobject.components.stackable.stacksize
+                )
+                or 1
+
+                if count <= 0 then
+                    return false
+                end
+            end
+
+            local able, reason = act.target.components.trader:AbleToAccept(act.invobject, act.doer, count)
             if not able then
                 return false, reason
             end
 
-            act.target.components.trader:AcceptGift(act.doer, act.invobject)
+            act.target.components.trader:AcceptGift(act.doer, act.invobject, count)
+
             return true
+
         elseif act.target.components.moontrader ~= nil then
             return act.target.components.moontrader:AcceptOffering(act.doer, act.invobject)
+
         elseif act.target.components.furnituredecortaker then
             local able, reason = act.target.components.furnituredecortaker:AbleToAcceptDecor(act.invobject, act.doer)
             if not able then
@@ -1711,10 +1762,13 @@ ACTIONS.GIVE.fn = function(act)
             else
                 return act.target.components.furnituredecortaker:AcceptDecor(act.invobject, act.doer)
             end
+
         elseif act.target.components.inventoryitemholder ~= nil then
             return act.target.components.inventoryitemholder:GiveItem(act.invobject, act.doer)
+
         elseif act.target.components.quagmire_cookwaretrader ~= nil then
             return act.target.components.quagmire_cookwaretrader:AcceptCookware(act.doer, act.invobject)
+
         elseif act.target.components.quagmire_altar ~= nil then
             return act.target.components.quagmire_altar:AcceptFoodTribute(act.doer, act.invobject)
         end

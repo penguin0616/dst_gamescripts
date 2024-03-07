@@ -300,6 +300,7 @@ local OptionsScreen = Class(Screen, function( self, prev_screen, default_section
         movementprediction = Profile:GetMovementPredictionEnabled(),
 		automods = Profile:GetAutoSubscribeModsEnabled(),
 		autologin = Profile:GetAutoLoginEnabled(),
+        npcchat = Profile:GetNPCChatEnabled(),
 		animatedheads = Profile:GetAnimatedHeadsEnabled(),
 		wathgrithrfont = Profile:IsWathgrithrFontEnabled(),
 		boatcamera = Profile:IsBoatCameraEnabled(),
@@ -628,6 +629,7 @@ function OptionsScreen:Save(cb)
     Profile:SetMovementPredictionEnabled(self.options.movementprediction)
 	Profile:SetAutoSubscribeModsEnabled( self.options.automods )
 	Profile:SetAutoLoginEnabled( self.options.autologin )
+    Profile:SetNPCChatEnabled(self.options.npcchat)
 	Profile:SetAnimatedHeadsEnabled( self.options.animatedheads )
 	Profile:SetTextureStreamingEnabled( self.options.texturestreaming )
 	if IsWin32() then
@@ -1251,7 +1253,7 @@ local function AddSpinnerTooltip(widget, tooltip, tooltipdivider)
 	if widget.spinner then
 		widget.spinner.onlosefocusfn = onlosefocus
 	elseif widget.button then -- Handles the data collection checkbox option
-		widget.button.ongainfocus = ongainfocus
+		widget.button.onlosefocus = onlosefocus
 	end
 
 end
@@ -1821,7 +1823,13 @@ function OptionsScreen:_BuildAdvancedSettings()
 			self.working.poidisplay = data
 			--self:Apply()
 			self:UpdateMenu()
-		end		
+		end
+
+    self.npcchatSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.NPCCHAT, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.NPCCHAT)
+    self.npcchatSpinner.OnChanged = function(_, data)
+        self.working.npcchat = data
+        self:UpdateMenu()
+    end
 
 	self.minimapzoomcursorSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.MINIMAPZOOMCURSOR, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.MINIMAPZOOMCURSOR)
 	self.minimapzoomcursorSpinner.OnChanged =
@@ -1925,6 +1933,7 @@ function OptionsScreen:_BuildAdvancedSettings()
     table.insert( self.left_spinners, self.wathgrithrfontSpinner)
 	table.insert( self.left_spinners, self.waltercameraSpinner)
 	table.insert( self.left_spinners, self.poidisplaySpinner)
+    table.insert(self.left_spinners, self.npcchatSpinner)
 
 	table.insert( self.right_spinners, self.consoleautopauseSpinner )
 	table.insert( self.right_spinners, self.craftingmenubufferedbuildautocloseSpinner )
@@ -2440,6 +2449,7 @@ function OptionsScreen:InitializeSpinners(first)
 	self.wathgrithrfontSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.wathgrithrfont ) )
 	self.waltercameraSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.waltercamera ) )
 	self.poidisplaySpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.poidisplay ) )
+    self.npcchatSpinner:SetSelectedIndex(EnabledOptionsIndex(self.working.npcchat))
 	self.minimapzoomcursorSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.minimapzoomcursor ) )
 	self.boatcameraSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.boatcamera ) )
 	self.integratedbackpackSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.integratedbackpack ) )

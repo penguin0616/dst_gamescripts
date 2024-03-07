@@ -31,7 +31,13 @@ local function OnUpdateThorns(inst)
 						not inst.owner.components.combat:IsAlly(v)
 					then
                         inst.ignore[v] = true
-                        v.components.combat:GetAttacked(v.components.follower ~= nil and v.components.follower:GetLeader() == inst.owner and inst or inst.owner, inst.damage)
+                        local attacker = v.components.follower ~= nil and v.components.follower:GetLeader() == inst.owner and inst or inst.owner
+                        if attacker == inst then
+                            v.components.combat:GetAttacked(attacker, inst.damage)
+                        else
+                            attacker.components.combat:DoAttack(v, inst)
+                        end
+                        
                         --V2C: wisecracks make more sense for being pricked by picking
                         --v:PushEvent("thorns")
                     end
@@ -47,7 +53,7 @@ local function OnUpdateThorns(inst)
 					end
 					if not isally then
 						inst.ignore[v] = true
-						v.components.combat:GetAttacked(inst, inst.damage)
+                        inst.attacker.components.combat:DoAttack(v, inst)
 						--v:PushEvent("thorns")
 					end
                 end
@@ -67,13 +73,17 @@ local function SetFXOwner(inst, owner)
     inst.ignore[owner] = true
 end
 
-local function MakeFX(name, anim, damage)
+local function MakeFX(name, anim, damage, planardamage)
     local function fn()
         local inst = CreateEntity()
 
         inst.entity:AddTransform()
         inst.entity:AddAnimState()
         inst.entity:AddNetwork()
+
+        if planardamage then
+            inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+        end
 
         inst:AddTag("FX")
         inst:AddTag("thorny")
@@ -95,12 +105,23 @@ local function MakeFX(name, anim, damage)
             return inst
         end
 
+        inst:AddComponent("combat")
+
+        inst:AddComponent("weapon")
+        inst.components.weapon:SetDamage(TUNING[damage])
+
+        if planardamage then
+            inst:AddComponent("planardamage")
+            inst.components.planardamage:SetBaseDamage(TUNING[planardamage])
+        end
+
         inst:AddComponent("updatelooper")
         inst.components.updatelooper:AddOnUpdateFn(OnUpdateThorns)
 
         inst:ListenForEvent("animover", inst.Remove)
         inst.persists = false
         inst.damage = TUNING[damage]
+        inst.planardamage = TUNING[planardamage]
         inst.range = .75
         inst.ignore = {}
         inst.canhitplayers = true
@@ -114,5 +135,6 @@ local function MakeFX(name, anim, damage)
     return Prefab(name, fn, assets)
 end
 
-return MakeFX("bramblefx_armor", "idle", "ARMORBRAMBLE_DMG"--[[TUNING.ARMORBRAMBLE_DMG]]),
+return MakeFX("bramblefx_armor", "idle", "ARMORBRAMBLE_DMG" --[[TUNING.ARMORBRAMBLE_DMG]]),
+    MakeFX("bramblefx_armor_upgrade", "idle", "ARMORBRAMBLE_DMG", "ARMORBRAMBLE_DMG_PLANAR_UPGRADE"--[[TUNING.ARMORBRAMBLE_DMG]]),
     MakeFX("bramblefx_trap", "trap", "TRAP_BRAMBLE_DAMAGE"--[[TUNING.TRAP_BRAMBLE_DAMAGE]])

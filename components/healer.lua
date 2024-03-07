@@ -7,6 +7,10 @@ function Healer:SetHealthAmount(health)
     self.health = health
 end
 
+function Healer:SetOnHealFn(fn)
+    self.onhealfn = fn
+end
+
 function Healer:Heal(target)
     if target.components.health ~= nil then
         target.components.health:DoDelta(self.health, false, self.inst.prefab)

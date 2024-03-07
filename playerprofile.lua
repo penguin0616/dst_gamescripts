@@ -1138,6 +1138,27 @@ function PlayerProfile:GetAutoLoginEnabled()
 	end
 end
 
+function PlayerProfile:SetNPCChatEnabled(enabled)
+    if USE_SETTINGS_FILE then
+        TheSim:SetSetting("misc", "npcchat", tostring(enabled))
+    else
+        self:SetValue("npcchat", enabled)
+        self.dirty = true
+    end
+end
+
+function PlayerProfile:GetNPCChatEnabled()
+    if USE_SETTINGS_FILE then
+        local npcchat = TheSim:GetSetting("misc", "npcchat")
+        if npcchat == nil then
+            return true
+        end
+        return npcchat == "true"
+    else
+        return GetValueOrDefault(self.persistdata.npcchat, true)
+    end
+end
+
 function PlayerProfile:SetAnimatedHeadsEnabled(enabled)
 	if USE_SETTINGS_FILE then
 	   TheSim:SetSetting("misc", "animatedheads", tostring(enabled))
@@ -1175,6 +1196,24 @@ function PlayerProfile:GetAutoCavesEnabled()
 		return GetValueOrDefault( self.persistdata.autocaves, false )
 	end
 end
+
+function PlayerProfile:SetCavesStateRemembered()
+	if USE_SETTINGS_FILE then
+	   TheSim:SetSetting("misc", "cavesstateremembered", "true")
+    else
+	   self:SetValue("cavesstateremembered", true)
+	   self.dirty = true
+    end
+end
+
+function PlayerProfile:GetCavesStateRemembered()
+	if USE_SETTINGS_FILE then
+		return TheSim:GetSetting("misc", "cavesstateremembered") == "true"
+	else
+		return GetValueOrDefault( self.persistdata.cavesstateremembered, false )
+	end
+end
+
 
 function PlayerProfile:SetModsWarning(enabled)
 	if USE_SETTINGS_FILE then

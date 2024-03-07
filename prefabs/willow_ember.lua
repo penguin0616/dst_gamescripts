@@ -268,11 +268,12 @@ local function TryShadowFire(inst, doer, pos)
             local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
 
             local newpos = Vector3(inst.Transform:GetWorldPosition()) + offset
-
-            local fire = SpawnPrefab("willow_shadow_flame")
-            fire.Transform:SetRotation(theta/DEGREES)
-            fire.Transform:SetPosition(newpos.x,newpos.y,newpos.z)
-            fire:settarget(nil,50,doer)
+            inst:DoTaskInTime(math.random()*0.2, function()
+                local fire = SpawnPrefab("willow_shadow_flame")
+                fire.Transform:SetRotation(theta/DEGREES)
+                fire.Transform:SetPosition(newpos.x,newpos.y,newpos.z)
+                fire:settarget(nil,50,doer)
+            end)
         end
 
 		if doer.components.spellbookcooldowns then
@@ -492,8 +493,7 @@ local function line_reticule_target_function(inst)
         local inventoryitem = inst.replica.inventoryitem
         local owner =  inventoryitem and inventoryitem:IsGrandOwner(ThePlayer) and ThePlayer
         if owner then
-            local pos = Vector3(owner.Transform:GetWorldPosition())
-            return pos
+			return Vector3(ThePlayer.entity:LocalToWorldSpace(5, 0, 0))
         end
     end
 end
@@ -514,12 +514,15 @@ end
 
 local function line_reticule_update_position_function(inst, pos, reticule, ease, smoothing, dt)
     local inventoryitem = inst.replica.inventoryitem
-    local owner = inventoryitem and inventoryitem:IsHeldBy(ThePlayer) and ThePlayer
-
-    if owner then
-        reticule.Transform:SetPosition(Vector3(owner.Transform:GetWorldPosition()):Get())
-        local angle = owner:GetAngleToPoint(pos.x,pos.y,pos.z)
-        reticule.Transform:SetRotation(angle)
+	if inventoryitem and inventoryitem:IsHeldBy(ThePlayer) then
+		reticule.Transform:SetPosition(ThePlayer.Transform:GetWorldPosition())
+		local rot1 = reticule:GetAngleToPoint(inst.components.reticule.targetpos)
+		if ease and dt then
+			local rot = reticule.Transform:GetRotation()
+			local drot = ReduceAngle(rot1 - rot)
+			rot1 = Lerp(rot, rot + drot, dt * smoothing)
+		end
+		reticule.Transform:SetRotation(rot1)
     end
 end
 

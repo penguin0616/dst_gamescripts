@@ -59,6 +59,12 @@ local function OnEquipChanged(inst)
             TheWorld:PushEvent("nutrientsvision", { enabled = self.nutrientsvision })
         end
     end
+    if self.darkenedvision == not inst.replica.inventory:EquipHasTag("darkenedvision") then
+        self.darkenedvision = not self.darkenedvision
+        if not self.forcedarkenedvision then
+            inst:PushEvent("darkenedvision", { enabled = self.darkenedvision })
+        end
+    end
 end
 
 local function OnInit(inst, self)
@@ -92,6 +98,8 @@ local PlayerVision = Class(function(self, inst)
     self.forcegogglevision = false
     self.nutrientsvision = false
     self.forcenutrientsvision = false
+    self.darkenedvision = false
+    self.forcedarkenedvision = false
     self.overridecctable = nil
     self.currentcctable = nil
     self.currentccphasefn = nil
@@ -118,6 +126,10 @@ end
 
 function PlayerVision:HasNutrientsVision()
     return self.nutrientsvision or self.forcenutrientsvision
+end
+
+function PlayerVision:HasDarkenedVision()
+    return self.darkenedvision or self.forcedarkenedvision
 end
 
 function PlayerVision:GetCCPhaseFn()
@@ -189,6 +201,15 @@ function PlayerVision:ForceNutrientVision(force)
         self.forcenutrientsvision = force == true
         if not self.nutrientsvision and self.inst == ThePlayer then
             TheWorld:PushEvent("nutrientsvision", { enabled = self.forcenutrientsvision })
+        end
+    end
+end
+
+function PlayerVision:ForceDarkenedVision(force)
+    if not self.forcedarkenedvision ~= not force then
+        self.forcedarkenedvision = force == true
+        if not self.darkenedvision then
+            self.inst:PushEvent("darkenedvision", { enabled = self.forcedarkenedvision })
         end
     end
 end

@@ -798,6 +798,8 @@ local function StartMonster(inst, force, starttimeoffset)
         inst.target_leaf_state = "poison"
         inst:RemoveTag("cattoyairborne")
 
+        inst:RemoveComponent("waxable")
+
         if inst.leaveschangetask ~= nil then
             inst.leaveschangetask:Cancel()
             inst.leaveschangetask = nil
@@ -825,6 +827,8 @@ local function DoStopMonster(inst)
     end
     inst.AnimState:SetBank("tree_leaf")
     inst:AddTag("cattoyairborne")
+
+    MakeWaxablePlant(inst)
 
     inst.target_leaf_state =
         (TheWorld.state.isautumn and "colorful") or
@@ -1338,6 +1342,8 @@ local function makefn(build, stage, data)
         inst:WatchWorldState("season", OnSeasonChanged)
 
         inst.leaf_state = "normal"
+
+        MakeWaxablePlant(inst)
 
         inst.StartMonster = StartMonster
         inst.StopMonster = StopMonster

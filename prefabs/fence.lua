@@ -5,6 +5,21 @@ local wall_prefabs =
     "collapse_small",
 }
 
+local junk_fence_prefabs = 
+{
+    "fence_junk_pre_rotator",
+	"junk_break_fx",
+}
+
+local DOOR_LOOT = { "boards", "boards", "rope" }
+local FENCE_LOOT = { "twigs" }
+
+SetSharedLootTable("fence_junk",
+{
+	{ "wagpunk_bits",	0.25	},
+	{ "twigs",			1.0		},
+})
+
 local FINDDOOR_MUST_TAGS = {"door"}
 local FINDWALL_MUST_TAGS = {"wall"}
 local FINDWALL_CANT_TAGS = {"alignwall"}
@@ -227,9 +242,6 @@ local function RefreshDoorOffset(inst)
     end
 end
 
-
-
-
 local function FixUpFenceOrientation(inst, deployedrotation)
     local x, y, z = inst.Transform:GetWorldPosition()
     local neighbors = TheSim:FindEntities(x,0,z, 1.5, FINDWALL_MUST_TAGS)
@@ -358,6 +370,27 @@ local function onhit(inst, attacker, damage)
     inst.components.workable:WorkedBy(attacker)
 end
 
+local function junk_onworkfn(inst, worker, workleft, numworks)
+	if numworks == 0 then
+		if worker:HasTag("junkmob") then
+			local fx = SpawnPrefab("junk_break_fx")
+			local x, y, z = inst.Transform:GetWorldPosition()
+			local scale = 0.7 + math.random() * 0.2
+			fx.Transform:SetPosition(x, y + math.random(), z)
+			fx.Transform:SetScale(scale, scale, scale)
+		elseif worker:HasTag("junk") then
+			--junk repairs junk XD
+			inst.components.workable:SetWorkLeft(3)
+			inst.components.health:SetPercent(1)
+		end
+	end
+	onworked(inst)
+end
+
+local function junk_workmultiplierfn(inst, worker, numworks)
+	return worker:HasTag("junk") and 0 or nil
+end
+
 -------------------------------------------------------------------------------
 local function SetIsOpen(inst, isopen)
     inst._isopen:set(isopen)
@@ -459,6 +492,7 @@ local function onsave(inst, data)
     data.swingright = inst._isswingright ~= nil and inst._isswingright:value() or nil
     data.isopen = inst._isopen ~= nil and inst._isopen:value() or nil
     data.isunlocked = inst._isunlocked ~= nil and inst._isunlocked:value() or nil
+    data.variant_num = inst.variant_num or nil
 end
 
 local function onload(inst, data)
@@ -489,6 +523,11 @@ local function onload(inst, data)
             OpenDoor(inst, true)
         elseif inst._isswingright ~= nil and inst._isswingright:value() then
             GetAnimState(inst):PlayAnimation(GetAnimName(inst, "idle"))
+        end
+
+        if data.variant_num then
+            inst.variant_num = data.variant_num
+            inst.AnimState:SetBuild(inst.basebuild .. inst.variant_num)
         end
     end
 end
@@ -528,7 +567,7 @@ local function onloadpostpass(inst, newents, data)
     end)
 end
 
-local function MakeWall(name, anims, isdoor, klaussackkeyid)
+local function MakeWall(name, anims, isdoor, klaussackkeyid, data)
     local assets, custom_wall_prefabs
 
     if isdoor then
@@ -544,6 +583,13 @@ local function MakeWall(name, anims, isdoor, klaussackkeyid)
         if anims.narrow then
             table.insert(assets, Asset("ANIM", "anim/"..anims.narrow..".zip"))
         end
+
+		if data and data.num_builds then
+			for i = 1, data.num_builds do
+                local build = (anims.build or anims.wide) .. i
+                table.insert(assets, Asset("ANIM", "anim/"..build..".zip"))
+            end
+		end
     end
 
     local function fn()
@@ -565,6 +611,16 @@ local function MakeWall(name, anims, isdoor, klaussackkeyid)
         inst:AddTag("noauradamage")
 		inst:AddTag("rotatableobject")
 
+		if data then
+			if data.tag then
+				inst:AddTag(data.tag)
+			end
+			if data.num_builds then
+				inst.variant_num = math.random(data.num_builds)
+				inst.basebuild = anims.build or anims.wide
+			end
+		end
+
         if isdoor then
             inst.isdoor = true
             inst:AddTag("door")
@@ -577,7 +633,7 @@ local function MakeWall(name, anims, isdoor, klaussackkeyid)
             inst.GetActivateVerb = getdooractionstring
         else
             inst.AnimState:SetBank(anims.wide)
-            inst.AnimState:SetBuild(anims.wide)
+            inst.AnimState:SetBuild((anims.build or anims.wide) .. (inst.variant_num or ""))
             inst.AnimState:PlayAnimation("idle")
 
             MakeSnowCoveredPristine(inst)
@@ -603,7 +659,7 @@ local function MakeWall(name, anims, isdoor, klaussackkeyid)
         end
 
         inst.scrapbook_anim    = "idle"
-        inst.scrapbook_build   = anims.wide
+        inst.scrapbook_build   = (anims.build or anims.wide) .. (inst.variant_num and 1 or "")
         inst.scrapbook_bank    = anims.wide
         inst.scrapbook_facing  = FACING_DOWN
 
@@ -621,11 +677,11 @@ local function MakeWall(name, anims, isdoor, klaussackkeyid)
         inst.anims = anims
 
         inst:AddComponent("lootdropper")
-        inst.components.lootdropper:SetLoot(
-            isdoor and
-            { "boards", "boards", "rope" } or
-            { "twigs" }
-        )
+		if data and data.loot_table then
+			inst.components.lootdropper:SetChanceLootTable(data.loot_table)
+        else
+			inst.components.lootdropper:SetLoot(isdoor and DOOR_LOOT or FENCE_LOOT)
+        end
 
         if TheNet:GetServerGameMode() ~= "quagmire" then
             inst:AddComponent("workable")
@@ -633,6 +689,14 @@ local function MakeWall(name, anims, isdoor, klaussackkeyid)
             inst.components.workable:SetWorkLeft(3)
             inst.components.workable:SetOnFinishCallback(onhammered)
             inst.components.workable:SetOnWorkCallback(onworked)
+			if data then
+				if data.onworkfn then
+					inst.components.workable:SetOnWorkCallback(data.onworkfn)
+				end
+				if data.workmultiplierfn then
+					inst.components.workable:SetWorkMultiplierFn(data.workmultiplierfn)
+				end
+			end
 
             inst:AddComponent("combat")
             inst.components.combat:SetKeepTargetFunction(keeptargetfn)
@@ -858,6 +922,133 @@ local function MakeWallPlacer(placer, placement, anims, isdoor)
         end)
 end
 
+local FENCE_MUST = {"fence"}
+local JUNK_MUST =  {"junk_pile_big"}
+local function onloadpostpass_junk_fence_rotator(inst)
+    local x,y,z = inst.Transform:GetWorldPosition()
+
+    local ents = TheSim:FindEntities(x, y, z, 1.7, {"fence"})
+
+    local N = nil
+    local S = nil
+    local E = nil
+    local W = nil 
+
+    local NE = nil
+    local NW = nil
+    local SE = nil
+    local SW = nil 
+
+    for i, ent in ipairs(ents)do
+        if ent ~= inst then
+            local ex,ey,ez = ent.Transform:GetWorldPosition()
+            local angle = inst:GetAngleToPoint(ex,ey,ez)
+            
+            if angle < 0 then angle = angle +360 end
+          
+            if (angle >= 360 - 12.5 and angle <= 360 + 12.5) or (angle <= 12.5) then          
+                N = true
+            elseif angle >= 90-12.5 and angle <= 90 + 12.5 then          
+                E = true
+            elseif angle >= 180-12.5 and angle <= 180 + 12.5 then          
+                S = true
+            elseif angle >= 270-12.5 and angle <= 270 + 12.5 then          
+                W = true
+            elseif angle > 12.5 and angle < 12.5+45 then
+                NE = true
+            elseif angle > 90+12.5 and angle < 90+12.5+45 then          
+                SE = true
+            elseif angle > 180+12.5 and angle < 180+12.5+45 then          
+                SW = true
+            elseif angle > 270+12.5 and angle < 270+12.5+45 then          
+                NW = true
+            end
+        end
+    end
+
+    local fence = SpawnPrefab("fence_junk")
+    fence.Transform:SetPosition(x,y,z)
+
+    if not N and not S and not E and not W and not SW and not SE and not NW and not NE then
+        fence.Transform:SetRotation(0)
+    -- ORDINAL LINES        
+    elseif N and S then
+        fence.Transform:SetRotation(90)
+    elseif E and W then
+        fence.Transform:SetRotation(0)
+
+    -- DIAGONAL LINES    
+    elseif (N and E) or (S and W) then        
+        fence.Transform:SetRotation(45)
+    elseif (N and W) or (S and E) then
+        fence.Transform:SetRotation(-45)
+
+    elseif (NE or SW) and not NW and not SE then
+        fence.Transform:SetRotation(-45)
+    elseif (NW or SE) and not NE and not SW then
+        fence.Transform:SetRotation(45)
+
+    -- ODD CORNERS
+    elseif (N and SW) or (E and SW) or (S and NE) or (W and NE) then
+        fence.Transform:SetRotation(-45)
+    elseif (N and SE) or (E and SE) or (S and NW) or (W and NW) then
+        fence.Transform:SetRotation(45)
+
+    -- ENDS
+    elseif N then
+        fence.Transform:SetRotation(90)
+    elseif S then
+        fence.Transform:SetRotation(00)
+    elseif E then
+        fence.Transform:SetRotation(0)
+    elseif W then
+        fence.Transform:SetRotation(0)
+    end
+
+
+
+    local ents = TheSim:FindEntities(x,y,z, 30, JUNK_MUST)
+
+    if #ents > 0 then        
+        local jx,jy,jz  = ents[1].Transform:GetWorldPosition()
+        local flip = false
+
+        local fencerot = fence.Transform:GetRotation()
+
+        if (fencerot == 90 and jz < z) or
+            (fencerot == -45 and jz > z and jx > x ) or
+            (fencerot == 0 and jx > x) or
+            (fencerot == 45 and jx < x and jz > z ) then
+            flip = true
+        end
+
+        if flip then
+            fence.Transform:SetRotation(fencerot + 180)
+        end
+        
+    end
+
+    inst:Remove()
+end
+
+local function fence_junk_rotatorfn(inst)
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+
+    inst:AddTag("fence")
+    
+    inst.entity:SetPristine()
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+	inst.OnLoadPostPass = onloadpostpass_junk_fence_rotator
+
+    return inst
+end
+
 return MakeWall("fence", {wide="fence", narrow="fence_thin"}, false),
     MakeInvItem("fence_item", "fence", "fence", false),
     MakeWallPlacer("fence_item_placer", "fence", {wide="fence", narrow="fence_thin"}, false),
@@ -868,4 +1059,15 @@ return MakeWall("fence", {wide="fence", narrow="fence_thin"}, false),
     MakeWallPlacer("fence_gate_item_placer", "fence_gate", {wide="fence_gate", narrow="fence_gate_thin"}, true),
 
     MakeWall("quagmire_park_gate", {wide="quagmire_park_gate"}, true, "gate_key"),
-    MakeWallAnim("quagmire_park_gate_anim", {wide="quagmire_park_gate"}, true)
+    MakeWallAnim("quagmire_park_gate_anim", {wide="quagmire_park_gate"}, true),
+
+	MakeWall("fence_junk", {wide="fence_junk", narrow="fence_thin_junk", build="fence_junk_build"}, false, nil,
+		{
+			num_builds = 3,
+			loot_table = "fence_junk",
+			tag = "junk_fence",
+			onworkfn = junk_onworkfn,
+			workmultiplierfn = junk_workmultiplierfn,
+		}),
+
+    Prefab("fence_junk_pre_rotator",fence_junk_rotatorfn, nil, junk_fence_prefabs)

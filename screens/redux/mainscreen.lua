@@ -243,7 +243,7 @@ function MainScreen:OnLoginButton(push_mp_main_screen)
         if is_banned then -- We are banned
         	TheFrontEnd:PopScreen()
 	        TheNet:NotifyAuthenticationFailure()
-            OnNetworkDisconnect( banned_reason, true)
+            OnNetworkDisconnect( banned_reason, true, nil, nil, function() TheFrontEnd:PopScreen() GoToMultiplayerMainMenu(true) end)
         -- We are on a deprecated version of the game
         elseif must_upgrade then
         	TheFrontEnd:PopScreen()

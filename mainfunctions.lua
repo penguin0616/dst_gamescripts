@@ -1570,6 +1570,7 @@ function DisplayError(error)
                                                             KnownModIndex:DisableAllMods()
                                                             ForceAssetReset()
                                                             KnownModIndex:Save(function()
+                                                                TheSim:ResetError()
                                                                 SimReset()
                                                             end)
                                                         end},
@@ -1768,7 +1769,7 @@ function OnDemoTimeout()
 end
 
 -- Receive a disconnect notification
-function OnNetworkDisconnect( message, should_reset, force_immediate_reset, details )
+function OnNetworkDisconnect( message, should_reset, force_immediate_reset, details, miscdata)
     -- The client has requested we immediately close this connection
     if force_immediate_reset == true then
         DoRestart(true)
@@ -1781,8 +1782,17 @@ function OnNetworkDisconnect( message, should_reset, force_immediate_reset, deta
 
     local accounts_link = nil
 	local help_button = nil
-    if (IsRail() or TheNet:IsNetOverlayEnabled()) and (message == "E_BANNED") then
-        accounts_link = {text=STRINGS.UI.NETWORKDISCONNECT.ACCOUNTS, cb = function() TheFrontEnd:GetAccountManager():VisitAccountPage() end}
+    local play_offline = nil
+    if message == "E_BANNED" then
+        if (IsRail() or TheNet:IsNetOverlayEnabled()) then
+            accounts_link = {text=STRINGS.UI.NETWORKDISCONNECT.ACCOUNTS, cb = function() TheFrontEnd:GetAccountManager():VisitAccountPage() end}
+        end
+        play_offline = {text=STRINGS.UI.MAINSCREEN.PLAYOFFLINE, cb = function()
+            TheFrontEnd:PopScreen()
+            if miscdata then
+                miscdata()
+            end
+        end}
     end
 
 	if details ~= nil then
@@ -1792,6 +1802,16 @@ function OnNetworkDisconnect( message, should_reset, force_immediate_reset, deta
 			help_button = details.help_button
 		end
 	end
+
+    if play_offline ~= nil then
+        if accounts_link == nil then
+            accounts_link = play_offline
+            play_offline = nil
+        elseif help_button == nil then
+            help_button = play_offline
+            play_offline = nil
+        end
+    end
 
     local title = STRINGS.UI.NETWORKDISCONNECT.TITLE[message] or STRINGS.UI.NETWORKDISCONNECT.TITLE.DEFAULT
     message = STRINGS.UI.NETWORKDISCONNECT.BODY[message] or STRINGS.UI.NETWORKDISCONNECT.BODY.DEFAULT
@@ -1842,7 +1862,7 @@ function OnNetworkDisconnect( message, should_reset, force_immediate_reset, deta
             local cb = TheFrontEnd.fadecb
             TheFrontEnd.fadecb = function()
                 if cb then cb() end
-                TheFrontEnd:PushScreen( PopupDialogScreen(title, message, { {text=STRINGS.UI.NETWORKDISCONNECT.OK, cb = function() doquit( should_reset ) end}, accounts_link, help_button }) )
+                TheFrontEnd:PushScreen( PopupDialogScreen(title, message, { {text=STRINGS.UI.NETWORKDISCONNECT.OK, cb = function() doquit( should_reset ) end}, accounts_link, help_button, play_offline }) )
                 local screen = TheFrontEnd:GetActiveScreen()
                 if screen then
                     screen:Enable()
@@ -1850,7 +1870,7 @@ function OnNetworkDisconnect( message, should_reset, force_immediate_reset, deta
                 TheFrontEnd:Fade(FADE_IN, screen_fade_time)
             end
         else
-            TheFrontEnd:PushScreen( PopupDialogScreen(title, message, { {text=STRINGS.UI.NETWORKDISCONNECT.OK, cb = function() doquit( should_reset ) end}, accounts_link, help_button }) )
+            TheFrontEnd:PushScreen( PopupDialogScreen(title, message, { {text=STRINGS.UI.NETWORKDISCONNECT.OK, cb = function() doquit( should_reset ) end}, accounts_link, help_button, play_offline }) )
             local screen = TheFrontEnd:GetActiveScreen()
             if screen then
                 screen:Enable()
@@ -1859,7 +1879,7 @@ function OnNetworkDisconnect( message, should_reset, force_immediate_reset, deta
         end
     else
         -- TheFrontEnd:Fade(FADE_OUT, screen_fade_time, function()
-            TheFrontEnd:PushScreen( PopupDialogScreen(title, message, { {text=STRINGS.UI.NETWORKDISCONNECT.OK, cb = function() doquit( should_reset ) end}, accounts_link, help_button }) )
+            TheFrontEnd:PushScreen( PopupDialogScreen(title, message, { {text=STRINGS.UI.NETWORKDISCONNECT.OK, cb = function() doquit( should_reset ) end}, accounts_link, help_button, play_offline }) )
             local screen = TheFrontEnd:GetActiveScreen()
             if screen then
                 screen:Enable()

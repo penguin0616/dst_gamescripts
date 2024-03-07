@@ -2,6 +2,7 @@ local ASSETS_CONTAINER =
 {
     Asset("ANIM", "anim/ui_icepack_2x3.zip"),
     Asset("ANIM", "anim/beargerfur_sack.zip"),
+    Asset("INV_IMAGE", "beargerfur_sack_open"),
 }
 
 local ASSETS_FX =
@@ -64,6 +65,7 @@ end
 
 local function OnOpen(inst)
     inst.AnimState:PlayAnimation("open")
+    inst.components.inventoryitem:ChangeImageName("beargerfur_sack_open")
 
     if inst._startsoundtask ~= nil then
         inst._startsoundtask:Cancel()
@@ -80,16 +82,20 @@ local function OnOpen(inst)
 end
 
 local function OnClose(inst)
-    inst.AnimState:PlayAnimation("close")
-    inst.AnimState:PushAnimation("closed", false)
-
     inst.SoundEmitter:KillSound(OPEN_SOUNDNAME)
+    inst.components.inventoryitem:ChangeImageName()
+
+    if inst.components.inventoryitem.owner == nil then
+        inst.AnimState:PlayAnimation("close")
+        inst.AnimState:PushAnimation("closed", false)
+    else
+        inst.AnimState:PlayAnimation("closed", false)
+    end
+    inst:ToggleFrostFX(false)
 
     if not inst:IsInLimbo() then
         inst.SoundEmitter:PlaySound(inst._sounds.close)
     end
-
-    inst:ToggleFrostFX(false)
 end
 
 local function OnPutInInventory(inst)

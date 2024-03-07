@@ -1269,6 +1269,12 @@ t = {
                 end
             end,
         },
+        {
+            version = 5.143, -- Junk Yard - new content
+            fn = function(savedata)
+                FlagForRetrofitting_Forest(savedata, "retrofit_junkyard_content")
+            end,
+        },        
     },
 }
 

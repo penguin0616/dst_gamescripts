@@ -7266,6 +7266,7 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_ancient",
 	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_ancient") end,
 	skin_tags = { "CHEST", "CRAFTABLE", "ANCIENT", },
 	release_group = 146,
+	granted_items = { "treasurechest_upgraded_ancient", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("treasurechest_cake",
@@ -7276,6 +7277,7 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_cake",
 	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_cake") end,
 	skin_tags = { "CHEST", "TENYEARS", "CRAFTABLE", },
 	release_group = 144,
+	granted_items = { "treasurechest_upgraded_cake", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("treasurechest_carpetbag",
@@ -7287,6 +7289,7 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_carpetbag",
 	skin_tags = { "CHEST", "CRAFTABLE", },
 	marketable = true,
 	release_group = 19,
+	granted_items = { "treasurechest_upgraded_carpetbag", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("treasurechest_corruption",
@@ -7298,6 +7301,7 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_corruption",
 	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_corruption") end,
 	skin_tags = { "CHEST", "CRAFTABLE", "T_UPDATE", },
 	release_group = 125,
+	granted_items = { "treasurechest_upgraded_corruption", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("treasurechest_cotl_basic",
@@ -7309,6 +7313,7 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_cotl_basic",
 	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_cotl_basic") end,
 	skin_tags = { "CHEST", "CRAFTABLE", "C_UPDATE", },
 	release_group = 147,
+	granted_items = { "treasurechest_upgraded_cotl_basic", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("treasurechest_cotl_fancy",
@@ -7320,6 +7325,7 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_cotl_fancy",
 	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_cotl_fancy") end,
 	skin_tags = { "CHEST", "C_UPDATE", "CRAFTABLE", },
 	release_group = 147,
+	granted_items = { "treasurechest_upgraded_cotl_fancy", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("treasurechest_crimson",
@@ -7331,6 +7337,7 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_crimson",
 	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_crimson") end,
 	skin_tags = { "CHEST", "CRAFTABLE", "T_UPDATE", },
 	release_group = 125,
+	granted_items = { "treasurechest_upgraded_crimson", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("treasurechest_cupid",
@@ -7341,6 +7348,7 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_cupid",
 	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_cupid") end,
 	skin_tags = { "CHEST", "CRAFTABLE", },
 	release_group = 113,
+	granted_items = { "treasurechest_upgraded_cupid", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("treasurechest_cupidalt",
@@ -7362,6 +7370,7 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_gingerbread",
 	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_gingerbread") end,
 	skin_tags = { "CHEST", "WINTER", "CRAFTABLE", },
 	release_group = 22,
+	granted_items = { "treasurechest_upgraded_gingerbread", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("treasurechest_monster",
@@ -7373,6 +7382,7 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_monster",
 	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_monster") end,
 	skin_tags = { "CHEST", "HALLOWED", "CRAFTABLE", },
 	release_group = 49,
+	granted_items = { "treasurechest_upgraded_monster", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("treasurechest_posh",
@@ -7384,6 +7394,7 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_posh",
 	skin_tags = { "CHEST", "CRAFTABLE", },
 	marketable = true,
 	release_group = 19,
+	granted_items = { "treasurechest_upgraded_posh", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("treasurechest_poshprint",
@@ -7394,6 +7405,7 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_poshprint",
 	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_poshprint") end,
 	skin_tags = { "CHEST", "CRAFTABLE", },
 	release_group = 13,
+	granted_items = { "treasurechest_upgraded_poshprint", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("treasurechest_sacred",
@@ -7404,6 +7416,7 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_sacred",
 	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_sacred") end,
 	skin_tags = { "CHEST", "ANCIENT", "CRAFTABLE", },
 	release_group = 25,
+	granted_items = { "treasurechest_upgraded_sacred", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("treasurechest_steamertrunk",
@@ -7415,6 +7428,7 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_steamertrunk",
 	skin_tags = { "CHEST", "CRAFTABLE", },
 	marketable = true,
 	release_group = 19,
+	granted_items = { "treasurechest_upgraded_steamertrunk", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("treasurechest_traincase",
@@ -7426,6 +7440,7 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_traincase",
 	skin_tags = { "CHEST", "CRAFTABLE", },
 	marketable = true,
 	release_group = 19,
+	granted_items = { "treasurechest_upgraded_traincase", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("treasurechest_traveltrunk",
@@ -7437,6 +7452,184 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_traveltrunk",
 	skin_tags = { "CHEST", "CRAFTABLE", },
 	marketable = true,
 	release_group = 19,
+	granted_items = { "treasurechest_upgraded_traveltrunk", },
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_ancient",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_ancient") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_cake",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "Loyal",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_cake") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_carpetbag",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "Distinguished",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_carpetbag") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_corruption",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_corruption") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_cotl_basic",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_cotl_basic") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_cotl_fancy",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_cotl_fancy") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_crimson",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_crimson") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_cupid",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "Timeless",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_cupid") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_gingerbread",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "Event",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_gingerbread") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_monster",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_monster") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_posh",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "Distinguished",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_posh") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_poshprint",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "ProofOfPurchase",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_poshprint") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_sacred",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "Timeless",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_sacred") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_steamertrunk",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "Distinguished",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_steamertrunk") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_traincase",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "Distinguished",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_traincase") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_traveltrunk",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "Distinguished",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_traveltrunk") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("treasurechest_upgraded_vintage",
+{
+	base_prefab = "treasurechest",
+	type = "item",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_upgraded_vintage") end,
+	skin_tags = { },
+	release_group = 153,
 }))
 
 table.insert(prefs, CreatePrefabSkin("treasurechest_vintage",
@@ -7448,6 +7641,7 @@ table.insert(prefs, CreatePrefabSkin("treasurechest_vintage",
 	init_fn = function(inst) treasurechest_init_fn(inst, "treasurechest_vintage") end,
 	skin_tags = { "COTTAGE", "CHEST", "CRAFTABLE", },
 	release_group = 118,
+	granted_items = { "treasurechest_upgraded_vintage", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("trophyscale_fish_handmade",

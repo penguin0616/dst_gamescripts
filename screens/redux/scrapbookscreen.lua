@@ -1581,7 +1581,7 @@ function ScrapbookScreen:PopulateInfoPanel(entry)
 		if data.fishable then
 			makeentry("icon_uses.tex",STRINGS.SCRAPBOOK.DATA_FISHABLE)
 		end		
-		if data.picakble then
+		if data.pickable then
 			makeentry("icon_action.tex",STRINGS.SCRAPBOOK.DATA_PICKABLE)			
 		end	
 		if data.harvestable then

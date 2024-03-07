@@ -432,6 +432,7 @@ STRINGS =
 		{
 			 GENERIC = "Pick",
 			 HARVEST = "Harvest",
+             RUMMAGE = "Rummage",
 		},
         REPAIR =
         {
@@ -1026,6 +1027,7 @@ STRINGS =
     SMOLDERINGITEM = "Smoldering",
     DISEASEDITEM = "Diseased",
 	BROKENITEM = "Broken",
+	WAXEDPLANT = "Scared Stiff",
 
     WET_PREFIX =
     {
@@ -1459,6 +1461,7 @@ STRINGS =
         INSANITYROCK = "Obelisk",
         SANITYROCK = "Obelisk",
         SKELETON = "Skeleton",
+        SKELETON_NOTPLAYER = "Skeleton",
         SCORCHED_SKELETON = "Crispy Skeleton",
         SKELETON_PLAYER = "Skeleton",
         PIGHEAD = "Pig Head",
@@ -1530,6 +1533,7 @@ STRINGS =
         BEARDHAIR = "Beard Hair",
         FURTUFT = "Fur Tuft",
         TREASURECHEST = "Chest",
+        CHESTUPGRADE_STACKSIZE = "Elastispacer",
         DRAGONFLYCHEST = "Scaled Chest",
         DRAGONFLYFURNACE = "Scaled Furnace",
         SKULLCHEST = "Skullchest",
@@ -1784,6 +1788,7 @@ STRINGS =
         WALL_HAY_ITEM = "Hay Wall",
         WALL_MOONROCK_ITEM = "Moon Rock Wall",
 		WALL_DREADSTONE_ITEM = "Dreadstone Wall",
+        WALL_SCRAP_ITEM = "Scrap Wall",
 
         WALL_WOOD = "Wood Wall",
         WALL_STONE = "Stone Wall",
@@ -1791,6 +1796,7 @@ STRINGS =
         WALL_HAY = "Hay Wall",
         WALL_MOONROCK = "Moon Rock Wall",
 		WALL_DREADSTONE = "Dreadstone Wall",
+        WALL_SCRAP = "Scrap Wall",
 
         FENCE = "Wood Fence",
         FENCE_ITEM = "Wood Fence",
@@ -2203,6 +2209,7 @@ STRINGS =
         RED_MUSHROOMHAT = "Red Funcap",
         GREEN_MUSHROOMHAT = "Green Funcap",
         BLUE_MUSHROOMHAT = "Blue Funcap",
+        MOON_MUSHROOMHAT = "Lunar Funcap",
         MUSHROOM_LIGHT2 = "Glowcap",
         MUSHROOM_LIGHT = "Mushlight",
         SHROOM_SKIN = "Shroom Skin",
@@ -3348,6 +3355,7 @@ STRINGS =
         DUSTMERINGUE = "Amberosia",
 
         SHROOMCAKE = "Mushy Cake",
+        SHROOMBAIT = "Stuffed Night Cap",
 
         ARCHIVE_LOCKBOX_DISPENCER = "Fountain of Knowledge",
         ARCHIVE_PORTAL = "Sealed Portal",
@@ -3442,6 +3450,7 @@ STRINGS =
         WAGSTAFF_NPC_PSTBOSS = "Grainy Transmission",
         WAGSTAFF_NPC_MUTATIONS = "Grainy Transmission",
         ALTERGUARDIAN_CONTAINED = "Lunar Essence Extractor",
+        WAGSTAFF_NPC_WAGPUNK = "Grainy Transmission",
 
         ALTERGUARDIAN_PHASE1 = "Celestial Champion",
         ALTERGUARDIAN_PHASE2 = "Celestial Champion",
@@ -3706,6 +3715,7 @@ STRINGS =
 		HORRORFUEL = "Pure Horror",
 		DAYWALKER = "Nightmare Werepig",
 		DAYWALKER_PILLAR = "Cracked Pillar",
+		DAYWALKER2 = "Scrappy Werepig",
 		SHADOW_LEECH = "Parasitic Shadeling",
 		ARMORDREADSTONE = "Dreadstone Armor",
 		DREADSTONEHAT = "Dreadstone Helm",
@@ -3902,6 +3912,22 @@ STRINGS =
         MASTUPGRADE_LAMP_YOTD = "Dragonfly Light",
         MASTUPGRADE_LAMP_ITEM_YOTD = "Dragonfly Light Kit",
         WALKINGPLANK_YOTD = "Scaled Plank",
+
+        -- Rifts / Meta QoL
+
+        HEALINGSALVE_ACID = "Slimy Salve",
+
+        BEESWAX_SPRAY = "Embalming Spritz",
+        STORAGE_ROBOT = "W.O.B.O.T.",
+
+        SCRAP_MONOCLEHAT = "Horizon Expandinator",
+        SCRAP_CONEHAT = "Scrappy Chapauldron",
+
+        JUNK_PILE = "Junk Pile",
+        JUNK_PILE_BIG = "Teetering Junk Pile",
+
+        FENCE_JUNK = "Junky Fence",
+
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -4042,6 +4068,7 @@ STRINGS =
         BEEBOX = "Store your own bees.",
         BEEHAT = "Protection against angry bees.",
         TREASURECHEST = "A sturdy container.",
+        CHESTUPGRADE_STACKSIZE = "It's a bit of a stretch for some storage space.",
         DRAGONFLYCHEST = "A sturdy and fireproof container.",
         DRAGONFLYFURNACE = "Build yourself a fly flue.",
         BEDROLL_STRAW = "Sleep through the night.",
@@ -4267,6 +4294,7 @@ STRINGS =
         RED_MUSHROOMHAT = "It's like eating all kinds of mushrooms.",
         GREEN_MUSHROOMHAT = "It's like eating all kinds of mushrooms.",
         BLUE_MUSHROOMHAT = "It's like eating all kinds of mushrooms.",
+        MOON_MUSHROOMHAT = "It's like eating all kinds of mushrooms.",
         MUSHROOM_LIGHT2 = "Inspired by the lava lamp sciences.",
         MUSHROOM_LIGHT = "The perfect addition to any mush-Room.",
         SLEEPBOMB = "A throwable pouch full of sleep.",
@@ -4907,7 +4935,15 @@ STRINGS =
 
         BOATRACE_START_THROWABLE_DEPLOYKIT = "Ready, set, boat!",
         BOATRACE_CHECKPOINT_THROWABLE_DEPLOYKIT = "It's not the destination, it's the journey.",
-    },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
+
+        -- Rifts / Meta QoL
+
+        HEALINGSALVE_ACID = "What doesn't kill you makes you stronger.",
+
+        BEESWAX_SPRAY = "A petrifying preserver of plant life.",
+
+        WALL_SCRAP_ITEM = "A pile of junk, roughly wall-shaped.",
+    },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
@@ -5085,7 +5121,7 @@ STRINGS =
     MERM_TALK_HELP_HAMMER    = {{"Will come with you.", "Flort glut."}, {"Make Mermfolk strong!", "Blut gloppy Glurtsu!"}, {"Smash! Smash!", "Florph! Florph!"}, {"Work hard, florp!", "Glort blut, florp!"}},
     MERM_TALK_FIND_FOOD      = {{"Will come with you.", "Flort glut."}, {"Make Mermfolk strong!", "Blut gloppy Glurtsu!"}, {"This do fine.", "Glort grolt flut."}, {"Find something tasty!", "Glurt florpy flut!"}},
     MERM_BATTLECRY           = {{"Glorp! Go away!", "Glorp! Glorpy glup!"}, {"Destroy you!", "Wult glut!"},},
-    MERM_GUARD_BATTLECRY     = {{"To battle!", "Wult flrot!"}, {"For glory of Mermfolk!", "Flort Glurtsu flut!"}, {"ATTAAAACK!!", "GLOT FLOOOORPH!!"}, {"Defend King!", "Glurph Glurtsen!"}},
+    MERM_GUARD_BATTLECRY     = {{"To battle!", "Wult flrot!"}, {"For Mermfolk!", "Flort Glurtsu flut!"}, {"ATTAAAACK!!", "GLOT FLOOOORPH!!"}, {"Defend King!", "Glurph Glurtsen!"}},
     MERM_TALK_PANICBOSS      = {{"Something coming!", "Gloppy flort!"}, {"Aaah!! Bad thing! Bad thing!", "Gloooorph!! Glurph glot! Glurph glot!"}, {"It come to destroy us!", "Flort wult Glurtsu!"}},
     MERM_TALK_PANICBOSS_KING = {{"Rally to King!", "Glurtsen blut flort!"}, {"Hurry! Protect kingdom!", "Flurph flrot! Gloppy Glurtsam!"}, {"S-stay brave!!", "G-glop blut flrot!!"}},
 
@@ -6661,6 +6697,10 @@ STRINGS =
         "Progress waits for no one!",
     },
 
+    WAGSTAFF_JUNK_YARD_OCCUPIED = {
+        "Too crowded here for my work. I'll come back later",
+    },    
+
     -- Terraria
     EYEOFTERROR_COMING = "You feel an evil presence watching you...",
     EYEOFTERROR_TARGET = "The Eye of Terror turns its gaze toward {player_name}",
@@ -6778,6 +6818,39 @@ STRINGS =
 		--kneeling down tired, recovering health
 		"HUFF... HUFF...",
         "BETTER... YES, MUCH BETTER.",
+	},
+
+	DAYWALKER2_BURIED_FAR =
+	{
+		--buried under junkpile & player is on screen but not that close
+		--moaning/grunting/mumbling to self?
+		"ME STUCK!","TOO HEAVY!","MUST GET FREE!","SO ITCHY.", --see DAYWALKER_IMPRISONED_FAR
+	},
+	DAYWALKER2_BURIED_NEAR =
+	{
+		--buried under junkpile & player is nearby
+		--duplicate some of the lines from above, and add some asking player for help?
+		"HEY YOU!","HELP ME!","MUST GET FREE!","STOP STARING!","SO ITCHY.","COME CLOSER.","ME WON'T DESTROY YOU... PROMISE.", --see DAYWALKER_IMPISONED_NEAR
+	},
+	DAYWALKER2_RUMMAGE_SUCCESS =
+	{
+		--rummaging and found something good
+		"ME LIKE.","GOOD STUFF.","MINE.","YES!","MORE!","NICE.","NEED MORE POWER.","OOH.","MMM.",
+	},
+	DAYWALKER2_RUMMAGE_FAIL =
+	{
+		--rummaging and found nothing but trash
+		"TRASH!","BLEGH!","WORTHLESS.","USELESS!","RAAAAAAGGHH! ALL GARBAGE!",
+	},
+	DAYWALKER2_JUNK_WARNING =
+	{
+		--idle in junkyard, rummaging, warn players not to take his stuff
+		"ALL MINE.","DON'T TOUCH.","LAST WARNING.","GET LOST!","NOT FOR YOU!","GET OUT!",
+	},
+	DAYWALKER2_CHASE_AWAY =
+	{
+		--aggro on players, attack and chase them out of the junkyard
+		"ME DESTROY YOU!","THIEF!","RAAAAAAAAGGHH!","YOU MUST DIE!","IS ALL MINE!",
 	},
 
     WARBIS = {
@@ -7409,7 +7482,7 @@ STRINGS.UI =
             "Anne-Marie Cyr",
             "Matthew Barry",
             "Zachary Lockwood",
-            "Amanda Niles",
+            "Andy Niles",
 			"Auday Hussein",
             "Jesse Blackston",
             "Jeddy Zhang",
@@ -7428,7 +7501,13 @@ STRINGS.UI =
             "Margaret Lu",
             "Kial Natale",
             "Daniel Yu",
-            "Elaine Chen"
+            "Elaine Chen",
+            "Diogo Webber",
+            "Chris Chan",
+            "Rich Talmey",
+            "Jayson Thiessen",
+            "Amanda Wong",
+            "Kent Reimer",
         },
 
         ALTGAMES =
@@ -7839,7 +7918,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "Year of the Dragonfly",
+		MAINBANNER_BETA_TITLE = "Scrappy Scavengers\nBeta Branch",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -8072,6 +8151,7 @@ STRINGS.UI =
 		FOOD_EFFECTS_SANITY_REGEN = "Restores sanity over time",
 		FOOD_EFFECTS_HOT_SANITY_REGEN = "Warms the body and mind",
 		FOOD_EFFECTS_BEEFALO = "Treat your Beefalo",
+        FOOD_EFFECTS_SLEEP = "Puts one to sleep",
 
 		FOOD_TYPE_TITLE = "Type",
 		FOOD_TYPE_UNKNOWN = "?",
@@ -8584,6 +8664,7 @@ STRINGS.UI =
         AUTOSAVE = "Auto-save",
         AUTOMODS = "Auto-Subscribe Mods:",
         AUTOLOGIN = "Auto-Login:",
+        NPCCHAT = "Creature's Chat:",
         ANIMATED_HEADS = "Moving Head Icons:",
         SHOWPASSWORD = "Show Passwords:",
 		SERVER_NAME_PROFANITY_FILTER = "Filter Server Names:",
@@ -8640,6 +8721,7 @@ STRINGS.UI =
             MINIMAPZOOMSENSITIVITY = "Adjust the input sensitivity while zooming in and out on the minimap.",
             MINIMAPZOOMCURSOR = "Zooming on the minimap will focus where the cursor is located.",
             AUTOLOGIN = "Log into your Klei account automatically when booting up Don't Starve Together.",
+            NPCCHAT = "Allows key dialogue from creatures in the world to be displayed in the chat box.",
             SHOWPASSWORD = "Show or hide your passwords.",
             BOATCAMERA = "Allows the camera to focus on your boat while sailing.",
             BACKPACKMODE = "Change how the contents of the backpack are displayed. Integrated with the inventory bar or separated at the side of the screen.",
@@ -9659,9 +9741,11 @@ STRINGS.UI =
         WINTERHOUNDS = "Ice Hound Waves",
         SUMMERHOUNDS = "Fire Hound Waves",
         RIFTS_FREQUENCY = "Wild Rift Frequency",
-        RIFTS_ENABLED = "Wild Rifts Enabled",
+        RIFTS_ENABLED = "Wild Rifts",
         RIFTS_FREQUENCY_CAVE = "Wild Rift Frequency",
-        RIFTS_ENABLED_CAVE = "Wild Rifts Enabled",
+        RIFTS_ENABLED_CAVE = "Wild Rifts",
+        LUNARHAIL_FREQUENCY = "Lunar Hail",
+        ACIDRAIN_ENABLED = "Acid Rain",
         HOUNDMOUND = "Hound Mounds",
         MERMS = "Merms",
         TENTACLES = "Tentacles",
@@ -9801,8 +9885,10 @@ STRINGS.UI =
         HEALTHPENALTY = "Max Health Penalty",
 		LESSDAMAGETAKEN = "Damage Taken",
         STAGEPLAYS = "Stage Plays",
+        JUNKYARD = "Junk Yard",
 
         DAYWALKER = "Nightmare Werepig",
+
 		-- End of world customization strings
     },
 
@@ -10169,6 +10255,12 @@ STRINGS.UI =
         SORT_DATECREATED = "Date Created",
         SEARCH = "Search",
 		NO_MATCHING_SERVERS = "No save games match your search.",
+        USECAVES_TITLE = "{server} or no {server}?",
+        USECAVES_DESC_CAVE = "Play with {server}, requires more PC Power as it runs multiple servers",
+        USECAVES_DESC_NOCAVE = "Play with no {server}, sad, but not as demanding on a computer",
+        USECAVES_NAME_CAVE = "{server}",
+        USECAVES_NAME_NOCAVE = "No {server}",
+        REMEMBERCOICE = "Remember my choice.",
     },
 
     CLOUDSERVERCREATIONSCREEN =
@@ -13885,6 +13977,7 @@ STRINGS.KITCOON_NAMING =
 		"Ares",
 		--"Armella",
 		"Armello",
+        "Dineide",
     },
 }
 
@@ -15095,7 +15188,7 @@ STRINGS.SKILLTREE = {
         COUNT_LOCK_1_DESC = "Learn enough left-branch skills to unlock.",
 
         LUNAR_GEAR_1_TITLE = "Lunar Guardian I",
-        LUNAR_GEAR_1_DESC = "Seize foes and keep them rooted in place while wearing Brightshade Armor.",
+        LUNAR_GEAR_1_DESC = "Seize foes and keep them rooted in place while wearing Brightshade Armor.\n\nInfuse Bramble Husks worn by Wormwood with Planar energy.",
 
         LUNAR_GEAR_2_TITLE = "Lunar Guardian II",
         LUNAR_GEAR_2_DESC = "Summon vines to join the fray while attacking with Brightshade melee weapons.",
@@ -15114,7 +15207,7 @@ STRINGS.SKILLTREE = {
         BLOOMING_SPEED2_DESC = "Reach full bloom much quicker.",
 
         BLOOMING_MAX_UPGRADE_TITLE = "Flower Power",
-        BLOOMING_MAX_UPGRADE_DESC = "Stay in full bloom longer.",
+        BLOOMING_MAX_UPGRADE_DESC = "Fertilization of Wormwood is boosted 30%.",
 
         BLOOMING_PHOTOSYNTHESIS_TITLE = "Photosynthesis",
         BLOOMING_PHOTOSYNTHESIS_DESC = "Slowly regenerate health when exposed to daylight in full bloom.",
@@ -15143,10 +15236,10 @@ STRINGS.SKILLTREE = {
         LUNAR_MUTATIONS_1_DESC = "Tap into your lunar roots to transform Carrots into Carrats.\nCarrats you've created will retrieve food they find on the ground.",
 
         LUNAR_MUTATIONS_2_TITLE = "Lunar Cultivator II",
-        LUNAR_MUTATIONS_2_DESC = "Tap into your lunar roots to transform Lightbulbs into Bulbous Lightbugs.\nBulbous Lightbugs you've created will follow you around.",
+        LUNAR_MUTATIONS_2_DESC = "Tap into your lunar roots to transform Lightbulbs into Bulbous Lightbugs.\nBulbous Lightbugs you've created will follow you around.\nThe more Lightbugs grouped together, the larger their light will glow.",
 
         LUNAR_MUTATIONS_3_TITLE = "Lunar Cultivator III",
-        LUNAR_MUTATIONS_3_DESC = "Tap into your lunar roots to transform Dragon Fruit into Saladmanders.\nSaladmanders you've created will attack things you do.",
+        LUNAR_MUTATIONS_3_DESC = "Tap into your lunar roots to transform Dragon Fruit into Saladmanders.\nSaladmanders you've created will attack things you do.\nTransforming maximum Saladmanders gives them a health boost.",
     },
 
     WILLOW = {
@@ -15842,6 +15935,7 @@ STRINGS.SCRAPBOOK = {
         SPIDERDEN = "Creates a patch of webbing on the ground near it that slows survivors and some creatures that walk on it.\n\nComes in several sizes and grows to fit its spider population.\n\nWebber may upgrade these with Silk.",
         STEERINGWHEEL = "When deployed on a boat, a survivor can use it to rotate the boats direction.",
         TACKLESTATION = "Standing near this device will provide the survivor with new Lures and Floats they can craft.",
+        CARPENTRY_STATION = "Standing near this device will provide the survivor with new Forniture they can craft.\n\nIt can also be used to quickly refine logs into boards.",
         TENT = "A survivor can use the tent at Dusk or Night.\n\nSurvivor recovers 2 Health per second and 1 Sanity per second but consumes 0.33 Hunger per second. It also reduces 1 Wetness per second and lowers temperature 1 degree per second down to 40 degrees.",
         TURFCRAFTINGSTATION = "Standing near this device will provide the survivor with new Turf they can craft.",
         TOWNPORTAL = "At the cost of 15 Sanity, a survivor can activate the device and then consume 40 Sanity per minute while they keep it active. A second survivor can use another Lazy Deserter or a Desert Stone to teleport to the active one. The teleport costs 50 Sanity.",
@@ -15858,7 +15952,7 @@ STRINGS.SCRAPBOOK = {
         TELEBASE = "This device requires 3 purple gems to be active\n\nA survivor that uses a Telelocator Staff will teleport to the nearest active Telelocator Focus and consume the gems.",
         TOADSTOOLCAP = "It can be chopped. Go ahead and chop it.\n\nPlease chop it.",
         TUMBLEWEED = "These bounce around the desert and collect junk along the way.\n\nAll sorts of crazy junk.\n\nYou'd be surprised.",
-        MONKEYISLANDPORTAL = "A entrance into the world from somewhere, Monkeys and other debris keep dropping out of it.",
+        MONKEYISLANDPORTAL = "A rift like spout from somewhere else, Monkeys and other debris keep dropping out of it.",
         WALLS = "Can be repaired using the inventory wall items.\n\nCan be build up 4 levels.",
         WALRUSCAMP = "A hunter's camp designed for Winter use.",
         WORMHOLE = "Jumping into this hole costs 15 points of Sanity.\n\nWhere will it come out?",
@@ -15893,6 +15987,17 @@ STRINGS.SCRAPBOOK = {
         EMBERLIGHT = "Works like a campfire for its duration, creating light and heat and will ignite things nearby. It can also be used to cook food.",
         BOOTLEG = "Can be thrown into the sea to create a pair of connected Whirlportals. Boats sailing close to them will be brought to the other entrance.",
         OCEANWHIRLPORTAL = "An ocean portal that allows boats to travel long distances.",
+
+        -- Rifts / Meta QoL
+
+        HEALINGSALVE_ACID = "Heals 20 Health and makes the survivor immune to Acid Rain for half of a day. Pacifies Snurtles and Slurtles for the duration.",
+
+        BEESWAX_SPRAY = "Freeze the stage of a plant. This will make it unproductive, but also not attractive to parasites.",
+        STORAGE_ROBOT = "An automaton capable of collecting and organizing items into containers. Store an item in a container next to it and it will know what to do!",
+
+        SCRAP_MONOCLEHAT = "Expands the survivor's vision range. Convenient during the day, uncomfortable at night.",
+
+        JUNK_PILE_BIG = "A towering pile of junk. There might be something surprising hiding inside...",
     },
 
     -- Full name: "{name} Scrapbook Page"

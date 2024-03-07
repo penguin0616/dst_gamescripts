@@ -125,7 +125,16 @@ function ServerCreationScreen:UpdatePresetMode(mode)
 end
 
 function ServerCreationScreen:OnNewGamePresetPicked(preset_id)
+
 	self.world_tabs[1]:OnCombinedPresetButton(preset_id)
+end
+
+
+function ServerCreationScreen:SetSecondaryLevel(levelsetting)
+    if levelsetting then
+        self.world_tabs[2]:AddMultiLevel()
+        self.world_tabs[2]:Refresh()
+    end
 end
 
 function ServerCreationScreen:UpdatePlaystyle(settings_overrides)

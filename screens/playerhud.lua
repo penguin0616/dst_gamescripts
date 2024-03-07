@@ -24,6 +24,7 @@ local InkOver = require "widgets/inkover"
 local WagpunkUI = require "widgets/wagpunkui"
 local GogglesOver = require "widgets/gogglesover"
 local NutrientsOver = require "widgets/nutrientsover"
+local DarkenedOver = require "widgets/darkenedover"
 local BatOver = require "widgets/batover"
 local FlareOver = require "widgets/flareover"
 local EndOfMatchPopup = require "widgets/redux/endofmatchpopup"
@@ -171,6 +172,7 @@ function PlayerHud:CreateOverlays(owner)
 
     self.gogglesover = self.overlayroot:AddChild(GogglesOver(owner, self.storm_overlays))
     self.nutrientsover = self.overlayroot:AddChild(NutrientsOver(owner))
+    self.darkenedover = self.overlayroot:AddChild(DarkenedOver(owner))
     self.bloodover = self.overlayroot:AddChild(BloodOver(owner))
     self.beefbloodover = self.overlayroot:AddChild(BeefBloodOver(owner))
     self.iceover = self.overlayroot:AddChild(IceOver(owner))

@@ -294,6 +294,10 @@ function self:CalcNewMoonstormBaseNodeIndex()
 	print("MoonstormManager failed to find a valid moonstorm base node")
 end
 
+function self:GetCelestialChampionsKilled()
+	return _alterguardian_defeated_count
+end
+
 function self:StartMoonstorm(set_first_node_index,nodes)
 	self:StopCurrentMoonstorm()
 
@@ -851,11 +855,15 @@ end
 --------------------------------------------------------------------------
 
 function self:GetDebugString()
-
-	if true then
-		return nil
-	end
-
+    return string.format(
+        "AGKills: %d, StormMove: %d of %d, TaskWagstaff: %d, TaskSpark: %d, TaskLightning: %d",
+        _alterguardian_defeated_count,
+        self.stormdays or 0,
+		TUNING.MOONSTORM_MOVE_TIME,
+        GetTaskRemaining(self.spawn_wagstaff_test_task),
+        GetTaskRemaining(self.moonstorm_spark_task),
+        GetTaskRemaining(self.moonstorm_lightning_task)
+    )
 end
 
 end)

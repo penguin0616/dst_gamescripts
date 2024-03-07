@@ -765,7 +765,7 @@ SPECIAL_EVENTS =
     YOTR = "year_of_the_bunnyman",
     YOTD = "year_of_the_dragonfly",
 }
-WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.YOTD
+WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.NONE
 --WORLD_SPECIAL_EVENT = IS_BETA and SPECIAL_EVENTS.NONE or SPECIAL_EVENTS.YOTR
 WORLD_EXTRA_EVENTS = {}
 
@@ -1081,6 +1081,21 @@ FE_MUSIC =
     --"dontstarve/music/music_FE_wanda"
     --"terraria1/common/music_main_eot"
 
+
+---------------------------------------------------------
+-- Pickup sounds for in game events.
+PICKUPSOUNDS = {
+    ["wood"] = "aqol/new_test/wood",
+    ["gem"] = "aqol/new_test/gem",
+    ["cloth"] = "aqol/new_test/cloth",
+    ["metal"] = "aqol/new_test/metal",
+    ["rock"] = "aqol/new_test/rock",
+    ["vegetation_firm"] = "aqol/new_test/vegetation_firm",
+    ["vegetation_grassy"] = "aqol/new_test/vegetation_grassy",    
+    ["squidgy"] = "aqol/new_test/squidgy",
+    ["grainy"] = "aqol/new_test/grainy",
+    ["DEFAULT_FALLBACK"] = "dontstarve/HUD/collect_resource",
+}
 
 ---------------------------------------------------------
 NUM_HALLOWEENCANDY = 14
@@ -1785,6 +1800,7 @@ MATERIALS =
     SHELL = "shell",
     NIGHTMARE = "nightmare",
 	DREADSTONE = "dreadstone",
+    SCRAP = "scrap"
 }
 
 FORGEMATERIALS =
@@ -1801,6 +1817,7 @@ UPGRADETYPES =
     WATERPLANT = "waterplant",
     MAST = "mast",
     SPEAR_LIGHTNING = "spear_lightning",
+    CHEST = "chest",
 }
 
 LOCKTYPE =
@@ -1841,6 +1858,7 @@ FOODTYPE =
     BERRY = "BERRY", --hack for smallbird; berries are actually part of veggie
     RAW = "RAW", -- things which some animals can eat off the ground, but players need to cook
     BURNT = "BURNT", --For lavae.
+    NITRE = "NITRE", -- For acidbats; they are part of elemental.
     ROUGHAGE = "ROUGHAGE",
 	WOOD = "WOOD",
     GOODIES = "GOODIES",

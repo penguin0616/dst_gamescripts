@@ -789,6 +789,7 @@ local function OnEnableDynamicMusic(inst, enable)
             StopDanger()
             StopBusy()
             _soundemitter:KillSound("busy")
+            _busytheme = nil
             _isbusydirty = true
         end
         _isenabled = enable

@@ -523,6 +523,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "I'm learning so much!",
 	ANNOUNCE_HOUNDS = "Doggies are coming!",
 	ANNOUNCE_WORMS = "Ohhh nooo. We're not friends with worms!",
+    ANNOUNCE_ACIDBATS = "We don't like that sound.",
 	ANNOUNCE_HUNGRY = "It's time for a snack!",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "Fresh tracks!",
 	ANNOUNCE_HUNT_LOST_TRAIL = "Animal went bye-bye.",
@@ -903,6 +904,8 @@ return{
     ANNOUNCE_SCRAPBOOK_FULL = "We already filled up our scrapbook.",
 
     ANNOUNCE_CHAIR_ON_FIRE = "We are fine.",
+
+    ANNOUNCE_HEALINGSALVE_ACIDBUFF_DONE = "We'd better not go out in the acid rain until we put on more repellent.",
 
     ANNOUNCE_COACH = 
     {
@@ -1445,18 +1448,25 @@ return{
         {
             GENERIC = "How did it get so big?",
             BLOOM = "It sounds so funny!",
+            ACIDCOVERED = "Smells funny.",
         },
         MUSHTREE_MEDIUM =
         {
             GENERIC = "It's upsettingly large.",
             BLOOM = "Hahah! Wow, it smells so bad!",
+            ACIDCOVERED = "Smells funny.",
         },
         MUSHTREE_SMALL =
         {
             GENERIC = "Bigger than a normal mushroom.",
             BLOOM = "It's all round and squishy now!",
+            ACIDCOVERED = "Smells funny.",
         },
-        MUSHTREE_TALL_WEBBED = "This one looks friendly!",
+        MUSHTREE_TALL_WEBBED =
+        {
+            GENERIC = "This one looks friendly!",
+            ACIDCOVERED = "Smells funny.",
+        },
         SPORE_TALL =
         {
             GENERIC = "Blue! That's our favorite color!",
@@ -2586,6 +2596,7 @@ return{
 		SILK = "It's so smooth!",
 		SKELETON = "Hello? Are you alright?",
 		SCORCHED_SKELETON = "They're probably fine.",
+        SKELETON_NOTPLAYER = "It makes us a little sad.",
 		SKULLCHEST = "Who knows what could be hiding in there!", --removed
 		SMALLBIRD =
 		{
@@ -2702,8 +2713,10 @@ return{
 		{
 			GENERIC = "We could keep our toys in it!",
 			BURNT = "It won't be very useful to us now.",
+            UPGRADED_STACKSIZE = "Think of all the toys we could fit in there!",
 		},
 		TREASURECHEST_TRAP = "It couldn't hurt to take a peek inside...",
+        CHESTUPGRADE_STACKSIZE = "Will this make our toy chest bigger?", -- Describes the kit upgrade item.
 		SACRED_CHEST =
 		{
 			GENERIC = "We feel cold.",
@@ -3002,6 +3015,8 @@ return{
 		WALL_MOONROCK_ITEM = "We thought \"moon\" meant something totally different!",
 		WALL_DREADSTONE = "It looks kinda scary...",
 		WALL_DREADSTONE_ITEM = "Do we have to build it?",
+        WALL_SCRAP = "Junk, junk, junk!",
+        WALL_SCRAP_ITEM = "Junk, junk, junk!",
 		FENCE = "I don't think we can jump over that.",
         FENCE_ITEM = "Let's build a fence!",
         FENCE_GATE = "The hinges are a little squeaky.",
@@ -4112,6 +4127,7 @@ return{
         DUSTMERINGUE = "It doesn't taste as good as it looks.",
 
         SHROOMCAKE = "Hey, this isn't real cake!",
+        SHROOMBAIT = "We're not afraid to try it.",
 
         NIGHTMAREGROWTH = "Um... we don't think the ground was like that before.",
 
@@ -4842,6 +4858,12 @@ return{
 			GENERIC = "We feel bad just leaving him like that...",
 			EXPOSED = "We can't break through it!",
 		},
+		DAYWALKER2 =
+		{
+			GENERIC = "Does he want to play with us?",
+			BURIED = "Oh. That's why we don't play in the big junk pile.",
+			HOSTILE = "We don't think he's playing.",
+		},
 		ARMORDREADSTONE = "It's kinda scary, but it keeps us safe!",
 		DREADSTONEHAT = "A pointy helmet to match our pointy teeth!",
 
@@ -5094,6 +5116,25 @@ return{
         MASTUPGRADE_LAMP_ITEM_YOTD = "Now our boat can have a light!",
         WALKINGPLANK_YOTD = "It's not much fun, but a least it's pretty.",
         CHESSPIECE_YOTD = "We had a lot of fun that day!",
+
+        -- Rifts / Meta QoL
+
+        HEALINGSALVE_ACID = "Not just for booboos!",
+
+        BEESWAX_SPRAY = "We're only allowed to spray it on plants.",
+        WAXED_PLANT = "It'll stay like that forever!", -- Used for all waxed plants, from farm plants to trees.
+
+        STORAGE_ROBOT = {
+            GENERIC = "It works while we play!",
+            BROKEN = "Someone fix it so we can play with it.",
+        },
+
+        SCRAP_MONOCLEHAT = "We can see extra far with that on!",
+        SCRAP_CONEHAT = "It still smells like pig sweat!",
+
+        FENCE_JUNK = "It's not the nicest-looking fence.",
+        JUNK_PILE = "There might be something fun to play with in there!",
+        JUNK_PILE_BIG = "We don't want to get squashed!",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

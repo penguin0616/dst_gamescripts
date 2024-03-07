@@ -90,6 +90,9 @@ function basic_init_fn( inst, build_name, def_build, filter_fn )
         if filter_fn then
             skin_name = filter_fn(skin_name)
         end
+        if inst.components.container ~= nil and inst.components.container:IsOpen() then
+            skin_name = skin_name .. "_open"
+        end
         inst.components.inventoryitem:ChangeImageName(skin_name)
     end
 
@@ -582,16 +585,27 @@ arrowsign_post_init_fn = function(inst, build_name) basic_init_fn( inst, build_n
 arrowsign_post_clear_fn = function(inst) basic_clear_fn(inst, "sign_arrow_post" ) end
 
 treasurechest_init_fn = function(inst, build_name)
-    basic_init_fn( inst, build_name, "treasure_chest" )
-
-    if not TheWorld.ismastersim then
+    if inst.components.placer then
+        basic_init_fn(inst, build_name, "treasure_chest") -- NOTES(JBK): Chests can not be built as upgraded form.
         return
+    elseif not TheWorld.ismastersim then
+        return
+    end
+
+    if inst._chestupgrade_stacksize then
+        basic_init_fn(inst, build_name:gsub("treasurechest_", "treasurechest_upgraded_"), "treasure_chest_upgraded")
+    else
+        basic_init_fn(inst, build_name, "treasure_chest")
     end
 
     AddSkinSounds(inst)
 end
 treasurechest_clear_fn = function(inst)
-    basic_clear_fn(inst, "treasure_chest" )
+    if inst._chestupgrade_stacksize then
+        basic_clear_fn(inst, "treasure_chest_upgraded")
+    else
+        basic_clear_fn(inst, "treasure_chest")
+    end
 
     RemoveSkinSounds(inst)
 end

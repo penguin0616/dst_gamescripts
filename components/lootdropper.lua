@@ -340,7 +340,7 @@ function LootDropper:SpawnLootPrefab( lootprefab, pt, linked_skinname, skin_id, 
                 end
             end
 
-        -- here? so we can run a full drop loot?
+            -- here? so we can run a full drop loot?
             self:FlingItem(loot, pt)
 
             loot:PushEvent("on_loot_dropped", {dropper = self.inst})
@@ -348,7 +348,6 @@ function LootDropper:SpawnLootPrefab( lootprefab, pt, linked_skinname, skin_id, 
 
             -- make it smoulder when dropped if the parent was in controlled burn
             if self.inst.components.burnable and self.inst.components.burnable:GetControlledBurn() and loot.components.burnable then
-
                 loot.components.burnable:StartWildfire()
             end
 

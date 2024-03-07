@@ -47,6 +47,15 @@ local function OnChatterDirty(inst)
         if str ~= nil then
             local t = self.chatter.strtime:value()
             self:Say(str, t > 0 and t or nil, self.chatter.forcetext:value(), self.chatter.forcetext:value(), true)
+            if self.chatter.echotochat:value() then
+                local hud = ThePlayer and ThePlayer.HUD or nil
+                if hud and ThePlayer:GetDistanceSqToInst(inst) <= PLAYER_CAMERA_SEE_DISTANCE_SQ then -- NOTES(JBK): Replicate range check for chatter. [RCCHATTER]
+                    -- Replicate to chat.
+                    local name_colour = self.name_colour and {self.name_colour.x, self.name_colour.y, self.name_colour.z, 1} or WHITE
+                    local colour = self.colour and {self.colour.x, self.colour.y, self.colour.z, 1} or WHITE
+                    ChatHistory:OnChatterMessage(inst, name_colour, str, colour, self.chaticon, self.chaticonbg)
+                end
+            end
             return
         end
     end
@@ -63,6 +72,7 @@ function Talker:MakeChatter()
             strid = net_smallbyte(self.inst.GUID, "talker.chatter.strid", "chatterdirty"),
             strtime = net_tinybyte(self.inst.GUID, "talker.chatter.strtime"),
             forcetext = net_bool(self.inst.GUID, "talker.chatter.forcetext"),
+            echotochat = net_bool(self.inst.GUID, "talker.chatter.echotochat"),
         }
         if not TheWorld.ismastersim then
             self.inst:ListenForEvent("chatterdirty", OnChatterDirty)
@@ -76,7 +86,8 @@ local function OnCancelChatter(inst, self)
 end
 
 --NOTE: forcetext chatter translates to noanim + force say
-function Talker:Chatter(strtbl, strid, time, forcetext)
+-- NOTES(JBK): "echotochat" will replicate the text into the player's chatbox if they are nearby to see it.
+function Talker:Chatter(strtbl, strid, time, forcetext, echotochat)
     if self.chatter ~= nil and TheWorld.ismastersim then
         self.chatter.strtbl:set(strtbl)
         --force at least the id dirty, so that it's possible to repeat strings
@@ -84,6 +95,7 @@ function Talker:Chatter(strtbl, strid, time, forcetext)
         self.chatter.strid:set(strid)
         self.chatter.strtime:set(time or 0)
         self.chatter.forcetext:set(forcetext == true)
+        self.chatter.echotochat:set(echotochat == true)
         if self.chatter.task ~= nil then
             self.chatter.task:Cancel()
         end

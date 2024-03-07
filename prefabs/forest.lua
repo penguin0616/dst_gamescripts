@@ -24,6 +24,7 @@ local assets =
     Asset("IMAGE", "images/colour_cubes/moonstorm_cc.tex"),
 
     Asset("ANIM", "anim/snow.zip"),
+    Asset("ANIM", "anim/acidglob.zip"),
     Asset("ANIM", "anim/lightning.zip"),
 
     Asset("SOUND", "sound/forest_stream.fsb"),
@@ -477,6 +478,14 @@ local prefabs =
     "sharkboi_ice_hazard",
 
     -- Year of the Dragon
+
+
+    -- Rifts / Meta QoL
+
+    --"fishbone_shadow",
+    "fence_junk",
+    "junk_pile",
+    "junk_pile_big",
 }
 
 local FISH_DATA = require("prefabs/oceanfishdef")

@@ -374,6 +374,17 @@ local RPC_HANDLERS =
 		end
 	end,
 
+	StrafeFacing = function(player, dir)
+		if not checknumber(dir) then
+			printinvalid("StrafeFacing", player)
+			return
+		end
+		local locomotor = player.components.locomotor
+		if locomotor and not (player.sg and player.sg:HasStateTag("busy")) then
+			locomotor:OnStrafeFacingChanged(dir)
+		end
+	end,
+
     StartHop = function(player, x, z, platform, has_platform)
         if not (checknumber(x) and
                 checknumber(z) and

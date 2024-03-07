@@ -1015,6 +1015,91 @@ end
 
 
 --------------------------------------------------------------------------
+
+local function Junkyard_NewContent_Retrofitting()
+
+	if TheWorld.topology.overrides ~= nil and TheWorld.topology.overrides.junkyard == "never" then
+		print("Retrofitting for Junkyard: Skipping due to overrides.stageplays == never")
+		return
+	end
+
+	-- Find appropriate biomes
+	local VALID_JUNKYARD_BACKGROUNDS = {
+		"BGBadlands",
+		"BGCrappyForest",
+		"BGDeciduous",
+		"BGDeepForest",
+		"BGForest",
+		"BGGrass",
+		"BGGrassBurnt",
+		"BGRocky",
+		"BGSavanna",
+	}
+
+	local node_indices, jy_candidate_nodes = {}, {}
+	for node_index, id_string in ipairs(TheWorld.topology.ids) do
+		for _, bg_string in ipairs(VALID_JUNKYARD_BACKGROUNDS) do
+			if id_string:find(bg_string) then
+				table.insert(jy_candidate_nodes, TheWorld.topology.nodes[node_index])
+			end
+		end
+	end
+
+	if #jy_candidate_nodes == 0 then
+		print("Retrofitting for the Junk Yard: Failed to find any appropriate nodes to spawn in.")
+		return
+	end
+
+	print("Retrofitting for Junk Yard: Adding missing junkyard objects.")
+
+	local VALID_JUNKYARD_WORLDTILES = {
+		WORLD_TILES.DIRT_NOISE,
+		WORLD_TILES.DECIDUOUS,
+		WORLD_TILES.FOREST,
+		WORLD_TILES.GRASS,
+		WORLD_TILES.ROCKY,
+		WORLD_TILES.SAVANNA,
+	}
+	local is_valid_jy_turf = function(x, y, z, prefab)
+		local tile = TheWorld.Map:GetTileAtPoint(x, y, z)
+		for _, tile_type in ipairs(VALID_JUNKYARD_WORLDTILES) do
+			if tile_type == tile then
+				return true
+			end
+		end
+		return false
+	end
+
+	local on_add_prefab = function(inst)
+		local pos = Vector3(inst.Transform:GetWorldPosition())
+		local MAX = 8
+		for i=1,MAX do
+			local radius = math.random()*5 +3
+			local offset = FindWalkableOffset(pos, i*(TWOPI/MAX) + (math.random() * PI/(MAX/4) ), radius, 10, true, false)
+			if offset then 
+				pos = pos +offset
+				local junk = SpawnPrefab("junk_pile")
+				junk.Transform:SetPosition(pos.x,pos.y,pos.z)
+			end
+		end
+
+		local radius = math.random()*5 +3
+		local offset = FindWalkableOffset(pos, (math.random() * PI/(MAX/4) ), radius, 10, true, false)
+		if offset then 
+			pos = pos + offset
+			local robot = SpawnPrefab("storage_robot")
+			robot.Transform:SetPosition(pos:Get())
+			robot.components.fueled:SetPercent(0)
+		end
+	end
+
+	--RetrofitNewContentPrefab(inst, prefab, min_space, dist_from_structures, canplacefn, candidtate_nodes, on_add_prefab)
+
+	if not RetrofitNewContentPrefab(inst, "junk_pile_big", 10.5, 8, is_valid_jy_turf, jy_candidate_nodes, on_add_prefab) then
+		print("Retrofitting for Junk Yard: Failed to place a junk pile in the world.")
+	end
+end
+--------------------------------------------------------------------------
 --[[ Post initialization ]]
 --------------------------------------------------------------------------
 
@@ -1342,6 +1427,13 @@ function self:OnPostInit()
         end
 	end
 
+	---------------------------------------------------------------------------
+
+    if self.retrofit_junkyard_content then
+		print ("Retrofitting for Junk Yard: Adding important prefabs normally found in new setpieces.")
+		Junkyard_NewContent_Retrofitting()
+	end
+
     ---------------------------------------------------------------------------
 
     if self.console_beard_turf_fix then
@@ -1415,7 +1507,9 @@ function self:OnLoad(data)
         self.retrofit_terraria_terrarium = data.retrofit_terraria_terrarium or false
 		self.retrofit_alittledrama_content = data.retrofit_alittledrama_content or false
         self.retrofit_daywalker_content = data.retrofit_daywalker_content or false
+        self.retrofit_junkyard_content = data.retrofit_junkyard_content or false
         self.console_beard_turf_fix = data.console_beard_turf_fix or false
+
     end
 end
 

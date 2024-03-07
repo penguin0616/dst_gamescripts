@@ -7,7 +7,7 @@ local NUM_MACHINES_PER_SPAWN = 3
 local NOTE_OFFSET_RADIUS = 2
 
 local IS_CLEAR_CENTERPOINT_AREA_RADIUS = 10
-local IS_CLEAR_AREA_RADIUS = 5
+local IS_CLEAR_AREA_RADIUS = 2.5
 
 local LOCATION_CANT_TAGS = { "INLIMBO", "NOBLOCK", "FX" }
 
@@ -70,6 +70,8 @@ local WagpunkManager = Class(function(self, inst)
 
     self._currentnodeindex = nil
 
+    self.machinemarker = nil
+
     self.inst:ListenForEvent("wagstaff_machine_destroyed", OnMachineDestroyed)
     self.inst:ListenForEvent("wagstaff_machine_added",     OnMachineAdded)
 
@@ -129,6 +131,10 @@ function WagpunkManager:Disable()
     self.nextspawntime = nil
 end
 
+function WagpunkManager:IsEnabled()
+    return self._enabled == true
+end
+
 --------------------------------------------------------------------------------------------
 
 function WagpunkManager:StartSpawnMachinesTimer(timeoverride)
@@ -153,36 +159,73 @@ function WagpunkManager:StartHintTimer(timeoverride)
     end
 end
 
+function WagpunkManager:SpawnJunkWagstaff(pos, junkpos)
+    local wagstaff = SpawnPrefab("wagstaff_npc_wagpunk")
+
+    wagstaff.hunt_stage = "hunt"
+    wagstaff.hunt_count = 0
+    wagstaff.Transform:SetPosition(pos:Get())
+    wagstaff:erode(1, true)
+
+    wagstaff.components.timer:StartTimer("expiretime", TUNING.WAGSTAFF_NPC_EXPIRE_TIME)
+    wagstaff.components.timer:StartTimer("wagstaff_movetime", 10 + (math.random()*5))
+
+    wagstaff.components.knownlocations:RememberLocation("junk", junkpos)
+
+    return wagstaff -- Mods.
+end
+
 function WagpunkManager:FindSpotForMachines()
-    local nodes = {}
 
-    for index, node in ipairs(TheWorld.topology.nodes) do
-        if index ~= self._currentnodeindex and NodeCanHaveMachine(node) then
-            table.insert(nodes, index)
+    if self.machinemarker then
+        local pos = Vector3(self.machinemarker.Transform:GetWorldPosition())
+        if not IsAnyPlayerInRange(pos.x, 0, pos.z, MAX_DIST_FROM_AN_PLAYER) then
+            return pos
+        else
+            if not TheWorld.components.timer:TimerExists("junkwagpunk") then
+                TheWorld.components.timer:StartTimer("junkwagpunk", math.random(240 + math.random()*240))
+
+                local offset = FindWalkableOffset(pos, math.random()*TWOPI, 30, 16, true)
+                local finalpos = pos + offset
+
+                local radius = 16
+                local theta = self.machinemarker:GetAngleToPoint(finalpos.x, 0, finalpos.z)*DEGREES
+                local offsetclose = Vector3(radius * math.cos(theta), 0, -radius * math.sin(theta))
+
+                self:SpawnJunkWagstaff(pos+offset, pos+offsetclose)
+            end
         end
-    end
+    else
+        local nodes = {}
 
-    local current_node = TheWorld.topology.nodes[self._currentnodeindex]
-    local current_x, current_z = current_node and current_node.cent[1], current_node and current_node.cent[2]
+        for index, node in ipairs(TheWorld.topology.nodes) do
+            if index ~= self._currentnodeindex and NodeCanHaveMachine(node) then
+                table.insert(nodes, index)
+            end
+        end
 
-    while #nodes > 0 do
-        local rand = math.random(#nodes)
-        local index = nodes[rand]
+        local current_node = TheWorld.topology.nodes[self._currentnodeindex]
+        local current_x, current_z = current_node and current_node.cent[1], current_node and current_node.cent[2]
 
-        table.remove(nodes, rand)
+        while #nodes > 0 do
+            local rand = math.random(#nodes)
+            local index = nodes[rand]
 
-        local new_node = TheWorld.topology.nodes[index]
-        local new_x, new_z = new_node.cent[1], new_node.cent[2]
-        local new_pos = Vector3(new_x, 0, new_z)
+            table.remove(nodes, rand)
 
-        if IsAnyPlayerInRange(new_x, 0, new_z, MAX_DIST_FROM_AN_PLAYER) and
-            (current_node == nil or VecUtil_LengthSq(new_x - current_x, new_z - current_z) > MIN_DIST_FROM_LAST_POSITION_SQ)
-        then
-            local offset = FindWalkableOffset(new_pos, math.random()*TWOPI, math.random()*10, 16, nil, nil, IsPositionClearCenterPoint)
+            local new_node = TheWorld.topology.nodes[index]
+            local new_x, new_z = new_node.cent[1], new_node.cent[2]
+            local new_pos = Vector3(new_x, 0, new_z)
 
-            if offset ~= nil then
-                self._currentnodeindex = index
-                return new_pos + offset
+            if IsAnyPlayerInRange(new_x, 0, new_z, MAX_DIST_FROM_AN_PLAYER) and
+                (current_node == nil or VecUtil_LengthSq(new_x - current_x, new_z - current_z) > MIN_DIST_FROM_LAST_POSITION_SQ)
+            then
+                local offset = FindWalkableOffset(new_pos, math.random()*TWOPI, math.random()*10, 16, nil, nil, IsPositionClearCenterPoint)
+
+                if offset ~= nil then
+                    self._currentnodeindex = index
+                    return new_pos + offset
+                end    
             end
         end
     end
@@ -197,7 +240,7 @@ function WagpunkManager:FindMachineSpawnPoint(center_pos)
 end
 
 function WagpunkManager:SpawnWagstaff(pos, machinepos)
-    local wagstaff = SpawnPrefab("wagstaff_npc")
+    local wagstaff = SpawnPrefab("wagstaff_npc_wagpunk")
 
     wagstaff.hunt_stage = "hunt"
     wagstaff.hunt_count = 0
@@ -212,6 +255,8 @@ function WagpunkManager:SpawnWagstaff(pos, machinepos)
     return wagstaff -- Mods.
 end
 
+
+
 local WAGSTAFF_MAY = { "wagstaff_npc", "wagstaff_machine" }
 
 function WagpunkManager:TryHinting(debug)
@@ -219,7 +264,6 @@ function WagpunkManager:TryHinting(debug)
 
     if player == nil then
         self:StartHintTimer()
-
         return
     end
 
@@ -288,7 +332,7 @@ function WagpunkManager:SpawnMachines(force)
         local pos = self:FindSpotForMachines()
 
         if pos == nil then
-            self:StartSpawnMachinesTimer()
+            self:StartSpawnMachinesTimer(30)
             return
         end
 
@@ -300,7 +344,6 @@ function WagpunkManager:SpawnMachines(force)
 
         for i=1, NUM_MACHINES_PER_SPAWN do
             local machinepos = self:FindMachineSpawnPoint(pos)
-
             if machinepos ~= nil then
                 local machine = SpawnPrefab("wagstaff_machinery")
                 
@@ -321,6 +364,10 @@ function WagpunkManager:SpawnMachines(force)
 end
 
 --------------------------------------------------------------------------------------------
+
+function WagpunkManager:RegisterMachineMarker(inst)
+    self.machinemarker = inst
+end
 
 function WagpunkManager:OnSave()
     local data = {

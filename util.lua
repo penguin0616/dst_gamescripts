@@ -534,23 +534,24 @@ function GetRandomMinMax(min, max)
 end
 
 function distsq(v1, v2, v3, v4)
-
     -- PLEASE FORGIVE US! WE NEVER MEANT FOR IT TO END THIS WAY!
 
-    assert(v1, "Something is wrong: v1 is nil stale component reference?")
-    assert(v2, "Something is wrong: v2 is nil stale component reference?")
+	--V2C: disabling asserts. crash is fine, we don't need that assert message
+	--assert(v1, "Something is wrong: v1 is nil stale component reference?")
+	--assert(v2, "Something is wrong: v2 is nil stale component reference?")
 
-    if v4 and v3 and v2 and v1 then
+	--V2C: just check v3, would've crashed either way if params weren't correct
+	if v3 then--v4 and v3 and v2 and v1 then
         --special case for 2dvects passed in as numbers
         local dx = v1-v3
         local dy = v2-v4
         return dx*dx + dy*dy
-    else
-        local dx = (v1.x or v1[1]) - (v2.x or v2[1])
-        local dy = (v1.y or v1[2]) - (v2.y or v2[2])
-        local dz = (v1.z or v1[3]) - (v2.z or v2[3])
-        return dx*dx+dy*dy+dz*dz
     end
+
+	local dx = (v1.x or v1[1]) - (v2.x or v2[1])
+	local dy = (v1.y or v1[2]) - (v2.y or v2[2])
+	local dz = (v1.z or v1[3]) - (v2.z or v2[3])
+	return dx*dx+dy*dy+dz*dz
 end
 
 local memoizedFilePaths = {}

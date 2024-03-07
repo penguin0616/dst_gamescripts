@@ -1367,6 +1367,68 @@ function TEMPLATES.ChatFlairBadge()
     return flair
 end
 
+function TEMPLATES.ChatterMessageBadge()
+    local flair = Widget("ChatterMessage Badge")
+
+    flair.bg = flair:AddChild(Image())
+    flair.bg:SetScale(0.8)
+
+    flair.flair_img = flair:AddChild(Image(GetProfileFlairAtlasAndTex()))
+    flair.flair_img:SetScale(.55)
+    flair.flair_img:SetPosition(0, 31)
+
+    flair:Hide()
+    flair:SetClickable(false)
+
+    --Setup custom widget functions
+    flair.SetFlair = function(self, profileflair)
+        self.profileflair = profileflair
+
+        if self.profileflair then
+            if profileflair == "default" then
+                profileflair = nil
+            end
+            self.flair_img:SetTexture(GetProfileFlairAtlasAndTex(profileflair))
+        end
+    end
+
+    flair.GetFlair = function(self)
+        return self.profileflair
+    end
+
+    flair.SetBGIcon = function(self, bg_icon)
+        self.bg_icon = bg_icon
+        if self.bg_icon then
+            if bg_icon == "default" then
+                bg_icon = "playericon_bg_none"
+            end
+            self.bg:SetTexture("images/profileflair.xml", bg_icon .. ".tex", "playericon_bg_none.tex")
+        end
+    end
+
+    flair.GetBGIcon = function(self)
+        return self.bg_icon
+    end
+
+    flair.SetAlpha = function(self, a)
+        if a > 0.01 and self.profileflair then
+            self:Show()
+            self.bg:SetTint(1,1,1, a)
+            self.flair_img:SetTint(1,1,1, a)
+        else
+            self:Hide()
+        end
+    end
+
+    flair:SetScale(0.5)
+
+    flair.GetSize = function(self)
+        return self.flair_img:GetScaledSize()
+    end
+
+    return flair
+end
+
 function TEMPLATES.AnnouncementBadge()
     local announcement = Widget("chat announcement badge")
 

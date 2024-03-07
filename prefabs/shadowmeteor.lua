@@ -135,32 +135,42 @@ local function onexplode(inst)
         for i, v in ipairs(inst.loot) do
             if math.random() <= v.chance then
                 local canspawn = true
-                --Check if there's space to deploy rocks
-                --Similar to CanDeployAtPoint check in map.lua
-                local ents = TheSim:FindEntities(x, y, z, FIVERADIUS, BOULDER_TAGS)
-                if #ents < 5 then
-                    ents = TheSim:FindEntities(x, y, z, EXCLUDE_RADIUS, nil, BOULDERSPAWNBLOCKER_TAGS)
-                    for k, v in pairs(ents) do
-                        if v ~= inst and
-                            not launched[v] and
-                            v.entity:IsValid() and
-                            v.entity:IsVisible() and
-                            v.components.placer == nil and
-                            v.entity:GetParent() == nil then
-                            canspawn = false
-                            break
-                        end
+                local force_spawn = false
+                
+                local targetprefab = v.prefab
+                if TheWorld.components.worldmeteorshower ~= nil then
+                    local modifiedtargetprefab = TheWorld.components.worldmeteorshower:GetMeteorLootPrefab(targetprefab)
+                    if modifiedtargetprefab ~= targetprefab then
+                        targetprefab = modifiedtargetprefab
+                        force_spawn = true
                     end
-                else
-                    canspawn = false
                 end
-                if canspawn then
-                    local drop
-                    if TheWorld.components.worldmeteorshower ~= nil then
-                        drop = TheWorld.components.worldmeteorshower:SpawnMeteorLoot(v.prefab)
+
+                if not force_spawn then
+                    --Check if there's space to deploy rocks
+                    --Similar to CanDeployAtPoint check in map.lua
+                    -- NOTES(JBK): But only if it is not a messed with drop from worldmeteorshower.
+                    local ents = TheSim:FindEntities(x, y, z, FIVERADIUS, BOULDER_TAGS)
+                    if #ents < 5 then
+                        ents = TheSim:FindEntities(x, y, z, EXCLUDE_RADIUS, nil, BOULDERSPAWNBLOCKER_TAGS)
+                        for k, v in pairs(ents) do
+                            if v ~= inst and
+                                not launched[v] and
+                                v.entity:IsValid() and
+                                v.entity:IsVisible() and
+                                v.components.placer == nil and
+                                v.entity:GetParent() == nil then
+                                canspawn = false
+                                break
+                            end
+                        end
                     else
-                        drop = SpawnPrefab(v.prefab)
+                        canspawn = false
                     end
+                end
+
+                if canspawn then
+                    local drop = SpawnPrefab(targetprefab)
                     if drop ~= nil then
                         drop.Transform:SetPosition(x, y, z)
                         if drop.components.inventoryitem ~= nil then

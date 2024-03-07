@@ -1454,7 +1454,7 @@ function Inventory:GetCraftingIngredient(item, amount)
 		if v ~= nil and v.prefab == item and not v:HasTag("nocrafting") then
             table.insert(items, {
                 item = v,
-                stacksize = GetStackSize(v),
+				stacksize = v.components.stackable and v.components.stackable:StackSize() or 1,
                 slot = i,
             })
         end
@@ -1480,7 +1480,10 @@ function Inventory:GetCraftingIngredient(item, amount)
     end
 
 	if self.activeitem ~= nil and self.activeitem.prefab == item and not self.activeitem:HasTag("nocrafting") then
-        crafting_items[self.activeitem] = math.min(GetStackSize(self.activeitem), amount - total_num_found)
+		crafting_items[self.activeitem] = math.min(
+			self.activeitem.components.stackable and self.activeitem.components.stackable:StackSize() or 1,
+			amount - total_num_found
+		)
     end
 
     return crafting_items
@@ -1503,6 +1506,7 @@ local function tryconsume(self, v, amount)
 end
 
 function Inventory:ConsumeByName(item, amount) --Note(Peter): We don't care about v.skinname for inventory ConsumeByName requests.
+    amount = amount or 1
     if amount <= 0 then
         return
     end

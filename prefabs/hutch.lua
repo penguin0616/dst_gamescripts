@@ -430,6 +430,9 @@ local function create_hutch()
     inst.components.sleeper:SetSleepTest(ShouldSleep)
     inst.components.sleeper:SetWakeTest(ShouldWakeUp)
 
+    inst:AddComponent("acidinfusible")
+    inst.components.acidinfusible:SetMultipliers(TUNING.ACID_INFUSION_MULT.STRONGER)
+
     MakeHauntableDropFirstItem(inst)
     AddHauntableCustomReaction(inst, OnHaunt, false, false, true)
 

@@ -524,6 +524,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "Is maybe too much information.",
 	ANNOUNCE_HOUNDS = "I hear puppies!",
 	ANNOUNCE_WORMS = "Earth is tremble beneath Wolfgang's mighty feet!",
+    ANNOUNCE_ACIDBATS = "Wolfgang not afraid. You are afraid.",
 	ANNOUNCE_HUNGRY = "My mighty belly is empty!",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "Animal is close!",
 	ANNOUNCE_HUNT_LOST_TRAIL = "No animal here.",
@@ -904,6 +905,8 @@ return{
     ANNOUNCE_SCRAPBOOK_FULL = "Wolfgang's scrapbook will fit no more!",
 
     ANNOUNCE_CHAIR_ON_FIRE = "Wolfgang is fine.",
+
+    ANNOUNCE_HEALINGSALVE_ACIDBUFF_DONE = "Hmm, Wolfgang does not feel very acid-proof anymore...",
 
     ANNOUNCE_COACH = 
     {
@@ -1446,18 +1449,25 @@ return{
         {
             GENERIC = "Big mushtree is big.",
             BLOOM = "Woah! It's even bigger!",
+            ACIDCOVERED = "Mushtree smells unhealthy.",
         },
         MUSHTREE_MEDIUM =
         {
             GENERIC = "Mushy bush.",
             BLOOM = "It's having fun!",
+            ACIDCOVERED = "Mushtree smells unhealthy.",
         },
         MUSHTREE_SMALL =
         {
             GENERIC = "Mushy shrub.",
             BLOOM = "Even smell is strong!",
+            ACIDCOVERED = "Mushtree smells unhealthy.",
         },
-        MUSHTREE_TALL_WEBBED = "Aw, cheer up!",
+        MUSHTREE_TALL_WEBBED =
+        {
+            GENERIC = "Aw, cheer up!",
+            ACIDCOVERED = "Mushtree smells unhealthy.",
+        },
         SPORE_TALL =
         {
             GENERIC = "Little blue bug has no wings.",
@@ -2587,6 +2597,7 @@ return{
 		SILK = "Is too fancy.",
 		SKELETON = "Not enough muscle.",
 		SCORCHED_SKELETON = "Wolfgang does not like this!!",
+        SKELETON_NOTPLAYER = "Should have eaten more protein.",
 		SKULLCHEST = "This man had big head!", --removed
 		SMALLBIRD =
 		{
@@ -2703,8 +2714,10 @@ return{
 		{
 			GENERIC = "I put stuff there!",
 			BURNT = "Nothing will stay inside.",
+            UPGRADED_STACKSIZE = "Wolfgang could store whole gym inside!",
 		},
 		TREASURECHEST_TRAP = "Raagh!",
+        CHESTUPGRADE_STACKSIZE = "Makes trunk bigger? Hmmm, does little machine work on muscles?", -- Describes the kit upgrade item.
 		SACRED_CHEST =
 		{
 			GENERIC = "Is little scare-chest.",
@@ -3003,6 +3016,8 @@ return{
 		WALL_MOONROCK_ITEM = "Can build with power of moon!",
 		WALL_DREADSTONE = "Wall is mighty! And scary!",
 		WALL_DREADSTONE_ITEM = "Pile of scary rocks!",
+        WALL_SCRAP = "I hope wall of junk is strong.",
+        WALL_SCRAP_ITEM = "I hope wall of junk is strong.",
 		FENCE = "I do not like trapping little animals.",
         FENCE_ITEM = "Wolfgang will help make fence!",
         FENCE_GATE = "Is little flimsy swingboards.",
@@ -4113,6 +4128,7 @@ return{
         DUSTMERINGUE = "Wolfgang will leave that for someone else to eat.",
 
         SHROOMCAKE = "Wolfgang will eat whole cake!",
+        SHROOMBAIT = "Does not look tasty to Wolfgang.",
 
         NIGHTMAREGROWTH = "Wolfgang feels chill crawling up mighty spine...",
 
@@ -4843,6 +4859,12 @@ return{
 			GENERIC = "Mighty Wolfgang could break pillar!",
 			EXPOSED = "Mighty Wolfgang could... not break pillar.",
 		},
+		DAYWALKER2 =
+		{
+			GENERIC = "Hey piggie! Wolfgang love to eat bacon for breakfast.",
+			BURIED = "Big monster piggie don't look so tough now.",
+			HOSTILE = "Nice piggie. Wolfgang can't remember last time eat bacon.",
+		},
 		ARMORDREADSTONE = "Wolfgang doesn't need scary rock armor!",
 		DREADSTONEHAT = "Ha! Wolfgang's head is already hard like a rock!",
 
@@ -5095,6 +5117,22 @@ return{
         MASTUPGRADE_LAMP_ITEM_YOTD = "Put fire up high. Is safer that way.",
         WALKINGPLANK_YOTD = "Is fancy diving plank, yes?",
         CHESSPIECE_YOTD = "Wolfgang crushed Dragonfly race!",
+
+        -- Rifts / Meta QoL
+
+        HEALINGSALVE_ACID = "Feels slimy but nice on Wolfgang's skin.",
+
+        BEESWAX_SPRAY = "Is scary perfume for plants.",
+        WAXED_PLANT = "Poor plant is too scared to grow.", -- Used for all waxed plants, from farm plants to trees.
+
+        STORAGE_ROBOT = {
+            GENERIC = "Is cute. Wolfgang carry more and heavier thing.",
+            BROKEN = "Good effort, little buddy. Good effort.",
+        },
+
+        FENCE_JUNK = "Is ugly little fence, but does its job.",
+        JUNK_PILE = "Might be something inside Wolfgang can use.",
+        JUNK_PILE_BIG = "Wolfgang not like the way big pile teeter-totters...",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

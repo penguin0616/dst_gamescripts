@@ -9,6 +9,7 @@ local prefabs =
     "wagpunk_bits",
     "collapse_small",
     "wagstaff_mutations_note",
+    "wagstaff_machinery_marker",
 }
 
 ------------------------------------------------------------------------------------------------
@@ -113,9 +114,10 @@ local function fn()
 
     inst.components.lootdropper.numrandomloot = TUNING.WAGSTAFF_MACHINERY_NUM_BLUEPRINTS
     inst.components.lootdropper.chancerandomloot = TUNING.WAGSTAFF_MACHINERY_BLUEPRINT_CHANCE
-    inst.components.lootdropper:AddRandomLoot("wagpunkhat_blueprint",      1)
-    inst.components.lootdropper:AddRandomLoot("armorwagpunk_blueprint",    1)
+    inst.components.lootdropper:AddRandomLoot("wagpunkhat_blueprint", 1)
+    inst.components.lootdropper:AddRandomLoot("armorwagpunk_blueprint", 1)
     inst.components.lootdropper:AddRandomLoot("wagpunkbits_kit_blueprint", 1)
+    inst.components.lootdropper:AddRandomLoot("chestupgrade_stacksize_blueprint", 1)
 
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
@@ -138,6 +140,37 @@ local function fn()
     return inst
 end
 
+local function OnLoadMarker(inst)
+    if TheWorld.components.wagpunk_manager then
+        TheWorld.components.wagpunk_manager:RegisterMachineMarker(inst)
+    end
+end
+
+local function OnSaveMarker(inst, data)
+
+end
+
+local function markerfn()
+    local inst = CreateEntity()
+    inst.entity:AddNetwork()    
+
+    inst.entity:AddTransform()
+    
+    inst:AddTag("CLASSIFIED")
+    inst:AddTag("NOCLICK")
+
+    inst.OnLoad = OnLoadMarker
+    inst.OnSave = OnSaveMarker
+    inst.entity:SetPristine()
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    return inst    
+end
+
 ------------------------------------------------------------------------------------------------
 
-return Prefab("wagstaff_machinery", fn, assets, prefabs)
+return Prefab("wagstaff_machinery", fn, assets, prefabs),
+       Prefab("wagstaff_machinery_marker", markerfn, assets, prefabs)

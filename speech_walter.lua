@@ -523,6 +523,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "I know everything now! Mostly everything, at least.",
 	ANNOUNCE_HOUNDS = "Woby? Do you hear something?",
 	ANNOUNCE_WORMS = "Something's moving...",
+    ANNOUNCE_ACIDBATS = "Here they come!",
 	ANNOUNCE_HUNGRY = "Can we stop for a snack break?",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "I learned all about tracking in the Pioneers! It went thataway!",
 	ANNOUNCE_HUNT_LOST_TRAIL = "I uh... think I lost the trail...",
@@ -903,6 +904,8 @@ return{
     ANNOUNCE_SCRAPBOOK_FULL = "I've already filled out my scrapbook.",
 
     ANNOUNCE_CHAIR_ON_FIRE = "This is fine.",
+
+    ANNOUNCE_HEALINGSALVE_ACIDBUFF_DONE = "Hold on Woby, I think my Acid Repellent is wearing off.",
 
     ANNOUNCE_COACH = 
     {
@@ -1445,18 +1448,25 @@ return{
         {
             GENERIC = "That one's not in my handbook...",
             BLOOM = "They only bloom spore-adically. Heh... nice one, Walter.",
+            ACIDCOVERED = "Smells weird. Right, Woby?",
         },
         MUSHTREE_MEDIUM =
         {
             GENERIC = "The mushrooms sure grow big down here...",
             BLOOM = "Looks like this one's in bloom.",
+            ACIDCOVERED = "Smells weird. Right, Woby?",
         },
         MUSHTREE_SMALL =
         {
             GENERIC = "This one's kind of puny.",
             BLOOM = "It's making more mushrooms.",
+            ACIDCOVERED = "Smells weird. Right, Woby?",
         },
-        MUSHTREE_TALL_WEBBED = "There must be spiders around here somewhere!",
+        MUSHTREE_TALL_WEBBED =
+        {
+            GENERIC = "There must be spiders around here somewhere!",
+            ACIDCOVERED = "Smells weird. Right, Woby?",
+        },
         SPORE_TALL =
         {
             GENERIC = "Hope I don't accidentally swallow one.",
@@ -2586,6 +2596,7 @@ return{
 		SILK = "Spiders are pretty useful.",
 		SKELETON = "Is it a real skeleton?",
 		SCORCHED_SKELETON = "I think the time for first aid has long passed.",
+        SKELETON_NOTPLAYER = "Think it's a monster skeleton, Woby?",
 		SKULLCHEST = "There's got to be something good in there.", --removed
 		SMALLBIRD =
 		{
@@ -2702,8 +2713,10 @@ return{
 		{
 			GENERIC = "It isn't a toy chest, it's a very grownup SUPPLY chest.",
 			BURNT = "My stuff!!",
+            UPGRADED_STACKSIZE = "Just look at how many important survival supplies it can hold!",
 		},
 		TREASURECHEST_TRAP = "There might be cursed pirate gold inside!",
+        CHESTUPGRADE_STACKSIZE = "I can make more room for supplies!", -- Describes the kit upgrade item.
 		SACRED_CHEST =
 		{
 			GENERIC = "There HAS to be something good in there, just look at it!",
@@ -3002,6 +3015,8 @@ return{
 		WALL_MOONROCK_ITEM = "I can't believe we're making walls out of real moon rock!",
 		WALL_DREADSTONE = "Spooky!",
 		WALL_DREADSTONE_ITEM = "It's gonna be a real nightmare to set it up! Get it?",
+        WALL_SCRAP = "What a neat use of trash!",
+        WALL_SCRAP_ITEM = "What a neat use of trash!",
 		FENCE = "Why do we need fences? It's the great outdoors!",
         FENCE_ITEM = "Why fence in nature?",
         FENCE_GATE = "It's open-and-shut.",
@@ -4112,6 +4127,7 @@ return{
         DUSTMERINGUE = "Uh... no thanks. Maybe the moths will like it?",
 
         SHROOMCAKE = "Is that really a cake?",
+        SHROOMBAIT = "Don't eat that Woby! It'll knock you right out.",
 
         NIGHTMAREGROWTH = "We should probably stay away from those, Woby.",
 
@@ -4842,6 +4858,12 @@ return{
 			GENERIC = "Hey, what's that stuff inside?",
 			EXPOSED = "Oh, it's just a different kind of rock.",
 		},
+		DAYWALKER2 =
+		{
+			GENERIC = "Don't worry, Woby. I think I can gain his trust.",
+			BURIED = "Should we help him, Woby?",
+			HOSTILE = "I still think we can be friends.",
+		},
 		ARMORDREADSTONE = "It looks like an evil knight's armor. Neat!",
 		DREADSTONEHAT = "Never forget to wear your dark helmet.",
 
@@ -5094,6 +5116,25 @@ return{
         MASTUPGRADE_LAMP_ITEM_YOTD = "I guess it's safer than having a campfire on the deck...",
         WALKINGPLANK_YOTD = "Oh, I'm good at diving! I got a badge for it!",
         CHESSPIECE_YOTD = "Racing was fun, even if I didn't get a badge for it...",
+
+        -- Rifts / Meta QoL
+
+        HEALINGSALVE_ACID = "We're prepared for anything, Woby!",
+
+        BEESWAX_SPRAY = "It looks kind of like my mom's perfume, but it sure doesn't smell like it.",
+        WAXED_PLANT = "It's still alive... I think.", -- Used for all waxed plants, from farm plants to trees.
+
+        STORAGE_ROBOT = {
+            GENERIC = "Now that's how you fetch, Woby!",
+            BROKEN = "We should try to fix it!",
+        },
+
+        SCRAP_MONOCLEHAT = "Woah! It's like binoculars, but... well, the opposite of that!",
+        SCRAP_CONEHAT = "That werepig was so big, I can wear his shoulder pad as a hat!",
+
+        FENCE_JUNK = "I guess it's better than just leaving all that scrap metal lying around.",
+        JUNK_PILE = "One person's trash is another's treasure!",
+        JUNK_PILE_BIG = "Careful Woby, it doesn't look very stable.",
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

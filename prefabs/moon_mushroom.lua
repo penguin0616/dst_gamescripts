@@ -14,6 +14,7 @@ local capprefabs =
 {
     "moon_cap_cooked",
     "small_puff",
+	"sleepcloud_lunar",
 }
 
 local cookedprefabs =
@@ -40,6 +41,12 @@ local function mooncap_oneaten(inst, eater)
         else
             eater:PushEvent("knockedout")
         end
+
+		if eater.components.skilltreeupdater and eater.components.skilltreeupdater:IsActivated("wormwood_moon_cap_eating") then
+			local cloud = SpawnPrefab("sleepcloud_lunar")
+			cloud.Transform:SetPosition(eater.Transform:GetWorldPosition())
+			cloud:SetOwner(eater)
+		end
     end
 end
 

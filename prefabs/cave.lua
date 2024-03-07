@@ -245,6 +245,7 @@ local function master_postinit(inst)
     inst:AddComponent("brightmarespawner")
     inst:AddComponent("toadstoolspawner")
     inst:AddComponent("grottowarmanager")
+    inst:AddComponent("acidbatwavemanager")
 
     --gameplay
     inst:AddComponent("caveins")

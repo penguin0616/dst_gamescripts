@@ -1543,7 +1543,7 @@ local COMPONENT_ACTIONS =
         end,
 
         wax = function(inst, doer, target, actions)
-            if target:HasTag("waxable") then
+            if target:HasTag("waxable") and (target:HasTag("needswaxspray") == inst:HasTag("waxspray")) then
                 table.insert(actions, ACTIONS.WAX)
             end
         end,
@@ -1980,26 +1980,37 @@ local COMPONENT_ACTIONS =
         end,
 
         weapon = function(inst, doer, target, actions, right)
-            if not right
-                and doer.replica.combat ~= nil
+            if  doer.replica.combat ~= nil
                 and (inst:HasTag("projectile") or inst:HasTag("rangedweapon") or not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding()))
-				and not inst:HasTag("outofammo") then
+				and not inst:HasTag("outofammo")
+            then
                 if doer.replica.combat:CanExtinguishTarget(target, inst) or
-                    doer.replica.combat:CanLightTarget(target, inst) then
+                    (right and doer.replica.combat:CanLightTarget(target, inst))
+                then
                     table.insert(actions, ACTIONS.ATTACK)
-                elseif not (target:HasTag("wall") or target:HasTag("mustforceattack"))
+
+                elseif not right
+                    and not (target:HasTag("wall") or target:HasTag("mustforceattack"))
 					and not (doer.TargetForceAttackOnly ~= nil and doer:TargetForceAttackOnly(target))
                     and target.replica.combat ~= nil
                     and doer.replica.combat:CanTarget(target)
                     and target.replica.combat:CanBeAttacked(doer)
-                    and not doer.replica.combat:IsAlly(target) then
+                    and not doer.replica.combat:IsAlly(target)
+                then
                     if target:HasTag("mole") and inst:HasTag("hammer") then
                         table.insert(actions, ACTIONS.ATTACK)
                     elseif not (doer:HasTag("player") and target:HasTag("player"))
-                        and not (inst:HasTag("tranquilizer") and not target:HasTag("sleeper")) then
+                        and not (inst:HasTag("tranquilizer") and not target:HasTag("sleeper"))
+                    then
                         table.insert(actions, ACTIONS.ATTACK)
                     end
                 end
+            end
+        end,
+
+        wax = function(inst, doer, target, actions, right)
+            if right and target:HasTag("waxable") and (target:HasTag("needswaxspray") == inst:HasTag("waxspray")) then
+                table.insert(actions, ACTIONS.WAX)
             end
         end,
     },
@@ -2303,6 +2314,7 @@ local COMPONENT_ACTIONS =
             end
         end,
 
+        -- NOTES(DiogoW): Keep in sync with AOESpell:CanCast
 		spellbook = function(inst, doer, actions)
 			--spellbook exists on clients too
 			if doer.HUD ~= nil and doer.HUD:GetCurrentOpenSpellBook() == inst then

@@ -2581,6 +2581,41 @@ TheInventory:AddRestrictedBuildFromLua( "treasurechest_sacred", "treasurechest_s
 TheInventory:AddRestrictedBuildFromLua( "treasurechest_steamertrunk", "treasurechest_steamertrunk", false )
 TheInventory:AddRestrictedBuildFromLua( "treasurechest_traincase", "treasurechest_traincase", false )
 TheInventory:AddRestrictedBuildFromLua( "treasurechest_traveltrunk", "treasurechest_traveltrunk", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_ancient", "treasurechest_upgraded_ancient", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_ancient", "treasurechest_ancient", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_cake", "treasurechest_upgraded_cake", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_cake", "treasurechest_cake", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_carpetbag", "treasurechest_upgraded_carpetbag", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_carpetbag", "treasurechest_carpetbag", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_corruption", "treasurechest_upgraded_corruption", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_corruption", "treasurechest_corruption", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_cotl_basic", "treasurechest_upgraded_cotl_basic", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_cotl_basic", "treasurechest_cotl_basic", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_cotl_fancy", "treasurechest_upgraded_cotl_fancy", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_cotl_fancy", "treasurechest_cotl_fancy", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_crimson", "treasurechest_upgraded_crimson", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_crimson", "treasurechest_crimson", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_cupid", "treasurechest_upgraded_cupid", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_cupid", "treasurechest_cupid", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_cupid", "treasurechest_cupidalt", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_gingerbread", "treasurechest_upgraded_gingerbread", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_gingerbread", "treasurechest_gingerbread", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_monster", "treasurechest_upgraded_monster", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_monster", "treasurechest_monster", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_posh", "treasurechest_upgraded_posh", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_posh", "treasurechest_posh", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_poshprint", "treasurechest_upgraded_poshprint", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_poshprint", "treasurechest_poshprint", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_sacred", "treasurechest_upgraded_sacred", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_sacred", "treasurechest_sacred", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_steamertrunk", "treasurechest_upgraded_steamertrunk", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_steamertrunk", "treasurechest_steamertrunk", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_traincase", "treasurechest_upgraded_traincase", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_traincase", "treasurechest_traincase", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_traveltrunk", "treasurechest_upgraded_traveltrunk", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_traveltrunk", "treasurechest_traveltrunk", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_vintage", "treasurechest_upgraded_vintage", false )
+TheInventory:AddRestrictedBuildFromLua( "treasurechest_upgraded_vintage", "treasurechest_vintage", false )
 TheInventory:AddRestrictedBuildFromLua( "treasurechest_vintage", "treasurechest_vintage", false )
 TheInventory:AddRestrictedBuildFromLua( "trophyscale_fish_handmade", "trophyscale_fish_handmade", false )
 TheInventory:AddRestrictedBuildFromLua( "trophyscale_oversizedveggies_plant", "trophyscale_oversizedveggies_plant", false )
@@ -3612,6 +3647,23 @@ TheInventory:AddSkinLinkInput( "stagehand_dragonfly", "endtable_dragonfly" )
 TheInventory:AddSkinLinkInput( "stagehand_vintage", "endtable_vintage" )
 TheInventory:AddSkinLinkInput( "steeringwheel_nautical_item", "steeringwheel_nautical" )
 TheInventory:AddSkinLinkInput( "steeringwheel_wagstaff_item", "steeringwheel_wagstaff" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_ancient", "treasurechest_ancient" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_cake", "treasurechest_cake" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_carpetbag", "treasurechest_carpetbag" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_corruption", "treasurechest_corruption" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_cotl_basic", "treasurechest_cotl_basic" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_cotl_fancy", "treasurechest_cotl_fancy" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_crimson", "treasurechest_crimson" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_cupid", "treasurechest_cupid" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_gingerbread", "treasurechest_gingerbread" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_monster", "treasurechest_monster" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_posh", "treasurechest_posh" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_poshprint", "treasurechest_poshprint" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_sacred", "treasurechest_sacred" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_steamertrunk", "treasurechest_steamertrunk" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_traincase", "treasurechest_traincase" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_traveltrunk", "treasurechest_traveltrunk" )
+TheInventory:AddSkinLinkInput( "treasurechest_upgraded_vintage", "treasurechest_vintage" )
 TheInventory:AddSkinLinkInput( "walkingplank_nautical", "boat_nautical" )
 TheInventory:AddSkinLinkInput( "walkingplank_wagstaff", "boat_wagstaff" )
 TheInventory:AddSkinLinkInput( "wall_moonrock_victorianitem", "wall_moonrock_victorian" )
@@ -3782,6 +3834,7 @@ TheInventory:AddCookBookKey( "pumpkincookie" )
 TheInventory:AddCookBookKey( "ratatouille" )
 TheInventory:AddCookBookKey( "salsa" )
 TheInventory:AddCookBookKey( "seafoodgumbo" )
+TheInventory:AddCookBookKey( "shroombait" )
 TheInventory:AddCookBookKey( "shroomcake" )
 TheInventory:AddCookBookKey( "stuffedeggplant" )
 TheInventory:AddCookBookKey( "surfnturf" )
@@ -3875,7 +3928,7 @@ TheInventory:AddGenericKVKey( "wathgrithr_container_unlocked" )
 TheInventory:AddGenericKVKey( "wathgrithr_horn_played" )
 
 if TheInventory.AddScrapbook0Key == nil then
-    TheInventory:ValidateWithSignature( "5b77e08fac6ce39af75ac7ba8bfda5fb44426c528b5ed13b3dcd4027536b194cfdaae5e435a8b03848a75c4530cd134df94d6bb8b2af7e1fcac24e288e60d3f28da43b9ef6f46b102d248159dfc0ddea2a38d6f4095b93d09f33ef7fcf001b7884bf99365cb5e69aec9aa885bdd526666343de9cc10da372d961a29839d557b0086ad0823a00c0c08b6ae29dd81cd21c32cbc2edf83850e920a5e2cd4076e9698ca18266a5600085ee02db4c4570e6602825bb42495929a5389ac1f5aa3738254329febf4158bd052ce538857a9b1b9d70617fa53a5db4f6f91d020897061b56b98592fba030b1607c28b9f00f4e58a1a9ad2c6f03a08d12d72f29214ddd10550f21226101dac44721a4ae11f6a6f66396ba94427e9db44b1dc8d26b7e3cb857899c5a1b7a5aff2881f1e6165d24a75dfbcd73411f50580f342b6877af99ba1fc3547303e70e72d3a15f4e314f0ac419de1bdcc9ea783d9edb1fd104d029936fa9fa9af0f4ce72ace3e0fd18cb1315850b6d8b45f8d81695ea891f06131b7f64aff8606242ab18804357fa901ea694fb50334d6bc2561fad1437a411b8f62ee9ce9c6a28585ae523beb6e60d07fe4ab80854a999c3b79d69fc1ebf10d9e26918115dc3b93f3a687f03e682702f944866b2a3495baa9a85795d23030b387ca9c24e7dd497ccaaf0d49bb8f7d58f83e846cb959386537e8302bb595c09952ce1d5" )
+    TheInventory:ValidateWithSignature( "7a76a7152e675534a187aed448bb5175e2494ad24b545157c75a3f2de0f090f968525b61422f02a7f0c2e5f39c0b91828dda6d7a802e9b34e4ad41f5bd63047c36d9e98f5a1be36db8c344ad2aed89db34ad6c568815d5e63e91b7dd6666ca0655225b7e8e14cdccfd09a7891bfec22f6cab4dfa53bddf8702e481278fe2916e9a4cdc01308e853c93e8c465840162c7d29f9df48c32fa9acc504f94fc48ec2364a15d929f5ea220defafb92dabe6a7a8da226368da6896752791decd05b40d85be325e7740db4d54eabeb2b41e960765839c14ce4f41739940c010891d8211a1f8aa4f53030159d905e3fc747baf5e16735edfb6b9a1486c7920174582c4ff24d125b4a44d5b3a68319fb7c47b637351951aeb3fca61e78ccf9a02bbebd9c263a5df93a5c1ec55bd48000d78f9a023d6ae614bc70531b50ce4149cc071a30e823b209e8fdec4434de58775737b285ad5fd69a36d0875f3fff5436ff919a5e4902a646f89ed21c91ee2e2ba934b50284ad2b654b952c3ce67a57e878d1d3e5721696383205bd79c4cc40d58bb4abd97032023c8f4b4816ee1064a7d2ceb370b02826ec2f850627bd2c4a097590337f5a3c7d1ef9d6ae80a234a17b8a0e7b64713444864469e3b071becd7feaf6dea759f5566efae485384216ce284abb81bcf965f9fcd27c66da0ef071dfb50e97d7b6057c59ecd58019790eada960ed75d6a8" )
 else -- Temporary protection guard for platforms missing the engine change 1.
 
 TheInventory:AddScrapbook5Key( "679F8765" ) -- abigail
@@ -4002,6 +4055,7 @@ TheInventory:AddScrapbook5Key( "8BBC7F55" ) -- beemine
 TheInventory:AddScrapbook8Key( "1C4D0FC8" ) -- beequeen
 TheInventory:AddScrapbook3Key( "5162DC63" ) -- beequeenhivegrown
 TheInventory:AddScrapbook13Key( "A9BD39BD" ) -- beeswax
+TheInventory:AddScrapbook11Key( "3C2FE56B" ) -- beeswax_spray
 TheInventory:AddScrapbook10Key( "B542310A" ) -- bernie_active
 TheInventory:AddScrapbook12Key( "29D9D3BC" ) -- bernie_big
 TheInventory:AddScrapbook15Key( "F1761CF" ) -- bernie_inactive
@@ -4156,6 +4210,7 @@ TheInventory:AddScrapbook5Key( "888E1F45" ) -- chesspiece_twinsofterror
 TheInventory:AddScrapbook15Key( "419D794F" ) -- chesspiece_warg_mutated
 TheInventory:AddScrapbook14Key( "C0F71E6E" ) -- chester
 TheInventory:AddScrapbook4Key( "1CBA00E4" ) -- chester_eyebone
+TheInventory:AddScrapbook5Key( "3D785EA5" ) -- chestupgrade_stacksize
 TheInventory:AddScrapbook13Key( "31CE237D" ) -- chum
 TheInventory:AddScrapbook10Key( "8D60EE3A" ) -- coldfire
 TheInventory:AddScrapbook1Key( "92CCC001" ) -- coldfirepit
@@ -4200,6 +4255,7 @@ TheInventory:AddScrapbook13Key( "9DE8E6AD" ) -- cutlichen
 TheInventory:AddScrapbook15Key( "CA25AF1F" ) -- cutreeds
 TheInventory:AddScrapbook3Key( "CCEEE6C3" ) -- cutstone
 TheInventory:AddScrapbook2Key( "5B342532" ) -- daywalker
+TheInventory:AddScrapbook0Key( "97072780" ) -- daywalker2
 TheInventory:AddScrapbook7Key( "47AD0A77" ) -- daywalker_pillar
 TheInventory:AddScrapbook4Key( "34DEC024" ) -- dead_sea_bones
 TheInventory:AddScrapbook9Key( "823876F9" ) -- deciduoustree_tall
@@ -4313,6 +4369,7 @@ TheInventory:AddScrapbook1Key( "A1EBF7F1" ) -- fence
 TheInventory:AddScrapbook9Key( "B29D9059" ) -- fence_gate
 TheInventory:AddScrapbook9Key( "A14B3E59" ) -- fence_gate_item
 TheInventory:AddScrapbook1Key( "18F754C1" ) -- fence_item
+TheInventory:AddScrapbook6Key( "48053736" ) -- fence_junk
 TheInventory:AddScrapbook15Key( "BF25729F" ) -- fence_rotator
 TheInventory:AddScrapbook2Key( "ACBEA762" ) -- fertilizer
 TheInventory:AddScrapbook0Key( "2AE22F50" ) -- festivefish
@@ -4456,6 +4513,7 @@ TheInventory:AddScrapbook1Key( "BEA16A01" ) -- hambat
 TheInventory:AddScrapbook6Key( "C4101586" ) -- hammer
 TheInventory:AddScrapbook6Key( "B4E674C6" ) -- hawaiianshirt
 TheInventory:AddScrapbook3Key( "3CB06493" ) -- healingsalve
+TheInventory:AddScrapbook9Key( "B7BDE609" ) -- healingsalve_acid
 TheInventory:AddScrapbook5Key( "DB20FA95" ) -- heatrock
 TheInventory:AddScrapbook15Key( "F09EEEFF" ) -- hedgehound
 TheInventory:AddScrapbook8Key( "ABE2CCE8" ) -- hedgehound_bush
@@ -4491,6 +4549,8 @@ TheInventory:AddScrapbook5Key( "3CCDBE75" ) -- icestaff
 TheInventory:AddScrapbook0Key( "768E4F60" ) -- ipecacsyrup
 TheInventory:AddScrapbook5Key( "2B3F1F65" ) -- jammypreserves
 TheInventory:AddScrapbook14Key( "8FEB788E" ) -- jellybean
+TheInventory:AddScrapbook9Key( "FE911549" ) -- junk_pile
+TheInventory:AddScrapbook10Key( "475ACCA" ) -- junk_pile_big
 TheInventory:AddScrapbook10Key( "B24D07DA" ) -- justeggs
 TheInventory:AddScrapbook4Key( "7C35F54" ) -- kabobs
 TheInventory:AddScrapbook14Key( "A48178BE" ) -- kelp
@@ -4970,6 +5030,7 @@ TheInventory:AddScrapbook8Key( "77DF6828" ) -- sapling_moon
 TheInventory:AddScrapbook7Key( "6D04767" ) -- scandata
 TheInventory:AddScrapbook11Key( "ED65FCBB" ) -- scarecrow
 TheInventory:AddScrapbook5Key( "A397B9B5" ) -- scorched_skeleton
+TheInventory:AddScrapbook0Key( "EB7A2BB0" ) -- scrap_monoclehat
 TheInventory:AddScrapbook4Key( "39E3AB34" ) -- scrapbook_page
 TheInventory:AddScrapbook7Key( "795096B7" ) -- sculptingtable
 TheInventory:AddScrapbook1Key( "977A4001" ) -- sculpture_bishopbody
@@ -5018,6 +5079,7 @@ TheInventory:AddScrapbook2Key( "1A5BFAC2" ) -- singingshell_octave4
 TheInventory:AddScrapbook3Key( "1A5BFAC3" ) -- singingshell_octave5
 TheInventory:AddScrapbook10Key( "1FD17D3A" ) -- sisturn
 TheInventory:AddScrapbook13Key( "C0DD788D" ) -- skeleton
+TheInventory:AddScrapbook2Key( "C76EABC2" ) -- skeleton_notplayer
 TheInventory:AddScrapbook14Key( "7A94E5EE" ) -- skeletonhat
 TheInventory:AddScrapbook12Key( "EE6DDF4C" ) -- sketch
 TheInventory:AddScrapbook9Key( "9C951B79" ) -- sleepbomb
@@ -5101,6 +5163,7 @@ TheInventory:AddScrapbook0Key( "76824DA0" ) -- steelwool
 TheInventory:AddScrapbook10Key( "C4F38A8A" ) -- steeringwheel
 TheInventory:AddScrapbook8Key( "EEAC6168" ) -- steeringwheel_item
 TheInventory:AddScrapbook14Key( "4E63342E" ) -- stinger
+TheInventory:AddScrapbook6Key( "3536AEE6" ) -- storage_robot
 TheInventory:AddScrapbook4Key( "BCFCA634" ) -- strawhat
 TheInventory:AddScrapbook9Key( "22B6BFB9" ) -- stuffedeggplant
 TheInventory:AddScrapbook14Key( "3CB6DAEE" ) -- stuffing
@@ -5299,6 +5362,8 @@ TheInventory:AddScrapbook11Key( "816018FB" ) -- wall_moonrock
 TheInventory:AddScrapbook7Key( "A0C84037" ) -- wall_moonrock_item
 TheInventory:AddScrapbook6Key( "83232836" ) -- wall_ruins
 TheInventory:AddScrapbook12Key( "A8B25ABC" ) -- wall_ruins_item
+TheInventory:AddScrapbook12Key( "85F6621C" ) -- wall_scrap
+TheInventory:AddScrapbook6Key( "1B25C056" ) -- wall_scrap_item
 TheInventory:AddScrapbook0Key( "9B7D1370" ) -- wall_stone
 TheInventory:AddScrapbook2Key( "22EC3802" ) -- wall_stone_item
 TheInventory:AddScrapbook2Key( "ABFB6FA2" ) -- wall_wood
@@ -7450,7 +7515,7 @@ TheInventory:AddScrapbook12Key( "4374C56C" ) -- yellowstaff
 --TheInventory:AddItemIDPairing(2083, "shovel_heart")
 
 if TheInventory.AddFreeItemForEveryone == nil then
-    TheInventory:ValidateWithSignature( "61be501908283056224b69dbf8f31141299cb319bfac633823bcd9e3bfda0b638ece0d58ff53947bff3a15802271a7cdb8ef074dcbed3cdedde82d163614c7adb4781e36fd47e9d1f47ed91247d0a915634a3caec9ca8ce5162bc35d41bf26af5124ed8a19c45bd6d05b9b0a32b7661dc70526cd8eddced5db33da35c19f92a1724bcd97e32f76ec49aa0abb3c8946d788f7ccd3e9239dde6d40c21c5a4c313a9c18fd40e89a6c91d2be1e422c4a8f01c13c4bb39809f381fe2b659297aa8035d2a2ed6587ef3ea2c1999050a9c9373c46bb9365abd95501ea7f0161e4bd1c2a659f2a7cf6e04c0371a3edbfedd506746f781a35dd6b32925f8fb276e571ef577b6b3a36a33703ea98be7b977ecd6a33299f54cccfcebb2ec0eab823404fe2a4a22391d6ae362e5be0dfdb3108cd7180727f5365651f155ccfdd437c25cfccfdece975ce8dcc67eeceea6565a97fc4dd20e910c9494b813502f2d4b1907ead66158257c9a2a7de16abcb61e1e35e4ed64158cbaa3501db80c19f811d3ab155495ffa24504572ebc3df029add4c1a5a90527b3973072d3b36009f93fe2ee190d1d37b6028d820443666f8908f2a31ba9240318332fd96baaa5b19f7e057a177069e7583590c54d83ba32ff57dc67e1506bdcab2340eaf5acf6bca7df3b1a0c5355c7631f5bff41ef4c175c4f3a1df9386abf8d560ca077a62d9d7215e483a8a55" )
+    TheInventory:ValidateWithSignature( "16fa39a50aaa2cf3d51f74cf7c7b104f1f32c0dbd8c7d13c3b8a4dd165e9dcb2818495579cb66c8fae2970f8cd7e4e8b989b5255c9b90cc29ddae30c0cedb7b3aed27d2fc2ef4d8f9a59fe374cc12d90ccca251f0906c33bd8693841755e52fdb95ae72624032e892d72483dfb688e257fe1d19a25dcf5078a35bc221837a716dbe4123153f4bbe44cf7e738588bcd6ef7c6522d4bfa5c4b53ec70a3e597242ef155cf1a0b6702f1dbe4fa72ff7de0d37c2805677b8bd3dcaf77f19daf2c36556cba08eddff0488a5b7cafd798bda798f01bc7d4e2f1af960420123272c5090d0a04cc8fd84c68665f0a132d1d85436228e0dcd5a6cd85bbe7669b8a6701c34e4e5a5973ed5176fa089358fded47b14dc8427fb5675eaf0f8237ce73e56911b9ee0a76fb53079afb00469136972e0952379c202bc13d169af40b1c213976ec8553d21ce0c2059c0780e2576ac81149b9bfda036493504a083210f20999aa8ea6f71a7befa7b93b95f49a150804941db485d2d775be734233036deb31c69e261453ae42163c90ecece31ae52abdaf83a2b6a176e04c4e9eec9a1c9958dc99a5a82117a94e9dfcb7d8f91026c4e3d75b04a71944e68e45dec896b16eb5e7e54f3c37ee9a7d827082eb6fb32fbbca46b7288bd51219368c234c59bece715ecd45fddc86b745f7de8e09f202c720f03ae3aa5f5380abd1d984065e0dc8131647af90" )
 else -- Temporary protection guard for platforms missing the engine change 2.
 
 -- These are free items for everyone and are not networked.
@@ -7505,7 +7570,7 @@ TheInventory:AddFreeItemForEveryone("record_creepyforest") -- 148
 TheInventory:AddFreeItemForEveryone("record_drstyle") -- 148
 TheInventory:AddFreeItemForEveryone("record_efs") -- 148
 
-TheInventory:ValidateWithSignature( "91cbcf713bb6b57200c65f8759f829d8b25f1fe9e3f2c3b8e4ba0e8867cdaee098bd32940e1164fa5b75463ace45c336abbd2d79568c1f4b3a11f3490d98d661a4de02652de5ea5d1965721616551afca4652fd46f5f44dfae58f15e0a9bd758595088997f0663040adb0e901c1af4700e473b662867446e93bbb81e24e71acbcd0a64608b277c4c424a4fd5966f80ae70abeae6cfa94e294d5a131ef9d4085d7cf608c6d8e1f20125911c59d0ed1e391e2b8052250e3519d3c1d5d4b6e02ab17fb53022155201bc1529fd6879247e8c0263d0359c1e56f678331f0bec8afe47afa3ca5fb6eddeec13a3e8cb438dacf3ef9fe6aca4d6e8abbb31d7321636aa7380fcd8f7ceea0a1509503adf4a0bae7b0e5bd1d2388a0d3c7a442b2e9ade32bbd9e17f8ad84318e2339e57d956ba9d763efa8ff14f487f1873bfca2588b22e050c1cf0d1d09e94c8b2ac7b67ade77e67bc7937701fb20184692f098633a5dac476cfd5364f87c77b2f3357ad3a158cba1817d675b5ab3dc9fac9cbcae446a29363ef4ddecee9b333f7422d86b32fe4330ff8964bfbd1359a569d473dda65274097626095f7db6a0a0b9c5d226dd75fa22f93f7002645e9b0a65d128228e897a7cda57ae0533293da7e7a7e1e855d3a3be2c905eb133699d5d0a3cdbaa061c926fe5f14fb9cd56abb8eba5c46cd5fff82152c84ede6af27d5761101e3ec9ca113" )
+TheInventory:ValidateWithSignature( "57faebd4d7f31637901a3b3cbb0d6a9f30ce19aaf6af92cedc62038922af27c40102e90d20ee41156cec68b7ce3684d13774875b23ff8247ef88f650374302fde85a61853d19d60d5ab04ea16aee17243414c77de2a35f75d0f8eaaa9a02828dd500240c65400504c68762d995bba7ad060f941f077ea6b1be3ec3fdd1eccc38b7bdd188d764014957be12fa8860e0306541f5edb76db74134aa7187160242a6bf095ac83ecafb3ecd70b2c90f745c8b89f2745f79c21d7e8bdb88482be5246efcb727dd11b69c3e3e1ccefef7bfee0b6ad9cb9bc99de840752b6ffb981aaf82ae47570b66980af91e5cac89d87aef3f58926d3d9c484de0356c0234f1c90e34d84c6d53c32737332fa5632a9ca77eb7fbe13db99331bf10947f14ec3abe8052d800876616712324dd01df46c84efb4d1638c4b4269c6310ecaf18875231287997d9aeea8be3470b1047a720b94655d92c8a0b7a33db3f398a5d99d269299dabca6f07b41b484086608916fed9b03787bb02e8b80302c0d5ead9cf87aaadefe92023f7e303e474f21c7bf1cba2662ecaf94a6be26af4c3520f226d22c2581e0ebef48a838cffb1178496c33d0f86947a34f3e6cd1dce86bdf7f7123814ddb8acfdce222d58315aafd8c29a5673fa6027b87291ed2812003cb239f74234462b96eae3ae7287fcd26efc62b2d3b7af7db80b20f0f2f41dfc70ca733786edbf5c88" )
 
 end -- Temporary protection guard for platforms missing the engine change 2.
 

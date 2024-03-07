@@ -391,9 +391,16 @@ function ItemTile:SetQuantity(quantity)
         return
     elseif not self.quantity then
         self.quantity = self:AddChild(Text(NUMBERFONT, 42))
-        self.quantity:SetPosition(2, 16, 0)
     end
-    self.quantity:SetString(tostring(quantity))
+	if quantity > 999 then
+		self.quantity:SetSize(36)
+		self.quantity:SetPosition(3.5, 16, 0)
+		self.quantity:SetString("999+")
+	else
+		self.quantity:SetSize(42)
+		self.quantity:SetPosition(2, 16, 0)
+		self.quantity:SetString(tostring(quantity))
+	end
 end
 
 function ItemTile:SetPerishPercent(percent)

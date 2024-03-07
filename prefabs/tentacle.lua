@@ -129,6 +129,9 @@ local function fn()
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetChanceLootTable('tentacle')
 
+    inst:AddComponent("acidinfusible")
+    inst.components.acidinfusible:SetMultipliers(TUNING.ACID_INFUSION_MULT.BERSERKER)
+
     inst:SetStateGraph("SGtentacle")
 
     inst:ListenForEvent("attacked", OnAttacked)

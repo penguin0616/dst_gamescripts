@@ -523,6 +523,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "Head feels so full of smarts, florp!",
 	ANNOUNCE_HOUNDS = "Glurp... doggies coming...",
 	ANNOUNCE_WORMS = "Glurt?",
+    ANNOUNCE_ACIDBATS = "Don't like.",
 	ANNOUNCE_HUNGRY = "Want food!",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "Where these footprints go?",
 	ANNOUNCE_HUNT_LOST_TRAIL = "No more prints, flort.",
@@ -903,6 +904,8 @@ return{
     ANNOUNCE_SCRAPBOOK_FULL = "No more room in scrappy book.",
 
     ANNOUNCE_CHAIR_ON_FIRE = "This not fine!!",
+
+    ANNOUNCE_HEALINGSALVE_ACIDBUFF_DONE = "Uh oh... better stay out of stingy rain, florp.",
 
     ANNOUNCE_COACH = 
     {
@@ -1445,18 +1448,25 @@ return{
         {
             GENERIC = "It grow so big!",
             BLOOM = "Something falling off it.",
+            ACIDCOVERED = "Smell... different. Still tasty?",
         },
         MUSHTREE_MEDIUM =
         {
             GENERIC = "Look kinda tasty, florp.",
             BLOOM = "Pretty!",
+            ACIDCOVERED = "Smell... different. Still tasty?",
         },
         MUSHTREE_SMALL =
         {
             GENERIC = "Short and stumpy.",
             BLOOM = "Floaty lights!",
+            ACIDCOVERED = "Smell... different. Still tasty?",
         },
-        MUSHTREE_TALL_WEBBED = "This one claimed by Spiderfolk.",
+        MUSHTREE_TALL_WEBBED =
+        {
+            GENERIC = "This one claimed by Spiderfolk.",
+            ACIDCOVERED = "Smell... different. Still tasty?",
+        },
         SPORE_TALL =
         {
             GENERIC = "Pretty!",
@@ -2586,6 +2596,7 @@ return{
 		SILK = "Spiderfolk loogies!",
 		SKELETON = "It dead.",
 		SCORCHED_SKELETON = "Got too close to campfire, florp.",
+        SKELETON_NOTPLAYER = "Glorpt. Can't tell if Mermfolk or Pigfolk...",
 		SKULLCHEST = "Maybe something good inside!", --removed
 		SMALLBIRD =
 		{
@@ -2702,8 +2713,10 @@ return{
 		{
 			GENERIC = "Oooooh, box for things!",
 			BURNT = "Noooo!",
+            UPGRADED_STACKSIZE = "Big box for things!",
 		},
 		TREASURECHEST_TRAP = "Treasure!",
+        CHESTUPGRADE_STACKSIZE = "Make boxes bigger? Glurgh. More fun to leave stuff on ground.", -- Describes the kit upgrade item.
 		SACRED_CHEST =
 		{
 			GENERIC = "Wonder what inside?",
@@ -3002,6 +3015,8 @@ return{
 		WALL_MOONROCK_ITEM = "Tough rocks.",
 		WALL_DREADSTONE = "Pretty wall!",
 		WALL_DREADSTONE_ITEM = "Will be good wall, florp.",
+        WALL_SCRAP = "Pretty wall, flort!",
+        WALL_SCRAP_ITEM = "Make pretty wall, flort!",
 		FENCE = "Keep out nasty Pigfolk, florp.",
         FENCE_ITEM = "For building fence!",
         FENCE_GATE = "Oooh smart, put door in fence.",
@@ -4112,6 +4127,7 @@ return{
         DUSTMERINGUE = "Throw it on floor, then don't have to eat it.",
 
         SHROOMCAKE = "It best cake ever!",
+        SHROOMBAIT = "Nope.",
 
         NIGHTMAREGROWTH = "Glurp... something bad happening!",
 
@@ -4842,6 +4858,12 @@ return{
 			GENERIC = "Heehee, stinky Pig all locked up!",
 			EXPOSED = "Rock too hard for breaking, florp.",
 		},
+		DAYWALKER2 =
+		{
+			GENERIC = "I don't like him.",
+			BURIED = "No, thank you. Flort!",
+			HOSTILE = "See? Never trust a stinky Pig.",
+		},
 		ARMORDREADSTONE = "So pretty... it mine!",
 		DREADSTONEHAT = "It real good for headbutting, flort!",
 
@@ -5094,6 +5116,22 @@ return{
         MASTUPGRADE_LAMP_ITEM_YOTD = "Tall boat light!",
         WALKINGPLANK_YOTD = "Ooooh, fancy jumpy board!",
         CHESSPIECE_YOTD = "Why it not start? Wanna race again!",
+
+        -- Rifts / Meta QoL
+
+        HEALINGSALVE_ACID = "Slimy!",
+
+        BEESWAX_SPRAY = "Glurgh... stink spray!",
+        WAXED_PLANT = "Plant gonna be stuck like that forever?", -- Used for all waxed plants, from farm plants to trees.
+
+        STORAGE_ROBOT = {
+            GENERIC = "Clean mess, baby Ironfolk!",
+            BROKEN = "Didn't break baby Ironfolk. Found like that.",
+        },
+
+        FENCE_JUNK = "Made of bunch of metal bits.",
+        JUNK_PILE = "If anything good in there, it mine!",
+        JUNK_PILE_BIG = "Glurp... look like it gonna fall!",
     },
 
     DESCRIBE_GENERIC = "What that?",

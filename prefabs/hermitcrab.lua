@@ -1141,6 +1141,15 @@ local function initfriendlevellisteners(inst)
             item:Remove()
         end
     end)
+
+    -- Friend level deltas.
+    inst:ListenForEvent("friend_level_changed", function(inst, data)
+        local worldmeteorshower = TheWorld.components.worldmeteorshower
+        if worldmeteorshower ~= nil then
+            local odds = inst.components.friendlevels:GetLevel() / inst.components.friendlevels:GetMaxLevel()
+            worldmeteorshower.moonrockshell_chance_additionalodds:SetModifier(inst, odds, "pearl_tasks")
+        end
+    end)
 end
 -- END FRIEND LEVELS
 

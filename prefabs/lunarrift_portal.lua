@@ -3,7 +3,15 @@ local assets =
     Asset("ANIM", "anim/lunar_rift_portal.zip"),
     Asset("ANIM", "anim/lunar_rift_portal_small.zip"),
     Asset("MINIMAP_IMAGE", "lunarrift_portal"),
+    Asset("MINIMAP_IMAGE", "lunarrift_portal1"),
+    Asset("MINIMAP_IMAGE", "lunarrift_portal2"),
+    Asset("MINIMAP_IMAGE", "lunarrift_portal3"),
+    Asset("MINIMAP_IMAGE", "lunarrift_portal4"),
     Asset("MINIMAP_IMAGE", "lunarrift_portal_max"),
+    Asset("MINIMAP_IMAGE", "lunarrift_portal_max1"),
+    Asset("MINIMAP_IMAGE", "lunarrift_portal_max2"),
+    Asset("MINIMAP_IMAGE", "lunarrift_portal_max3"),
+    Asset("MINIMAP_IMAGE", "lunarrift_portal_max4"),
 }
 
 local prefabs =
@@ -269,9 +277,14 @@ local function setmaxminimapstatus(inst)
     inst.MiniMapEntity:SetPriority(22)
     inst.MiniMapEntity:SetIcon("lunarrift_portal_max.png")
 
+    if inst.icon then
+        inst.icon:Remove()
+    end
+
     inst.icon = SpawnPrefab("globalmapicon")
     inst.icon:TrackEntity(inst)
-    inst.icon.MiniMapEntity:SetPriority(22)
+    inst.icon.MiniMapEntity:SetPriority(21)
+    inst.icon_max = true
 end
 
 --------------------------------------------------------------------------------
@@ -553,6 +566,31 @@ local function on_portal_load_postpass(inst, newents, data)
     end
 end
 
+
+local function do_marker_minimap_swap(inst)
+    inst.marker_index = inst.marker_index == nil and 0 or ((inst.marker_index + 1) % 4)
+    
+    local max = ""
+    if inst.icon_max then
+        max = "_max"
+    end
+
+    local marker_image = "lunarrift_portal"..max..(inst.marker_index +1)..".png"  --_max
+
+    --inst.MiniMapEntity:SetIcon(marker_image)
+    inst.icon.MiniMapEntity:SetIcon(marker_image)
+end
+
+local function show_minimap(inst)
+    -- Create a global map icon so the minimap icon is visible to other players as well.
+    inst.icon = SpawnPrefab("globalmapicon")
+    inst.icon:TrackEntity(inst)
+    inst.icon.MiniMapEntity:SetPriority(21)
+
+    inst:DoPeriodicTask(TUNING.STORM_SWAP_TIME, do_marker_minimap_swap)
+end
+
+
 --------------------------------------------------------------------------------
 local function portalfn()
     local inst = CreateEntity()
@@ -591,7 +629,11 @@ local function portalfn()
     inst:AddTag("NOBLOCK")
     inst:AddTag("scarytoprey")
     inst:AddTag("lunarrift_portal")
-
+--[[
+    inst.icon = SpawnPrefab("globalmapicon")
+    inst.icon:TrackEntity(inst)
+    inst.icon.MiniMapEntity:SetPriority(22)    
+]]
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst
@@ -621,7 +663,7 @@ local function portalfn()
     ----------------------------------------------------------
     local combat = inst:AddComponent("combat")
     combat:SetDefaultDamage(TUNING.RIFT_LUNAR1_GROUNDPOUND_DAMAGE)
-    combat.playerdamagepercent = 0.5
+    combat.playerdamagepercent = 0.5    
 
     ----------------------------------------------------------
     local groundpounder = inst:AddComponent("groundpounder")
@@ -653,6 +695,8 @@ local function portalfn()
     inst.OnSave = on_portal_save
     inst.OnLoad = on_portal_load
     inst.OnLoadPostPass = on_portal_load_postpass
+
+    inst:DoTaskInTime(0, show_minimap)
 
     return inst
 end

@@ -1207,11 +1207,8 @@ function PlayerController:DoControllerUseItemOnSelfFromInvTile(item)
     if not self.deploy_mode and
         item.replica.inventoryitem:IsDeployable(self.inst) and
         item.replica.inventoryitem:IsGrandOwner(self.inst) then
-		local rider = self.inst.replica.rider
-		if not (rider ~= nil and rider:IsRiding()) then
-			self.deploy_mode = true
-			return
-		end
+		self.deploy_mode = true
+		return
     end
     self.inst.replica.inventory:ControllerUseItemOnSelfFromInvTile(item)
 end
@@ -3141,7 +3138,7 @@ function PlayerController:OnRemotePredictOverrideLocomote(dir)
 	if self.ismastersim and self.handler == nil and self.inst.sg:HasStateTag("overridelocomote") then
 		if self:IsEnabled() and not self:IsBusy() or self.classified.busyremoteoverridelocomote:value() then
 			if self.inst.sg:HasStateTag("canrotate") then
-				self.inst.Transform:SetRotation(dir)
+				self.locomotor:SetMoveDir(dir)
 			end
 			self.inst:PushEvent("locomote", { dir = dir, remoteoverridelocomote = true })
 		end
@@ -3337,7 +3334,7 @@ function PlayerController:DoPredictWalking(dt)
 					--overshot?
 					self.inst.Transform:SetPosition(pt.x, 0, pt.z)
 				else
-					self.inst.Transform:SetRotation(dir)
+					self.locomotor:SetMoveDir(dir)
 				end
                 --Destination reached, queued (instead of immediate) stop
                 --so that prediction may be resumed before the next frame
@@ -4303,19 +4300,16 @@ function PlayerController:GetItemUseAction(active_item, target)
 		return act
 	elseif active_item.replica.inventoryitem:IsDeployable(self.inst) and active_item.replica.inventoryitem:IsGrandOwner(self.inst) then
 		--Deployable item, no item use action generated yet
-		local rider = self.inst.replica.rider
-		if not (rider ~= nil and rider:IsRiding()) then
-			--V2C: When not mounted, use self actions blocked by controller R.Dpad "TOGGLE_DEPLOY_MODE"
-			--     So force it onto L.Dpad instead here
-			--     e.g. Murder/Plant, Eat/Plant
-			act = --[[rmb]] self.inst.components.playeractionpicker:GetInventoryActions(active_item, true)
+		--V2C: When not mounted, use self actions blocked by controller R.Dpad "TOGGLE_DEPLOY_MODE"
+		--     So force it onto L.Dpad instead here
+		--     e.g. Murder/Plant, Eat/Plant
+		act = --[[rmb]] self.inst.components.playeractionpicker:GetInventoryActions(active_item, true)
+		act = act[1] ~= nil and act[1].action ~= ACTIONS.TOGGLE_DEPLOY_MODE and act[1] or act[2]
+		if act == nil then
+			act = --[[lmb]] self.inst.components.playeractionpicker:GetInventoryActions(active_item, false)
 			act = act[1] ~= nil and act[1].action ~= ACTIONS.TOGGLE_DEPLOY_MODE and act[1] or act[2]
-			if act == nil then
-				act = --[[lmb]] self.inst.components.playeractionpicker:GetInventoryActions(active_item, false)
-				act = act[1] ~= nil and act[1].action ~= ACTIONS.TOGGLE_DEPLOY_MODE and act[1] or act[2]
-			end
-			return act ~= nil and act.action ~= ACTIONS.LOOKAT and act or nil
 		end
+		return act ~= nil and act.action ~= ACTIONS.LOOKAT and act or nil
 	end
 end
 
@@ -4521,7 +4515,7 @@ function PlayerController:OnRemoteBufferedAction()
 				if x ~= self.remote_vector.x or z ~= self.remote_vector.z then
 					local dir = math.atan2(z - self.remote_vector.z, self.remote_vector.x - x) * RADIANS
 					if self.inst.sg:HasStateTag("canrotate") then
-						self.inst.Transform:SetRotation(dir)
+						self.locomotor:SetMoveDir(dir)
 					end
 					--Force us to interrupt and go to movement state immediately
 					self.inst.sg:HandleEvent("locomote", { dir = dir, force_idle_state = true }) --force idle state in case this tiny motion was meant to cancel an action

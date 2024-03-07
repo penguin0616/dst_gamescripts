@@ -2,7 +2,16 @@ ChattyNode = Class(BehaviourNode, function(self, inst, chatlines, child, delay, 
     BehaviourNode._ctor(self, "ChattyNode", {child})
 
     self.inst = inst
-    self.chatlines = chatlines
+    if type(chatlines) == "table" and chatlines.chatterparams then
+        -- NOTES(JBK): Having chatterparams allows for meta information about how to present the text using chatter.
+        -- { name = "STRINGTABLENAME", chatterparams = { ... }, }
+        self.chatlines = chatlines.name
+        self.chatter_time = chatlines.chatterparams.time
+        self.chatter_forcetext = chatlines.chatterparams.forcetext
+        self.chatter_echotochat = chatlines.chatterparams.echotochat
+    else
+        self.chatlines = chatlines
+    end
     self.nextchattime = 0
 	self.delay = delay
 	self.rand_delay = rand_delay
@@ -44,7 +53,7 @@ function ChattyNode:Visit()
                 local strtbl = STRINGS[self.chatlines]
                 if strtbl ~= nil then
                     local strid = math.random(#strtbl)
-                    self.inst.components.talker:Chatter(self.chatlines, strid)
+                    self.inst.components.talker:Chatter(self.chatlines, strid, self.chatter_time, self.chatter_forcetext, self.chatter_echotochat)
                 end
             end
             self.nextchattime = t + (self.delay or 10) + math.random() * (self.rand_delay or 10)

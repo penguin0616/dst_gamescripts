@@ -587,6 +587,7 @@ local actionhandlers =
     ActionHandler(ACTIONS.PICK,
         function(inst, action)
             return
+				(action.target and action.target:HasTag("noquickpick") and "dolongaction") or
                 (inst:HasTag("farmplantfastpicker") and action.target ~= nil and action.target:HasTag("farm_plant") and "domediumaction") or
 				(inst.components.rider ~= nil and inst.components.rider:IsRiding() and (
 					(inst:HasTag("woodiequickpicker") and "dowoodiefastpick") or
@@ -996,7 +997,13 @@ local actionhandlers =
     ActionHandler(ACTIONS.PLANTREGISTRY_RESEARCH, "dolongaction"),
     ActionHandler(ACTIONS.ASSESSPLANTHAPPINESS, "dolongaction"),
     ActionHandler(ACTIONS.ADDCOMPOSTABLE, "give"),
-    ActionHandler(ACTIONS.WAX, "dolongaction"),
+    ActionHandler(ACTIONS.WAX,
+        function(inst, action)
+            return
+                action.invobject ~= nil and action.invobject:HasTag("waxspray") and "spray_wax"
+                or "dolongaction"
+        end
+    ),
 
     ActionHandler(ACTIONS.USEITEMON, function(inst, action)
         if action.invobject == nil then
@@ -1097,13 +1104,13 @@ local events =
         elseif not is_moving and should_move then
 			--V2C: Added "dir" param so we don't have to add "canrotate" to all interruptible states
 			if data and data.dir then
-				inst.Transform:SetRotation(data.dir)
+				inst.components.locomotor:SetMoveDir(data.dir)
 			end
             inst.sg:GoToState("run_start")
         elseif data.force_idle_state and not (is_moving or should_move or inst.sg:HasStateTag("idle") or inst:HasTag("is_furling")) then
 			--V2C: Added "dir" param so we don't have to add "canrotate" to all interruptible states
 			if data and data.dir then
-				inst.Transform:SetRotation(data.dir)
+				inst.components.locomotor:SetMoveDir(data.dir)
 			end
             inst.sg:GoToState("idle")
         end
@@ -6168,7 +6175,7 @@ local states =
                     StartActionMeter(inst, timeout)
                 end
                 if inst.bufferedaction.target ~= nil and inst.bufferedaction.target:IsValid() then
-                    inst.bufferedaction.target:PushEvent("startlongaction")
+                    inst.bufferedaction.target:PushEvent("startlongaction", inst)
                 end
             end
         end,
@@ -6208,7 +6215,7 @@ local states =
             if inst.bufferedaction == inst.sg.statemem.action and
             (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
-            end
+            end    
         end,
     },
 
@@ -9516,6 +9523,34 @@ local states =
     },
 
     State{
+        name = "spray_wax",
+        tags = { "waxing" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("light_fire")
+            inst.AnimState:PushAnimation("light_fire_pst", false)
+            inst.SoundEmitter:PlaySound("qol/wax_spray/spritz")
+        end,
+
+        timeline =
+        {
+            TimeEvent(13 * FRAMES, function(inst)
+                inst:PerformBufferedAction()
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animqueueover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+    },
+
+    State{
         name = "bedroll",
         tags = { "bedroll", "busy", "nomorph" },
 
@@ -10041,7 +10076,7 @@ local states =
                     StartActionMeter(inst, timeout)
                 end
                 if inst.bufferedaction.target ~= nil and inst.bufferedaction.target:IsValid() then
-                    inst.bufferedaction.target:PushEvent("startlongaction")
+					inst.bufferedaction.target:PushEvent("startlongaction", inst)
                 end
             end
 			if inst.components.mightiness then
@@ -16370,53 +16405,6 @@ local states =
         end,
     },
 
-    State{
-        name = "mooncap_cloud",
-        tags = { "busy", "yawn", "pausepredict", "nointerrupt" },
-
-        onenter = function(inst, data)
-            ForceStopHeavyLifting(inst)
-            inst.components.locomotor:Stop()
-            inst:ClearBufferedAction()
-
-            if inst.components.playercontroller then
-                inst.components.playercontroller:RemotePausePrediction()
-            end
-
-            inst.AnimState:PlayAnimation("yawn")
-        end,
-
-        timeline =
-        {
-            TimeEvent(0.1, function(inst)
-                local mount = inst.components.rider:GetMount()
-                if mount and mount.sounds and mount.sounds.yell then
-                    inst.SoundEmitter:PlaySound(mount.sounds.yell)
-                end
-            end),
-            TimeEvent(15 * FRAMES, function(inst)
-				inst.sg:RemoveStateTag("nointerrupt")
-                DoYawnSound(inst)
-				local cloud = SpawnPrefab("sleepcloud_lunar")
-				cloud.Transform:SetPosition(inst.Transform:GetWorldPosition())
-				cloud:SetOwner(inst)
-            end),
-			FrameEvent(55, function(inst)
-				inst.sg:RemoveStateTag("busy")
-				inst.sg:RemoveStateTag("pausepredict")
-			end),
-        },
-
-        events =
-        {
-            EventHandler("animover", function(inst)
-                if inst.AnimState:AnimDone() then
-                    inst.sg:GoToState("idle")
-                end
-            end),
-        },
-    },
-
     --------------------------------------------------------------------------
     -- Wigfrid
 
@@ -18703,7 +18691,12 @@ local states =
 			if not inst.sg.statemem.isphysicstoggle then
 				ToggleOffPhysics(inst)
 			end
-			inst.components.locomotor:Stop()
+			local buffaction = inst:GetBufferedAction()
+			if buffaction == nil or buffaction.action == ACTIONS.WALKTO then
+				inst.components.locomotor:Stop()
+				inst.components.locomotor:Clear()
+				inst:ClearBufferedAction()
+			end
 			inst.sg.statemem.chair = chair
 			inst.sg.statemem.rot = inst.Transform:GetRotation()
 			inst.Transform:SetRotation(chair.Transform:GetRotation())
@@ -18787,7 +18780,7 @@ local states =
 				ToggleOffPhysics(inst)
 			end
 			inst.sg.statemem.chair = chair
-			inst.components.locomotor:Stop()
+			inst.components.locomotor:StopMoving()
 			inst.AnimState:SetBankAndPlayAnimation("wilson", "sit_jump_off")
 			local radius = inst:GetPhysicsRadius(0) + chair:GetPhysicsRadius(0)
 			if radius > 0 then
