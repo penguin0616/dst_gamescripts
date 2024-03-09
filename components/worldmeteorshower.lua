@@ -11,17 +11,32 @@ assert(TheWorld.ismastersim, "worldmeteorshower should not exist on client")
 self.moonrockshell_chance = 0
 self.moonrockshell_chance_additionalodds = SourceModifierList(self.inst, 0, SourceModifierList.additive)
 
+function self:GetRockMoonShellWaveOdds()
+    if self.moonrockshell_chance < 1 then
+        return self.moonrockshell_chance_additionalodds:Get()
+    end
+
+    return 0
+end
+
 function self:GetMeteorLootPrefab(prefab)
-	if prefab == "rock_moon" and self.moonrockshell_chance < 1 then
-		self.moonrockshell_chance = self.moonrockshell_chance + TUNING.MOONROCKSHELL_CHANCE
+    if self.moonrockshell_chance < 1 then
+        if prefab == "rock_moon" then
+            self.moonrockshell_chance = self.moonrockshell_chance + TUNING.MOONROCKSHELL_CHANCE
 
-        local odds = self.moonrockshell_chance + self.moonrockshell_chance_additionalodds:Get()
+            local odds = self.moonrockshell_chance + self.moonrockshell_chance_additionalodds:Get()
 
-		if odds >= 1 or TheWorld.state.cycles >= 60 or math.random() <= odds then
-			self.moonrockshell_chance = 1
-			return "rock_moon_shell"
-		end
-	end
+            if odds >= 1 or TheWorld.state.cycles >= 60 or math.random() <= odds then
+                self.moonrockshell_chance = 1
+                return "rock_moon_shell"
+            end
+        elseif prefab == "rock_moon_shell" then
+            self.moonrockshell_chance = 1
+            return prefab, true
+        end
+    elseif prefab == "rock_moon_shell" then -- In case two meteors spawned with the same drop we want to only have one in the world.
+        prefab = "rock_moon"
+    end
 	return prefab
 end
 

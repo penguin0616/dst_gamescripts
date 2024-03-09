@@ -42,6 +42,7 @@ local function OnUpdateThorns(inst)
                         --v:PushEvent("thorns")
                     end
                 elseif v.components.combat:CanBeAttacked() then
+                    -- NOTES(JBK): inst.owner is nil here so this is for non worn things like the bramble trap.
 					local isally = false
 					if not inst.canhitplayers then
 						--non-pvp, so don't hit any player followers (unless they are targeting a player!)
@@ -53,7 +54,7 @@ local function OnUpdateThorns(inst)
 					end
 					if not isally then
 						inst.ignore[v] = true
-                        inst.attacker.components.combat:DoAttack(v, inst)
+						v.components.combat:GetAttacked(inst, inst.damage)
 						--v:PushEvent("thorns")
 					end
                 end

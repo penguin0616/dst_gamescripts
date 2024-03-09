@@ -259,6 +259,39 @@ end
 local KNOCKBACK_TAGS = { "_combat" }
 local KNOCKBACK_CANT_TAGS = { "INLIMBO", "notarget", "noattack", "flight", "invisible", "playerghost", "epic" }
 
+local function DoReleaseDaywalker(inst)
+	local x, y, z = inst.Transform:GetWorldPosition()
+	local x1, y1, z1 = inst.daywalker.Transform:GetWorldPosition()
+	local x2, z2
+	local dist1 = inst:GetPhysicsRadius(0) + inst.daywalker:GetPhysicsRadius(0)
+	if x == x1 and z == z1 then
+		local theta = inst.daywalker.Transform:GetRotation() * DEGREES
+		x2 = x + math.cos(theta) * dist1
+		z2 = z - math.sin(theta) * dist1
+	else
+		local dx = x1 - x
+		local dz = z1 - z
+		local dscale = dist1 / math.sqrt(dx * dx + dz * dz)
+		x2 = x + dx * dscale
+		z2 = z + dz * dscale
+	end
+	inst.daywalker.Physics:Teleport(x2, 0, z2)
+	inst.daywalker:MakeFreed()
+	inst.daywalker = nil
+	inst.daywalker_state = nil
+	inst.sides[inst.daywalker_side]:Show()
+	inst.SoundEmitter:PlaySound("qol1/wagstaff_ruins/rummagepile_pst")
+
+	local r = 3
+	for i, v in ipairs(TheSim:FindEntities(x2, 0, z2, r + 3, KNOCKBACK_TAGS, KNOCKBACK_CANT_TAGS)) do
+		if not (v.components.health and v.components.health:IsDead()) and v:GetDistanceSqToPoint(x2, 0, z2) < r * r then
+			local strengthmult = (v.components.inventory and v.components.inventory:ArmorHasTag("heavyarmor") or v:HasTag("heavybody")) and 1 or 1.4
+			--use the pile as knocker so we go in the right direction
+			v:PushEvent("knockback", { knocker = inst, radius = dist1 + r, strengthmult = strengthmult, forcelanded = true })
+		end
+	end
+end
+
 local function onpickedfn(inst, picker, loot)
 	if inst.daywalker_side then
 		local pickerdata = inst._pickers and inst._pickers[picker] or nil
@@ -271,37 +304,8 @@ local function onpickedfn(inst, picker, loot)
 			inst.daywalker.sg:GoToState("idle")
 			SpawnPrefab("junk_break_fx").Transform:SetPosition(inst.daywalker.Transform:GetWorldPosition())
 		elseif inst.daywalker_state == 2 then
-			local x, y, z = inst.Transform:GetWorldPosition()
 			local x1, y1, z1 = inst.daywalker.Transform:GetWorldPosition()
-			local x2, z2
-			local dist1 = inst:GetPhysicsRadius(0) + inst.daywalker:GetPhysicsRadius(0)
-			if x == x1 and z == z1 then
-				local theta = inst.daywalker.Transform:GetRotation() * DEGREES
-				x2 = x + math.cos(theta) * dist1
-				z2 = z - math.sin(theta) * dist1
-			else
-				local dx = x1 - x
-				local dz = z1 - z
-				local dscale = dist1 / math.sqrt(dx * dx + dz * dz)
-				x2 = x + dx * dscale
-				z2 = z + dz * dscale
-			end
-			inst.daywalker.Physics:Teleport(x2, 0, z2)
-			inst.daywalker:MakeFreed()
-			inst.daywalker = nil
-			inst.daywalker_state = nil
-			inst.sides[inst.daywalker_side]:Show()
-			inst.SoundEmitter:PlaySound("qol1/wagstaff_ruins/rummagepile_pst")
-
-			local r = 3
-			for i, v in ipairs(TheSim:FindEntities(x2, 0, z2, r + 3, KNOCKBACK_TAGS, KNOCKBACK_CANT_TAGS)) do
-				if not (v.components.health and v.components.health:IsDead()) and v:GetDistanceSqToPoint(x2, 0, z2) < r * r then
-					local strengthmult = (v.components.inventory and v.components.inventory:ArmorHasTag("heavyarmor") or v:HasTag("heavybody")) and 1 or 1.4
-					--use the pile as knocker so we go in the right direction
-					v:PushEvent("knockback", { knocker = inst, radius = dist1 + r, strengthmult = strengthmult, forcelanded = true })
-				end
-			end
-
+			DoReleaseDaywalker(inst)
 			toss_junk(inst, x1, z1)
         else
             if not inst.components.timer:TimerExists("loot_spawn_cd") then
@@ -420,6 +424,7 @@ local function OnTimerDone(inst, data)
         if not inst:IsAsleep() then
             inst.shaketask = inst:DoTaskInTime(5 + math.random() * 4, Shaker)
         end
+        inst.daywalker_side = nil
     end
 end
 
@@ -438,6 +443,42 @@ local function OnEntitySleep(inst)
         inst.shaketask:Cancel()
         inst.shaketask = nil
     end
+end
+
+local function CanBuryDaywalker(inst, daywalker)
+	return inst.daywalker_side ~= nil and inst.daywalker == nil
+end
+
+local function TryBuryDaywalker(inst, daywalker)
+	local side = inst.daywalker_side
+	if side and inst.daywalker == nil then
+		inst.sides[side]:Hide()
+
+		local x, y, z = inst.Transform:GetWorldPosition()
+		local angle = 90 * side + HEAD_ANGLE_OFFSET
+
+		inst.daywalker_state = 1
+		inst.daywalker = daywalker
+		inst.daywalker.Transform:SetRotation(angle)
+		angle = angle * DEGREES
+		x = x + HEAD_SPAWN_RADIUS * math.cos(angle)
+		z = z - HEAD_SPAWN_RADIUS * math.sin(angle)
+		inst.daywalker:MakeBuried(inst)
+		inst.daywalker.Transform:SetPosition(x, 0, z)
+		inst.daywalker.sg.mem.level = 1
+
+		SpawnPrefab("junk_break_fx").Transform:SetPosition(x, 1, z)
+		return true
+	end
+end
+
+local function TryReleaseDaywalker(inst, daywalker)
+	if inst.daywalker == daywalker then
+		local x1, y1, z1 = daywalker.Transform:GetWorldPosition()
+		DoReleaseDaywalker(inst)
+		SpawnPrefab("junk_break_fx").Transform:SetPosition(x1, y1 + 2, z1)
+		return true
+	end
 end
 
 local function fn()
@@ -495,6 +536,9 @@ local function fn()
 	inst.OnEntityWake = OnEntityWake
 	inst.OnEntitySleep = OnEntitySleep
 
+	inst.CanBuryDaywalker = CanBuryDaywalker
+	inst.TryBuryDaywalker = TryBuryDaywalker
+	inst.TryReleaseDaywalker = TryReleaseDaywalker
 
     inst.WatchForDaywalkerRemove = WatchForDaywalkerRemove -- FIXME(JBK): Temporary respawning routine for beta.
     inst:AddComponent("lootdropper")

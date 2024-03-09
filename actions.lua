@@ -1040,7 +1040,7 @@ ACTIONS.CHANGE_TACKLE.fn = function(act)
 	end
 
 	if act.invobject.components.inventoryitem:IsHeldBy(equipped) then
-		local item = equipped.components.container:RemoveItem(act.invobject, true)
+		local item = equipped.components.container:RemoveItem(act.invobject, true, nil, true)
 
 		if item ~= nil then
 	        item.prevcontainer = nil

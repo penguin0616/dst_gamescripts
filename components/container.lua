@@ -784,20 +784,29 @@ function Container:OnLoad(data, newents)
     end
 end
 
-function Container:RemoveItem(item, wholestack)
+--V2C: ***WARNING*** checkallcontainers not implemented here
+--     parameter exists to keep interface same as inventory component
+function Container:RemoveItem(item, wholestack, checkallcontainers, keepoverstacked)
     if item == nil then
         return
     end
 
     local prevslot = self:GetItemSlot(item)
 
-    if not wholestack and item.components.stackable ~= nil and item.components.stackable:IsStack() then
-        local dec = item.components.stackable:Get()
-        dec.components.inventoryitem:OnRemoved()
-        dec.prevslot = prevslot
-        dec.prevcontainer = self
-        return dec
-    end
+	local stackable = item.components.stackable
+	if stackable and stackable:IsStack() then
+		local num =
+			(not wholestack and 1) or
+			(keepoverstacked and stackable:IsOverStacked() and stackable.originalmaxsize) or
+			nil
+		if num then
+			local dec = item.components.stackable:Get(num)
+			dec.components.inventoryitem:OnRemoved()
+			dec.prevslot = prevslot
+			dec.prevcontainer = self
+			return dec
+		end
+	end
 
 	if prevslot then
 		self.slots[prevslot] = nil

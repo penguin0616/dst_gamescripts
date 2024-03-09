@@ -3921,13 +3921,12 @@ STRINGS =
         STORAGE_ROBOT = "W.O.B.O.T.",
 
         SCRAP_MONOCLEHAT = "Horizon Expandinator",
-        SCRAP_CONEHAT = "Scrappy Chapauldron",
+        SCRAPHAT = "Scrappy Chapauldron",
 
         JUNK_PILE = "Junk Pile",
         JUNK_PILE_BIG = "Teetering Junk Pile",
 
         FENCE_JUNK = "Junky Fence",
-
 	},
 
     NAME_DETAIL_EXTENTION =

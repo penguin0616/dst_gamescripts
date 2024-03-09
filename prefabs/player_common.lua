@@ -1,4 +1,3 @@
-local upvalue = {}
 local easing = require("easing")
 local PlayerHud = require("screens/playerhud")
 local ex_fns = require "prefabs/player_common_extensions"
@@ -1436,17 +1435,17 @@ local function IsActionsVisible(inst)
     return inst.player_classified ~= nil and inst.player_classified.isactionsvisible:value()
 end
 
-local function IsHUDVisible(inst)
+fns.IsHUDVisible = function(inst)
     return inst.player_classified.ishudvisible:value()
 end
 
-local function ShowActions(inst, show)
+fns.ShowActions = function(inst, show)
     if TheWorld.ismastersim then
         inst.player_classified:ShowActions(show)
     end
 end
 
-local function ShowHUD(inst, show)
+fns.ShowHUD = function(inst, show)
     if TheWorld.ismastersim then
         inst.player_classified:ShowHUD(show)
     end
@@ -1474,13 +1473,13 @@ fns.CloseMinimap = function(inst) -- NOTES(JBK): Please use this only when neces
     end
 end
 
-local function SetCameraDistance(inst, distance)
+fns.SetCameraDistance = function(inst, distance)
     if TheWorld.ismastersim then
         inst.player_classified.cameradistance:set(distance or 0)
     end
 end
 
-function fns.AddCameraExtraDistance(inst, source, distance, key)
+fns.AddCameraExtraDistance = function(inst, source, distance, key)
     if TheWorld.ismastersim and inst.cameradistancebonuses ~= nil then
         inst.cameradistancebonuses:SetModifier(source, distance, key)
 
@@ -1488,7 +1487,7 @@ function fns.AddCameraExtraDistance(inst, source, distance, key)
     end
 end
 
-function fns.RemoveCameraExtraDistance(inst, source, key)
+fns.RemoveCameraExtraDistance = function(inst, source, key)
     if TheWorld.ismastersim and inst.cameradistancebonuses ~= nil then
         inst.cameradistancebonuses:RemoveModifier(source, key)
 
@@ -1496,13 +1495,13 @@ function fns.RemoveCameraExtraDistance(inst, source, key)
     end
 end
 
-local function SetCameraZoomed(inst, iszoomed)
+fns.SetCameraZoomed = function(inst, iszoomed)
     if TheWorld.ismastersim then
         inst.player_classified.iscamerazoomed:set(iszoomed)
     end
 end
 
-local function SnapCamera(inst, resetrot)
+fns.SnapCamera = function(inst, resetrot)
     if TheWorld.ismastersim then
         --Forces a netvar to be dirty regardless of value
         inst.player_classified.camerasnap:set_local(false)
@@ -1510,7 +1509,7 @@ local function SnapCamera(inst, resetrot)
     end
 end
 
-local function ShakeCamera(inst, mode, duration, speed, scale, source_or_pt, maxDist)
+fns.ShakeCamera = function(inst, mode, duration, speed, scale, source_or_pt, maxDist)
     if source_or_pt ~= nil and maxDist ~= nil then
         local distSq = source_or_pt.entity ~= nil and inst:GetDistanceSqToInst(source_or_pt) or inst:GetDistanceSqToPoint(source_or_pt:Get())
         local k = math.max(0, math.min(1, distSq / (maxDist * maxDist)))
@@ -1543,7 +1542,7 @@ local function ShakeCamera(inst, mode, duration, speed, scale, source_or_pt, max
     end
 end
 
-local function ScreenFade(inst, isfadein, time, iswhite)
+fns.ScreenFade = function(inst, isfadein, time, iswhite)
     if TheWorld.ismastersim then
         --truncate to half of net_smallbyte, so we can include iswhite flag
         time = time ~= nil and math.min(31, math.floor(time * 10 + .5)) or 0
@@ -1552,7 +1551,7 @@ local function ScreenFade(inst, isfadein, time, iswhite)
     end
 end
 
-local function ScreenFlash(inst, intensity)
+fns.ScreenFlash = function(inst, intensity)
     if TheWorld.ismastersim then
         --normalize for net_tinybyte
         intensity = math.floor((intensity >= 1 and 1 or intensity) * 8 + .5) - 1
@@ -1569,7 +1568,7 @@ end
 
 --------------------------------------------------------------------------
 
-local function ApplyScale(inst, source, scale)
+fns.ApplyScale = function(inst, source, scale)
     if TheWorld.ismastersim and source ~= nil then
         if scale ~= 1 and scale ~= nil then
             if inst._scalesource == nil then
@@ -1599,7 +1598,7 @@ local function ApplyScale(inst, source, scale)
     end
 end
 
-local function ApplyAnimScale(inst, source, scale)
+fns.ApplyAnimScale = function(inst, source, scale)
     if TheWorld.ismastersim and source ~= nil then
         if scale ~= 1 and scale ~= nil then
             if inst._animscalesource == nil then
@@ -2023,7 +2022,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 		inst.IsChannelCastingItem = fns.IsChannelCastingItem -- Didn't want to make channelcaster a networked component
         inst.EnableMovementPrediction = EnableMovementPrediction
         inst.EnableBoatCamera = fns.EnableBoatCamera
-        inst.ShakeCamera = ShakeCamera
+        inst.ShakeCamera = fns.ShakeCamera
         inst.SetGhostMode = SetGhostMode
         inst.IsActionsVisible = IsActionsVisible
         inst.CanSeeTileOnMiniMap = ex_fns.CanSeeTileOnMiniMap
@@ -2562,19 +2561,19 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         RegisterMasterEventListeners(inst)
 
         --HUD interface
-        inst.IsHUDVisible = IsHUDVisible
-        inst.ShowActions = ShowActions
-        inst.ShowHUD = ShowHUD
+        inst.IsHUDVisible = fns.IsHUDVisible
+        inst.ShowActions = fns.ShowActions
+        inst.ShowHUD = fns.ShowHUD
         inst.ShowPopUp = fns.ShowPopUp
         inst.ResetMinimapOffset = fns.ResetMinimapOffset
         inst.CloseMinimap = fns.CloseMinimap
-        inst.SetCameraDistance = SetCameraDistance
+        inst.SetCameraDistance = fns.SetCameraDistance
         inst.AddCameraExtraDistance = fns.AddCameraExtraDistance
         inst.RemoveCameraExtraDistance = fns.RemoveCameraExtraDistance
-        inst.SetCameraZoomed = SetCameraZoomed
-        inst.SnapCamera = SnapCamera
-        inst.ScreenFade = ScreenFade
-        inst.ScreenFlash = ScreenFlash
+        inst.SetCameraZoomed = fns.SetCameraZoomed
+        inst.SnapCamera = fns.SnapCamera
+        inst.ScreenFade = fns.ScreenFade
+        inst.ScreenFlash = fns.ScreenFlash
         inst.YOTB_unlockskinset = fns.YOTB_unlockskinset
         inst.YOTB_issetunlocked = fns.YOTB_issetunlocked
         inst.YOTB_isskinunlocked = fns.YOTB_isskinunlocked
@@ -2586,8 +2585,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
         --Other
         inst._scalesource = nil
-        inst.ApplyScale = ApplyScale
-		inst.ApplyAnimScale = ApplyAnimScale	-- use this one if you don't want to have thier speed increased
+        inst.ApplyScale = fns.ApplyScale
+		inst.ApplyAnimScale = fns.ApplyAnimScale	-- use this one if you don't want to have thier speed increased
 
         if inst.starting_inventory == nil then
             inst.starting_inventory = starting_inventory

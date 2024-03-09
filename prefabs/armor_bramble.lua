@@ -18,7 +18,7 @@ local function DoThorns(inst, owner)
 
     inst._hitcount = 0
 
-    if owner.components.skilltreeupdater:IsActivated("wormwood_allegiance_lunar_plant_gear_1") then
+    if owner.components.skilltreeupdater ~= nil and owner.components.skilltreeupdater:IsActivated("wormwood_allegiance_lunar_plant_gear_1") then
         SpawnPrefab("bramblefx_armor_upgrade"):SetFXOwner(owner)
     else
         SpawnPrefab("bramblefx_armor"):SetFXOwner(owner)
@@ -46,7 +46,7 @@ local function OnAttackOther(owner, data, inst)
 end
 
 local function onequip(inst, owner)
-    if owner.components.skilltreeupdater:IsActivated("wormwood_allegiance_lunar_plant_gear_1") then
+    if owner.components.skilltreeupdater ~= nil and owner.components.skilltreeupdater:IsActivated("wormwood_allegiance_lunar_plant_gear_1") then
         inst:bramble_upgrade(owner)
     end
 

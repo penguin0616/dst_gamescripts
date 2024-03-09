@@ -150,6 +150,11 @@ local function food_init(inst)
 end
 
 local function food_OnIsRaining(inst, israining)
+    if inst.components.inventoryitem.owner ~= nil then
+        -- NOTES(JBK): Do nothing if the item is in any inventory.
+        return
+    end
+
     if israining then
         inst.components.disappears:PrepareDisappear()
     else

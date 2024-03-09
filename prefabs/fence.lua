@@ -370,14 +370,27 @@ local function onhit(inst, attacker, damage)
     inst.components.workable:WorkedBy(attacker)
 end
 
+local function junk_spawnhitfx(inst)
+	local fx = SpawnPrefab("junk_break_fx")
+	local x, y, z = inst.Transform:GetWorldPosition()
+	local scale = 0.7 + math.random() * 0.2
+	fx.Transform:SetPosition(x, y + math.random(), z)
+	fx.Transform:SetScale(scale, scale, scale)
+	return fx
+end
+
+local function junk_onworkfinishedfn(inst, worker)
+	if not worker:HasTag("junkmob") then
+		inst.components.lootdropper:DropLoot()
+	end
+	junk_spawnhitfx(inst)
+	inst:Remove()
+end
+
 local function junk_onworkfn(inst, worker, workleft, numworks)
 	if numworks == 0 then
 		if worker:HasTag("junkmob") then
-			local fx = SpawnPrefab("junk_break_fx")
-			local x, y, z = inst.Transform:GetWorldPosition()
-			local scale = 0.7 + math.random() * 0.2
-			fx.Transform:SetPosition(x, y + math.random(), z)
-			fx.Transform:SetScale(scale, scale, scale)
+			junk_spawnhitfx(inst)
 		elseif worker:HasTag("junk") then
 			--junk repairs junk XD
 			inst.components.workable:SetWorkLeft(3)
@@ -690,6 +703,9 @@ local function MakeWall(name, anims, isdoor, klaussackkeyid, data)
             inst.components.workable:SetOnFinishCallback(onhammered)
             inst.components.workable:SetOnWorkCallback(onworked)
 			if data then
+				if data.onworkfinishedfn then
+					inst.components.workable:SetOnFinishCallback(data.onworkfinishedfn)
+				end
 				if data.onworkfn then
 					inst.components.workable:SetOnWorkCallback(data.onworkfn)
 				end
@@ -1066,6 +1082,7 @@ return MakeWall("fence", {wide="fence", narrow="fence_thin"}, false),
 			num_builds = 3,
 			loot_table = "fence_junk",
 			tag = "junk_fence",
+			onworkfinishedfn = junk_onworkfinishedfn,
 			onworkfn = junk_onworkfn,
 			workmultiplierfn = junk_workmultiplierfn,
 		}),

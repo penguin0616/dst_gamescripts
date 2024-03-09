@@ -139,8 +139,8 @@ local function onexplode(inst)
                 
                 local targetprefab = v.prefab
                 if TheWorld.components.worldmeteorshower ~= nil then
-                    local modifiedtargetprefab = TheWorld.components.worldmeteorshower:GetMeteorLootPrefab(targetprefab)
-                    if modifiedtargetprefab ~= targetprefab then
+                    local modifiedtargetprefab, forcemodified = TheWorld.components.worldmeteorshower:GetMeteorLootPrefab(targetprefab)
+                    if forcemodified or modifiedtargetprefab ~= targetprefab then
                         targetprefab = modifiedtargetprefab
                         force_spawn = true
                     end
@@ -199,12 +199,14 @@ local sizes =
     small = .7,
     medium = 1,
     large = 1.3,
+    rockmoonshell = 1.3,
 }
 local work =
 {
     small = 1,
     medium = 2,
     large = 20,
+    rockmoonshell = 20,
 }
 
 local function SetPeripheral(inst, peripheral)
@@ -276,6 +278,14 @@ local function SetSize(inst, sz, mod)
                 },
             }
         end
+    elseif sz == "rockmoonshell" then
+        inst.loot =
+        {
+            {
+                prefab = "rock_moon_shell",
+                chance = 1,
+            },
+        }
     else -- "small" or other undefined
         inst.loot = {}
     end

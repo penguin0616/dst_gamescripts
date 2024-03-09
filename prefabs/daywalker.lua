@@ -564,6 +564,7 @@ local function OnHeadTrackingDirty(inst)
 		end
 	elseif inst.head ~= nil then
 		inst.head:Remove()
+		inst.head = nil
 		inst.highlightchildren = nil
 	end
 end

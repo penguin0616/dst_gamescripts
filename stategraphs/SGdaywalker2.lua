@@ -670,11 +670,11 @@ local states =
 
 		timeline =
 		{
-			FrameEvent(8 + 17 * 2, function(inst)
-				inst.AnimState:PlayAnimation("lift_object_pst")
-			end),
-			FrameEvent((8 + 17 * 2) + 5, function(inst)
+			FrameEvent((8 + 17) + 8, function(inst)
 				inst.sg:AddStateTag("caninterrupt")
+			end),
+			FrameEvent((8 + 17 * 2), function(inst)
+				inst.AnimState:PlayAnimation("lift_object_pst")
 			end),
 			FrameEvent((8 + 17 * 2) + 9, function(inst)
 				inst.sg:RemoveStateTag("busy")
@@ -709,11 +709,11 @@ local states =
 
 		timeline =
 		{
-			FrameEvent(8 + 17 * 2, function(inst)
-				inst.AnimState:PlayAnimation("lift_upperarm_pst")
-			end),
-			FrameEvent((8 + 17 * 2) + 5, function(inst)
+			FrameEvent((8 + 17) + 8, function(inst)
 				inst.sg:AddStateTag("caninterrupt")
+			end),
+			FrameEvent((8 + 17 * 2), function(inst)
+				inst.AnimState:PlayAnimation("lift_upperarm_pst")
 			end),
 			FrameEvent((8 + 17 * 2) + 9, function(inst)
 				inst.sg:RemoveStateTag("busy")
@@ -752,7 +752,7 @@ local states =
 			FrameEvent((8) + 14, function(inst)
 				inst.SoundEmitter:PlaySound("daywalker/voice/speak_short")
 			end),
-			FrameEvent((8 + 34) + 5, function(inst)
+			FrameEvent((8 + 34), function(inst)
 				inst.sg:AddStateTag("caninterrupt")
 			end),
 			FrameEvent((8 + 34) + 9, function(inst)

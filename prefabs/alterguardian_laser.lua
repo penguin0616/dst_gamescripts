@@ -122,7 +122,7 @@ local function DoDamage(inst, targets, skiptoss, skipscorch, scale, scorchscale,
                 end
                 if isworkable then
                     targets[v] = true
-                    v.components.workable:Destroy(inst)
+					v.components.workable:Destroy(inst.caster and inst.caster:IsValid() and inst.caster or inst)
 
                     -- Completely uproot trees.
                     if v:HasTag("stump") then

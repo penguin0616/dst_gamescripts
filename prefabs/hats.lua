@@ -4174,6 +4174,23 @@ local function MakeHat(name)
 
     -----------------------------------------------------------------------------
 
+    fns.scrap = function()
+        local inst = simple()
+
+        inst.components.floater:SetSize("med")
+        inst.components.floater:SetVerticalOffset(0.2)
+
+        if not TheWorld.ismastersim then
+            return inst
+        end
+
+        MakeHauntableLaunch(inst)
+
+        return inst
+    end
+
+    -----------------------------------------------------------------------------
+
     local fn = nil
     local assets = { Asset("ANIM", "anim/"..fname..".zip") }
     local prefabs = nil
@@ -4337,6 +4354,8 @@ local function MakeHat(name)
         fn = fns.wagpunk
     elseif name == "scrap_monocle" then
         fn = fns.scrap_monocle
+    elseif name == "scrap" then
+        fn = fns.scrap
     end
 
     table.insert(ALL_HAT_PREFAB_NAMES, prefabname)
@@ -4700,6 +4719,7 @@ return  MakeHat("straw"),
         MakeHat("wagpunk"),
         MakeHat("moon_mushroom"),
         MakeHat("scrap_monocle"),
+        MakeHat("scrap"),
 
 		MakeFollowFx("lunarplanthat_fx", {
 			createfn = lunarplanthat_CreateFxFollowFrame,

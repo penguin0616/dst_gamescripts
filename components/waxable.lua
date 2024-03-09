@@ -66,6 +66,7 @@ end
 
 function Waxable:OnRemoveFromEntity()
     self.inst:RemoveTag("waxable")
+    self.inst:RemoveTag("needswaxspray")
 end
 
 return Waxable

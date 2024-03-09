@@ -999,7 +999,7 @@ Recipe("lunar_forge",					{Ingredient("moonrocknugget", 5), Ingredient("moonglas
 Recipe("shadow_forge",					{Ingredient("nightmarefuel", 5), Ingredient("dreadstone", 2), Ingredient("horrorfuel", 1)}, nil, TECH.LOST, nil, nil, true)
 Recipe("deerclopseyeball_sentryward",   {Ingredient("security_pulse_cage_full", 1, nil, true), Ingredient("moonglass", 8), Ingredient("purebrilliance", 5), Ingredient("moonrocknugget", 3)}, nil, TECH.LOST, nil, nil, true)
 
--- security_pulse_cage_full drops as security_pulse_cage when the entity is not desconstructed.
+-- security_pulse_cage_full drops as security_pulse_cage when the entity is not deconstructed.
 Recipe("security_pulse_cage_full",   	{Ingredient("security_pulse_cage", 1)}, nil, TECH.LOST, {no_deconstruction=true}, nil, true)
 
 --WILSON TRANSMUTATION
@@ -1073,7 +1073,7 @@ CONSTRUCTION_PLANS["support_pillar_dreadstone_scaffold"] = CONSTRUCTION_PLANS["s
 ---- Deconstruction Recipes----
 --NOTE: These recipes are for overriding the items returned when something is deconstructed or hammered.
 
---- summar carnival prize, return the kit when destroyed
+-- Summer carnival prize, return the kit when destroyed.
 DeconstructRecipe("carnivaldecor_plant",			{Ingredient("carnivaldecor_plant_kit", 1)})
 DeconstructRecipe("carnivaldecor_banner",			{Ingredient("carnivaldecor_banner_kit", 1)})
 DeconstructRecipe("carnivaldecor_figure",			{Ingredient("carnivaldecor_figure_kit", 1)})
@@ -1087,7 +1087,7 @@ DeconstructRecipe("carnivalcannon_confetti",		{Ingredient("carnivalcannon_confet
 DeconstructRecipe("carnivalcannon_sparkle",			{Ingredient("carnivalcannon_sparkle_kit", 1)})
 DeconstructRecipe("carnivalcannon_streamer",		{Ingredient("carnivalcannon_streamer_kit", 1)})
 
---- summar carnival host, return the kit when destroyed
+-- Summer carnival host, return the kit when destroyed.
 DeconstructRecipe("carnival_plaza",					{Ingredient("carnival_plaza_kit", 1)})
 DeconstructRecipe("carnival_prizebooth",			{Ingredient("carnival_prizebooth_kit", 1)})
 DeconstructRecipe("carnivalgame_memory_station",	{Ingredient("carnivalgame_memory_kit", 1)})
@@ -1097,7 +1097,7 @@ DeconstructRecipe("carnivalgame_shooting_station",	{Ingredient("carnivalgame_sho
 DeconstructRecipe("carnivalgame_wheelspin_station",	{Ingredient("carnivalgame_wheelspin_kit", 1)})
 DeconstructRecipe("carnivalgame_puckdrop_station",	{Ingredient("carnivalgame_puckdrop_kit", 1)})
 
--- world gen items
+-- World gen items.
 DeconstructRecipe("pighead",						{Ingredient("pigskin", 4), Ingredient("twigs", 4)})
 DeconstructRecipe("mermhead",						{Ingredient("pondfish", 1), Ingredient("spoiled_food", 4), Ingredient("twigs", 4)})
 DeconstructRecipe("sunkenchest",					{Ingredient("slurtle_shellpieces", 5)})
@@ -1107,12 +1107,12 @@ DeconstructRecipe("wall_ruins_2_item",				{Ingredient("thulecite", 1)})
 DeconstructRecipe("wall_stone_2_item",				{Ingredient("cutstone", 2)})
 DeconstructRecipe("terrariumchest",					{Ingredient("boards", 3)})
 
---Hermit shop material recipes
+-- Hermit shop material recipes.
 DeconstructRecipe("tacklecontainer",				{Ingredient("cookiecuttershell", 2), Ingredient("rope", 1)})
 DeconstructRecipe("chum",							{Ingredient("spoiled_food", 2)})
 DeconstructRecipe("supertacklecontainer",			{Ingredient("cookiecuttershell", 3), Ingredient("rope", 2)})
 
---deployed and kit item
+-- Deployed and kit item.
 DeconstructRecipe("yotb_post",						{Ingredient("boards", 2), Ingredient("goldnugget", 1)})
 DeconstructRecipe("portablecookpot",				{Ingredient("goldnugget", 2), Ingredient("charcoal", 6), Ingredient("twigs", 6)})
 DeconstructRecipe("portableblender",				{Ingredient("goldnugget", 2), Ingredient("transistor", 2), Ingredient("twigs", 4)})
@@ -1144,7 +1144,8 @@ DeconstructRecipe("potatosack",						{Ingredient("cutgrass", 2), Ingredient("roc
 DeconstructRecipe("minisign",						{Ingredient("boards", 1)})
 DeconstructRecipe("ocean_trawler",   				{Ingredient("boards", 2), Ingredient("rope", 2), Ingredient("silk", 6)})
 DeconstructRecipe("boat_magnet",  					{Ingredient("boards", 2), Ingredient("cutstone", 2), Ingredient("transistor", 1), Ingredient("trinket_6", 1)})
--- Loot drops
+
+-- Loot drops.
 DeconstructRecipe("archive_resonator",				{Ingredient("moonrocknugget", 1), Ingredient("thulecite", 1)})
 DeconstructRecipe("alterguardianhat",				{Ingredient("alterguardianhatshard", 5)})
 DeconstructRecipe("hivehat",						{Ingredient("honeycomb", 4), Ingredient("honey", 3), Ingredient("royal_jelly", 2), Ingredient("bee", 4)})
@@ -1156,8 +1157,10 @@ DeconstructRecipe("eyemaskhat",						{Ingredient("milkywhites", 3), Ingredient("
 DeconstructRecipe("shieldofterror",					{Ingredient("gears", 2), Ingredient("nightmarefuel", 3)})
 DeconstructRecipe("oar_monkey",						{Ingredient("log", 1), Ingredient("palmcone_scale", 1)})
 DeconstructRecipe("eyeturret",						{Ingredient("deerclops_eyeball", 1), Ingredient("minotaurhorn", 1), Ingredient("thulecite", 5)})
+DeconstructRecipe("scrap_monoclehat",				{Ingredient("wagpunk_bits", 2), Ingredient("transistor", 1), Ingredient("trinket_6", 1)})
+DeconstructRecipe("scraphat",						{Ingredient("wagpunk_bits", 3)})
 
--- old deprecated structures
+-- Old deprecated structures.
 DeconstructRecipe("slow_farmplot",					{Ingredient("cutgrass", 8), Ingredient("poop", 4), Ingredient("log", 4)})
 DeconstructRecipe("fast_farmplot",					{Ingredient("cutgrass", 10), Ingredient("poop", 6),Ingredient("rocks", 4)})
 DeconstructRecipe("book_gardening",					{Ingredient("papyrus", 2), Ingredient("seeds", 1), Ingredient("poop", 1)})

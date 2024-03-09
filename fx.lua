@@ -2997,7 +2997,7 @@ local fx =
         bank = "cavein_dust_fx",
         build = "cavein_dust_fx",
         anim = "dust_low",
-        sound = "rifts3/wagpunk_armor/upgrade",
+        sound = "qol1/chest_upgrade/poof",
         fn = function(inst)
             inst.entity:AddSoundEmitter()
             local total_hide_frames = 6 -- NOTES(JBK): Keep in sync with treasurechest.lua! [CUHIDERFRAMES]

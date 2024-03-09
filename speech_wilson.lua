@@ -5140,7 +5140,7 @@ return {
         },
 
         SCRAP_MONOCLEHAT = "Does it make me look more distinguished?",
-        SCRAP_CONEHAT = "The tip of that hat is almost as sharp as... my mind!",
+        SCRAPHAT = "The tip of that hat is almost as sharp as... my mind!",
 
         FENCE_JUNK = "Tell me it's ugly, I won't take a fence.",
         JUNK_PILE = "A good junk pile rummage? I'll never refuse.",

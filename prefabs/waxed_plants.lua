@@ -131,15 +131,15 @@ end
 -------------------------------------------------------------------------------------------------
 
 local FARMPLANT_ANIMSET = {
-    randomseed    = { anim = "sow_idle"           },
-    seed          = { anim = "crop_seed"          },
-    sprout        = { anim = "crop_sprout"        },
-    small         = { anim = "crop_small"         },
-    med           = { anim = "crop_med"           },
-    full          = { anim = "crop_full"          },
-    oversized     = { anim = "crop_oversized"     },
-    rotten        = { anim = "crop_rot"           },
-    rot_oversized = { anim = "crop_rot_oversized" },
+    randomseed       = { anim = "sow_idle"           },
+    seed             = { anim = "crop_seed"          },
+    sprout           = { anim = "crop_sprout"        },
+    small            = { anim = "crop_small"         },
+    med              = { anim = "crop_med"           },
+    full             = { anim = "crop_full"          },
+    full_oversized   = { anim = "crop_oversized"     },
+    rotten           = { anim = "crop_rot"           },
+    rotten_oversized = { anim = "crop_rot_oversized" },
 }
 
 local function FarmPlant_GetAnimFn(inst)
@@ -150,7 +150,7 @@ local function FarmPlant_GetAnimFn(inst)
     local stagedata = inst.components.growable ~= nil and inst.components.growable:GetCurrentStageData() or nil
 
     if stagedata ~= nil then
-        return stagedata.name
+        return stagedata.name .. (inst.is_oversized and "_oversized" or "")
     end
 
     return "full"

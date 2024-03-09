@@ -3569,3 +3569,27 @@ function d_boatracepointers()
         index_counter = index_counter + 1
     end)
 end
+
+function d_testsound(soundpath, loopname, volume)
+	local soundemitter =
+		(c_sel() and c_sel().SoundEmitter) or
+		(ThePlayer and ThePlayer.SoundEmitter) or
+		(AllPlayers[1] and AllPlayers[1].SoundEmitter) or
+		nil
+
+	if soundemitter then
+		soundemitter:PlaySound(soundpath, loopname, volume)
+	end
+end
+
+function d_stopsound(loopname)
+	local soundemitter =
+		(c_sel() and c_sel().SoundEmitter) or
+		(ThePlayer and ThePlayer.SoundEmitter) or
+		(AllPlayers[1] and AllPlayers[1].SoundEmitter) or
+		nil
+
+	if soundemitter then
+		soundemitter:KillSound(loopname)
+	end
+end

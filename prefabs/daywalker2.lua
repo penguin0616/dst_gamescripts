@@ -28,6 +28,7 @@ local prefabs =
 	"alterguardian_laserempty",
 	"alterguardian_laserhit",
 	"scrap_monoclehat",
+	"scraphat",
 	"wagpunk_bits",
 	"gears",
 }
@@ -164,7 +165,7 @@ end
 
 local function OnStalkingDirty(inst)
 	inst.head.stalking = inst._stalking:value() --available to clients
-	if inst.head.stalking ~= nil then
+	if inst.head.stalking then
 		if not inst.head.isupdating then
 			inst.head.isupdating = true
 			inst.head.components.updatelooper:AddPostUpdateFn(UpdateHead)
@@ -190,8 +191,9 @@ local function OnHeadTrackingDirty(inst)
 			inst.head:ListenForEvent("stalkingdirty", OnStalkingDirty, inst)
 			OnStalkingDirty(inst)
 		end
-	elseif inst.head ~= nil then
+	elseif inst.head then
 		inst.head:Remove()
+		inst.head = nil
 		inst.highlightchildren = nil
 	end
 end
@@ -208,14 +210,6 @@ local function SetHeadTracking(inst, track)
 	end
 end
 
---[[local function OnStalkingNewState(inst)
-	if inst.sg:HasStateTag("stalking") then
-		inst.components.health:StartRegen(TUNING.DAYWALKER_COMBAT_STALKING_HEALTH_REGEN, TUNING.DAYWALKER_COMBAT_HEALTH_REGEN_PERIOD, false)
-	else
-		inst.components.health:StopRegen()
-	end
-end]]
-
 local function SetStalking(inst, stalking)
 	if stalking and not (inst.hostile and stalking.isplayer) then
 		stalking = nil
@@ -223,14 +217,6 @@ local function SetStalking(inst, stalking)
 	if stalking ~= inst._stalking:value() then
 		if inst._stalking:value() then
 			inst:RemoveEventCallback("onremove", inst._onremovestalking, inst._stalking:value())
-			--[[if stalking == nil then
-				inst:RemoveEventCallback("newstate", OnStalkingNewState)
-				if inst.engaged then
-					inst.components.health:StopRegen()
-				end
-			end
-		elseif stalking then
-			inst:ListenForEvent("newstate", OnStalkingNewState)]]
 		end
 		inst._stalking:set(stalking)
 		if stalking then
@@ -465,24 +451,26 @@ local function OnNewTarget(inst, data)
 end
 
 local function SetEngaged(inst, engaged)
-	if inst.engaged ~= engaged and (engaged ~= nil) == inst.hostile then
-		inst.engaged = engaged
-		if engaged then
+	if engaged then
+		if not inst.engaged then
+			inst.engaged = true
 			inst.components.health:StopRegen()
 			inst:StartAttackCooldown()
 			if not inst.components.timer:TimerExists("roar_cd") then
 				inst:PushEvent("roar", { target = inst.components.combat.target })
 			end
-		else
-			inst:SetStalking(nil)
-			if engaged == false then
-				inst.components.health:StartRegen(TUNING.DAYWALKER_HEALTH_REGEN, 1)
-			else--if engaged == nil then
-				inst.components.health:StopRegen()
-			end
-			inst.components.combat:ResetCooldown()
-			inst.components.combat:DropTarget()
 		end
+	elseif inst.engaged then
+		inst.engaged = false
+		inst:SetStalking(nil)
+
+		if not inst.defeated then
+			inst.components.health:StartRegen(TUNING.DAYWALKER_HEALTH_REGEN, 1)
+		else
+			inst.components.health:StopRegen()
+		end
+		inst.components.combat:ResetCooldown()
+		inst.components.combat:DropTarget()
 	end
 end
 
@@ -516,6 +504,15 @@ local function MakeBuried(inst, junk)
 		inst.buried = true
 		inst.hostile = false
 		inst.persists = false
+		if inst.canswing then
+			inst:DropItem("swing")
+		end
+		if inst.cantackle then
+			inst:DropItem("tackle")
+		end
+		if inst.cancannon then
+			inst:DropItem("cannon")
+		end
 		inst.sg:GoToState("transition")
 		inst:RemoveEventCallback("attacked", OnAttacked)
 		inst:RemoveEventCallback("newcombattarget", OnNewTarget)
@@ -529,7 +526,6 @@ local function MakeBuried(inst, junk)
 		inst.components.sanityaura.aura = -TUNING.SANITYAURA_LARGE
 		inst:RemoveTag("hostile")
 		inst:AddTag("notarget")
-		inst:AddTag("noteleport")
 		inst.AnimState:Hide("junk_top")
 		inst.AnimState:Hide("junk_mid")
 		inst.AnimState:Hide("junk_back")
@@ -539,7 +535,7 @@ local function MakeBuried(inst, junk)
 		inst:SetBrain(nil)
 		inst:SetHeadTracking(false)
 		inst:SetStalking(nil)
-		inst:SetEngaged(nil)
+		inst:SetEngaged(false)
 
 		if inst.junkfx == nil then
 			inst.junkfx = {}
@@ -579,7 +575,6 @@ local function MakeFreed(inst)
 		inst.components.health:SetInvincible(false)
 		inst.components.sanityaura.aura = -TUNING.SANITYAURA_HUGE
 		inst:RemoveTag("notarget")
-		inst:RemoveTag("noteleport")
 		inst.AnimState:Show("junk_top")
 		inst.AnimState:Show("junk_mid")
 		inst.AnimState:Show("junk_back")
@@ -621,6 +616,7 @@ local function MakeDefeated(inst)
 		if not inst.components.timer:TimerExists("despawn") then
 			inst.components.timer:StartTimer("despawn", DESPAWN_TIME, not inst.looted)
 		end
+		inst.components.health:StopRegen()
 		inst.components.combat:DropTarget()
 		inst.components.combat:SetRetargetFunction(nil)
 		inst.components.sanityaura.aura = -TUNING.SANITYAURA_MED
@@ -628,7 +624,7 @@ local function MakeDefeated(inst)
 		inst:SetBrain(nil)
 		inst:SetHeadTracking(false)
 		inst:SetStalking(nil)
-		inst:SetEngaged(nil)
+		inst:SetEngaged(false)
 	end
 end
 
@@ -720,19 +716,44 @@ local function OnTalk(inst)
 end
 
 local function teleport_override_fn(inst)
-	--[[if not inst.hostile then
-		--Stay within prison; or, backup is just don't go too far
-		local pos = inst.components.knownlocations:GetLocation("prison") or inst:GetPosition()
-		local offset = FindWalkableOffset(pos, TWOPI * math.random(), 4, 8, true, false)
-		return offset ~= nil and pos + offset or pos
+	if inst.buried then
+		return inst:GetPosition()
 	end
 
-	--Go back to prison if it is still there, otherwise anywhere (return nil for default behvaiour)
-	local pos = inst.components.knownlocations:GetLocation("prison")
-	if pos ~= nil then
+	local junk = inst.components.entitytracker:GetEntity("junk")
+	if inst.defeated then
+		--Stay near junkyard; or, backup is just don't go too far
+		local pos = (junk or inst):GetPosition()
 		local offset = FindWalkableOffset(pos, TWOPI * math.random(), 4, 8, true, false)
-		return offset ~= nil and pos + offset or pos
-	end]]
+		if offset then
+			pos.x = pos.x + offset.x
+			pos.z = pos.z + offset.z
+		elseif junk then
+			pos.x, pos.y, pos.z = inst.Transform:GetWorldPosition()
+		end
+		pos.y = 0
+		return pos
+	end
+
+	--Go back to junk if it is still there, otherwise anywhere (return nil for default behvaiour)
+	if junk and junk:CanBuryDaywalker(inst) then
+		return inst:GetPosition()
+	end
+end
+
+local function OnTeleported(inst)
+	if inst.defeated then
+		return
+	end
+	local junk = inst.components.entitytracker:GetEntity("junk")
+	if inst.buried then
+		if not (junk and junk:TryReleaseDaywalker(inst)) then
+			--staff teleport resets invincible flag
+			inst.components.health:SetInvincible(true)
+		end
+	elseif junk then
+		junk:TryBuryDaywalker(inst)
+	end
 end
 
 --------------------------------------------------------------------------
@@ -850,6 +871,7 @@ local function fn()
 	inst:AddComponent("health")
 	inst.components.health:SetMinHealth(1)
 	inst.components.health:SetMaxHealth(TUNING.DAYWALKER_HEALTH)
+	inst.components.health:StartRegen(TUNING.DAYWALKER_HEALTH_REGEN, 1)
 	--inst.components.health.nofadeout = true
 
 	inst:AddComponent("combat")
@@ -898,8 +920,9 @@ local function fn()
 	inst:ListenForEvent("attacked", OnAttacked)
 	inst:ListenForEvent("newcombattarget", OnNewTarget)
 	inst:ListenForEvent("minhealth", OnMinHealth)
+	inst:ListenForEvent("teleported", OnTeleported)
 
-	inst.engaged = nil
+	inst.engaged = false
 	inst.defeated = false
 	inst.looted = false
 	inst._trampledelays = {}

@@ -62,12 +62,18 @@ local function CreateHelperRadiusCircle()
 end
 
 
+local function OnOriginDirty(inst)
+    if inst.helper ~= nil then
+        inst.helper.Transform:SetPosition(inst._originx:value(), 0, inst._originz:value())
+    end
+end
+
 local function OnEnableHelper(inst, enabled)
     if enabled and not inst:HasTag("broken") then
         if inst.helper == nil then
             inst.helper = CreateHelperRadiusCircle()
 
-            inst.helper.Transform:SetPosition(inst:GetSpawnPoint():Get())
+            OnOriginDirty(inst)
 
             inst.AnimState:SetAddColour(0, .2, .5, 0)
         end
@@ -89,12 +95,26 @@ end
 ---------------------------------------------------------------------------------------------------
 
 local function GetSpawnPoint(inst)
-    return inst.components.knownlocations:GetLocation(SPAWNPOINT_NAME) or inst:GetPosition()
+    return inst.components.knownlocations ~= nil and inst.components.knownlocations:GetLocation(SPAWNPOINT_NAME) or inst:GetPosition()
 end
 
 local function UpdateSpawnPoint(inst, dont_overwrite)
+    if dont_overwrite and (inst.components.knownlocations == nil or inst.components.knownlocations:GetLocation(SPAWNPOINT_NAME) ~= nil) then
+        return
+    end
+
     if inst:IsOnPassablePoint() then
-        inst.components.knownlocations:RememberLocation(SPAWNPOINT_NAME, inst:GetPosition(), dont_overwrite)
+        local pos = inst:GetPosition()
+
+        if pos.x == 0 then
+            -- Make sure something is dirty for sure.
+            inst._originx:set_local(0)
+        end
+
+        inst._originx:set(pos.x)
+        inst._originz:set(pos.z)
+
+        inst.components.knownlocations:RememberLocation(SPAWNPOINT_NAME, pos, dont_overwrite)
     end
 end
 
@@ -124,7 +144,7 @@ local function OnPickup(inst, pickupguy, src_pos)
     end
 
     inst.components.fueled:StopConsuming()
-    
+
     inst.SoundEmitter:KillAllSounds()
 
     local item = inst.components.inventory:GetFirstItemInAnySlot() or inst.components.inventory:GetActiveItem() -- This is intentionally backwards to give the bigger stacks first.
@@ -186,6 +206,18 @@ local function OnLoadPostPass(inst, newents, data)
         inst:SetBroken()
 
         inst.sg:GoToState("idle_broken")
+    end
+
+    if inst.components.knownlocations ~= nil then
+        local pos = inst.components.knownlocations:GetLocation(SPAWNPOINT_NAME) or inst:GetPosition()
+
+        if pos.x == 0 then
+            -- Make sure something is dirty for sure.
+            inst._originx:set_local(0)
+        end
+
+        inst._originx:set(pos.x)
+        inst._originz:set(pos.z)
     end
 end
 
@@ -356,6 +388,9 @@ local function fn()
     inst:AddTag("storagerobot")
     inst:AddTag("irreplaceable")
 
+    inst._originx = net_float(inst.GUID, "storage_robot._originx", "origindirty")
+    inst._originz = net_float(inst.GUID, "storage_robot._originz", "origindirty")
+
     inst.AnimState:SetBank("storage_robot")
     inst.AnimState:SetBuild("storage_robot")
     inst.AnimState:PlayAnimation("idle")
@@ -376,6 +411,7 @@ local function fn()
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
+        inst:ListenForEvent("origindirty", OnOriginDirty)
         return inst
     end
 

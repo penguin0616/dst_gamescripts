@@ -1708,6 +1708,7 @@ local PREFABS =
     ["wall_scrap"] = true,
     ["skeleton_notplayer"] = true,
     ["scrap_monoclehat"] = true,
+    ["scraphat"] = true,
 
     --[[POI]]
     ["charlie_stage_post"] = true,

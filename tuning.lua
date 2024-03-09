@@ -7425,7 +7425,7 @@ function Tune(overrides)
                 SPEED = 1.25,
             },
 
-            STONGER = {
+            STRONGER = {
                 DAMAGE = 1.5,
                 DAMAGE_TAKEN = 0.75,
                 SPEED = 1.15,
