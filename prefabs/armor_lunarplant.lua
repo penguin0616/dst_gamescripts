@@ -3,6 +3,11 @@ local assets =
 	Asset("ANIM", "anim/armor_lunarplant.zip"),
 }
 
+local huskassets =
+{
+	Asset("ANIM", "anim/armor_lunarplant_husk.zip"),
+}
+
 local prefabs =
 {
 	"armor_lunarplant_glow_fx",
@@ -31,6 +36,8 @@ local function OnBlocked(owner, data)
     OnHit(owner, data)
 end
 
+
+
 local function OnEnabledSetBonus(inst)
 	inst.components.damagetyperesist:AddResist("lunar_aligned", inst, TUNING.ARMOR_LUNARPLANT_SETBONUS_LUNAR_RESIST, "setbonus")
 end
@@ -48,8 +55,10 @@ local function onequip(inst, owner)
 		owner.AnimState:OverrideSymbol("swap_body", "armor_lunarplant", "swap_body")
 	end
 
-	inst:ListenForEvent("blocked", OnBlocked, owner)
-    inst:ListenForEvent("attacked", OnHit, owner)
+	if inst:HasTag("vinetrapper") then
+		inst:ListenForEvent("blocked", OnBlocked, owner)
+		inst:ListenForEvent("attacked", OnHit, owner)
+	end
 
 	if inst.fx ~= nil then
 		inst.fx:Remove()
@@ -57,6 +66,16 @@ local function onequip(inst, owner)
 	inst.fx = SpawnPrefab("armor_lunarplant_glow_fx")
 	inst.fx:AttachToOwner(owner)
 	owner.AnimState:SetSymbolLightOverride("swap_body", .1)
+
+	if inst._onblocked and owner:HasTag("plantkin")  then
+		inst:ListenForEvent("attacked", inst._onblocked, owner)
+		inst:ListenForEvent("blocked", inst._onblocked, owner)
+	end
+
+	if inst._onattackother and owner:HasTag("plantkin") and owner.components.skilltreeupdater ~= nil and owner.components.skilltreeupdater:IsActivated("wormwood_armor_bramble") then
+		inst:ListenForEvent("onattackother", inst._onattackother, owner)
+		inst._hitcount = 0
+	end
 end
 
 local function onunequip(inst, owner)
@@ -74,6 +93,10 @@ local function onunequip(inst, owner)
 		inst.fx = nil
 	end
 	owner.AnimState:SetSymbolLightOverride("swap_body", 0)
+
+	if inst._onattackother and owner:HasTag("plantkin") and owner.components.skilltreeupdater ~= nil and owner.components.skilltreeupdater:IsActivated("wormwood_armor_bramble") then
+	    inst:RemoveEventCallback("onattackother", inst._onattackother, owner)
+	end
 end
 
 local function SetupEquippable(inst)
@@ -122,7 +145,7 @@ local function OnReflectDamage(inst, data)
 	end
 end
 
-local function fn()
+local function commonfn(build,common_postinit, master_postinit)
 	local inst = CreateEntity()
 
 	inst.entity:AddTransform()
@@ -136,7 +159,7 @@ local function fn()
 	inst:AddTag("show_broken_ui")
 
 	inst.AnimState:SetBank("armor_lunarplant")
-	inst.AnimState:SetBuild("armor_lunarplant")
+	inst.AnimState:SetBuild(build)
 	inst.AnimState:PlayAnimation("anim")
 
 	inst.foleysound = "dontstarve/movement/foley/lunarplantarmour_foley"
@@ -144,6 +167,10 @@ local function fn()
 	MakeInventoryFloatable(inst, "small", 0.2, 0.80, nil, nil, SWAP_DATA)
 
 	inst.scrapbook_specialinfo = "ARMORLUNARPLANT"
+
+    if common_postinit ~= nil then
+        common_postinit(inst)
+    end
 
 	inst.entity:SetPristine()
 
@@ -178,7 +205,64 @@ local function fn()
 
 	MakeHauntableLaunch(inst)
 
+    if master_postinit ~= nil then
+        master_postinit(inst)
+    end
+
 	return inst
+end
+
+local function fn()
+	local function common(inst)
+		inst:AddTag("vinetrapper")
+	end
+
+	return commonfn("armor_lunarplant",common)
+end
+
+--------------------------------------------------------------------------
+
+local function OnCooldown(inst)
+    inst._cdtask = nil
+end
+
+local function DoThorns(inst, owner)
+    --V2C: tiny CD to limit chain reactions
+    inst._cdtask = inst:DoTaskInTime(.3, OnCooldown)
+
+    inst._hitcount = 0
+    
+    SpawnPrefab("bramblefx_armor_upgrade"):SetFXOwner(owner)        
+
+
+    if owner.SoundEmitter ~= nil then
+        owner.SoundEmitter:PlaySound("dontstarve/common/together/armor/cactus")
+    end
+end
+
+local function OnAttackOther(owner, data, inst)
+
+    if inst._cdtask == nil and checknumber(inst._hitcount) then
+        inst._hitcount = inst._hitcount + 1
+
+        if inst._hitcount >= TUNING.WORMWOOD_ARMOR_BRAMBLE_RELEASE_SPIKES_HITCOUNT then
+            DoThorns(inst, owner)
+        end
+    end
+end
+
+local function OnHuskBlocked(owner, data, inst)
+    if inst._cdtask == nil and data ~= nil and not data.redirected then
+        DoThorns(inst, owner)
+    end
+end
+
+local function huskfn()
+	local function master(inst)
+	    inst._onblocked      = function(owner, data) OnHuskBlocked(owner, data, inst) end
+	    inst._onattackother  = function(owner, data) OnAttackOther(owner, data, inst) end
+	end
+	return commonfn("armor_lunarplant_husk", nil, master)
 end
 
 --------------------------------------------------------------------------
@@ -278,4 +362,5 @@ local function glowfn()
 end
 
 return Prefab("armor_lunarplant", fn, assets, prefabs),
-	Prefab("armor_lunarplant_glow_fx", glowfn, assets)
+	  Prefab("armor_lunarplant_husk", huskfn, huskassets),
+	  Prefab("armor_lunarplant_glow_fx", glowfn, assets)

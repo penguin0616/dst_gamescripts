@@ -5130,6 +5130,9 @@ return{
             BROKEN = "Good effort, little buddy. Good effort.",
         },
 
+        SCRAP_MONOCLEHAT = "Makes Wolfgang's sight as strong as his muscles!",
+        SCRAP_CONEHAT = "Looks better on Wolfgang!",
+
         FENCE_JUNK = "Is ugly little fence, but does its job.",
         JUNK_PILE = "Might be something inside Wolfgang can use.",
         JUNK_PILE_BIG = "Wolfgang not like the way big pile teeter-totters...",

@@ -8,13 +8,24 @@ local function OnHitGround(inst, speed)
 end
 
 local function OnAnimOver(inst)
-	inst:RemoveEventCallback("animover", OnAnimOver)
-	inst.Physics:SetMotorVel(0, 0, 0)
-	inst.Physics:Stop()
-	ErodeAway(inst)
+	if inst.loot then
+		local loot = SpawnPrefab(inst.loot)
+		loot.Transform:SetPosition(inst.Transform:GetWorldPosition())
+		if loot.components.armor then
+			loot.components.armor:SetPercent(GetRandomMinMax(0.06, 0.2))
+		end
+		inst:Remove()
+	else
+		inst:RemoveEventCallback("animover", OnAnimOver)
+		inst.Physics:SetMotorVel(0, 0, 0)
+		inst.Physics:Stop()
+		ErodeAway(inst)
+	end
 end
 
-local function MakeItemBreakFx(name, anim)
+local function MakeItemBreakFx(name, anim, loot)
+	local prefabs = loot and { loot } or nil
+
 	local function fn()
 		local inst = CreateEntity()
 
@@ -37,20 +48,29 @@ local function MakeItemBreakFx(name, anim)
 			return inst
 		end
 
-		inst.persists = false
-		local speed = 4 + math.random()
-		inst.Physics:SetMotorVel(speed, 0, 0)
-		inst:DoTaskInTime(20 * FRAMES, OnHitGround, speed)
+		if loot then
+			local speed = 3 + math.random()
+			inst.Physics:SetMotorVel(speed, 0, 0)
+			inst:DoTaskInTime(15 * FRAMES, OnHitGround, speed)
+			inst.loot = loot
+			inst.OnLoad = OnAnimOver
+		else
+			local speed = 4 + math.random()
+			inst.Physics:SetMotorVel(speed, 0, 0)
+			inst:DoTaskInTime(20 * FRAMES, OnHitGround, speed)
+			inst.persists = false
+		end
 		inst:ListenForEvent("animover", OnAnimOver)
 
 		return inst
 	end
 
-	return Prefab(name, fn, assets)
+	return Prefab(name, fn, assets, prefabs)
 end
 
 return MakeItemBreakFx("daywalker2_object_break_fx", "object_break"),
 	MakeItemBreakFx("daywalker2_spike_break_fx", "spike_break"),
+	MakeItemBreakFx("daywalker2_spike_loot_fx", "spike_loot", "scraphat"),
 	MakeItemBreakFx("daywalker2_cannon_break_fx", "cannon_break"),
 	MakeItemBreakFx("daywalker2_armor1_break_fx", "armor1_break"),
 	MakeItemBreakFx("daywalker2_armor2_break_fx", "armor2_break"),

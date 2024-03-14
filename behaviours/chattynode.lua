@@ -8,7 +8,7 @@ ChattyNode = Class(BehaviourNode, function(self, inst, chatlines, child, delay, 
         self.chatlines = chatlines.name
         self.chatter_time = chatlines.chatterparams.time
         self.chatter_forcetext = chatlines.chatterparams.forcetext
-        self.chatter_echotochat = chatlines.chatterparams.echotochat
+        self.chatter_echotochatpriority = chatlines.chatterparams.echotochatpriority
     else
         self.chatlines = chatlines
     end
@@ -30,8 +30,11 @@ function ChattyNode:Visit()
         local t = GetTime()
 
 		if prev_status ~= RUNNING then
-			-- allow for an initial delay when entering the node, use this for things like Wander where you stay in the state for a long time and frequently enter it
-			self.nextchattime = t + (self.enter_delay or 0) + (self.enter_delay_rand ~= nil and math.random() * self.enter_delay_rand or 0) - FRAMES
+			-- Allow for an initial delay when entering the node.
+            -- Use this for things like Wander, where you stay in the state
+            -- for a long time, and frequently enter it.
+            local enter_delay_rand = (self.enter_delay_rand ~= nil and math.random() * self.enter_delay_rand) or 0
+			self.nextchattime = t + (self.enter_delay or 0) + enter_delay_rand - FRAMES
 		end
 
         if self.nextchattime == nil or t > self.nextchattime then
@@ -52,8 +55,17 @@ function ChattyNode:Visit()
                 --Will be networked if talker:MakeChatter() was initialized
                 local strtbl = STRINGS[self.chatlines]
                 if strtbl ~= nil then
-                    local strid = math.random(#strtbl)
-                    self.inst.components.talker:Chatter(self.chatlines, strid, self.chatter_time, self.chatter_forcetext, self.chatter_echotochat)
+                    local strid = (type(strtbl) == "table" and math.random(#strtbl)) or 0
+                    local echotochatpriority = (self.chatter_echotochatpriority == true and 1)
+                        or (self.chatter_echotochatpriority == false and 0)
+                        or self.chatter_echotochatpriority
+                    self.inst.components.talker:Chatter(
+                        self.chatlines,
+                        strid,
+                        self.chatter_time,
+                        self.chatter_forcetext,
+                        echotochatpriority
+                    )
                 end
             end
             self.nextchattime = t + (self.delay or 10) + math.random() * (self.rand_delay or 10)

@@ -18,11 +18,7 @@ local function DoThorns(inst, owner)
 
     inst._hitcount = 0
 
-    if owner.components.skilltreeupdater ~= nil and owner.components.skilltreeupdater:IsActivated("wormwood_allegiance_lunar_plant_gear_1") then
-        SpawnPrefab("bramblefx_armor_upgrade"):SetFXOwner(owner)
-    else
-        SpawnPrefab("bramblefx_armor"):SetFXOwner(owner)
-    end
+    SpawnPrefab("bramblefx_armor"):SetFXOwner(owner)
 
     if owner.SoundEmitter ~= nil then
         owner.SoundEmitter:PlaySound("dontstarve/common/together/armor/cactus")
@@ -46,10 +42,6 @@ local function OnAttackOther(owner, data, inst)
 end
 
 local function onequip(inst, owner)
-    if owner.components.skilltreeupdater ~= nil and owner.components.skilltreeupdater:IsActivated("wormwood_allegiance_lunar_plant_gear_1") then
-        inst:bramble_upgrade(owner)
-    end
-
     local skin_build = inst:GetSkinBuild()
     if skin_build ~= nil then
         owner:PushEvent("equipskinneditem", inst:GetSkinName())
@@ -69,8 +61,6 @@ local function onequip(inst, owner)
 end
 
 local function onunequip(inst, owner)
-    inst:bramble_downgrade(owner)
-
     owner.AnimState:ClearOverrideSymbol("swap_body")
 
     inst:RemoveEventCallback("blocked", inst._onblocked, owner)
@@ -83,17 +73,6 @@ local function onunequip(inst, owner)
     if skin_build ~= nil then
         owner:PushEvent("unequipskinneditem", inst:GetSkinName())
     end
-end
-
-local function bramble_downgrade(inst,owner)
-    if owner then
-        owner.AnimState:ClearSymbolBloom("swap_body")
-    end
-    inst.components.planardefense:SetBaseDefense(0)
-end
-local function bramble_upgrade(inst,owner)
-    inst.components.planardefense:SetBaseDefense(TUNING.ARMORBRAMBLE_PLANAR_UPGRADE)
-    owner.AnimState:SetSymbolBloom("swap_body")
 end
 
 local function fn()
@@ -152,15 +131,6 @@ local function fn()
 
     inst._onblocked      = function(owner, data)     OnBlocked(owner, data, inst) end
     inst._onattackother  = function(owner, data) OnAttackOther(owner, data, inst) end
-    inst.bramble_upgrade = bramble_upgrade
-    inst.bramble_downgrade = bramble_downgrade
-
-    inst:ListenForEvent( "onremove", function()
-            local owner = inst.components.inventoryitem.owner
-            if owner then
-                inst:bramble_downgrade(owner)
-            end
-        end, inst )
 
     return inst
 end

@@ -95,7 +95,7 @@ return {
             NO_RACERS = "I think I'm missing something here.",
         },
 
-		DISMANTLE =
+		DISMANTLE = 
 		{
 			COOKING = "I can't do that while something's cooking.",
 			INUSE = "Science says I have to wait my turn.",
@@ -5145,6 +5145,9 @@ return {
         FENCE_JUNK = "Tell me it's ugly, I won't take a fence.",
         JUNK_PILE = "A good junk pile rummage? I'll never refuse.",
         JUNK_PILE_BIG = "I think it could fall over any moment.",
+
+        ARMOR_LUNARPLANT_HUSK = "Every rose has it's thorn.",
+
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

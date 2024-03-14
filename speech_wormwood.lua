@@ -5133,6 +5133,9 @@ return{
             BROKEN = "Help! Grabby friend is hurt!",
         },
 
+        SCRAP_MONOCLEHAT = "Can see friends far away!",
+        SCRAP_CONEHAT = "Big thorny head!",
+
         FENCE_JUNK = "Friends wearing metal clothes",
         JUNK_PILE = "Pile of stuff",
         JUNK_PILE_BIG = "Not safe...",

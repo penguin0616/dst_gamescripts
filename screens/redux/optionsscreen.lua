@@ -63,6 +63,13 @@ local loadingtipsOptions =
 	{ text = STRINGS.UI.OPTIONS.LOADING_TIPS_SHOW_NONE, data = LOADING_SCREEN_TIP_OPTIONS.NONE },
 }
 
+local npcChatOptions = -- NPC Chat messages with priorities >= these values will be shown in the chat history.
+{
+	{ text = STRINGS.UI.OPTIONS.NPCCHAT_ALL,	data = CHATPRIORITIES.LOW },
+	{ text = STRINGS.UI.OPTIONS.NPCCHAT_SOME,	data = CHATPRIORITIES.HIGH },
+	{ text = STRINGS.UI.OPTIONS.NPCCHAT_NONE,	data = CHATPRIORITIES.MAX },
+}
+
 local function FindEnableScreenFlashOptionsIndex(value)
     for i = 1, #enableScreenFlashOptions do
 		if enableScreenFlashOptions[i].data == value then
@@ -79,6 +86,15 @@ local function FindDistortionLevelOptionsIndex(value)
 		end
 	end
 	return 4
+end
+
+local function FindNPCChatOptionsIndex(value)
+    for i = 1, #npcChatOptions do
+		if npcChatOptions[i].data == value then
+			return i
+		end
+	end
+	return 1
 end
 
 local all_controls =
@@ -300,7 +316,7 @@ local OptionsScreen = Class(Screen, function( self, prev_screen, default_section
         movementprediction = Profile:GetMovementPredictionEnabled(),
 		automods = Profile:GetAutoSubscribeModsEnabled(),
 		autologin = Profile:GetAutoLoginEnabled(),
-        npcchat = Profile:GetNPCChatEnabled(),
+        npcchat = Profile:GetNPCChatLevel(),
 		animatedheads = Profile:GetAnimatedHeadsEnabled(),
 		wathgrithrfont = Profile:IsWathgrithrFontEnabled(),
 		boatcamera = Profile:IsBoatCameraEnabled(),
@@ -629,7 +645,7 @@ function OptionsScreen:Save(cb)
     Profile:SetMovementPredictionEnabled(self.options.movementprediction)
 	Profile:SetAutoSubscribeModsEnabled( self.options.automods )
 	Profile:SetAutoLoginEnabled( self.options.autologin )
-    Profile:SetNPCChatEnabled(self.options.npcchat)
+    Profile:SetNPCChatLevel(self.options.npcchat)
 	Profile:SetAnimatedHeadsEnabled( self.options.animatedheads )
 	Profile:SetTextureStreamingEnabled( self.options.texturestreaming )
 	if IsWin32() then
@@ -1825,7 +1841,7 @@ function OptionsScreen:_BuildAdvancedSettings()
 			self:UpdateMenu()
 		end
 
-    self.npcchatSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.NPCCHAT, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.NPCCHAT)
+    self.npcchatSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.NPCCHAT, npcChatOptions, STRINGS.UI.OPTIONS.TOOLTIPS.NPCCHAT)
     self.npcchatSpinner.OnChanged = function(_, data)
         self.working.npcchat = data
         self:UpdateMenu()
@@ -1933,7 +1949,7 @@ function OptionsScreen:_BuildAdvancedSettings()
     table.insert( self.left_spinners, self.wathgrithrfontSpinner)
 	table.insert( self.left_spinners, self.waltercameraSpinner)
 	table.insert( self.left_spinners, self.poidisplaySpinner)
-    table.insert(self.left_spinners, self.npcchatSpinner)
+    table.insert( self.left_spinners, self.npcchatSpinner)
 
 	table.insert( self.right_spinners, self.consoleautopauseSpinner )
 	table.insert( self.right_spinners, self.craftingmenubufferedbuildautocloseSpinner )
@@ -2449,7 +2465,7 @@ function OptionsScreen:InitializeSpinners(first)
 	self.wathgrithrfontSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.wathgrithrfont ) )
 	self.waltercameraSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.waltercamera ) )
 	self.poidisplaySpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.poidisplay ) )
-    self.npcchatSpinner:SetSelectedIndex(EnabledOptionsIndex(self.working.npcchat))
+    self.npcchatSpinner:SetSelectedIndex( FindNPCChatOptionsIndex(self.working.npcchat) )
 	self.minimapzoomcursorSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.minimapzoomcursor ) )
 	self.boatcameraSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.boatcamera ) )
 	self.integratedbackpackSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.integratedbackpack ) )

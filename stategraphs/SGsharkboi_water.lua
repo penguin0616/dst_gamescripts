@@ -23,7 +23,7 @@ local events =
 			if should_move then
 				if inst.sg.statemem.stop then
 					inst.sg.statemem.stop = false
-					isnt.sg:AddStateTag("canrotate")
+					inst.sg:AddStateTag("canrotate")
 					inst.components.locomotor.pusheventwithdirection = false
 				end
 			elseif not inst.sg.statemem.stop then

@@ -12,8 +12,11 @@ function Healer:SetOnHealFn(fn)
 end
 
 function Healer:Heal(target)
-    if target.components.health ~= nil then
-        target.components.health:DoDelta(self.health, false, self.inst.prefab)
+    local health = target.components.health
+    if health ~= nil then
+        if health.canheal then -- NOTES(JBK): Tag healerbuffs can make this heal function be invoked but we do not want to apply health to things that can not be healed.
+            health:DoDelta(self.health, false, self.inst.prefab)
+        end
 		if self.onhealfn ~= nil then
 			self.onhealfn(self.inst, target)
 		end

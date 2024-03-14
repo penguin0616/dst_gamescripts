@@ -17,7 +17,7 @@ local function ChooseAttack(inst)
 		elseif inst.cancannon and inst:IsNear(target, TUNING.DAYWALKER2_CANNON_ATTACK_RANGE) then
 			inst.sg:GoToState("cannon_pre", target)
 			return true
-		elseif inst.cantackle then
+		elseif inst.cantackle and inst:TestTackle(target, TUNING.DAYWALKER2_TACKLE_RANGE) then
 			inst.sg:GoToState("tackle_pre", target)
 			return true
 		elseif inst.cancannon then
@@ -25,6 +25,9 @@ local function ChooseAttack(inst)
 			return true
 		elseif inst.canswing then
 			inst.sg:GoToState("attack_swing", target)
+			return true
+		elseif inst.components.rooted then
+			inst.sg:GoToState("attack_pounce_pre", target)
 			return true
 		end
 	end
@@ -151,6 +154,7 @@ local FOOTSTEP_NON_COLLAPSIBLE_TAGS = { "FX", --[["NOCLICK",]] "DECOR", "INLIMBO
 --Also could be stunlocked while trying to run through, slowing down steps.
 local TRAMPLE_TIMEOUT = 5 --seconds
 local TRAMPLE_THRESHOLD = 5 --steps
+local FRONT_ANGLE_THRESHOLD = 60 * DEGREES
 
 local function _OnTrampleTimeout(inst, trampledelays, target)
 	trampledelays[target] = nil
@@ -191,10 +195,11 @@ local function _DoAOEWork(inst, dist, radius, arc, targets, canblock, overrideno
 					(v.components.workable:CanBeWorked() and work_action and COLLAPSIBLE_WORK_ACTIONS[work_action.id])
 				then
 					--blocked is if we want to stop when colliding with an obstacle in front of us
-					local isblocker
+					local isblocker, infront
 					if canblock and not blocked then
 						isblocker = v:HasTag("blocker")
-						if isblocker and (dx ~= 0 or dz ~= 0) and DiffAngleRad(theta, math.atan2(-dz, dx)) < 45 then
+						infront = isblocker and (dx ~= 0 or dz ~= 0) and DiffAngleRad(theta, math.atan2(-dz, dx)) < FRONT_ANGLE_THRESHOLD
+						if infront then
 							blocked = true
 						end
 					end
@@ -226,8 +231,18 @@ local function _DoAOEWork(inst, dist, radius, arc, targets, canblock, overrideno
 							end
 						end
 					elseif v:HasTag("junk_fence") then
-						--when not trampling, don't break junk fences
-						shoulddelaytrample = true
+						if inst.sg:HasStateTag("tackle") then
+							if infront == nil then
+								infront = (dx ~= 0 or dz ~= 0) and DiffAngleRad(theta, math.atan2(-dz, dx)) < FRONT_ANGLE_THRESHOLD
+							end
+							if not infront then
+								--when tackling, only break junk fences directly in front of us
+								shoulddelaytrample = true
+							end
+						else
+							--when not trampling don't break junk fences
+							shoulddelaytrample = true
+						end
 					end
 
 					if shoulddelaytrample then
@@ -288,17 +303,40 @@ end
 local function DoArcAttack(inst, dist, radius, arc, heavymult, mult, forcelanded, targets)
 	local worked = _DoAOEWork(inst, dist, radius, arc, targets, false, nil, nil)
 	local hit = _AOEAttack(inst, dist, radius, arc, heavymult, mult, forcelanded, targets, nil)
-	return hit or worked
+	if hit or worked then
+		inst.components.stuckdetection:Reset()
+		return true
+	end
+	return false
 end
 
 local function DoAOEAttack(inst, dist, radius, heavymult, mult, forcelanded, targets, canblock, ignoreblock)
 	local worked, blocked = _DoAOEWork(inst, dist, radius, nil, targets, canblock, ignoreblock and NOBLOCK_NON_COLLAPSIBLE_TAGS or nil, nil)
 	local hit = _AOEAttack(inst, dist, radius, nil, heavymult, mult, forcelanded, targets, ignoreblock and NOBLOCK_AOE_TARGET_CANT_TAGS or nil)
-	return hit or worked, blocked
+	if hit or worked then
+		inst.components.stuckdetection:Reset()
+		return true, blocked
+	end
+	return false, blocked
+end
+
+--pounce stacks these calls, so let the state handle resetting stuckdetection
+local function DoPounceAOEAttack(inst, dist, radius, heavymult, mult, forcelanded, targets)
+	local hit = _AOEAttack(inst, dist, radius, nil, heavymult, mult, forcelanded, targets, nil)
+	return hit
+end
+
+--pounce stacks these calls, so let the state handle resetting stuckdetection
+local function DoPounceAOEWork(inst, dist, radius, targets)
+	local worked, blocked = _DoAOEWork(inst, dist, radius, nil, targets, false, nil, nil)
+	return worked, blocked
 end
 
 local function DoFootstepAOE(inst)
-	_DoAOEWork(inst, 0.3, 1.5, nil, nil, false, FOOTSTEP_NON_COLLAPSIBLE_TAGS, inst._trampledelays)
+	local worked = _DoAOEWork(inst, 0.3, 1.5, nil, nil, false, FOOTSTEP_NON_COLLAPSIBLE_TAGS, inst._trampledelays)
+	if worked then
+		inst.components.stuckdetection:Reset()
+	end
 end
 
 --------------------------------------------------------------------------
@@ -388,6 +426,15 @@ local function DoFootstep(inst, volume)
 	inst.SoundEmitter:PlaySound(inst.footstep, nil, volume)
 end
 
+local function TurnToTargetFromNoFaced(inst)
+	if inst.sg.lasttags and inst.sg.lasttags["canrotate"] and inst.sg.lasttags["busy"] then
+		local target = inst.components.combat.target
+		if target then
+			inst:ForceFacePoint(target.Transform:GetWorldPosition())
+		end
+	end
+end
+
 --------------------------------------------------------------------------
 
 local states =
@@ -402,6 +449,7 @@ local states =
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
+			TurnToTargetFromNoFaced(inst)
 			if inst:IsStalking() then
 				inst.sg:AddStateTag("stalking")
 				inst:SetHeadTracking(true)
@@ -425,7 +473,10 @@ local states =
 
 		timeline =
 		{
-			FrameEvent(2, ToggleOnCharacterCollisions),
+			FrameEvent(4, function(inst)
+				ToggleOnCharacterCollisions(inst)
+				SGDaywalkerCommon.DoDefeatShake(inst)
+			end),
 		},
 
 		events =
@@ -446,6 +497,7 @@ local states =
 
 		onenter = function(inst)
 			inst:SetStalking(nil)
+			TurnToTargetFromNoFaced(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("hit")
 			inst.SoundEmitter:PlaySound("daywalker/voice/hurt")
@@ -555,22 +607,44 @@ local states =
 			if loot == "ball" then
 				inst.sg:GoToState("throw_pre")
 			else
-				local nextstate
+				local nextstate1, nextstate2
 				if loot == "object" then
 					inst:SetEquip("swing", "object")
-					nextstate = "lift_object"
+					nextstate1 = "lift_object"
 				elseif loot == "spike" then
 					inst:SetEquip("tackle", "spike")
-					nextstate = "lift_spike"
+					nextstate1 = "lift_spike"
 				elseif loot == "cannon" then
 					inst:SetEquip("cannon", "cannon")
-					nextstate = "lift_cannon"
+					nextstate1 = "lift_cannon"
 				end
-				if nextstate then
+
+				if nextstate1 then
+					if inst.candoublerummage and inst.canmultiwield then
+						local junk, loot2 = inst:GetNextItem()
+						if loot2 == "object" then
+							inst:SetEquip("swing", "object")
+							nextstate2 = "lift_object"
+						elseif loot2 == "spike" then
+							inst:SetEquip("tackle", "spike")
+							nextstate2 = "lift_spike"
+						elseif loot2 == "cannon" then
+							inst:SetEquip("cannon", "cannon")
+							nextstate2 = "lift_cannon"
+						end
+
+						if nextstate2 and (nextstate2 == "lift_object" or nextstate1 == "lift_cannon") then
+							local swap = nextstate1
+							nextstate1 = nextstate2
+							nextstate2 = swap
+						end
+					end
+
 					inst.components.timer:StopTimer("multiwield")
 					inst.components.timer:StartTimer("multiwield", TUNING.DAYWALKER2_MULTIWIELD_CD)
 				end
-				inst.sg:GoToState("rummage_pst", nextstate)
+
+				inst.sg:GoToState("rummage_pst", nextstate1 and { nextstate1 = nextstate1, nextstate2 = nextstate2 } or nil)
 			end
 		end,
 
@@ -617,23 +691,28 @@ local states =
 		name = "rummage_pst",
 		tags = { "busy" },
 
-		onenter = function(inst, nextstate)
-			if nextstate == "lift_object" or nextstate == "lift_spike" or nextstate == "lift_cannon" then
+		onenter = function(inst, data)
+			if data and data.nextstate1 then
+				inst.sg.statemem.data = data
+				inst.sg:AddStateTag("canrotate")
 				inst.Transform:SetNoFaced()
 				inst.AnimState:PlayAnimation("rummage_pst_nofaced")
 			else
 				inst.AnimState:PlayAnimation("rummage_pst")
 			end
 			inst.SoundEmitter:PlaySound("daywalker/voice/speak_short")
-			inst.sg.statemem.nextstate = nextstate
 		end,
 
 		timeline =
 		{
 			FrameEvent(3, function(inst)
-				if inst.sg.statemem.nextstate then
+				local data = inst.sg.statemem.data
+				if data then
+					local nextstate = data.nextstate1
+					data.nextstate1 = data.nextstate2
+					data.nextstate2 = nil
 					inst.sg.statemem.lifting = true
-					inst.sg:GoToState(inst.sg.statemem.nextstate)
+					inst.sg:GoToState(nextstate, data)
 					return
 				end
 				inst.sg:RemoveStateTag("busy")
@@ -660,16 +739,32 @@ local states =
 		name = "lift_object",
 		tags = { "busy", "canrotate" },
 
-		onenter = function(inst)
+		onenter = function(inst, data)
 			inst:SetStalking(nil)
 			inst.components.locomotor:Stop()
 			inst.Transform:SetNoFaced()
 			inst.AnimState:PlayAnimation("lift_object_pre") --8 frames
 			inst.AnimState:PushAnimation("lift_object_loop") --17 frames
+			if data and data.nextstate1 then
+				--going to another lift state
+				inst.AnimState:PushAnimation("lift_object_pst", false)
+				inst.sg.statemem.data = data
+			end
 		end,
 
 		timeline =
 		{
+			FrameEvent((8 + 17) + 7, function(inst)
+				local data = inst.sg.statemem.data
+				if data then
+					local nextstate = data.nextstate1
+					data.nextstate1 = data.nextstate2
+					data.nextstate2 = nil
+					data.fastforward = true
+					inst.sg.statemem.lifting = true
+					inst.sg:GoToState(nextstate, data)
+				end
+			end),
 			FrameEvent((8 + 17) + 8, function(inst)
 				inst.sg:AddStateTag("caninterrupt")
 			end),
@@ -691,7 +786,9 @@ local states =
 		},
 
 		onexit = function(inst)
-			inst.Transform:SetFourFaced()
+			if not inst.sg.statemem.lifting then
+				inst.Transform:SetFourFaced()
+			end
 		end,
 	},
 
@@ -699,23 +796,110 @@ local states =
 		name = "lift_spike",
 		tags = { "busy", "canrotate" },
 
-		onenter = function(inst)
+		onenter = function(inst, data)
 			inst:SetStalking(nil)
 			inst.components.locomotor:Stop()
 			inst.Transform:SetNoFaced()
 			inst.AnimState:PlayAnimation("lift_upperarm_pre") --8 frames
-			inst.AnimState:PushAnimation("lift_upperarm_loop") --17 frames
+			if data then
+				if data.fastforward then
+					--came from another lift state
+					inst.AnimState:SetFrame(5)
+				end
+				inst.sg.statemem.data = data
+			end
+			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength() - inst.AnimState:GetCurrentAnimationTime())
+		end,
+
+		--Better timing than events
+		ontimeout = function(inst)
+			inst.sg.statemem.lifting = true
+			inst.sg:GoToState("lift_spike2", inst.sg.statemem.data)
+		end,
+
+		--[[events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg.statemem.lifting = true
+					inst.sg:GoToState("lift_spike2", inst.sg.statemem.data)
+				end
+			end),
+		},]]
+
+		onexit = function(inst)
+			if not inst.sg.statemem.lifting then
+				inst.Transform:SetFourFaced()
+			end
+		end,
+	},
+
+	State{
+		name = "lift_spike2",
+		tags = { "busy", "canrotate" },
+
+		onenter = function(inst, data)
+			if data and (data.fastforward or data.nextstate1) then
+				inst.AnimState:PlayAnimation("lift_upperarm_loop") --17 frames
+				inst.AnimState:PushAnimation("lift_upperarm_pst", false)
+				if data.nextstate1 == nil then
+					inst.sg.statemem.lifting = true
+					inst.sg:GoToState("lift_spike3")
+				else
+					inst.sg.statemem.data = data
+				end
+			else
+				inst.AnimState:PlayAnimation("lift_upperarm_loop", true)
+				inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
+			end
 		end,
 
 		timeline =
 		{
-			FrameEvent((8 + 17) + 8, function(inst)
+			FrameEvent((17) + 7, function(inst)
+				local data = inst.sg.statemem.data
+				if data and data.nextstate1 then
+					local nextstate = data.nextstate1
+					data.nextstate1 = data.nextstate2
+					data.nextstate2 = nil
+					data.fastforward = true
+					inst.sg.statemem.lifting = true
+					inst.sg:GoToState(nextstate, data)
+				end
+			end),
+		},
+
+		ontimeout = function(inst)
+			inst.sg.statemem.lifting = true
+			inst.sg:GoToState("lift_spike3", true)
+		end,
+
+		onexit = function(inst)
+			if not inst.sg.statemem.lifting then
+				inst.Transform:SetFourFaced()
+			end
+		end,
+	},
+
+	State{
+		name = "lift_spike3",
+		tags = { "busy", "canrotate" },
+
+		onenter = function(inst, playpst)
+			inst.sg.statemem.playpst = playpst
+		end,
+
+		timeline =
+		{
+			FrameEvent(8, function(inst)
 				inst.sg:AddStateTag("caninterrupt")
 			end),
-			FrameEvent((8 + 17 * 2), function(inst)
-				inst.AnimState:PlayAnimation("lift_upperarm_pst")
+			FrameEvent(17, function(inst)
+				if inst.sg.statemem.playpst then
+					inst.AnimState:PlayAnimation("lift_upperarm_pst")
+				end
 			end),
-			FrameEvent((8 + 17 * 2) + 9, function(inst)
+			FrameEvent((17) + 9, function(inst)
 				inst.sg:RemoveStateTag("busy")
 			end),
 		},
@@ -730,7 +914,9 @@ local states =
 		},
 
 		onexit = function(inst)
-			inst.Transform:SetFourFaced()
+			if not inst.sg.statemem.lifting then
+				inst.Transform:SetFourFaced()
+			end
 		end,
 	},
 
@@ -738,24 +924,76 @@ local states =
 		name = "lift_cannon",
 		tags = { "busy", "canrotate" },
 
-		onenter = function(inst)
+		onenter = function(inst, data)
 			inst:SetStalking(nil)
 			inst.components.locomotor:Stop()
 			inst.Transform:SetNoFaced()
 			inst.AnimState:PlayAnimation("lift_lowerarm_pre") --8 frames
+			if data then
+				if data.fastforward then
+					--came from another lift state
+					inst.AnimState:SetFrame(3)
+				end
+				inst.sg.statemem.data = data
+			end
+			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength() - inst.AnimState:GetCurrentAnimationTime())
+		end,
+
+		--Better timing than events
+		ontimeout = function(inst)
+			inst.sg.statemem.lifting = true
+			inst.sg:GoToState("lift_cannon2", inst.sg.statemem.data)
+		end,
+
+		--[[events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg.statemem.lifting = true
+					inst.sg:GoToState("lift_cannon2", inst.sg.statemem.data)
+				end
+			end),
+		},]]
+
+		onexit = function(inst)
+			if not inst.sg.statemem.lifting then
+				inst.Transform:SetFourFaced()
+			end
+		end,
+	},
+
+	State{
+		name = "lift_cannon2",
+		tags = { "busy", "canrotate" },
+
+		onenter = function(inst, data)
 			inst.AnimState:PushAnimation("lift_lowerarm_loop") --34 frames (not a loop)
 			inst.AnimState:PushAnimation("lift_lowerarm_pst", false) --14 frames
+			inst.sg.statemem.data = data
 		end,
 
 		timeline =
 		{
-			FrameEvent((8) + 14, function(inst)
+			FrameEvent(14, function(inst)
 				inst.SoundEmitter:PlaySound("daywalker/voice/speak_short")
 			end),
-			FrameEvent((8 + 34), function(inst)
-				inst.sg:AddStateTag("caninterrupt")
+			FrameEvent(31, function(inst)
+				if not (inst.sg.statemem.data and inst.sg.statemem.data.nextstate1) then
+					inst.sg:AddStateTag("caninterrupt")
+				end
 			end),
-			FrameEvent((8 + 34) + 9, function(inst)
+			FrameEvent((34) + 7, function(inst)
+				local data = inst.sg.statemem.data
+				if data and data.nextstate1 then
+					local nextstate = data.nextstate1
+					data.nextstate1 = data.nextstate2
+					data.nextstate2 = nil
+					data.fastforward = true
+					inst.sg.statemem.lifting = true
+					inst.sg:GoToState(nextstate, data)
+				end
+			end),
+			FrameEvent((34) + 9, function(inst)
 				inst.sg:RemoveStateTag("busy")
 			end),
 		},
@@ -770,7 +1008,9 @@ local states =
 		},
 
 		onexit = function(inst)
-			inst.Transform:SetFourFaced()
+			if not inst.sg.statemem.lifting then
+				inst.Transform:SetFourFaced()
+			end
 		end,
 	},
 
@@ -854,8 +1094,13 @@ local states =
 				end
 				local target = inst.sg.statemem.target
 				if target and (inst.cancannon or inst.cantackle) and inst.components.combat:CanTarget(target) then
-					inst.sg:GoToState(inst.cancannon and "cannon_pre" or "tackle_pre", target)
-					return true
+					if inst.cancannon then
+						inst.sg:GoToState("cannon_pre", target)
+						return true
+					elseif inst:TestTackle(target, nil) then --pass nil for range when combo
+						inst.sg:GoToState("tackle_pre", target)
+						return true
+					end
 				end
 				inst.sg:AddStateTag("caninterrupt")
 			end),
@@ -1163,7 +1408,7 @@ local states =
 
 	State{
 		name = "tackle_pre",
-		tags = { "attack", "busy" },
+		tags = { "tackle", "attack", "busy" },
 
 		onenter = function(inst, target)
 			inst:SetStalking(nil)
@@ -1220,7 +1465,7 @@ local states =
 		},
 
 		onexit = function(inst)
-			if not inst.sg.statemem.tackling and inst.sg:HasStateTag("jumpping") then
+			if not inst.sg.statemem.tackling and inst.sg:HasStateTag("jumping") then
 				inst.Physics:ClearMotorVelOverride()
 				inst.Physics:Stop()
 			end
@@ -1229,7 +1474,7 @@ local states =
 
 	State{
 		name = "tackle_loop",
-		tags = { "attack", "busy", "jumping" },
+		tags = { "tackle", "attack", "busy", "jumping" },
 
 		onenter = function(inst, target)
 			inst.AnimState:PlayAnimation("tackle", true)
@@ -1321,7 +1566,7 @@ local states =
 
 	State{
 		name = "tackle_lift",
-		tags = { "attack", "busy", "jumping" },
+		tags = { "tackle", "attack", "busy", "jumping" },
 
 		onenter = function(inst, data)
 			inst.AnimState:PlayAnimation("tackle_lift")
@@ -1489,6 +1734,145 @@ local states =
 	},
 
 	State{
+		name = "attack_pounce_pre",
+		tags = { "attack", "busy", "jumping" },
+
+		onenter = function(inst, target)
+			inst:SetStalking(nil)
+			inst.components.locomotor:Stop()
+			inst.components.locomotor:EnableGroundSpeedMultiplier(false)
+			inst.AnimState:PlayAnimation("run_pre")
+			inst.SoundEmitter:PlaySound(inst.footstep)
+			if target and target:IsValid() then
+				inst:ForceFacePoint(target.Transform:GetWorldPosition())
+			end
+			inst.sg.statemem.speedmult = not (inst.sg.lasttags and inst.sg.lasttags["running"]) and 0.8 or nil
+			inst.Physics:SetMotorVelOverride(11 * (inst.sg.statemem.speedmult or 1), 0, 0)
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg.statemem.pouncing = true
+					inst.sg:GoToState("attack_pounce", inst.sg.statemem.speedmult)
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.pouncing then
+				inst.Physics:ClearMotorVelOverride()
+				inst.Physics:Stop()
+				inst.components.locomotor:EnableGroundSpeedMultiplier(true)
+			end
+		end,
+	},
+
+	State{
+		name = "attack_pounce",
+		tags = { "attack", "busy", "jumping", "nointerrupt", "notalksound" },
+
+		onenter = function(inst, speedmult)
+			inst:SetStalking(nil)
+			--inst.components.locomotor:Stop()
+			inst.components.locomotor:EnableGroundSpeedMultiplier(false)
+			inst:StartAttackCooldown()
+			inst.AnimState:PlayAnimation("atk3")
+			inst.SoundEmitter:PlaySound("daywalker/voice/speak_short")
+			inst.SoundEmitter:PlaySound("daywalker/action/attack3")
+			--TryChatter(inst, "DAYWALKER_ATTACK")
+			inst.sg.statemem.speedmult = speedmult or 1
+			inst.Physics:SetMotorVelOverride(11 * inst.sg.statemem.speedmult, 0, 0)
+		end,
+
+		onupdate = function(inst)
+			if inst.sg.statemem.speed then
+				inst.sg.statemem.speed = inst.sg.statemem.speed * 0.75
+				inst.Physics:SetMotorVelOverride(inst.sg.statemem.speed * inst.sg.statemem.speedmult, 0, 0)
+			end
+			if inst.sg.statemem.collides then
+				local hit = DoPounceAOEAttack(inst, 0.2, 1.4, nil, nil, nil, inst.sg.statemem.collides)
+				if hit then
+					inst.components.stuckdetection:Reset()
+				end
+			end
+		end,
+
+		timeline =
+		{
+			FrameEvent(0, function(inst)
+				inst.components.combat:SetDefaultDamage(TUNING.DAYWALKER_POUNCE_DAMAGE)
+				inst.sg.statemem.collides = {}
+			end),
+			FrameEvent(5, function(inst)
+				inst.sg.statemem.collides = nil
+			end),
+			FrameEvent(10, function(inst) inst.SoundEmitter:PlaySound(inst.footstep) end),
+			FrameEvent(11, SGDaywalkerCommon.DoPounceShake),
+			FrameEvent(12, function(inst)
+				inst.components.combat:SetDefaultDamage(TUNING.DAYWALKER_XCLAW_DAMAGE)
+				local targets = {}
+				local hit
+				hit = DoPounceAOEWork(inst, 3, 3, targets)
+				hit = DoPounceAOEWork(inst, 0.4, 1.6, targets) or hit
+				hit = DoPounceAOEAttack(inst, 3, 3, 1 + 0.1 * inst.sg.statemem.speedmult, 1 + 0.2 * inst.sg.statemem.speedmult, false, targets) or hit
+				hit = DoPounceAOEAttack(inst, 0.4, 1.6, 1, 1, false, targets) or hit
+				if hit then
+					inst.components.stuckdetection:Reset()
+				end
+			end),
+			FrameEvent(14, function(inst)
+				inst.sg:RemoveStateTag("nointerrupt")
+			end),
+			FrameEvent(15, function(inst)
+				inst.sg.statemem.speed = 8
+			end),
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("attack_pounce_pst")
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			inst.Physics:ClearMotorVelOverride()
+			inst.Physics:Stop()
+			inst.components.locomotor:EnableGroundSpeedMultiplier(true)
+			inst.components.combat:SetDefaultDamage(TUNING.DAYWALKER_DAMAGE)
+		end,
+	},
+
+	State{
+		name = "attack_pounce_pst",
+		tags = { "busy", "caninterrupt" },
+
+		onenter = function(inst)
+			inst.AnimState:PlayAnimation("atk3_pst")
+		end,
+
+		timeline =
+		{
+			FrameEvent(1, function(inst)
+				inst.sg:RemoveStateTag("busy")
+			end),
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+	},
+
+	State{
 		name = "taunt",
 		tags = { "taunt", "busy" }, --has facings! don't need "canrotate"
 
@@ -1568,11 +1952,19 @@ local states =
 			FrameEvent(36, function(inst)
 				inst.sg:AddStateTag("noattack")
 
-				if inst.cantackle then
-					inst:DropItem("tackle")
-				end
-				if inst.cancannon then
-					inst:DropItem("cannon")
+				if inst.cantackle or inst.cancannon then
+					if inst.cantackle then
+						if inst.equiptackle == "spike" then
+							inst:DropItemAsLoot("tackle", true)
+						else
+							inst:DropItem("tackle", true)
+						end
+					end
+					if inst.cancannon then
+						inst:DropItem("cannon", true)
+					end
+					--just play it once for all loot
+					inst.SoundEmitter:PlaySound("dontstarve/wilson/use_break")
 				end
 
 				local parts = { "daywalker2_armor1_break_fx", "daywalker2_armor2_break_fx", "daywalker2_cloth_break_fx" }

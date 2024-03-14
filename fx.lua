@@ -2979,7 +2979,7 @@ local fx =
 		bank = "scrapball",
 		build = "scrapball",
 		anim = "scrap_destruction_1",
-		sound = "qol1/wagstaff_ruins/rummagepile_pst",
+		sound = "qol1/daywalker_scrappy/pile_destroy",
 		fn = function(inst)
 			local rnd = math.random(6)
 			if rnd > 3 then

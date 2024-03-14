@@ -37,9 +37,12 @@ function ChatHistoryManager:OnSystemMessage(message)
     self:AddToHistory(ChatTypes.SystemMessage, nil, nil, STRINGS.UI.SERVERADMINSCREEN.SYSTEMMESSAGE, message, WHITE)
 end
 
-function ChatHistoryManager:OnChatterMessage(inst, name_colour, message, colour, user_vanity, user_vanity_bg)
+function ChatHistoryManager:OnChatterMessage(inst, name_colour, message, colour, user_vanity, user_vanity_bg, priority)
     if self.join_server then return end
     if not Profile:GetNPCChatEnabled() then return end
+
+    priority = priority or 0
+    if Profile:GetNPCChatLevel() > priority then return end
 
     if name_colour == nil then
         name_colour = shallowcopy(DEFAULT_PLAYER_COLOUR)

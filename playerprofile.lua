@@ -1138,24 +1138,31 @@ function PlayerProfile:GetAutoLoginEnabled()
 	end
 end
 
-function PlayerProfile:SetNPCChatEnabled(enabled)
+function PlayerProfile:SetNPCChatLevel(level)
     if USE_SETTINGS_FILE then
-        TheSim:SetSetting("misc", "npcchat", tostring(enabled))
+        TheSim:SetSetting("misc", "npcchat", tostring(level))
     else
-        self:SetValue("npcchat", enabled)
+        self:SetValue("npcchat", level)
         self.dirty = true
+    end
+end
+
+function PlayerProfile:GetNPCChatLevel()
+    if USE_SETTINGS_FILE then
+        local npcchat = TheSim:GetSetting("misc", "npcchat")
+		return (npcchat ~= nil and tonumber(npcchat)) or CHATPRIORITIES.LOW
+    else
+        return GetValueOrDefault(self.persistdata.npcchat, CHATPRIORITIES.LOW)
     end
 end
 
 function PlayerProfile:GetNPCChatEnabled()
     if USE_SETTINGS_FILE then
         local npcchat = TheSim:GetSetting("misc", "npcchat")
-        if npcchat == nil then
-            return true
-        end
-        return npcchat == "true"
+		return (npcchat == nil or npcchat ~= "0")
     else
-        return GetValueOrDefault(self.persistdata.npcchat, true)
+		local npcchat = GetValueOrDefault(self.persistdata.npcchat, CHATPRIORITIES.LOW)
+        return npcchat > 0
     end
 end
 

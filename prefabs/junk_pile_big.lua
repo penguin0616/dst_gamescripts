@@ -31,16 +31,16 @@ local LOOT = {
     },
 
     ITEMS = {
-        { weight=6, prefab = EMPTY          }, -- 18.75%
-        { weight=8, prefab = "wagpunk_bits" }, -- 25.00%
-        { weight=4, prefab = "rocks"        }, -- 12.50%
-        { weight=4, prefab = "log"          }, -- 12.50%
-        { weight=2, prefab = "transistor"   }, -- 6.25%
-        { weight=2, prefab = "trinket_6"    }, -- 6.25%
+        { weight=8, prefab = EMPTY          }, -- 25%
+        { weight=8, prefab = "wagpunk_bits" }, -- 25%
+        { weight=4, prefab = "rocks"        }, -- 12.5%
+        { weight=4, prefab = "log"          }, -- 12.5%
         { weight=2, prefab = "boards"       }, -- 6.25%
         { weight=2, prefab = "potato"       }, -- 6.25%
-        { weight=1, prefab = "blueprint"    }, -- 3.13%
-        { weight=1, prefab = "gears"        }, -- 3.13%
+        { weight=1, prefab = "transistor"   }, -- 3.125%
+        { weight=1, prefab = "trinket_6"    }, -- 3.125%
+        { weight=1, prefab = "blueprint"    }, -- 3.125%
+        { weight=1, prefab = "gears"        }, -- 3.125%
     },
 }
 
@@ -325,8 +325,9 @@ local function onpickedfn(inst, picker, loot)
 				nearest_side = i
 			end
 		end
-		if nearest_side then
+		if nearest_side then			
             if not inst.components.timer:TimerExists("daywalker_spawn_cd") then -- FIXME(JBK): Temporary respawning routine for beta.
+            	--#FIXME @V2C @JBK daywalker_spawn_cd refs in wagstaff
                 inst.components.timer:StartTimer("daywalker_spawn_cd", TUNING.TOTAL_DAY_TIME * 20)
                 spawn_daywalker(inst, nearest_side, 1)
                 if inst.daywalker then
@@ -344,7 +345,7 @@ end
 local function onshake(inst)
 	--make sure not looping
 	if not inst._pickingloop then
-		inst.SoundEmitter:PlaySound("qol1/wagstaff_ruins/rummagepile_pst")
+		inst.SoundEmitter:PlaySound("qol1/daywalker_scrappy/buried_rustle")
 
 		inst.AnimState:PlayAnimation("loopbig")
 		inst.AnimState:PushAnimation("big_idle", false)
@@ -400,6 +401,10 @@ local function OnLoad(inst, data)
 			end
 		end
 	end
+
+    if TheWorld.components.wagpunk_manager then
+        TheWorld.components.wagpunk_manager:RegisterBigJunk(inst)
+    end
 end
 
 local function WatchForDaywalkerRemove(inst, daywalker)

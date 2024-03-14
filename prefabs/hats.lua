@@ -4174,8 +4174,12 @@ local function MakeHat(name)
 
     -----------------------------------------------------------------------------
 
+	fns.scrap_custom_init = function(inst)
+		inst:AddTag("junk")
+	end
+
     fns.scrap = function()
-        local inst = simple()
+		local inst = simple(fns.scrap_custom_init)
 
         inst.components.floater:SetSize("med")
         inst.components.floater:SetVerticalOffset(0.2)
@@ -4183,6 +4187,12 @@ local function MakeHat(name)
         if not TheWorld.ismastersim then
             return inst
         end
+
+		inst:AddComponent("armor")
+		inst.components.armor:InitCondition(TUNING.ARMOR_SCRAP_HAT, TUNING.ARMOR_SCRAP_HAT_ABSORPTION)
+
+		inst:AddComponent("waterproofer")
+		inst.components.waterproofer:SetEffectiveness(TUNING.WATERPROOFNESS_SMALL)
 
         MakeHauntableLaunch(inst)
 

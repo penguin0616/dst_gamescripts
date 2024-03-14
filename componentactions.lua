@@ -1129,7 +1129,7 @@ local COMPONENT_ACTIONS =
 		end,
 
         healer = function(inst, doer, target, actions)
-            if target.replica.health ~= nil and target.replica.health:CanHeal() then
+            if target.replica.health ~= nil and (target.replica.health:CanHeal() or inst:HasTag("healerbuffs")) then
                 table.insert(actions, ACTIONS.HEAL)
             end
         end,
@@ -2130,7 +2130,7 @@ local COMPONENT_ACTIONS =
         end,
 
         healer = function(inst, doer, actions)
-            if doer.replica.health ~= nil and doer.replica.health:CanHeal() then
+            if doer.replica.health ~= nil and (doer.replica.health:CanHeal() or inst:HasTag("healerbuffs")) then
                 table.insert(actions, ACTIONS.HEAL)
             end
         end,

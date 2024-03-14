@@ -137,6 +137,10 @@ local function SetupJunkTossFromPile(inst, x, z, x1, z1)
 	inst.components.updatelooper:AddOnWallUpdateFn(UpdatePos)
 end
 
+local function DoSound(inst)
+	inst.SoundEmitter:PlaySound("qol1/daywalker_scrappy/pile_throw_land")
+end
+
 local function DoJunkFall(inst, x, z, x1, z1, formpile, targets)
 	SpawnPrefab("junkball_fall_fx"):SetupJunkFall(inst.attacker, x, z, x1, z1, formpile, inst.pileupchance, targets)
 end
@@ -225,7 +229,10 @@ local function OnAnimOver(inst)
 		inst:DoTaskInTime(delay, DoJunkFall, x, z, v.x, v.z, v.pile, targets)
 		delay = delay + (1.5 + math.random()) * FRAMES
 	end
-	inst:DoTaskInTime(delay, inst.Remove)
+
+	inst.Transform:SetPosition(x1, 0, z1)
+	inst:DoTaskInTime((6 + 11) * FRAMES, DoSound)
+	inst:DoTaskInTime(math.max(delay, (6 + 11 + 4) * FRAMES), inst.Remove)
 end
 
 local function fn()
@@ -233,6 +240,7 @@ local function fn()
 
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
+	inst.entity:AddSoundEmitter()
 	inst.entity:AddDynamicShadow()
 	inst.entity:AddNetwork()
 
@@ -330,7 +338,13 @@ local function DoDamage(inst, targets)
 					v.components.pickable:Pick(inst)
 					targets[v] = "picked"
 				elseif combat:CanTarget(v) then
-					combat:DoAttack(v)
+					if v.components.inventory and v.components.inventory:EquipHasTag("junk") then
+						combat.externaldamagemultipliers:SetModifier(inst, 0, "junkabsorbed")
+						combat:DoAttack(v)
+						combat.externaldamagemultipliers:RemoveModifier(inst, "junkabsorbed")
+					else
+						combat:DoAttack(v)
+					end
 					targets[v] = "attacked"
 				end
 			end
@@ -445,7 +459,7 @@ local function UpdateFallPos(inst, dt)
 				local junk = SpawnPrefab("junk_pile")
 				junk.Transform:SetPosition(inst.x1, 0, inst.z1)
 				junk.components.workable:SetWorkLeft(1)
-				junk:Shake(1)
+				junk:Shake(1, true)
 				targets[junk] = "pile"
 				targets.pile = junk
 			end

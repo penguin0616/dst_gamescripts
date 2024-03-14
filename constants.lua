@@ -2170,6 +2170,20 @@ PLANTREGISTRYUICOLOURS = {
 MAX_CHAT_INPUT_LENGTH = 150
 MAX_WRITEABLE_LENGTH = 200
 
+CHATPRIORITIES =
+{
+    -- Messages sent with priority 0 should never appear in chat history.
+    NOCHAT = 0,
+
+    LOW = 1,
+    HIGH = 2,
+
+    -- Keep this the highest value in the table.
+    -- Do not use this value for any messages, unless
+    -- it is desperately needed to be seen irrelevant of user settings.
+    MAX = 3,
+}
+
 --Bit flags, currently supports up to 8
 --Server may use these for things that clients need to know about
 --other clients whose player entities may or may not be available

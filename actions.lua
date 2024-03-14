@@ -1050,41 +1050,17 @@ ACTIONS.CHANGE_TACKLE.fn = function(act)
 			return true
 		end
 	else
-		local targetslot = equipped.components.container:GetSpecificSlotForItem(act.invobject)
+		local targetslot = act.invobject.components.inventoryitem:GetSlotNum() or equipped.components.container:GetSpecificSlotForItem(act.invobject)
 		if targetslot == nil then
 			return false
 		end
 
-		local cur_item = equipped.components.container:GetItemInSlot(targetslot)
-		if cur_item == nil then
-	        local item = act.invobject.components.inventoryitem:RemoveFromOwner(equipped.components.container.acceptsstacks)
-			equipped.components.container:GiveItem(item, targetslot, nil, false)
-		else
-			if equipped.components.container.acceptsstacks and act.invobject.prefab == cur_item.prefab and act.invobject.skinname == cur_item.skinname
-				and (cur_item.components.stackable == nil or not cur_item.components.stackable:IsFull()) then -- if full up the stack
-
-		        local item = act.invobject.components.inventoryitem:RemoveFromOwner(equipped.components.container.acceptsstacks)
-				if not equipped.components.container:GiveItem(act.invobject, targetslot, nil, false) then
-					if item.prevcontainer ~= nil then
-						item.prevcontainer.inst.components.container:GiveItem(item, item.prevslot)
-					else
-						act.doer.components.inventory:GiveItem(item, item.prevslot)
-					end
-				end
-				return true
-			elseif (act.invobject.prefab ~= cur_item.prefab and (act.invobject.skinname == nil or act.invobject.skinname ~= cur_item.skinname)) or cur_item.components.perishable then
-		        local item = act.invobject.components.inventoryitem:RemoveFromOwner(equipped.components.container.acceptsstacks)
-				local old_item = equipped.components.container:RemoveItemBySlot(targetslot)
-				if not equipped.components.container:GiveItem(item, targetslot, nil, false) then
-					act.doer.components.inventory:GiveItem(item, nil, equipped:GetPosition())
-				end
-				if old_item ~= nil then
-					act.doer.components.inventory:GiveItem(old_item, nil, equipped:GetPosition())
-				end
-				return true
-			end
-		end
-
+        local owner = act.invobject.components.inventoryitem.owner
+        local container = owner and (owner.components.container or owner.components.inventory) or nil
+        if container ~= nil then
+            container:MoveItemFromAllOfSlot(targetslot, equipped, act.doer)
+        end
+        return true
 	end
 	return false
 end
@@ -2446,10 +2422,12 @@ ACTIONS.MURDER.fn = function(act)
 end
 
 ACTIONS.HEAL.strfn = function(act)
-    return (act.target == nil or act.target == act.doer)
-        and TheInput:ControllerAttached()
-        and "SELF"
-        or nil
+    local isself = (act.target == nil or act.target == act.doer) and TheInput:ControllerAttached()
+    local target = act.target or act.doer
+    if target ~= nil and target:HasTag("cannotheal") then
+        return isself and "USEONSELF" or "USE"
+    end
+    return isself and "SELF" or nil
 end
 
 ACTIONS.HEAL.fn = function(act)

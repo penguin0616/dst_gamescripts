@@ -179,10 +179,10 @@ end
 
 local function GetProxyEquips(inst)
 	local equips = {}
-	for i, v in ipairs(inst._equips) do
+	for k, v in pairs(inst._equips) do
 		local item = v:value()
 		if item ~= inst._activeitem then
-			equips[i] = ProxyItem(item, inst)
+			equips[k] = ProxyItem(item, inst)
 		end
 	end
 	return equips

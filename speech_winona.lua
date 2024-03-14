@@ -5135,6 +5135,9 @@ return{
             BROKEN = "Poor lil' guy is all busted.",
         },
 
+        SCRAP_MONOCLEHAT = "The bossman always said you gotta \"see the bigger picture.\"",
+        SCRAP_CONEHAT = "Now that's one industrial-strength hardhat!",
+
         FENCE_JUNK = "It does the trick.",
         JUNK_PILE = "Folks underestimate how much good stuff you can find in a scrap pile.",
         JUNK_PILE_BIG = "Who's in charge here? Someone could get hurt!",

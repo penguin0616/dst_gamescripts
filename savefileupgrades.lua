@@ -1274,7 +1274,13 @@ t = {
             fn = function(savedata)
                 FlagForRetrofitting_Forest(savedata, "retrofit_junkyard_content")
             end,
-        },        
+        },
+        {
+            version = 5.144, -- Junk Yard - remove fence_junk_pre_rotator instances
+            fn = function(savedata)
+                savedata.retrofit_junkyardv2_content = true
+            end,
+        },
     },
 }
 

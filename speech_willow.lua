@@ -5136,6 +5136,9 @@ return{
             BROKEN = "Only thing left to do is melt it down. I'll stoke up the furnace!",
         },
 
+        SCRAP_MONOCLEHAT = "Am I gonna start saying stuff like \"quite\" and \"indubitably\"?",
+        SCRAP_CONEHAT = "Heh. I like it!",
+
         FENCE_JUNK = "Not the prettiest fence in the world, but it works.",
         JUNK_PILE = "I'm not too proud to rifle through some trash.",
         JUNK_PILE_BIG = "Yeeaahh, I don't think I want anything in there THAT bad.",

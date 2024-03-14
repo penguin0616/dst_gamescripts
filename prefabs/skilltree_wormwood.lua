@@ -228,6 +228,7 @@ local function BuildSkillsData(SkillTreeFns)
                 if item and item.bramble_upgrade then
                     item:bramble_upgrade(owner)
                 end
+                owner:AddTag("lunarplant_husk_crafter")
             end,
             ondeactivate = function(owner, from_load)
                 if not owner.components.skilltreeupdater:IsActivated("wormwood_allegiance_lunar_mutations_1") then
@@ -242,7 +243,8 @@ local function BuildSkillsData(SkillTreeFns)
                 local item = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
                 if item and item.bramble_downgrade then
                     item:bramble_downgrade(inst)
-                end                
+                end 
+                owner:RemoveTag("lunarplant_husk_crafter")               
             end,
 
             group = "allegiance2",

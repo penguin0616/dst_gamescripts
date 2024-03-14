@@ -19,6 +19,7 @@ local prefabs =
 	"daywalker2_swipe_fx",
 	"daywalker2_object_break_fx",
 	"daywalker2_spike_break_fx",
+	"daywalker2_spike_loot_fx",
 	"daywalker2_cannon_break_fx",
 	"daywalker2_armor1_break_fx",
 	"daywalker2_armor2_break_fx",
@@ -28,9 +29,13 @@ local prefabs =
 	"alterguardian_laserempty",
 	"alterguardian_laserhit",
 	"scrap_monoclehat",
-	"scraphat",
 	"wagpunk_bits",
 	"gears",
+    "wagpunkhat_blueprint",
+    "armorwagpunk_blueprint",
+    "chestupgrade_stacksize_blueprint",
+    "wagpunkbits_kit_blueprint",
+    "wagpunkbits_kit",
 }
 
 local brain = require("brains/daywalker2brain")
@@ -235,6 +240,54 @@ end
 
 --------------------------------------------------------------------------
 
+local SWING_ITEMS = { "object" }
+local TACKLE_ITEMS = { "spike" }
+local CANNON_ITEMS = { "cannon" }
+local _temp = {}
+
+local function GetNextItem(inst)
+	local junk = inst.components.entitytracker:GetEntity("junk")
+	if junk and (
+		not (inst.canswing or inst.cantackle or inst.cancannon) or
+		(	inst.canmultiwield and
+			not (inst.canswing and inst.cantackle and (inst.cancannon or not junk.hascannon)) and
+			not inst.components.timer:TimerExists("multiwield")
+		))
+	then
+		--Has no equip, or can multiwield and isn't fully equipped yet
+		local n = 0
+		if not inst.canswing then
+			for i = 1, #SWING_ITEMS do
+				n = n + 1
+				_temp[n] = SWING_ITEMS[i]
+			end
+		end
+		if not inst.cantackle then
+			for i = 1, #TACKLE_ITEMS do
+				n = n + 1
+				_temp[n] = TACKLE_ITEMS[i]
+			end
+		end
+		if not inst.cancannon and junk.hascannon then
+			for i = 1, #CANNON_ITEMS do
+				n = n + 1
+				_temp[n] = CANNON_ITEMS[i]
+			end
+		end
+		if inst.lastequip and n > 1 then
+			for i = 1, n do
+				if _temp[i] == inst.lastequip then
+					_temp[i] = _temp[n]
+					n = n - 1
+					break
+				end
+			end
+		end
+		return junk, _temp[math.random(n)]
+	end
+	return junk
+end
+
 local function SetEquip(inst, action, item, uses)
 	if action == "swing" then
 		if item then
@@ -265,13 +318,11 @@ local function SetEquip(inst, action, item, uses)
 	elseif action == "cannon" then
 		if item then
 			inst.AnimState:ShowSymbol("swap_armlower")
-			inst.components.combat:SetRange(TUNING.DAYWALKER2_CANNON_ATTACK_RANGE)
 			inst.cancannon = true
 			inst.equipcannon = item
 			inst.numcannons = TUNING.DAYWALKER2_ITEM_USES
 		else
 			inst.AnimState:HideSymbol("swap_armlower")
-			inst.components.combat:SetRange(TUNING.DAYWALKER2_ATTACK_RANGE)
 			inst.cancannon = false
 			inst.equipcannon = nil
 			inst.numcannons = nil
@@ -280,6 +331,11 @@ local function SetEquip(inst, action, item, uses)
 	if item then
 		inst.lastequip = item
 	end
+	inst.components.combat:SetRange(
+		(inst.cancannon and TUNING.DAYWALKER2_CANNON_ATTACK_RANGE) or
+		(inst.canswing and TUNING.DAYWALKER2_ATTACK_RANGE) or
+		TUNING.DAYWALKER_ATTACK_RANGE
+	)
 end
 
 local function OnItemUsed(inst, action)
@@ -302,7 +358,7 @@ local function OnItemUsed(inst, action)
 	return false
 end
 
-local function DropItem(inst, action)
+local function DropItem(inst, action, nosound, _loot)
 	local item, angleoffset
 	if action == "swing" then
 		item = inst.equipswing
@@ -318,15 +374,86 @@ local function DropItem(inst, action)
 	inst:SetEquip(action, nil)
 
 	if item then
-		local fx = SpawnPrefab("daywalker2_"..item.."_break_fx")
+		local fx = SpawnPrefab("daywalker2_"..item..(_loot and "_loot_fx" or "_break_fx"))
 		local rot = inst.Transform:GetRotation() + angleoffset
 		fx.Transform:SetRotation(rot)
 		local x, y, z = inst.Transform:GetWorldPosition()
 		rot = rot * DEGREES
 		fx.Transform:SetPosition(x + math.cos(rot) * 2, y, z - math.sin(rot) * 2)
 
-		inst.SoundEmitter:PlaySound("dontstarve/wilson/use_break")
+		if not nosound then
+			inst.SoundEmitter:PlaySound("dontstarve/wilson/use_break")
+		end
 	end
+end
+
+local function DropItemAsLoot(inst, action, nosound)
+	DropItem(inst, action, nosound, true)
+end
+
+local JUNK_COLLIDE_RADIUS = 5.7 --3.6(junk radius) + 2(aoe radius) + padding!
+local JUNK_COLLIDE_RSQ = JUNK_COLLIDE_RADIUS * JUNK_COLLIDE_RADIUS
+local function TestTackle(inst, target, range)
+	local x, y, z = inst.Transform:GetWorldPosition()
+	local x1, y1, z1 = target.Transform:GetWorldPosition()
+	local a_dx = x1 - x
+	local a_dz = z1 - z
+	local a_sq = a_dx * a_dx + a_dz * a_dz
+
+	if range then
+		if a_sq >= range * range then
+			return false --OOR
+		elseif not inst.canavoidjunk then
+			--no need to avoid colliding with junk
+			--(except for combo; range is nil; always avoid junk then)
+			return true
+		end
+	end
+
+	range = 1 + 2 + target:GetPhysicsRadius(0)
+	if a_sq < range * range then
+		--in range to hit target, doesn't matter if we also collide
+		return true
+	end
+
+	local junk = inst.components.entitytracker:GetEntity("junk")
+	if junk == nil then
+		--no junk to avoid
+		return true
+	end
+
+	local x2, y2, z2 = junk.Transform:GetWorldPosition()
+	local b_sq = distsq(x1, z1, x2, z2)
+	if b_sq < JUNK_COLLIDE_RSQ then
+		--target too close to junk, we'll collide b4 reaching target
+		return false
+	end
+
+	local c_dx = x2 - x
+	local c_dz = z2 - z
+	if c_dx == 0 and c_dz == 0 then
+		--target is inside junk, unlikely, but more as sanity check
+		return false
+	end
+	local a_dir = math.atan2(-a_dz, a_dx)
+	local c_dir = math.atan2(-c_dz, c_dx)
+	if DiffAngleRad(a_dir, c_dir) >= PI / 2 then
+		--target at more than 90degree from junk
+		return true
+	end
+
+	local c_sq = c_dx * c_dx + c_dz * c_dz
+	if c_sq < JUNK_COLLIDE_RSQ then
+		--daywalker is too close to junk, will collide immediately
+		return false
+	end
+
+	local a = math.sqrt(a_sq)
+	local c = math.sqrt(c_sq)
+	local B = math.acos((a_sq - b_sq + c_sq) / (2 * a * c))
+	local theta = math.asin(JUNK_COLLIDE_RADIUS / c)
+	--won't collide if angle to target is greater than angle to tangent
+	return B >= theta
 end
 
 --------------------------------------------------------------------------
@@ -341,15 +468,25 @@ local PHASES =
 		hp = 1,
 		fn = function(inst)
 			inst.canmultiwield = false
+			inst.candoublerummage = false
+			inst.canavoidjunk = true
 		end,
 	},
 	--
 	[1] = {
 		hp = 0.75,
 		fn = function(inst)
-			if inst.hostile then
-				inst.canmultiwield = true
-			end
+			inst.canmultiwield = true
+			inst.candoublerummage = false
+			inst.canavoidjunk = true
+		end,
+	},
+	[2] = {
+		hp = 0.5,
+		fn = function(inst)
+			inst.canmultiwield = true
+			inst.candoublerummage = true
+			inst.canavoidjunk = true
 		end,
 	},
 }
@@ -393,12 +530,12 @@ local function RetargetFn(inst)
 	UpdatePlayerTargets(inst)
 
 	local target = inst.components.combat.target
-	local inrange = target and inst:IsNear(target, TUNING.DAYWALKER_ATTACK_RANGE + target:GetPhysicsRadius(0))
+	local inrange = target and inst:IsNear(target, inst.components.combat:GetAttackRange() + target:GetPhysicsRadius(0))
 
 	if target and target.isplayer then
 		local newplayer = inst.components.grouptargeter:TryGetNewTarget()
 		return newplayer
-			and newplayer:IsNear(inst, inrange and TUNING.DAYWALKER_ATTACK_RANGE + newplayer:GetPhysicsRadius(0) or TUNING.DAYWALKER_KEEP_AGGRO_DIST)
+			and newplayer:IsNear(inst, inrange and inst.components.combat:GetAttackRange() + newplayer:GetPhysicsRadius(0) or TUNING.DAYWALKER_KEEP_AGGRO_DIST)
 			and newplayer
 			or nil,
 			true
@@ -406,7 +543,7 @@ local function RetargetFn(inst)
 
 	local nearplayers = {}
 	for k in pairs(inst.components.grouptargeter:GetTargets()) do
-		if inst:IsNear(k, inrange and TUNING.DAYWALKER_ATTACK_RANGE + k:GetPhysicsRadius(0) or TUNING.DAYWALKER_AGGRO_DIST) then
+		if inst:IsNear(k, inrange and inst.components.combat:GetAttackRange() + k:GetPhysicsRadius(0) or TUNING.DAYWALKER_AGGRO_DIST) then
 			table.insert(nearplayers, k)
 		end
 	end
@@ -429,7 +566,7 @@ local function OnAttacked(inst, data)
 		local target = inst.components.combat.target
 		if not (target and
 				target.isplayer and
-				target:IsNear(inst, TUNING.DAYWALKER_ATTACK_RANGE + target:GetPhysicsRadius(0)))
+				target:IsNear(inst, inst.components.combat:GetAttackRange() + target:GetPhysicsRadius(0)))
 		then
 			inst.components.combat:SetTarget(data.attacker)
 		end
@@ -504,14 +641,22 @@ local function MakeBuried(inst, junk)
 		inst.buried = true
 		inst.hostile = false
 		inst.persists = false
-		if inst.canswing then
-			inst:DropItem("swing")
-		end
-		if inst.cantackle then
-			inst:DropItem("tackle")
-		end
-		if inst.cancannon then
-			inst:DropItem("cannon")
+		if inst.canswing or inst.cantackle or inst.cancannon then
+			if inst.canswing then
+				inst:DropItem("swing", true)
+			end
+			if inst.cantackle then
+				if inst.equiptackle == "spike" then
+					inst:DropItemAsLoot("tackle", true)
+				else
+					inst:DropItem("tackle", true)
+				end
+			end
+			if inst.cancannon then
+				inst:DropItem("cannon", true)
+			end
+			--just play it once for all loot
+			inst.SoundEmitter:PlaySound("dontstarve/wilson/use_break")
 		end
 		inst.sg:GoToState("transition")
 		inst:RemoveEventCallback("attacked", OnAttacked)
@@ -756,6 +901,48 @@ local function OnTeleported(inst)
 	end
 end
 
+-- NOTES(JBK): Keep these up to sync with wagstaff_machinery drops. [WPDROPS]
+local WAGPUNK_ITEMS = { -- These are prefab names not their blueprints.
+    "wagpunkhat",
+    "armorwagpunk",
+    "chestupgrade_stacksize",
+    "wagpunkbits_kit",
+}
+local function lootsetfn(lootdropper)
+    lootdropper:ClearRandomLoot()
+    if TheWorld.components.riftspawner and TheWorld.components.riftspawner:GetLunarRiftsEnabled() then
+        local needstoknow = nil
+        local inst = lootdropper.inst
+        for _, player in ipairs(AllPlayers) do
+            if player:GetDistanceSqToInst(inst) <= 256 then -- 16 * 16 = 256 = 4 tiles
+                local builder = player.components.builder
+                for _, recipename in ipairs(WAGPUNK_ITEMS) do
+                    if not builder:KnowsRecipe(recipename) then
+                        if needstoknow == nil then
+                            needstoknow = {}
+                        end
+                        needstoknow[recipename] = (needstoknow[recipename] or 0) + 1
+                    end
+                end
+            end
+        end
+        if needstoknow then
+            -- Some one needs something make it only potentially drop these.
+            for recipename, _ in pairs(needstoknow) do
+                lootdropper:AddRandomLoot(recipename .. "_blueprint", 1)
+            end
+        else
+            -- No one needs anything make it random.
+            for _, recipename in ipairs(WAGPUNK_ITEMS) do
+                lootdropper:AddRandomLoot(recipename .. "_blueprint", 1)
+            end
+        end
+    else
+        lootdropper:AddRandomLoot("wagpunkbits_kit", 1)
+    end
+    lootdropper.numrandomloot = 1
+end
+
 --------------------------------------------------------------------------
 
 local function PushMusic(inst)
@@ -772,9 +959,16 @@ end
 --------------------------------------------------------------------------
 
 -- NOTES(DiogoW): @V2C, please keep this updated :)
-local scrapbook_overridedata = {
-	{ "ww_armlower_base", "daywalker_build", "ww_armlower_base_nored" },
-	{ "ww_eye_R",         "daywalker_build", "ww_eye_R_scar"          },
+local scrapbook_data =
+{
+	scrapbook_anim =			"scrapbook",
+	scrapbook_overridebuild =	"daywalker_phase3",
+	scrapbook_overridedata =	{	{ "ww_armlower_base", "daywalker_build", "ww_armlower_base_nored" },
+									{ "ww_eye_R",         "daywalker_build", "ww_eye_R_scar"          },
+								},
+	scrapbook_hide =			{ "follow_eye" },
+	scrapbook_hidesymbol =		{ "ww_armlower_red" },
+	scrapbook_deps =			{ "scraphat" },
 }
 
 local function TEMP_JUNK_EVENT(inst) -- FIXME(JBK): Temporary respawning routine for beta.
@@ -813,6 +1007,7 @@ local function fn()
 	inst.AnimState:HideSymbol("ww_armlower_red")
 	inst.AnimState:OverrideSymbol("ww_armlower_base", "daywalker_build", "ww_armlower_base_nored")
 	inst.AnimState:OverrideSymbol("ww_eye_R", "daywalker_build", "ww_eye_R_scar")
+	inst.AnimState:SetSymbolSaturation("fx_smear", 0)
 	--init swappable scrap equips
 	inst.AnimState:Hide("ARM_CARRY")
 	inst.AnimState:HideSymbol("swap_armupper")
@@ -851,9 +1046,7 @@ local function fn()
 		return inst
 	end
 
-	inst.scrapbook_anim = "scrapbook"
-	inst.scrapbook_overridebuild = "daywalker_phase3"
-	inst.scrapbook_overridedata = scrapbook_overridedata
+	shallowcopy(scrapbook_data, inst)
 
 	inst.footstep = "qol1/daywalker_scrappy/step"
 
@@ -879,11 +1072,14 @@ local function fn()
 	inst.components.combat:SetAttackPeriod(TUNING.DAYWALKER2_ATTACK_PERIOD.min)
 	inst.components.combat.playerdamagepercent = .5
 	inst.components.combat.externaldamagetakenmultipliers:SetModifier(inst, TUNING.DAYWALKER2_DAMAGE_TAKEN_MULT, "junkarmor")
-	inst.components.combat:SetRange(TUNING.DAYWALKER2_ATTACK_RANGE)
+	inst.components.combat:SetRange(TUNING.DAYWALKER_ATTACK_RANGE)
 	inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
 	inst.components.combat.hiteffectsymbol = "ww_body"
 	inst.components.combat.battlecryenabled = false
 	inst.components.combat.forcefacing = false
+
+	inst:AddComponent("stuckdetection")
+	inst.components.stuckdetection:SetTimeToStuck(3)
 
 	inst:AddComponent("colouradder")
 	inst:AddComponent("bloomer")
@@ -905,6 +1101,7 @@ local function fn()
 	inst.components.epicscare:SetRange(TUNING.DAYWALKER_EPICSCARE_RANGE)
 
 	inst:AddComponent("lootdropper")
+    inst.components.lootdropper:SetLootSetupFn(lootsetfn)
 	inst.components.lootdropper:SetChanceLootTable("daywalker2")
 	inst.components.lootdropper.min_speed = 1
 	inst.components.lootdropper.max_speed = 3
@@ -934,6 +1131,8 @@ local function fn()
 	inst.cantackle = false
 	inst.cancannon = false
 	inst.canmultiwield = false
+	inst.candoublerummage = false
+	inst.canavoidjunk = true
 
 	inst._onremovestalking = function(stalking) inst._stalking:set(nil) end
 
@@ -946,9 +1145,12 @@ local function fn()
 	inst.SetStalking = SetStalking
 	inst.GetStalking = GetStalking
 	inst.IsStalking = IsStalking
+	inst.GetNextItem = GetNextItem
 	inst.SetEquip = SetEquip
 	inst.OnItemUsed = OnItemUsed
 	inst.DropItem = DropItem
+	inst.DropItemAsLoot = DropItemAsLoot
+	inst.TestTackle = TestTackle
 	inst.OnSave = OnSave
 	inst.OnLoad = OnLoad
 	inst.OnEntitySleep = OnEntitySleep

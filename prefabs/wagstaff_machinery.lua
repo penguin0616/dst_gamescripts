@@ -10,6 +10,10 @@ local prefabs =
     "collapse_small",
     "wagstaff_mutations_note",
     "wagstaff_machinery_marker",
+    "wagpunkhat_blueprint",
+    "armorwagpunk_blueprint",
+    "chestupgrade_stacksize_blueprint",
+    "wagpunkbits_kit_blueprint",
 }
 
 ------------------------------------------------------------------------------------------------
@@ -74,6 +78,45 @@ local function OnRemoved(inst)
     TheWorld:PushEvent("wagstaff_machine_destroyed", inst.GUID)
 end
 
+-- NOTES(JBK): Keep these up to sync with daywalker2 drops. [WPDROPS]
+local WAGPUNK_ITEMS = { -- These are prefab names not their blueprints.
+    "wagpunkhat",
+    "armorwagpunk",
+    "chestupgrade_stacksize",
+    "wagpunkbits_kit",
+}
+local function lootsetfn(lootdropper)
+    lootdropper:ClearRandomLoot()
+    local needstoknow = nil
+    local inst = lootdropper.inst
+    for _, player in ipairs(AllPlayers) do
+        if player:GetDistanceSqToInst(inst) <= 16 then -- 4 * 4 = 16 = 1 tiles
+            local builder = player.components.builder
+            for _, recipename in ipairs(WAGPUNK_ITEMS) do
+                if not builder:KnowsRecipe(recipename) then
+                    if needstoknow == nil then
+                        needstoknow = {}
+                    end
+                    needstoknow[recipename] = (needstoknow[recipename] or 0) + 1
+                end
+            end
+        end
+    end
+    if needstoknow then
+        -- Some one needs something make it only potentially drop these.
+        for recipename, _ in pairs(needstoknow) do
+            lootdropper:AddRandomLoot(recipename .. "_blueprint", 1)
+        end
+    else
+        -- No one needs anything make it random.
+        for _, recipename in ipairs(WAGPUNK_ITEMS) do
+            lootdropper:AddRandomLoot(recipename .. "_blueprint", 1)
+        end
+    end
+    lootdropper.numrandomloot = TUNING.WAGSTAFF_MACHINERY_NUM_BLUEPRINTS
+    lootdropper.chancerandomloot = TUNING.WAGSTAFF_MACHINERY_BLUEPRINT_CHANCE
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -112,12 +155,7 @@ local function fn()
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetChanceLootTable("wagstaff_machinery")
 
-    inst.components.lootdropper.numrandomloot = TUNING.WAGSTAFF_MACHINERY_NUM_BLUEPRINTS
-    inst.components.lootdropper.chancerandomloot = TUNING.WAGSTAFF_MACHINERY_BLUEPRINT_CHANCE
-    inst.components.lootdropper:AddRandomLoot("wagpunkhat_blueprint", 1)
-    inst.components.lootdropper:AddRandomLoot("armorwagpunk_blueprint", 1)
-    inst.components.lootdropper:AddRandomLoot("wagpunkbits_kit_blueprint", 1)
-    inst.components.lootdropper:AddRandomLoot("chestupgrade_stacksize_blueprint", 1)
+    inst.components.lootdropper:SetLootSetupFn(lootsetfn)
 
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)

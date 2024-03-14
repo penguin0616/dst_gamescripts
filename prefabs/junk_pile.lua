@@ -31,16 +31,16 @@ local LOOT = {
     },
 
     ITEMS = {
-        { weight=6, prefab = EMPTY          }, -- 18.75%
-        { weight=8, prefab = "wagpunk_bits" }, -- 25.00%
-        { weight=4, prefab = "rocks"        }, -- 12.50%
-        { weight=4, prefab = "log"          }, -- 12.50%
-        { weight=2, prefab = "transistor"   }, -- 6.25%
-        { weight=2, prefab = "trinket_6"    }, -- 6.25%
+        { weight=8, prefab = EMPTY          }, -- 25%
+        { weight=8, prefab = "wagpunk_bits" }, -- 25%
+        { weight=4, prefab = "rocks"        }, -- 12.5%
+        { weight=4, prefab = "log"          }, -- 12.5%
         { weight=2, prefab = "boards"       }, -- 6.25%
         { weight=2, prefab = "potato"       }, -- 6.25%
-        { weight=1, prefab = "blueprint"    }, -- 3.13%
-        { weight=1, prefab = "gears"        }, -- 3.13%
+        { weight=1, prefab = "transistor"   }, -- 3.125%
+        { weight=1, prefab = "trinket_6"    }, -- 3.125%
+        { weight=1, prefab = "blueprint"    }, -- 3.125%
+        { weight=1, prefab = "gears"        }, -- 3.125%
     },
 }
 
@@ -115,8 +115,7 @@ local function OnWork(inst, worker, workleft, numwork)
 			--junk piles up
 			workleft = math.min(workleft + 1, TUNING.JUNK_PILE_STAGES)
 			inst.components.workable:SetWorkLeft(workleft)
-			inst.SoundEmitter:PlaySound("qol1/wagstaff_ruins/rummagepile_pst")
-			inst:Shake(workleft)
+			inst:Shake(workleft, true)
 			return
 		elseif workerisjunkmob then
 			local x, y, z = inst.Transform:GetWorldPosition()

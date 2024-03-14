@@ -48,6 +48,12 @@ function LootDropper:AddRandomLoot(prefab, weight)
     self.totalrandomweight = self.totalrandomweight + weight
 end
 
+function LootDropper:ClearRandomLoot()
+    self.randomloot = nil
+    self.totalrandomweight = nil
+    self.numrandomloot = nil
+end
+
 -- This overrides the normal loot table while haunted
 function LootDropper:AddRandomHauntedLoot(prefab, weight)
     if not self.randomhauntedloot then

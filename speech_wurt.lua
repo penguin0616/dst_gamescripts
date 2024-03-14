@@ -5129,6 +5129,9 @@ return{
             BROKEN = "Didn't break baby Ironfolk. Found like that.",
         },
 
+        SCRAP_MONOCLEHAT = "Can see everything!",
+        SCRAP_CONEHAT = "Blegh, still smell like nasty Pigman!",
+
         FENCE_JUNK = "Made of bunch of metal bits.",
         JUNK_PILE = "If anything good in there, it mine!",
         JUNK_PILE_BIG = "Glurp... look like it gonna fall!",

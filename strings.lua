@@ -628,6 +628,8 @@ STRINGS =
         {
             GENERIC = "Heal",
             SELF = "Heal Self",
+            USE = "Use",
+            USEONSELF = "Use on Self",
         },
         UNLOCK =
         {
@@ -3927,6 +3929,8 @@ STRINGS =
         JUNK_PILE_BIG = "Teetering Junk Pile",
 
         FENCE_JUNK = "Junky Fence",
+
+        ARMOR_LUNARPLANT_HUSK = "Brambleshade Armor", --[[TODO]]        
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -4942,6 +4946,8 @@ STRINGS =
         BEESWAX_SPRAY = "A petrifying preserver of plant life.",
 
         WALL_SCRAP_ITEM = "A pile of junk, roughly wall-shaped.",
+
+        ARMOR_LUNARPLANT_HUSK = "Feel the wrath of a full plantkin", --[[TODO]]
     },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
@@ -8691,6 +8697,10 @@ STRINGS.UI =
         LOADING_TIPS_SHOW_NONE = "None",
         LOADING_TIPS_TIPS_ONLY = "Tips Only",
         LOADING_TIPS_LORE_ONLY = "Lore Only",
+
+        NPCCHAT_ALL = "All",
+        NPCCHAT_SOME = "Some",
+        NPCCHAT_NONE = "None",
 
         TOOLTIPS =
         {
@@ -15187,7 +15197,7 @@ STRINGS.SKILLTREE = {
         COUNT_LOCK_1_DESC = "Learn enough left-branch skills to unlock.",
 
         LUNAR_GEAR_1_TITLE = "Lunar Guardian I",
-        LUNAR_GEAR_1_DESC = "Seize foes and keep them rooted in place while wearing Brightshade Armor.\n\nInfuse Bramble Husks worn by Wormwood with Planar energy.",
+        LUNAR_GEAR_1_DESC = "Seize foes and keep them rooted in place while wearing Brightshade Armor.\nFuse Bramble Husks with Brightshade armor to create Brambleshade armor.",
 
         LUNAR_GEAR_2_TITLE = "Lunar Guardian II",
         LUNAR_GEAR_2_DESC = "Summon vines to join the fray while attacking with Brightshade melee weapons.",

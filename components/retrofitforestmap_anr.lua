@@ -1427,13 +1427,6 @@ function self:OnPostInit()
         end
 	end
 
-	---------------------------------------------------------------------------
-
-    if self.retrofit_junkyard_content then
-		print ("Retrofitting for Junk Yard: Adding important prefabs normally found in new setpieces.")
-		Junkyard_NewContent_Retrofitting()
-	end
-
     ---------------------------------------------------------------------------
 
     if self.console_beard_turf_fix then
@@ -1456,7 +1449,16 @@ function self:OnPostInit()
         end
     end
 
+
 	---------------------------------------------------------------------------
+
+    if self.retrofit_junkyard_content then
+		print ("Retrofitting for Junk Yard: Adding important prefabs normally found in new setpieces.")
+		Junkyard_NewContent_Retrofitting()
+	end
+
+	---------------------------------------------------------------------------
+
 	if self.requiresreset then
 		print ("Retrofitting: Worldgen retrofitting requires the server to save and restart to fully take effect.")
 		print ("Restarting server in 30 seconds...")
@@ -1507,9 +1509,9 @@ function self:OnLoad(data)
         self.retrofit_terraria_terrarium = data.retrofit_terraria_terrarium or false
 		self.retrofit_alittledrama_content = data.retrofit_alittledrama_content or false
         self.retrofit_daywalker_content = data.retrofit_daywalker_content or false
-        self.retrofit_junkyard_content = data.retrofit_junkyard_content or false
         self.console_beard_turf_fix = data.console_beard_turf_fix or false
-
+        self.retrofit_junkyard_content = data.retrofit_junkyard_content or false
+        self.retrofit_junkyardv2_content = data.retrofit_junkyardv2_content or false
     end
 end
 

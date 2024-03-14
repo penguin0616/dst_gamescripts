@@ -695,12 +695,15 @@ local MOONSTORM_SPARKS_MUST_HAVE= {"moonstorm_spark"}
 local MOONSTORM_SPARKS_CANT_HAVE= {"INLIMBO"}
 
 function self:DoTestForSparks()
+
 	for i, v in ipairs(_activeplayers) do
 		local pt = Vector3(v.Transform:GetWorldPosition())
 		if TheWorld.net.components.moonstorms and TheWorld.net.components.moonstorms:IsPointInMoonstorm(pt) then
 			local ents = TheSim:FindEntities(pt.x, pt.y, pt.z, 30, MOONSTORM_SPARKS_MUST_HAVE,MOONSTORM_SPARKS_CANT_HAVE)
+
 			if #ents < SPARKLIMIT then
 				local pos = FindWalkableOffset(pt, math.random()*2*PI, 5 + math.random()* 20, 16, nil, nil, customcheckfn, nil, nil)
+
 				if pos then
 					local spark = SpawnPrefab("moonstorm_spark")
 					spark.Transform:SetPosition(pt.x + pos.x,0,pt.z + pos.z)

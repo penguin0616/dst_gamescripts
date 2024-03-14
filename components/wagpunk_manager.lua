@@ -71,6 +71,7 @@ local WagpunkManager = Class(function(self, inst)
     self._currentnodeindex = nil
 
     self.machinemarker = nil
+    self.bigjunk = nil
 
     self.inst:ListenForEvent("wagstaff_machine_destroyed", OnMachineDestroyed)
     self.inst:ListenForEvent("wagstaff_machine_added",     OnMachineAdded)
@@ -175,12 +176,152 @@ function WagpunkManager:SpawnJunkWagstaff(pos, junkpos)
     return wagstaff -- Mods.
 end
 
+WagpunkManager.fences = {
+    -- NOTES(JBK): Format is in {x, z, rotation}.
+    -- Top Left from left going up.
+    { -7,  -3, 180},
+    { -7,  -2, 180},
+    { -7,  -1, 180},
+    { -7,   0, 180},
+    { -7,   1, 180},
+    { -7,   2, 225},
+    { -6,   3, 225},
+    { -6,   4, 180},
+    { -6,   5, 180},
+    { -6,   6, 225},
+    { -5,   7, 225},
+    { -4,   7, 270},
+    { -3,   7, 270},
+    { -2,   7, 270},
+    { -1,   7, 270},
+    -- Top Right from top going right.
+    {  4,   7, 270},
+    {  5,   7, 315},
+    {  6,   6, 315},
+    {  7,   6, 270},
+    {  8,   6, 270},
+    {  9,   6, 270},
+    { 10,   6, 270},
+    { 11,   6, 270},
+    { 12,   6, 315},
+    { 13,   5, 315},
+    { 13,   4,   0},
+    { 13,   3,   0},
+    { 13,   2,   0},
+    -- Bottom Right from right going down.
+    { 15,  -8,   0},
+    { 15,  -9,   0},
+    { 15, -10,   0},
+    { 15, -11,   0},
+    { 15, -12,   0},
+    { 15, -13,  45},
+    { 14, -14,  45},
+    { 13, -14,  90},
+    { 12, -14,  90},
+    { 11, -14,  90},
+    { 10, -14,  90},
+    {  9, -14,  90},
+    {  8, -14,  90},
+    -- Bottom Left from bottom going left.
+    {  0, -15,  90},
+    { -1, -15,  90},
+    { -2, -15,  90},
+    { -3, -15,  90},
+    { -4, -15,  90},
+    { -5, -15, 135},
+    { -6, -14, 135},
+    { -7, -13, 135},
+    { -7, -12, 180},
+    { -7, -11, 180},
+    { -7, -10, 180},
+}
+function WagpunkManager:ApplyFenceRotationTransformation_Internal(anglefromjunktomachine)
+    -- NOTES(JBK): This mapping is from the layout of junk_yard1 where the angle between the junk_pile_big and wagstaff_machinery_marker is known from setpiece placement.
+    if anglefromjunktomachine > 0 then
+        if anglefromjunktomachine < 45 then
+            --print("Rotate 90 left")
+            for _, v in ipairs(self.fences) do
+                v[1], v[2], v[3] = -v[2], v[1], v[3] - 90
+            end
+        elseif anglefromjunktomachine < 90 then
+            --print("Flip Y")
+            for _, v in ipairs(self.fences) do
+                v[1], v[2], v[3] = v[1], -v[2], -v[3]
+            end
+        elseif anglefromjunktomachine < 135 then
+            --print("No rotation")
+        else -- anglefromjunktomachine < 180
+            --print("Flip diagonal topleft to downright")
+            for _, v in ipairs(self.fences) do
+                v[1], v[2], v[3] = -v[2], -v[1], 90 - v[3]
+            end
+        end
+    else
+        if anglefromjunktomachine > -45 then
+            --print("Flip diagonal bottomleft to topright")
+            for _, v in ipairs(self.fences) do
+                v[1], v[2], v[3] = v[2], v[1], 270 - v[3]
+            end
+        elseif anglefromjunktomachine > -90 then
+            --print("Rotate 180 or flip X + Y")
+            for _, v in ipairs(self.fences) do
+                v[1], v[2], v[3] = -v[1], -v[2], 180 + v[3]
+            end
+        elseif anglefromjunktomachine > -135 then
+            --print("Flip X")
+            for _, v in ipairs(self.fences) do
+                v[1], v[2], v[3] = -v[1], v[2], 180 - v[3]
+            end
+        else -- anglefromjunktomachine > -180
+            --print("Rotate 90 right")
+            for _, v in ipairs(self.fences) do
+                v[1], v[2], v[3] = v[2], -v[1], v[3] + 90
+            end
+        end
+    end
+end
+function WagpunkManager:TryToSpawnFences()
+    if self.machinemarker == nil or self.bigjunk == nil then
+        return false
+    end
+
+    local x1, y1, z1 = self.bigjunk.Transform:GetWorldPosition()
+    if not self.appliedfencerotationtransformation then
+        self.appliedfencerotationtransformation = true
+        local x2, y2, z2 = self.machinemarker.Transform:GetWorldPosition()
+        local anglefromjunktomachine = math.atan2(x2 - x1, z2 - z1) * RADIANS
+        self:ApplyFenceRotationTransformation_Internal(anglefromjunktomachine)
+    end
+
+    x1, z1 = math.floor(x1), math.floor(z1)
+    for i, v in ipairs(self.fences) do
+        local cx, cz = x1 + v[1] + 0.5, z1 + v[2] + 0.5 -- These are in centered wall coordinates.
+        if TheSim:CountEntities(cx, 0, cz, 0.5) == 0 then
+            local fence = SpawnPrefab("fence_junk")
+            fence.Transform:SetPosition(cx, 0, cz)
+            --fence.Transform:SetRotation(v[3])
+            fence:SetOrientation(v[3]) -- NOTES(JBK): This is the function for fences to have correct visual widths.
+        end
+    end
+
+    return true
+end
+
+
+function WagpunkManager:IsWerepigInCharge(pos)
+    --#FIXME @V2C @JBK daywalker_spawn_cd refs in wagstaff
+    if self.bigjunk and self.bigjunk.components.timer:IsPaused("daywalker_spawn_cd") then
+        return true
+    end
+end
+
 function WagpunkManager:FindSpotForMachines()
 
-    if self.machinemarker then
+    if self.machinemarker and not self:IsWerepigInCharge(Vector3(self.machinemarker.Transform:GetWorldPosition())) then
         local pos = Vector3(self.machinemarker.Transform:GetWorldPosition())
+
         if not IsAnyPlayerInRange(pos.x, 0, pos.z, MAX_DIST_FROM_AN_PLAYER) then
-            return pos
+            return pos, true
         else
             if not TheWorld.components.timer:TimerExists("junkwagpunk") then
                 TheWorld.components.timer:StartTimer("junkwagpunk", math.random(240 + math.random()*240))
@@ -224,8 +365,8 @@ function WagpunkManager:FindSpotForMachines()
 
                 if offset ~= nil then
                     self._currentnodeindex = index
-                    return new_pos + offset
-                end    
+                    return new_pos + offset, false
+                end
             end
         end
     end
@@ -329,11 +470,15 @@ end
 
 function WagpunkManager:SpawnMachines(force)
     if force or next(self.machineGUIDS) == nil then
-        local pos = self:FindSpotForMachines()
+        local pos, shouldspawnfences = self:FindSpotForMachines()
 
         if pos == nil then
             self:StartSpawnMachinesTimer(30)
             return
+        end
+
+        if shouldspawnfences then
+            self:TryToSpawnFences()
         end
 
         if not self:MutationsNoteExist() then
@@ -364,10 +509,30 @@ function WagpunkManager:SpawnMachines(force)
 end
 
 --------------------------------------------------------------------------------------------
+function WagpunkManager:CheckToTryToSpawnFences()
+    -- NOTES(JBK): This is for post world creation to create the set piece fences.
+    -- This should only happen once per world even if it is being loaded from an old world.
+    if self.spawnedfences then
+        return
+    end
+
+    if self.machinemarker and self.bigjunk then
+        self.spawnedfences = true
+        self:TryToSpawnFences()
+    end
+end
 
 function WagpunkManager:RegisterMachineMarker(inst)
     self.machinemarker = inst
+    self:CheckToTryToSpawnFences()
 end
+
+
+function WagpunkManager:RegisterBigJunk(inst)
+    self.bigjunk = inst
+    self:CheckToTryToSpawnFences()
+end
+
 
 function WagpunkManager:OnSave()
     local data = {
@@ -375,6 +540,7 @@ function WagpunkManager:OnSave()
        nexthinttime = self.nexthinttime,
        hintcount = self.hintcount > 0 and self.hintcount or nil,
        currentnodeindex = self._currentnodeindex,
+       spawnedfences = self.spawnedfences,
     }
 
     return data
@@ -388,6 +554,8 @@ function WagpunkManager:OnLoad(data)
     self.hintcount     = data.hintcount     or self.hintcount
 
     self._currentnodeindex = data.currentnodeindex or self._currentnodeindex
+
+    self.spawnedfences = data.spawnedfences
 end
 
 --------------------------------------------------------------------------------------------

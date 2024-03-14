@@ -242,6 +242,7 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"wormwood_carrat",
 	"wormwood_lightflier",
 	"wormwood_fruitdragon",
+	"armor_lunarplant_husk",
 
 	-- Wanda
 	"pocketwatch_dismantler",

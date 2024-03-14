@@ -61,6 +61,8 @@ local function fn_acid()
 
     MakeInventoryFloatable(inst, "small", 0.05, 0.95)
 
+    inst:AddTag("healerbuffs")
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
@@ -84,6 +86,7 @@ local function fn_acid()
 end
 
 local function buff_OnAttached(inst, target)
+    -- NOTES(JBK): Do not apply health over time for this item because of healerbuffs tag.
     inst.entity:SetParent(target.entity)
     inst.Transform:SetPosition(0, 0, 0)
 

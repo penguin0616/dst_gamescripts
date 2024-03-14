@@ -5,12 +5,6 @@ local wall_prefabs =
     "collapse_small",
 }
 
-local junk_fence_prefabs = 
-{
-    "fence_junk_pre_rotator",
-	"junk_break_fx",
-}
-
 local DOOR_LOOT = { "boards", "boards", "rope" }
 local FENCE_LOOT = { "twigs" }
 
@@ -756,7 +750,14 @@ local function MakeWall(name, anims, isdoor, klaussackkeyid, data)
         return inst
     end
 
-    return Prefab(name, fn, assets, custom_wall_prefabs or wall_prefabs)
+    local prefabs = custom_wall_prefabs or wall_prefabs
+    if data and data.prefabs then
+        for _, prefab in ipairs(data.prefabs) do
+            table.insert(prefabs, prefab)
+        end
+    end
+
+    return Prefab(name, fn, assets, prefabs)
 end
 
 -------------------------------------------------------------------------------
@@ -938,132 +939,6 @@ local function MakeWallPlacer(placer, placement, anims, isdoor)
         end)
 end
 
-local FENCE_MUST = {"fence"}
-local JUNK_MUST =  {"junk_pile_big"}
-local function onloadpostpass_junk_fence_rotator(inst)
-    local x,y,z = inst.Transform:GetWorldPosition()
-
-    local ents = TheSim:FindEntities(x, y, z, 1.7, {"fence"})
-
-    local N = nil
-    local S = nil
-    local E = nil
-    local W = nil 
-
-    local NE = nil
-    local NW = nil
-    local SE = nil
-    local SW = nil 
-
-    for i, ent in ipairs(ents)do
-        if ent ~= inst then
-            local ex,ey,ez = ent.Transform:GetWorldPosition()
-            local angle = inst:GetAngleToPoint(ex,ey,ez)
-            
-            if angle < 0 then angle = angle +360 end
-          
-            if (angle >= 360 - 12.5 and angle <= 360 + 12.5) or (angle <= 12.5) then          
-                N = true
-            elseif angle >= 90-12.5 and angle <= 90 + 12.5 then          
-                E = true
-            elseif angle >= 180-12.5 and angle <= 180 + 12.5 then          
-                S = true
-            elseif angle >= 270-12.5 and angle <= 270 + 12.5 then          
-                W = true
-            elseif angle > 12.5 and angle < 12.5+45 then
-                NE = true
-            elseif angle > 90+12.5 and angle < 90+12.5+45 then          
-                SE = true
-            elseif angle > 180+12.5 and angle < 180+12.5+45 then          
-                SW = true
-            elseif angle > 270+12.5 and angle < 270+12.5+45 then          
-                NW = true
-            end
-        end
-    end
-
-    local fence = SpawnPrefab("fence_junk")
-    fence.Transform:SetPosition(x,y,z)
-
-    if not N and not S and not E and not W and not SW and not SE and not NW and not NE then
-        fence.Transform:SetRotation(0)
-    -- ORDINAL LINES        
-    elseif N and S then
-        fence.Transform:SetRotation(90)
-    elseif E and W then
-        fence.Transform:SetRotation(0)
-
-    -- DIAGONAL LINES    
-    elseif (N and E) or (S and W) then        
-        fence.Transform:SetRotation(45)
-    elseif (N and W) or (S and E) then
-        fence.Transform:SetRotation(-45)
-
-    elseif (NE or SW) and not NW and not SE then
-        fence.Transform:SetRotation(-45)
-    elseif (NW or SE) and not NE and not SW then
-        fence.Transform:SetRotation(45)
-
-    -- ODD CORNERS
-    elseif (N and SW) or (E and SW) or (S and NE) or (W and NE) then
-        fence.Transform:SetRotation(-45)
-    elseif (N and SE) or (E and SE) or (S and NW) or (W and NW) then
-        fence.Transform:SetRotation(45)
-
-    -- ENDS
-    elseif N then
-        fence.Transform:SetRotation(90)
-    elseif S then
-        fence.Transform:SetRotation(00)
-    elseif E then
-        fence.Transform:SetRotation(0)
-    elseif W then
-        fence.Transform:SetRotation(0)
-    end
-
-
-
-    local ents = TheSim:FindEntities(x,y,z, 30, JUNK_MUST)
-
-    if #ents > 0 then        
-        local jx,jy,jz  = ents[1].Transform:GetWorldPosition()
-        local flip = false
-
-        local fencerot = fence.Transform:GetRotation()
-
-        if (fencerot == 90 and jz < z) or
-            (fencerot == -45 and jz > z and jx > x ) or
-            (fencerot == 0 and jx > x) or
-            (fencerot == 45 and jx < x and jz > z ) then
-            flip = true
-        end
-
-        if flip then
-            fence.Transform:SetRotation(fencerot + 180)
-        end
-        
-    end
-
-    inst:Remove()
-end
-
-local function fence_junk_rotatorfn(inst)
-    local inst = CreateEntity()
-
-    inst.entity:AddTransform()
-
-    inst:AddTag("fence")
-    
-    inst.entity:SetPristine()
-
-    if not TheWorld.ismastersim then
-        return inst
-    end
-
-	inst.OnLoadPostPass = onloadpostpass_junk_fence_rotator
-
-    return inst
-end
 
 return MakeWall("fence", {wide="fence", narrow="fence_thin"}, false),
     MakeInvItem("fence_item", "fence", "fence", false),
@@ -1085,6 +960,5 @@ return MakeWall("fence", {wide="fence", narrow="fence_thin"}, false),
 			onworkfinishedfn = junk_onworkfinishedfn,
 			onworkfn = junk_onworkfn,
 			workmultiplierfn = junk_workmultiplierfn,
-		}),
-
-    Prefab("fence_junk_pre_rotator",fence_junk_rotatorfn, nil, junk_fence_prefabs)
+            prefabs = {"junk_break_fx"},
+		})

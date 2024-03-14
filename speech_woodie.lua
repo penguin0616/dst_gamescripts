@@ -5130,6 +5130,9 @@ return{
             BROKEN = "Lucy! Did you do that?",
         },
 
+        SCRAP_MONOCLEHAT = "I can see far and wide!",
+        SCRAP_CONEHAT = "Anything to protect the ol' dome, eh?",
+
         FENCE_JUNK = "It's got nothin' on a sturdy wooden fence.",
         JUNK_PILE = "Wouldn't hurt to root around there a bit, eh?",
         JUNK_PILE_BIG = "That'll make one heckuva mess when it falls over.",

@@ -1768,6 +1768,9 @@ function Tune(overrides)
         ARMOR_WOODCARVED_HAT = wilson_health*2.5*multiplayer_armor_durability_modifier,
         ARMOR_WOODCARVED_HAT_ABSORPTION = .7*multiplayer_armor_absorption_modifier,
 
+		ARMOR_SCRAP_HAT = wilson_health * 2.5 * multiplayer_armor_durability_modifier,
+		ARMOR_SCRAP_HAT_ABSORPTION = 0.85 * multiplayer_armor_absorption_modifier,
+
         ARMORDRAGONFLY = wilson_health * 9*multiplayer_armor_durability_modifier,
         ARMORDRAGONFLY_ABSORPTION = 0.7*multiplayer_armor_absorption_modifier,
         ARMORDRAGONFLY_FIRE_RESIST = 1,
@@ -6611,7 +6614,7 @@ function Tune(overrides)
 		DAYWALKER2_DAMAGE_TAKEN_MULT = 0.8, --basically his armor
 
 		DAYWALKER2_ITEM_USES = 3,
-		DAYWALKER2_MULTIWIELD_CD = 20,
+		DAYWALKER2_MULTIWIELD_CD = 16,
 
 		DAYWALKER2_DEAGGRO_DIST_FROM_JUNK = 24,
 

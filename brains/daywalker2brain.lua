@@ -1,8 +1,11 @@
-require("behaviours/chaseandattack")
+require("behaviours/chaseandattackandavoid")
 require("behaviours/faceentity")
 require("behaviours/leash")
+require("behaviours/leashandavoid")
 require("behaviours/standstill")
 require("behaviours/wander")
+
+local AVOID_JUNK_DIST = 7
 
 local Daywalker2Brain = Class(Brain, function(self, inst)
 	Brain._ctor(self, inst)
@@ -35,51 +38,22 @@ local function ShouldRunToJunk(inst)
 	return inst.components.combat:HasTarget()
 end
 
-local SWING_ITEMS = { "object" }
-local TACKLE_ITEMS = { "spike" }
-local CANNON_ITEMS = { "cannon" }
-local _temp = {}
-
 local function GetCurrentJunkLoot(inst, ignorerange)
-	local junk = GetJunk(inst)
+	local junk, item = inst:GetNextItem()
 	if junk then
-		--Has no equip, or can multiwield and isn't fully equipped yet
-		if not (inst.canswing or inst.cantackle or inst.cancannon) or
-			(	inst.canmultiwield and
-				not (inst.canswing and inst.cantackle and (inst.cancannon or not junk.hascannon)) and
-				not inst.components.timer:TimerExists("multiwield")
-			)
-		then
-			local n = 0
-			if not inst.canswing then
-				for i = 1, #SWING_ITEMS do
-					n = n + 1
-					_temp[n] = SWING_ITEMS[i]
-				end
+		if item and inst.candoublerummage then
+			local numequipped =
+				(inst.canswing and 1 or 0) +
+				(inst.cantackle and 1 or 0) +
+				(inst.cancannon and 1 or 0)
+			if numequipped >= 2 then
+				item = nil
 			end
-			if not inst.cantackle then
-				for i = 1, #TACKLE_ITEMS do
-					n = n + 1
-					_temp[n] = TACKLE_ITEMS[i]
-				end
-			end
-			if not inst.cancannon and junk.hascannon then
-				for i = 1, #CANNON_ITEMS do
-					n = n + 1
-					_temp[n] = CANNON_ITEMS[i]
-				end
-			end
-			if inst.lastequip and n > 1 then
-				for i = 1, n do
-					if _temp[i] == inst.lastequip then
-						_temp[i] = _temp[n]
-						n = n - 1
-						break
-					end
-				end
-			end
-			return junk, _temp[math.random(n)]
-		elseif inst.canthrow then
+		end
+		if item then
+			return junk, item
+		end
+		if inst.canthrow then
 			local target = inst.components.combat.target
 			if target then
 				if not ignorerange then
@@ -96,6 +70,11 @@ end
 
 local function MaxTargetLeashDist(inst)
 	local target = inst.components.combat.target
+	if target and inst.cantackle and not inst:TestTackle(target, TUNING.DAYWALKER2_TACKLE_RANGE) then
+		--use forced tackle range (2(aoe radius) + 1(offset))
+		--This is to prevent stopping short of target, but not tackling due to failed junk collision test
+		return 3 + (target and target:GetPhysicsRadius(0) or 0)
+	end
 	return 4 + (target and target:GetPhysicsRadius(0) or 0)
 end
 
@@ -107,8 +86,9 @@ end
 local function LeashShouldRun(inst)
 	if inst.sg:HasStateTag("running") then
 		return true
-	end
-	if inst.canswing or inst.cancannon then
+	elseif inst.components.stuckdetection:IsStuck() then
+		return true
+	elseif inst.canswing or inst.cancannon then
 		local target = inst.components.combat.target
 		if target then
 			local cd = inst.components.combat:GetCooldown()
@@ -116,7 +96,15 @@ local function LeashShouldRun(inst)
 		end
 	elseif inst.cantackle then
 		local target = inst.components.combat.target
-		return target and not (inst.components.combat:InCooldown() or inst:IsNear(target, TUNING.DAYWALKER2_TACKLE_RANGE + 2))
+		if target then
+			if not inst.components.combat:InCooldown() then
+				if not inst:IsNear(target, TUNING.DAYWALKER2_TACKLE_RANGE + 2) then
+					return true --far, so run to chase
+				elseif not inst:TestTackle(target, TUNING.DAYWALKER2_TACKLE_RANGE + 2) then
+					return true --close, but hiding around junk, so run to chase
+				end
+			end
+		end
 	end
 	return false
 end
@@ -164,7 +152,16 @@ end
 local function ShouldTackle(inst)
 	if inst.cantackle then
 		local target = inst.components.combat.target
-		return target and inst:IsNear(target, TUNING.DAYWALKER2_TACKLE_RANGE)
+		if target then
+			return inst:TestTackle(target, TUNING.DAYWALKER2_TACKLE_RANGE)
+		end
+	end
+	return false
+end
+
+local function TryStuckAttack(inst)
+	if (inst.components.rooted or inst.components.stuckdetection:IsStuck()) and not inst.components.combat:InCooldown() then
+		inst.components.combat:TryAttack()
 	end
 end
 
@@ -178,7 +175,10 @@ function Daywalker2Brain:OnStart()
 			PriorityNode({
 				WhileNode(function() return ShouldRummage(self.inst, self) end, "Rummage",
 					PriorityNode({
-						FailIfSuccessDecorator(Leash(self.inst, GetJunkPos, 5.5, 5, ShouldRunToJunk)),
+						ParallelNode{
+							FailIfSuccessDecorator(Leash(self.inst, GetJunkPos, 5.5, 5, ShouldRunToJunk)),
+							ConditionWaitNode(function() TryStuckAttack(self.inst) end, "StuckAttack"),
+						},
 						ActionNode(function()
 							local junk, loot = GetCurrentJunkLoot(self.inst, true)
 							if loot then
@@ -196,7 +196,7 @@ function Daywalker2Brain:OnStart()
 								return true
 							end
 						end, "HighPriorityTackle"),
-						FailIfSuccessDecorator(Leash(self.inst, GetTargetPos, MaxTargetLeashDist, MinTargetLeashDist, LeashShouldRun)),
+						FailIfSuccessDecorator(LeashAndAvoid(self.inst, GetJunk, AVOID_JUNK_DIST, GetTargetPos, MaxTargetLeashDist, MinTargetLeashDist, LeashShouldRun)),
 						NotDecorator(ActionNode(function()
 							if self.inst.components.combat:GetCooldown() < 0.5 then
 								self.inst.components.combat:ResetCooldown()
@@ -216,7 +216,7 @@ function Daywalker2Brain:OnStart()
 				--When ready to attack with weapon (or optionally tackle)
 				WhileNode(function() return ShouldChase(self.inst) end, "Chasing",
 					ParallelNode{
-						ChaseAndAttack(self.inst),
+						ChaseAndAttackAndAvoid(self.inst, GetJunk, AVOID_JUNK_DIST),
 						ConditionWaitNode(function()
 							if ShouldTackle(self.inst) then
 								self.inst:PushEvent("tackle", self.inst.components.combat.target)

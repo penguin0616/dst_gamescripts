@@ -5135,6 +5135,9 @@ return{
             BROKEN = "It either starts, or we harvest for parts!",
         },
 
+        SCRAP_MONOCLEHAT = "My my, that distant look in your eye!",
+        SCRAP_CONEHAT = "A piece of scrap, fashioned into a cap!",
+
         FENCE_JUNK = "A metal fence for our defense.",
         JUNK_PILE = "Could it hide a surprise inside?",
         JUNK_PILE_BIG = "I won't fall for that, hyuyu!",
