@@ -5,6 +5,7 @@ local assets =
 
 local huskassets =
 {
+	Asset("ANIM", "anim/armor_lunarplant.zip"),
 	Asset("ANIM", "anim/armor_lunarplant_husk.zip"),
 }
 
@@ -15,8 +16,16 @@ local prefabs =
     "wormwood_vined_debuff",
 }
 
-local function OnHit(owner, data)
-    if not owner then return end
+local huskprefabs =
+{
+	"armor_lunarplant_husk_glow_fx",
+	"hitsparks_reflect_fx",
+}
+
+local function OnHit_Vines(owner, data)
+	if owner == nil or data == nil then
+		return
+	end
 
     local attacker = data.attacker
     if not attacker or not attacker.components.locomotor
@@ -32,11 +41,7 @@ end
 
 local function OnBlocked(owner, data)
 	owner.SoundEmitter:PlaySound("dontstarve/common/together/armor/cactus")
-
-    OnHit(owner, data)
 end
-
-
 
 local function OnEnabledSetBonus(inst)
 	inst.components.damagetyperesist:AddResist("lunar_aligned", inst, TUNING.ARMOR_LUNARPLANT_SETBONUS_LUNAR_RESIST, "setbonus")
@@ -52,41 +57,45 @@ local function onequip(inst, owner)
 		owner:PushEvent("equipskinneditem", inst:GetSkinName())
 		owner.AnimState:OverrideItemSkinSymbol("swap_body", skin_build, "swap_body", inst.GUID, "armor_lunarplant")
 	else
-		owner.AnimState:OverrideSymbol("swap_body", "armor_lunarplant", "swap_body")
+		owner.AnimState:OverrideSymbol("swap_body", inst.build, "swap_body")
 	end
 
-	if inst:HasTag("vinetrapper") then
-		inst:ListenForEvent("blocked", OnBlocked, owner)
-		inst:ListenForEvent("attacked", OnHit, owner)
+	inst:ListenForEvent("blocked", OnBlocked, owner)
+
+	if owner:HasTag("plantkin") then
+		if inst._onblocked then
+			inst:ListenForEvent("attacked", inst._onblocked, owner)
+			inst:ListenForEvent("blocked", inst._onblocked, owner)
+		end
+		if inst._onattackother then
+			inst:ListenForEvent("onattackother", inst._onattackother, owner)
+			inst._hitcount = 0
+		end
 	end
 
 	if inst.fx ~= nil then
 		inst.fx:Remove()
 	end
-	inst.fx = SpawnPrefab("armor_lunarplant_glow_fx")
+	inst.fx = SpawnPrefab(inst.prefab.."_glow_fx")
 	inst.fx:AttachToOwner(owner)
 	owner.AnimState:SetSymbolLightOverride("swap_body", .1)
-
-	if inst._onblocked and owner:HasTag("plantkin")  then
-		inst:ListenForEvent("attacked", inst._onblocked, owner)
-		inst:ListenForEvent("blocked", inst._onblocked, owner)
-	end
-
-	if inst._onattackother and owner:HasTag("plantkin") and owner.components.skilltreeupdater ~= nil and owner.components.skilltreeupdater:IsActivated("wormwood_armor_bramble") then
-		inst:ListenForEvent("onattackother", inst._onattackother, owner)
-		inst._hitcount = 0
-	end
 end
 
 local function onunequip(inst, owner)
 	owner.AnimState:ClearOverrideSymbol("swap_body")
-	inst:RemoveEventCallback("blocked", OnBlocked, owner)
-    inst:RemoveEventCallback("attacked", OnHit, owner)
 
-	local skin_build = inst:GetSkinBuild()
-	if skin_build ~= nil then
-		owner:PushEvent("unequipskinneditem", inst:GetSkinName())
+	inst:RemoveEventCallback("blocked", OnBlocked, owner)
+
+	--"plantkin" (wormwood) events--
+	if inst._onblocked then
+		inst:RemoveEventCallback("attacked", inst._onblocked, owner)
+		inst:RemoveEventCallback("blocked", inst._onblocked, owner)
 	end
+	if inst._onattackother then
+		inst:RemoveEventCallback("onattackother", inst._onattackother, owner)
+		inst._hitcount = nil
+	end
+	--------------------------------
 
 	if inst.fx ~= nil then
 		inst.fx:Remove()
@@ -94,8 +103,9 @@ local function onunequip(inst, owner)
 	end
 	owner.AnimState:SetSymbolLightOverride("swap_body", 0)
 
-	if inst._onattackother and owner:HasTag("plantkin") and owner.components.skilltreeupdater ~= nil and owner.components.skilltreeupdater:IsActivated("wormwood_armor_bramble") then
-	    inst:RemoveEventCallback("onattackother", inst._onattackother, owner)
+	local skin_build = inst:GetSkinBuild()
+	if skin_build ~= nil then
+		owner:PushEvent("unequipskinneditem", inst:GetSkinName())
 	end
 end
 
@@ -145,7 +155,7 @@ local function OnReflectDamage(inst, data)
 	end
 end
 
-local function commonfn(build,common_postinit, master_postinit)
+local function commonfn(build, common_postinit, master_postinit)
 	local inst = CreateEntity()
 
 	inst.entity:AddTransform()
@@ -177,6 +187,8 @@ local function commonfn(build,common_postinit, master_postinit)
 	if not TheWorld.ismastersim then
 		return inst
 	end
+
+	inst.build = build
 
 	inst:AddComponent("inspectable")
 	inst:AddComponent("inventoryitem")
@@ -212,12 +224,12 @@ local function commonfn(build,common_postinit, master_postinit)
 	return inst
 end
 
-local function fn()
-	local function common(inst)
-		inst:AddTag("vinetrapper")
-	end
+local function master_postinit(inst)
+	inst._onblocked = OnHit_Vines
+end
 
-	return commonfn("armor_lunarplant",common)
+local function fn()
+	return commonfn("armor_lunarplant", nil, master_postinit)
 end
 
 --------------------------------------------------------------------------
@@ -230,10 +242,11 @@ local function DoThorns(inst, owner)
     --V2C: tiny CD to limit chain reactions
     inst._cdtask = inst:DoTaskInTime(.3, OnCooldown)
 
-    inst._hitcount = 0
+	if inst._hitcount then
+		inst._hitcount = 0
+	end
     
     SpawnPrefab("bramblefx_armor_upgrade"):SetFXOwner(owner)        
-
 
     if owner.SoundEmitter ~= nil then
         owner.SoundEmitter:PlaySound("dontstarve/common/together/armor/cactus")
@@ -241,13 +254,17 @@ local function DoThorns(inst, owner)
 end
 
 local function OnAttackOther(owner, data, inst)
-
-    if inst._cdtask == nil and checknumber(inst._hitcount) then
+	if inst._cdtask == nil and
+		owner.components.skilltreeupdater and
+		owner.components.skilltreeupdater:IsActivated("wormwood_armor_bramble")
+	then
         inst._hitcount = inst._hitcount + 1
 
         if inst._hitcount >= TUNING.WORMWOOD_ARMOR_BRAMBLE_RELEASE_SPIKES_HITCOUNT then
             DoThorns(inst, owner)
         end
+	else
+		inst._hitcount = 0
     end
 end
 
@@ -257,17 +274,24 @@ local function OnHuskBlocked(owner, data, inst)
     end
 end
 
+local function husk_common_postinit(inst)
+	inst:AddTag("bramble_resistant")
+end
+
+local function husk_master_postinit (inst)
+	inst._onblocked      = function(owner, data) OnHuskBlocked(owner, data, inst) end
+	inst._onattackother  = function(owner, data) OnAttackOther(owner, data, inst) end
+
+	inst.components.equippable.restrictedtag = "plantkin"
+end
+
 local function huskfn()
-	local function master(inst)
-	    inst._onblocked      = function(owner, data) OnHuskBlocked(owner, data, inst) end
-	    inst._onattackother  = function(owner, data) OnAttackOther(owner, data, inst) end
-	end
-	return commonfn("armor_lunarplant_husk", nil, master)
+	return commonfn("armor_lunarplant_husk", husk_common_postinit, husk_master_postinit)
 end
 
 --------------------------------------------------------------------------
 
-local function CreateFxFollowFrame(i)
+local function CreateFxFollowFrame(i, build)
 	local inst = CreateEntity()
 
 	--[[Non-networked entity]]
@@ -278,7 +302,7 @@ local function CreateFxFollowFrame(i)
 	inst:AddTag("FX")
 
 	inst.AnimState:SetBank("armor_lunarplant")
-	inst.AnimState:SetBuild("armor_lunarplant")
+	inst.AnimState:SetBuild(build)
 	inst.AnimState:PlayAnimation("idle"..tostring(i), true)
 	inst.AnimState:SetSymbolBloom("glowcentre")
 	inst.AnimState:SetSymbolLightOverride("glowcentre", .5)
@@ -307,7 +331,7 @@ local function glow_SpawnFxForOwner(inst, owner)
 	inst.fx = {}
 	local frame
 	for i = 1, 6 do
-		local fx = CreateFxFollowFrame(i)
+		local fx = CreateFxFollowFrame(i, inst.build)
 		frame = frame or math.random(fx.AnimState:GetCurrentAnimationNumFrames()) - 1
 		fx.entity:SetParent(owner.entity)
 		fx.Follower:FollowSymbol(owner.GUID, "swap_body", nil, nil, nil, true, nil, i - 1)
@@ -337,30 +361,38 @@ local function glow_AttachToOwner(inst, owner)
 	end
 end
 
-local function glowfn()
-	local inst = CreateEntity()
+local function MakeGlow(name, build, assets)
+	local function fn()
+		local inst = CreateEntity()
 
-	inst.entity:AddTransform()
-	inst.entity:AddNetwork()
+		inst.entity:AddTransform()
+		inst.entity:AddNetwork()
 
-	inst:AddTag("FX")
+		inst:AddTag("FX")
 
-	inst:AddComponent("colouraddersync")
+		inst:AddComponent("colouraddersync")
 
-	inst.entity:SetPristine()
+		inst.build = build
 
-	if not TheWorld.ismastersim then
-		inst.OnEntityReplicated = glow_OnEntityReplicated
+		inst.entity:SetPristine()
+
+		if not TheWorld.ismastersim then
+			inst.OnEntityReplicated = glow_OnEntityReplicated
+
+			return inst
+		end
+
+		inst.AttachToOwner = glow_AttachToOwner
+		inst.persists = false
 
 		return inst
 	end
 
-	inst.AttachToOwner = glow_AttachToOwner
-	inst.persists = false
-
-	return inst
+	return Prefab(name, fn, assets)
 end
 
 return Prefab("armor_lunarplant", fn, assets, prefabs),
-	  Prefab("armor_lunarplant_husk", huskfn, huskassets),
-	  Prefab("armor_lunarplant_glow_fx", glowfn, assets)
+		MakeGlow("armor_lunarplant_glow_fx", "armor_lunarplant", assets),
+		--
+		Prefab("armor_lunarplant_husk", huskfn, huskassets, huskprefabs),
+		MakeGlow("armor_lunarplant_husk_glow_fx", "armor_lunarplant_husk", huskassets)

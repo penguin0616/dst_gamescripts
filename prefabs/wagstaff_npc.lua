@@ -38,6 +38,8 @@ local mutations_prefabs =
 	"security_pulse_cage",
 }
 
+local WAGSTAFF_CHATTER_COLOUR = Vector3(231/256, 165/256, 75/256)
+
 --------------------------------------------------------------------------
 
 local function PushMusic(inst)
@@ -448,9 +450,9 @@ local function fn()
     talker.fontsize = 35
     talker.font = TALKINGFONT
     talker.offset = Vector3(0, -400, 0)
-    talker.name_colour = Vector3(0.5, 0.5, 0.5)
-    talker.chaticon = "profileflair_moonstaff_crystal"
-    talker.chaticonbg = "playerlevel_bg_quagmire"
+    talker.name_colour = WAGSTAFF_CHATTER_COLOUR
+    talker.chaticon = "npcchatflair_wagstaff"
+    --talker.chaticonbg = "playerlevel_bg_quagmire"
     talker:MakeChatter()
     --inst.talksoundoverride = "moonboss/characters/wagstaff/talk_LP"
 
@@ -776,9 +778,9 @@ local function pstbossfn()
     talker.fontsize = 35
     talker.font = TALKINGFONT
     talker.offset = Vector3(0, -400, 0)
-    talker.name_colour = Vector3(0.5, 0.5, 0.5)
-    talker.chaticon = "profileflair_mast_nautical"
-    talker.chaticonbg = "playerlevel_bg_lavaarena"
+    talker.name_colour = WAGSTAFF_CHATTER_COLOUR
+    talker.chaticon = "npcchatflair_wagstaff"
+    --talker.chaticonbg = "playerlevel_bg_lavaarena"
     talker:MakeChatter()
 
     if not TheNet:IsDedicated() then
@@ -1040,11 +1042,13 @@ local function MutationsQuestFn()
     inst.Light:SetColour(255/255, 200/255, 200/255)
     inst.Light:Enable(false)
 
-    inst:AddComponent("talker")
-    inst.components.talker.fontsize = 35
-    inst.components.talker.font = TALKINGFONT
-    inst.components.talker.offset = Vector3(0, -400, 0)
-    inst.components.talker:MakeChatter()
+    local talker = inst:AddComponent("talker")
+    talker.fontsize = 35
+    talker.font = TALKINGFONT
+    talker.offset = Vector3(0, -400, 0)
+    talker.name_colour = WAGSTAFF_CHATTER_COLOUR
+    talker.chaticon = "npcchatflair_wagstaff"
+    talker:MakeChatter()
 
     inst.entity:SetPristine()
 
@@ -1125,11 +1129,13 @@ local function WagpunkFn()
     inst.Light:SetColour(255/255, 200/255, 200/255)
     inst.Light:Enable(false)
 
-    inst:AddComponent("talker")
-    inst.components.talker.fontsize = 35
-    inst.components.talker.font = TALKINGFONT
-    inst.components.talker.offset = Vector3(0, -400, 0)
-    inst.components.talker:MakeChatter()
+    local talker = inst:AddComponent("talker")
+    talker.fontsize = 35
+    talker.font = TALKINGFONT
+    talker.offset = Vector3(0, -400, 0)
+    talker.name_colour = WAGSTAFF_CHATTER_COLOUR
+    talker.chaticon = "npcchatflair_wagstaff"
+    talker:MakeChatter()
 
     inst.entity:SetPristine()
 

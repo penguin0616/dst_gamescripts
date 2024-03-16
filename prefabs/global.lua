@@ -467,6 +467,9 @@ local assets =
     Asset("ATLAS", "images/servericons.xml"),
     Asset("IMAGE", "images/servericons.tex"),
 
+    Asset("ATLAS", "images/npcchatflairs.xml"),
+    Asset("IMAGE", "images/npcchatflairs.tex"),
+
     -- Loading screen
     Asset("ATLAS", "images/loading_screen.xml"),
     Asset("IMAGE", "images/loading_screen.tex"),

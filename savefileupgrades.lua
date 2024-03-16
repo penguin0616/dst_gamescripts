@@ -1281,6 +1281,12 @@ t = {
                 savedata.retrofit_junkyardv2_content = true
             end,
         },
+        {
+            version = 5.145, -- Junk Yard - Try to spawn a whole setpiece if any of the pieces are missing.
+            fn = function(savedata)
+                FlagForRetrofitting_Forest(savedata, "retrofit_junkyardv3_content")
+            end,
+        },
     },
 }
 

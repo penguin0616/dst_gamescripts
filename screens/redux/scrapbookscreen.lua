@@ -146,10 +146,11 @@ local ScrapbookScreen = Class(Screen, function( self, prev_screen, default_secti
 
 	if DEBUG_MODE then
         self.debugentry = self.root:AddChild(TextButton())
-        self.debugentry:SetTextSize(24)
+        self.debugentry:SetTextSize(12)
         self.debugentry:SetFont(HEADERFONT)
         self.debugentry:SetVAnchor(ANCHOR_BOTTOM)
         self.debugentry:SetHAnchor(ANCHOR_RIGHT)
+		self.debugentry:SetScaleMode(SCALEMODE_PROPORTIONAL)
 		self.debugentry.clickoffset = Vector3(0, 0, 0)
 
         self.debugentry:SetOnClick(function()
@@ -2152,7 +2153,7 @@ function ScrapbookScreen:PopulateInfoPanel(entry)
 		self.debugentry:SetText(msg)
 
         local w, h = self.debugentry.text:GetRegionSize()
-        self.debugentry:SetPosition(-w/2 - 10, h/2 + 10) -- 10 Pixel padding, bottom right screen justification.
+        self.debugentry:SetPosition(-w*2 - 5, h*2 + 5)
 	end
 
     return page

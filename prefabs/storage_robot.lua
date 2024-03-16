@@ -287,6 +287,15 @@ local function FueledSectionCallback(newsection, oldsection, inst)
     end
 end
 
+local function GetFueledSectionSuffix(inst)
+    local section = inst.components.fueled:GetCurrentSection()
+
+    return
+        (section == SECTION_SMALL and "_small") or
+        (section == SECTION_MED   and "_med")   or
+        ""
+end
+
 ---------------------------------------------------------------------------------------------------
 
 local function ShouldAcceptItem(inst, item)
@@ -414,6 +423,8 @@ local function fn()
         inst:ListenForEvent("origindirty", OnOriginDirty)
         return inst
     end
+
+    inst.GetFueledSectionSuffix = GetFueledSectionSuffix
 
     inst.GetSpawnPoint = GetSpawnPoint
     inst.UpdateSpawnPoint = UpdateSpawnPoint

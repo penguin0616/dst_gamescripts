@@ -118,7 +118,6 @@ local function DoJunkyardHint(inst)
 end
 
 local function ShouldGoToJunkYard(inst)
-    print("test SHOULD GO TO JUNK")
     local junkpos = inst.components.knownlocations:GetLocation("junk")
 
     if junkpos ~= nil then        

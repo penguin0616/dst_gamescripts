@@ -1128,13 +1128,15 @@ local function fn()
 
 	inst.DynamicShadow:SetSize(3.5, 1.5)
 
-	inst:AddComponent("talker")
-	inst.components.talker.fontsize = 40
-	inst.components.talker.font = TALKINGFONT
-	inst.components.talker.colour = Vector3(238 / 255, 69 / 255, 105 / 255)
-	inst.components.talker.offset = Vector3(0, -400, 0)
-	inst.components.talker.symbol = "ww_hunch"
-	inst.components.talker:MakeChatter()
+	local talker = inst:AddComponent("talker")
+	talker.fontsize = 40
+	talker.font = TALKINGFONT
+	talker.colour = Vector3(238 / 255, 69 / 255, 105 / 255)
+	talker.offset = Vector3(0, -400, 0)
+	talker.symbol = "ww_hunch"
+	talker.name_colour = Vector3(159/256, 72/256, 93/256)
+	talker.chaticon = "npcchatflair_daywalker"
+	talker:MakeChatter()
 
 	inst._enablechains = net_bool(inst.GUID, "daywalker._enablechains", "chainsdirty")
 	inst._facingmodel = net_tinybyte(inst.GUID, "daywalker._facingmodel", "facingmodeldirty")

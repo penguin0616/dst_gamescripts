@@ -223,11 +223,6 @@ local function BuildSkillsData(SkillTreeFns)
                         owner.components.damagetypebonus:AddBonus("shadow_aligned", owner, TUNING.SKILLS.WILSON_ALLEGIANCE_VS_SHADOW_BONUS, "wormwood_allegiance_lunar")
                     end
                 end
-
-                local item = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
-                if item and item.bramble_upgrade then
-                    item:bramble_upgrade(owner)
-                end
                 owner:AddTag("lunarplant_husk_crafter")
             end,
             ondeactivate = function(owner, from_load)
@@ -240,11 +235,7 @@ local function BuildSkillsData(SkillTreeFns)
                         owner.components.damagetypebonus:RemoveBonus("shadow_aligned", owner, "wormwood_allegiance_lunar")
                     end
                 end
-                local item = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
-                if item and item.bramble_downgrade then
-                    item:bramble_downgrade(inst)
-                end 
-                owner:RemoveTag("lunarplant_husk_crafter")               
+                owner:RemoveTag("lunarplant_husk_crafter")
             end,
 
             group = "allegiance2",
@@ -424,22 +415,6 @@ local function BuildSkillsData(SkillTreeFns)
 
             group = "gathering",
             tags = {"blooming"},
-
-            onactivate = function(owner)
-                local item = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
-
-                if item ~= nil and item:HasTag("bramble_resistant") and item._onattackother ~= nil then
-                    item:ListenForEvent("onattackother", item._onattackother, owner)
-                end
-            end,
-
-            ondeactivate = function(owner)
-                local item = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
-
-                if item ~= nil and item:HasTag("bramble_resistant") and item._onattackother ~= nil then
-                    item:RemoveEventCallback("onattackother", item._onattackother, owner)
-                end
-            end,
         },
 
         wormwood_allegiance_lock_lunar_1 = SkillTreeFns.MakeCelestialChampionLock({

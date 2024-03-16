@@ -13,6 +13,8 @@ local actionhandlers =
     ActionHandler( ACTIONS.STORE,     "store"  ),
 }
 
+------------------------------------------------------------------------------------------------------------------------------
+
 local WALK_SOUNDNAME = "walk_loop"
 local ACTIVE_SOUNDNAME = "active_loop"
 local NEUTRAL_VOICE_SOUNDNAME = "neutral_voice"
@@ -22,6 +24,8 @@ local NEUTRAL_VOCALIZATION_CHANCE   = 0.1
 
 local PICKUP_VOCALIZATION_CHANCE = 0.2
 
+------------------------------------------------------------------------------------------------------------------------------
+
 local function _ReturnToIdle(inst)
     if inst.AnimState:AnimDone() then
         inst.sg:GoToState("idle")
@@ -29,6 +33,8 @@ local function _ReturnToIdle(inst)
 end
 
 local idle_on_animover = { EventHandler("animover", _ReturnToIdle) }
+
+------------------------------------------------------------------------------------------------------------------------------
 
 local function MakeImmovable(inst)
     inst.Physics:SetTempMass0(true)
@@ -38,7 +44,16 @@ local function RestoreMobility(inst)
     inst.Physics:SetTempMass0(false)
 end
 
-local function PlayVocalizationSound(inst)
+local function PlaySectionSound(inst, sound, soundname)
+    inst.SoundEmitter:PlaySound("qol1/collector_robot/"..sound..inst:GetFueledSectionSuffix(), soundname)
+end
+
+local function PlayVocalizationSound(inst, voice, soundname)
+    inst.sg.mem.last_vocalization_time = GetTime()
+    PlaySectionSound(inst, voice.."_voice", soundname)
+end
+
+local function TryPlayingNeutralVocalizationSound(inst)
     if inst.SoundEmitter:PlayingSound(NEUTRAL_VOICE_SOUNDNAME) or inst.components.inventoryitem:IsHeld() then
         return
     end
@@ -46,11 +61,11 @@ local function PlayVocalizationSound(inst)
     if math.random() < NEUTRAL_VOCALIZATION_CHANCE and (
         inst.sg.mem.last_vocalization_time == nil or (GetTime() - inst.sg.mem.last_vocalization_time > NEUTRAL_VOCALIZATION_INTERVAL)
     ) then
-        inst.sg.mem.last_vocalization_time = GetTime()
-
-        inst.SoundEmitter:PlaySound("qol1/collector_robot/neutral_voice", NEUTRAL_VOICE_SOUNDNAME)
+        PlayVocalizationSound(inst, "neutral", NEUTRAL_VOICE_SOUNDNAME)
     end
 end
+
+------------------------------------------------------------------------------------------------------------------------------
 
 local states =
 {
@@ -68,7 +83,7 @@ local states =
 
             inst.components.locomotor:Stop()
 
-            PlayVocalizationSound(inst)
+            TryPlayingNeutralVocalizationSound(inst)
 
             inst.AnimState:PlayAnimation("idle", true)
         end,
@@ -83,8 +98,8 @@ local states =
             inst.AnimState:PlayAnimation("pickup")
 
             inst.SoundEmitter:KillSound(WALK_SOUNDNAME)
-            inst.SoundEmitter:PlaySound("qol1/collector_robot/idle", ACTIVE_SOUNDNAME)
 
+            PlaySectionSound(inst, "idle", ACTIVE_SOUNDNAME)
             inst.SoundEmitter:PlaySound("qol1/collector_robot/pickup")
 
             MakeImmovable(inst)
@@ -100,8 +115,7 @@ local states =
 
             FrameEvent(37, function(inst)
                 if math.random() < PICKUP_VOCALIZATION_CHANCE then
-                    inst.sg.mem.last_vocalization_time = GetTime()
-                    inst.SoundEmitter:PlaySound("qol1/collector_robot/pickup_voice")
+                    PlayVocalizationSound(inst, "pickup")
                 end
             end),
         },
@@ -117,8 +131,8 @@ local states =
             inst.AnimState:PlayAnimation("dropoff")
 
             inst.SoundEmitter:KillSound(WALK_SOUNDNAME)
-            inst.SoundEmitter:PlaySound("qol1/collector_robot/idle", ACTIVE_SOUNDNAME)
 
+            PlaySectionSound(inst, "idle", ACTIVE_SOUNDNAME)
             inst.SoundEmitter:PlaySound("qol1/collector_robot/dropoff")
 
             MakeImmovable(inst)
@@ -131,8 +145,7 @@ local states =
             end),
 
             FrameEvent(50, function(inst)
-                inst.sg.mem.last_vocalization_time = GetTime()
-                inst.SoundEmitter:PlaySound("qol1/collector_robot/dropoff_voice")
+                PlayVocalizationSound(inst, "dropoff")
             end),
         },
 
@@ -196,6 +209,8 @@ local states =
             inst.AnimState:PlayAnimation("breaking")
 
             inst.SoundEmitter:KillAllSounds()
+
+            PlayVocalizationSound(inst, "breakdown")
             inst.SoundEmitter:PlaySound("qol1/collector_robot/breakdown")
         end,
 
@@ -235,7 +250,7 @@ CommonStates.AddWalkStates(
             inst.SoundEmitter:KillSound(ACTIVE_SOUNDNAME)
 
             if not inst.SoundEmitter:PlayingSound(WALK_SOUNDNAME) then
-                inst.SoundEmitter:PlaySound("qol1/collector_robot/walk", WALK_SOUNDNAME)
+                PlaySectionSound(inst, "walk", WALK_SOUNDNAME)
             end
         end,
 
@@ -247,7 +262,7 @@ CommonStates.AddWalkStates(
 
         walktimeline =
         {
-            FrameEvent(5, PlayVocalizationSound),
+            FrameEvent(5, TryPlayingNeutralVocalizationSound),
         },
     }
 )

@@ -167,8 +167,8 @@ local function acidcovered_on_loot_prefab_spawned(inst, event_data)
 
     local perish_multiplier = TUNING.ACIDRAIN_DAMAGE_TIME * TUNING.ACIDRAIN_PERISHABLE_ROT_PERCENT
     local final_multiplier = math.clamp(acid_perish_time * perish_multiplier, 0, 1)
-    local new_percentage = TUNING.ACIDRAIN_PERISHLOOT_BASESAFEPERCENT
-        + ((1 - TUNING.ACIDRAIN_PERISHLOOT_BASESAFEPERCENT) * final_multiplier)
+    local unsafe_percent = (1 - TUNING.ACIDRAIN_PERISHLOOT_BASESAFEPERCENT)
+    local new_percentage = 1 - (unsafe_percent * final_multiplier)
     loot.components.perishable:SetPercent(new_percentage)
 end
 

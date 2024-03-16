@@ -431,7 +431,6 @@ Recipe2("eyebrellahat", 					{Ingredient("deerclops_eyeball", 1), Ingredient("tw
 Recipe2("red_mushroomhat", 					{Ingredient("red_cap", 6)}, 																	TECH.LOST)
 Recipe2("green_mushroomhat",				{Ingredient("green_cap", 6)},																	TECH.LOST)
 Recipe2("blue_mushroomhat",					{Ingredient("blue_cap", 6)},																	TECH.LOST)
-Recipe2("moon_mushroomhat",					{Ingredient("moon_cap", 4), Ingredient("red_mushroomhat",1)},									TECH.CELESTIAL_ONE)
 Recipe2("polly_rogershat",					{Ingredient("monkey_mediumhat", 1),Ingredient("feather_canary", 1),Ingredient("blackflag",1)},	TECH.LOST)
 
 Recipe2("treasurechest",					{Ingredient("boards", 3)},																		TECH.SCIENCE_ONE,			{placer="treasurechest_placer",		min_spacing=1})
@@ -662,6 +661,7 @@ Recipe2("critter_eyeofterror_builder",		{Ingredient("milkywhites", 1), Ingredien
 Recipe2("moonrockidol",								{Ingredient("moonrocknugget", 1), Ingredient("purplegem", 1)},									TECH.CELESTIAL_ONE,			{nounlock=true})
 Recipe2("multiplayer_portal_moonrock_constr_plans", {Ingredient("boards", 1), Ingredient("rope", 1)},												TECH.CELESTIAL_ONE,			{nounlock=true})
 Recipe2("lunar_forge_kit",							{Ingredient("moonrocknugget", 5),Ingredient("moonglass", 5),Ingredient("purebrilliance", 1)},	TECH.CELESTIAL_ONE,			{nounlock=true})
+Recipe2("moon_mushroomhat",							{Ingredient("moon_cap", 4), Ingredient("red_mushroomhat",1)},									TECH.CELESTIAL_ONE,			{nounlock=true})
 
 ----MOON_ALTAR-----
 Recipe2("moonglassaxe",						{Ingredient("twigs", 2), Ingredient("moonglass", 3)},													TECH.CELESTIAL_THREE,		{nounlock=true})
@@ -1103,6 +1103,7 @@ DeconstructRecipe("pighead",						{Ingredient("pigskin", 4), Ingredient("twigs",
 DeconstructRecipe("mermhead",						{Ingredient("pondfish", 1), Ingredient("spoiled_food", 4), Ingredient("twigs", 4)})
 DeconstructRecipe("sunkenchest",					{Ingredient("slurtle_shellpieces", 5)})
 DeconstructRecipe("mastupgrade_lamp",				{Ingredient("boards", 1), Ingredient("rope", 2), Ingredient("flint", 4)})
+DeconstructRecipe("mastupgrade_lamp_yotd",			{Ingredient("lucky_goldnugget", 3)})
 DeconstructRecipe("mastupgrade_lightningrod",		{Ingredient("goldnugget", 5)})
 DeconstructRecipe("wall_ruins_2_item",				{Ingredient("thulecite", 1)})
 DeconstructRecipe("wall_stone_2_item",				{Ingredient("cutstone", 2)})

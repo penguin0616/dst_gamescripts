@@ -37,8 +37,8 @@ local throwfirelevels =
 local CLOSERANGE = 1
 
 local TARGETS_MUST = {"_health"}
-local TARGETS_ONEOF = { "hostile", "_combat" }
-local TARGETS_CANT = { "INLIMBO", "flight", "player", "invisible", "noattack", "notarget" }
+local TARGETS_ONEOF = { "_combat" }
+local TARGETS_CANT = { "INLIMBO", "invisible", "noattack", "notarget" }
 
 local FLAME_MUST = {"willow_shadow_flame"}
 
@@ -59,6 +59,16 @@ local function settarget(inst,target,life,source)
 
 				local x, y, z = inst.Transform:GetWorldPosition()
 				local ents = TheSim:FindEntities(x, y, z, 20, TARGETS_MUST, TARGETS_CANT, TARGETS_ONEOF)
+
+                if #ents > 0 then
+                    for i=#ents, 1, -1 do
+                        local ent = ents[i]
+                        if source.TargetIsHostile and not source:TargetIsHostile(ent) then
+                            table.remove(ents,i)
+                        end
+                    end
+                end                                
+
                 if #ents > 0 then
 
                     local anglediffs = {}

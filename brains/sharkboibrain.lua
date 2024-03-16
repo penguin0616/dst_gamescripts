@@ -107,6 +107,13 @@ local function WanderAroundHole(inst)
 	return Wander(inst, nil, nil, nil, GetWanderDir, nil, nil, WANDER_DATA)
 end
 
+local CHATTERPARAMS_LOW = {
+	echotochatpriority = CHATPRIORITIES.LOW,
+}
+local CHATTERPARAMS_HIGH = {
+	echotochatpriority = CHATPRIORITIES.HIGH,
+}
+
 function SharkboiBrain:OnStart()
 	local root = PriorityNode({
 		WhileNode(
@@ -121,7 +128,10 @@ function SharkboiBrain:OnStart()
 							Leash(self.inst, GetTargetPos, TUNING.SHARKBOI_MELEE_RANGE, 3, true)),
 						FaceEntity(self.inst, GetTarget, IsTarget),
 					}, 0.5)),
-				ChattyNode(self.inst, "SHARKBOI_TALK_FIGHT",
+				ChattyNode(self.inst, {
+						name = "SHARKBOI_TALK_FIGHT",
+						chatterparams = CHATTERPARAMS_LOW,
+					},
 					ParallelNode{
 						ConditionWaitNode(function()
 							local target = self.inst.components.combat.target
@@ -138,7 +148,10 @@ function SharkboiBrain:OnStart()
 					}),
 				--Sharkboi won the battle? (or all targets deaggroed?)
 				IfNode(function() return self.inst:HasTag("hostile") end, "Gloating",
-					ChattyNode(self.inst, "SHARKBOI_TALK_GLOAT",
+					ChattyNode(self.inst, {
+							name = "SHARKBOI_TALK_GLOAT",
+							chatterparams = CHATTERPARAMS_LOW,
+						},
 						WanderAroundHole(self.inst))),
 				--Out of stock (after defeated)
 				IfNode(function() return self.inst.components.trader and self.inst.stock <= 0 end, "Out of stock",
@@ -149,11 +162,17 @@ function SharkboiBrain:OnStart()
 				--Trader (after defeated)
 				WhileNode(function() return self.inst.components.trader and self.inst.stock > 0 end, "Friendly",
 					PriorityNode({
-						ChattyNode(self.inst, "SHARKBOI_TALK_ATTEMPT_TRADE",
+						ChattyNode(self.inst, {
+								name = "SHARKBOI_TALK_ATTEMPT_TRADE",
+								chatterparamts = CHATTERPARAMS_HIGH,
+							},
 							FaceEntity(self.inst, GetFarTraderFn, KeepTraderFn)),
 						FaceEntity(self.inst, GetNearTraderFn, KeepTraderFn),
 						SequenceNode{
-							ChattyNode(self.inst, "SHARKBOI_TALK_FRIENDLY",
+							ChattyNode(self.inst, {
+									name = "SHARKBOI_TALK_FRIENDLY",
+									chatterparamts = CHATTERPARAMS_HIGH,
+								},
 								FaceEntity(self.inst, GetNearbyPlayerFn, KeepNearbyPlayerFn, 6)),
 							ParallelNodeAny{
 								WanderAroundHole(self.inst),
@@ -164,7 +183,10 @@ function SharkboiBrain:OnStart()
 					}, 0.5)),
 				--When first spawned; alternate between wandering and looking at you
 				SequenceNode{
-					ChattyNode(self.inst, "SHARKBOI_TALK_IDLE",
+					ChattyNode(self.inst, {
+							name = "SHARKBOI_TALK_IDLE",
+							chatterparams = CHATTERPARAMS_LOW,
+						},
 						FaceEntity(self.inst, GetNearbyPlayerFn, KeepNearbyPlayerFn, 4)),
 					ParallelNodeAny{
 						WanderAroundHole(self.inst),

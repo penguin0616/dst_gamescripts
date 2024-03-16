@@ -1373,7 +1373,7 @@ function TEMPLATES.ChatterMessageBadge()
     flair.bg = flair:AddChild(Image())
     flair.bg:SetScale(0.8)
 
-    flair.flair_img = flair:AddChild(Image(GetProfileFlairAtlasAndTex()))
+    flair.flair_img = flair:AddChild(Image("images/npcchatflairs.xml", "npcchatflair_none.tex"))
     flair.flair_img:SetScale(.55)
     flair.flair_img:SetPosition(0, 31)
 
@@ -1381,14 +1381,13 @@ function TEMPLATES.ChatterMessageBadge()
     flair:SetClickable(false)
 
     --Setup custom widget functions
-    flair.SetFlair = function(self, profileflair)
-        self.profileflair = profileflair
+    flair.SetFlair = function(self, chatflair)
+        self.profileflair = chatflair
 
         if self.profileflair then
-            if profileflair == "default" then
-                profileflair = nil
-            end
-            self.flair_img:SetTexture(GetProfileFlairAtlasAndTex(profileflair))
+            local attempt_texture = ((not chatflair or chatflair == "default") and "npcchatflair_none.tex")
+                or chatflair..".tex"
+            self.flair_img:SetTexture("images/npcchatflairs.xml", attempt_texture, "npcchatflair_none.tex")
         end
     end
 

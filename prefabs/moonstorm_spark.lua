@@ -128,14 +128,13 @@ local function onworked(inst, worker)
     if worker.components.inventory ~= nil then
 
         if TheWorld.components.moonstormmanager then
-            print("PICKED UP")
             TheWorld.components.moonstormmanager:DoTestForSparks()
         end
 
         worker.components.inventory:GiveItem(inst, nil, inst:GetPosition())
         worker.SoundEmitter:PlaySound("dontstarve/common/butterfly_trap")
         inst.SoundEmitter:KillSound("idle_LP")
-    end    
+    end
 end
 
 local function OnWake(inst)

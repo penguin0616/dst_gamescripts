@@ -453,12 +453,29 @@ local CHATTER_DELAYS =
 	["SHARKBOI_REFUSE_EMPTY"] =			{ delay = 3 },
 }
 
+local DEFAULT_CHAT_ECHO_PRIORITY = CHATPRIORITIES.LOW
+local CHATTER_ECHO_PRIORITIES =
+{
+	["SHARKBOI_ACCEPT_OCEANFISH"]		= CHATPRIORITIES.HIGH,
+	["SHARKBOI_ACCEPT_BIG_OCEANFISH"] 	= CHATPRIORITIES.HIGH,
+	["SHARKBOI_REFUSE_NOT_OCEANFISH"] 	= CHATPRIORITIES.HIGH,
+	["SHARKBOI_REFUSE_TOO_SMALL"]		= CHATPRIORITIES.HIGH,
+	["SHARKBOI_REFUSE_EMPTY"]			= CHATPRIORITIES.HIGH,
+}
+
 local function TryChatter(inst, strtblname, index, ignoredelay, force)
 	local t = GetTime()
 	local delays = CHATTER_DELAYS[strtblname]
 	if ignoredelay or (inst.sg.mem.lastchatter or 0) + (delays and delays.delay or 0) < t then
 		inst.sg.mem.lastchatter = t
-		inst.components.talker:Chatter(strtblname, index or math.random(#STRINGS[strtblname]), delays and delays.len or nil, force)
+		local echo_priority = CHATTER_ECHO_PRIORITIES[strtblname] or DEFAULT_CHAT_ECHO_PRIORITY
+		inst.components.talker:Chatter(
+			strtblname,
+			index or math.random(#STRINGS[strtblname]),
+			(delays and delays.len) or nil,
+			force,
+			echo_priority
+		)
 	end
 end
 

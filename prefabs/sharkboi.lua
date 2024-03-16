@@ -264,7 +264,7 @@ end
 local function OnKilledOther(inst, data)
 	if data and data.victim and data.victim:HasTag("player") then
 		if not inst:HasTag("ignoretalking") then
-			inst.components.talker:Chatter("SHARKBOI_TALK_GLOAT", math.random(#STRINGS.SHARKBOI_TALK_GLOAT), nil, true)
+			inst.components.talker:Chatter("SHARKBOI_TALK_GLOAT", math.random(#STRINGS.SHARKBOI_TALK_GLOAT), nil, true, CHATPRIORITIES.LOW)
 			inst.components.talker:IgnoreAll("gloat")
 			inst:DoTaskInTime(3, EndGloat)
 		end
@@ -655,13 +655,15 @@ local function fn()
 	inst.AnimState:SetBuild("sharkboi_build")
 	inst.AnimState:PlayAnimation("idle", true)
 
-	inst:AddComponent("talker")
-	inst.components.talker.fontsize = 40
-	inst.components.talker.font = TALKINGFONT
-	inst.components.talker.colour = Vector3(unpack(WET_TEXT_COLOUR))
-	inst.components.talker.offset = Vector3(0, -400, 0)
-	inst.components.talker.symbol = "sharkboi_cloak"
-	inst.components.talker:MakeChatter()
+	local talker = inst:AddComponent("talker")
+	talker.fontsize = 40
+	talker.font = TALKINGFONT
+	talker.colour = Vector3(unpack(WET_TEXT_COLOUR))
+	talker.offset = Vector3(0, -400, 0)
+	talker.symbol = "sharkboi_cloak"
+	talker.name_colour = Vector3(131/256, 153/256, 172/256)
+	talker.chaticon = "npcchatflair_sharkboi"
+	talker:MakeChatter()
 
 	inst.finmode = net_bool(inst.GUID, "sharkboi.finmode", "finmodedirty")
 

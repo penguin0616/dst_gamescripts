@@ -4947,7 +4947,7 @@ STRINGS =
 
         WALL_SCRAP_ITEM = "A pile of junk, roughly wall-shaped.",
 
-        ARMOR_LUNARPLANT_HUSK = "Feel the wrath of a full plantkin", --[[TODO]]
+        ARMOR_LUNARPLANT_HUSK = "Become the prickliest of them all.", --[[TODO]]
     },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
@@ -8363,6 +8363,7 @@ STRINGS.UI =
         WHACK = "Whack",
         HUNGRY = "Hungry",
         STARVING = "Starving",
+        DESTROY = "Destroy",
         DEATH_PET_NAME = "%s's %s", --e.g. "Vito's Cat"
         DEATH_ANNOUNCEMENT_1 = "was killed by",
         DEATH_ANNOUNCEMENT_2_MALE = ". He became a spooky ghost!",
@@ -15937,7 +15938,7 @@ STRINGS.SCRAPBOOK = {
         RUINS_CHAIR = "A chair. You can sit in it.",
         SALTBOX = "A container with 9 slots that will accept food ingredient items.\n\nIt quadruples the time before the food will spoil",
         SALTLICK = "A constructed Saltlick will attract nearby Beefalo and other herd like animals.\n\nThey will lick the saltlick, eventually depleting it.\n\nBeefalo who use the saltlick will pause their domestication decay.",
-        DRAGONFLYFURNACE = "Provides a small amount of light and a large amount of heat like a campfire.",
+        DRAGONFLYFURNACE = "Provides a small amount of light and a large amount of heat like a campfire. It may also be used to destroy items.",
         SIESTAHUT = "Useable in the day.\n\nSurvivor recovers 2 Health per second and 1 Sanity per second but consumes 0.33 Hunger per second. It also reduces 1 Wetness per second and lowers temperature 1 degree per second down to 40 degrees.",
         HOMESIGN = "When placed, it allows the survivor to write a message that can be read by themselves or other survivors later.",
         SISTURN = "A 4 slot container that can hold petals.\n\nWhen full of petals it raises nearby survivors Sanity by 25 per minute.\n\nAs well, Abigail's health regenerates 4x faster.\n\nWhen the petals rot, they will drop out of the container onto the ground as rot.",

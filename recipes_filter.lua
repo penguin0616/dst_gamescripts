@@ -1088,7 +1088,6 @@ CRAFTING_FILTERS.STRUCTURES.recipes =
 	"wall_moonrock_item",	
 	"wall_dreadstone_item",
 
-
 	"homesign",
 	"arrowsign_post",
 	"minisign_item",
@@ -1259,7 +1258,8 @@ CRAFTING_FILTERS.DECOR.recipes =
 	"wall_hay_item",
 	"wall_wood_item",
 	"wall_stone_item",
-	"wall_moonrock_item",
+	"wall_scrap_item",
+	"wall_moonrock_item",	
 	"wall_dreadstone_item",
 
 	"pirate_flag_pole",

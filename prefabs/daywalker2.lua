@@ -564,12 +564,31 @@ end
 local function OnAttacked(inst, data)
 	if data.attacker then
 		local target = inst.components.combat.target
-		if not (target and
-				target.isplayer and
-				target:IsNear(inst, inst.components.combat:GetAttackRange() + target:GetPhysicsRadius(0)))
-		then
-			inst.components.combat:SetTarget(data.attacker)
+		local targetinrange
+		if target and target.isplayer then
+			targetinrange = target:IsNear(inst, inst.components.combat:GetAttackRange() + target:GetPhysicsRadius(0))
+			if targetinrange then
+				--keep player target if they're in range
+				return
+			end
 		end
+
+		if inst.components.rooted or inst.components.stuckdetection:IsStuck() then
+			if data.attacker:IsNear(inst, inst.components.combat:GetAttackRange() + data.attacker:GetPhysicsRadius(0)) then
+				--switch to attacker if they're in range
+				inst.components.combat:SetTarget(data.attacker)
+				return
+			elseif targetinrange == nil and target then
+				targetinrange = target:IsNear(inst, inst.components.combat:GetAttackRange() + target:GetPhysicsRadius(0))
+			end
+			if targetinrange then
+				--keep current target if they're in range
+				return
+			end
+			--neither target in range, default to just switching targets
+		end
+
+		inst.components.combat:SetTarget(data.attacker)
 	end
 end
 
@@ -1018,13 +1037,15 @@ local function fn()
 
 	inst.DynamicShadow:SetSize(3.5, 1.5)
 
-	inst:AddComponent("talker")
-	inst.components.talker.fontsize = 40
-	inst.components.talker.font = TALKINGFONT
-	inst.components.talker.colour = Vector3(238 / 255, 69 / 255, 105 / 255)
-	inst.components.talker.offset = Vector3(0, -400, 0)
-	inst.components.talker.symbol = "ww_hunch"
-	inst.components.talker:MakeChatter()
+	local talker = inst:AddComponent("talker")
+	talker.fontsize = 40
+	talker.font = TALKINGFONT
+	talker.colour = Vector3(238 / 255, 69 / 255, 105 / 255)
+	talker.offset = Vector3(0, -400, 0)
+	talker.symbol = "ww_hunch"
+    talker.name_colour = Vector3(175/256, 133/256, 64/256)
+    talker.chaticon = "npcchatflair_daywalker_scrap"
+	talker:MakeChatter()
 
 	inst._headtracking = net_bool(inst.GUID, "daywalker._headtracking", "headtrackingdirty")
 	inst._stalking = net_entity(inst.GUID, "daywalker._stalking", "stalkingdirty")

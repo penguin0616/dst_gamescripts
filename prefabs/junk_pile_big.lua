@@ -401,10 +401,6 @@ local function OnLoad(inst, data)
 			end
 		end
 	end
-
-    if TheWorld.components.wagpunk_manager then
-        TheWorld.components.wagpunk_manager:RegisterBigJunk(inst)
-    end
 end
 
 local function WatchForDaywalkerRemove(inst, daywalker)
@@ -515,6 +511,8 @@ local function fn()
 		return inst
 	end
 
+	inst.scrapbook_anim = "scrapbook"
+
 	inst:AddComponent("inspectable")
 
 	inst:AddComponent("pickable")
@@ -549,6 +547,7 @@ local function fn()
     inst:AddComponent("lootdropper")
     inst.SpawnLoot = SpawnLoot -- FIXME(JBK): Temporary respawning routine for beta.
 
+    TheWorld:PushEvent("ms_register_junk_pile_big", inst)
 
 	return inst
 end

@@ -1394,6 +1394,52 @@ function params.battlesong_container.itemtestfn(container, item, slot)
 end
 
 --------------------------------------------------------------------------
+--[[ dragonflyfurnace ]]
+--------------------------------------------------------------------------
+
+params.dragonflyfurnace =
+{
+    widget =
+    {
+        slotpos =
+        {
+            Vector3(-37.5, 32 + 4, 0),
+            Vector3(37.5, 32 + 4, 0),
+            Vector3(-37.5, -(32 + 4), 0),
+            Vector3(37.5, -(32 + 4), 0),
+        },
+        animbank = "ui_bundle_2x2",
+        animbuild = "ui_bundle_2x2",
+        pos = Vector3(200, 0, 0),
+        side_align_tip = 120,
+        buttoninfo =
+        {
+            text = STRINGS.UI.HUD.DESTROY,
+            position = Vector3(0, -100, 0),
+        }
+    },
+    type = "cooker",
+}
+
+function params.dragonflyfurnace.itemtestfn(container, item, slot)
+    return not item:HasOneOfTags("irreplaceable", "_container", "bundle")
+end
+
+function params.dragonflyfurnace.widget.buttoninfo.fn(inst, doer)
+    if inst.components.container ~= nil and inst.OnContentsDestroyed ~= nil then
+        inst.components.container:DestroyContents()
+        inst:OnContentsDestroyed()
+
+    elseif inst.replica.container ~= nil and not inst.replica.container:IsBusy() then
+        SendRPCToServer(RPC.DoWidgetButtonAction, nil, inst)
+    end
+end
+
+function params.dragonflyfurnace.widget.buttoninfo.validfn(inst)
+    return inst.replica.container ~= nil and not inst.replica.container:IsEmpty()
+end
+
+--------------------------------------------------------------------------
 --[[ quagmire_pot ]]
 --------------------------------------------------------------------------
 

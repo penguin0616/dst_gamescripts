@@ -493,26 +493,21 @@ function MakeBanner(self)
 	end
 
     if title_str ~= nil then
-        local font_size = 32
+        local x, y = 170, 19
+        local text_width = 880
+        local font_size = 22
 
         local shadow = banner_root:AddChild(Text(self.info_font, font_size, title_str, UICOLOURS.BLACK))
         local title  = banner_root:AddChild(Text(self.info_font, font_size, title_str, UICOLOURS.HIGHLIGHT_GOLD))
 
-        title:SetHAnchor(ANCHOR_RIGHT)
-        title:SetVAnchor(ANCHOR_MIDDLE)
-        title:SetHAlign(ANCHOR_MIDDLE)
-        shadow:SetHAnchor(ANCHOR_RIGHT)
-        shadow:SetVAnchor(ANCHOR_MIDDLE)
-        shadow:SetHAlign(ANCHOR_MIDDLE)
-
-        local w, h = title:GetRegionSize()
-
-        local x, y = -75 - w/2, 35
-
-        title:SetPosition(x, y)
+        shadow:SetRegionSize(text_width, 2*(font_size + 2))
+        title:SetRegionSize(text_width, 2*(font_size + 2))
+        shadow:SetHAlign(ANCHOR_RIGHT)
+        title:SetHAlign(ANCHOR_RIGHT)
+        
         shadow:SetPosition(x + 2, y - 2)
+        title:SetPosition(x, y)
     end
-
 
     return banner_root
 end

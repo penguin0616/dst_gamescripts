@@ -1019,7 +1019,7 @@ end
 local function Junkyard_NewContent_Retrofitting()
 
 	if TheWorld.topology.overrides ~= nil and TheWorld.topology.overrides.junkyard == "never" then
-		print("Retrofitting for Junkyard: Skipping due to overrides.stageplays == never")
+		print("Retrofitting for Junkyard: Skipping due to overrides.junkyard == never")
 		return
 	end
 
@@ -1050,7 +1050,34 @@ local function Junkyard_NewContent_Retrofitting()
 		return
 	end
 
+    local needs_robot = true
+    local needs_marker = true
+    local bigjunkpile = nil
+    for k, v in pairs(Ents) do
+        if v.prefab == "storage_robot" then
+            needs_robot = false
+        elseif v.prefab == "wagstaff_machinery_marker" then
+            needs_marker = false
+        elseif v.prefab == "junk_pile_big" then
+            bigjunkpile = v
+        end
+    end
+
+    if bigjunkpile ~= nil and not needs_robot and not needs_marker then
+		print("Retrofitting for the Junk Yard: Nothing needed.")
+        return
+    end
+
 	print("Retrofitting for Junk Yard: Adding missing junkyard objects.")
+    if bigjunkpile == nil then
+        print("Going to try to add junk_pile_big.")
+    end
+    if needs_robot then
+        print("Going to try to add storage_robot.")
+    end
+    if needs_marker then
+        print("Going to try to add wagstaff_machinery_marker.")
+    end
 
 	local VALID_JUNKYARD_WORLDTILES = {
 		WORLD_TILES.DIRT_NOISE,
@@ -1069,35 +1096,99 @@ local function Junkyard_NewContent_Retrofitting()
 		end
 		return false
 	end
+    local is_valid_NO_DOCKS = function(x, y, z, prefab)
+        return not TheWorld.Map:IsDockAtPoint(x, y, z)
+    end
 
-	local on_add_prefab = function(inst)
-		local pos = Vector3(inst.Transform:GetWorldPosition())
+    local NO_JUNK_FLAG = {} -- NOTES(JBK): Using a table here in case RetrofitNewContentPrefab changes and no one updates this callback for a unique variable.
+	local on_add_prefab = function(inst, nojunk)
 		local MAX = 8
-		for i=1,MAX do
-			local radius = math.random()*5 +3
-			local offset = FindWalkableOffset(pos, i*(TWOPI/MAX) + (math.random() * PI/(MAX/4) ), radius, 10, true, false)
-			if offset then 
-				pos = pos +offset
-				local junk = SpawnPrefab("junk_pile")
-				junk.Transform:SetPosition(pos.x,pos.y,pos.z)
-			end
-		end
+		local pos = Vector3(inst.Transform:GetWorldPosition())
+        local offset = nil
+        if needs_robot then
+            for radius = math.random() * 5 + 3, 3, -0.5 do
+                offset = FindWalkableOffset(pos, math.random() * PI / (MAX / 4), radius, 10, true, false)
+                if offset then
+                    break
+                end
+            end
+            if offset then
+                pos = pos + offset
+            else
+                local r = inst:GetPhysicsRadius()
+                local theta = math.random() * PI2
+                pos.x = pos.x + r * math.cos(theta)
+                pos.z = pos.z + r * math.sin(theta)
+            end
+            local robot = SpawnPrefab("storage_robot") -- Required for retrofitting.
+            robot.Transform:SetPosition(pos:Get())
+            robot.components.fueled:SetPercent(0)
+            robot.sg:GoToState("idle_broken")
+        end
 
-		local radius = math.random()*5 +3
-		local offset = FindWalkableOffset(pos, (math.random() * PI/(MAX/4) ), radius, 10, true, false)
-		if offset then 
-			pos = pos + offset
-			local robot = SpawnPrefab("storage_robot")
-			robot.Transform:SetPosition(pos:Get())
-			robot.components.fueled:SetPercent(0)
-		end
+        pos = Vector3(inst.Transform:GetWorldPosition())
+        offset = nil
+        if needs_marker then
+            for radius = math.random() * 5 + 3, 3, -0.5 do
+                offset = FindWalkableOffset(pos, math.random() * PI / (MAX / 4), radius, 10, true, false)
+                if offset then
+                    break
+                end
+            end
+            if offset then
+                pos = pos + offset
+            else
+                local r = inst:GetPhysicsRadius()
+                local theta = math.random() * PI2
+                pos.x = pos.x + r * math.cos(theta)
+                pos.z = pos.z + r * math.sin(theta)
+            end
+            local marker = SpawnPrefab("wagstaff_machinery_marker") -- Required for retrofitting.
+            marker.Transform:SetPosition(pos:Get())
+        end
+
+        if nojunk == NO_JUNK_FLAG then
+            for i = 1, MAX do
+                local radius = math.random() * 5 + 3
+                local offset = FindWalkableOffset(pos, i * (TWOPI / MAX) + (math.random() * PI / (MAX / 4) ), radius, 10, true, false)
+                if offset then 
+                    local junk = SpawnPrefab("junk_pile") -- Not needed for retrofitting.
+                    junk.Transform:SetPosition(pos.x + offset.x, pos.y + offset.y, pos.z + offset.z)
+                end
+            end
+        end
 	end
 
 	--RetrofitNewContentPrefab(inst, prefab, min_space, dist_from_structures, canplacefn, candidtate_nodes, on_add_prefab)
+    local function TryReallyHardForThis()
+        if RetrofitNewContentPrefab(inst, "junk_pile_big", 10.5, 8, is_valid_jy_turf, jy_candidate_nodes, on_add_prefab) then
+            return
+        end
+        print("Retrofitting for Junk Yard: Failed to place a junk pile in the world for best spots retrying with any turf.")
+        if RetrofitNewContentPrefab(inst, "junk_pile_big", 10.5, 8, is_valid_NO_DOCKS, jy_candidate_nodes, on_add_prefab) then
+            print("Was a success.")
+            return
+        end
+        print("Retrofitting for Junk Yard: Failed to place a junk pile in the world for non turf spots retrying with less space.")
+        if RetrofitNewContentPrefab(inst, "junk_pile_big", 8, nil, is_valid_NO_DOCKS, jy_candidate_nodes, on_add_prefab) then
+            print("Was a success.")
+            return
+        end
+        print("Retrofitting for Junk Yard: Failed to place a junk pile in the world for less space retrying with even less space.")
+        for i = 1, 10 do
+            if RetrofitNewContentPrefab(inst, "junk_pile_big", 4, nil, is_valid_NO_DOCKS, jy_candidate_nodes, on_add_prefab) then
+                print("Was a success.")
+                return
+            end
+        end
+        print("Retrofitting for Junk Yard: Failed to place a junk pile in the world for even less space.")
+    end
 
-	if not RetrofitNewContentPrefab(inst, "junk_pile_big", 10.5, 8, is_valid_jy_turf, jy_candidate_nodes, on_add_prefab) then
-		print("Retrofitting for Junk Yard: Failed to place a junk pile in the world.")
-	end
+    if bigjunkpile == nil then
+        TryReallyHardForThis() -- NOTES(JBK): Retrofitting in the junk pile is mandatory somewhere in the world for the daywalker fight we can not let this slip by.
+    else
+        on_add_prefab(bigjunkpile, NO_JUNK_FLAG)
+    end
 end
 --------------------------------------------------------------------------
 --[[ Post initialization ]]
@@ -1457,6 +1548,11 @@ function self:OnPostInit()
 		Junkyard_NewContent_Retrofitting()
 	end
 
+    if self.retrofit_junkyardv3_content then
+        print("Retrofitting for Junk Yard: Adding important prefabs normally found in new setpieces SECOND PASS.")
+        Junkyard_NewContent_Retrofitting()
+    end
+
 	---------------------------------------------------------------------------
 
 	if self.requiresreset then
@@ -1512,6 +1608,7 @@ function self:OnLoad(data)
         self.console_beard_turf_fix = data.console_beard_turf_fix or false
         self.retrofit_junkyard_content = data.retrofit_junkyard_content or false
         self.retrofit_junkyardv2_content = data.retrofit_junkyardv2_content or false
+        self.retrofit_junkyardv3_content = data.retrofit_junkyardv3_content or false
     end
 end
 

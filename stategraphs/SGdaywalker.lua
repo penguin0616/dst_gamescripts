@@ -309,8 +309,9 @@ local CHATTER_DELAYS =
 	["DAYWALKER_ATTACK"] =			{ delay = 4, len = 1.5 },
 }
 
-local function TryChatter(inst, strtblname, index, ignoredelay)
-	SGDaywalkerCommon.TryChatter(inst, CHATTER_DELAYS, strtblname, index, ignoredelay)
+local function TryChatter(inst, strtblname, index, ignoredelay, echotochatpriority)
+	-- 'echotochatpriority' defaults to CHATPRIORITIES.LOW if nil is passed.
+	SGDaywalkerCommon.TryChatter(inst, CHATTER_DELAYS, strtblname, index, ignoredelay, echotochatpriority)
 end
 
 --------------------------------------------------------------------------
@@ -640,7 +641,7 @@ local states =
 			inst.SoundEmitter:PlaySound("daywalker/voice/hurt")
 			inst.sg.mem.struggle_count = (inst.sg.mem.struggle_count or 0) + 1
 			inst.sg.mem.shrug_count = 0
-			TryChatter(inst, "DAYWALKER_SHAKE_LEECHES")
+			TryChatter(inst, "DAYWALKER_SHAKE_LEECHES", nil, nil, CHATPRIORITIES.HIGH)
 		end,
 
 		timeline =
@@ -764,7 +765,7 @@ local states =
 			inst.Physics:SetMotorVelOverride(2, 0, 0)
 			inst.sg.mem.shrug_count = (inst.sg.mem.shrug_count or 0) + 1
 			inst.sg.mem.struggle_count = 0
-			TryChatter(inst, "DAYWALKER_SHAKE_LEECHES")
+			TryChatter(inst, "DAYWALKER_SHAKE_LEECHES", nil, nil, CHATPRIORITIES.HIGH)
 		end,
 
 		onupdate = function(inst)
@@ -1652,7 +1653,7 @@ local states =
 		timeline =
 		{
 			FrameEvent(13, function(inst)
-				TryChatter(inst, "DAYWALKER_POWERDOWN")
+				TryChatter(inst, "DAYWALKER_POWERDOWN", nil, nil, CHATPRIORITIES.HIGH)
 			end),
 		},
 

@@ -26,7 +26,7 @@ local function ChooseAttack(inst)
 		elseif inst.canswing then
 			inst.sg:GoToState("attack_swing", target)
 			return true
-		elseif inst.components.rooted then
+		elseif inst.components.rooted or inst.components.stuckdetection:IsStuck() then
 			inst.sg:GoToState("attack_pounce_pre", target)
 			return true
 		end
@@ -348,8 +348,9 @@ local CHATTER_DELAYS =
 	["DAYWALKER_ATTACK"] =			{ delay = 4, len = 1.5 },
 }
 
-local function TryChatter(inst, strtblname, index, ignoredelay)
-	SGDaywalkerCommon.TryChatter(inst, CHATTER_DELAYS, strtblname, index, ignoredelay)
+local function TryChatter(inst, strtblname, index, ignoredelay, echotochatpriority)
+	-- 'echotochatpriority' defaults to CHATPRIORITIES.LOW if nil is passed.
+	SGDaywalkerCommon.TryChatter(inst, CHATTER_DELAYS, strtblname, index, ignoredelay, echotochatpriority)
 end
 
 --------------------------------------------------------------------------

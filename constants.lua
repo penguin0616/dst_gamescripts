@@ -2170,6 +2170,19 @@ PLANTREGISTRYUICOLOURS = {
 MAX_CHAT_INPUT_LENGTH = 150
 MAX_WRITEABLE_LENGTH = 200
 
+-- Used by exportprefabs to identify which "npcchatflairs" images to recognize.
+DST_NPCCHATTERLIST =
+{
+    "none", -- Default chatter/image name
+
+    "daywalker",
+    "daywalker_scrap",
+    "hermitcrab",
+    "sharkboi",
+    "stalker",
+    "wagstaff",
+}
+
 CHATPRIORITIES =
 {
     -- Messages sent with priority 0 should never appear in chat history.

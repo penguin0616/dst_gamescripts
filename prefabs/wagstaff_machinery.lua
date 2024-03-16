@@ -178,16 +178,6 @@ local function fn()
     return inst
 end
 
-local function OnLoadMarker(inst)
-    if TheWorld.components.wagpunk_manager then
-        TheWorld.components.wagpunk_manager:RegisterMachineMarker(inst)
-    end
-end
-
-local function OnSaveMarker(inst, data)
-
-end
-
 local function markerfn()
     local inst = CreateEntity()
     inst.entity:AddNetwork()    
@@ -197,13 +187,13 @@ local function markerfn()
     inst:AddTag("CLASSIFIED")
     inst:AddTag("NOCLICK")
 
-    inst.OnLoad = OnLoadMarker
-    inst.OnSave = OnSaveMarker
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
         return inst
     end
+
+    TheWorld:PushEvent("ms_register_wagstaff_machinery", inst)
 
     return inst    
 end

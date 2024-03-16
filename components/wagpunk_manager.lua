@@ -78,6 +78,9 @@ local WagpunkManager = Class(function(self, inst)
 
     self.inst:ListenForEvent("ms_playerjoined", OnPlayerJoined)
     self.inst:ListenForEvent("ms_playerleft",   OnPlayerLeft)
+
+    self.inst:ListenForEvent("ms_register_wagstaff_machinery", function(inst, ent) self:RegisterMachineMarker(ent) end, TheWorld)
+    self.inst:ListenForEvent("ms_register_junk_pile_big", function(inst, ent) self:RegisterBigJunk(ent) end, TheWorld)
 end)
 
 function WagpunkManager:RemoveMachine(GUID)
@@ -279,6 +282,7 @@ function WagpunkManager:ApplyFenceRotationTransformation_Internal(anglefromjunkt
             end
         end
     end
+    -- Do not filter ocean points here in case docks are made.
 end
 function WagpunkManager:TryToSpawnFences()
     if self.machinemarker == nil or self.bigjunk == nil then
@@ -296,7 +300,7 @@ function WagpunkManager:TryToSpawnFences()
     x1, z1 = math.floor(x1), math.floor(z1)
     for i, v in ipairs(self.fences) do
         local cx, cz = x1 + v[1] + 0.5, z1 + v[2] + 0.5 -- These are in centered wall coordinates.
-        if TheSim:CountEntities(cx, 0, cz, 0.5) == 0 then
+        if not TheWorld.Map:IsOceanAtPoint(cx, 0, cz, false) and TheSim:CountEntities(cx, 0, cz, 0.5) == 0 then
             local fence = SpawnPrefab("fence_junk")
             fence.Transform:SetPosition(cx, 0, cz)
             --fence.Transform:SetRotation(v[3])

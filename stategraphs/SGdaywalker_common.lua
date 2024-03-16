@@ -18,12 +18,13 @@ end
 
 --------------------------------------------------------------------------
 
-SGDaywalkerCommon.TryChatter = function(inst, delaytbl, strtblname, index, ignoredelay)
+SGDaywalkerCommon.TryChatter = function(inst, delaytbl, strtblname, index, ignoredelay, prioritylevel)
 	local t = GetTime()
 	local delays = delaytbl[strtblname]
 	if ignoredelay or (inst.sg.mem.lastchatter or 0) + (delays and delays.delay or 0) < t then
+		prioritylevel = prioritylevel or CHATPRIORITIES.LOW
 		inst.sg.mem.lastchatter = t
-		inst.components.talker:Chatter(strtblname, index or math.random(#STRINGS[strtblname]), delays and delays.len or nil)
+		inst.components.talker:Chatter(strtblname, index or math.random(#STRINGS[strtblname]), (delays and delays.len) or nil, nil, prioritylevel)
 	end
 end
 
