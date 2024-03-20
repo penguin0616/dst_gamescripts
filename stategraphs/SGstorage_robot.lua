@@ -81,7 +81,10 @@ local states =
                 return
             end
 
+            inst.components.fueled:StopConsuming()
             inst.components.locomotor:Stop()
+
+            inst.SoundEmitter:KillSound(WALK_SOUNDNAME)
 
             TryPlayingNeutralVocalizationSound(inst)
 

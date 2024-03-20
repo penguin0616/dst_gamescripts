@@ -590,7 +590,9 @@ ACTIONS.STEAL.fn = function(act)
     local target = act.target.components.inventory == nil and act.target or nil
 
     if owner ~= nil then
-        return act.doer.components.thief:StealItem(owner, target, act.attack == true)
+        if act.doer.components.thief ~= nil then
+            return act.doer.components.thief:StealItem(owner, target, act.attack == true)
+        end
     elseif act.target.components.dryer ~= nil then
         return act.target.components.dryer:DropItem()
     end
@@ -812,7 +814,10 @@ ACTIONS.RUMMAGE.fn = function(act)
             return false, "INUSE"
         elseif targ.components.container.canbeopened and (proxy == nil or proxy.components.container_proxy:CanBeOpened()) then
             local owner = targ.components.inventoryitem ~= nil and targ.components.inventoryitem:GetGrandOwner() or nil
-            if owner ~= nil and (targ.components.quagmire_stewer ~= nil or targ.components.container.droponopen and not owner:HasTag("player")) then
+			if owner and
+				(targ.components.container.droponopen or targ.components.quagmire_stewer) and
+				not (owner:HasTag("player") and targ:HasTag("portablestorage"))
+			then
                 if owner == act.doer then
                     owner.components.inventory:DropItem(targ, true, true)
 				elseif owner:HasTag("pocketdimension_container") then
@@ -2237,10 +2242,35 @@ ACTIONS.INVESTIGATE.fn = function(act)
 end
 
 ACTIONS.COMMENT.fn = function(act)
-    if act.doer.components.talker and act.doer.comment_data then
-        act.doer.components.talker:Say(act.doer.comment_data.speech)
-        act.doer.comment_data = nil
+    local comment_data = act.doer.comment_data
+    if not comment_data then
+        return
     end
+
+    if act.doer.components.npc_talker then
+        if comment_data.do_chatter then
+            act.doer.components.npc_talker:Chatter(
+                comment_data.speech,
+                comment_data.chatter_index,
+                nil, nil,
+                comment_data.chat_priority
+            )
+        else
+            act.doer.components.npc_talker:Say(comment_data.speech)
+        end
+    elseif act.doer.components.talker then
+        if comment_data.do_chatter then
+            act.doer.components.talker:Chatter(
+                comment_data.speech,
+                comment_data.chatter_index,
+                nil, nil,
+                comment_data.chat_priority
+            )
+        else
+            act.doer.components.talker:Say(comment_data.speech)
+        end
+    end
+    act.doer.comment_data = nil
 end
 
 ACTIONS.GOHOME.fn = function(act)

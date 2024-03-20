@@ -163,7 +163,13 @@ local function startpickingloop(inst)
 	inst._pickingtask = nil
 	inst._pickingloop = true
 
-	inst.SoundEmitter:PlaySound("qol1/wagstaff_ruins/rummagepile_lrg", "rummage")
+	for k, v in pairs(inst._pickers) do
+		if k:HasTag("junkmob") then
+			inst._mobloop = true
+			break
+		end
+	end
+	inst.SoundEmitter:PlaySound(inst._mobloop and "qol1/daywalker_scrappy/rummage_lp" or "qol1/wagstaff_ruins/rummagepile_lrg", "rummage")
 	inst.AnimState:PlayAnimation("loopbig", true)
 
 	if inst.sides then
@@ -184,6 +190,7 @@ local function stoppickingloop(inst)
 		return --loop hadn't actually started yet
 	end
 	inst._pickingloop = nil
+	inst._mobloop = nil
 
 	inst.SoundEmitter:KillSound("rummage")
 	inst.SoundEmitter:PlaySound("qol1/wagstaff_ruins/rummagepile_pst", nil, 0.3)
@@ -209,6 +216,19 @@ local function cancelpicker(inst, doer)
 		if next(inst._pickers) == nil then
 			inst._pickers = nil
 			stoppickingloop(inst)
+		elseif inst._mobloop then
+			inst._mobloop = nil
+			for k, v in pairs(inst._pickers) do
+				if k:HasTag("junkmob") then
+					inst._mobloop = true
+					break
+				end
+			end
+			if not inst._mobloop then
+				inst._mobloop = nil
+				inst.SoundEmitter:KillSound("rummage")
+				inst.SoundEmitter:PlaySound("qol1/wagstaff_ruins/rummagepile_lrg", "rummage")
+			end
 		end
 	end
 end
@@ -233,8 +253,15 @@ local function onstartpicking(inst, doer)
 		inst:ListenForEvent("newstate", cb, doer)
 		inst:ListenForEvent("onremove", cb, doer)
 
-		if inst._pickingloop and inst.daywalker_side and inst.daywalker_state == 2 and not inst.daywalker.sg.currentstate.name == "tryemerge" then
-			inst.daywalker.sg:GoToState("tryemerge")
+		if inst._pickingloop then
+			if not inst._mobloop and doer:HasTag("junkmob") then
+				inst._mobloop = true
+				inst.SoundEmitter:KillSound("rummage")
+				inst.SoundEmitter:PlaySound("qol1/daywalker_scrappy/rummage_lp", "rummage")
+			end
+			if inst.daywalker_side and inst.daywalker_state == 2 and not inst.daywalker.sg.currentstate.name == "tryemerge" then
+				inst.daywalker.sg:GoToState("tryemerge")
+			end
 		end
 	end
 end
@@ -325,15 +352,13 @@ local function onpickedfn(inst, picker, loot)
 				nearest_side = i
 			end
 		end
-		if nearest_side then			
-            if not inst.components.timer:TimerExists("daywalker_spawn_cd") then -- FIXME(JBK): Temporary respawning routine for beta.
-            	--#FIXME @V2C @JBK daywalker_spawn_cd refs in wagstaff
-                inst.components.timer:StartTimer("daywalker_spawn_cd", TUNING.TOTAL_DAY_TIME * 20)
+		if nearest_side then
+            local forestdaywalkerspawner = TheWorld.components.forestdaywalkerspawner
+            if forestdaywalkerspawner and forestdaywalkerspawner:CanSpawnFromJunk() then
                 spawn_daywalker(inst, nearest_side, 1)
                 if inst.daywalker then
 					SpawnPrefab("junk_break_fx").Transform:SetPosition(inst.daywalker.Transform:GetWorldPosition())
-                    inst.components.timer:PauseTimer("daywalker_spawn_cd")
-                    inst:WatchForDaywalkerRemove(inst.daywalker)
+                    forestdaywalkerspawner:WatchDaywalker(inst.daywalker)
                 end
 			else
 				inst.SoundEmitter:PlaySound("qol1/wagstaff_ruins/rummagepile_pst")
@@ -403,29 +428,32 @@ local function OnLoad(inst, data)
 	end
 end
 
-local function WatchForDaywalkerRemove(inst, daywalker)
-    if inst.components.timer:IsPaused("daywalker_spawn_cd") and not inst._temp_watching then
-        inst._temp_watching = inst:ListenForEvent("onremove", function()
-            inst.components.timer:ResumeTimer("daywalker_spawn_cd")
-        end, daywalker)
-    end
-end
-
-local function Shaker(inst) -- FIXME(JBK): Temporary respawning routine for beta.
+local function Shaker(inst)
     inst:PushEvent("shake")
     inst.shaketask = inst:DoTaskInTime(5 + math.random() * 4, Shaker)
 end
 
-local function OnTimerDone(inst, data)
-    if data == nil then
-        return
+local function StartDaywalkerBuried(inst)
+    if not inst:IsAsleep() then
+        if inst.shaketask ~= nil then
+            inst.shaketask:Cancel()
+            inst.shaketask = nil
+        end
+        inst.shaketask = inst:DoTaskInTime(5 + math.random() * 4, Shaker)
     end
+    inst.daywalker_side = nil
+end
 
-    if data.name == "daywalker_spawn_cd" then
-        if not inst:IsAsleep() then
+local function UpdateShaker(inst)
+    if inst.daywalker_state == nil then
+        local forestdaywalkerspawner = TheWorld.components.forestdaywalkerspawner
+        if forestdaywalkerspawner and forestdaywalkerspawner:ShouldShakeJunk() then
+            if inst.shaketask ~= nil then
+                inst.shaketask:Cancel()
+                inst.shaketask = nil
+            end
             inst.shaketask = inst:DoTaskInTime(5 + math.random() * 4, Shaker)
         end
-        inst.daywalker_side = nil
     end
 end
 
@@ -434,9 +462,7 @@ local function OnEntityWake(inst)
 	if not inst.hascannon and TheWorld.components.moonstormmanager and (TheWorld.components.moonstormmanager:GetCelestialChampionsKilled() or 0) > 0 then
 		inst.hascannon = true
 	end
-    if inst.daywalker_state == nil and not inst.components.timer:TimerExists("daywalker_spawn_cd") then
-        inst.shaketask = inst:DoTaskInTime(5 + math.random() * 4, Shaker)
-    end
+    inst:UpdateShaker()
 end
 
 local function OnEntitySleep(inst)
@@ -526,7 +552,6 @@ local function fn()
 	inst.components.workable:SetOnWorkCallback(OnWork)
 
     inst:AddComponent("timer")
-    inst:ListenForEvent("timerdone", OnTimerDone)
 
 	spawn_sides(inst)
 	set_variations(inst)
@@ -542,10 +567,11 @@ local function fn()
 	inst.CanBuryDaywalker = CanBuryDaywalker
 	inst.TryBuryDaywalker = TryBuryDaywalker
 	inst.TryReleaseDaywalker = TryReleaseDaywalker
+    inst.UpdateShaker = UpdateShaker
+    inst.StartDaywalkerBuried = StartDaywalkerBuried
 
-    inst.WatchForDaywalkerRemove = WatchForDaywalkerRemove -- FIXME(JBK): Temporary respawning routine for beta.
     inst:AddComponent("lootdropper")
-    inst.SpawnLoot = SpawnLoot -- FIXME(JBK): Temporary respawning routine for beta.
+    inst.SpawnLoot = SpawnLoot
 
     TheWorld:PushEvent("ms_register_junk_pile_big", inst)
 

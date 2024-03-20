@@ -64,18 +64,7 @@ end
 --------------------------------------------------------------------------------
 
 local function SetMaxMinimapStatus(inst)
-    inst.MiniMapEntity:SetCanUseCache(false)
-    inst.MiniMapEntity:SetDrawOverFogOfWar(true)
-    inst.MiniMapEntity:SetPriority(22)
     inst.MiniMapEntity:SetIcon("shadowrift_portal_max.png")
-
-    if inst.icon then
-        inst.icon:Remove()
-    end
-
-    inst.icon = SpawnPrefab("globalmapicon")
-    inst.icon:TrackEntity(inst)
-    inst.icon.MiniMapEntity:SetPriority(22)
     inst.icon_max = true
 end
 
@@ -382,7 +371,9 @@ local function portalfn()
     inst.Physics:SetCylinder(PHYSICS_SIZE_BY_STAGE[1], 6)
 
     inst.MiniMapEntity:SetIcon("shadowrift_portal.png")
-    inst.MiniMapEntity:SetPriority(1)
+    inst.MiniMapEntity:SetCanUseCache(false)
+    inst.MiniMapEntity:SetDrawOverFogOfWar(true)
+    inst.MiniMapEntity:SetPriority(22)
 
     local animstate = inst.AnimState
     animstate:SetBank ("shadowrift_portal")

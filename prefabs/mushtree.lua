@@ -702,10 +702,14 @@ local function maketree(name, data, state)
 
         inst.scrapbook_specialinfo = "TREE"
         inst.scrapbook_deps = { "charcoal", data.spore }
+        inst.scrapbook_hidesymbol = {}
 
         for i = 1, 3 do
             inst.AnimState:HideSymbol("swap_acidglob"..i)
             inst.AnimState:HideSymbol("swap_acidglob_bloom"..i)
+
+            table.insert(inst.scrapbook_hidesymbol, "swap_acidglob"..i)
+            table.insert(inst.scrapbook_hidesymbol, "swap_acidglob_bloom"..i)
         end
 
         inst._smoke_number = net_tinybyte(inst.GUID, "mushtree_"..name.."._smoke_number", "acidphasedirty")

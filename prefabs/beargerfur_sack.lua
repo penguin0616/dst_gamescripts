@@ -28,7 +28,9 @@ local sounds =
     close = "rifts3/bearger_sack/close",
 }
 
-local OPEN_SOUNDNAME = "openloop"
+local function GetOpenSoundName(inst)
+	return "openloop"..tostring(inst.GUID)
+end
 
 -----------------------------------------------------------------------------------------------
 
@@ -60,7 +62,10 @@ local function StartOpenSound(inst)
         inst._startsoundtask = nil
     end
 
-    inst.SoundEmitter:PlaySound(inst._sounds.open, OPEN_SOUNDNAME)
+	local SoundEmitter = (inst.components.inventoryitem:GetGrandOwner() or inst).SoundEmitter
+	if SoundEmitter then
+		SoundEmitter:PlaySound(inst._sounds.open, GetOpenSoundName(inst))
+	end
 end
 
 local function OnOpen(inst)
@@ -82,10 +87,15 @@ local function OnOpen(inst)
 end
 
 local function OnClose(inst)
-    inst.SoundEmitter:KillSound(OPEN_SOUNDNAME)
+	local open_soundname = GetOpenSoundName(inst)
+	local owner = inst.components.inventoryitem:GetGrandOwner()
+	if owner and owner.SoundEmitter then
+		owner.SoundEmitter:KillSound(open_soundname)
+	end
+	inst.SoundEmitter:KillSound(open_soundname)
     inst.components.inventoryitem:ChangeImageName()
 
-    if inst.components.inventoryitem.owner == nil then
+	if not inst.components.inventoryitem:IsHeld() then
         inst.AnimState:PlayAnimation("close")
         inst.AnimState:PushAnimation("closed", false)
     else
@@ -93,9 +103,10 @@ local function OnClose(inst)
     end
     inst:ToggleFrostFX(false)
 
-    if not inst:IsInLimbo() then
-        inst.SoundEmitter:PlaySound(inst._sounds.close)
-    end
+	local SoundEmitter = (inst.components.inventoryitem:GetGrandOwner() or inst).SoundEmitter
+	if SoundEmitter then
+		SoundEmitter:PlaySound(inst._sounds.close)
+	end
 end
 
 local function OnPutInInventory(inst)

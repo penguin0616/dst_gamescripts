@@ -30,106 +30,6 @@ end
 
 ---------------------------------------------------------------------------------------------------
 
-local CONTAINER_MUST_TAGS = { "_container" }
-local CONTAINER_CANT_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO" }
-
-local function FindContainerWithItem(inst, item, count)
-    count = count or 0
-    local x, y, z = inst:GetSpawnPoint():Get()
-
-    local stack_maxsize = item.components.stackable ~= nil and item.components.stackable.maxsize or 1
-
-    local ents = TheSim:FindEntities(x, y, z, TUNING.STORAGE_ROBOT_WORK_RADIUS, CONTAINER_MUST_TAGS, CONTAINER_CANT_TAGS)
-
-    for i, ent in ipairs(ents) do
-        if ent.components.container ~= nil and
-            ent.components.container:Has(item.prefab, 1) and
-            ent.components.container:CanAcceptCount(item, stack_maxsize) > count and
-            ent:IsOnPassablePoint() and
-            ent:GetCurrentPlatform() == inst:GetCurrentPlatform()
-        then
-            return ent
-        end
-    end
-
-    return
-end
-
----------------------------------------------------------------------------------------------------
-
-local function FindPickupableItem_filter(inst, item, onlytheseprefabs)
-    -- Ignore ourself and other storage robots.
-    if item:HasTag("storagerobot") then
-        return false
-    end
-
-    if not (item.components.inventoryitem ~= nil and
-        item.components.inventoryitem.canbepickedup and
-        item.components.inventoryitem.cangoincontainer and
-        not item.components.inventoryitem:IsHeld())
-    then
-        return false
-    end
-
-    if not item:IsOnPassablePoint() or item:GetCurrentPlatform() ~= inst:GetCurrentPlatform() then
-        return false
-    end
-
-    if inst.brain:ShouldIgnoreItem(item) then
-        return false
-    end
-
-    if onlytheseprefabs ~= nil and onlytheseprefabs[item.prefab] == nil then
-        return false
-    end
-
-    if item.components.bait ~= nil and item.components.bait.trap ~= nil then -- Do not steal baits.
-        return false
-    end
-
-    if item.components.trap ~= nil and not (item.components.trap:IsSprung() and item.components.trap:HasLoot()) then -- Only interact with traps that have something in it to take.
-        return false
-    end
-
-    -- Checks how many of this item we have.
-    local _, count = inst.components.inventory:Has(item.prefab, 1)
-
-    if not FindContainerWithItem(inst, item, count) then
-        return false
-    end
-
-    return item
-end
-
-local PICKUP_MUST_TAGS =
-{
-    "_inventoryitem"
-}
-
-local PICKUP_CANT_TAGS =
-{
-    "INLIMBO", "NOCLICK", "irreplaceable", "knockbackdelayinteraction",
-    "event_trigger", "mineactive", "catchable", "fire", "spider", "cursed",
-    "heavy", "outofreach",
-}
-
-local function FindPickupableItem(inst, onlytheseprefabs)
-    local x, y, z    = inst.Transform:GetWorldPosition()
-    local sx, xy, sz = inst:GetSpawnPoint():Get()
-
-    local ents = TheSim:FindEntities(x, y, z, TUNING.STORAGE_ROBOT_WORK_RADIUS, PICKUP_MUST_TAGS, PICKUP_CANT_TAGS)
-
-    for i, ent in ipairs(ents) do
-        if ent:GetDistanceSqToPoint(sx, xy, sz) <= TUNING.STORAGE_ROBOT_WORK_RADIUS * TUNING.STORAGE_ROBOT_WORK_RADIUS and
-            FindPickupableItem_filter(inst, ent, onlytheseprefabs)
-        then
-            return ent
-        end
-    end
-
-    return
-end
-
 local function PickUpAction(inst)
     local activeitem = inst.components.inventory:GetActiveItem()
 
@@ -153,7 +53,7 @@ local function PickUpAction(inst)
 
     ----------------
 
-    local item = FindPickupableItem(inst, onlytheseprefabs)
+    local item = inst:FindPickupableItem(onlytheseprefabs)
 
     if item == nil then
         return
@@ -175,7 +75,7 @@ local function StoreItemAction(inst)
 
     inst.brain:UnignoreItem()
 
-    local container = FindContainerWithItem(inst, item)
+    local container = inst:FindContainerWithItem(item)
 
     return container ~= nil and BufferedAction(inst, container, ACTIONS.STORE, item) or nil
 end

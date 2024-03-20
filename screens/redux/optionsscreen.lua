@@ -308,6 +308,7 @@ local OptionsScreen = Class(Screen, function( self, prev_screen, default_section
 		craftingmenusensitivity = Profile:GetCraftingMenuSensitivity(),
 		inventorysensitivity = Profile:GetInventorySensitivity(),
 		minimapzoomsensitivity = Profile:GetMiniMapZoomSensitivity(),
+		boathopdelay = Profile:GetBoatHopDelay(),
 		netbookmode = TheSim:IsNetbookMode(),
 		vibration = Profile:GetVibrationEnabled(),
 		showpassword = Profile:GetShowPasswordEnabled(),
@@ -637,6 +638,7 @@ function OptionsScreen:Save(cb)
 	Profile:SetCraftingMenuSensitivity( self.options.craftingmenusensitivity )
 	Profile:SetInventorySensitivity( self.options.inventorysensitivity )
 	Profile:SetMiniMapZoomSensitivity( self.options.minimapzoomsensitivity )
+    Profile:SetBoatHopDelay( self.options.boathopdelay )
 	Profile:SetScreenFlash( self.options.screenflash )
 	Profile:SetVibrationEnabled( self.options.vibration )
 	Profile:SetShowPasswordEnabled( self.options.showpassword )
@@ -1926,6 +1928,13 @@ function OptionsScreen:_BuildAdvancedSettings()
 			--self:Apply()
 			self:UpdateMenu()
 		end
+    self.boathopdelaySpinner = CreateNumericSpinner(STRINGS.UI.OPTIONS.BOATHOPDELAY, 0, 16, STRINGS.UI.OPTIONS.TOOLTIPS.BOATHOPDELAY)
+    self.boathopdelaySpinner.OnChanged =
+        function( _, data )
+            self.working.boathopdelay = data
+            --self:Apply()
+            self:UpdateMenu()
+        end
 
 	if IsSteam() then
 		self.defaultcloudsavesSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DEFAULTCLOUDSAVES, steamCloudLocalOptions, STRINGS.UI.OPTIONS.TOOLTIPS.DEFAULTCLOUDSAVES)
@@ -1958,6 +1967,7 @@ function OptionsScreen:_BuildAdvancedSettings()
 	table.insert( self.right_spinners, self.inventorysensitivitySpinner )
 	table.insert( self.right_spinners, self.minimapzoomcursorSpinner )
 	table.insert( self.right_spinners, self.minimapzoomsensitivitySpinner )
+	table.insert( self.right_spinners, self.boathopdelaySpinner )
 	
 	self.grid_advanced:UseNaturalLayout()
 	self.grid_advanced:InitSize(2, math.max(#self.left_spinners, #self.right_spinners), 440, 40)
@@ -2453,6 +2463,7 @@ function OptionsScreen:InitializeSpinners(first)
 	self.craftingmenusensitivitySpinner:SetSelectedIndex( self.working.craftingmenusensitivity or 12)
 	self.inventorysensitivitySpinner:SetSelectedIndex( self.working.inventorysensitivity or 16)
 	self.minimapzoomsensitivitySpinner:SetSelectedIndex( self.working.minimapzoomsensitivity or 15)
+	self.boathopdelaySpinner:SetSelectedIndex( self.working.boathopdelay or 8)
 	self.screenFlashSpinner:SetSelectedIndex( FindEnableScreenFlashOptionsIndex( self.working.screenflash ) )
 	self.vibrationSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.vibration ) )
 	self.passwordSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.showpassword ) )

@@ -3930,7 +3930,7 @@ STRINGS =
 
         FENCE_JUNK = "Junky Fence",
 
-        ARMOR_LUNARPLANT_HUSK = "Brambleshade Armor", --[[TODO]]        
+        ARMOR_LUNARPLANT_HUSK = "Brambleshade Armor",       
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -4947,7 +4947,7 @@ STRINGS =
 
         WALL_SCRAP_ITEM = "A pile of junk, roughly wall-shaped.",
 
-        ARMOR_LUNARPLANT_HUSK = "Become the prickliest of them all.", --[[TODO]]
+        ARMOR_LUNARPLANT_HUSK = "Become the prickliest of them all.",
     },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
@@ -5138,81 +5138,81 @@ STRINGS =
     MERM_KING_TALK_HUNGER_FULL =  "Have done well. Now go.",
 
 	HERMITCRAB_TALK_ONPURCHASE = {
-                LOW = {"Great. Now leave me alone."},
-                MED = {"Pleasure doing business."},
-                HIGH = {"Give me a holler if you need anything else!"},
-            },
+            LOW = {"Great. Now leave me alone."},
+            MED = {"Pleasure doing business."},
+            HIGH = {"Give me a holler if you need anything else!"},
+        },
     HERMITCRAB_COMPLAIN = {
-            PLANT_FLOWERS = {
-                LOW = {"Useless lazy bees... not a drop of honey..."},
-                MED = {"When I had my flower garden, the bees made honey all the time."},
-                HIGH = {{"Dearie, would you...","Help me plant some flowers?"}},
-            },
-            REMOVE_JUNK = {
-                LOW = {"(Grumble)... water's all full of junk..."},
-                MED = {"The water's so full of junk, I can't even see the fish!"},
-                HIGH = {"You look spry! Could you get rid of that junk in the water?"},
-            },
-            PLANT_BERRIES = {
-                LOW = {"All of my berry bushes died."},
-                MED = {"I miss my garden... I used to grow berries..."},
-                HIGH = {{"Care to help me with some gardening?","I need some new berry bushes."}},
-            },
-            FILL_MEATRACKS = {
-                LOW = {"Hmph... never any meat around here for drying..."},
-                MED = {{"My drying racks are empty again?","So much work for these old claws..."}},
-                HIGH = {"Could you dry some meat for me, dearie?"},
-            },
-            GIVE_HEAVY_FISH = {
-                LOW = {{"(Grumble)... only ever catch minnows...","Never a nice big fish..."}},
-                MED = {"If only SOMEONE could bring me some big, juicy fish..."},
-                HIGH = {{"If you could bring me some big fish...","I'd be so happy!"}},
-            },
-            REMOVE_LUREPLANT = {
-                LOW = {{"That horrible plant...","Such an eyesore..."}},
-                MED = {"That lureplant is going to take over my whole yard!"},
-                HIGH = {{"Would you be a dear?","Take care of that awful plant for me."}},
-            },
-            GIVE_UMBRELLA = {
-                LOW = {{"Miserable rain...","I'll catch my death..."}},
-                MED = {{"I'm getting soaked to the chitin!","If only I had an umbrella..."}},
-                HIGH = {{"What terrible weather.","Do you have an umbrella, dearie?"}},
-            },
-            GIVE_PUFFY_VEST = {
-                LOW = {"(Grumble) It's freezing out here!"},
-                MED = {"Brrr, this cold weather is terrible for my rheumatism."},
-                HIGH = {"Ooooh, I do wish I had something warm to wear."},
-            },
-            GIVE_FLOWER_SALAD = {
-                LOW = {"Hmph. No ingredients for flower salad around..."},
-                MED = {"My sweetie used to make my favorite... flower salad..."},
-                HIGH = {{"Flower salad brings back such memories...","Could you make some for me?"}},
-            },
-            GIVE_FISH_WINTER = {
-                LOW = {"Hmph. Should be Ice Bream season right about now."},
-                MED = {"I used to catch Ice Bream all through the winter..."},
-                HIGH = {"Dearie, could you catch an Ice Bream for me?"},
-            },
-            GIVE_FISH_SUMMER = {
-                LOW = {"The Scorching Sunfish should be migrating now."},
-                MED = {"Nothing says summer like some Scorching Sunfish..."},
-                HIGH = {"I would love a Scorching Sunfish, if you have it."},
-            },
-            GIVE_FISH_SPRING = {
-                LOW = {"Thought I saw some Bloomfin Tuna yesterday..."},
-                MED = {"This weather is perfect for Bloomfin Tuna..."},
-                HIGH = {"Let me know if you catch a Bloomfin Tuna, dearie!"},
-            },
-            GIVE_FISH_AUTUM = {
-                LOW = {"I think Fallounders are in season."},
-                MED = {"Nothing says autumn like some tasty Fallounder..."},
-                HIGH = {"Would you bring me a Fallounder, dearie?"},
-            },
-            MAKE_CHAIR = {
-                LOW = {"(Grumble) my shell is killing me...","Nowhere to sit around here..."},
-                MED = {"There's nowhere to sit and rest this old chitin..."},
-                HIGH = {"What this place really needs is a nice place to sit and chat."},
-            },
+        PLANT_FLOWERS = {
+            LOW = {"Useless lazy bees... not a drop of honey..."},
+            MED = {"When I had my flower garden, the bees made honey all the time."},
+            HIGH = {"Dearie, would you...","Help me plant some flowers?"},
+        },
+        REMOVE_JUNK = {
+            LOW = {"(Grumble)... water's all full of junk..."},
+            MED = {"The water's so full of junk, I can't even see the fish!"},
+            HIGH = {"You look spry! Could you get rid of that junk in the water?"},
+        },
+        PLANT_BERRIES = {
+            LOW = {"All of my berry bushes died."},
+            MED = {"I miss my garden... I used to grow berries..."},
+            HIGH = {"Care to help me with some gardening?","I need some new berry bushes."},
+        },
+        FILL_MEATRACKS = {
+            LOW = {"Hmph... never any meat around here for drying..."},
+            MED = {"My drying racks are empty again?","So much work for these old claws..."},
+            HIGH = {"Could you dry some meat for me, dearie?"},
+        },
+        GIVE_HEAVY_FISH = {
+            LOW = {"(Grumble)... only ever catch minnows...","Never a nice big fish..."},
+            MED = {"If only SOMEONE could bring me some big, juicy fish..."},
+            HIGH = {"If you could bring me some big fish...","I'd be so happy!"},
+        },
+        REMOVE_LUREPLANT = {
+            LOW = {"That horrible plant...","Such an eyesore..."},
+            MED = {"That lureplant is going to take over my whole yard!"},
+            HIGH = {"Would you be a dear?","Take care of that awful plant for me."},
+        },
+        GIVE_UMBRELLA = {
+            LOW = {"Miserable rain...","I'll catch my death..."},
+            MED = {"I'm getting soaked to the chitin!","If only I had an umbrella..."},
+            HIGH = {"What terrible weather.","Do you have an umbrella, dearie?"},
+        },
+        GIVE_PUFFY_VEST = {
+            LOW = {"(Grumble) It's freezing out here!"},
+            MED = {"Brrr, this cold weather is terrible for my rheumatism."},
+            HIGH = {"Ooooh, I do wish I had something warm to wear."},
+        },
+        GIVE_FLOWER_SALAD = {
+            LOW = {"Hmph. No ingredients for flower salad around..."},
+            MED = {"My sweetie used to make my favorite... flower salad..."},
+            HIGH = {"Flower salad brings back such memories...","Could you make some for me?"},
+        },
+        GIVE_FISH_WINTER = {
+            LOW = {"Hmph. Should be Ice Bream season right about now."},
+            MED = {"I used to catch Ice Bream all through the winter..."},
+            HIGH = {"Dearie, could you catch an Ice Bream for me?"},
+        },
+        GIVE_FISH_SUMMER = {
+            LOW = {"The Scorching Sunfish should be migrating now."},
+            MED = {"Nothing says summer like some Scorching Sunfish..."},
+            HIGH = {"I would love a Scorching Sunfish, if you have it."},
+        },
+        GIVE_FISH_SPRING = {
+            LOW = {"Thought I saw some Bloomfin Tuna yesterday..."},
+            MED = {"This weather is perfect for Bloomfin Tuna..."},
+            HIGH = {"Let me know if you catch a Bloomfin Tuna, dearie!"},
+        },
+        GIVE_FISH_AUTUM = {
+            LOW = {"I think Fallounders are in season."},
+            MED = {"Nothing says autumn like some tasty Fallounder..."},
+            HIGH = {"Would you bring me a Fallounder, dearie?"},
+        },
+        MAKE_CHAIR = {
+            LOW = {"(Grumble) my shell is killing me...","Nowhere to sit around here..."},
+            MED = {"There's nowhere to sit and rest this old chitin..."},
+            HIGH = {"What this place really needs is a nice place to sit and chat."},
+        },
     },
 
     HERMITCRAB_INVESTIGATE = {
@@ -5283,17 +5283,17 @@ STRINGS =
     },
 
     HERMITCRAB_DEFAULT_REWARD = {
-                LOW = {{"I guess you want something for helping me out?","Fine."}},
+                LOW = {"I guess you want something for helping me out?","Fine."},
                 MED = {"I guess it's not so bad having you around."},
                 HIGH = {"Such a big help! Thank you."},
             },
     HERMITCRAB_GROUP_REWARD = {
-                LOW = {{"I don't know what you're playing at","but don't think I owe you now!"}},
+                LOW = {"I don't know what you're playing at","but don't think I owe you now!"},
                 MED = {"You've been busy! I suppose I should repay you."},
-                HIGH = {{"You've done such a wonderful job!","Here, it's the least I can do."}},
+                HIGH = {"You've done such a wonderful job!","Here, it's the least I can do."},
             },
 
-    HERMITCRAB_INTRODUCE = {{"You've done so much for me.","Please, call me Pearl."}},
+    HERMITCRAB_INTRODUCE = {"You've done so much for me.","Please, call me Pearl."},
 
     HERMITCRAB_REWARD = {
             FIX_HOUSE_1 = {
@@ -5308,8 +5308,8 @@ STRINGS =
             },
             FIX_HOUSE_3 = {
                 LOW = {"Oh. That does look a bit better."},
-                MED = {{"I barely recognize the place!","Oh don't look worried, that's a good thing."}},
-                HIGH = {{"Oh, it's wonderful!","I feel like a Queen in her palace","Hoo-hoo!"}},
+                MED = {"I barely recognize the place!","Oh don't look worried, that's a good thing."},
+                HIGH = {"Oh, it's wonderful!","I feel like a Queen in her palace","Hoo-hoo!"},
             },
             PLANT_FLOWERS = {
                 LOW = {"Well, at least my bees are happy now."},
@@ -5319,12 +5319,12 @@ STRINGS =
             REMOVE_JUNK = {
                 LOW = {"Hmph. Took you long enough."},
                 MED = {"Should be easier to fish with all that junk gone!"},
-                HIGH = {{"Ahhh...","It's such a weight off my mind to have that junk gone."}},
+                HIGH = {"Ahhh...","It's such a weight off my mind to have that junk gone."},
             },
             PLANT_BERRIES = {
-                LOW = {{"You could've planted them in neater rows...","But I guess it'll do."}},
+                LOW = {"You could've planted them in neater rows...","But I guess it'll do."},
                 MED = {"I can't remember the last time I had fresh berries!"},
-                HIGH = {{"Ooooh, such a thoughtful young whipper-snapper!","Let me pinch your cheeks!"}},
+                HIGH = {"Ooooh, such a thoughtful young whipper-snapper!","Let me pinch your cheeks!"},
             },
             FILL_MEATRACKS = {
                 LOW = {"Let me guess, you want something in return? Fine..."},
@@ -5332,14 +5332,14 @@ STRINGS =
                 HIGH = {"I hope it wasn't too much trouble..."},
             },
             GIVE_HEAVY_FISH = {
-                LOW = {{"Why are you giving me this?","Wait, I never said I wouldn't take it!"}},
+                LOW = {"Why are you giving me this?","Wait, I never said I wouldn't take it!"},
                 MED = {"Ooooh, that's a hefty pile of fish!"},
-                HIGH = {{"Hoo-hoo!","That's some pretty impressive fish, dearie!"}},
+                HIGH = {"Hoo-hoo!","That's some pretty impressive fish, dearie!"},
             },
             REMOVE_LUREPLANT = {
-                LOW = {{"You think you deserve a reward or something?","Hmph."}},
+                LOW = {"You think you deserve a reward or something?","Hmph."},
                 MED = {"Guess you're at least a half decent weed killer."},
-                HIGH = {{"What a relief!","That plant's been side-eying me for some time."}},
+                HIGH = {"What a relief!","That plant's been side-eying me for some time."},
             },
             GIVE_UMBRELLA = {
                 LOW = {"I guess this will do."},
@@ -5354,7 +5354,7 @@ STRINGS =
             GIVE_FLOWER_SALAD = {
                 LOW = {"..."},
                 MED = {"...Thank you. It's been a long time."},
-                HIGH = {{"Thank you dearie...","Have you seen any other crabs on your travels?"}},
+                HIGH = {"Thank you dearie...","Have you seen any other crabs on your travels?"},
             },
             GIVE_FISH_WINTER = {
                 LOW = {"Hmph. You could've caught it faster if you used this."},
@@ -5383,11 +5383,11 @@ STRINGS =
             },
     },
 
-    HERMITCRAB_STORE_UNLOCK_1 = {{"So do you want to trade?","Or are you just wasting my time?"}},
-    HERMITCRAB_STORE_UNLOCK_2 = {{"I miiight have some lures to trade...","if you can afford them."}},
-    HERMITCRAB_STORE_UNLOCK_3 = {{"Alright, you've twisted my claw."," I'll show you my GOOD lures."}},
-    HERMITCRAB_STORE_UNLOCK_4 = {{"I've got some new things to trade,","but they don't come cheap!"}},
-    HERMITCRAB_STORE_UNLOCK_5 = {{"This old shell must be going soft...","I put something special in the shop."}},
+    HERMITCRAB_STORE_UNLOCK_1 = {"So do you want to trade?","Or are you just wasting my time?"},
+    HERMITCRAB_STORE_UNLOCK_2 = {"I miiight have some lures to trade...","if you can afford them."},
+    HERMITCRAB_STORE_UNLOCK_3 = {"Alright, you've twisted my claw."," I'll show you my GOOD lures."},
+    HERMITCRAB_STORE_UNLOCK_4 = {"I've got some new things to trade,","but they don't come cheap!"},
+    HERMITCRAB_STORE_UNLOCK_5 = {"This old shell must be going soft...","I put something special in the shop."},
 
     HERMITCRAB_PLANTED_LUREPLANT_DIED = {
                 LOW = {"Nice try.\nYou don't get anything for cleaning up your own messes."},
@@ -5403,7 +5403,7 @@ STRINGS =
     HERMITCRAB_ATTEMPT_TRADE = {
         LOW = {"Don't talk to me if you have nothing to trade.",},
         MED = {"Have anything to trade today?",},
-        HIGH = {{"My favorite customer!","What do you need today, dearie?",}},
+        HIGH = {"My favorite customer!","What do you need today, dearie?",},
     },
     HERMITCRAB_GETFISH_BIG = {"Now that's a proper-sized fish!"},
 
@@ -5412,7 +5412,7 @@ STRINGS =
 		"Wow, {weight}...\nI've never caught a fish this small.",
 		"Only {weight}?\nYou should have put it back.",
 		},
-    HERMITCRAB_REFUSE_SALAD = {{"I don't want that right now...","it makes me too sad..."}},
+    HERMITCRAB_REFUSE_SALAD = {"I don't want that right now...","it makes me too sad..."},
     HERMITCRAB_REFUSE_ICE_HOT = {"Don't be silly, it's already freezing out here!"},
     HERMITCRAB_REFUSE_ICE_HAD = {"I don't need any more ice."},
     HERMITCRAB_REFUSE_UMBRELLA = {"It's not even raining..."},
@@ -5433,17 +5433,18 @@ STRINGS =
     HERMITCRAB_ANNOUNCE_OCEANFISHING_IDLE_QUOTE = {
         "Hmph. The fish aren't biting today...",
         "Don't be so fussy, get on my hook!",
-        "\"I often look from the highest hill\"","\"that I might see my boatman...\"","hmm-de-dmm...",
+        "\"I often look from the highest hill, that I might see my boatman...\"",
+        "Hmm-de-dmm...",
         "Never seem to catch anything...",
     },
 
     HERMITCRAB_ANNOUNCE_OCEANFISHING_LINETOOLOOSE = {"Oooh, these tired old claws!",},
     HERMITCRAB_ANNOUNCE_OCEANFISHING_BADCAST = {"I'm not quite as good at this as I used to be...",},
-    HERMITCRAB_ANNOUNCE_OCEANFISHING_GOTAWAY = {{"Why you slippery little nincompoop!","Get back on my hook!"},},
+    HERMITCRAB_ANNOUNCE_OCEANFISHING_GOTAWAY = {"Why you slippery little nincompoop!","Get back on my hook!"},
     HERMITCRAB_ANNOUNCE_OCEANFISHING_BOTHERED = {
-        LOW = {"Ack! You made me lose my fish!",},
-        MED = {"You couldn't wait for a better time?",},
-        HIGH = {"I can always make time for you, dearie.",},
+        LOW = {"Ack! You made me lose my fish!"},
+        MED = {"You couldn't wait for a better time?"},
+        HIGH = {"I can always make time for you, dearie."},
     },
 
     HERMITCRAB_LEVEL10_PLAYERGOOD = {
@@ -5451,7 +5452,7 @@ STRINGS =
     },
 
     HERMITCRAB_LEVEL10_LOWHEALTH = {
-        {"Goodness, what happened to you?"," You need to be more careful!"},
+        {"Goodness, what happened to you?","You need to be more careful!"},
     },
     HERMITCRAB_LEVEL10_LOWSANITY = {
         {"You look like something's troubling you.","Is everything alright, dearie?"},
@@ -5460,7 +5461,7 @@ STRINGS =
         {"Hmph... you look skinny.","Have you been eating well?"},
     },
     HERMITCRAB_THROWBOTTLE = {
-        LOW = {{"You've been snatching up my bottles!","Now I need to send out twice as many!"}},
+        LOW = {"You've been snatching up my bottles!","Now I need to send out twice as many!"},
         MED = {"I suppose I'm glad they reached anyone, really."},
         HIGH = {"Maybe this will be the one to reach him..."},
     },
@@ -5477,6 +5478,9 @@ STRINGS =
     HERMITCRAB_GOT_PEARL = {"Oh...","...I think I understand now.","Thank you for bringing this back to me.","I'm so glad you kept coming back.","My friend."},
     HERMITCRAB_WANT_HOUSE = {"I could really use some help fixing up my house..."},
     HERMITCRAB_GIVE_PEARL = {"If you find my sweetie on your travels...","Could you... give him that pearl?","He'll recognize it."},
+
+    HERMITCRAB_ANNOUNCE_SPOOKED = "Did you see that?!",
+    HERMITCRAB_ANNOUNCE_TOOL_SLIP = "Wow, that tool is slippery!",
 
     --NOTE: Limit to 63 strings per table! (Using net_smallbyte for NPC chatter)
     PIG_TALK_FOLLOWWILSON = { "YOU FRIEND", "I LOVE FRIEND", "YOU IS GOOD", "I FOLLOW!" },
@@ -8634,6 +8638,7 @@ STRINGS.UI =
         SCAPBOOKHUDDISPLAY = "Scrapbook Alerts:",
 		INVENTORYSENSITIVITY = "Inventory Sensitivity:",
         MINIMAPZOOMSENSITIVITY = "Zoom Sensitivity:",
+        BOATHOPDELAY = "Boat Hop Delay:",
         MINIMAPZOOMCURSOR = "Zoom Cursor Focus:",
         VIBRATION = "Vibration:",
         WATHGRITHRFONT = "Wigfrid's Umlauts:",
@@ -8729,6 +8734,7 @@ STRINGS.UI =
             SCAPBOOKHUDDISPLAY = "Toggle HUD notifications from the Scrapbook on and off.",
 			INVENTORYSENSITIVITY = "Adjust the input sensitivity while navigating through the inventory.",
             MINIMAPZOOMSENSITIVITY = "Adjust the input sensitivity while zooming in and out on the minimap.",
+            BOATHOPDELAY = "Adjust how much time is needed to start hopping onto and off of a boat.",
             MINIMAPZOOMCURSOR = "Zooming on the minimap will focus where the cursor is located.",
             AUTOLOGIN = "Log into your Klei account automatically when booting up Don't Starve Together.",
             NPCCHAT = "Allows key dialogue from creatures in the world to be displayed in the chat box.",

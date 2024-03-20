@@ -64,7 +64,6 @@ local function spawnglass(inst)
     if #ents > 0 then
         local nx,ny,nz = ents[1].Transform:GetWorldPosition()
         local new = SpawnPrefab("moonglass_charged")
-        print("FLING")
         ents[1].components.lootdropper:FlingItem(new)       
     else
         local glass = SpawnPrefab("moonstorm_glass")

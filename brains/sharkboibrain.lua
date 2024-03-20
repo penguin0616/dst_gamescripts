@@ -164,14 +164,14 @@ function SharkboiBrain:OnStart()
 					PriorityNode({
 						ChattyNode(self.inst, {
 								name = "SHARKBOI_TALK_ATTEMPT_TRADE",
-								chatterparamts = CHATTERPARAMS_HIGH,
+								chatterparams = CHATTERPARAMS_HIGH,
 							},
 							FaceEntity(self.inst, GetFarTraderFn, KeepTraderFn)),
 						FaceEntity(self.inst, GetNearTraderFn, KeepTraderFn),
 						SequenceNode{
 							ChattyNode(self.inst, {
 									name = "SHARKBOI_TALK_FRIENDLY",
-									chatterparamts = CHATTERPARAMS_HIGH,
+									chatterparams = CHATTERPARAMS_HIGH,
 								},
 								FaceEntity(self.inst, GetNearbyPlayerFn, KeepNearbyPlayerFn, 6)),
 							ParallelNodeAny{

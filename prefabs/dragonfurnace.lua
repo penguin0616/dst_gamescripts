@@ -8,6 +8,7 @@ local prefabs =
 local assets =
 {
     Asset("ANIM", "anim/dragonfly_furnace.zip"),
+    Asset("ANIM", "anim/ui_dragonflyfurnace_2x2.zip"),
     Asset("MINIMAP_IMAGE", "dragonfly_furnace"),
 }
 
@@ -37,6 +38,11 @@ local function onworked(inst)
     end
     inst.AnimState:PlayAnimation("hi_hit")
     inst.AnimState:PushAnimation("hi")
+
+    if inst.components.container ~= nil then
+        inst.components.container:DropEverything()
+        inst.components.container:Close()
+    end
 end
 
 local function BuiltTimeLine1(inst)
@@ -101,6 +107,11 @@ local function OnContentsDestroyed(inst)
     inst:DoTaskInTime(time, _CanBeOpened)
 end
 
+local function ShouldIncinerateItem(inst, item)
+    -- NOTES(JBK): Fruitcake hack. You think you can escape this so easily?
+    return item.prefab ~= "winter_food4"
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -145,8 +156,9 @@ local function fn()
     end
 
     inst.OnContentsDestroyed = OnContentsDestroyed
+    inst.ShouldIncinerateItem = ShouldIncinerateItem
 
-    inst.scrapbook_anim = "hi"
+    inst.scrapbook_anim = "hi" -- NOTES(JBK): Hey.
 
     -----------------------
     inst:AddComponent("workable")

@@ -201,7 +201,9 @@ local function OnRepaired(inst)
     end
 end
 
-local function OnLoadPostPass(inst, newents, data)
+---------------------------------------------------------------------------------------------------
+
+local function OnLoad(inst, newents, data)
     if inst.components.fueled:IsEmpty() then
         inst:SetBroken()
 
@@ -220,6 +222,202 @@ local function OnLoadPostPass(inst, newents, data)
         inst._originz:set(pos.z)
     end
 end
+
+---------------------------------------------------------------------------------------------------
+
+
+local CONTAINER_MUST_TAGS = { "_container" }
+local CONTAINER_CANT_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO" }
+
+local function FindContainerWithItem(inst, item, count)
+    count = count or 0
+    local x, y, z = inst:GetSpawnPoint():Get()
+
+    local stack_maxsize = item.components.stackable ~= nil and item.components.stackable.maxsize or 1
+
+    local ents = TheSim:FindEntities(x, y, z, TUNING.STORAGE_ROBOT_WORK_RADIUS, CONTAINER_MUST_TAGS, CONTAINER_CANT_TAGS)
+
+    for i, ent in ipairs(ents) do
+        if ent.components.container ~= nil and
+            ent.components.container:Has(item.prefab, 1) and
+            ent.components.container:CanAcceptCount(item, stack_maxsize) > count and
+            ent:IsOnPassablePoint() and
+            ent:GetCurrentPlatform() == inst:GetCurrentPlatform()
+        then
+            return ent
+        end
+    end
+
+    return
+end
+
+local function FindPickupableItem_filter(inst, item, onlytheseprefabs)
+    -- Ignore ourself and other storage robots.
+    if item:HasTag("storagerobot") then
+        return
+    end
+
+    if not (item.components.inventoryitem ~= nil and
+        item.components.inventoryitem.canbepickedup and
+        item.components.inventoryitem.cangoincontainer and
+        not item.components.inventoryitem:IsHeld())
+    then
+        return
+    end
+
+    if not item:IsOnPassablePoint() or item:GetCurrentPlatform() ~= inst:GetCurrentPlatform() then
+        return
+    end
+
+    if inst.brain ~= nil and inst.brain:ShouldIgnoreItem(item) then
+        return
+    end
+
+    if onlytheseprefabs ~= nil and onlytheseprefabs[item.prefab] == nil then
+        return
+    end
+
+    if item.components.bait ~= nil and item.components.bait.trap ~= nil then -- Do not steal baits.
+        return
+    end
+
+    if item.components.trap ~= nil and not (item.components.trap:IsSprung() and item.components.trap:HasLoot()) then -- Only interact with traps that have something in it to take.
+        return
+    end
+
+    -- Checks how many of this item we have.
+    local _, count = inst.components.inventory:Has(item.prefab, 1)
+
+    local container = inst:FindContainerWithItem(item, count)
+
+    if not container then
+        return
+    end
+
+    return item, container
+end
+
+local PICKUP_MUST_TAGS =
+{
+    "_inventoryitem"
+}
+
+local PICKUP_CANT_TAGS =
+{
+    "INLIMBO", "NOCLICK", "irreplaceable", "knockbackdelayinteraction",
+    "event_trigger", "mineactive", "catchable", "fire", "spider", "cursed",
+    "heavy", "outofreach",
+}
+
+local function FindPickupableItem(inst, onlytheseprefabs)
+    local x, y, z    = inst.Transform:GetWorldPosition()
+    local sx, xy, sz = inst:GetSpawnPoint():Get()
+
+    local ents = TheSim:FindEntities(x, y, z, TUNING.STORAGE_ROBOT_WORK_RADIUS, PICKUP_MUST_TAGS, PICKUP_CANT_TAGS)
+
+    for i, ent in ipairs(ents) do
+        if ent:GetDistanceSqToPoint(sx, xy, sz) <= TUNING.STORAGE_ROBOT_WORK_RADIUS * TUNING.STORAGE_ROBOT_WORK_RADIUS then
+            local item, container = FindPickupableItem_filter(inst, ent, onlytheseprefabs)
+
+            if item ~= nil then
+                return item, container
+            end
+        end
+    end
+
+    return
+end
+
+---------------------------------------------------------------------------------------------------
+
+local function DoOffscreenPickup(inst)
+    local item = inst:FindPickupableItem()
+
+    if item == nil then
+        inst:StartOffscreenPickupTask(5)
+
+        return 
+    end
+
+    local container = inst:FindContainerWithItem(item)
+
+    if container == nil then
+        inst.components.inventory:DropItem(item, true, true)
+
+        inst:StartOffscreenPickupTask(5)
+
+        return
+    end
+
+    local dist = math.sqrt(distsq(container:GetPosition(), item:GetPosition()))
+
+    local time = (dist * 2 / inst.components.locomotor.walkspeed) + (59 + 57) * FRAMES -- Distance (container -> item and item -> container) / walkspeed + pickup and dropoff anim time.
+
+    BufferedAction(inst, item, item.components.trap ~= nil and ACTIONS.CHECKTRAP or ACTIONS.PICKUP, nil, nil, nil, nil, nil, nil, 0):Do()
+    BufferedAction(inst, container, ACTIONS.STORE, item):Do()
+
+    inst.components.inventory:CloseAllChestContainers()
+
+    local fueled = inst.components.fueled
+
+    fueled:DoDelta(-time * fueled.rate * fueled.rate_modifiers:Get())
+
+    if not fueled:IsEmpty() then
+        inst:StartOffscreenPickupTask(time)
+    end
+end
+
+local function StartOffscreenPickupTask(inst, time)
+    if inst._sleeptask ~= nil then
+        inst._sleeptask:Cancel()
+        inst._sleeptask = nil
+    end
+
+    inst._sleeptask = inst:DoTaskInTime(time, inst.DoOffscreenPickup)
+end
+
+local function OnEntityWake(inst)
+    if inst._sleeptask ~= nil then
+        inst._sleeptask:Cancel()
+        inst._sleeptask = nil
+    end
+end
+
+local function OnEntitySleep(inst)
+    if inst.components.fueled:IsEmpty() then
+        return
+    end
+
+    inst.components.fueled:StopConsuming()
+    inst.SoundEmitter:KillAllSounds()
+
+    inst.Physics:Teleport(inst:GetSpawnPoint():Get())
+
+    if inst.brain ~= nil then
+        inst.brain:UnignoreItem()
+    end
+
+    -- First store the item we are holding.
+
+    local item = inst.components.inventory:GetFirstItemInAnySlot() or inst.components.inventory:GetActiveItem() -- This is intentionally backwards to give the bigger stacks first.
+
+    if item ~= nil then
+        local container = inst:FindContainerWithItem(item)
+
+        if container ~= nil then
+            BufferedAction(inst, container, ACTIONS.STORE, item):Do()
+            inst.components.inventory:CloseAllChestContainers()
+        else
+            inst.components.inventory:DropItem(item, true, true)
+        end
+    end
+
+    -- Then start pickuping others.
+
+    inst:StartOffscreenPickupTask(1.5)
+end
+
+---------------------------------------------------------------------------------------------------
 
 local function OnReachDestination(inst, data)
     if data.pos == nil or data.target == nil then
@@ -424,6 +622,12 @@ local function fn()
         return inst
     end
 
+    inst.DoOffscreenPickup = DoOffscreenPickup
+    inst.StartOffscreenPickupTask = StartOffscreenPickupTask
+
+    inst.FindPickupableItem = FindPickupableItem
+    inst.FindContainerWithItem = FindContainerWithItem
+
     inst.GetFueledSectionSuffix = GetFueledSectionSuffix
 
     inst.GetSpawnPoint = GetSpawnPoint
@@ -486,7 +690,10 @@ local function fn()
     inst:ListenForEvent("equip",   inst.OnEquipSomething  )
     inst:ListenForEvent("unequip", inst.OnUnequipSomething)
 
-    inst.OnLoadPostPass = OnLoadPostPass
+    inst.OnLoad = OnLoad
+
+    inst.OnEntitySleep = OnEntitySleep
+    inst.OnEntityWake = OnEntityWake
 
     MakeHauntable(inst)
 

@@ -278,8 +278,12 @@ local function fn()
     inst:AddTag("plant")
     inst:AddTag("tree")
 
+    inst.scrapbook_specialinfo = "TREE"
+    inst.scrapbook_hidesymbol = {}
+
     for i = 1, 3 do
         inst.AnimState:HideSymbol("swap_acidglob"..i)
+        table.insert(inst.scrapbook_hidesymbol, "swap_acidglob"..i)
     end
 
     inst._smoke_number = net_tinybyte(inst.GUID, "mushtree_tall_webbed._smoke_number", "acidphasedirty")

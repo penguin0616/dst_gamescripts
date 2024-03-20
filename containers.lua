@@ -1408,8 +1408,15 @@ params.dragonflyfurnace =
             Vector3(-37.5, -(32 + 4), 0),
             Vector3(37.5, -(32 + 4), 0),
         },
-        animbank = "ui_bundle_2x2",
-        animbuild = "ui_bundle_2x2",
+        slotbg =
+        {
+            { image = "inv_slot_dragonflyfurnace.tex", atlas = "images/hud2.xml" },
+            { image = "inv_slot_dragonflyfurnace.tex", atlas = "images/hud2.xml" },
+            { image = "inv_slot_dragonflyfurnace.tex", atlas = "images/hud2.xml" },
+            { image = "inv_slot_dragonflyfurnace.tex", atlas = "images/hud2.xml" },
+        },
+        animbank = "ui_dragonflyfurnace_2x2",
+        animbuild = "ui_dragonflyfurnace_2x2",
         pos = Vector3(200, 0, 0),
         side_align_tip = 120,
         buttoninfo =
@@ -1426,10 +1433,11 @@ function params.dragonflyfurnace.itemtestfn(container, item, slot)
 end
 
 function params.dragonflyfurnace.widget.buttoninfo.fn(inst, doer)
-    if inst.components.container ~= nil and inst.OnContentsDestroyed ~= nil then
-        inst.components.container:DestroyContents()
-        inst:OnContentsDestroyed()
-
+    if inst.components.container ~= nil then
+        inst.components.container:DestroyContentsConditionally(inst.ShouldIncinerateItem)
+        if inst.OnContentsDestroyed ~= nil then
+            inst:OnContentsDestroyed()
+        end
     elseif inst.replica.container ~= nil and not inst.replica.container:IsBusy() then
         SendRPCToServer(RPC.DoWidgetButtonAction, nil, inst)
     end

@@ -42,14 +42,27 @@ function ChattyNode:Visit()
                 local str = self.chatlines(self.inst)
 				if str ~= nil then
 					if self.inst.components.npc_talker then
-						self.inst.components.npc_talker:Say(str,nil,true)
+                        local splits = str:split(".")
+                        if STRINGS[splits[1]] ~= nil then
+                            local echotochatpriority = (self.chatter_echotochatpriority == true and 1)
+                                or (self.chatter_echotochatpriority == false and 0)
+                                or self.chatter_echotochatpriority
+                            self.inst.components.npc_talker:Chatter(str, nil, echotochatpriority, nil, true)
+                        else
+						    self.inst.components.npc_talker:Say(str,nil,true)
+                        end
 					else
 						self.inst.components.talker:Say(str)
 					end
 				end
             elseif type(self.chatlines) == "table" then
                 --legacy, will only show on host
-                local str = self.chatlines[math.random(#self.chatlines)]
+                local r = #self.chatlines
+                if r == 0 then
+                    -- NOTES(JBK): This will crash let us print more information before it does.
+                    dumptable(self.chatlines)
+                end
+                local str = self.chatlines[math.random(r)]
                 self.inst.components.talker:Say(str)
             else
                 --Will be networked if talker:MakeChatter() was initialized

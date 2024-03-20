@@ -132,6 +132,20 @@ local ItemTile = Class(Widget, function(self, invitem)
 				self:UpdateTooltip()
 			end
 		end, invitem)
+    self.inst:ListenForEvent("serverpauseddirty",
+        function(invitem)
+            if self.focus and not TheInput:ControllerAttached() then
+                self.inst:DoTaskInTime(0, function() self:UpdateTooltip() end)
+            end
+        end,
+    TheWorld)
+    self.inst:ListenForEvent("refreshcrafting",
+        function(invitem)
+            if self.focus and not TheInput:ControllerAttached() then
+                self:UpdateTooltip()
+            end
+        end,
+    ThePlayer)
         self.inst:ListenForEvent("inventoryitem_updatespecifictooltip",
             function(player, data)
                 if self.focus and not TheInput:ControllerAttached() and invitem.prefab == data.prefab then

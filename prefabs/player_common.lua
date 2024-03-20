@@ -2317,6 +2317,9 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.OnPostActivateHandshake_Client = ex_fns.OnPostActivateHandshake_Client
         inst._PostActivateHandshakeState_Client = POSTACTIVATEHANDSHAKE.NONE
 
+        inst.SetClientAuthoritativeSetting = ex_fns.SetClientAuthoritativeSetting
+        inst.SynchronizeOneClientAuthoritativeSetting = ex_fns.SynchronizeOneClientAuthoritativeSetting
+
         inst.entity:SetPristine()
         if not TheWorld.ismastersim then
             return inst

@@ -81,6 +81,7 @@ local WagpunkManager = Class(function(self, inst)
 
     self.inst:ListenForEvent("ms_register_wagstaff_machinery", function(inst, ent) self:RegisterMachineMarker(ent) end, TheWorld)
     self.inst:ListenForEvent("ms_register_junk_pile_big", function(inst, ent) self:RegisterBigJunk(ent) end, TheWorld)
+    self.inst:DoTaskInTime(0, function() self:CheckToTryToSpawnFences() end)
 end)
 
 function WagpunkManager:RemoveMachine(GUID)
@@ -313,10 +314,17 @@ end
 
 
 function WagpunkManager:IsWerepigInCharge(pos)
-    --#FIXME @V2C @JBK daywalker_spawn_cd refs in wagstaff
-    if self.bigjunk and self.bigjunk.components.timer:IsPaused("daywalker_spawn_cd") then
-        return true
+    if self.bigjunk == nil then
+        return false
     end
+
+    local shard_daywalkerspawner = TheWorld.shard.components.shard_daywalkerspawner
+    if shard_daywalkerspawner ~= nil and shard_daywalkerspawner:GetLocationName() ~= "forestjunkpile" then
+        return false
+    end
+
+    local forestdaywalkerspawner = TheWorld.components.forestdaywalkerspawner
+    return forestdaywalkerspawner ~= nil and forestdaywalkerspawner:HasDaywalker()
 end
 
 function WagpunkManager:FindSpotForMachines()
@@ -373,14 +381,6 @@ function WagpunkManager:FindSpotForMachines()
                 end
             end
         end
-    end
-end
-
-function WagpunkManager:FindMachineSpawnPoint(center_pos)
-    local offset = FindWalkableOffset(center_pos, math.random()*TWOPI, IS_CLEAR_AREA_RADIUS, 16, nil, nil, IsPositionClear)
-
-    if offset ~= nil then
-        return center_pos + offset
     end
 end
 
@@ -472,6 +472,33 @@ function WagpunkManager:MutationsNoteExist(machinepos)
     return TheSim:FindFirstEntityWithTag("mutationsnote") ~= nil
 end
 
+function WagpunkManager:FindMachineSpawnPointOffset(pos)
+    local offset
+    for r = IS_CLEAR_AREA_RADIUS, IS_CLEAR_AREA_RADIUS * 2.5, 1 do
+        offset = FindWalkableOffset(pos, math.random() * TWOPI, r, 16, nil, nil, IsPositionClear)
+        if offset then
+            break
+        end
+    end
+
+    return offset
+end
+
+function WagpunkManager:PlaceMachinesAround(pos)
+    --local ids = PickSome(NUM_MACHINES_PER_SPAWN, { 1, 2, 3, 4, 5 } ) -- NOTE(DiogoW): For later!
+    for i = 1, NUM_MACHINES_PER_SPAWN do
+        local offset = self:FindMachineSpawnPointOffset(pos)
+        if offset ~= nil then
+            local machine = SpawnPrefab("wagstaff_machinery")
+            machine.Transform:SetPosition(pos.x + offset.x, pos.y + offset.y, pos.z + offset.z)
+            machine:SetDebrisType(i)
+            --machine:SetDebrisType(ids[i]) -- NOTE(DiogoW): For later!
+
+            self:AddMachine(machine.GUID)
+        end
+    end
+end
+
 function WagpunkManager:SpawnMachines(force)
     if force or next(self.machineGUIDS) == nil then
         local pos, shouldspawnfences = self:FindSpotForMachines()
@@ -489,22 +516,7 @@ function WagpunkManager:SpawnMachines(force)
             self:SpawnNote(pos)
         end
 
-        --local ids = PickSome(NUM_MACHINES_PER_SPAWN, { 1, 2, 3, 4, 5 } ) -- NOTE(DiogoW): For later!
-
-        for i=1, NUM_MACHINES_PER_SPAWN do
-            local machinepos = self:FindMachineSpawnPoint(pos)
-            if machinepos ~= nil then
-                local machine = SpawnPrefab("wagstaff_machinery")
-                
-                if machine ~= nil then
-                    machine.Transform:SetPosition(machinepos:Get())
-                    machine:SetDebrisType(i)
-                    --machine:SetDebrisType(ids[i]) -- NOTE(DiogoW): For later!
-
-                    self:AddMachine(machine.GUID)
-                end
-            end
-        end
+        self:PlaceMachinesAround(pos)
 
         self.hintcount = 0
         self.nextspawntime = nil
@@ -528,15 +540,16 @@ end
 
 function WagpunkManager:RegisterMachineMarker(inst)
     self.machinemarker = inst
-    self:CheckToTryToSpawnFences()
 end
 
 
 function WagpunkManager:RegisterBigJunk(inst)
     self.bigjunk = inst
-    self:CheckToTryToSpawnFences()
 end
 
+function WagpunkManager:GetBigJunk()
+    return self.bigjunk
+end
 
 function WagpunkManager:OnSave()
     local data = {

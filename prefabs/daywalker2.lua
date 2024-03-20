@@ -969,7 +969,7 @@ local function PushMusic(inst)
 		inst._playingmusic = false
 	elseif ThePlayer:IsNear(inst, inst._playingmusic and 40 or 20) then
 		inst._playingmusic = true
-		ThePlayer:PushEvent("triggeredevent", { name = "daywalker" })
+		ThePlayer:PushEvent("triggeredevent", { name = "daywalker2" })
 	elseif inst._playingmusic and not ThePlayer:IsNear(inst, 50) then
 		inst._playingmusic = false
 	end
@@ -990,12 +990,6 @@ local scrapbook_data =
 	scrapbook_deps =			{ "scraphat" },
 }
 
-local function TEMP_JUNK_EVENT(inst) -- FIXME(JBK): Temporary respawning routine for beta.
-    local junk = inst.components.entitytracker:GetEntity("junk")
-    if junk ~= nil then
-        junk:WatchForDaywalkerRemove(inst)
-    end
-end
 local function fn()
 	local inst = CreateEntity()
 
@@ -1180,8 +1174,6 @@ local function fn()
 	inst:SetStateGraph("SGdaywalker2")
 	inst:SetBrain(brain)
 	inst:SetEngaged(false)
-
-    inst:DoTaskInTime(0, TEMP_JUNK_EVENT) -- FIXME(JBK): Temporary respawning routine for beta.
 
 	return inst
 end

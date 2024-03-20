@@ -1125,7 +1125,7 @@ function LocoMotor:ScanForPlatformInDir(my_platform, map, my_x, my_z, dir_x, dir
                 if platform ~= nil or not is_water then
 					if self.hop_delay and self.dest == nil then
 						--keep pushing toward the same direction during the delay before the hop is actually triggered
-						local delay = math.max(TUNING.PLATFORM_HOP_DELAY_TICKS, math.max(
+						local delay = self.inst.forced_platformhopdelay or math.max(TUNING.PLATFORM_HOP_DELAY_TICKS, math.max(
 							platform and platform.components.platformhopdelay and platform.components.platformhopdelay:GetDelayTicks() or 0,
 							my_platform and my_platform.components.platformhopdelay and my_platform.components.platformhopdelay:GetDelayTicks() or 0
 						))

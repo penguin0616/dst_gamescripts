@@ -272,18 +272,7 @@ end
 
 --------------------------------------------------------------------------------
 local function setmaxminimapstatus(inst)
-    inst.MiniMapEntity:SetCanUseCache(false)
-    inst.MiniMapEntity:SetDrawOverFogOfWar(true)
-    inst.MiniMapEntity:SetPriority(22)
     inst.MiniMapEntity:SetIcon("lunarrift_portal_max.png")
-
-    if inst.icon then
-        inst.icon:Remove()
-    end
-
-    inst.icon = SpawnPrefab("globalmapicon")
-    inst.icon:TrackEntity(inst)
-    inst.icon.MiniMapEntity:SetPriority(21)
     inst.icon_max = true
 end
 
@@ -603,7 +592,9 @@ local function portalfn()
     inst.entity:AddNetwork()
 
     inst.MiniMapEntity:SetIcon("lunarrift_portal.png")
-    inst.MiniMapEntity:SetPriority(1)
+    inst.MiniMapEntity:SetCanUseCache(false)
+    inst.MiniMapEntity:SetDrawOverFogOfWar(true)
+    inst.MiniMapEntity:SetPriority(22)
 
     inst.AnimState:SetBank ("lunar_rift_portal")
     inst.AnimState:SetBuild("lunar_rift_portal")
@@ -629,11 +620,7 @@ local function portalfn()
     inst:AddTag("NOBLOCK")
     inst:AddTag("scarytoprey")
     inst:AddTag("lunarrift_portal")
---[[
-    inst.icon = SpawnPrefab("globalmapicon")
-    inst.icon:TrackEntity(inst)
-    inst.icon.MiniMapEntity:SetPriority(22)    
-]]
+
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst

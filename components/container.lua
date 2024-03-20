@@ -250,6 +250,24 @@ function Container:DestroyContents()
     end
 end
 
+function Container:DestroyContentsConditionally(filterfn)
+    if filterfn == nil then
+        -- NOTES(JBK): Revert to unconditionally.
+        self:DestroyContents()
+        return
+    end
+
+    for k = 1, self.numslots do
+        local testitem = self.slots[k]
+        if testitem and filterfn(self.inst, testitem) then
+            local item = self:RemoveItemBySlot(k)
+            if item ~= nil then
+                item:Remove()
+            end
+        end
+    end
+end
+
 -- Check how many of an item we can accept from its stack.
 function Container:CanAcceptCount(item, maxcount)
     local stacksize = math.max(maxcount or 0, item.components.stackable ~= nil and item.components.stackable.stacksize or 1)
@@ -835,12 +853,18 @@ function Container:OnUpdate(dt)
     else
         --attempt to close the chest for all players who have the chest opened who meet the requirements for closing it.
         for opener, _ in pairs(self.openlist) do
-            if not (self.inst.components.inventoryitem ~= nil and
-                    self.inst.components.inventoryitem:GetGrandOwner() == opener) and
-                    ((opener.components.rider ~= nil and opener.components.rider:IsRiding()) or
-                    not (opener:IsNear(self.inst, 3) and
-                    CanEntitySeeTarget(opener, self.inst))) then
-                self:Close(opener)
+			if self.inst.components.inventoryitem and self.inst.components.inventoryitem:GetGrandOwner() == opener then
+				--V2C: special case handling for players who can open "portablestorage" containers from inventory without dropping
+				if self.inst:HasTag("portablestorage") and not (opener.sg and opener.sg:HasStateTag("keep_pocket_rummage")) then
+					self:Close(opener)
+					if opener.sg then
+						opener.sg:HandleEvent("ms_closeportablestorage", { item = self.inst })
+					end
+				end
+			elseif (opener.components.rider and opener.components.rider:IsRiding())
+				or not (opener:IsNear(self.inst, 3) and CanEntitySeeTarget(opener, self.inst))
+			then
+				self:Close(opener)
             end
         end
     end

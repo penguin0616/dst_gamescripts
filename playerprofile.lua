@@ -37,6 +37,7 @@ local PlayerProfile = Class(function(self)
         self.persistdata.craftingmenusensitivity = 12
         self.persistdata.inventorysensitivity = 16
 		self.persistdata.minimapzoomsensitivity = 15
+        self.persistdata.boathopdelay = 8
         self.persistdata.screenflash = 1
         self.persistdata.vibration = true
         self.persistdata.showpassword = false
@@ -89,6 +90,7 @@ function PlayerProfile:Reset()
         self.persistdata.craftingmenusensitivity = 12
         self.persistdata.inventorysensitivity = 16
 		self.persistdata.minimapzoomsensitivity = 15
+        self.persistdata.boathopdelay = 8
         self.persistdata.screenflash = 1
         self.persistdata.vibration = true
         self.persistdata.showpassword = false
@@ -142,6 +144,7 @@ function PlayerProfile:SoftReset()
         self.persistdata.craftingmenusensitivity = 12
         self.persistdata.inventorysensitivity = 16
 		self.persistdata.minimapzoomsensitivity = 15
+        self.persistdata.boathopdelay = 8
         self.persistdata.screenflash = 1
         self.persistdata.vibration = true
         self.persistdata.showpassword = false
@@ -692,6 +695,26 @@ function PlayerProfile:GetMiniMapZoomSensitivity()
 	else
 		return tonumber(self:GetValue("minimapzoomsensitivity") or 15)
 	end
+end
+
+function PlayerProfile:GetBoatHopDelay()
+ 	if USE_SETTINGS_FILE then
+		return tonumber(TheSim:GetSetting("misc", "boathopdelay") or 8)
+	else
+		return tonumber(self:GetValue("boathopdelay") or 8)
+	end
+end
+
+function PlayerProfile:SetBoatHopDelay(delay)
+ 	if USE_SETTINGS_FILE then
+		TheSim:SetSetting("misc", "boathopdelay", tostring(delay))
+	else
+		self:SetValue("boathopdelay", delay)
+		self.dirty = true
+	end
+    if ThePlayer then
+        ThePlayer:SynchronizeOneClientAuthoritativeSetting(CLIENTAUTHORITATIVESETTINGS.PLATFORMHOPDELAY, Profile:GetBoatHopDelay())
+    end
 end
 
 function PlayerProfile:SetDistortionEnabled(enabled)
@@ -1637,6 +1660,7 @@ function PlayerProfile:Set(str, callback, minimal_load)
 				self.persistdata.craftingmenusensitivity = 12
 				self.persistdata.inventorysensitivity = 16
 				self.persistdata.minimapzoomsensitivity = 15
+                self.persistdata.boathopdelay = 8
                 self.persistdata.vibration = true
                 self.persistdata.showpassword = false
                 self.persistdata.movementprediction = true

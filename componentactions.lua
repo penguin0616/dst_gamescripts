@@ -2053,12 +2053,16 @@ local COMPONENT_ACTIONS =
         container = function(inst, doer, actions)
             if not inst:HasTag("burnt") then
                 local container = inst.replica.container
-                if container:CanBeOpened() and
-                    doer.replica.inventory ~= nil and
-                    not (container:IsSideWidget() and
-                        doer.components.playercontroller ~= nil and
-                        doer.components.playercontroller.isclientcontrollerattached) then
-                    table.insert(actions, ACTIONS.RUMMAGE)
+				if container:CanBeOpened() then
+					local inventory = doer.replica.inventory
+					if inventory and
+						inventory:GetActiveItem() ~= inst and
+						not (container:IsSideWidget() and
+							doer.components.playercontroller and
+							doer.components.playercontroller.isclientcontrollerattached)
+					then
+						table.insert(actions, ACTIONS.RUMMAGE)
+					end
                 end
             end
 		end,

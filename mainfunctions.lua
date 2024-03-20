@@ -1125,6 +1125,20 @@ function SaveGame(isshutdown, cb)
                 end
             end
         end
+
+        local shard_network = ground.shard -- NOTES(JBK): This data is optional.
+        if shard_network ~= nil then
+            local persistdata, new_refs = shard_network:GetPersistData()
+            if persistdata ~= nil then
+                save.shard_network = {}
+                save.shard_network.persistdata = persistdata
+                if new_refs ~= nil then
+                    for k, v in pairs(new_refs) do
+                        references[v] = shard_network
+                    end
+                end
+            end
+        end
     end
 
     if not isshutdown and #AllPlayers > 0 then

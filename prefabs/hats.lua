@@ -3139,6 +3139,21 @@ local function MakeHat(name)
         end
     end
 
+    fns.alterguardian_onsave = function(inst, data)
+        local equipper = inst.components.equippable:IsEquipped() and inst.components.inventoryitem:GetGrandOwner() or nil
+        local keep_closed = (equipper ~= nil and inst.components.container.opencount == 0 and equipper.userid) or inst.keep_closed -- Try to get new data and fallback to saved variable.
+
+        if keep_closed ~= nil then
+            data.owner_id = keep_closed
+        end
+    end
+
+    fns.alterguardian_onload = function(inst, data)
+        if data.owner_id ~= nil then
+            inst.keep_closed = data.owner_id
+        end
+    end
+
     fns.alterguardian = function()
         local inst = simple(alterguardian_custom_init)
 
@@ -3160,6 +3175,9 @@ local function MakeHat(name)
 
         inst:AddComponent("preserver")
         inst.components.preserver:SetPerishRateMultiplier(0)
+
+        inst.OnSave = fns.alterguardian_onsave
+		inst.OnLoad = fns.alterguardian_onload
 
         MakeHauntableLaunchAndPerish(inst)
 

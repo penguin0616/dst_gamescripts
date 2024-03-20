@@ -2,6 +2,7 @@ require "class"
 require("util/emoji")
 
 local MAX_CHAT_HISTORY = 100
+local NPC_CHATTER_MAX_CHAT_NO_DUPES = 20
 
 local ChatHistoryManager = Class(function(self)
     self.listeners = {}
@@ -17,6 +18,7 @@ function ChatHistoryManager:JoinServer()
 end
 
 ChatHistoryManager.MAX_CHAT_HISTORY = MAX_CHAT_HISTORY
+ChatHistoryManager.NPC_CHATTER_MAX_CHAT_NO_DUPES = NPC_CHATTER_MAX_CHAT_NO_DUPES
 
 function ChatHistoryManager:GetDisplayName(name, prefab)
     return name ~= "" and name or STRINGS.UI.SERVERADMINSCREEN.UNKNOWN_USER_NAME
@@ -135,6 +137,23 @@ function ChatHistoryManager:AddToHistory(type, sender_userid, sender_netid, send
     if self.join_server then return end
 
 	local chat_message = self:GenerateChatMessage(type, sender_userid, sender_netid, sender_name, message, colour, icondata, whisper, localonly, text_filter_context)
+
+    if type == ChatTypes.ChatterMessage then
+        -- NOTES(JBK): We do not want the NPC chats to be filled up with repeat messages so we will filter out the chat_message if it is a duplicate entry for any of the past recent entries.
+        for i = 1, self.NPC_CHATTER_MAX_CHAT_NO_DUPES do
+            local old_message = self:GetChatMessageAtIndex(i)
+            if old_message == nil then
+                break
+            end
+
+            if old_message.type == ChatTypes.ChatterMessage then
+                local is_dupe_message = old_message.message == chat_message.message and old_message.sender_name == chat_message.sender_name
+                if is_dupe_message then
+                    return
+                end
+            end
+        end
+    end
 
     self.history_start = (self.history_start % self.MAX_CHAT_HISTORY) + 1
 

@@ -272,7 +272,6 @@ local prefabs =
     "sculpture_bishop",
     "sculpture_rook",
     "statue_marble",
-    "eyeplant",
     "lureplant",
     "purpleamulet",
     "monkey",
@@ -620,6 +619,8 @@ local function master_postinit(inst)
     inst:AddComponent("lunarriftmutationsmanager")
 
     inst:AddComponent("wagpunk_manager")
+
+    inst:AddComponent("forestdaywalkerspawner")
 
     if METRICS_ENABLED then
         inst:AddComponent("worldoverseer")
