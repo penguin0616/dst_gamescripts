@@ -742,6 +742,7 @@ local function maketree(name, data, state)
 
         --
         local acidinfusible = inst:AddComponent("acidinfusible")
+        acidinfusible:SetFXLevel()
         acidinfusible:SetOnInfuseFn(OnAcidInfused)
         acidinfusible:SetOnUninfuseFn(OnAcidUninfused)
 

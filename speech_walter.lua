@@ -1946,7 +1946,11 @@ return{
 		DRAGONFLY = "Woah! It's a giant bug!",
 		ARMORDRAGONFLY = "I still wish we could've been friends...",
 		DRAGON_SCALES = "Was she a bug or a lizard?",
-		DRAGONFLYCHEST = "We'll have to find something worthy of going in there.",
+		DRAGONFLYCHEST =
+		{
+			GENERIC = "We'll have to find something worthy of going in there.",
+            UPGRADED_STACKSIZE = "The more supplies we can keep safe from fire, the better!",
+		},
 		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "...That didn't fix it.",

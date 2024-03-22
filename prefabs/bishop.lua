@@ -205,6 +205,7 @@ local function bishop_nightmare_fn()
 
     --
     local acidinfusible = inst:AddComponent("acidinfusible")
+    acidinfusible:SetFXLevel(3)
     acidinfusible:SetMultipliers(TUNING.ACID_INFUSION_MULT.WEAKER)
 
     --

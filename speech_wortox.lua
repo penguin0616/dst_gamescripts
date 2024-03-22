@@ -1952,7 +1952,11 @@ return{
 		DRAGONFLY = "Fear me! I'm a scary imp!",
 		ARMORDRAGONFLY = "Ooo, I've always wanted to be scaly.",
 		DRAGON_SCALES = "I prefer fur to scales.",
-		DRAGONFLYCHEST = "Chest to impress.",
+		DRAGONFLYCHEST =
+		{
+			GENERIC = "Chest to impress.",
+            UPGRADED_STACKSIZE = "Scaled-up storage, hyuyu!",
+		},
 		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "It lost its glamor to the hammer.",

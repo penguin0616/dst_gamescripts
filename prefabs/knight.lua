@@ -174,6 +174,7 @@ local function nightmarefn()
 
     --
     local acidinfusible = inst:AddComponent("acidinfusible")
+    acidinfusible:SetFXLevel(2)
     acidinfusible:SetMultipliers(TUNING.ACID_INFUSION_MULT.WEAKER)
 
     --

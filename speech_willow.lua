@@ -1953,7 +1953,11 @@ return{
 		DRAGONFLY = "It's filled with fire!",
 		ARMORDRAGONFLY = "Yay! More FIRE!!!",
 		DRAGON_SCALES = "Oooooooh! I LIKE those.",
-		DRAGONFLYCHEST = "I'm not sure why you'd want something that DOESN'T burn...",
+		DRAGONFLYCHEST =
+		{
+			GENERIC = "I'm not sure why you'd want something that DOESN'T burn...",
+            UPGRADED_STACKSIZE = "Why hide away so much potential kindling?",
+		},
 		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "That's certainly a look.",

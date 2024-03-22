@@ -425,6 +425,7 @@ local function fn()
     ------------------------------------------
 
     inst:AddComponent("acidinfusible")
+    inst.components.acidinfusible:SetFXLevel(2)
     inst.components.acidinfusible:SetMultipliers(TUNING.ACID_INFUSION_MULT.WEAKER)
 
     ------------------------------------------

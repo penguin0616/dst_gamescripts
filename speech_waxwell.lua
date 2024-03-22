@@ -1946,7 +1946,11 @@ return{
 		DRAGONFLY = "A fiery fly.",
 		ARMORDRAGONFLY = "That's some fly mail.",
 		DRAGON_SCALES = "Fiery.",
-		DRAGONFLYCHEST = "Those scales sure are nifty.",
+		DRAGONFLYCHEST =
+		{
+			GENERIC = "Those scales sure are nifty.",
+            UPGRADED_STACKSIZE = "Spacious and stylish.",
+		},
 		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "How undignified.",

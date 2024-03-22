@@ -261,6 +261,7 @@ local function fn()
     inst:ListenForEvent("attacked", OnAttacked)
 
     local acidinfusible = inst:AddComponent("acidinfusible")
+    acidinfusible:SetFXLevel(3)
     acidinfusible:SetDamageMultiplier(TUNING.ACIDRAIN_BAT_DAMAGE_MULT)
     acidinfusible:SetSpeedMultiplier(TUNING.ACIDRAIN_BAT_SPEED_MULT)
     acidinfusible:SetOnInfuseFn(OnInfuse)

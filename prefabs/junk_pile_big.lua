@@ -319,7 +319,10 @@ local function DoReleaseDaywalker(inst)
 	end
 end
 
+local JUNK_MOB_TAGS = { "junkmob" }
+
 local function onpickedfn(inst, picker, loot)
+	local junkstolen
 	if inst.daywalker_side then
 		local pickerdata = inst._pickers and inst._pickers[picker] or nil
 		local startstate = pickerdata and pickerdata.startstate or nil
@@ -335,34 +338,45 @@ local function onpickedfn(inst, picker, loot)
 			DoReleaseDaywalker(inst)
 			toss_junk(inst, x1, z1)
         else
-            if not inst.components.timer:TimerExists("loot_spawn_cd") then
-                inst.components.timer:StartTimer("loot_spawn_cd", TUNING.TOTAL_DAY_TIME * 0.25)
-                inst:SpawnLoot(picker)
-            end
+			junkstolen = true
 		end
 	elseif picker and picker:IsValid() then
-		--find nearest side to picker
-		local x, y, z = picker.Transform:GetWorldPosition()
-		local mindsq = math.huge
-		local nearest_side
-		for i, v in ipairs(inst.sides) do
-			local dsq = v:GetDistanceSqToPoint(x, y, z)
-			if dsq < mindsq then
-				mindsq = dsq
-				nearest_side = i
+		local forestdaywalkerspawner = TheWorld.components.forestdaywalkerspawner
+		if forestdaywalkerspawner and forestdaywalkerspawner:CanSpawnFromJunk() then
+			--find nearest side to picker
+			local x, y, z = picker.Transform:GetWorldPosition()
+			local mindsq = math.huge
+			local nearest_side
+			for i, v in ipairs(inst.sides) do
+				local dsq = v:GetDistanceSqToPoint(x, y, z)
+				if dsq < mindsq then
+					mindsq = dsq
+					nearest_side = i
+				end
 			end
-		end
-		if nearest_side then
-            local forestdaywalkerspawner = TheWorld.components.forestdaywalkerspawner
-            if forestdaywalkerspawner and forestdaywalkerspawner:CanSpawnFromJunk() then
-                spawn_daywalker(inst, nearest_side, 1)
-                if inst.daywalker then
+			if nearest_side then
+				spawn_daywalker(inst, nearest_side, 1)
+				if inst.daywalker then
 					SpawnPrefab("junk_break_fx").Transform:SetPosition(inst.daywalker.Transform:GetWorldPosition())
-                    forestdaywalkerspawner:WatchDaywalker(inst.daywalker)
-                end
+					forestdaywalkerspawner:WatchDaywalker(inst.daywalker)
+				end
 			else
 				inst.SoundEmitter:PlaySound("qol1/wagstaff_ruins/rummagepile_pst")
-            end
+			end
+		else
+			junkstolen = true
+		end
+	end
+
+	if junkstolen then
+		if not inst.components.timer:TimerExists("loot_spawn_cd") then
+			inst.components.timer:StartTimer("loot_spawn_cd", TUNING.TOTAL_DAY_TIME * 0.25)
+			inst:SpawnLoot(picker)
+		end
+		--stolen even if no loot dropped!
+		local x, y, z = inst.Transform:GetWorldPosition()
+		for i, v in ipairs(TheSim:FindEntities(x, y, z, 16, JUNK_MOB_TAGS)) do
+			v:PushEvent("ms_junkstolen", picker)
 		end
 	end
 end
@@ -371,6 +385,7 @@ local function onshake(inst)
 	--make sure not looping
 	if not inst._pickingloop then
 		inst.SoundEmitter:PlaySound("qol1/daywalker_scrappy/buried_rustle")
+		inst.SoundEmitter:PlaySound("qol1/daywalker_scrappy/vocalization_muffled")
 
 		inst.AnimState:PlayAnimation("loopbig")
 		inst.AnimState:PushAnimation("big_idle", false)

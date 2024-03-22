@@ -678,6 +678,7 @@ local function create_common(bank, build, tag, common_init, extra_data)
     ------------------
 
     inst:AddComponent("acidinfusible")
+    inst.components.acidinfusible:SetFXLevel(1)
     inst.components.acidinfusible:SetMultipliers(TUNING.ACID_INFUSION_MULT.STRONGER)
 
     ------------------

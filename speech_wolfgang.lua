@@ -1947,7 +1947,11 @@ return{
 		DRAGONFLY = "I confuse... Is dragonfly, or dragon-fly?",
 		ARMORDRAGONFLY = "Wolfgang not need protection.",
 		DRAGON_SCALES = "Glowy scales.",
-		DRAGONFLYCHEST = "Chest is not afraid of fire.",
+		DRAGONFLYCHEST =
+		{
+			GENERIC = "Chest is not afraid of fire.",
+            UPGRADED_STACKSIZE = "Mighty chest is not afraid of fire!",
+		},
 		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "Is very cute!",

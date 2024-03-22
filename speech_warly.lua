@@ -1946,7 +1946,11 @@ return{
 		DRAGONFLY = "I'm not cut out for this.",
 		ARMORDRAGONFLY = "Heavy and hot.",
 		DRAGON_SCALES = "Hot to the touch!",
-		DRAGONFLYCHEST = "Ooh la la, burnproof storage.",
+		DRAGONFLYCHEST =
+		{
+			GENERIC = "Ooh la la, burnproof storage.",
+            UPGRADED_STACKSIZE = "Burnproof storage, très grand!",
+		},
 		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "Is it reparable?",

@@ -24,7 +24,7 @@ local InkOver = require "widgets/inkover"
 local WagpunkUI = require "widgets/wagpunkui"
 local GogglesOver = require "widgets/gogglesover"
 local NutrientsOver = require "widgets/nutrientsover"
-local DarkenedOver = require "widgets/darkenedover"
+local ScrapMonocleOver = require "widgets/scrapmonocleover"
 local BatOver = require "widgets/batover"
 local FlareOver = require "widgets/flareover"
 local EndOfMatchPopup = require "widgets/redux/endofmatchpopup"
@@ -172,7 +172,7 @@ function PlayerHud:CreateOverlays(owner)
 
     self.gogglesover = self.overlayroot:AddChild(GogglesOver(owner, self.storm_overlays))
     self.nutrientsover = self.overlayroot:AddChild(NutrientsOver(owner))
-    self.darkenedover = self.overlayroot:AddChild(DarkenedOver(owner))
+    self.scrapmonocleover = self.overlayroot:AddChild(ScrapMonocleOver(owner))
     self.bloodover = self.overlayroot:AddChild(BloodOver(owner))
     self.beefbloodover = self.overlayroot:AddChild(BeefBloodOver(owner))
     self.iceover = self.overlayroot:AddChild(IceOver(owner))
@@ -189,6 +189,7 @@ function PlayerHud:CreateOverlays(owner)
     self.clouds:SetClickable(false)
     self.clouds:SetHAnchor(ANCHOR_MIDDLE)
     self.clouds:SetVAnchor(ANCHOR_MIDDLE)
+    self.clouds:SetScaleMode(SCALEMODE_FIXEDSCREEN_NONDYNAMIC)
     self.clouds:GetAnimState():SetBank("clouds_ol")
     self.clouds:GetAnimState():SetBuild("clouds_ol")
     self.clouds:GetAnimState():PlayAnimation("idle", true)

@@ -6562,7 +6562,7 @@ function Tune(overrides)
 		--
         SPAWN_DAYWALKER = true,
 		DAYWALKER_PILLAR_MINE = 10,
-        DAYWALKER_RESPAWN_DAYS_COUNT = 20, -- Days after the last defeat.
+        DAYWALKER_RESPAWN_DAYS_COUNT = 10, -- Days after the last defeat.
 
 		DAYWALKER_HEALTH = 10000,
 		DAYWALKER_HEALTH_REGEN = 25, --per second (only when not in combat)
@@ -7399,7 +7399,7 @@ function Tune(overrides)
         SCRAP_MONOCLE_EXTRA_VIEW_DIST = 15,
         SCRAP_MONOCLEHAT_PERISHTIME = total_day_time * 12,
 
-        BEESWAX_SPRAY_USES = 50,
+        BEESWAX_SPRAY_USES = 75,
 
         STORAGE_ROBOT_WORK_RADIUS = 15,
         STORAGE_ROBOT_FUEL = total_day_time * 2,

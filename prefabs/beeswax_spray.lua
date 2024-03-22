@@ -20,6 +20,8 @@ local prefabs = {
     "marbleshrub",
     "monkeytail",
     "rock_avocado_bush",
+    "marsh_bush",
+    "oceantree",
 
     "dug_berrybush",
     "dug_berrybush2",
@@ -27,7 +29,7 @@ local prefabs = {
     "dug_sapling",
     "dug_sapling_moon",
     "dug_grass",
-    --dug_marsh_bush",
+    "dug_marsh_bush",
     "dug_rock_avocado_bush",
     "dug_bananabush",
     "dug_monkeytail",

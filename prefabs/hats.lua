@@ -4150,7 +4150,7 @@ local function MakeHat(name)
     end
 
     fns.scrap_monocle_custom_init = function(inst)
-        inst:AddTag("darkenedvision")
+        inst:AddTag("scrapmonolevision")
     end
 
     fns.scrap_monocle_dappernessfn = function(inst, owner)

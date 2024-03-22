@@ -28,6 +28,7 @@ local prefabs_cave =
     "fossil_piece",
     "fossilspike",
     "nightmarefuel",
+    "blinkfocus_marker",
 }
 
 local prefabs_forest =
@@ -560,8 +561,17 @@ local function SpawnSnare(inst, x, z, r, num, target)
     end
     if count <= 0 then
         return false
-    elseif target:IsValid() then
-        target:PushEvent("snared", { attacker = inst })
+    else
+        -- NOTES(JBK): This is for controllers to escape out of the prison without teleporting across the entire arena.
+        local duration = TUNING.STALKER_SNARE_TIME + TUNING.STALKER_SNARE_TIME_VARIANCE + 1
+        local blinkfocus = SpawnPrefab("blinkfocus_marker")
+        blinkfocus.Transform:SetPosition(x, 0, z)
+        blinkfocus:MakeTemporary(duration)
+        blinkfocus:SetMaxRange(r + 4)
+
+        if target:IsValid() then
+            target:PushEvent("snared", { attacker = inst })
+        end
     end
     return true
 end

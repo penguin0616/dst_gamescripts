@@ -1950,7 +1950,11 @@ return{
 		DRAGONFLY = "It's burning on the inside.",
 		ARMORDRAGONFLY = "I'd wear it inside-out.",
 		DRAGON_SCALES = "Scales of pain.",
-		DRAGONFLYCHEST = "Boom box.",
+		DRAGONFLYCHEST =
+		{
+			GENERIC = "Boom box.",
+            UPGRADED_STACKSIZE = "It holds multitudes, and refuses to burn away.",
+		},
 		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "Pathetic.",

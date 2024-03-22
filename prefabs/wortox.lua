@@ -266,9 +266,19 @@ local function ReticuleTargetFn(inst)
     local pos = inst:GetPosition()
 
     local ents = TheSim:FindEntities(pos.x, pos.y, pos.z, TUNING.CONTROLLER_BLINKFOCUS_DISTANCE, BLINKFOCUS_MUST_TAGS)
+    local maxrange = nil
+    for _, v in ipairs(ents) do
+        local newmaxrange = v.maxrange and v.maxrange:value() or nil
+        if newmaxrange ~= nil and newmaxrange ~= 0 and (maxrange == nil or newmaxrange < maxrange) then
+            if inst:GetDistanceSqToInst(v) < newmaxrange * newmaxrange then
+                maxrange = newmaxrange
+            end
+        end
+    end
     for _, v in ipairs(ents) do
         local epos = v:GetPosition()
-        if distsq(pos, epos) > TUNING.CONTROLLER_BLINKFOCUS_DISTANCESQ_MIN then
+        local dsq = distsq(pos, epos)
+        if (maxrange == nil or dsq < maxrange * maxrange) and dsq > TUNING.CONTROLLER_BLINKFOCUS_DISTANCESQ_MIN then
             local angletoepos = inst:GetAngleToPoint(epos)
             local angleto = math.abs(anglediff(rotation, angletoepos))
             if angleto < TUNING.CONTROLLER_BLINKFOCUS_ANGLE then
@@ -279,7 +289,7 @@ local function ReticuleTargetFn(inst)
     rotation = rotation * DEGREES
 
     pos.y = 0
-    for r = 13, 4, -.5 do
+    for r = maxrange or 13, 4, -.5 do
         local offset = FindWalkableOffset(pos, rotation, r, 1, false, true, inst.CanBlinkTo)
         if offset ~= nil then
             pos.x = pos.x + offset.x
@@ -287,17 +297,21 @@ local function ReticuleTargetFn(inst)
             return pos
         end
     end
-    for r = 13.5, 16, .5 do
-        local offset = FindWalkableOffset(pos, rotation, r, 1, false, true, inst.CanBlinkTo)
-        if offset ~= nil then
-            pos.x = pos.x + offset.x
-            pos.z = pos.z + offset.z
-            return pos
+    if maxrange == nil or maxrange >= 13.5 then
+        for r = 13.5, maxrange or 16, .5 do
+            local offset = FindWalkableOffset(pos, rotation, r, 1, false, true, inst.CanBlinkTo)
+            if offset ~= nil then
+                pos.x = pos.x + offset.x
+                pos.z = pos.z + offset.z
+                return pos
+            end
         end
     end
-    pos.x = pos.x + math.cos(rotation) * 13
-    pos.z = pos.z - math.sin(rotation) * 13
-    return pos
+    if maxrange == nil or maxrange >= 13 then
+        pos.x = pos.x + math.cos(rotation) * 13
+        pos.z = pos.z - math.sin(rotation) * 13
+        return pos
+    end
 end
 
 local function CanSoulhop(inst, souls)

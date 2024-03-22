@@ -31,6 +31,7 @@ local AcidInfusible = Class(function(self, inst)
 
     self.infused = false
     self.userainimmunity = true
+    self.fxlevel = 1
 
     --self.damagemult = nil
     --self.damagetakenmult = nil
@@ -120,6 +121,10 @@ function AcidInfusible:SetUseRainImmunity(userainimmunity)
     end
 end
 
+function AcidInfusible:SetFXLevel(level)
+    self.fxlevel = level
+end
+
 --------------------------------------------------------------------------
 
 function AcidInfusible:IsInfused()
@@ -143,6 +148,10 @@ function AcidInfusible:OnInfuse()
         end
     end
 
+    if self.fxlevel ~= nil then
+        self:SpawnFX()
+    end
+
     if self.on_infuse_fn ~= nil then
         self.on_infuse_fn(self.inst)
     end
@@ -158,6 +167,8 @@ function AcidInfusible:OnUninfuse()
         self.inst.components.combat.externaldamagetakenmultipliers:RemoveModifier(self.inst, SOURCE_LIST_KEY)
     end
 
+    self:KillFX()
+
     if self.on_uninfuse_fn ~= nil then
         self.on_uninfuse_fn(self.inst)
     end
@@ -171,6 +182,24 @@ function AcidInfusible:OnInfusedDirty(acidraining, hasrainimmunity)
     elseif not infused and self.infused then
         self:OnUninfuse()
         self.infused = false
+    end
+end
+
+--------------------------------------------------------------------------
+
+function AcidInfusible:SpawnFX()
+    self:KillFX()
+
+    self._fx = self.inst:SpawnChild("acidsmoke_fx")
+
+    if self._fx ~= nil then
+        self._fx:SetLevel(self.fxlevel)
+    end
+end
+
+function AcidInfusible:KillFX()
+    if self._fx ~= nil then
+        self._fx:DoTaskInTime(self._fx.AnimState:GetCurrentAnimationLength() + FRAMES, self._fx.Remove)
     end
 end
 

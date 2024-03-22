@@ -1946,7 +1946,11 @@ return{
 		DRAGONFLY = "It's some kind of mythical variant of a Diptera.",
 		ARMORDRAGONFLY = "Pyrotechnic armor!",
 		DRAGON_SCALES = "Scales from an insect? Unheard of!",
-		DRAGONFLYCHEST = "Scales! Scales are the winner!",
+		DRAGONFLYCHEST =
+		{
+			GENERIC = "Scales! Scales are the winner!",
+            UPGRADED_STACKSIZE = "A fireproof chest with an impossibly expansive interior.",
+		},
 		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "Hm, that was an interesting choice of alteration.",

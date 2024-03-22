@@ -36,6 +36,7 @@ local function DoFootstep(inst, volume)
 end
 
 local function OnEnterWalkingStates(inst)
+	inst.sg:AddStateTag("walk")
 	inst:SetHeadTracking(true)
 	if inst.autostalk then
 		inst:SetStalking(inst.components.combat.target)

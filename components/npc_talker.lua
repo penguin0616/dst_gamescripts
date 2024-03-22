@@ -87,9 +87,7 @@ function Npc_talker:Chatter(strtbl, index, chatpriority, override, stompable, so
 end
 
 function Npc_talker:haslines()
-    if #self.queue > 0 then
-        return true
-    end
+    return #(self.queue) > 0
 end
 
 function Npc_talker:resetqueue()
@@ -100,8 +98,14 @@ end
 function Npc_talker:donextline()
     if #self.queue > 0 then
         local queue_item = self.queue[1]
+
         if type(queue_item) == "table" then
-            self.inst.components.talker:Chatter(queue_item[1], queue_item[2], nil, nil, queue_item[3])
+            -- The Line object might get used with Say, so we need to filter those over too.
+            if queue_item.message then
+                self.inst.components.talker:Say({queue_item})
+            else
+                self.inst.components.talker:Chatter(queue_item[1], queue_item[2], nil, nil, queue_item[3])
+            end
         else
             self.inst.components.talker:Say(queue_item)
         end

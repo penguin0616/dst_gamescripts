@@ -35,6 +35,7 @@ To add a new language:
   - PC Mouse:			132 to 135		0x84-0x87
   - DualShock4 on PC:	136 to 139		0x88-0x8B
   - PS4:				140 to 143		0x8A-0x8D
+  - Switch:             144 to 147      0x90-0x93
 - The third digit can be from 128 to 191, inclusive
   - no reserved meanings
 ***************************************************************
@@ -7933,6 +7934,16 @@ STRINGS.UI =
 
         FAMILY_SHARED = "Family Sharing",
 
+        FAILED_INVENTORY_TITLE = "Inventory Download Failed",
+        FAILED_INVENTORY_BODY = "Unfortunately your Item Collection failed to complete downloading. Would you like to continue without your collection?",
+        FAILED_INVENTORY_YES = "Yes",
+        FAILED_INVENTORY_NO = "No",
+
+        PLAYER2_NOT_ONLINE = "Player 2 Offline",
+        PLAYER2_NOT_ONLINE_DESC = "Player 2 is currently offline. If player 2 is not using an online account, please switch player 2 to an online account and try again.",
+        INVITED_USER_NOT_LOGGED_IN = "Not Logged In",
+        INVITED_USER_NOT_LOGGED_IN_DESC = "The invited user is not logged in. Please log in as the invited user and accept the invite again to join.",
+
         OFFLINE = "Offline",
         OFFLINEMODE = "Connection to Klei Failed",
         OFFLINEMODEDESC = "Could not connect to Klei's servers. Characters and worlds from online games will be unavailable. Continue and play offline?",
@@ -8036,6 +8047,8 @@ STRINGS.UI =
 		STATUS_ONLINE = "Signed In",
 		PLAYER_2_PRESS_START_PREFIX = "PRESS",
 		PLAYER_2_PRESS_START_POSTFIX = "TO JOIN",
+
+        PLAYER_2_CONTROLLER_DISCONNECTED = "CONTROLLER 2 DISCONNECTED",
     },
 
     PLANTREGISTRY = {
@@ -8395,6 +8408,7 @@ STRINGS.UI =
             PLAYFUL = "Peppy",
             CRAFTY = "Crafty",
         },
+        LOCK_TARGET = "Lock Target",
 		UNLOCK_TARGET = "Unlock Target",
 
         LAVAARENA_WIN_TITLE = "Victory!",
@@ -8644,6 +8658,7 @@ STRINGS.UI =
         WATHGRITHRFONT = "Wigfrid's Umlauts:",
         WALTERCAMERA = "Campfire Camera:",        
         BOATCAMERA = "Seafaring Camera:",
+		PROMOTIONS = "Promotions:",
         BACKPACKMODE = "Backpack Layout:",
         POIDISPLAY = "Point of Interest Icons:",
         AUTOPAUSE = "Auto-Pause:",
@@ -8662,8 +8677,9 @@ STRINGS.UI =
         TEXTURESTREAMING = "Texture Streaming:",
         THREADEDRENDER = "Threaded Render:",
 		SCREEN_FLASH_INTENSITY = "Screen Flashes:",
+        SCREEN_FLASH_INTENSITY_SWITCH = "Photosensitivity Mode:",
         DYNAMIC_TREE_SHADOWS = "Canopy Shadows:",
-		INVERTCAMERAROTATION = "Camera Rotation",
+		INVERTCAMERAROTATION = "Camera Rotation:",
         RESTART_TEXTURE_STREAMING_TITLE = "Restart Required",
         RESTART_TEXTURE_STREAMING_BODY = "For Texture Streaming changes to take effect, you will have to exit and restart the game.",
         RESTART_THREADED_RENDER_TITLE = "Restart Required",
@@ -8692,7 +8708,7 @@ STRINGS.UI =
         OFFLINE_MODE_TITLE = "Offline Mode",
         OFFLINE_MODE_BODY = "Your selection is not available in offline mode. Please log in and try again.",
         KLEI_ID_PREFIX = "Klei ID: ",
-		COMMANDWHEEL = "Command / Emote Wheel Movement:",
+		COMMANDWHEEL = "Social Menu Movement:",
 
 		INTRO_MOVIE = "Intro Movie",
 		CREDITS = "Credits",
@@ -8704,9 +8720,19 @@ STRINGS.UI =
         LOADING_TIPS_TIPS_ONLY = "Tips Only",
         LOADING_TIPS_LORE_ONLY = "Lore Only",
 
-        NPCCHAT_ALL = "All",
-        NPCCHAT_SOME = "Some",
+        NPCCHAT_ALL = "Most",
+        NPCCHAT_SOME = "Important",
         NPCCHAT_NONE = "None",
+
+        CONTROLLER_LAYOUT = "Controller Layout:",
+        CONTROLLER_CUSTOM = "Custom",
+        RESET_LAYOUT = "Default All",
+        RESET_LAYOUT_BODY = "Do you want to reset all controls to their default values?\n\nYou will lose any changes you've made.\n",        
+        CHANGE_BINDING = "Change Binding",
+        CURRENT_CONTROL_TEXT = "Current %s",
+        DEFAULT_CONTROL_TEXT = "Default %s",
+        INV_ADJUST_STACK_SIZE = "Adjust stack size",
+        INV_USE_ITEM_ON_ITEM = "Use on item",
 
         TOOLTIPS =
         {
@@ -8765,6 +8791,7 @@ STRINGS.UI =
             DISTORTION = "Allows you to turn off screen distortions in the game, especially notable during moments of insanity.",
             BLOOM = "Increases the visual intensity of lights.",
             SCREEN_FLASH_INTENSITY = "Control the intensity of screen flashes during explosions and lightning strikes.",
+            SCREEN_FLASH_INTENSITY_SWITCH = "Control the intensity of flashing effects during explosions and lightning strikes.",
             DYNAMIC_TREE_SHADOWS = "Renders the ground shadow while under a canopy.",
 			DISPLAYAREA = "Maximize the screen size on your display.",
 			INVERTCAMERAROTATION = "Flips the camera rotation direction.",
@@ -8777,8 +8804,39 @@ STRINGS.UI =
             ANIMATED_HEADS = "Animates the survivor's heads in the menus.",
             CONSOLEAUTOPAUSE = "Allows the server to auto-pause while the console screen is open.",
             DEFAULTCLOUDSAVES = "Chooses whether new saves will be stored in the cloud or not by default.",
-			COMMANDWHEEL = "Allows you to control your player movement and the Command / Emote Wheel independently.",
+			COMMANDWHEEL = "Allows you to control your player movement and the Social Menu independently.",
             POIDISPLAY = "Hide all the Point of Interest Icons.",
+
+            -- controls
+            CONTROLLER_LAYOUT = "Use the default controls or customize them to your liking.",
+
+            CONTROLS_EDITOR = 
+            {
+                -- These are used in the Console version of the controls settings and thus only cover the controls available there
+                [57] = "Perform the default action on the current target.", --CONTROL_CONTROLLER_ACTION
+                [56] = "Attack the current target.", -- CONTROL_CONTROLLER_ATTACK
+                [58] = "Perform an alternate action on the current target (when applicable).", -- CONTROL_CONTROLLER_ALTACTION
+                [3] = "Inspect the current target.", -- CONTROL_INSPECT
+                [84] = "Lock on to the current target.", -- CONTROL_TARGET_LOCK
+                [85] = "Lock on to the next available target.", -- CONTROL_TARGET_CYCLE
+                [46] = "Open and Close the crafting menu.", -- CONTROL_OPEN_CRAFTING
+                [45] = "Open and Close the inventory bar.", -- CONTROL_OPEN_INVENTORY
+                [51] = "Examine the selected inventory item.", -- CONTROL_INVENTORY_EXAMINE
+                [52] = "Use the selected inventory item on yourself.", -- CONTROL_INVENTORY_USEONSELF
+                [53] = "Use  the selected inventory item on the world.", -- CONTROL_INVENTORY_USEONSCENE
+                [54] = "Drop the selected inventory item.", -- CONTROL_INVENTORY_DROP
+                [55] = "Put part of the selected stack of inventory items into another inventory slot.", -- CONTROL_PUTSTACK
+                [59] = "Use the selected inventory item on another.", -- CONTROL_USE_ITEM_ON_ITEM
+                [83] = "Open and Close the Social Menu.", -- CONTROL_OPEN_COMMAND_WHEEL
+                [13] = "Pause and Unpause the game.", -- CONTROL_PAUSE
+                [14] = "Open and Close the minimap", -- CONTROL_MAP
+                [60] = "Zoom in while using the minimap.", -- CONTROL_MAP_ZOOM_IN
+                [61] = "Zoom out while using the minimap.", -- CONTROL_MAP_ZOOM_OUT
+                [11] = "Rotate the camera to the left.", -- CONTROL_ROTATE_LEFT
+                [12] = "Rotate the camera to the right.", -- CONTROL_ROTATE_RIGHT
+                [9] = "Move the camera closer to your character.", -- CONTROL_ZOOM_IN
+                [10] = "Move the camera farther from your character.", -- CONTROL_ZOOM_OUT
+            }
     },
 
     },
@@ -10270,6 +10328,7 @@ STRINGS.UI =
         SORT_MOSTDAYS = "Days Played",
         SORT_DATECREATED = "Date Created",
         SEARCH = "Search",
+        SAVEFROMNEWERVERSION = "Not playable - save data from newer game version",
 		NO_MATCHING_SERVERS = "No save games match your search.",
         USECAVES_TITLE = "{server} or no {server}?",
         USECAVES_DESC_CAVE = "Play with {server}, requires more PC Power as it runs multiple servers",
@@ -11509,7 +11568,7 @@ STRINGS.UI =
         NEW_STUFF = "Recent Discoveries",
         LOADING_STUFF = "Loading Discoveries...",
         NO_ITEMS = "Start playing to earn items!",
-		OFFLINE_NO_ITEMS = "Log in to starting earning items.",
+		OFFLINE_NO_ITEMS = "Log in to start earning items.",
         UNOPENED_BOXES_FMT = "{num_boxes} unopened Chests",
         MOST_COMMON_DEATH = "Often Killed By",
         MOST_COMMON_FRIEND = "Friendliest Friend",
@@ -12591,7 +12650,7 @@ STRINGS.UI =
                 [1005] = "\238\132\131", --"Mouse Button 4",
                 [1006] = "\238\132\132", --"Mouse Button 5",
             },
-            -- Xbox360
+            -- Xbox on PC (CharlesB: XboxOne/Xbox Series is down below in index 13)
             [2] =
             {
                 [0] = "Unknown",
@@ -12656,7 +12715,7 @@ STRINGS.UI =
                 "(Slider 1)",
                 "(Slider 1)",
             },
-            -- PS4 Dual Shock 4
+            -- DualShock 4 on PC (CharlesB: PS4/PS5 is down below in index 12)
             [4] =
             {
                 [0] = "Unknown",
@@ -12695,22 +12754,29 @@ STRINGS.UI =
             [5] =
             {
                 [0] = "Unknown",
+                "", -- unused but needed to get the index to 2
 
                 -- Digital
-                "\238\136\143",--"DPad Up",
-                "\238\136\140",--"DPad Down",
-                "\238\136\141",--"DPad Left",
-                "\238\136\142",--"DPad Right"
-                "\238\136\132",--"Start",
-                "\238\136\133",--"Back",
                 "\238\136\156",--"Left Stick",					-- 57884
                 "\238\136\157",--"Right Stick",					-- 57885
+                "\238\136\132",--"Start",
+                "\238\136\143",--"DPad Up",
+                "\238\136\142",--"DPad Right"
+                "\238\136\140",--"DPad Down",
+                "\238\136\141",--"DPad Left",
+                "\238\136\154",--"Left Trigger",
+                "\238\136\155",--"Right Trigger",		-- 25
                 "\238\136\152",--"L",							-- 57880
                 "\238\136\153",--"R",					-- 10	-- 57881
-                "\238\136\128",--"Button A",
-                "\238\136\129",--"Button B",
-                "\238\136\130",--"Button X",
                 "\238\136\131",--"Button Y",
+                "\238\136\129",--"Button B",
+                "\238\136\128",--"Button A",
+                "\238\136\130",--"Button X",
+                "",
+                "",
+                "",
+                "",
+                "\238\136\133",--"Back",
 
                 -- Analog
                 "\238\136\146",--"Left Thumb Left",		-- 15
@@ -12778,6 +12844,8 @@ STRINGS.UI =
             --Unknown
             [9] =
             {
+                [0] = "Unknown",
+
                 "Unknown",
                 " - No Bind - ",
             },
@@ -12786,8 +12854,37 @@ STRINGS.UI =
             {
                 [0] = "Unknown",
 
-                "Unknown",
-                " - No Bind - ",
+                -- Digital
+                "\238\144\143",--"DPad Up"
+                "\238\144\140",--"DPad Down"
+                "\238\144\141",--"DPad Left",
+                "\238\144\142",--"DPad Right"
+                "\238\144\132",--"Start",
+                "\238\144\133",--"Select",
+                "\238\144\134",--"Left Stick"
+                "\238\144\137",--"Right Stick"
+                "\238\144\135",--"Left Bumper",
+                "\238\144\138",--"Right Bumper"
+                "\238\144\128",--"Button A",
+                "\238\144\129",--"Button B",
+                "\238\144\130",--"Button X",
+                "\238\144\131",--"Button Y",    
+
+                -- Analog
+                "\238\144\146",--"Left Thumb Left",
+                "\238\144\147",--"Left Thumb Right",
+                "\238\144\145",--"Left Thumb Down",
+                "\238\144\144",--"Left Thumb Up",
+                "\238\144\150",--"Right Thumb Left",
+                "\238\144\151",--"Right Thumb Right",
+                "\238\144\149",--"Right Thumb Down",
+                "\238\144\148",--"Right Thumb Up",
+                "\238\144\136",--"Left Trigger",
+                "\238\144\136",--"Left Trigger",
+                "\238\144\139",--"Right Trigger",
+                "\238\144\139",--"Right Trigger",
+				"\238\144\152",--"SL",
+                "\238\144\153",--"SR",
             },
 			-- Steam Deck
             [11] =
@@ -12835,6 +12932,85 @@ STRINGS.UI =
                 [284] = "\238\136\184",	-- "Mouse Button 4" = R4
                 [285] = "\238\136\185",	-- "Mouse Button 5" = R5
 
+            },
+            -- DualShock 4 on PS4/PS5 (CharlesB: PC is above in index 4, this one has the same icons but they've been reordered)
+            [12] =
+            {
+                [0] = "Unknown",      
+                "", -- unused but needed to get the index to 2
+
+                -- Digital
+                "\238\136\134",-- 2 "L3",
+                "\238\136\137",-- 3 "R3",
+                "\238\136\132",-- 4 "Options (Start)",
+                "\238\136\143",-- 5 "DPad Up",
+                "\238\136\142",-- 6 "DPad Right"
+                "\238\136\140",-- 7 "DPad Down",
+                "\238\136\141",-- 8 "DPad Left",
+                "\238\136\136",-- 9 "Left Trigger",
+                "\238\136\139",--10 "Right Trigger",
+                "\238\136\135",--11 "Left Bumper",
+                "\238\136\138",--12 "Right Bumper",                
+                "\238\136\131",--13 "Triangle",
+                "\238\136\129",--14 "Circle",
+                "\238\136\128",--15 "Cross",
+                "\238\136\130",--16 "Square",
+                "",
+                "",
+                "",
+                "",
+                "\238\136\133",--21 "Touchpad",
+
+                -- Analog
+                "\238\136\146",--22 "Left Thumb Left",
+                "\238\136\147",--23 "Left Thumb Right",
+                "\238\136\145",--24 "Left Thumb Down",
+                "\238\136\144",--25 "Left Thumb Up",
+                "\238\136\150",--26 "Right Thumb Left",
+                "\238\136\151",--27 "Right Thumb Right",
+                "\238\136\149",--28 "Right Thumb Down",
+                "\238\136\148",--29 "Right Thumb Up",
+                "\238\136\136",--30 "Left Trigger",
+                "\238\136\136",--31 "Left Trigger",
+                "\238\136\139",--32 "Right Trigger",
+                "\238\136\139",--33 "Right Trigger",
+            },            
+            -- Xbox on XboxOne/Xbox Series (CharlesB: PC is above in index 2, this one has the same icons but they've been reordered)
+            [13] =
+            {
+                [0] = "Unknown",
+                -- Digital
+				
+                "\238\128\136",--"Left Trigger",
+                "\238\128\139",--"Right Trigger",
+                "\238\128\132",--"Start",
+                "\238\128\133",--"Back",
+                "\238\128\128",--"Button A",
+                "\238\128\129",--"Button B",
+                "\238\128\130",--"Button X",
+                "\238\128\131",--"Button Y",
+                "\238\128\143",--"DPad Up"
+                "\238\128\140",--"DPad Down"
+                "\238\128\141",--"DPad Left",
+                "\238\128\142",--"DPad Right"
+                "\238\128\135",--"Left Bumper",
+                "\238\128\138",--"Right Bumper"
+                "\238\128\134",--"Left Stick"
+                "\238\128\137",--"Right Stick"
+
+                -- Analog
+                "\238\128\146",--"Left Thumb Left",
+                "\238\128\147",--"Left Thumb Right",
+                "\238\128\145",--"Left Thumb Down",
+                "\238\128\144",--"Left Thumb Up",
+                "\238\128\150",--"Right Thumb Left",
+                "\238\128\151",--"Right Thumb Right",
+                "\238\128\149",--"Right Thumb Down",
+                "\238\128\148",--"Right Thumb Up",
+                "\238\128\136",--"Left Trigger",
+                "\238\128\136",--"Left Trigger",
+                "\238\128\139",--"Right Trigger",
+                "\238\128\139",--"Right Trigger",
             },
         },
         PS4 =

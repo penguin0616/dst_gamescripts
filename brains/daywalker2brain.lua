@@ -165,6 +165,11 @@ local function TryStuckAttack(inst)
 	end
 end
 
+local function GetThief(inst)
+	local thief = not inst.hostile and (inst.sg.statemem.thief or inst._thief) or nil
+	return thief and thief:IsValid() and thief or nil
+end
+
 function Daywalker2Brain:OnStart()
 	local root = PriorityNode({
 		WhileNode(
@@ -173,6 +178,25 @@ function Daywalker2Brain:OnStart()
 			end,
 			"<busy state guard>",
 			PriorityNode({
+				--Out of combat warning junk thief
+				WhileNode(function() return GetThief(self.inst) ~= nil end, "Warning",
+					--"SUCCEED" instead of "FAIL" so we don't get rotated by Wander immediately
+					--in case we were just failing to force target switch (_thieflevel changed)
+					NotDecorator(FaceEntity(self.inst,
+						function(inst)
+							local thief = GetThief(inst)
+							if thief then
+								self._thieflevel = inst._thieflevel
+								return thief
+							end
+						end,
+						function(inst, thief)
+							return thief
+								and not inst.hostile
+								and (inst.sg.statemem.thief or inst._thief) == thief
+								and inst._thieflevel == self._thieflevel
+						end))),
+
 				WhileNode(function() return ShouldRummage(self.inst, self) end, "Rummage",
 					PriorityNode({
 						ParallelNode{
@@ -225,7 +249,8 @@ function Daywalker2Brain:OnStart()
 						end, "LowPriorityTackle"),
 					}),
 
-				Wander(self.inst, GetJunkPos, 8),
+				IfNode(function() return not self.inst.sg.statemem.thief end, "Wander",
+					Wander(self.inst, GetJunkPos, 8)),
 			}, 0.5)),
 	}, 0.5)
 

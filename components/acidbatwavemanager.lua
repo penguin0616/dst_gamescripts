@@ -275,26 +275,40 @@ function self:TryToSpawnWaveForPlayer(player, playermetadata, t)
 
     -- Warn player of incoming spawn.
     playermetadata.spawn_wave_time = t + self.time_for_warning
-    self:IssueWarningForPlayer(player, playermetadata)
+    self:IssueWarningForPlayer(player, playermetadata, t)
+    player:DoTaskInTime(self.time_for_warning * 0.1 + math.random(), self.DoWarningSpeech)
 end
 function self:SpawnWaveForPlayer(player, playermetadata)
+    playermetadata.last_warn_time = nil
     self:CreateAcidBatsForPlayer(player, playermetadata)
 end
 self.DoWarningSpeech = function(player)
     player.components.talker:Say(GetString(player, "ANNOUNCE_ACIDBATS"))
 end
-function self:IssueWarningForPlayer(player, playermetadata)
-    -- FIXME(JBK): Play bat audio sounds for self.time_for_warning seconds.
-    player:DoTaskInTime(1 + math.random() * 2, self.DoWarningSpeech)
+function self:IssueWarningForPlayer(player, playermetadata, t)
+    if playermetadata.last_warn_time == nil or playermetadata.last_warn_time < t then
+        local sfx = SpawnPrefab("acidbatwavewarning_lvl1")
+        sfx.Transform:SetPosition(player.Transform:GetWorldPosition())
+        local timeleft = playermetadata.spawn_wave_time - t
+        playermetadata.last_warn_time = t + ((timeleft < self.time_for_warning * 0.25 and 0.8 + math.random() * 0.3) or (timeleft < self.time_for_warning * 0.5 and 3 + math.random()) or (timeleft < self.time_for_warning * 0.75 and 4 + math.random(2)) or (5 + math.random(4)))
+    end
 end
 function self:OnUpdate(dt)
+    -- Ignore the counter here for sfx checks.
+    local t = GetTime()
+    for player, _ in pairs(self.players) do
+        local playermetadata = self.watching[player]
+        if playermetadata ~= nil and playermetadata.spawn_wave_time then
+            self:IssueWarningForPlayer(player, playermetadata, t)
+        end
+    end
+
     self.update_time_accumulator = self.update_time_accumulator + dt
     if self.update_time_accumulator < self.update_time_seconds then
         return
     end
 
     self.update_time_accumulator = math.random() * 0.1 -- NOTES(JBK): Add a small amount of jitter to reduce timer sync across multiple systems and defer process load.
-    local t = GetTime()
     for player, _ in pairs(self.players) do
         local playermetadata = self.watching[player]
         if playermetadata ~= nil then

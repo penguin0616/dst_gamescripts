@@ -59,10 +59,10 @@ local function OnEquipChanged(inst)
             TheWorld:PushEvent("nutrientsvision", { enabled = self.nutrientsvision })
         end
     end
-    if self.darkenedvision == not inst.replica.inventory:EquipHasTag("darkenedvision") then
-        self.darkenedvision = not self.darkenedvision
-        if not self.forcedarkenedvision then
-            inst:PushEvent("darkenedvision", { enabled = self.darkenedvision })
+    if self.scrapmonolevision == not inst.replica.inventory:EquipHasTag("scrapmonolevision") then
+        self.scrapmonolevision = not self.scrapmonolevision
+        if not self.forcescrapmonolevision then
+            inst:PushEvent("scrapmonolevision", { enabled = self.scrapmonolevision })
         end
     end
 end
@@ -98,8 +98,8 @@ local PlayerVision = Class(function(self, inst)
     self.forcegogglevision = false
     self.nutrientsvision = false
     self.forcenutrientsvision = false
-    self.darkenedvision = false
-    self.forcedarkenedvision = false
+    self.scrapmonolevision = false
+    self.forcescrapmonolevision = false
     self.overridecctable = nil
     self.currentcctable = nil
     self.currentccphasefn = nil
@@ -128,8 +128,8 @@ function PlayerVision:HasNutrientsVision()
     return self.nutrientsvision or self.forcenutrientsvision
 end
 
-function PlayerVision:HasDarkenedVision()
-    return self.darkenedvision or self.forcedarkenedvision
+function PlayerVision:HasScrapMonoleVision()
+    return self.scrapmonolevision or self.forcescrapmonolevision
 end
 
 function PlayerVision:GetCCPhaseFn()
@@ -205,11 +205,11 @@ function PlayerVision:ForceNutrientVision(force)
     end
 end
 
-function PlayerVision:ForceDarkenedVision(force)
-    if not self.forcedarkenedvision ~= not force then
-        self.forcedarkenedvision = force == true
-        if not self.darkenedvision then
-            self.inst:PushEvent("darkenedvision", { enabled = self.forcedarkenedvision })
+function PlayerVision:ForceScrapMonoleVision(force)
+    if not self.forcescrapmonolevision ~= not force then
+        self.forcescrapmonolevision = force == true
+        if not self.scrapmonolevision then
+            self.inst:PushEvent("scrapmonolevision", { enabled = self.forcescrapmonolevision })
         end
     end
 end

@@ -3024,6 +3024,39 @@ local fx =
 
         end,
     },
+    {
+        name = "chestupgrade_stacksize_taller_fx",
+        bank = "cavein_dust_fx",
+        build = "cavein_dust_fx",
+        anim = "dust_low",
+        sound = "qol1/chest_upgrade/poof",
+        fn = function(inst)
+            inst.entity:AddSoundEmitter()
+            inst.AnimState:SetScale(1, 1.3) -- NOTES(JBK): An even taller tall chest needs more cover.
+            local total_hide_frames = 6 -- NOTES(JBK): Keep in sync with treasurechest.lua! [CUHIDERFRAMES]
+            inst:DoTaskInTime(total_hide_frames * FRAMES, function(inst) inst.SoundEmitter:PlaySound("wolfgang1/mightygym/item_removed") end)
+            inst.AnimState:SetFinalOffset(3)
+            local gmin, gmax = 0.75, 1
+            local bmin, bmax = 1, 0.6
+            local amin, amax = 1, 0
+            local dg = gmax - gmin
+            local db = bmax - bmin
+            local da = amax - amin
+            local r, a = 0.5, 1
+            inst.AnimState:SetMultColour(r, gmin, bmin, amin)
+            local t = 0
+            local length = 48
+            local task = inst:DoPeriodicTask(0, function(inst)
+                t = t + 1
+                local p = math.min(1, t / length)
+                local gc = dg * p + gmin
+                local bc = db * p + bmin
+                local ac = da * math.min(1, math.max(0, t - total_hide_frames) / length) + amin
+                inst.AnimState:SetMultColour(r, gc, bc, ac)
+            end)
+
+        end,
+    },
 }
 
 for cratersteamindex = 1, 4 do

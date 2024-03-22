@@ -36,6 +36,20 @@ end
 local events =
 {
 	CommonHandlers.OnLocomote(true, true),
+	CommonHandlers.OnFreeze(),
+	EventHandler("ontalk", function(inst)
+		if not (inst.hostile or inst.sg:HasStateTag("busy")) then
+			if inst._thieflevel > 2 then
+				inst.sg:GoToState("angry_taunt")
+			elseif inst._thief and inst._thief:IsValid() and inst:IsNear(inst._thief, 8) then
+				inst.sg.statemem.keepsixfaced = true
+				inst.sg:GoToState("talk", inst.sg:HasStateTag("talking"))
+			else
+				inst.sg.statemem.keepnofaced = true
+				inst.sg:GoToState("angry", inst.sg:HasStateTag("angry"))
+			end
+		end
+	end),
 	EventHandler("doattack", function(inst)
 		if not (inst.sg:HasStateTag("busy") or inst.defeated) then
 			ChooseAttack(inst)
@@ -344,8 +358,10 @@ end
 local CHATTER_DELAYS =
 {
 	--NOTE: len must work for (net_tinybyte)
-	["DAYWALKER_POWERDOWN"] =		{ delay = 3, len = 1.5 },
-	["DAYWALKER_ATTACK"] =			{ delay = 4, len = 1.5 },
+	["DAYWALKER_POWERDOWN"] =			{ delay = 3, len = 1.5 },
+	["DAYWALKER2_CHASE_AWAY"] =			{ delay = 4, len = 1.5 },
+	["DAYWALKER2_RUMMAGE_SUCCESS"] =	{ delay = 2, len = 1.5 },
+	["DAYWALKER2_RUMMAGE_FAIL"] =		{ delay = 0, len = 1.5 },
 }
 
 local function TryChatter(inst, strtblname, index, ignoredelay, echotochatpriority)
@@ -455,6 +471,8 @@ local states =
 				inst.sg:AddStateTag("stalking")
 				inst:SetHeadTracking(true)
 				inst.AnimState:PlayAnimation("idlewalk", true)
+			elseif inst.sg.lasttags and inst.sg.lasttags["walk"] then
+				inst.AnimState:PlayAnimation("idlewalk", true)
 			else
 				inst.AnimState:PlayAnimation("idle", true)
 			end
@@ -491,6 +509,159 @@ local states =
 
 		onexit = ToggleOnCharacterCollisions,
 	},
+
+	--------------------------------------------------------------------------
+	--Out of combat
+	--------------------------------------------------------------------------
+
+	State{
+		name = "talk",
+		tags = { "talking", "idle", "canrotate" },
+
+		onenter = function(inst, noanim)
+			inst.components.locomotor:Stop()
+			inst.Transform:SetSixFaced()
+			if not noanim then
+				inst.AnimState:PlayAnimation("idle_creepy_pre") --14
+				inst.AnimState:PushAnimation("idle_creepy_loop") --55
+				inst.sg:SetTimeout((14 + 55) * FRAMES)
+			elseif inst.AnimState:IsCurrentAnimation("idle_creepy_pre") then
+				inst.sg:SetTimeout((14 + 55) * FRAMES - inst.AnimState:GetCurrentAnimationTime())
+			else
+				inst.sg:SetTimeout(55 * FRAMES - inst.AnimState:GetCurrentAnimationTime())
+			end
+			if inst._thief and inst._thief:IsValid() then
+				inst:FacePoint(inst._thief.Transform:GetWorldPosition())
+				inst.sg.statemem.thief = inst._thief
+			end
+		end,
+
+		ontimeout = function(inst)
+			inst.sg.statemem.keepsixfaced = true
+			inst.sg:GoToState("talk_pst")
+		end,
+
+		onexit = function(inst)
+			if not inst.sg.statemem.keepsixfaced then
+				inst.Transform:SetFourFaced()
+			end
+		end,
+	},
+
+	State{
+		name = "talk_pst",
+		tags = { "idle", "canrotate" },
+
+		onenter = function(inst)
+			inst.components.locomotor:Stop()
+			inst.Transform:SetSixFaced()
+			inst.AnimState:PlayAnimation("idle_creepy_pst")
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			inst.Transform:SetFourFaced()
+		end,
+	},
+
+	State{
+		name = "angry",
+		tags = { "angry", "idle", "canrotate" },
+
+		onenter = function(inst, noanim)
+			inst.components.locomotor:Stop()
+			inst.Transform:SetNoFaced()
+			if not noanim then
+				inst.AnimState:PlayAnimation("idle_angry_pre") --12
+				inst.AnimState:PushAnimation("idle_angry_loop") --44
+				inst.sg:SetTimeout((12 + 44) * FRAMES)
+			elseif inst.AnimState:IsCurrentAnimation("idle_angry_pre") then
+				inst.sg:SetTimeout((12 + 44) * FRAMES - inst.AnimState:GetCurrentAnimationTime())
+			else
+				inst.sg:SetTimeout(44 * FRAMES - inst.AnimState:GetCurrentAnimationTime())
+			end
+			if inst._thief and inst._thief:IsValid() then
+				inst:FacePoint(inst._thief.Transform:GetWorldPosition())
+				inst.sg.statemem.thief = inst._thief
+			end
+		end,
+
+		ontimeout = function(inst)
+			inst.sg.statemem.keepnofaced = true
+			inst.sg:GoToState("angry_pst")
+		end,
+
+		onexit = function(inst)
+			if not inst.sg.statemem.keepnofaced then
+				inst.Transform:SetFourFaced()
+			end
+		end,
+	},
+
+	State{
+		name = "angry_pst",
+		tags = { "idle", "canrotate" },
+
+		onenter = function(inst)
+			inst.components.locomotor:Stop()
+			inst.Transform:SetNoFaced()
+			inst.AnimState:PlayAnimation("idle_angry_pst")
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			inst.Transform:SetFourFaced()
+		end,
+	},
+
+	State{
+		name = "angry_taunt",
+		tags = { "talking", "busy" },
+
+		onenter = function(inst)
+			inst.components.locomotor:Stop()
+			inst.AnimState:PlayAnimation("angry_taunt")
+			if inst._thief and inst._thief:IsValid() then
+				inst:ForceFacePoint(inst._thief.Transform:GetWorldPosition())
+			end
+		end,
+
+		timeline =
+		{
+			FrameEvent(51, function(inst)
+				inst.sg:RemoveStateTag("busy")
+			end),
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+	},
+
+	--------------------------------------------------------------------------
+	--Combat
+	--------------------------------------------------------------------------
 
 	State{
 		name = "hit",
@@ -751,6 +922,7 @@ local states =
 				inst.AnimState:PushAnimation("lift_object_pst", false)
 				inst.sg.statemem.data = data
 			end
+			TryChatter(inst, "DAYWALKER2_RUMMAGE_SUCCESS")
 		end,
 
 		timeline =
@@ -809,6 +981,7 @@ local states =
 				end
 				inst.sg.statemem.data = data
 			end
+			TryChatter(inst, "DAYWALKER2_RUMMAGE_SUCCESS")
 			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength() - inst.AnimState:GetCurrentAnimationTime())
 		end,
 
@@ -937,6 +1110,7 @@ local states =
 				end
 				inst.sg.statemem.data = data
 			end
+			TryChatter(inst, "DAYWALKER2_RUMMAGE_SUCCESS")
 			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength() - inst.AnimState:GetCurrentAnimationTime())
 		end,
 
@@ -1017,7 +1191,7 @@ local states =
 
 	State{
 		name = "attack_swing",
-		tags = { "attack", "busy" },
+		tags = { "attack", "busy", "notalksound" },
 
 		onenter = function(inst, target)
 			inst:SetStalking(nil)
@@ -1025,6 +1199,7 @@ local states =
 			inst.AnimState:PlayAnimation("atk_object")
 			inst.SoundEmitter:PlaySound("daywalker/voice/speak_short")
 			inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_whoosh")
+			TryChatter(inst, "DAYWALKER2_CHASE_AWAY")
 
 			if target and target:IsValid() then
 				inst:ForceFacePoint(target.Transform:GetWorldPosition())
@@ -1128,7 +1303,7 @@ local states =
 
 	State{
 		name = "cannon_pre",
-		tags = { "attack", "busy" },
+		tags = { "attack", "busy", "notalksound" },
 
 		onenter = function(inst, target)
 			inst:SetStalking(nil)
@@ -1136,6 +1311,7 @@ local states =
 			inst.AnimState:PlayAnimation("laser_pre")
 			inst.SoundEmitter:PlaySound("qol1/daywalker_scrappy/laser_pre")
 			inst.SoundEmitter:PlaySound("daywalker/voice/speak_short")
+			TryChatter(inst, "DAYWALKER2_CHASE_AWAY")
 
 			if target and target:IsValid() then
 				inst.sg.statemem.target = target
@@ -1280,7 +1456,7 @@ local states =
 
 	State{
 		name = "throw_pre",
-		tags = { "attack", "busy" },
+		tags = { "attack", "busy", "notalksound" },
 
 		onenter = function(inst, target)
 			inst:SetStalking(nil)
@@ -1288,6 +1464,7 @@ local states =
 			inst.AnimState:PlayAnimation("throw_pre")
 			inst.SoundEmitter:PlaySound("daywalker/voice/speak_short")
 			inst.sg.statemem.target = target
+			TryChatter(inst, "DAYWALKER2_RUMMAGE_FAIL")
 		end,
 
 		events =
@@ -1409,13 +1586,14 @@ local states =
 
 	State{
 		name = "tackle_pre",
-		tags = { "tackle", "attack", "busy" },
+		tags = { "tackle", "attack", "busy", "notalksound" },
 
 		onenter = function(inst, target)
 			inst:SetStalking(nil)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("tackle_pre")
 			inst.SoundEmitter:PlaySound("daywalker/voice/speak_short")
+			TryChatter(inst, "DAYWALKER2_CHASE_AWAY")
 
 			if target and target:IsValid() then
 				inst.sg.statemem.target = target
@@ -1782,7 +1960,7 @@ local states =
 			inst.AnimState:PlayAnimation("atk3")
 			inst.SoundEmitter:PlaySound("daywalker/voice/speak_short")
 			inst.SoundEmitter:PlaySound("daywalker/action/attack3")
-			--TryChatter(inst, "DAYWALKER_ATTACK")
+			TryChatter(inst, "DAYWALKER2_CHASE_AWAY")
 			inst.sg.statemem.speedmult = speedmult or 1
 			inst.Physics:SetMotorVelOverride(11 * inst.sg.statemem.speedmult, 0, 0)
 		end,
@@ -1875,7 +2053,7 @@ local states =
 
 	State{
 		name = "taunt",
-		tags = { "taunt", "busy" }, --has facings! don't need "canrotate"
+		tags = { "taunt", "busy", "notalksound" }, --has facings! don't need "canrotate"
 
 		onenter = function(inst, target)
 			inst.components.locomotor:Stop()
@@ -1906,6 +2084,7 @@ local states =
 			FrameEvent(19, function(inst)
 				inst.SoundEmitter:PlaySound(inst.footstep, nil, 0.3)
 				SGDaywalkerCommon.DoRoarShake(inst)
+				TryChatter(inst, "DAYWALKER2_CHASE_AWAY", nil, true)
 			end),
 			FrameEvent(38, function(inst)
 				inst.sg:AddStateTag("caninterrupt")
@@ -2118,5 +2297,7 @@ SGDaywalkerCommon.AddRunStates(states,
 		FrameEvent(23, DoFootstepAOE),
 	},
 })
+
+CommonStates.AddFrozenStates(states)
 
 return StateGraph("daywalker2", states, events, "idle")

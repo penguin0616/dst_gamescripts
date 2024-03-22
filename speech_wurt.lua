@@ -1946,7 +1946,11 @@ return{
 		DRAGONFLY = "Scaled-folk shouldn't fight, florp!",
 		ARMORDRAGONFLY = "More scales!!",
 		DRAGON_SCALES = "Pretty...",
-		DRAGONFLYCHEST = "Like look of this box, florpt.",
+		DRAGONFLYCHEST =
+		{
+			GENERIC = "Like look of this box, florpt.",
+            UPGRADED_STACKSIZE = "Could fit a whole me inside, florp!",
+		},
 		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "Broke it...",

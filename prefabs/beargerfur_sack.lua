@@ -15,11 +15,6 @@ local PREFABS_CONTAINER =
     "beargerfur_sack_frost_fx",
 }
 
-local PREFABS_FX =
-{
-
-}
-
 -----------------------------------------------------------------------------------------------
 
 local sounds =
@@ -56,15 +51,24 @@ local function ToggleFrostFX(inst, start, remove)
     end
 end
 
-local function StartOpenSound(inst)
-    if inst._startsoundtask ~= nil then
-        inst._startsoundtask:Cancel()
-        inst._startsoundtask = nil
-    end
+local function StopOpenSound(inst)
+	if inst._soundent then
+		if inst._soundent:IsValid() then
+			inst._soundent.SoundEmitter:KillSound(GetOpenSoundName(inst))
+		end
+		inst._soundent = nil
+	end
+end
 
-	local SoundEmitter = (inst.components.inventoryitem:GetGrandOwner() or inst).SoundEmitter
-	if SoundEmitter then
-		SoundEmitter:PlaySound(inst._sounds.open, GetOpenSoundName(inst))
+local function StartOpenSound(inst)
+	inst._startsoundtask = nil
+
+	StopOpenSound(inst)
+
+	local ent = inst.components.inventoryitem:GetGrandOwner() or inst
+	if ent.SoundEmitter then
+		ent.SoundEmitter:PlaySound(inst._sounds.open, GetOpenSoundName(inst))
+		inst._soundent = ent
 	end
 end
 
@@ -74,25 +78,29 @@ local function OnOpen(inst)
 
     if inst._startsoundtask ~= nil then
         inst._startsoundtask:Cancel()
+		inst._startsoundtask = nil
     end
-
-    inst._startsoundtask = inst:DoTaskInTime(5*FRAMES, inst.StartOpenSound)
-
     if inst._opentask ~= nil then
         inst._opentask:Cancel()
+		inst._opentask = nil
     end
 
-    local time = inst.AnimState:GetCurrentAnimationLength() - inst.AnimState:GetCurrentAnimationTime()
-    inst._opentask = inst:DoTaskInTime(time, inst.ToggleFrostFX, true)
+	if not inst.components.inventoryitem:IsHeld() then
+		StopOpenSound(inst)
+		local time = inst.AnimState:GetCurrentAnimationLength() - inst.AnimState:GetCurrentAnimationTime()
+		inst._opentask = inst:DoTaskInTime(time, ToggleFrostFX, true)
+		inst._startsoundtask = inst:DoTaskInTime(5 * FRAMES, StartOpenSound)
+	else
+		StartOpenSound(inst)
+	end
 end
 
 local function OnClose(inst)
-	local open_soundname = GetOpenSoundName(inst)
-	local owner = inst.components.inventoryitem:GetGrandOwner()
-	if owner and owner.SoundEmitter then
-		owner.SoundEmitter:KillSound(open_soundname)
+	if inst._startsoundtask then
+		inst._startsoundtask:Cancel()
+		inst._startsoundtask = nil
 	end
-	inst.SoundEmitter:KillSound(open_soundname)
+	StopOpenSound(inst)
     inst.components.inventoryitem:ChangeImageName()
 
 	if not inst.components.inventoryitem:IsHeld() then
@@ -101,7 +109,7 @@ local function OnClose(inst)
     else
         inst.AnimState:PlayAnimation("closed", false)
     end
-    inst:ToggleFrostFX(false)
+	ToggleFrostFX(inst, false)
 
 	local SoundEmitter = (inst.components.inventoryitem:GetGrandOwner() or inst).SoundEmitter
 	if SoundEmitter then
@@ -110,14 +118,15 @@ local function OnClose(inst)
 end
 
 local function OnPutInInventory(inst)
-    inst:ToggleFrostFX(false, true)
+	ToggleFrostFX(inst, false, true)
 
     inst.components.container:Close()
     inst.AnimState:PlayAnimation("closed", false)
 end
 
 local function OnRemoveEntity(inst)
-    inst:ToggleFrostFX(false, true)
+	ToggleFrostFX(inst, false, true)
+	StopOpenSound(inst)
 end
 
 -----------------------------------------------------------------------------------------------
@@ -173,9 +182,6 @@ local function fn()
 
     inst._sounds = sounds
     inst._frostfx = nil
-
-    inst.ToggleFrostFX = ToggleFrostFX
-    inst.StartOpenSound = StartOpenSound
 
     inst:AddComponent("inspectable")
 
@@ -242,4 +248,4 @@ end
 
 return
         Prefab( "beargerfur_sack",          fn,   ASSETS_CONTAINER, PREFABS_CONTAINER ),
-        Prefab( "beargerfur_sack_frost_fx", fxfn, ASSETS_FX,        PREFABS_FX        )
+        Prefab( "beargerfur_sack_frost_fx", fxfn, ASSETS_FX )

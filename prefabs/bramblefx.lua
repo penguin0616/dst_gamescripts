@@ -31,13 +31,7 @@ local function OnUpdateThorns(inst)
 						not inst.owner.components.combat:IsAlly(v)
 					then
                         inst.ignore[v] = true
-                        local attacker = v.components.follower ~= nil and v.components.follower:GetLeader() == inst.owner and inst or inst.owner
-                        if attacker == inst then
-                            v.components.combat:GetAttacked(attacker, inst.damage)
-                        else
-                            attacker.components.combat:DoAttack(v, inst)
-                        end
-                        
+						v.components.combat:GetAttacked(v.components.follower and v.components.follower:GetLeader() == inst.owner and inst or inst.owner, inst.damage, nil, nil, inst.spdmg)
                         --V2C: wisecracks make more sense for being pricked by picking
                         --v:PushEvent("thorns")
                     end
@@ -54,7 +48,7 @@ local function OnUpdateThorns(inst)
 					end
 					if not isally then
 						inst.ignore[v] = true
-						v.components.combat:GetAttacked(inst, inst.damage)
+						v.components.combat:GetAttacked(inst, inst.damage, nil, nil, inst.spdmg)
 						--v:PushEvent("thorns")
 					end
                 end
@@ -106,23 +100,13 @@ local function MakeFX(name, anim, damage, planardamage)
             return inst
         end
 
-        inst:AddComponent("combat")
-
-        inst:AddComponent("weapon")
-        inst.components.weapon:SetDamage(TUNING[damage])
-
-        if planardamage then
-            inst:AddComponent("planardamage")
-            inst.components.planardamage:SetBaseDamage(TUNING[planardamage])
-        end
-
         inst:AddComponent("updatelooper")
         inst.components.updatelooper:AddOnUpdateFn(OnUpdateThorns)
 
         inst:ListenForEvent("animover", inst.Remove)
         inst.persists = false
         inst.damage = TUNING[damage]
-        inst.planardamage = TUNING[planardamage]
+		inst.spdmg = planardamage and { planar = TUNING[planardamage] } or nil
         inst.range = .75
         inst.ignore = {}
         inst.canhitplayers = true

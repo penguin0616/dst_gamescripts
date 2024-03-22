@@ -653,12 +653,53 @@ local function OnDespawnTimer(inst, data)
 	end
 end
 
+local function OnThiefDelayOver(inst)
+	inst._thiefdelaytask = nil
+	inst._thief = nil
+end
+
+local function OnThiefReset(inst)
+	if inst._thiefresettask then
+		inst._thiefresettask:Cancel()
+		inst._thiefresettask = nil
+	end
+	inst._thieflevel = 0
+end
+
+local function OnJunkStolen(inst, thief)
+	if not (inst.buried or inst.defated or inst.hostile or inst._thiefdelaytask) then
+		inst._thieflevel = inst._thieflevel + 1
+		inst._thiefdelaytask = inst:DoTaskInTime(2, OnThiefDelayOver)
+		inst._thief = thief
+
+		if inst._thiefresettask then
+			inst._thiefresettask:Cancel()
+		end
+		inst._thiefresettask = inst:DoTaskInTime(TUNING.TOTAL_DAY_TIME / 2, OnThiefReset)
+
+		if inst._thieflevel > 3 then
+			inst.components.combat:SetTarget(thief)
+		else
+			local strid
+			if inst._thieflevel > 2 then
+				strid = math.max(3, math.random(#STRINGS.DAYWALKER2_JUNK_WARNING))
+			elseif inst._thieflevel > 1 then
+				strid = math.random(4, #STRINGS.DAYWALKER2_JUNK_WARNING)
+			else
+				strid = math.random(2)
+			end
+			inst.components.talker:Chatter("DAYWALKER2_JUNK_WARNING", strid, nil, nil, CHATPRIORITIES.HIGH)
+		end
+	end
+end
+
 --------------------------------------------------------------------------
 
 local function MakeBuried(inst, junk)
 	if not (inst.buried or inst.defeated) then
 		inst.buried = true
 		inst.hostile = false
+		OnThiefReset(inst)
 		inst.persists = false
 		if inst.canswing or inst.cantackle or inst.cancannon then
 			if inst.canswing then
@@ -681,6 +722,7 @@ local function MakeBuried(inst, junk)
 		inst:RemoveEventCallback("attacked", OnAttacked)
 		inst:RemoveEventCallback("newcombattarget", OnNewTarget)
 		inst:RemoveEventCallback("minhealth", OnMinHealth)
+		inst:RemoveEventCallback("ms_junkstolen", OnJunkStolen)
 		inst.components.timer:StopTimer("despawn")
 		inst.components.combat:DropTarget()
 		inst.components.combat:SetRetargetFunction(nil)
@@ -688,6 +730,13 @@ local function MakeBuried(inst, junk)
 		inst.components.locomotor:Stop()
 		inst.components.health:SetInvincible(true)
 		inst.components.sanityaura.aura = -TUNING.SANITYAURA_LARGE
+		if inst.components.freezable.coldness > 0 then
+			inst.components.freezable:SpawnShatterFX()
+		end
+		inst.components.freezable:Reset()
+		inst:RemoveComponent("freezable")
+		inst:RemoveComponent("burnable")
+		inst:RemoveComponent("propagator")
 		inst:RemoveTag("hostile")
 		inst:AddTag("notarget")
 		inst.AnimState:Hide("junk_top")
@@ -729,11 +778,17 @@ end
 local function MakeFreed(inst)
 	if inst.buried then
 		inst.buried = nil
+		--OnThiefReset(inst)
 		inst.persists = true
 		inst.sg:GoToState("transition")
 		inst:ListenForEvent("attacked", OnAttacked)
 		inst:ListenForEvent("newcombattarget", OnNewTarget)
 		inst:ListenForEvent("minhealth", OnMinHealth)
+		inst:ListenForEvent("ms_junkstolen", OnJunkStolen)
+		MakeLargeBurnableCharacter(inst, "ww_cloth")
+		MakeLargeFreezableCharacter(inst, "ww_body")
+		inst.components.freezable:SetResistance(4)
+		inst.components.freezable.diminishingreturns = true
 		inst.components.timer:StopTimer("despawn")
 		inst.components.talker:ShutUp()
 		inst.components.health:SetInvincible(false)
@@ -773,9 +828,11 @@ local function MakeDefeated(inst)
 	if not (inst.buried or inst.defated) and inst.hostile then
 		inst.defeated = true
 		inst.hostile = false
+		OnThiefReset(inst)
 		inst:RemoveEventCallback("attacked", OnAttacked)
 		inst:RemoveEventCallback("newcombattarget", OnNewTarget)
 		inst:RemoveEventCallback("minhealth", OnMinHealth)
+		inst:RemoveEventCallback("ms_junkstolen", OnJunkStolen)
 		inst:ListenForEvent("timerdone", OnDespawnTimer)
 		if not inst.components.timer:TimerExists("despawn") then
 			inst.components.timer:StartTimer("despawn", DESPAWN_TIME, not inst.looted)
@@ -784,6 +841,13 @@ local function MakeDefeated(inst)
 		inst.components.combat:DropTarget()
 		inst.components.combat:SetRetargetFunction(nil)
 		inst.components.sanityaura.aura = -TUNING.SANITYAURA_MED
+		if inst.components.freezable.coldness > 0 then
+			inst.components.freezable:SpawnShatterFX()
+		end
+		inst.components.freezable:Reset()
+		inst:RemoveComponent("freezable")
+		inst:RemoveComponent("burnable")
+		inst:RemoveComponent("propagator")
 		inst:RemoveTag("hostile")
 		inst:SetBrain(nil)
 		inst:SetHeadTracking(false)
@@ -1127,17 +1191,26 @@ local function fn()
 	inst:AddComponent("teleportedoverride")
 	inst.components.teleportedoverride:SetDestPositionFn(teleport_override_fn)
 
+	MakeLargeBurnableCharacter(inst, "ww_cloth")
+	MakeLargeFreezableCharacter(inst, "ww_body")
+	inst.components.freezable:SetResistance(4)
+	inst.components.freezable.diminishingreturns = true
+
 	inst.hit_recovery = TUNING.DAYWALKER_HIT_RECOVERY
 
 	inst:ListenForEvent("attacked", OnAttacked)
 	inst:ListenForEvent("newcombattarget", OnNewTarget)
 	inst:ListenForEvent("minhealth", OnMinHealth)
+	inst:ListenForEvent("ms_junkstolen", OnJunkStolen)
 	inst:ListenForEvent("teleported", OnTeleported)
 
 	inst.engaged = false
 	inst.defeated = false
 	inst.looted = false
 	inst._trampledelays = {}
+	inst._thieflevel = 0
+	inst._thief = nil
+	inst._thiefdelaytask = nil
 
 	--ability unlocks
 	inst.autostalk = true

@@ -6246,7 +6246,7 @@ local states =
 
     State{
         name = "dolongaction",
-        tags = { "doing", "busy", "nodangle" },
+		tags = { "doing", "busy", "nodangle", "keep_pocket_rummage" },
 
         onenter = function(inst, timeout)
             if timeout == nil then
@@ -6293,7 +6293,9 @@ local states =
         {
             EventHandler("animqueueover", function(inst)
                 if inst.AnimState:AnimDone() then
-                    inst.sg:GoToState("idle")
+					if not TryResumePocketRummage(inst) then
+						inst.sg:GoToState("idle")
+					end
                 end
             end),
         },
@@ -6306,14 +6308,15 @@ local states =
             if inst.bufferedaction == inst.sg.statemem.action and
             (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
-            end    
+            end
+			CheckPocketRummageMem(inst)
         end,
     },
 
     State{name = "carvewood_boards", onenter = function(inst) inst.sg:GoToState("carvewood", 1) end},
     State{
         name = "carvewood",
-        tags = { "doing", "busy", "nodangle" },
+		tags = { "doing", "busy", "nodangle", "keep_pocket_rummage" },
 
         onenter = function(inst, timeout)
             local timeout = timeout or 1.5
@@ -6352,7 +6355,9 @@ local states =
         {
             EventHandler("animqueueover", function(inst)
                 if inst.AnimState:AnimDone() then
-                    inst.sg:GoToState("idle")
+					if not TryResumePocketRummage(inst) then
+						inst.sg:GoToState("idle")
+					end
                 end
             end),
         },
@@ -6364,6 +6369,7 @@ local states =
             (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
+			CheckPocketRummageMem(inst)
         end,
     },
 
@@ -6631,7 +6637,7 @@ local states =
 
     State{
         name = "makeballoon",
-        tags = { "doing", "busy", "nodangle" },
+		tags = { "doing", "busy", "nodangle", "keep_pocket_rummage" },
 
         onenter = function(inst, timeout)
             inst.sg.statemem.action = inst.bufferedaction
@@ -6661,7 +6667,9 @@ local states =
         {
             EventHandler("animqueueover", function(inst)
                 if inst.AnimState:AnimDone() then
-                    inst.sg:GoToState("idle")
+					if not TryResumePocketRummage(inst) then
+						inst.sg:GoToState("idle")
+					end
                 end
             end),
         },
@@ -6672,6 +6680,7 @@ local states =
             (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
+			CheckPocketRummageMem(inst)
         end,
     },
 
@@ -16289,7 +16298,7 @@ local states =
 
 	State{
 		name = "form_log",
-		tags = { "doing", "busy", "nocraftinginterrupt", "nomorph" },
+		tags = { "doing", "busy", "nocraftinginterrupt", "nomorph", "keep_pocket_rummage" },
 
 		onenter = function(inst, product)
 			inst.components.locomotor:Stop()
@@ -16327,6 +16336,7 @@ local states =
 			FrameEvent(58, function(inst)
 				inst.sg:RemoveStateTag("busy")
 			end),
+			FrameEvent(62, TryResumePocketRummage),
 		},
 
 		events =
@@ -16345,12 +16355,13 @@ local states =
 				inst:ClearBufferedAction()
 			end
 			inst.AnimState:ClearOverrideSymbol("wood_splinter")
+			CheckPocketRummageMem(inst)
 		end,
 	},
 
     State{
         name = "fertilize",
-        tags = { "doing", "busy", "nomorph", "self_fertilizing" },
+		tags = { "doing", "busy", "nomorph", "self_fertilizing", "keep_pocket_rummage" },
 
         onenter = function(inst)
             inst.sg.statemem.fast = inst.components.skilltreeupdater:IsActivated("wormwood_quick_selffertilizer")
@@ -16379,7 +16390,9 @@ local states =
             end),
             FrameEvent(52, function(inst)
                 if inst.sg.statemem.fast then
-                    inst.sg:RemoveStateTag("busy")
+					if not TryResumePocketRummage(inst) then
+						inst.sg:RemoveStateTag("busy")
+					end
                 end
             end),
 
@@ -16398,6 +16411,11 @@ local states =
                     inst.sg:RemoveStateTag("busy")
                 end
             end),
+			FrameEvent(92, function(inst)
+				if not inst.sg.statemem.fast then
+					TryResumePocketRummage(inst)
+				end
+			end),
         },
 
         events =
@@ -16411,12 +16429,13 @@ local states =
 
         onexit = function(inst)
             inst.SoundEmitter:KillSound("rub")
+			CheckPocketRummageMem(inst)
         end,
     },
 
     State{
         name = "fertilize_short",
-        tags = { "doing", "busy", "nomorph", "self_fertilizing" },
+		tags = { "doing", "busy", "nomorph", "self_fertilizing", "keep_pocket_rummage" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -16439,6 +16458,7 @@ local states =
             TimeEvent(33 * FRAMES, function(inst)
                 inst.sg:RemoveStateTag("busy")
             end),
+			FrameEvent(35, TryResumePocketRummage),
         },
 
         events =
@@ -16452,12 +16472,13 @@ local states =
 
         onexit = function(inst)
             inst.SoundEmitter:KillSound("rub")
+			CheckPocketRummageMem(inst)
         end,
     },
 
     State{
         name = "spawn_mutated_creature",
-        tags = { "doing", "busy", "nocraftinginterrupt", "nomorph" },
+		tags = { "doing", "busy", "nocraftinginterrupt", "nomorph", "keep_pocket_rummage" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -16477,6 +16498,7 @@ local states =
 			FrameEvent(38, function(inst)
                 inst.sg:RemoveStateTag("busy")
             end),
+			FrameEvent(42, TryResumePocketRummage),
         },
 
         events =
@@ -16493,6 +16515,7 @@ local states =
                     (not inst.components.playercontroller or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
+			CheckPocketRummageMem(inst)
         end,
     },
 
@@ -19332,9 +19355,12 @@ local states =
 					if inst.sg.statemem.is_going_to_action_state then
 						local buffaction = inst:GetBufferedAction()
 						if buffaction and
-							buffaction.invobject and
-							buffaction.invobject.components.inventoryitem and
-							buffaction.invobject.components.inventoryitem:IsHeldBy(item)
+							(	buffaction.action == ACTIONS.BUILD or
+								(	buffaction.invobject and
+									buffaction.invobject.components.inventoryitem and
+									buffaction.invobject.components.inventoryitem:IsHeldBy(item)
+								)
+							)
 						then
 							stayopen = true
 						end

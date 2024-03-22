@@ -33,8 +33,8 @@ local function Tree_MultColorFn()
     return .5 + math.random() * .5
 end
 
-local function Tree_Minimap_CommonPostInit()
-    return .5 + math.random() * .5
+local function Tree_Minimap_CommonPostInit(inst)
+    inst.MiniMapEntity:SetPriority(-1)
 end
 
 -------------------------------------------------------------------------------------------------
@@ -127,6 +127,14 @@ local function BananaBush_GetAnimFn(inst)
 
     return "tall"
 end
+
+-------------------------------------------------------------------------------------------------
+
+local MARSH_BUSH_ANIMSET = {
+    idle   = { anim = "idle"      },
+    picked = { anim = "picked"    },
+    dead   = { anim = "idle_dead" },
+}
 
 -------------------------------------------------------------------------------------------------
 
@@ -484,6 +492,60 @@ end
 
 -------------------------------------------------------------------------------------------------
 
+local OCEANTREE_ANIMSET_LIST = {
+    "sway1_loop", "sway2_loop", "burnt", "stump"
+}
+
+local OCEAN_TREE_BUD_SYMBOLS = {}
+
+for i=0, 7 do
+    table.insert(OCEAN_TREE_BUD_SYMBOLS, "tree_bud"..i)
+end
+
+local OCEANTREE_ANIMSET = {
+    sway1         = {anim = "sway1_loop", hidesymbols = OCEAN_TREE_BUD_SYMBOLS                            },
+    sway2         = {anim = "sway2_loop", hidesymbols = OCEAN_TREE_BUD_SYMBOLS                            },
+    sway1_bloomed = {anim = "sway1_loop",                                                                 },
+    sway2_bloomed = {anim = "sway2_loop",                                                                 },
+    stump         = {anim = "stump", minimap = "oceantree_stump.png", hidesymbols = OCEAN_TREE_BUD_SYMBOLS},
+    burnt         = {anim = "burnt", minimap = "oceantree_burnt.png", hidesymbols = OCEAN_TREE_BUD_SYMBOLS},
+}
+
+local function OceanTree_GetAnimFn(inst)
+    if inst:HasTag("burnt") or (inst.components.burnable ~= nil and inst.components.burnable:IsBurning()) then
+        return "burnt"
+    end
+
+    if inst:HasTag("stump") then
+        return "stump"
+    end
+
+    local sway = inst.AnimState:IsCurrentAnimation(inst.anims.sway2) and "sway2" or "sway1"
+
+    if #inst.buds_used > 0 then
+        return sway.."_bloomed"
+    end
+
+    return sway
+end
+
+local function OceanTree_CommonPostInit(inst)
+    Tree_Minimap_CommonPostInit(inst)
+
+    inst:AddTag("ignorewalkableplatforms")
+
+    inst:SetPhysicsRadiusOverride(2.35)
+end
+
+local function OceanTree_OnConfigure(inst)
+    local suffix = string.gsub(string.gsub(inst.AnimState:GetBuild(), "oceantree_", ""), "_jammed_build", "")
+
+    inst:SpawnChild("oceantree_ripples_"..suffix)
+    inst:SpawnChild("oceantree_roots_"..suffix)
+end
+
+-------------------------------------------------------------------------------------------------
+
 local ret = {
     CreateWaxedBerryBush("berrybush"),
     CreateWaxedBerryBush("berrybush2"),
@@ -514,6 +576,20 @@ local ret = {
         animset=GRASS_ANIMSET,
         getanim_fn=Plantable_GetAnimFn,
         multcolor=Grass_MultColorFn,
+        assets=ASSETS,
+    }),
+
+    WAXED_PLANTS.CreateWaxedPlant({
+        prefab="marsh_bush",
+        bank="marsh_bush",
+        build="marsh_bush",
+        minimapicon="marsh_bush",
+        anim="idle",
+        action="DIG",
+        animset=MARSH_BUSH_ANIMSET,
+        getanim_fn=Plantable_GetAnimFn,
+        common_postinit=Tree_Minimap_CommonPostInit,
+        multcolor=Tree_MultColorFn,
         assets=ASSETS,
     }),
 
@@ -612,7 +688,23 @@ local ret = {
         common_postinit=Tree_Minimap_CommonPostInit,
         multcolor=MoonAndPalmconeTree_MultColour,
         assets=ASSETS,
-    })
+    }),
+
+    WAXED_PLANTS.CreateWaxedPlant({
+        prefab="oceantree",
+        bank="oceantree_tall",
+        build="oceantree_tall",
+        anim="sway1_loop",
+        minimapicon="oceantree_tall",
+        action="CHOP",
+        physics={MakeWaterObstaclePhysics, 0.80, 2, 0.75},
+        animset=OCEANTREE_ANIMSET,
+        getanim_fn=OceanTree_GetAnimFn,
+        common_postinit=OceanTree_CommonPostInit,
+        onconfigure_fn=OceanTree_OnConfigure,
+        multcolor=Tree_MultColorFn,
+        assets=ASSETS,
+    }),
 }
 
 -------------------------------------------------------------------------------------------------

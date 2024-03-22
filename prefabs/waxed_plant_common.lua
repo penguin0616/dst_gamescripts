@@ -109,12 +109,25 @@ local function Disappear(inst)
             inst.AnimState:SetErosionParams(0.2, 0.2, n)
             inst.AnimState:SetMultColour(color, color, color, alpha)
 
+            if inst.children ~= nil then
+                for _, child in inst.children do
+                    if child.AnimState ~= nil then
+                        child.AnimState:SetErosionParams(0.2, 0.2, n)
+                        child.AnimState:SetMultColour(color, color, color, alpha)
+                    end
+                end
+            end
+
             ticks = ticks + 1
             Yield()
         end
 
         inst:Remove()
     end)
+
+    if inst.ondisappear_fn ~= nil then
+        inst.ondisappear_fn(inst)
+    end
 end
 
 local function SpawnDugWaxedPlant(inst)
@@ -209,10 +222,11 @@ Valid args:
         - getanim_fn (function) - Decides with animset entry will be chosen.
 
     Optional:
-        - physics (table) - physics fn, rad, height
+        - physics (table) - physics fn, rad, height, restitution
         - minimapicon (string) - without .png
         - nameoverride (string)
-        - data.workcallback (function) - workable.onfinish
+        - ondisappear_fn (function) - custom logic called at inst.Disappear
+        - onconfigure_fn (function) - custom logic called at inst.Configure
         - multcolor (function) - arg in AnimState:SetMultColor(arg, arg, arg, 1)
         - common_postinit (function)
         - master_postinit (function)
@@ -238,9 +252,9 @@ local function CreateWaxedPlant(data)
         inst.entity:AddNetwork()
 
         if data.physics then
-            local fn, rad, height = unpack(data.physics)
+            local fn, rad, height, restitution = unpack(data.physics)
 
-            fn(inst, rad, height)
+            fn(inst, rad, height, restitution)
         end
 
         if data.minimapicon then
@@ -275,6 +289,8 @@ local function CreateWaxedPlant(data)
         inst.savedata = {}
         inst.animset = data.animset
         inst.getanim_fn = data.getanim_fn
+        inst.ondisappear_fn = data.ondisappear_fn
+        inst.onconfigure_fn = data.onconfigure_fn
 
         inst.anim  = data.anim
         inst.build = data.build
@@ -293,7 +309,7 @@ local function CreateWaxedPlant(data)
         inst:AddComponent("workable")
         inst.components.workable:SetWorkAction(ACTIONS[data.action])
         inst.components.workable:SetWorkLeft(1)
-        inst.components.workable:SetOnFinishCallback(data.workcallback or OnWorked)
+        inst.components.workable:SetOnFinishCallback(OnWorked)
 
         inst.OnSave = OnSave
         inst.OnLoad = OnLoad

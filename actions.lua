@@ -2242,35 +2242,40 @@ ACTIONS.INVESTIGATE.fn = function(act)
 end
 
 ACTIONS.COMMENT.fn = function(act)
-    local comment_data = act.doer.comment_data
+    local doer = act.doer
+    local comment_data = doer.comment_data
     if not comment_data then
         return
     end
 
-    if act.doer.components.npc_talker then
+    if doer.components.npc_talker then
         if comment_data.do_chatter then
-            act.doer.components.npc_talker:Chatter(
+            doer.components.npc_talker:Chatter(
                 comment_data.speech,
                 comment_data.chatter_index,
                 nil, nil,
                 comment_data.chat_priority
             )
         else
-            act.doer.components.npc_talker:Say(comment_data.speech)
+            doer.components.npc_talker:Say(comment_data.speech)
         end
-    elseif act.doer.components.talker then
+
+        if doer.components.npc_talker:haslines() then
+            doer.components.npc_talker:donextline()
+        end
+    elseif doer.components.talker then
         if comment_data.do_chatter then
-            act.doer.components.talker:Chatter(
+            doer.components.talker:Chatter(
                 comment_data.speech,
                 comment_data.chatter_index,
                 nil, nil,
                 comment_data.chat_priority
             )
         else
-            act.doer.components.talker:Say(comment_data.speech)
+            doer.components.talker:Say(comment_data.speech)
         end
     end
-    act.doer.comment_data = nil
+    doer.comment_data = nil
 end
 
 ACTIONS.GOHOME.fn = function(act)

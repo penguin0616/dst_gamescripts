@@ -478,6 +478,7 @@ local function fn()
     inst:AddComponent("areaaware")
 
     inst:AddComponent("acidinfusible")
+    inst.components.acidinfusible:SetFXLevel(1)
     inst.components.acidinfusible:SetMultipliers(TUNING.ACID_INFUSION_MULT.WEAKER)
 
     inst:SetBrain(brain)

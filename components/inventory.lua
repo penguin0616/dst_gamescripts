@@ -1098,6 +1098,11 @@ function Inventory:Equip(item, old_to_active, no_animation, force_ui_anim)
     else
         item.prevcontainer = nil
     end
+	--controller swaps to the same slot
+	if olditem and self.inst.components.playercontroller and self.inst.components.playercontroller.isclientcontrollerattached then
+		olditem.prevcontainer = item.prevcontainer
+		olditem.prevslot = item.prevslot
+	end
     -----
     --heavy lifting
     if item.components.equippable.equipslot == EQUIPSLOTS.HANDS then

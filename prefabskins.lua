@@ -448,6 +448,8 @@ PREFAB_SKINS = {
 	{
 		"dragonflychest_fantasy",
 		"dragonflychest_kraken",
+		"dragonflychest_upgraded_fantasy",
+		"dragonflychest_upgraded_kraken",
 	},
 	dragonflyfurnace =
 	{
@@ -1916,6 +1918,8 @@ PREFAB_SKINS = {
 }
 
 PREFAB_SKINS_SHOULD_NOT_SELECT = {
+	["dragonflychest_upgraded_fantasy"] = true,
+	["dragonflychest_upgraded_kraken"] = true,
 	["treasurechest_upgraded_ancient"] = true,
 	["treasurechest_upgraded_cake"] = true,
 	["treasurechest_upgraded_carpetbag"] = true,

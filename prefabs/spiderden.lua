@@ -663,6 +663,21 @@ local function OnGoHome(_, child)
     end
 end
 
+local function OnWork(inst, worker, workleft, numworks)
+	if not inst.components.health:IsDead() then
+		local hp = inst.components.health.currenthealth
+		local delta = TUNING.SPIDERDEN_HEALTH[1]
+		if numworks <= 0 and delta >= hp then
+			delta = hp - 1
+		end
+		inst.components.workable:SetWorkLeft(10)
+		inst.components.health:DoDelta(-delta)
+		if not inst.components.health:IsDead() then
+			OnHit(inst, worker)
+		end
+	end
+end
+
 local function MakeSpiderDenFn(den_level)
     return function()
         local inst = CreateEntity()
@@ -690,6 +705,7 @@ local function MakeSpiderDenFn(den_level)
         inst:AddTag("spiderden")
         inst:AddTag("bedazzleable")
         inst:AddTag("hive")
+		inst:AddTag("NPC_workable")
 
         MakeSnowCoveredPristine(inst)
 
@@ -778,6 +794,10 @@ local function MakeSpiderDenFn(den_level)
 
         ---------------------
         inst:AddComponent("inspectable")
+
+		inst:AddComponent("workable")
+		inst.components.workable:SetWorkAction(nil)
+		inst.components.workable:SetOnWorkCallback(OnWork)
 
         inst:AddComponent("hauntable")
         inst.components.hauntable.cooldown = TUNING.HAUNT_COOLDOWN_MEDIUM

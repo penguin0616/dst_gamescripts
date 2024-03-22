@@ -1947,7 +1947,11 @@ return{
 		DRAGONFLY = "She'll burn all the trees before I can chop them!",
 		ARMORDRAGONFLY = "Plaid is all the armor I need.",
 		DRAGON_SCALES = "I still don't believe in dragons.",
-		DRAGONFLYCHEST = "Gaudy if you ask me.",
+		DRAGONFLYCHEST =
+		{
+			GENERIC = "Gaudy if you ask me.",
+            UPGRADED_STACKSIZE = "It's a bit much, eh? But at least it stores a lot.",
+		},
 		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "It got even tackier, eh?",

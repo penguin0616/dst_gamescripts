@@ -1946,7 +1946,11 @@ return{
 		DRAGONFLY = "Ohhhh I was really hoping to avoid dodging fiery bug monsters today.",
 		ARMORDRAGONFLY = "I think it looks better on me than it did on the bug.",
 		DRAGON_SCALES = "Fireproof material has served me well in the past. And future, come to think of it.",
-		DRAGONFLYCHEST = "Now that I'm not worried about my things burning up, I can worry about everything else.",
+		DRAGONFLYCHEST =
+		{
+			GENERIC = "Now that I'm not worried about my things burning up, I can worry about everything else.",
+            UPGRADED_STACKSIZE = "Big enough to keep all my trinkets safely stashed away.",
+		},
 		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "If only I could go back in time and undo that decision. If only.",

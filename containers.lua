@@ -811,8 +811,10 @@ params.quagmire_safe.widget.animbuild = "quagmire_ui_chest_3x3"
 --[[ dragonflychest ]]
 --------------------------------------------------------------------------
 
-params.dragonflychest = params.shadowchester
 params.minotaurchest = params.shadowchester
+params.dragonflychest = deepcopy(params.shadowchester)
+params.dragonflychest.widget.animbank_upgraded = "ui_chester_upgraded_3x4"
+params.dragonflychest.widget.animbuild_upgraded = "ui_chester_upgraded_3x4"
 
 --------------------------------------------------------------------------
 --[[ antlionhat ]]

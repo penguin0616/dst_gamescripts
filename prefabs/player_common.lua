@@ -298,6 +298,10 @@ local function MinMult(recalcmult, mult)
 end
 
 fns.OnStartChannelCastingItem = function(inst, item)
+	if item and item.components.channelcastable and not item.components.channelcastable.strafing then
+		return
+	end
+
 	--channelcaster speedmult stacks with other status speedmults
 	--but we don't actually want that
 	--so temporarily adjust the other mults so that when stacked, will equal the min

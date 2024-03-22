@@ -312,6 +312,7 @@ local function fn()
     inst.components.lootdropper:SetLoot({ "monstermeat", "monstermeat", "monstermeat", "monstermeat", "wormlight" })
 
     inst:AddComponent("acidinfusible")
+    inst.components.acidinfusible:SetFXLevel(1)
     inst.components.acidinfusible:SetMultipliers(TUNING.ACID_INFUSION_MULT.BERSERKER)
 
     --Disable this task for worm attacks

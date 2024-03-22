@@ -124,9 +124,6 @@ local function fn()
     inst.components.armor:InitCondition(TUNING.ARMORBRAMBLE, TUNING.ARMORBRAMBLE_ABSORPTION)
     inst.components.armor:AddWeakness("beaver", TUNING.BEAVER_WOOD_DAMAGE)
 
-    inst:AddComponent("planardefense")
-    inst.components.planardefense:SetBaseDefense(0)
-
     inst:AddComponent("equippable")
     inst.components.equippable.equipslot = EQUIPSLOTS.BODY
 

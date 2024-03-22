@@ -610,8 +610,31 @@ treasurechest_clear_fn = function(inst)
     RemoveSkinSounds(inst)
 end
 
-dragonflychest_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "dragonfly_chest" ) end
-dragonflychest_clear_fn = function(inst) basic_clear_fn(inst, "dragonfly_chest" ) end
+dragonflychest_init_fn = function(inst, build_name)
+    if inst.components.placer then
+        basic_init_fn(inst, build_name, "dragonfly_chest") -- NOTES(JBK): Chests can not be built as upgraded form.
+        return
+    elseif not TheWorld.ismastersim then
+        return
+    end
+
+    if inst._chestupgrade_stacksize then
+        basic_init_fn(inst, build_name:gsub("dragonflychest_", "dragonflychest_upgraded_"), "dragonfly_chest_upgraded")
+    else
+        basic_init_fn(inst, build_name, "dragonfly_chest")
+    end
+
+    AddSkinSounds(inst)
+end
+dragonflychest_clear_fn = function(inst)
+    if inst._chestupgrade_stacksize then
+        basic_clear_fn(inst, "dragonfly_chest_upgraded")
+    else
+        basic_clear_fn(inst, "dragonfly_chest")
+    end
+
+    RemoveSkinSounds(inst)
+end
 
 wardrobe_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "wardrobe" ) end
 wardrobe_clear_fn = function(inst) basic_clear_fn(inst, "wardrobe" ) end

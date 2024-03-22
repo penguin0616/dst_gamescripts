@@ -1946,7 +1946,11 @@ return{
 		DRAGONFLY = "Ah, dragon! At last we meet!",
 		ARMORDRAGONFLY = "Excellent armor for the heat of battle.",
 		DRAGON_SCALES = "Mystical scales.",
-		DRAGONFLYCHEST = "This chest is worthy of my weapons.",
+		DRAGONFLYCHEST =
+		{
+			GENERIC = "This chest is worthy of my weapons.",
+            UPGRADED_STACKSIZE = "This chest is worthy of my weapons, and then some.",
+		},
 		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "It has seen much battle.",

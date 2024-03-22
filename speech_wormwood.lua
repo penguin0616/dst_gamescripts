@@ -1950,7 +1950,11 @@ return{
 		DRAGONFLY = "Patuey Fly",
 		ARMORDRAGONFLY = "Fire Keeper Outer",
 		DRAGON_SCALES = "Fiery clothes",
-		DRAGONFLYCHEST = "Fire Safe",
+		DRAGONFLYCHEST =
+		{
+			GENERIC = "Fire Safe",
+            UPGRADED_STACKSIZE = "Big Fire Safe",
+		},
 		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "Just stuff now",

@@ -2670,8 +2670,11 @@ local function UpdateControllerAttackTarget(self, dt, x, y, z, dirx, dirz)
     --    return
     --end
 
+    local equipped_item = self.inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+    local forced_rad = equipped_item ~= nil and equipped_item.controller_use_attack_distance or 0
+
     local min_rad = 4
-    local max_rad = math.max(min_rad, combat:GetAttackRangeWithWeapon()) + 3
+    local max_rad = math.max(math.max(min_rad, combat:GetAttackRangeWithWeapon()), forced_rad) + 3
     local min_rad_sq = min_rad * min_rad
     local max_rad_sq = max_rad * max_rad
 
@@ -2845,6 +2848,14 @@ local function UpdateControllerInteractionTarget(self, dt, x, y, z, dirx, dirz)
     end
 
     local equiped_item = self.inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+
+    if equiped_item and equiped_item.controller_should_use_attack_target and self.controller_attack_target ~= nil then
+        if self.controller_target ~= self.controller_attack_target then
+            self.controller_target = self.controller_attack_target
+            self.controller_target_age = 0
+        end
+        return
+    end
 
     --Fishing targets may have large radius, making it hard to target with normal priority
     local fishing = equiped_item ~= nil and equiped_item:HasTag("fishingrod")

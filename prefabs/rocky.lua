@@ -212,6 +212,7 @@ local function fn()
 
     --
     local acidinfusible = inst:AddComponent("acidinfusible")
+    acidinfusible:SetFXLevel(3)
     acidinfusible:SetOnInfuseFn(OnGrowthStateDirty)
     acidinfusible:SetOnUninfuseFn(OnGrowthStateDirty)
 

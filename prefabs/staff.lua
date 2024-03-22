@@ -425,9 +425,19 @@ local function blinkstaff_reticuletargetfn()
     local rotation = player.Transform:GetRotation()
     local pos = player:GetPosition()
     local ents = TheSim:FindEntities(pos.x, pos.y, pos.z, TUNING.CONTROLLER_BLINKFOCUS_DISTANCE, BLINKFOCUS_MUST_TAGS)
+    local maxrange = nil
+    for _, v in ipairs(ents) do
+        local newmaxrange = v.maxrange and v.maxrange:value() or nil
+        if newmaxrange ~= nil and newmaxrange ~= 0 and (maxrange == nil or newmaxrange < maxrange) then
+            if player:GetDistanceSqToInst(v) < newmaxrange * newmaxrange then
+                maxrange = newmaxrange
+            end
+        end
+    end
     for _, v in ipairs(ents) do
         local epos = v:GetPosition()
-        if distsq(pos, epos) > TUNING.CONTROLLER_BLINKFOCUS_DISTANCESQ_MIN then
+        local dsq = distsq(pos, epos)
+        if (maxrange == nil or dsq < maxrange * maxrange) and dsq > TUNING.CONTROLLER_BLINKFOCUS_DISTANCESQ_MIN then
             local angletoepos = player:GetAngleToPoint(epos)
             local angleto = math.abs(anglediff(rotation, angletoepos))
             if angleto < TUNING.CONTROLLER_BLINKFOCUS_ANGLE then
@@ -436,7 +446,7 @@ local function blinkstaff_reticuletargetfn()
         end
     end
     rotation = rotation * DEGREES
-    for r = 13, 1, -1 do
+    for r = maxrange or 13, 1, -1 do
         local numtries = 2 * PI * r
         local offset = FindWalkableOffset(pos, rotation, r, numtries, false, true, NoHoles, false, true)
         if offset ~= nil then

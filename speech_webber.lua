@@ -1946,7 +1946,11 @@ return{
 		DRAGONFLY = "Oh, don't you just drag on.",
 		ARMORDRAGONFLY = "Another creature casing.",
 		DRAGON_SCALES = "They don't weigh much for scales.",
-		DRAGONFLYCHEST = "It looks like my old toy chest!",
+		DRAGONFLYCHEST =
+		{
+			GENERIC = "It looks like my old toy chest!",
+            UPGRADED_STACKSIZE = "It's way bigger and better than my old toy chest!",
+		},
 		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "What happened to your face?",

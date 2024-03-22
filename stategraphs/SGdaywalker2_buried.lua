@@ -52,6 +52,13 @@ local states =
 		onenter = function(inst)
 			PlayAnimation(inst, "buried")
 			inst.SoundEmitter:PlaySound("qol1/daywalker_scrappy/buried_stagger")
+
+			local t = GetTime()
+			if (inst.sg.mem.lasttalk or 0) + 4 < t then
+				inst.sg.mem.lasttalk = t
+				local strtbl = inst:IsNearPlayer(12, true) and "DAYWALKER2_BURIED_NEAR" or "DAYWALKER2_BURIED_FAR"
+				inst.components.talker:Chatter(strtbl, math.random(#STRINGS[strtbl]), nil, nil, CHATPRIORITIES.HIGH)
+			end
 		end,
 
 		timeline =
@@ -81,6 +88,7 @@ local states =
 			PlayAnimation(inst, "buried_stagger")
 			PushAnimation(inst, "buried_stagger_loop")
 			inst.SoundEmitter:PlaySound("qol1/daywalker_scrappy/buried_stagger")
+			inst.components.talker:Chatter("DAYWALKER2_BURIED_NEAR", 3, nil, nil, CHATPRIORITIES.HIGH)
 		end,
 	},
 

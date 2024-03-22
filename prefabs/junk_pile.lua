@@ -108,7 +108,10 @@ local function WorkMultiplierFn(inst, worker, numworks)
 	return worker:HasTag("junk") and 0 or nil
 end
 
+local JUNK_MOB_TAGS = { "junkmob" }
+
 local function OnWork(inst, worker, workleft, numwork)
+	local x, y, z
 	local workerisjunkmob = worker:HasTag("junkmob")
 	if numwork == 0 then
 		if worker:HasTag("junk") then
@@ -118,7 +121,7 @@ local function OnWork(inst, worker, workleft, numwork)
 			inst:Shake(workleft, true)
 			return
 		elseif workerisjunkmob then
-			local x, y, z = inst.Transform:GetWorldPosition()
+			x, y, z = inst.Transform:GetWorldPosition()
 			local x1, y1, z1 = worker.Transform:GetWorldPosition()
 			if x ~= x1 or z ~= z1 then
 				local dx = x1 - x
@@ -130,6 +133,15 @@ local function OnWork(inst, worker, workleft, numwork)
 			SpawnPrefab("junk_break_fx").Transform:SetPosition(x1, y, z1)
 			inst:CancelPicking(worker, true)
 			inst:Shake(workleft, true)
+		end
+	end
+
+	if (worker.components.follower and worker.components.follower:GetLeader() or worker).isplayer then
+		if x == nil then
+			x, y, z = inst.Transform:GetWorldPosition()
+		end
+		for i, v in ipairs(TheSim:FindEntities(x, y, z, 16, JUNK_MOB_TAGS)) do
+			v:PushEvent("ms_junkstolen", worker)
 		end
 	end
 

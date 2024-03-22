@@ -1952,7 +1952,11 @@ return{
 		DRAGONFLY = "Get a load of this flying welding torch!",
 		ARMORDRAGONFLY = "Bit flashy, hey?",
 		DRAGON_SCALES = "Showy.",
-		DRAGONFLYCHEST = "For the snootiest of snoots.",
+		DRAGONFLYCHEST =
+		{
+			GENERIC = "For the snootiest of snoots.",
+            UPGRADED_STACKSIZE = "Snooty, but durable.",
+		},
 		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "We oughta fix that.",

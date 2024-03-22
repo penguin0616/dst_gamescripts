@@ -2217,6 +2217,7 @@ table.insert(prefs, CreatePrefabSkin("dragonflychest_fantasy",
 	init_fn = function(inst) dragonflychest_init_fn(inst, "dragonflychest_fantasy") end,
 	skin_tags = { "DRAGONFLYCHEST", "FANTASY", "CRAFTABLE", },
 	release_group = 128,
+	granted_items = { "dragonflychest_upgraded_fantasy", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("dragonflychest_kraken",
@@ -2227,6 +2228,28 @@ table.insert(prefs, CreatePrefabSkin("dragonflychest_kraken",
 	init_fn = function(inst) dragonflychest_init_fn(inst, "dragonflychest_kraken") end,
 	skin_tags = { "DRAGONFLYCHEST", "NAUTICAL", "CRAFTABLE", },
 	release_group = 119,
+	granted_items = { "dragonflychest_upgraded_kraken", },
+}))
+
+table.insert(prefs, CreatePrefabSkin("dragonflychest_upgraded_fantasy",
+{
+	base_prefab = "dragonflychest",
+	type = "item",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) dragonflychest_init_fn(inst, "dragonflychest_upgraded_fantasy") end,
+	skin_tags = { },
+	release_group = 153,
+}))
+
+table.insert(prefs, CreatePrefabSkin("dragonflychest_upgraded_kraken",
+{
+	base_prefab = "dragonflychest",
+	type = "item",
+	rarity = "Loyal",
+	init_fn = function(inst) dragonflychest_init_fn(inst, "dragonflychest_upgraded_kraken") end,
+	skin_tags = { },
+	release_group = 153,
 }))
 
 table.insert(prefs, CreatePrefabSkin("dragonflyfurnace_antique",

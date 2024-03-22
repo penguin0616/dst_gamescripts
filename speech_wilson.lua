@@ -1956,7 +1956,11 @@ return {
 		DRAGONFLY = "That's one fly dragon!",
 		ARMORDRAGONFLY = "Hot mail!",
 		DRAGON_SCALES = "They're still warm.",
-		DRAGONFLYCHEST = "Next best thing to a lockbox!",
+		DRAGONFLYCHEST =
+		{
+			GENERIC = "Next best thing to a lockbox!",
+            UPGRADED_STACKSIZE = "The amount of storage is off the scale!",
+		},
 		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "I don't think it's supposed to look like that.",

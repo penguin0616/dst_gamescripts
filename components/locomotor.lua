@@ -1125,10 +1125,11 @@ function LocoMotor:ScanForPlatformInDir(my_platform, map, my_x, my_z, dir_x, dir
                 if platform ~= nil or not is_water then
 					if self.hop_delay and self.dest == nil then
 						--keep pushing toward the same direction during the delay before the hop is actually triggered
-						local delay = self.inst.forced_platformhopdelay or math.max(TUNING.PLATFORM_HOP_DELAY_TICKS, math.max(
+                        local platform_delay = math.max(
 							platform and platform.components.platformhopdelay and platform.components.platformhopdelay:GetDelayTicks() or 0,
 							my_platform and my_platform.components.platformhopdelay and my_platform.components.platformhopdelay:GetDelayTicks() or 0
-						))
+						)
+						local delay = platform_delay > 0 and platform_delay or self.inst.forced_platformhopdelay or TUNING.PLATFORM_HOP_DELAY_TICKS
 						if delay > 0 then
 							--detect boat bridges (only from boat->boat)
 							local is_boat_bridge = false
