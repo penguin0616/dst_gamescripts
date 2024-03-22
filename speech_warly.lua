@@ -5134,7 +5134,7 @@ return{
         },
 
         SCRAP_MONOCLEHAT = "It provides a lovely view!",
-        SCRAP_CONEHAT = "One werepig's pauldron is another man's chapeau, non?",
+        SCRAPHAT = "One werepig's pauldron is another man's chapeau, non?",
 
         FENCE_JUNK = "It's constructed well enough, but it lacks presentation.",
         JUNK_PILE = "Perhaps there is something delicious hiding in its center?",

@@ -5134,7 +5134,7 @@ return{
         },
 
         SCRAP_MONOCLEHAT = "It never hurts to view things from a wider angle.",
-        SCRAP_CONEHAT = "I like it much better as a hat.",
+        SCRAPHAT = "I like it much better as a hat.",
 
         FENCE_JUNK = "As long as it keeps things out, I don't care how it looks.",
         JUNK_PILE = "There might be something worth my time in there.",

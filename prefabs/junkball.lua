@@ -13,6 +13,7 @@ local prefabs =
 local prefabs_fall =
 {
 	"junk_pile",
+	"splash_green_large",
 }
 
 local MIN_DIST = 4
@@ -404,6 +405,11 @@ local function UpdateFallFade(inst, dt)
 	end
 end
 
+--server only
+local function UpdateFallShadow(inst, dt)
+	inst.DynamicShadow:Enable(not TheWorld.Map:IsOceanAtPoint(inst.Transform:GetWorldPosition()))
+end
+
 local JUNK_PILE_TAGS = { "junk_pile", "junk_pile_big", "wall" }
 
 --server only
@@ -423,7 +429,9 @@ local function UpdateFallPos(inst, dt)
 		local targets = inst.targets or {}
 		DoDamage(inst, targets)
 
-		if inst.formpile then
+		if TheWorld.Map:IsOceanAtPoint(inst.x1, 0, inst.z1) then
+			SpawnPrefab("splash_green_large").Transform:SetPosition(inst.x1, 0, inst.z1)
+		elseif inst.formpile then
 			local blocked = false
 			for i, v in ipairs(TheSim:FindEntities(inst.x1, 0, inst.z1, 5, nil, nil, JUNK_PILE_TAGS)) do
 				if v:HasTag("junk_pile_big") then
@@ -522,6 +530,8 @@ local function fallfn()
 	inst.components.combat:SetDefaultDamage(TUNING.JUNK_FALL_DAMAGE)
 	inst.components.combat:SetRange(AOE_RADIUS)
 	inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
+
+	inst.components.updatelooper:AddOnUpdateFn(UpdateFallShadow)
 
 	inst.persists = false
 	inst:ListenForEvent("animover", inst.Remove)

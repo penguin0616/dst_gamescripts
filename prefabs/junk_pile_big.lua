@@ -546,6 +546,11 @@ local function fn()
 
 	inst.highlightchildren = {}
 
+	if not TheNet:IsDedicated() then
+        inst:AddComponent("pointofinterest")
+        inst.components.pointofinterest:SetHeight(75)
+    end
+
 	inst.entity:SetPristine()
 
 	if not TheWorld.ismastersim then

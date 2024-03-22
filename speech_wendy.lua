@@ -5138,7 +5138,7 @@ return{
         },
 
         SCRAP_MONOCLEHAT = "I won't find what I'm looking for, no matter how far I can see.",
-        SCRAP_CONEHAT = "My head will be safe. My dignity, however...",
+        SCRAPHAT = "My head will be safe. My dignity, however...",
 
         FENCE_JUNK = "Even these discarded pieces can manage to be useful.",
         JUNK_PILE = "Could there be something worthwhile hiding deep inside?",

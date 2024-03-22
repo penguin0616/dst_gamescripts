@@ -255,25 +255,25 @@ local function TryLunarFire(inst, doer, pos)
     return false
 end
 
+local function DoShadowFire(doer, x, z, rot)
+	local fire = SpawnPrefab("willow_shadow_flame")
+	fire.Transform:SetRotation(rot)
+	fire.Transform:SetPosition(x, 0, z)
+	fire:settarget(nil, 50, doer)
+end
+
 local function TryShadowFire(inst, doer, pos)
     if CheckStackSize(inst, doer, "shadowfire") then
-
-        local startangle = inst:GetAngleToPoint(pos.x,pos.y,pos.z)*DEGREES
-
-        local burst = 5
-
+		local burst = 5
+		local radius = 2
+		local x, y, z = doer.Transform:GetWorldPosition()
+		local theta = x == pos.x and z == pos.z and doer.Transform:GetRotation() * DEGREES or math.atan2(z - pos.z, pos.x - x)
+		local delta = PI2 / burst
         for i=1,burst do
-            local radius = 2
-            local theta = startangle + (PI*2/burst*i) - (PI*2/burst)
-            local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
-
-            local newpos = Vector3(inst.Transform:GetWorldPosition()) + offset
-            inst:DoTaskInTime(math.random()*0.2, function()
-                local fire = SpawnPrefab("willow_shadow_flame")
-                fire.Transform:SetRotation(theta/DEGREES)
-                fire.Transform:SetPosition(newpos.x,newpos.y,newpos.z)
-                fire:settarget(nil,50,doer)
-            end)
+			local x1 = x + radius * math.cos(theta)
+			local z1 = z - radius * math.sin(theta)
+			doer:DoTaskInTime(math.random() * 0.2, DoShadowFire, x1, z1, theta * RADIANS)
+			theta = theta + delta
         end
 
 		if doer.components.spellbookcooldowns then
@@ -777,8 +777,12 @@ local function updatespells(inst,owner)
 end
 
 local function OnUpdateSpellsDirty(inst)
-    local owner = inst.replica.inventoryitem:IsHeldBy(ThePlayer) and ThePlayer or nil
-
+	--V2C: inst.replica.inventoryitem:IsHeldBy(ThePlayer) won't work for new ember
+	--     spawned directly in pocket, because inventory preview won't have been
+	--     resolved yet.
+	--     Use IsHeld(), and assume it's ours, since this can only go into pockets
+	--     and not containers.
+	local owner = inst.replica.inventoryitem:IsHeld() and ThePlayer or nil
     if owner then
 		if inst._onskillrefresh == nil then
 			inst._onskillrefresh = function() OnUpdateSpellsDirty(inst) end

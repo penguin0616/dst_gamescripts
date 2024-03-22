@@ -5138,7 +5138,7 @@ return{
         },
 
         SCRAP_MONOCLEHAT = "Can see friends far away!",
-        SCRAP_CONEHAT = "Big thorny head!",
+        SCRAPHAT = "Big thorny head!",
 
         FENCE_JUNK = "Friends wearing metal clothes",
         JUNK_PILE = "Pile of stuff",

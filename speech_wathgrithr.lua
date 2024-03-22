@@ -5134,7 +5134,7 @@ return{
         },
 
         SCRAP_MONOCLEHAT = "An enchanted eye, to view the whole battlefield at once.",
-        SCRAP_CONEHAT = "T'was won in an invigorating battle!",
+        SCRAPHAT = "T'was won in an invigorating battle!",
 
         FENCE_JUNK = "A sturdy barrier.",
         JUNK_PILE = "Mayhaps a treasure lies inside?",

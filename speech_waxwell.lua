@@ -5134,7 +5134,7 @@ return{
         },
 
         SCRAP_MONOCLEHAT = "I don't need glasses! Who told you I need glasses?",
-        SCRAP_CONEHAT = "Can you really call that pile of refuse a hat?",
+        SCRAPHAT = "Can you really call that pile of refuse a hat?",
 
         FENCE_JUNK = "Hmph. It'll certainly repel anyone with taste.",
         JUNK_PILE = "Have I really been reduced to sifting through the trash?",

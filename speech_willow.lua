@@ -5141,7 +5141,7 @@ return{
         },
 
         SCRAP_MONOCLEHAT = "Am I gonna start saying stuff like \"quite\" and \"indubitably\"?",
-        SCRAP_CONEHAT = "Heh. I like it!",
+        SCRAPHAT = "Heh. I like it!",
 
         FENCE_JUNK = "Not the prettiest fence in the world, but it works.",
         JUNK_PILE = "I'm not too proud to rifle through some trash.",

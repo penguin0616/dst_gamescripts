@@ -1103,6 +1103,13 @@ local function onload(inst, data)
             Sway(inst)
         end
     end
+
+    if inst.monster then
+        inst:RemoveComponent("waxable")
+
+    elseif inst.components.waxable == nil then
+        MakeWaxablePlant(inst)
+    end
 end
 
 local function OnSeasonChanged(inst, season)

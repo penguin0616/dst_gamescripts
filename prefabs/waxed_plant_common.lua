@@ -75,7 +75,9 @@ end
 local function GetParentCurrentAnimation(inst, parent)
     local anim = inst.getanim_fn(parent)
 
-    assert(inst.animset[anim], "inst.getanim_fn should return a key in inst.animset, it's returning "..tostring(anim))
+    if not inst.animset[anim] then
+        return
+    end
 
     return anim
 end
@@ -477,6 +479,12 @@ local function WaxPlant(plant, doer, waxitem)
     local build = plant.AnimState:GetBuild()
     local anim  = waxed:GetParentCurrentAnimation(plant)
     local scale = plant.Transform:GetScale() -- Note(DiogoW): This returns 3 values, but they are usually the same.
+
+    if anim == nil then
+        waxed:Remove()
+
+        return false
+    end
 
     local data = {
         pos   = plant:GetPosition(),

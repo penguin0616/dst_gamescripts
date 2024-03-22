@@ -16,8 +16,6 @@ end
 
 local function SetLevel(inst, level)
     inst._anim = "idle_"..level
-
-    inst.AnimState:PlayAnimation(inst._anim)
 end
 
 local function fn()

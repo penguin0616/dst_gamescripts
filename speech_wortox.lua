@@ -5140,7 +5140,7 @@ return{
         },
 
         SCRAP_MONOCLEHAT = "My my, that distant look in your eye!",
-        SCRAP_CONEHAT = "A piece of scrap, fashioned into a cap!",
+        SCRAPHAT = "A piece of scrap, fashioned into a cap!",
 
         FENCE_JUNK = "A metal fence for our defense.",
         JUNK_PILE = "Could it hide a surprise inside?",

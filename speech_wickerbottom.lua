@@ -5134,7 +5134,7 @@ return{
         },
 
         SCRAP_MONOCLEHAT = "It seems to exponentially increase the wearer's field of view.",
-        SCRAP_CONEHAT = "Perhaps we might give it a good wash first?",
+        SCRAPHAT = "Perhaps we might give it a good wash first?",
 
         FENCE_JUNK = "Unpleasant to the eye, but I suppose practicality outweighs aesthetics.",
         JUNK_PILE = "I may find something of use within.",

@@ -5134,7 +5134,7 @@ return{
         },
 
         SCRAP_MONOCLEHAT = "We can see extra far with that on!",
-        SCRAP_CONEHAT = "It still smells like pig sweat!",
+        SCRAPHAT = "It still smells like pig sweat!",
 
         FENCE_JUNK = "It's not the nicest-looking fence.",
         JUNK_PILE = "There might be something fun to play with in there!",

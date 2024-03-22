@@ -199,7 +199,11 @@ end
 
 function AcidInfusible:KillFX()
     if self._fx ~= nil then
-        self._fx:DoTaskInTime(self._fx.AnimState:GetCurrentAnimationLength() + FRAMES, self._fx.Remove)
+        if self._fx:IsValid() then
+            local time = self._fx.AnimState:GetCurrentAnimationLength() - self._fx.AnimState:GetCurrentAnimationTime() + FRAMES
+            self._fx:DoTaskInTime(time, self._fx.Remove)
+        end
+        self._fx = nil
     end
 end
 

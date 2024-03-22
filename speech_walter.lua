@@ -5134,7 +5134,7 @@ return{
         },
 
         SCRAP_MONOCLEHAT = "Woah! It's like binoculars, but... well, the opposite of that!",
-        SCRAP_CONEHAT = "That werepig was so big, I can wear his shoulder pad as a hat!",
+        SCRAPHAT = "That werepig was so big, I can wear his shoulder pad as a hat!",
 
         FENCE_JUNK = "I guess it's better than just leaving all that scrap metal lying around.",
         JUNK_PILE = "One person's trash is another's treasure!",
