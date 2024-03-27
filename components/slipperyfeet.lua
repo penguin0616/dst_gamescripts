@@ -12,7 +12,7 @@ local function OnOceanIce(inst, on_ocean_ice)
 			if self._updating["checkice"] then
 				self:StopUpdating_Internal("checkice")
 			else
-				inst.components.slipperyfeet:StartSlipperySource("ocean_ice")
+				self:StartSlipperySource("ocean_ice")
 			end
 		end
 	elseif self.onicetile then
@@ -189,7 +189,7 @@ function SlipperyFeet:StopUpdating_Internal(reason)
 	self._updating[reason] = nil
 	if next(self._updating) == nil then
 		self.inst:StopUpdatingComponent(self)
-        if self.checknearbyentitytask == nil then
+        if self.checknearbyentitytask == nil and self.inst.components.slipperyfeet ~= nil then -- NOTES(JBK): Make sure the component still exists because this can be called when the component is removed.
             self.checknearbyentitytask = self.inst:DoTaskInTime(SLIPPERY_SLOWCHECK_FREQUENCY, self.SlowUpdateCheck)
         end
 	end

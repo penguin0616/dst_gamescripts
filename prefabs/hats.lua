@@ -345,6 +345,19 @@ local function MakeHat(name)
         inst:AddTag("waterproofer")
     end
 
+    fns.football_onequip = function(inst, owner)
+        if inst:HasTag("open_top_hat") then
+            fns.opentop_onequip(inst, owner)
+        else
+            _onequip(inst, owner)
+        end
+    end
+
+    fns.football_onunequip = function(inst, owner)
+        _onunequip(inst, owner)
+    end
+
+
     fns.football = function()
         local inst = simple(football_custom_init)
 
@@ -357,6 +370,9 @@ local function MakeHat(name)
 
         inst:AddComponent("waterproofer")
         inst.components.waterproofer:SetEffectiveness(TUNING.WATERPROOFNESS_SMALL)
+
+        inst.components.equippable:SetOnEquip(fns.football_onequip)
+        inst.components.equippable:SetOnUnequip(fns.football_onunequip)
 
         return inst
     end

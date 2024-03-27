@@ -2203,7 +2203,7 @@ function ScrapbookScreen:OnControl(control, down)
 			return true
 		end
 
-	    if control == CONTROL_PAUSE and TheInput:ControllerAttached() then
+	    if control == CONTROL_MENU_START and TheInput:ControllerAttached() then
 			if self.columns_setting == 1 then
 				self.columns_setting = 2
 			elseif self.columns_setting == 2 then
@@ -2229,14 +2229,14 @@ function ScrapbookScreen:OnControl(control, down)
 			return true
 		end	
 
-	    if control == CONTROL_MAP then
+	    if control == CONTROL_MENU_BACK then
 			TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
 			self:CycleChraterQuotes("right")
 			return true
 		end	
 
 		if self.flashestoclear then
-  			if control == CONTROL_CONTROLLER_ATTACK then
+  			if control == CONTROL_MENU_MISC_1 then
   				self.flashestoclear = nil
   				self:ClearFlashes()
 				return true
@@ -2255,17 +2255,17 @@ function ScrapbookScreen:GetHelpText()
 	table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_2) .. " " .. STRINGS.SCRAPBOOK.CYCLE_CAT)
 
 	if self.character_panels and self.character_panels_total>1 then
-		table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MAP).. " " .. STRINGS.SCRAPBOOK.CYCLE_QUOTES)
+		table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_BACK).. " " .. STRINGS.SCRAPBOOK.CYCLE_QUOTES)
 	end
 
-	table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_PAUSE) .. " " .. STRINGS.SCRAPBOOK.CYCLE_VIEW)
+	table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_START) .. " " .. STRINGS.SCRAPBOOK.CYCLE_VIEW)
 
 	if self.searchbox.focus then
-		table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_CONTROLLER_ACTION) .. " " .. STRINGS.SCRAPBOOK.SEARCH)
+		table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.SCRAPBOOK.SEARCH)
 	end
 
 	if self.flashestoclear then
-		table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_CONTROLLER_ATTACK) .. " " .. STRINGS.SCRAPBOOK.CLEARFLASH)
+		table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_1) .. " " .. STRINGS.SCRAPBOOK.CLEARFLASH)
 	end
 
 	return table.concat(t, "  ")

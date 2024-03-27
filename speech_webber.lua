@@ -85,7 +85,7 @@ return{
             NO_RACERS = "We need to find some Carrats!",
         },
 
-		DISMANTLE =
+		DISMANTLE = 
 		{
 			COOKING = "We can't, it's still cooking!",
 			INUSE = "Oops. Someone else is using that.",
@@ -2721,6 +2721,7 @@ return{
 		},
 		TREASURECHEST_TRAP = "It couldn't hurt to take a peek inside...",
         CHESTUPGRADE_STACKSIZE = "Will this make our toy chest bigger?", -- Describes the kit upgrade item.
+		COLLAPSEDCHEST = "Can we dig for treasure?",
 		SACRED_CHEST =
 		{
 			GENERIC = "We feel cold.",
@@ -5139,6 +5140,8 @@ return{
         FENCE_JUNK = "It's not the nicest-looking fence.",
         JUNK_PILE = "There might be something fun to play with in there!",
         JUNK_PILE_BIG = "We don't want to get squashed!",
+
+        ARMOR_LUNARPLANT_HUSK = "We aren't allowed to play with that. It's just for Wormwood.",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

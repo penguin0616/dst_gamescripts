@@ -25,6 +25,7 @@ local prefabs =
 	"daywalker2_armor2_break_fx",
 	"daywalker2_cloth_break_fx",
 	"junkball_fx",
+	"junk_break_fx",
 	"alterguardian_laser",
 	"alterguardian_laserempty",
 	"alterguardian_laserhit",
@@ -667,7 +668,7 @@ local function OnThiefReset(inst)
 end
 
 local function OnJunkStolen(inst, thief)
-	if not (inst.buried or inst.defated or inst.hostile or inst._thiefdelaytask) then
+	if not (inst.buried or inst.defated or inst.hostile or inst._thiefdelaytask or inst.sg:HasStateTag("sleeping")) then
 		inst._thieflevel = inst._thieflevel + 1
 		inst._thiefdelaytask = inst:DoTaskInTime(2, OnThiefDelayOver)
 		inst._thief = thief
@@ -691,6 +692,14 @@ local function OnJunkStolen(inst, thief)
 			inst.components.talker:Chatter("DAYWALKER2_JUNK_WARNING", strid, nil, nil, CHATPRIORITIES.HIGH)
 		end
 	end
+end
+
+local function ShouldSleep(inst)
+	return false
+end
+
+local function ShouldWake(inst)
+	return true
 end
 
 --------------------------------------------------------------------------
@@ -737,6 +746,7 @@ local function MakeBuried(inst, junk)
 		inst:RemoveComponent("freezable")
 		inst:RemoveComponent("burnable")
 		inst:RemoveComponent("propagator")
+		inst:RemoveComponent("sleeper")
 		inst:RemoveTag("hostile")
 		inst:AddTag("notarget")
 		inst.AnimState:Hide("junk_top")
@@ -848,6 +858,7 @@ local function MakeDefeated(inst)
 		inst:RemoveComponent("freezable")
 		inst:RemoveComponent("burnable")
 		inst:RemoveComponent("propagator")
+		inst:RemoveComponent("sleeper")
 		inst:RemoveTag("hostile")
 		inst:SetBrain(nil)
 		inst:SetHeadTracking(false)
@@ -1159,6 +1170,12 @@ local function fn()
 
 	inst:AddComponent("stuckdetection")
 	inst.components.stuckdetection:SetTimeToStuck(3)
+
+	inst:AddComponent("sleeper")
+	inst.components.sleeper:SetResistance(4)
+	inst.components.sleeper:SetSleepTest(ShouldSleep)
+	inst.components.sleeper:SetWakeTest(ShouldWake)
+	inst.components.sleeper.diminishingreturns = true
 
 	inst:AddComponent("colouradder")
 	inst:AddComponent("bloomer")

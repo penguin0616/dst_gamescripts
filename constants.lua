@@ -193,11 +193,17 @@ CONTROL_INV_15 = 81
 
 CONTROL_START_EMOJI = 82
 
-CONTROL_OPEN_COMMAND_WHEEL = 83
+-- extra menu controls that should have been above but it's too late to add them now
+CONTROL_MENU_BACK = 83
+CONTROL_MENU_START = 84
+CONTROL_MENU_L2 = 85
+CONTROL_MENU_R2 = 86
+
+CONTROL_OPEN_COMMAND_WHEEL = 87
 
 -- controller targetting
-CONTROL_TARGET_LOCK = 84
-CONTROL_TARGET_CYCLE = 85
+CONTROL_TARGET_LOCK = 88
+CONTROL_TARGET_CYCLE = 89
 
 CONTROL_CUSTOM_START = 100
 
@@ -1071,7 +1077,8 @@ end
 FE_MUSIC =
     (FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT] ~= nil and FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT].sound) or
     (SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT] ~= nil and SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT].sound) or
-    "dontstarve/music/music_FE_riftsthree"
+    "dontstarve/music/music_FE_junkyardhog"
+    --"dontstarve/music/music_FE_riftsthree"
     --"dontstarve/music/music_FE_survivorsguideone"
     --"dontstarve/music/music_FE_shadowrift"
     --"dontstarve/music/music_FE_lunarrift"

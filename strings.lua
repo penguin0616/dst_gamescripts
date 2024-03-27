@@ -1537,6 +1537,7 @@ STRINGS =
         FURTUFT = "Fur Tuft",
         TREASURECHEST = "Chest",
         CHESTUPGRADE_STACKSIZE = "Elastispacer",
+		COLLAPSEDCHEST = "Broken-down Chest",
         DRAGONFLYCHEST = "Scaled Chest",
         DRAGONFLYFURNACE = "Scaled Furnace",
         SKULLCHEST = "Skullchest",
@@ -8776,6 +8777,7 @@ STRINGS.UI =
             DATACOLLECTION = "We collect metrics and telemetry on Don't Starve Together, including how long and how often you play. This information helps us troubleshoot the game, provide rewards, and improve your experience. Refer to https://www.klei.com/privacy-policy for more information.",
             LOADING_TIPS = "Learn more about the lore and the gameplay of Don't Starve while your world loads.",
 			TARGETLOCKING = "Focus on one target at a time.",
+			PROMOTIONS = "Display store promotions in the main menus.",
 
             -- Graphics
             FULLSCREEN = "Fill your screen with Don't Starve Together.",
@@ -8817,17 +8819,17 @@ STRINGS.UI =
                 [56] = "Attack the current target.", -- CONTROL_CONTROLLER_ATTACK
                 [58] = "Perform an alternate action on the current target (when applicable).", -- CONTROL_CONTROLLER_ALTACTION
                 [3] = "Inspect the current target.", -- CONTROL_INSPECT
-                [84] = "Lock on to the current target.", -- CONTROL_TARGET_LOCK
-                [85] = "Lock on to the next available target.", -- CONTROL_TARGET_CYCLE
+                [88] = "Lock on to the current target.", -- CONTROL_TARGET_LOCK
+                [89] = "Lock on to the next available target.", -- CONTROL_TARGET_CYCLE
                 [46] = "Open and Close the crafting menu.", -- CONTROL_OPEN_CRAFTING
                 [45] = "Open and Close the inventory bar.", -- CONTROL_OPEN_INVENTORY
                 [51] = "Examine the selected inventory item.", -- CONTROL_INVENTORY_EXAMINE
                 [52] = "Use the selected inventory item on yourself.", -- CONTROL_INVENTORY_USEONSELF
-                [53] = "Use  the selected inventory item on the world.", -- CONTROL_INVENTORY_USEONSCENE
+                [53] = "Use the selected inventory item on the world.", -- CONTROL_INVENTORY_USEONSCENE
                 [54] = "Drop the selected inventory item.", -- CONTROL_INVENTORY_DROP
                 [55] = "Put part of the selected stack of inventory items into another inventory slot.", -- CONTROL_PUTSTACK
                 [59] = "Use the selected inventory item on another.", -- CONTROL_USE_ITEM_ON_ITEM
-                [83] = "Open and Close the Social Menu.", -- CONTROL_OPEN_COMMAND_WHEEL
+                [87] = "Open and Close the Social Menu.", -- CONTROL_OPEN_COMMAND_WHEEL
                 [13] = "Pause and Unpause the game.", -- CONTROL_PAUSE
                 [14] = "Open and Close the minimap", -- CONTROL_MAP
                 [60] = "Zoom in while using the minimap.", -- CONTROL_MAP_ZOOM_IN
@@ -9962,6 +9964,8 @@ STRINGS.UI =
         JUNKYARD = "Junk Yard",
 
         DAYWALKER = "Nightmare Werepig",
+        DAYWALKER2 = "Scrappy Werepig",
+        SHARKBOI = "Frostjaw",
 
 		-- End of world customization strings
     },
@@ -12451,6 +12455,13 @@ STRINGS.UI =
             "Inv 14",
             "Inv 15",
             "Start Emoticon",
+            "Menu Back",
+            "Menu Start",
+            "Menu L2",
+            "Menu R2",
+            "Social Menu", 
+            "Toggle Target locking",
+            "Next Target",
         },
 
         DEVICE_TITLE = "Controls",

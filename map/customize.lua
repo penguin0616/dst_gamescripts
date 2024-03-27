@@ -434,6 +434,9 @@ local WORLDSETTINGS_GROUP = {
 			["eyeofterror"] = {value = "default", image = "eyeofterror.tex", world={"forest"}},
 
 			["daywalker"] = {value = "default", image = "daywalker.tex", world={"cave"}},
+			["daywalker2"] = {value = "default", image = "daywalker2.tex", world={"forest"}}, -- Same TUNING but different icon for forest.
+
+			["sharkboi"] = {value = "default", image = "sharkboi.tex", world={"forest"}},
 			--NO_BOSS_TIME?
 		}
 	},

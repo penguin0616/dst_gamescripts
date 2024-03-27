@@ -85,7 +85,7 @@ return{
             NO_RACERS = "I can't gather any data with no subjects.",
         },
 
-		DISMANTLE =
+		DISMANTLE = 
 		{
 			COOKING = "I'm afraid I'll have to wait until it's finished cooking.",
 			INUSE = "It's already in use.",
@@ -2721,6 +2721,7 @@ return{
 		},
 		TREASURECHEST_TRAP = "Looks suspicious...",
         CHESTUPGRADE_STACKSIZE = "Increases the capacity of a storage container by a, frankly, absurd degree.", -- Describes the kit upgrade item.
+		COLLAPSEDCHEST = "It would be prudent to rebuild the chest, rather than leave all this lying about.",
 		SACRED_CHEST =
 		{
 			GENERIC = "A small dimension tightly bound in magic.",
@@ -5139,6 +5140,8 @@ return{
         FENCE_JUNK = "Unpleasant to the eye, but I suppose practicality outweighs aesthetics.",
         JUNK_PILE = "I may find something of use within.",
         JUNK_PILE_BIG = "The danger far outweighs the possibility of discovering anything of value.",
+
+        ARMOR_LUNARPLANT_HUSK = "Plant-based, plant-made, and plant-worn.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

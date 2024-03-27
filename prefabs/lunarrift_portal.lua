@@ -376,11 +376,15 @@ local function on_portal_removed(inst)
 
     if inst._terraformer ~= nil then
         inst._terraformer:OnParentRemoved()
+        if inst._terraformer.components.timer then
+            inst._terraformer.components.timer:StopTimer("remove")
+        end
     end
 
     inst._terraformer = inst._terraformer or make_terraformer_proxy(inst, ix, iy, iz)
     inst._terraformer:AddTerraformTask(portal_tile_x, portal_tile_y, 0, {0, 0}, true)
 
+    local maxdelay = 0
     local current_portal_radius = TILE_WIDTH_BY_STAGE[inst._stage]
     for index = 1, current_portal_radius do
         local horizontal_offset, vertical_offset = index, 0
@@ -388,17 +392,21 @@ local function on_portal_removed(inst)
         local base_time_delay = (current_portal_radius - index - 1)
 
         while horizontal_offset > -index do
+            local delay = (base_time_delay + 0.5*math.random()) * 2.0
+            maxdelay = math.max(maxdelay, delay)
             inst._terraformer:AddTerraformTask(
                 portal_tile_x + horizontal_offset,
                 portal_tile_y + vertical_offset,
-                (base_time_delay + 0.5*math.random()) * 2.0,
+                delay,
                 {horizontal_offset, vertical_offset},
                 true
             )
+            delay = (base_time_delay + 0.5*math.random()) * 2.0
+            maxdelay = math.max(maxdelay, delay)
             inst._terraformer:AddTerraformTask(
                 portal_tile_x - horizontal_offset,
                 portal_tile_y - vertical_offset,
-                (base_time_delay + 0.5*math.random()) * 2.0,
+                delay,
                 {horizontal_offset, vertical_offset},
                 true
             )
@@ -409,6 +417,11 @@ local function on_portal_removed(inst)
                 vertical_mod = -1
             end
         end
+    end
+
+    maxdelay = maxdelay + 0.1
+    if inst._terraformer.components.timer then
+        inst._terraformer.components.timer:StartTimer("remove", maxdelay)
     end
 
     if inst._crystals then

@@ -85,7 +85,7 @@ return{
             NO_RACERS = "Pardonnez-moi, I was so excited I forgot to find a racer!",
         },
 
-		DISMANTLE =
+		DISMANTLE = 
 		{
 			COOKING = "Just a little longer... It's almost done.",
 			INUSE = "Oh, excusez-moi.",
@@ -2721,6 +2721,7 @@ return{
 		},
 		TREASURECHEST_TRAP = "Hmmm, something does not feel right about this...",
         CHESTUPGRADE_STACKSIZE = "Ah! Can this give me the storage space I crave?", -- Describes the kit upgrade item.
+		COLLAPSEDCHEST = "I'm tired of the whole \"deconstructed\" trend.",
 		SACRED_CHEST =
 		{
 			GENERIC = "Now to add the final ingredients.",
@@ -5139,6 +5140,8 @@ return{
         FENCE_JUNK = "It's constructed well enough, but it lacks presentation.",
         JUNK_PILE = "Perhaps there is something delicious hiding in its center?",
         JUNK_PILE_BIG = "It could topple over any minute!",
+
+        ARMOR_LUNARPLANT_HUSK = "The little veg's own concoction.",
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

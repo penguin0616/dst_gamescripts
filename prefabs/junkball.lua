@@ -16,6 +16,44 @@ local prefabs_fall =
 	"splash_green_large",
 }
 
+--------------------------------------------------------------------------
+
+local function SetShadowScale(inst, scale)
+	scale = inst.scale * scale
+	inst.AnimState:SetScale(scale, math.abs(scale))
+end
+
+local function CreateShadow(scale)
+	local inst = CreateEntity()
+
+	inst:AddTag("FX")
+	inst:AddTag("NOCLICK")
+	--[[Non-networked entity]]
+	inst.entity:SetCanSleep(false)
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+
+	inst.AnimState:SetBank("scrapball")
+	inst.AnimState:SetBuild("scrapball")
+	inst.AnimState:PlayAnimation("shadow"..tostring(math.random(3)))
+	inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
+	inst.AnimState:SetLayer(LAYER_BACKGROUND)
+	inst.AnimState:SetSortOrder(3)
+
+	inst.scale = math.random() < 0.5 and -scale or scale
+	inst.AnimState:SetScale(inst.scale, scale)
+
+	inst.Transform:SetRotation(math.random() * 360)
+
+	inst.SetShadowScale = SetShadowScale
+
+	return inst
+end
+
+--------------------------------------------------------------------------
+
 local MIN_DIST = 4
 local MAX_DIST = 20
 local DEFAULT_DIST = 12
@@ -36,18 +74,22 @@ local function UpdateFade(inst, dt)
 			inst.AnimState:OverrideMultColour(1, 1, 1, alpha)
 		end
 	end
-end
 
---server only
-local function UpdateShadow(inst, dt)
-	local frame = inst.AnimState:GetCurrentAnimationFrame()
-	local len = inst.AnimState:GetCurrentAnimationNumFrames()
-	if frame >= len * 0.7 then
-		inst.DynamicShadow:Enable(false)
-		inst.components.updatelooper:RemoveOnUpdateFn(UpdateFade)
-	else
-		local scale = easing.linear(frame, 1, -0.5, len)
-		inst.DynamicShadow:SetSize(6 * scale, 4 * scale)
+	if inst.shadow then
+		local fadeoutlen = len * 0.75
+		if frame >= fadeoutlen then
+			inst.shadow:Remove()
+			inst.shadow = nil
+		elseif frame >= 1 then
+			local scale = easing.linear(frame, 1, -0.5, len)
+			inst.shadow:SetShadowScale(scale)
+
+			local alpha = easing.inQuad(frame - 1, 1, -1, fadeoutlen - 1)
+			inst.shadow.AnimState:SetMultColour(1, 1, 1, alpha)
+		else
+			inst.shadow:SetShadowScale(1)
+			inst.shadow.AnimState:SetMultColour(1, 1, 1, 0.5)
+		end
 	end
 end
 
@@ -158,7 +200,6 @@ local function OnAnimOver(inst)
 
 	inst.components.updatelooper:RemoveOnWallUpdateFn(UpdatePos)
 	inst:Hide()
-	inst.DynamicShadow:Enable(false)
 
 	--More last minute tracking
 	if inst.target and inst.target:IsValid() then
@@ -242,10 +283,7 @@ local function fn()
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
 	inst.entity:AddSoundEmitter()
-	inst.entity:AddDynamicShadow()
 	inst.entity:AddNetwork()
-
-	inst.DynamicShadow:SetSize(6, 4)
 
 	inst:AddTag("NOCLICK")
 	inst:AddTag("FX")
@@ -257,8 +295,11 @@ local function fn()
 
 	inst:AddComponent("updatelooper")
 
-	--Dedicated server does not need to fade
+	--Dedicated server does not need to spawn the local fx or fade
 	if not TheNet:IsDedicated() then
+		inst.shadow = CreateShadow(1.7)
+		inst.shadow.entity:SetParent(inst.entity)
+
 		inst.components.updatelooper:AddOnUpdateFn(UpdateFade)
 		UpdateFade(inst, 0)
 	end
@@ -268,8 +309,6 @@ local function fn()
 	if not TheWorld.ismastersim then
 		return inst
 	end
-
-	inst.components.updatelooper:AddOnUpdateFn(UpdateShadow)
 
 	inst.persists = false
 	inst:ListenForEvent("animover", OnAnimOver)
@@ -396,18 +435,35 @@ local FALL_TIME = 0.5
 local function UpdateFallFade(inst, dt)
 	local frame = inst.AnimState:GetCurrentAnimationFrame()
 	local len = inst.AnimState:GetCurrentAnimationNumFrames()
-	if frame >= 10 then
-		inst.AnimState:OverrideMultColour(1, 1, 1, 1)
+	local landingframe = 15
+	local faeoutframe = 19
+	if frame >= faeoutframe then
 		inst.components.updatelooper:RemoveOnUpdateFn(UpdateFallFade)
-	else
-		local alpha = easing.inQuad(frame, 0, 1, 6)
-		inst.AnimState:OverrideMultColour(1, 1, 1, alpha)
-	end
-end
+		inst.AnimState:OverrideMultColour(1, 1, 1, 1)
+		inst.shadow:Remove()
+		inst.shadow = nil
+	elseif frame >= landingframe then
+		inst.AnimState:OverrideMultColour(1, 1, 1, 1)
 
---server only
-local function UpdateFallShadow(inst, dt)
-	inst.DynamicShadow:Enable(not TheWorld.Map:IsOceanAtPoint(inst.Transform:GetWorldPosition()))
+		local t = frame - landingframe
+		local len = faeoutframe - landingframe
+		local scale = easing.outQuad(t, 1, 0.2, len)
+		local alpha = easing.outQuad(t, 1, -1, len)
+		inst.shadow:SetShadowScale(scale)
+		inst.shadow.AnimState:SetMultColour(1, 1, 1, alpha)
+	else
+		if frame >= 10 then
+			inst.AnimState:OverrideMultColour(1, 1, 1, 1)
+			inst.shadow.AnimState:SetMultColour(1, 1, 1, 1)
+		else
+			local alpha = easing.inQuad(frame, 0, 1, 6)
+			inst.AnimState:OverrideMultColour(1, 1, 1, alpha)
+			inst.shadow.AnimState:SetMultColour(1, 1, 1, alpha)
+		end
+
+		local scale = easing.linear(frame, 0.5, 0.5, landingframe)
+		inst.shadow:SetShadowScale(scale)
+	end
 end
 
 local JUNK_PILE_TAGS = { "junk_pile", "junk_pile_big", "wall" }
@@ -499,10 +555,7 @@ local function fallfn()
 
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
-	inst.entity:AddDynamicShadow()
 	inst.entity:AddNetwork()
-
-	inst.DynamicShadow:SetSize(4.5, 3)
 
 	inst:AddTag("NOCLICK")
 	inst:AddTag("FX")
@@ -514,8 +567,11 @@ local function fallfn()
 
 	inst:AddComponent("updatelooper")
 
-	--Dedicated server does not need to fade
+	--Dedicated server does not need to spawn the local fx or fade
 	if not TheNet:IsDedicated() then
+		inst.shadow = CreateShadow(1.3)
+		inst.shadow.entity:SetParent(inst.entity)
+
 		inst.components.updatelooper:AddOnUpdateFn(UpdateFallFade)
 		UpdateFallFade(inst, 0)
 	end
@@ -530,8 +586,6 @@ local function fallfn()
 	inst.components.combat:SetDefaultDamage(TUNING.JUNK_FALL_DAMAGE)
 	inst.components.combat:SetRange(AOE_RADIUS)
 	inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
-
-	inst.components.updatelooper:AddOnUpdateFn(UpdateFallShadow)
 
 	inst.persists = false
 	inst:ListenForEvent("animover", inst.Remove)

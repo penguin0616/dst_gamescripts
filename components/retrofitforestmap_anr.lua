@@ -1555,6 +1555,35 @@ function self:OnPostInit()
 
 	---------------------------------------------------------------------------
 
+    if self.remove_rift_terraformers_fix then
+        print("Removing stale rift_terraformer entities.")
+        self.remove_rift_terraformers_fix = nil
+        -- NOTES(JBK): This fixup exists from an issue with rift_terraformer not removing itself when the portal is finished with it.
+        -- This fix needs to check for the portal to rift_terraformer link to not remove them.
+        local tokeep = {}
+        local terraformers = {}
+        for _, v in pairs(Ents) do
+            if v.prefab == "rift_terraformer" then
+                terraformers[v] = true
+                if v.components.timer and v.components.timer:TimerExists("remove") then
+                    tokeep[v] = true -- This is self cleaning.
+                end
+            elseif v.prefab == "lunarrift_portal" then
+                if v._terraformer then
+                    tokeep[v._terraformer] = true
+                end
+            end
+        end
+        for v, _ in pairs(terraformers) do
+            if not tokeep[v] then
+                print(v, "removed.")
+                v:Remove()
+            end
+        end
+    end
+
+	---------------------------------------------------------------------------
+
 	if self.requiresreset then
 		print ("Retrofitting: Worldgen retrofitting requires the server to save and restart to fully take effect.")
 		print ("Restarting server in 30 seconds...")
@@ -1609,6 +1638,7 @@ function self:OnLoad(data)
         self.retrofit_junkyard_content = data.retrofit_junkyard_content or false
         self.retrofit_junkyardv2_content = data.retrofit_junkyardv2_content or false
         self.retrofit_junkyardv3_content = data.retrofit_junkyardv3_content or false
+        self.remove_rift_terraformers_fix = data.remove_rift_terraformers_fix or false
     end
 end
 

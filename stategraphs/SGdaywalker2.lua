@@ -36,7 +36,24 @@ end
 local events =
 {
 	CommonHandlers.OnLocomote(true, true),
-	CommonHandlers.OnFreeze(),
+	EventHandler("freeze", function(inst)
+		if not inst.defeated then
+			inst.sg:GoToState("frozen")
+		end
+	end),
+	EventHandler("gotosleep", function(inst)
+		inst.sg.mem.sleeping = true
+		if not inst.defeated and not (inst.sg:HasStateTag("nosleep") or inst.sg:HasStateTag("sleeping")) then
+			inst.sg:GoToState("sleep")
+		end
+	end),
+	EventHandler("onwakeup", function(inst)
+		inst.sg.mem.sleeping = false
+		if not inst.defeated and inst.sg:HasStateTag("sleeping") and not inst.sg:HasStateTag("nowake") then
+			inst.sg.statemem.continuesleeping = true
+			inst.sg:GoToState("wake")
+		end
+	end),
 	EventHandler("ontalk", function(inst)
 		if not (inst.hostile or inst.sg:HasStateTag("busy")) then
 			if inst._thieflevel > 2 then
@@ -371,6 +388,12 @@ end
 
 --------------------------------------------------------------------------
 
+local function SpawnDroppedJunk(inst, offset)
+	local x, y, z = inst.Transform:GetWorldPosition()
+	local theta = inst.Transform:GetRotation() * DEGREES
+	SpawnPrefab("junk_break_fx").Transform:SetPosition(x + math.cos(theta), 0, z - math.sin(theta))
+end
+
 local function SpawnSwipeFX(inst, offset, reverse)
 	--spawn 3 frames early (with 3 leading blank frames) since anim is super short, and tends to get lost with network timing
 	inst.sg.statemem.fx = SpawnPrefab("daywalker2_swipe_fx")
@@ -454,6 +477,54 @@ end
 
 --------------------------------------------------------------------------
 
+local function rummage_ontimeout(inst)
+	local loot = inst.sg.statemem.data and inst.sg.statemem.data.loot or nil
+	if loot == "ball" then
+		inst.sg:GoToState("throw_pre")
+	else
+		local nextstate1, nextstate2
+		if loot == "object" then
+			inst:SetEquip("swing", "object")
+			nextstate1 = "lift_object"
+		elseif loot == "spike" then
+			inst:SetEquip("tackle", "spike")
+			nextstate1 = "lift_spike"
+		elseif loot == "cannon" then
+			inst:SetEquip("cannon", "cannon")
+			nextstate1 = "lift_cannon"
+		end
+
+		if nextstate1 then
+			if inst.candoublerummage and inst.canmultiwield then
+				local junk, loot2 = inst:GetNextItem()
+				if loot2 == "object" then
+					inst:SetEquip("swing", "object")
+					nextstate2 = "lift_object"
+				elseif loot2 == "spike" then
+					inst:SetEquip("tackle", "spike")
+					nextstate2 = "lift_spike"
+				elseif loot2 == "cannon" then
+					inst:SetEquip("cannon", "cannon")
+					nextstate2 = "lift_cannon"
+				end
+
+				if nextstate2 and (nextstate2 == "lift_object" or nextstate1 == "lift_cannon") then
+					local swap = nextstate1
+					nextstate1 = nextstate2
+					nextstate2 = swap
+				end
+			end
+
+			inst.components.timer:StopTimer("multiwield")
+			inst.components.timer:StartTimer("multiwield", TUNING.DAYWALKER2_MULTIWIELD_CD)
+		end
+
+		inst.sg:GoToState("rummage_pst", nextstate1 and { nextstate1 = nextstate1, nextstate2 = nextstate2 } or nil)
+	end
+end
+
+--------------------------------------------------------------------------
+
 local states =
 {
 	State{
@@ -465,6 +536,13 @@ local states =
 		tags = { "idle", "canrotate" },
 
 		onenter = function(inst)
+			if inst.sg.mem.sleeping then
+				if inst.components.sleeper then
+					inst.sg:GoToState("sleep")
+					return
+				end
+				inst.sg.mem.sleeping = nil
+			end
 			inst.components.locomotor:Stop()
 			TurnToTargetFromNoFaced(inst)
 			if inst:IsStalking() then
@@ -481,7 +559,7 @@ local states =
 
 	State{
 		name = "emerge",
-		tags = { "busy" },
+		tags = { "busy", "nosleep" },
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
@@ -500,11 +578,7 @@ local states =
 
 		events =
 		{
-			EventHandler("animover", function(inst)
-				if inst.AnimState:AnimDone() then
-					inst.sg:GoToState("idle")
-				end
-			end),
+			CommonHandlers.OnNoSleepAnimOver("idle"),
 		},
 
 		onexit = ToggleOnCharacterCollisions,
@@ -644,6 +718,11 @@ local states =
 
 		timeline =
 		{
+			FrameEvent(5, function(inst) inst.SoundEmitter:PlaySound(inst.footstep, nil, 0.3) end),
+			FrameEvent(7, SGDaywalkerCommon.DoRoarShake),
+			FrameEvent(23, function(inst) inst.SoundEmitter:PlaySound("daywalker/voice/speak_short") end),
+			FrameEvent(28, function(inst) inst.SoundEmitter:PlaySound(inst.footstep, nil, 0.3) end),
+			FrameEvent(31, SGDaywalkerCommon.DoRoarShake),
 			FrameEvent(51, function(inst)
 				inst.sg:RemoveStateTag("busy")
 			end),
@@ -732,7 +811,7 @@ local states =
 
 	State{
 		name = "rummage",
-		tags = { "rummaging", "busy" },
+		tags = { "rummaging", "busy", "nosleep" },
 
 		onenter = function(inst, data)
 			inst:SetStalking(nil)
@@ -772,53 +851,14 @@ local states =
 					inst.sg:AddStateTag("caninterrupt")
 				end
 			end),
+			TimeEvent(1, function(inst)
+				if inst.sg.mem.sleeping then
+					rummage_ontimeout(inst)
+				end
+			end),
 		},
 
-		ontimeout = function(inst)
-			local loot = inst.sg.statemem.data and inst.sg.statemem.data.loot or nil
-			if loot == "ball" then
-				inst.sg:GoToState("throw_pre")
-			else
-				local nextstate1, nextstate2
-				if loot == "object" then
-					inst:SetEquip("swing", "object")
-					nextstate1 = "lift_object"
-				elseif loot == "spike" then
-					inst:SetEquip("tackle", "spike")
-					nextstate1 = "lift_spike"
-				elseif loot == "cannon" then
-					inst:SetEquip("cannon", "cannon")
-					nextstate1 = "lift_cannon"
-				end
-
-				if nextstate1 then
-					if inst.candoublerummage and inst.canmultiwield then
-						local junk, loot2 = inst:GetNextItem()
-						if loot2 == "object" then
-							inst:SetEquip("swing", "object")
-							nextstate2 = "lift_object"
-						elseif loot2 == "spike" then
-							inst:SetEquip("tackle", "spike")
-							nextstate2 = "lift_spike"
-						elseif loot2 == "cannon" then
-							inst:SetEquip("cannon", "cannon")
-							nextstate2 = "lift_cannon"
-						end
-
-						if nextstate2 and (nextstate2 == "lift_object" or nextstate1 == "lift_cannon") then
-							local swap = nextstate1
-							nextstate1 = nextstate2
-							nextstate2 = swap
-						end
-					end
-
-					inst.components.timer:StopTimer("multiwield")
-					inst.components.timer:StartTimer("multiwield", TUNING.DAYWALKER2_MULTIWIELD_CD)
-				end
-
-				inst.sg:GoToState("rummage_pst", nextstate1 and { nextstate1 = nextstate1, nextstate2 = nextstate2 } or nil)
-			end
-		end,
+		ontimeout = rummage_ontimeout,
 
 		onexit = function(inst)
 			inst.SoundEmitter:KillSound("rummage")
@@ -827,7 +867,7 @@ local states =
 
 	State{
 		name = "rummage_hit",
-		tags = { "rummaging", "busy", "hit" },
+		tags = { "rummaging", "busy", "hit", "nosleep" },
 
 		onenter = function(inst, data)
 			inst.AnimState:PlayAnimation("rummage_hit")
@@ -861,7 +901,7 @@ local states =
 
 	State{
 		name = "rummage_pst",
-		tags = { "busy" },
+		tags = { "busy", "nosleep" },
 
 		onenter = function(inst, data)
 			if data and data.nextstate1 then
@@ -877,7 +917,7 @@ local states =
 
 		timeline =
 		{
-			FrameEvent(3, function(inst)
+			CommonHandlers.OnNoSleepFrameEvent(3, function(inst)
 				local data = inst.sg.statemem.data
 				if data then
 					local nextstate = data.nextstate1
@@ -887,6 +927,7 @@ local states =
 					inst.sg:GoToState(nextstate, data)
 					return
 				end
+				inst.sg:RemoveStateTag("nosleep")
 				inst.sg:RemoveStateTag("busy")
 			end),
 		},
@@ -1210,10 +1251,10 @@ local states =
 
 		timeline =
 		{
+			FrameEvent(9, function(inst) inst.SoundEmitter:PlaySound("qol1/daywalker_scrappy/objectswing_f15") end),
 			FrameEvent(12, function(inst)
 				inst:StartAttackCooldown()
 				SpawnSwipeFX(inst, 1, true)
-				inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_whoosh")
 			end),
 			FrameEvent(16, function(inst)
 				local target = inst.sg.statemem.target
@@ -1350,7 +1391,7 @@ local states =
 
 	State{
 		name = "cannon",
-		tags = { "attack", "busy" },
+		tags = { "attack", "busy", "nosleep" },
 
 		onenter = function(inst, target)
 			inst.components.locomotor:Stop()
@@ -1422,7 +1463,8 @@ local states =
 				--0.99 so we don't knockback
 				SpawnLaser(inst, dist, 0, 0.99, scorchscale, inst.sg.statemem.targets)
 			end),
-			FrameEvent(32, function(inst)
+			CommonHandlers.OnNoSleepFrameEvent(32, function(inst)
+				inst.sg:RemoveStateTag("nosleep")
 				inst.sg:AddStateTag("caninterrupt")
 			end),
 			FrameEvent(34, function(inst)
@@ -1456,7 +1498,7 @@ local states =
 
 	State{
 		name = "throw_pre",
-		tags = { "attack", "busy", "notalksound" },
+		tags = { "attack", "busy", "notalksound", "nosleep" },
 
 		onenter = function(inst, target)
 			inst:SetStalking(nil)
@@ -1467,6 +1509,16 @@ local states =
 			TryChatter(inst, "DAYWALKER2_RUMMAGE_FAIL")
 		end,
 
+		timeline =
+		{
+			FrameEvent(5, function(inst)
+				inst.sg.statemem.hasjunk = true
+			end),
+			CommonHandlers.OnNoSleepFrameEvent(11, function(inst)
+				inst.sg:RemoveStateTag("nosleep")
+			end),
+		},
+
 		events =
 		{
 			EventHandler("animover", function(inst)
@@ -1475,6 +1527,7 @@ local states =
 					if not (target and target:IsValid()) then
 						target = inst.components.combat.target
 					end
+					inst.sg.statemem.throwing = true
 					if target then
 						inst.sg:GoToState("throw", target)
 					else
@@ -1484,6 +1537,12 @@ local states =
 				end
 			end),
 		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.throwing and inst.sg.statemem.hasjunk then
+				SpawnDroppedJunk(inst, 2)
+			end
+		end,
 	},
 
 	State{
@@ -1498,13 +1557,21 @@ local states =
 		onupdate = function(inst)
 			local target = inst.components.combat.target
 			if target then
+				inst.sg.statemem.throwing = true
 				inst.sg:GoToState("throw", target)
 			end
 		end,
 
 		ontimeout = function(inst)
 			inst.Transform:SetRotation(inst.Transform:GetRotation() - 30 + math.random() * 60)
+			inst.sg.statemem.throwing = true
 			inst.sg:GoToState("throw")
+		end,
+
+		onexit = function(inst)
+			if not inst.sg.statemem.throwing then
+				SpawnDroppedJunk(inst, 2)
+			end
 		end,
 	},
 
@@ -1522,6 +1589,7 @@ local states =
 				inst.sg.statemem.targetpos = target:GetPosition()
 				inst:ForceFacePoint(inst.sg.statemem.targetpos)
 			end
+			inst.sg.statemem.hasjunk = true
 		end,
 
 		onupdate = function(inst)
@@ -1545,6 +1613,7 @@ local states =
 		timeline =
 		{
 			FrameEvent(21, function(inst)
+				inst.sg.statemem.hasjunk = false
 				SpawnPrefab("junkball_fx"):SetupJunkTossAttack(inst, 2, inst.sg.statemem.target, inst.sg.statemem.targetpos)
 			end),
 		},
@@ -1557,6 +1626,12 @@ local states =
 				end
 			end),
 		},
+
+		onexit = function(inst)
+			if inst.sg.statemem.hasjunk then
+				SpawnDroppedJunk(inst, 2)
+			end
+		end,
 	},
 
 	State{
@@ -1750,7 +1825,7 @@ local states =
 		onenter = function(inst, data)
 			inst.AnimState:PlayAnimation("tackle_lift")
 			inst.SoundEmitter:PlaySound("daywalker/voice/speak_short")
-			inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_whoosh")
+			inst.SoundEmitter:PlaySound("qol1/daywalker_scrappy/bodyswing_f5")
 			inst:StartAttackCooldown()
 			inst.sg.statemem.target = data and data.target or nil
 			inst.sg.statemem.targets = data and data.targets or {}
@@ -1950,7 +2025,7 @@ local states =
 
 	State{
 		name = "attack_pounce",
-		tags = { "attack", "busy", "jumping", "nointerrupt", "notalksound" },
+		tags = { "attack", "busy", "jumping", "nointerrupt", "nosleep", "notalksound" },
 
 		onenter = function(inst, speedmult)
 			inst:SetStalking(nil)
@@ -2001,7 +2076,8 @@ local states =
 					inst.components.stuckdetection:Reset()
 				end
 			end),
-			FrameEvent(14, function(inst)
+			CommonHandlers.OnNoSleepFrameEvent(14, function(inst)
+				inst.sg:RemoveStateTag("nosleep")
 				inst.sg:RemoveStateTag("nointerrupt")
 			end),
 			FrameEvent(15, function(inst)
@@ -2111,7 +2187,7 @@ local states =
 
 	State{
 		name = "defeat",
-		tags = { "defeated", "busy", "nointerrupt" },
+		tags = { "defeated", "busy", "nointerrupt", "nosleep" },
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
@@ -2203,7 +2279,7 @@ local states =
 
 	State{
 		name = "defeat_idle_pre",
-		tags = { "defeated", "busy", "nointerrupt", "noattack" },
+		tags = { "defeated", "busy", "nointerrupt", "nosleep", "noattack" },
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
@@ -2248,7 +2324,7 @@ local states =
 
 	State{
 		name = "defeat_idle",
-		tags = { "defeated", "busy", "nointerrupt", "noattack" },
+		tags = { "defeated", "busy", "nointerrupt", "nosleep", "noattack" },
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
@@ -2296,6 +2372,63 @@ SGDaywalkerCommon.AddRunStates(states,
 		FrameEvent(22, DoFootstep),
 		FrameEvent(23, DoFootstepAOE),
 	},
+})
+
+local function CleanupIfSleepInterrupted(inst)
+	if not inst.sg.statemem.continuesleeping then
+		inst.Transform:SetFourFaced()
+	end
+end
+
+CommonStates.AddSleepExStates(states,
+{
+	starttimeline =
+	{
+		FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("qol1/daywalker_scrappy/sleep") end),
+		FrameEvent(43, function(inst) inst.SoundEmitter:PlaySound(inst.footstep) end),
+		FrameEvent(45, function(inst) inst.SoundEmitter:PlaySound("daywalker/voice/hurt", nil, 0.5) end),
+		FrameEvent(46, function(inst) inst.SoundEmitter:PlaySound("dontstarve/movement/bodyfall_dirt") end),
+		FrameEvent(47, SGDaywalkerCommon.DoSleepShake),
+		FrameEvent(48, function(inst)
+			inst.sg:RemoveStateTag("caninterrupt")
+		end),
+	},
+	sleeptimeline =
+	{
+		FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("qol1/daywalker_scrappy/sleep") end),
+		FrameEvent(34, function(inst) inst.SoundEmitter:PlaySound("daywalker/voice/hurt", nil, 0.4) end),
+	},
+	waketimeline =
+	{
+		FrameEvent(16, function(inst) inst.SoundEmitter:PlaySound("qol1/daywalker_scrappy/sleep", nil, 0.6) end),
+		FrameEvent(19, function(inst) inst.SoundEmitter:PlaySound(inst.footstep, nil, 0.4) end),
+		FrameEvent(33, function(inst) inst.SoundEmitter:PlaySound(inst.footstep, nil, 0.4) end),
+		CommonHandlers.OnNoSleepFrameEvent(35, function(inst)
+			inst.sg:RemoveStateTag("nosleep")
+			inst.sg:AddStateTag("caninterrupt")
+		end),
+		FrameEvent(38, function(inst)
+			inst.sg:RemoveStateTag("busy")
+		end),
+	},
+},
+{
+	onsleep = function(inst)
+		inst.sg:AddStateTag("caninterrupt")
+		inst.sg:AddStateTag("canrotate")
+		inst.Transform:SetNoFaced()
+	end,
+	onexitsleep = CleanupIfSleepInterrupted,
+	onsleeping = function(inst)
+		inst.sg:AddStateTag("canrotate")
+		inst.Transform:SetNoFaced()
+	end,
+	onexitsleeping = CleanupIfSleepInterrupted,
+	onwake = function(inst)
+		inst.sg:AddStateTag("canrotate")
+		inst.Transform:SetNoFaced()
+	end,
+	onexitwake = CleanupIfSleepInterrupted,
 })
 
 CommonStates.AddFrozenStates(states)

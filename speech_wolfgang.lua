@@ -85,7 +85,7 @@ return{
             NO_RACERS = "Wolfgang must find leggy carrots for race!",
         },
 
-		DISMANTLE =
+		DISMANTLE = 
 		{
 			COOKING = "Delicious meal must finish first.",
 			INUSE = "Wolfgang would like to use after you, if okay.",
@@ -2722,6 +2722,7 @@ return{
 		},
 		TREASURECHEST_TRAP = "Raagh!",
         CHESTUPGRADE_STACKSIZE = "Makes trunk bigger? Hmmm, does little machine work on muscles?", -- Describes the kit upgrade item.
+		COLLAPSEDCHEST = "Poor trunk. Maybe ate too much.",
 		SACRED_CHEST =
 		{
 			GENERIC = "Is little scare-chest.",
@@ -5140,6 +5141,8 @@ return{
         FENCE_JUNK = "Is ugly little fence, but does its job.",
         JUNK_PILE = "Might be something inside Wolfgang can use.",
         JUNK_PILE_BIG = "Wolfgang not like the way big pile teeter-totters...",
+
+        ARMOR_LUNARPLANT_HUSK = "Only for leafy friend? Too small for Wolfgang muscles anyway.",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

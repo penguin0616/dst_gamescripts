@@ -85,7 +85,7 @@ return{
             NO_RACERS = "What am I forgetting? Oh! The carrats!",
         },
 
-		DISMANTLE =
+		DISMANTLE = 
 		{
 			COOKING = "I'll have to be patient... just be patient... I can be patient!",
 			INUSE = "Could you hurry it up a little?",
@@ -2721,6 +2721,7 @@ return{
 		},
 		TREASURECHEST_TRAP = "Did I leave this here? Hm...",
         CHESTUPGRADE_STACKSIZE = "More space is always welcome, but more time would be preferred.", -- Describes the kit upgrade item.
+		COLLAPSEDCHEST = "It's a waste of time to repair if someone's just going to destroy it again.",
 		SACRED_CHEST =
 		{
 			GENERIC = "An ancient puzzle! How exciting!",
@@ -5139,6 +5140,8 @@ return{
         FENCE_JUNK = "As long as it keeps things out, I don't care how it looks.",
         JUNK_PILE = "There might be something worth my time in there.",
         JUNK_PILE_BIG = "I'm not eager to be crushed by a teetering pile of scrap metal.",
+
+        ARMOR_LUNARPLANT_HUSK = "It kills while it protects. Rather efficient.",
     },
 
     DESCRIBE_GENERIC = "A very particular something or other.",

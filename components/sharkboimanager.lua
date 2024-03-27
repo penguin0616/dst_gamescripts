@@ -446,11 +446,14 @@ self.OnPlayerFishCaught = function(inst, data)
 
     self.arena.caughtfish = self.arena.caughtfish + 1
     if (self.arena.caughtfish % TUNING.ICEFISHING_HOLE_FISH_NEEDED_TO_SPAWN) == 0 then
-        if self.arena.state == self.STATES.CREATEDARENA then
-            self:SetArenaState(self.STATES.BOSSSPAWNED) -- Spawns a boss by default.
-        elseif self.arena.state == self.STATES.BOSSSPAWNED then
-            -- Spawn another one.
-            self:SpawnBoss()
+        if TUNING.SPAWN_SHARKBOI then
+            if self.arena.state == self.STATES.CREATEDARENA then
+                self:SetArenaState(self.STATES.BOSSSPAWNED) -- Spawns a boss by default.
+            elseif self.arena.state == self.STATES.BOSSSPAWNED then
+                -- Spawn another one.
+                -- FIXME(JBK): Allow spawning of more when this is finished. [FIXMESHARKBOI]
+                --self:SpawnBoss()
+            end
         end
     end
 end
@@ -460,7 +463,13 @@ self.OnPlayerFishingTick = function(inst)
         return
     end
 
-    if math.random() < TUNING.ICEFISHING_HOLE_ODDS_TO_HOOK_FISH then
+    -- FIXME(JBK): Remove self.arena.state == self.STATES.BOSSSPAWNED when this is finished. [FIXMESHARKBOI]
+    local oddsoverride = nil
+    if not TUNING.SPAWN_SHARKBOI or self.arena.state == self.STATES.BOSSSPAWNED then
+        oddsoverride = TUNING.ICEFISHING_HOLE_ODDS_TO_HOOK_FISH / 4
+    end
+
+    if math.random() < (oddsoverride or TUNING.ICEFISHING_HOLE_ODDS_TO_HOOK_FISH) then
         local rod = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
         rod = (rod ~= nil and rod.components.oceanfishingrod ~= nil) and rod or nil
         local target = rod ~= nil and rod.components.oceanfishingrod.target or nil

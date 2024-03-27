@@ -384,7 +384,7 @@ local function OnEntityWake(inst)
 end
 
 local function OnEntitySleep(inst)
-    if inst.components.fueled:IsEmpty() then
+    if inst:IsInLimbo() or inst.components.fueled:IsEmpty() then
         return
     end
 

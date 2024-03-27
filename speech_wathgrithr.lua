@@ -85,7 +85,7 @@ return{
             NO_RACERS = "The veggie beasts must take their places for the race to commence!",
         },
 
-		DISMANTLE =
+		DISMANTLE = 
 		{
 			COOKING = "I will let it finish its work.",
 			INUSE = "I shall valiantly wait my turn.",
@@ -2721,6 +2721,7 @@ return{
 		},
 		TREASURECHEST_TRAP = "I am always ready.",
         CHESTUPGRADE_STACKSIZE = "Be this science or witchcraft?", -- Describes the kit upgrade item.
+		COLLAPSEDCHEST = "Who hath rendered a shambles of our booty?",
 		SACRED_CHEST =
 		{
 			GENERIC = "What foul manner of chest is this?",
@@ -5139,6 +5140,8 @@ return{
         FENCE_JUNK = "A sturdy barrier.",
         JUNK_PILE = "Mayhaps a treasure lies inside?",
         JUNK_PILE_BIG = "T'would be a disgrace to be slain by a falling pile of refuse...",
+
+        ARMOR_LUNARPLANT_HUSK = "This will make my plant ally more deadly in battle.",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

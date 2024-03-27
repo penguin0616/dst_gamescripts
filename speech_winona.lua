@@ -85,7 +85,7 @@ return{
             NO_RACERS = "Whoever heard of a race with no racers?",
         },
 
-		DISMANTLE =
+		DISMANTLE = 
 		{
 			COOKING = "I'm all for striking while the iron's hot, but...",
 			INUSE = "No rush.",
@@ -2727,6 +2727,7 @@ return{
 		},
 		TREASURECHEST_TRAP = "I don't need to be concerned about that.",
         CHESTUPGRADE_STACKSIZE = "Looks like something the bossman would've come up with.", -- Describes the kit upgrade item.
+		COLLAPSEDCHEST = "Think everything will fit back inside once I fix it?",
 		SACRED_CHEST =
 		{
 			GENERIC = "Yeesh, it's givin' me the creeps",
@@ -5145,6 +5146,8 @@ return{
         FENCE_JUNK = "It does the trick.",
         JUNK_PILE = "Folks underestimate how much good stuff you can find in a scrap pile.",
         JUNK_PILE_BIG = "Who's in charge here? Someone could get hurt!",
+
+        ARMOR_LUNARPLANT_HUSK = "Pretty well constructed, for a plant.",
     },
 
     DESCRIBE_GENERIC = "Incredible! I have no idea what that is.",

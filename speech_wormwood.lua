@@ -85,7 +85,7 @@ return{
             NO_RACERS = "Find friends for race",
         },
 
-		DISMANTLE =
+		DISMANTLE = 
 		{
 			COOKING = "Cooking. Wait",
 			INUSE = "Someone else using it",
@@ -2725,6 +2725,7 @@ return{
 		},
 		TREASURECHEST_TRAP = "Hmm...",
         CHESTUPGRADE_STACKSIZE = "Make space streeeetch!", -- Describes the kit upgrade item.
+		COLLAPSEDCHEST = "Box ouchie?",
 		SACRED_CHEST =
 		{
 			GENERIC = "Put stuff in there!",
@@ -5143,6 +5144,8 @@ return{
         FENCE_JUNK = "Friends wearing metal clothes",
         JUNK_PILE = "Pile of stuff",
         JUNK_PILE_BIG = "Not safe...",
+
+        ARMOR_LUNARPLANT_HUSK = "Mean and pokey! Not good for hugs",
     },
 
     DESCRIBE_GENERIC = "Friend?",

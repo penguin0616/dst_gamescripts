@@ -2,6 +2,30 @@
 
 local prefs = {}
 
+table.insert(prefs, CreatePrefabSkin("abigail_creepy",
+{
+	base_prefab = "abigail",
+	type = "item",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) abigail_init_fn(inst, "abigail_creepy") end,
+	skin_tags = { "ABIGAIL", "HALLOWED", "CRAFTABLE", },
+	release_group = 154,
+	granted_items = { "abigail_flower_creepy", },
+}))
+
+table.insert(prefs, CreatePrefabSkin("abigail_flower_creepy",
+{
+	base_prefab = "abigail_flower",
+	type = "item",
+	build_name_override = "abigail_creepy",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) abigail_flower_init_fn(inst, "abigail_creepy") end,
+	skin_tags = { },
+	release_group = 154,
+}))
+
 table.insert(prefs, CreatePrefabSkin("abigail_flower_formal",
 {
 	base_prefab = "abigail_flower",
@@ -12,6 +36,30 @@ table.insert(prefs, CreatePrefabSkin("abigail_flower_formal",
 	init_fn = function(inst) abigail_flower_init_fn(inst, "abigail_formal") end,
 	skin_tags = { },
 	release_group = 92,
+}))
+
+table.insert(prefs, CreatePrefabSkin("abigail_flower_funeral",
+{
+	base_prefab = "abigail_flower",
+	type = "item",
+	build_name_override = "abigail_funeral",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) abigail_flower_init_fn(inst, "abigail_funeral") end,
+	skin_tags = { },
+	release_group = 154,
+}))
+
+table.insert(prefs, CreatePrefabSkin("abigail_flower_gladiator",
+{
+	base_prefab = "abigail_flower",
+	type = "item",
+	build_name_override = "abigail_gladiator",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) abigail_flower_init_fn(inst, "abigail_gladiator") end,
+	skin_tags = { },
+	release_group = 154,
 }))
 
 table.insert(prefs, CreatePrefabSkin("abigail_flower_handmedown",
@@ -26,6 +74,18 @@ table.insert(prefs, CreatePrefabSkin("abigail_flower_handmedown",
 	release_group = 92,
 }))
 
+table.insert(prefs, CreatePrefabSkin("abigail_flower_ice",
+{
+	base_prefab = "abigail_flower",
+	type = "item",
+	build_name_override = "abigail_ice",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) abigail_flower_init_fn(inst, "abigail_ice") end,
+	skin_tags = { },
+	release_group = 154,
+}))
+
 table.insert(prefs, CreatePrefabSkin("abigail_flower_lunar",
 {
 	base_prefab = "abigail_flower",
@@ -36,6 +96,30 @@ table.insert(prefs, CreatePrefabSkin("abigail_flower_lunar",
 	init_fn = function(inst) abigail_flower_init_fn(inst, "abigail_lunar") end,
 	skin_tags = { },
 	release_group = 136,
+}))
+
+table.insert(prefs, CreatePrefabSkin("abigail_flower_lureplant",
+{
+	base_prefab = "abigail_flower",
+	type = "item",
+	build_name_override = "abigail_lureplant",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) abigail_flower_init_fn(inst, "abigail_lureplant") end,
+	skin_tags = { },
+	release_group = 154,
+}))
+
+table.insert(prefs, CreatePrefabSkin("abigail_flower_magma",
+{
+	base_prefab = "abigail_flower",
+	type = "item",
+	build_name_override = "abigail_magma",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) abigail_flower_init_fn(inst, "abigail_magma") end,
+	skin_tags = { },
+	release_group = 154,
 }))
 
 table.insert(prefs, CreatePrefabSkin("abigail_flower_nature",
@@ -86,6 +170,30 @@ table.insert(prefs, CreatePrefabSkin("abigail_flower_survivor",
 	release_group = 92,
 }))
 
+table.insert(prefs, CreatePrefabSkin("abigail_flower_victorian",
+{
+	base_prefab = "abigail_flower",
+	type = "item",
+	build_name_override = "abigail_victorian",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) abigail_flower_init_fn(inst, "abigail_victorian") end,
+	skin_tags = { },
+	release_group = 154,
+}))
+
+table.insert(prefs, CreatePrefabSkin("abigail_flower_yule",
+{
+	base_prefab = "abigail_flower",
+	type = "item",
+	build_name_override = "abigail_yule",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) abigail_flower_init_fn(inst, "abigail_yule") end,
+	skin_tags = { },
+	release_group = 154,
+}))
+
 table.insert(prefs, CreatePrefabSkin("abigail_formal",
 {
 	base_prefab = "abigail",
@@ -96,6 +204,30 @@ table.insert(prefs, CreatePrefabSkin("abigail_formal",
 	skin_tags = { "ABIGAIL", "FORMAL", "CRAFTABLE", },
 	release_group = 92,
 	granted_items = { "abigail_flower_formal", },
+}))
+
+table.insert(prefs, CreatePrefabSkin("abigail_funeral",
+{
+	base_prefab = "abigail",
+	type = "item",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) abigail_init_fn(inst, "abigail_funeral") end,
+	skin_tags = { "ABIGAIL", "THEATER", "CRAFTABLE", },
+	release_group = 154,
+	granted_items = { "abigail_flower_funeral", },
+}))
+
+table.insert(prefs, CreatePrefabSkin("abigail_gladiator",
+{
+	base_prefab = "abigail",
+	type = "item",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) abigail_init_fn(inst, "abigail_gladiator") end,
+	skin_tags = { "ABIGAIL", "LAVA", "CRAFTABLE", },
+	release_group = 154,
+	granted_items = { "abigail_flower_gladiator", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("abigail_handmedown",
@@ -110,6 +242,18 @@ table.insert(prefs, CreatePrefabSkin("abigail_handmedown",
 	granted_items = { "abigail_flower_handmedown", },
 }))
 
+table.insert(prefs, CreatePrefabSkin("abigail_ice",
+{
+	base_prefab = "abigail",
+	type = "item",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) abigail_init_fn(inst, "abigail_ice") end,
+	skin_tags = { "ABIGAIL", "ICE", "CRAFTABLE", },
+	release_group = 154,
+	granted_items = { "abigail_flower_ice", },
+}))
+
 table.insert(prefs, CreatePrefabSkin("abigail_lunar",
 {
 	base_prefab = "abigail",
@@ -120,6 +264,30 @@ table.insert(prefs, CreatePrefabSkin("abigail_lunar",
 	skin_tags = { "ABIGAIL", "LUNAR", "CRAFTABLE", },
 	release_group = 136,
 	granted_items = { "abigail_flower_lunar", },
+}))
+
+table.insert(prefs, CreatePrefabSkin("abigail_lureplant",
+{
+	base_prefab = "abigail",
+	type = "item",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) abigail_init_fn(inst, "abigail_lureplant") end,
+	skin_tags = { "ABIGAIL", "COSTUME", "CRAFTABLE", },
+	release_group = 154,
+	granted_items = { "abigail_flower_lureplant", },
+}))
+
+table.insert(prefs, CreatePrefabSkin("abigail_magma",
+{
+	base_prefab = "abigail",
+	type = "item",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) abigail_init_fn(inst, "abigail_magma") end,
+	skin_tags = { "ABIGAIL", "LAVA", "CRAFTABLE", },
+	release_group = 154,
+	granted_items = { "abigail_flower_magma", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("abigail_nature",
@@ -168,6 +336,30 @@ table.insert(prefs, CreatePrefabSkin("abigail_survivor",
 	skin_tags = { "ABIGAIL", "SURVIVOR", "CRAFTABLE", },
 	release_group = 92,
 	granted_items = { "abigail_flower_survivor", },
+}))
+
+table.insert(prefs, CreatePrefabSkin("abigail_victorian",
+{
+	base_prefab = "abigail",
+	type = "item",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) abigail_init_fn(inst, "abigail_victorian") end,
+	skin_tags = { "ABIGAIL", "VICTORIAN", "CRAFTABLE", },
+	release_group = 154,
+	granted_items = { "abigail_flower_victorian", },
+}))
+
+table.insert(prefs, CreatePrefabSkin("abigail_yule",
+{
+	base_prefab = "abigail",
+	type = "item",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) abigail_init_fn(inst, "abigail_yule") end,
+	skin_tags = { "ABIGAIL", "YULE", "CRAFTABLE", },
+	release_group = 154,
+	granted_items = { "abigail_flower_yule", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("alterguardianhat_lastprism",
@@ -1538,6 +1730,20 @@ table.insert(prefs, CreatePrefabSkin("cane_harlequin",
 	fx_prefab = { "cane_harlequin_fx", },
 	release_group = 116,
 	granted_items = { "orangestaff_harlequin", },
+}))
+
+table.insert(prefs, CreatePrefabSkin("cane_rose",
+{
+	base_prefab = "cane",
+	type = "item",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	prefabs = { "cane_rose_fx", },
+	init_fn = function(inst) cane_init_fn(inst, "cane_rose") end,
+	skin_tags = { "CANE", "ROSE", "CRAFTABLE", },
+	fx_prefab = { "cane_rose_fx", },
+	release_group = 154,
+	granted_items = { "orangestaff_rose", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("cane_sharp",
@@ -5156,6 +5362,19 @@ table.insert(prefs, CreatePrefabSkin("orangestaff_rodofdiscord",
 	release_group = 125,
 }))
 
+table.insert(prefs, CreatePrefabSkin("orangestaff_rose",
+{
+	base_prefab = "orangestaff",
+	type = "item",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	prefabs = { "cane_rose_fx", },
+	init_fn = function(inst) orangestaff_init_fn(inst, "orangestaff_rose") end,
+	skin_tags = { },
+	fx_prefab = { "cane_rose_fx", },
+	release_group = 154,
+}))
+
 table.insert(prefs, CreatePrefabSkin("orangestaff_sharp",
 {
 	base_prefab = "orangestaff",
@@ -5876,6 +6095,16 @@ table.insert(prefs, CreatePrefabSkin("researchlab4_festive_bell_red_firehound",
 	init_fn = function(inst) researchlab4_init_fn(inst, "researchlab4_festive_bell_red_firehound") end,
 	skin_tags = { "RED", },
 	release_group = 26,
+}))
+
+table.insert(prefs, CreatePrefabSkin("researchlab4_fish",
+{
+	base_prefab = "researchlab4",
+	type = "item",
+	rarity = "Loyal",
+	init_fn = function(inst) researchlab4_init_fn(inst, "researchlab4_fish") end,
+	skin_tags = { },
+	release_group = 154,
 }))
 
 table.insert(prefs, CreatePrefabSkin("researchlab4_glommer_costume",
@@ -7033,6 +7262,17 @@ table.insert(prefs, CreatePrefabSkin("tophat_festive_bell_red_firehound",
 	skin_tags = { "TOPHAT", "WINTER", "CRAFTABLE", "RED", },
 	release_group = 22,
 	granted_items = { "researchlab4_festive_bell_red_firehound", },
+}))
+
+table.insert(prefs, CreatePrefabSkin("tophat_fish",
+{
+	base_prefab = "tophat",
+	type = "item",
+	rarity = "Loyal",
+	init_fn = function(inst) tophat_init_fn(inst, "tophat_fish") end,
+	skin_tags = { "FOOLS", "TOPHAT", "CRAFTABLE", },
+	release_group = 154,
+	granted_items = { "researchlab4_fish", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("tophat_harlequin",
@@ -8618,6 +8858,18 @@ table.insert(prefs, CreatePrefabSkin("warly_ice",
 	release_group = 109,
 }))
 
+table.insert(prefs, CreatePrefabSkin("warly_lunar",
+{
+	base_prefab = "warly",
+	type = "base",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "LUNAR", "BASE", "WARLY", },
+	bigportrait_anim = { build = "bigportraits/warly_lunar.xml", symbol = "warly_lunar_oval.tex"},
+	skins = { ghost_skin = "ghost_warly_build", normal_skin = "warly_lunar", },
+	release_group = 154,
+}))
+
 table.insert(prefs, CreatePrefabSkin("warly_masquerade",
 {
 	base_prefab = "warly",
@@ -10155,6 +10407,19 @@ table.insert(prefs, CreatePrefabSkin("wes_ice",
 	release_group = 138,
 }))
 
+table.insert(prefs, CreatePrefabSkin("wes_lunar",
+{
+	base_prefab = "wes",
+	type = "base",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "LUNAR", "BASE", "WES", },
+	bigportrait_anim = { build = "bigportraits/wes_lunar.xml", symbol = "wes_lunar_oval.tex"},
+	skins = { ghost_skin = "ghost_wes_build", normal_skin = "wes_lunar", },
+	torso_tuck_builds = { "wes_ice", },
+	release_group = 154,
+}))
+
 table.insert(prefs, CreatePrefabSkin("wes_magma",
 {
 	base_prefab = "wes",
@@ -10897,6 +11162,18 @@ table.insert(prefs, CreatePrefabSkin("willow_ice",
 	skins = { ghost_skin = "ghost_willow_build", normal_skin = "willow_ice", },
 	one_piece_skirt_builds = { "willow_ice", },
 	release_group = 36,
+}))
+
+table.insert(prefs, CreatePrefabSkin("willow_lunar",
+{
+	base_prefab = "willow",
+	type = "base",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "LUNAR", "BASE", "WILLOW", },
+	bigportrait_anim = { build = "bigportraits/willow_lunar.xml", symbol = "willow_lunar_oval.tex"},
+	skins = { ghost_skin = "ghost_willow_build", normal_skin = "willow_lunar", },
+	release_group = 154,
 }))
 
 table.insert(prefs, CreatePrefabSkin("willow_magma",

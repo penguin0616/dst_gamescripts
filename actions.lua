@@ -1403,9 +1403,12 @@ ACTIONS.REEL.strfn = function(act)
 end
 
 ACTIONS.PICK.strfn = function(act)
-	return act.target ~= nil and act.target:HasTag("pickable_harvest_str") and "HARVEST" or
-           act.target ~= nil and act.target:HasTag("pickable_rummage_str") and "RUMMAGE"
-			or nil
+	return act.target and act.target:HasTag("pickable_harvest_str") and "HARVEST" or nil
+end
+
+ACTIONS.PICK.stroverridefn = function(act)
+	--Just "Rummage" without specifying the target
+	return act.target and act.target:HasTag("pickable_rummage_str") and STRINGS.ACTIONS.PICK.RUMMAGE or nil
 end
 
 ACTIONS.PICK.fn = function(act)

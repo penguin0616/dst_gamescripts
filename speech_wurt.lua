@@ -85,7 +85,7 @@ return{
             NO_RACERS = "Can't start yet! Need veggie rats!",
         },
 
-		DISMANTLE =
+		DISMANTLE = 
 		{
 			COOKING = "Wait, it making food!",
 			INUSE = "Gotta wait.",
@@ -2721,6 +2721,7 @@ return{
 		},
 		TREASURECHEST_TRAP = "Treasure!",
         CHESTUPGRADE_STACKSIZE = "Make boxes bigger? Glurgh. More fun to leave stuff on ground.", -- Describes the kit upgrade item.
+		COLLAPSEDCHEST = "Hee-hee, broke box.",
 		SACRED_CHEST =
 		{
 			GENERIC = "Wonder what inside?",
@@ -5139,6 +5140,8 @@ return{
         FENCE_JUNK = "Made of bunch of metal bits.",
         JUNK_PILE = "If anything good in there, it mine!",
         JUNK_PILE_BIG = "Glurp... look like it gonna fall!",
+
+        ARMOR_LUNARPLANT_HUSK = "Plant's killing shirt!",
     },
 
     DESCRIBE_GENERIC = "What that?",

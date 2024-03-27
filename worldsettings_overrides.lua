@@ -1,4 +1,5 @@
- function OverrideTuningVariables(tuning)
+-- NOTES(JBK): Fix in here for Missing WorldSettings_Override for customization option error string.
+function OverrideTuningVariables(tuning)
     if tuning ~= nil then
         for k, v in pairs(tuning) do
             if BRANCH == "dev" then
@@ -475,11 +476,11 @@ local applyoverrides_pre = {
                 SPAWN_DAYWALKER = false,
             },
             rare = {
-                DAYWALKER_RESPAWN_DAYS_COUNT = 40,
+                DAYWALKER_RESPAWN_DAYS_COUNT = 20,
             },
             --[[
             default = {
-                DAYWALKER_RESPAWN_DAYS_COUNT = 20,
+                DAYWALKER_RESPAWN_DAYS_COUNT = 10,
             },
             --]]
             often = {
@@ -487,6 +488,50 @@ local applyoverrides_pre = {
             },
             always = {
                 DAYWALKER_RESPAWN_DAYS_COUNT = 1,
+            },
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
+    daywalker2 = function(difficulty)
+        local tuning_vars = {
+            never = {
+                SPAWN_DAYWALKER = false,
+            },
+            rare = {
+                DAYWALKER_RESPAWN_DAYS_COUNT = 20,
+            },
+            --[[
+            default = {
+                DAYWALKER_RESPAWN_DAYS_COUNT = 10,
+            },
+            --]]
+            often = {
+                DAYWALKER_RESPAWN_DAYS_COUNT = 7,
+            },
+            always = {
+                DAYWALKER_RESPAWN_DAYS_COUNT = 1,
+            },
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
+    sharkboi = function(difficulty)
+        local tuning_vars = {
+            never = {
+                SPAWN_SHARKBOI = false,
+            },
+            rare = {
+                SHARKBOI_ARENA_COOLDOWN_DAYS = 40 * TUNING.TOTAL_DAY_TIME,
+            },
+            --[[
+            default = {
+                SHARKBOI_ARENA_COOLDOWN_DAYS = 20 * TUNING.TOTAL_DAY_TIME,
+            },
+            --]]
+            often = {
+                SHARKBOI_ARENA_COOLDOWN_DAYS = 7 * TUNING.TOTAL_DAY_TIME,
+            },
+            always = {
+                SHARKBOI_ARENA_COOLDOWN_DAYS = 1 * TUNING.TOTAL_DAY_TIME,
             },
         }
         OverrideTuningVariables(tuning_vars[difficulty])

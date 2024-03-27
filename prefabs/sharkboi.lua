@@ -688,11 +688,11 @@ local function fn()
 	inst.components.named.possiblenames = STRINGS.SHARKBOINAMES
 	inst.components.named:PickNewName()
 
-	SetHue(inst, math.random())
-	SetBrightness(inst, 1 - math.random() * (1  - SKINTONE_MIN_BRIGHTNESS))
-	SetMane(inst, math.random(0, 2))
-	SetBrow(inst, math.random(0, 8))
-	SetVoice(inst, math.random(0, 3))
+	SetHue(inst, 0)--math.random())
+	SetBrightness(inst, 1)--1 - math.random() * (1  - SKINTONE_MIN_BRIGHTNESS))
+	SetMane(inst, 0)--math.random(0, 2))
+	SetBrow(inst, 0)--math.random(0, 8))
+	SetVoice(inst, 0)--math.random(0, 3))
 
 	inst:AddComponent("inspectable")
 

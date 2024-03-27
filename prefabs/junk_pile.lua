@@ -1,6 +1,7 @@
 local assets =
 {
     Asset("ANIM", "anim/scrappile.zip"),
+	Asset("MINIMAP_IMAGE", "junk_pile"),
 }
 
 local prefabs =

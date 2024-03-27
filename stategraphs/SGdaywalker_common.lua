@@ -16,6 +16,10 @@ SGDaywalkerCommon.DoDefeatShake = function(inst)
 	ShakeAllCameras(CAMERASHAKE.VERTICAL, .6, .025, .2, inst, 20)
 end
 
+SGDaywalkerCommon.DoSleepShake = function(inst)
+	ShakeAllCameras(CAMERASHAKE.VERTICAL, .5, .02, .15, inst, 20)
+end
+
 --------------------------------------------------------------------------
 
 SGDaywalkerCommon.TryChatter = function(inst, delaytbl, strtblname, index, ignoredelay, prioritylevel)

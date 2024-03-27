@@ -85,7 +85,7 @@ return{
             NO_RACERS = "Just who's racing against who, eh?",
         },
 
-		DISMANTLE =
+		DISMANTLE = 
 		{
 			COOKING = "Better to wait till the food's done, eh?",
 			INUSE = "Sorry! I'll wait till you're finished there.",
@@ -2722,6 +2722,7 @@ return{
 		},
 		TREASURECHEST_TRAP = "Something is not quite right aboot that chest.",
         CHESTUPGRADE_STACKSIZE = "Guess this thing will hollow out more space in my storage chest?", -- Describes the kit upgrade item.
+		COLLAPSEDCHEST = "Nobody's blamin' you, Luce.",
 		SACRED_CHEST =
 		{
 			GENERIC = "It makes my beard hair stand on end.",
@@ -5140,6 +5141,8 @@ return{
         FENCE_JUNK = "It's got nothin' on a sturdy wooden fence.",
         JUNK_PILE = "Wouldn't hurt to root around there a bit, eh?",
         JUNK_PILE_BIG = "That'll make one heckuva mess when it falls over.",
+
+        ARMOR_LUNARPLANT_HUSK = "That is some fine craftsmanship.",
     },
 
     DESCRIBE_GENERIC = "What's that, eh?",

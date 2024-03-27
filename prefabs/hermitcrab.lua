@@ -1288,17 +1288,16 @@ end
 local function retrofitconstuctiontasks(inst, house_prefab)
     if house_prefab == "hermithouse_construction2" then
         inst.components.friendlevels.friendlytasks[TASKS.FIX_HOUSE_1].complete = true
-		print("Retrofitting for Return Of Them: Turn of Tides - completed hermit house 1 friendship task.")
+		--print("Retrofitting for Return Of Them: Turn of Tides - completed hermit house 1 friendship task.")
     elseif house_prefab == "hermithouse_construction3" then
         inst.components.friendlevels.friendlytasks[TASKS.FIX_HOUSE_1].complete = true
         inst.components.friendlevels.friendlytasks[TASKS.FIX_HOUSE_2].complete = true
-		print("Retrofitting for Return Of Them: Turn of Tides - completed hermit house 1, 2 friendship tasks.")
+		--print("Retrofitting for Return Of Them: Turn of Tides - completed hermit house 1, 2 friendship tasks.")
     elseif house_prefab == "hermithouse" then
         inst.components.friendlevels.friendlytasks[TASKS.FIX_HOUSE_1].complete = true
         inst.components.friendlevels.friendlytasks[TASKS.FIX_HOUSE_2].complete = true
         inst.components.friendlevels.friendlytasks[TASKS.FIX_HOUSE_3].complete = true
-
-		print("Retrofitting for Return Of Them: Turn of Tides - completed hermit house 1, 2, 3 friendship tasks.")
+		--print("Retrofitting for Return Of Them: Turn of Tides - completed hermit house 1, 2, 3 friendship tasks.")
     end
 end
 

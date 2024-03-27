@@ -85,7 +85,7 @@ return{
             NO_RACERS = "A race isn't any fun without someone to beat.",
         },
 
-		DISMANTLE =
+		DISMANTLE = 
 		{
 			COOKING = "I'm not going to interrupt it while it's cooking.",
 			INUSE = "But I want to use it!",
@@ -2728,6 +2728,7 @@ return{
 		},
 		TREASURECHEST_TRAP = "Dirty trick!",
         CHESTUPGRADE_STACKSIZE = "More space to stash stuff? Sounds good to me!", -- Describes the kit upgrade item.
+		COLLAPSEDCHEST = "Nice, free stuff!",
 		SACRED_CHEST =
 		{
 			GENERIC = "A very very old chest.",
@@ -5146,6 +5147,8 @@ return{
         FENCE_JUNK = "Not the prettiest fence in the world, but it works.",
         JUNK_PILE = "I'm not too proud to rifle through some trash.",
         JUNK_PILE_BIG = "Yeeaahh, I don't think I want anything in there THAT bad.",
+
+        ARMOR_LUNARPLANT_HUSK = "This must be one of Wormwood's.",
     },
 
     DESCRIBE_GENERIC = "I have no idea what that is!",

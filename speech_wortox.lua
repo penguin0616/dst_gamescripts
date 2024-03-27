@@ -85,7 +85,7 @@ return{
             NO_RACERS = "Now that's quite the trick, invisible racing Carrats!",
         },
 
-		DISMANTLE =
+		DISMANTLE = 
 		{
 			COOKING = "I'm afraid the pot is far too hot!",
 			INUSE = "Another soul has use of it right now.",
@@ -2727,6 +2727,7 @@ return{
 		},
 		TREASURECHEST_TRAP = "What have we here?",
         CHESTUPGRADE_STACKSIZE = "Now that's bending the rules a little, hyuyu!", -- Describes the kit upgrade item.
+		COLLAPSEDCHEST = "Infinite space, gone without a trace?",
 		SACRED_CHEST =
 		{
 			GENERIC = "Ooohoohoo, it's probably cursed!",
@@ -5078,7 +5079,7 @@ return{
 
         SADDLE_WATHGRITHR = "That'll be the saddle to ride cattle into battle, hyuyu!",
 
-        WATHGRITHR_SHIELD = "Wield this shield on the battlefield.",
+        WATHGRITHR_SHIELD = "She'll wield this shield on the battlefield.",
 
         BATTLESONG_SHADOWALIGNED = "Singing is good for the soul.",
         BATTLESONG_LUNARALIGNED = "Singing is good for the soul.",
@@ -5145,6 +5146,8 @@ return{
         FENCE_JUNK = "A metal fence for our defense.",
         JUNK_PILE = "Could it hide a surprise inside?",
         JUNK_PILE_BIG = "I won't fall for that, hyuyu!",
+
+        ARMOR_LUNARPLANT_HUSK = "Prickly plant protection, perfection!",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",

@@ -1931,7 +1931,7 @@ function TEMPLATES.ControllerFunctionsFromButtons(buttons)
             return false
         -- Hitting Esc fires both Pause and Cancel, so we can only handle pause
         -- when coming from gamepads.
-        elseif control ~= CONTROL_PAUSE or TheInput:ControllerAttached() then
+        elseif control ~= CONTROL_MENU_START or TheInput:ControllerAttached() then
             for i,v in ipairs(buttons) do
                 if control == v.controller_control then
                     TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")

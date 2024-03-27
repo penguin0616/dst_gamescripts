@@ -3,6 +3,11 @@ local assets =
 	Asset("ANIM", "anim/scrappile.zip"),
 }
 
+local assets_big = {
+	Asset("ANIM", "anim/scrappile.zip"),
+	Asset("MINIMAP_IMAGE", "junk_pile_big"),
+}
+
 local prefabs =
 {
 	"junk_pile_side",
@@ -532,6 +537,9 @@ local function fn()
 	inst.entity:AddMiniMapEntity()
 	inst.entity:AddNetwork()
 
+    inst.MiniMapEntity:SetIcon("junk_pile_big.png")
+    inst.MiniMapEntity:SetPriority(1)
+
 	inst.AnimState:SetBank("scrappile")
 	inst.AnimState:SetBuild("scrappile")
 	inst.AnimState:PlayAnimation("big_idle")
@@ -641,5 +649,5 @@ local function side_fn()
 	return inst
 end
 
-return Prefab("junk_pile_big", fn, assets, prefabs),
+return Prefab("junk_pile_big", fn, assets_big, prefabs),
 	Prefab("junk_pile_side", side_fn, assets)

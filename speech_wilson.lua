@@ -2731,6 +2731,7 @@ return {
 		},
 		TREASURECHEST_TRAP = "How convenient!",
         CHESTUPGRADE_STACKSIZE = "The laws of physics are surprisingly flexible.", -- Describes the kit upgrade item.
+		COLLAPSEDCHEST = "The laws of physics have been bent and broken.",
 		SACRED_CHEST =
 		{
 			GENERIC = "I hear whispers. It wants something.",
@@ -5150,8 +5151,7 @@ return {
         JUNK_PILE = "A good junk pile rummage? I'll never refuse.",
         JUNK_PILE_BIG = "I think it could fall over any moment.",
 
-        ARMOR_LUNARPLANT_HUSK = "Every rose has it's thorn.",
-
+        ARMOR_LUNARPLANT_HUSK = "That'll put a thorn in your side.",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

@@ -252,66 +252,15 @@ end
 --------------------------------------------------------------------------
 
 local function CanBlinkTo(pt)
-    return (TheWorld.Map:IsAboveGroundAtPoint(pt.x, pt.y, pt.z) or TheWorld.Map:GetPlatformAtPoint(pt.x, pt.z) ~= nil) and not TheWorld.Map:IsGroundTargetBlocked(pt)
+    return TheWorld.Map:IsPassableAtPoint(pt:Get()) and not TheWorld.Map:IsGroundTargetBlocked(pt) -- NOTES(JBK): Keep in sync with blinkstaff. [BATELE]
 end
 
 local function CanBlinkFromWithMap(pt)
     return true -- NOTES(JBK): Change this if there is a reason to anchor Wortox when trying to use the map to teleport.
 end
 
-local BLINKFOCUS_MUST_TAGS = { "blinkfocus" }
-
 local function ReticuleTargetFn(inst)
-    local rotation = inst.Transform:GetRotation()
-    local pos = inst:GetPosition()
-
-    local ents = TheSim:FindEntities(pos.x, pos.y, pos.z, TUNING.CONTROLLER_BLINKFOCUS_DISTANCE, BLINKFOCUS_MUST_TAGS)
-    local maxrange = nil
-    for _, v in ipairs(ents) do
-        local newmaxrange = v.maxrange and v.maxrange:value() or nil
-        if newmaxrange ~= nil and newmaxrange ~= 0 and (maxrange == nil or newmaxrange < maxrange) then
-            if inst:GetDistanceSqToInst(v) < newmaxrange * newmaxrange then
-                maxrange = newmaxrange
-            end
-        end
-    end
-    for _, v in ipairs(ents) do
-        local epos = v:GetPosition()
-        local dsq = distsq(pos, epos)
-        if (maxrange == nil or dsq < maxrange * maxrange) and dsq > TUNING.CONTROLLER_BLINKFOCUS_DISTANCESQ_MIN then
-            local angletoepos = inst:GetAngleToPoint(epos)
-            local angleto = math.abs(anglediff(rotation, angletoepos))
-            if angleto < TUNING.CONTROLLER_BLINKFOCUS_ANGLE then
-                return epos
-            end
-        end
-    end
-    rotation = rotation * DEGREES
-
-    pos.y = 0
-    for r = maxrange or 13, 4, -.5 do
-        local offset = FindWalkableOffset(pos, rotation, r, 1, false, true, inst.CanBlinkTo)
-        if offset ~= nil then
-            pos.x = pos.x + offset.x
-            pos.z = pos.z + offset.z
-            return pos
-        end
-    end
-    if maxrange == nil or maxrange >= 13.5 then
-        for r = 13.5, maxrange or 16, .5 do
-            local offset = FindWalkableOffset(pos, rotation, r, 1, false, true, inst.CanBlinkTo)
-            if offset ~= nil then
-                pos.x = pos.x + offset.x
-                pos.z = pos.z + offset.z
-                return pos
-            end
-        end
-    end
-    if maxrange == nil or maxrange >= 13 then
-        pos.x = pos.x + math.cos(rotation) * 13
-        pos.z = pos.z - math.sin(rotation) * 13
-        return pos
-    end
+    return ControllerReticle_Blink_GetPosition(inst, inst.CanBlinkTo)
 end
 
 local function CanSoulhop(inst, souls)

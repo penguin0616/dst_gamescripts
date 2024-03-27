@@ -2810,7 +2810,7 @@ local function UpdateControllerAttackTarget(self, dt, x, y, z, dirx, dirz)
     end
 end
 
-local function UpdateControllerInteractionTarget(self, dt, x, y, z, dirx, dirz)
+local function UpdateControllerInteractionTarget(self, dt, x, y, z, dirx, dirz, heading_angle)
 	local attack_target = self:GetControllerAttackTarget()
 	if self.controller_targeting_lock_target and attack_target then
 		self.controller_target = attack_target
@@ -2888,6 +2888,8 @@ local function UpdateControllerInteractionTarget(self, dt, x, y, z, dirx, dirz)
 				and (self.inst.sg == nil or self.inst.sg:HasStateTag("moving") or self.inst.sg:HasStateTag("idle") or self.inst.sg:HasStateTag("channeling"))
 				and (self.inst:HasTag("moving") or self.inst:HasTag("idle") or self.inst:HasTag("channeling"))
 
+    local onboat = self.inst:GetCurrentPlatform() ~= nil
+    local anglemax = onboat and TUNING.CONTROLLER_BOATINTERACT_ANGLE or TUNING.CONTROLLER_INTERACT_ANGLE
     for i, v in ipairs(nearby_ents) do
         if v ~= ocean_fishing_target then
 
@@ -2917,65 +2919,73 @@ local function UpdateControllerInteractionTarget(self, dt, x, y, z, dirx, dirz)
                             v == self.controller_attack_target or
                             dx * dirx + dz * dirz > 0))) and
                     CanEntitySeePoint(self.inst, x1, y1, z1) then
-
-                    -- Incorporate the y component after we've performed the inclusion radius test.
-                    -- We wait until now because we might disqualify our controller_target if its transform has a y component,
-                    -- but we still want to use the y component as a tiebreaker for objects at the same x,z position.
-                    dsq = dsq + (dy * dy)
-
-                    local dist = dsq > 0 and math.sqrt(dsq) or 0
-                    local dot = dist > 0 and dx / dist * dirx + dz / dist * dirz or 0
-
-                    --keep the angle component between [0..1]
-                    local angle_component = (dot + 1) / 2
-
-                    --distance doesn't matter when you're really close, and then attenuates down from 1 as you get farther away
-                    local dist_component = dsq < min_rad_sq and 1 or min_rad_sq / dsq
-
-                    --for stuff that's *really* close - ie, just dropped
-                    local add = dsq < .0625 --[[.25 * .25]] and 1 or 0
-
-                    --just a little hysteresis
-                    local mult = v == self.controller_target and not v:HasTag("wall") and 1.5 or 1
-
-                    local score = angle_component * dist_component * mult + add
-
-                    --make it easier to target stuff dropped inside the portal when alive
-                    --make it easier to haunt the portal for resurrection in endless mode
-                    if v:HasTag("portal") then
-                        score = score * (self.inst:HasTag("playerghost") and GetPortalRez() and 1.1 or .9)
+                    local shouldcheck = dsq < 1 -- Do not skip really close entities.
+                    if not shouldcheck then
+                        local epos = v:GetPosition()
+                        local angletoepos = self.inst:GetAngleToPoint(epos)
+                        local angleto = math.abs(anglediff(-heading_angle, angletoepos))
+                        shouldcheck = angleto < anglemax
                     end
+                    if shouldcheck then
+                        -- Incorporate the y component after we've performed the inclusion radius test.
+                        -- We wait until now because we might disqualify our controller_target if its transform has a y component,
+                        -- but we still want to use the y component as a tiebreaker for objects at the same x,z position.
+                        dsq = dsq + (dy * dy)
 
-                    if v:HasTag("hasfurnituredecoritem") then
-                        score = score * 0.5
-                    end
+                        local dist = dsq > 0 and math.sqrt(dsq) or 0
+                        local dot = dist > 0 and dx / dist * dirx + dz / dist * dirz or 0
 
-                    --print(v, angle_component, dist_component, mult, add, score)
+                        --keep the angle component between [0..1]
+                        local angle_component = (dot + 1) / 2
 
-                    if score < target_score or
-                        (   score == target_score and
-                            (   (target ~= nil and not (target.CanMouseThrough ~= nil and target:CanMouseThrough())) or
-                                (v.CanMouseThrough ~= nil and v:CanMouseThrough())
-                            )
-                        ) then
-                        --skip
-                    elseif canexamine and v:HasTag("inspectable") then
-                        target = v
-                        target_score = score
-                    else
-                        --this is kind of expensive, so ideally we don't get here for many objects
-                        local lmb, rmb = self:GetSceneItemControllerAction(v)
-                        if lmb ~= nil or rmb ~= nil then
+                        --distance doesn't matter when you're really close, and then attenuates down from 1 as you get farther away
+                        local dist_component = dsq < min_rad_sq and 1 or min_rad_sq / dsq
+
+                        --for stuff that's *really* close - ie, just dropped
+                        local add = dsq < .0625 --[[.25 * .25]] and 1 or 0
+
+                        --just a little hysteresis
+                        local mult = v == self.controller_target and not v:HasTag("wall") and 1.5 or 1
+
+                        local score = angle_component * dist_component * mult + add
+
+                        --make it easier to target stuff dropped inside the portal when alive
+                        --make it easier to haunt the portal for resurrection in endless mode
+                        if v:HasTag("portal") then
+                            score = score * (self.inst:HasTag("playerghost") and GetPortalRez() and 1.1 or .9)
+                        end
+
+                        if v:HasTag("hasfurnituredecoritem") then
+                            score = score * 0.5
+                        end
+
+                        --print(v, angle_component, dist_component, mult, add, score)
+
+                        if score < target_score or
+                            (   score == target_score and
+                                (   (target ~= nil and not (target.CanMouseThrough ~= nil and target:CanMouseThrough())) or
+                                    (v.CanMouseThrough ~= nil and v:CanMouseThrough())
+                                )
+                            ) then
+                            --skip
+                        elseif canexamine and v:HasTag("inspectable") then
                             target = v
                             target_score = score
                         else
-                            local inv_obj = self:GetCursorInventoryObject()
-							if inv_obj ~= nil then
-								rmb = self:GetItemUseAction(inv_obj, v)
-								if rmb ~= nil and rmb.target == v then
-									target = v
-									target_score = score
-								end
+                            --this is kind of expensive, so ideally we don't get here for many objects
+                            local lmb, rmb = self:GetSceneItemControllerAction(v)
+                            if lmb ~= nil or rmb ~= nil then
+                                target = v
+                                target_score = score
+                            else
+                                local inv_obj = self:GetCursorInventoryObject()
+                                if inv_obj ~= nil then
+                                    rmb = self:GetItemUseAction(inv_obj, v)
+                                    if rmb ~= nil and rmb.target == v then
+                                        target = v
+                                        target_score = score
+                                    end
+                                end
                             end
                         end
                     end
@@ -3031,7 +3041,7 @@ function PlayerController:UpdateControllerTargets(dt)
     local heading_angle = -self.inst.Transform:GetRotation()
     local dirx = math.cos(heading_angle * DEGREES)
     local dirz = math.sin(heading_angle * DEGREES)
-    UpdateControllerInteractionTarget(self, dt, x, y, z, dirx, dirz)
+    UpdateControllerInteractionTarget(self, dt, x, y, z, dirx, dirz, heading_angle)
     UpdateControllerAttackTarget(self, dt, x, y, z, dirx, dirz)
     UpdateControllerConflictingTargets(self)
 end

@@ -521,8 +521,26 @@ rainhat_clear_fn = function(inst) basic_clear_fn(inst, "hat_rain" ) end
 minerhat_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "hat_miner" ) end
 minerhat_clear_fn = function(inst) basic_clear_fn(inst, "hat_miner" ) end
 
-footballhat_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "hat_football" ) end
-footballhat_clear_fn = function(inst) basic_clear_fn(inst, "hat_football" ) end
+footballhat_init_fn = function(inst, build_name, opentop)
+    basic_init_fn(inst, build_name, "hat_football")
+
+    if opentop then
+        inst:AddTag("open_top_hat")
+    end
+
+    if not TheWorld.ismastersim then
+        return
+    end
+
+    AddSkinSounds(inst)
+end
+footballhat_clear_fn = function(inst)
+    basic_clear_fn(inst, "hat_football")
+
+    inst:RemoveTag("open_top_hat")
+
+    RemoveSkinSounds(inst)
+end
 
 featherhat_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "hat_feather" ) end
 featherhat_clear_fn = function(inst) basic_clear_fn(inst, "hat_feather" ) end

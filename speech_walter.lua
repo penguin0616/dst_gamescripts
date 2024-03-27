@@ -85,7 +85,7 @@ return{
             NO_RACERS = "Oh. I forgot the racers!",
         },
 
-		DISMANTLE =
+		DISMANTLE = 
 		{
 			COOKING = "That seems kind of dangerous.",
 			INUSE = "Guess I have to wait.",
@@ -2721,6 +2721,7 @@ return{
 		},
 		TREASURECHEST_TRAP = "There might be cursed pirate gold inside!",
         CHESTUPGRADE_STACKSIZE = "I can make more room for supplies!", -- Describes the kit upgrade item.
+		COLLAPSEDCHEST = "I can fix the forever treasure chest.",
 		SACRED_CHEST =
 		{
 			GENERIC = "There HAS to be something good in there, just look at it!",
@@ -5139,6 +5140,8 @@ return{
         FENCE_JUNK = "I guess it's better than just leaving all that scrap metal lying around.",
         JUNK_PILE = "One person's trash is another's treasure!",
         JUNK_PILE_BIG = "Careful Woby, it doesn't look very stable.",
+
+        ARMOR_LUNARPLANT_HUSK = "Aww. Why don't I get to wear it?",
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

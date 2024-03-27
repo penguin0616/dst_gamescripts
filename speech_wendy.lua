@@ -85,7 +85,7 @@ return{
             NO_RACERS = "I suppose I'll have to go find some Carrats...",
         },
 
-		DISMANTLE =
+		DISMANTLE = 
 		{
 			COOKING = "Mother warned me not to touch a pot while it's cooking.",
 			INUSE = "Someone's in there.",
@@ -2725,6 +2725,7 @@ return{
 		},
 		TREASURECHEST_TRAP = "Every once in awhile, things go my way.",
         CHESTUPGRADE_STACKSIZE = "It will make the emptiness in my chest grow even bigger...", -- Describes the kit upgrade item.
+		COLLAPSEDCHEST = "Is the emptyness all around us now?",
 		SACRED_CHEST =
 		{
 			GENERIC = "It is touched by death.",
@@ -5143,6 +5144,8 @@ return{
         FENCE_JUNK = "Even these discarded pieces can manage to be useful.",
         JUNK_PILE = "Could there be something worthwhile hiding deep inside?",
         JUNK_PILE_BIG = "It's about to collapse... maybe I'll be here when it does.",
+
+        ARMOR_LUNARPLANT_HUSK = "I'd find it useful if I feared death.",
     },
 
     DESCRIBE_GENERIC = "Sigh... I don't know.",

@@ -1287,6 +1287,12 @@ t = {
                 FlagForRetrofitting_Forest(savedata, "retrofit_junkyardv3_content")
             end,
         },
+        {
+            version = 5.146, -- rift_terraformer fix
+            fn = function(savedata)
+                FlagForRetrofitting_Forest(savedata, "remove_rift_terraformers_fix")
+            end,
+        },
     },
 }
 

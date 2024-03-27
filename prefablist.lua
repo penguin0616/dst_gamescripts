@@ -180,6 +180,7 @@ PREFABFILES = {
   "cane_ancient_fx",
   "cane_candy_fx",
   "cane_harlequin_fx",
+  "cane_rose_fx",
   "cane_sharp_fx",
   "cane_victorian_fx",
   "cannon_aoe_range_fx",

@@ -125,8 +125,13 @@ function Tune(overrides)
 		CONTROLLER_RETICULE_RSTICK_SPEED = 2,
         CONTROLLER_BLINKFOCUS_DISTANCESQ_MIN = 4,
         CONTROLLER_BLINKFOCUS_DISTANCE = 8,
-        CONTROLLER_BLINKFOCUS_ANGLE = 30, -- Angle is for both sides of the facing direction so cone total size is double this value.
-        CONTROLLER_OCEANFISHINGFOCUS_ANGLE = 50, -- Angle is for both sides of the facing direction so cone total size is double this value.
+        -- NOTES(JBK): These Angles are for both sides of the facing direction so cone total size is double this value.
+        CONTROLLER_BLINKFOCUS_ANGLE = 30, -- For targeting onto a focus.
+        CONTROLLER_BLINKCONE_ANGLE = 30, -- For general blink teleports.
+        CONTROLLER_OCEANFISHINGFOCUS_ANGLE = 50,
+        CONTROLLER_BOATPLACEMENT_ANGLE = 135, -- Arc with 90 degree backside blind spot.
+        CONTROLLER_INTERACT_ANGLE = 60, -- Want things forward facing to be picked.
+        CONTROLLER_BOATINTERACT_ANGLE = 45, -- Want things forward facing to be picked.
 
         -- WX78 Refresh: WX78 min and max health variables kept for backwards compatibility & mods
         WX78_MIN_HEALTH = 150,
@@ -6642,6 +6647,7 @@ function Tune(overrides)
 		SHARKBOI_ICE_MINE = 4/3,
 		SHARKBOI_ICE_LARGE_MINE = 8/3,
 
+        SPAWN_SHARKBOI = true,
         SHARKBOI_ARENA_COOLDOWN_DAYS = 20 * total_day_time,
         SHARKBOI_ARENA_SHRINK_TICK_TIME = 2,
         SHARKBOI_ARENA_SHRINK_DISTANCE = 0.1,
