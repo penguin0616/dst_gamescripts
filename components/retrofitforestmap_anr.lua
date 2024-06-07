@@ -685,7 +685,7 @@ local function MoonFissures()
 	if #options > 0 then
 		for i, ent in ipairs(options) do
 			local pos = Vector3(ent.Transform:GetWorldPosition())
-			local startangle = math.random()*PI*2
+			local startangle = math.random()*PI2
 			local offset_a = FindWalkableOffset(pos, startangle, 12, 36, true, true) or FindWalkableOffset(pos, startangle, 15, 36, true, true) or FindWalkableOffset(pos, startangle, 9, 36, true, true)
 			local offset_b = nil
 			if offset_a then
@@ -1399,7 +1399,7 @@ function self:OnPostInit()
 									or body.prefab == "sculpture_rookbody" and 1.7
 									or nil
 						if radius ~= nil then
-							local offset = FindWalkableOffset(body:GetPosition(), math.random() * 2 * PI, radius, 60, false, false, NoHoles) or Vector3(2, 0, 0)
+							local offset = FindWalkableOffset(body:GetPosition(), math.random() * TWOPI, radius, 60, false, false, NoHoles) or Vector3(2, 0, 0)
 							obj.Transform:SetPosition((body:GetPosition() + offset):Get())
 
 							count = count + 1

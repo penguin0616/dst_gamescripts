@@ -485,6 +485,8 @@ local prefabs =
     "fence_junk",
     "junk_pile",
     "junk_pile_big",
+
+    "boat_otterden",
 }
 
 local FISH_DATA = require("prefabs/oceanfishdef")

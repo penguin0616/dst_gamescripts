@@ -8,27 +8,59 @@ require "behaviours/minperiod"
 require "giantutils"
 
 local function ShouldHaveClaws(inst)
-    if inst.components.health:GetPercent() < TUNING.CRABKING_CLAW_THRESHOLD and not inst.arms then
+    
+    if not inst:HasTag("icewall") and not inst.arms then
+       
         inst.wantstosummonclaws = true
     end
     return nil
 end
 
 local function ShouldHeal(inst)
-    if inst.components.health:GetPercent() < TUNING.CRABKING_HEAL_THRESHOLD and not inst.components.timer:TimerExists("heal_cooldown") then
-        inst.components.timer:StopTimer("clawsummon_cooldown")
+    if inst.components.health:GetPercent() < 1 and inst:HasTag("icewall") then
         inst.wantstoheal = true
+    else
+        inst.wantstoheal = nil
     end
     return nil
 end
 
 local BOAT_TAG = {"boat"}
 local TARGET_ONEOF_TAGS = {"character","animal","monster","smallcreature"}
-local function ShouldDoAttackSpell(inst)
-    if not inst.components.timer:TimerExists("spell_cooldown") then
+
+local function ShouldFreeze(inst)
+
+    if not inst:HasTag("icewall") and inst.damagetotal and inst.damagetotal <= -TUNING.CRABKING_FREEZE_THRESHOLD and inst.components.health:GetPercent() < TUNING.CRABKING_STAGE1_THRESHOLD  then        
         local x,y,z = inst.Transform:GetWorldPosition()
         local boatents = TheSim:FindEntities(x,y,z, 25, BOAT_TAG)
-        local range = inst.getfreezerange(inst)
+
+        for i, ent in ipairs(boatents) do
+            if ent.prefab == "boat_ice" then
+                return nil
+            end
+        end
+        local range = 20
+        local ents = TheSim:FindEntities(x,y,z, range, nil,nil, TARGET_ONEOF_TAGS)
+        if #ents > 0 then
+            for i=#ents,1,-1 do
+                local ent = ents[i]
+                if (not ent:HasTag("character") and (not ent.components.combat or ent.components.combat.target ~= inst) ) then
+                    table.remove(ents,i)
+                end
+            end
+        end
+        if #boatents > 0 or #ents > 0 then
+            inst.wantstofreeze = true
+        end
+    end
+    return nil
+end
+
+local function ShouldCannon(inst)
+    if not inst.components.timer:TimerExists("cannon_timer") and not inst:HasTag("icewall") then
+        local x,y,z = inst.Transform:GetWorldPosition()
+        local boatents = TheSim:FindEntities(x,y,z, 25, BOAT_TAG)
+        local range = 20
         local ents = TheSim:FindEntities(x,y,z, range, nil,nil, TARGET_ONEOF_TAGS)
         if #ents > 0 then
             for i=#ents,1,-1 do
@@ -38,11 +70,8 @@ local function ShouldDoAttackSpell(inst)
                 end
             end
         end
-        if #boatents > 0 or #ents > 0 then
-            if #ents > 0 and #boatents < 1 then
-                inst.dofreezecast = true
-            end
-            inst.wantstocast = true
+        if #boatents > 0 or #ents > 0 then            
+            inst.wantstocannon = true
         end
     end
     return nil
@@ -55,12 +84,12 @@ end)
 function CrabkingBrain:OnStart()
     local root = PriorityNode(
     {
-        WhileNode(function() return not self.inst.sg:HasStateTag("inert") and not self.inst.sg:HasStateTag("casting")  and not self.inst.sg:HasStateTag("fixing") and not self.inst.sg:HasStateTag("spawning") end, "doing",
+        IfNode(function() return not self.inst.sg:HasStateTag("inert") and not self.inst.sg:HasStateTag("casting")  and not self.inst.sg:HasStateTag("fixing") and not self.inst.sg:HasStateTag("spawning") end, "doing",
             PriorityNode({
 
+                DoAction(self.inst, ShouldHeal, "heal"),
                 DoAction(self.inst, ShouldHaveClaws, "claws?"),
-                DoAction(self.inst, ShouldHeal, "Heal?"),
-                DoAction(self.inst, ShouldDoAttackSpell, "casting"),
+                DoAction(self.inst, ShouldFreeze, "freeze"),
 
             }, 1)),
     }, 1)

@@ -184,12 +184,79 @@ end
 
 ---------------------------------------------
 
+function Shard_IsMaster()
+    return TheShard:IsMaster() or TheNet:GetIsMasterSimulation() and not TheShard:IsSecondary()
+end
+
+---------------------------------------------
+
 function Shard_SyncBossDefeated(bossprefab, shardid) -- NOTES(JBK): Flipped shardid argument order to make calling this easier elsewhere.
-    if TheShard:IsMaster() then
+    if Shard_IsMaster() then
         if TheWorld then
             TheWorld:PushEvent("master_shardbossdefeated", {bossprefab = bossprefab, shardid = shardid or TheShard:GetShardId(),})
         end
     else
         SendRPCToShard(SHARD_RPC.SyncBossDefeated, SHARDID.MASTER, bossprefab)
+    end
+end
+
+---------------------------------------------
+
+function Shard_SyncMermKingExists(exists, shardid) -- NOTES(JBK): Flipped shardid argument order to make calling this easier elsewhere.
+    if Shard_IsMaster() then
+        if TheWorld then
+            TheWorld:PushEvent("master_shardmermkingexists", {exists = exists, shardid = shardid or TheShard:GetShardId(),})
+        end
+    else
+        TheWorld:DoTaskInTime(0, function() -- NOTES(JBK): This should be delayed a frame to let loading correctly handle the RPC message.
+            SendRPCToShard(SHARD_RPC.SyncMermKingExists, SHARDID.MASTER, exists)
+        end)
+    end
+end
+
+-- Merm King buffs --------------------------
+
+function Shard_SyncMermKingTrident(exists, shardid) -- Flipped shardid argument order to make calling this easier elsewhere.
+    if Shard_IsMaster() then
+        if TheWorld then
+            TheWorld:PushEvent("master_shardmermkingtrident", {
+                pickedup = exists,
+                shardid = shardid or TheShard:GetShardId(),
+            })
+        end
+    else
+        TheWorld:DoTaskInTime(0, function() -- This should be delayed a frame to let loading correctly handle the RPC message.
+            SendRPCToShard(SHARD_RPC.SyncMermKingTrident, SHARDID.MASTER, exists)
+        end)
+    end
+end
+
+function Shard_SyncMermKingCrown(exists, shardid)
+    if Shard_IsMaster() then
+        if TheWorld then
+            TheWorld:PushEvent("master_shardmermkingcrown", {
+                pickedup = exists,
+                shardid = shardid or TheShard:GetShardId(),
+            })
+        end
+    else
+        TheWorld:DoTaskInTime(0, function() -- This should be delayed a frame to let loading correctly handle the RPC message.
+            SendRPCToShard(SHARD_RPC.SyncMermKingCrown, SHARDID.MASTER, exists)
+        end)
+    end
+end
+
+function Shard_SyncMermKingPauldron(exists, shardid)
+    if Shard_IsMaster() then
+        if TheWorld then
+            TheWorld:PushEvent("master_shardmermkingpauldron", {
+                pickedup = exists,
+                shardid = shardid or TheShard:GetShardId(),
+            })
+        end
+    else
+        TheWorld:DoTaskInTime(0, function() -- This should be delayed a frame to let loading correctly handle the RPC message.
+            SendRPCToShard(SHARD_RPC.SyncMermKingPauldron, SHARDID.MASTER, exists)
+        end)
     end
 end

@@ -67,13 +67,13 @@ local _task = nil
 --------------------------------------------------------------------------
 
 local function GetRenewablePeriod()
-    return TUNING.SEG_TIME + math.random() * TUNING.SEG_TIME
+    return TUNING.SEG_TIME * (1 + math.random())
 end
 
 local function DoPrefabRenew(x, z, ents, renewable_set, max)
     --Check if this set's prefab matches were found already
-    for i, v in ipairs(ents) do
-        if renewable_set.matches[v.prefab] then
+    for _, ent in ipairs(ents) do
+        if renewable_set.matches[ent.prefab] then
             return
         end
     end
@@ -81,8 +81,8 @@ local function DoPrefabRenew(x, z, ents, renewable_set, max)
     --Check if this set has a spawnable prefab
     if #renewable_set.spawns > 0 then
         --Spawn random up to max count
-        for i = math.random(max), 1, -1 do
-            local theta = math.random() * 2 * PI
+        for _ = math.random(max), 1, -1 do
+            local theta = math.random() * TWOPI
             local radius = math.random() * RENEW_RADIUS
             local x1 = x + radius * math.cos(theta)
             local z1 = z - radius * math.sin(theta)
@@ -108,8 +108,8 @@ local function DoRenew()
     local x, y, z = target.Transform:GetWorldPosition()
     if not IsAnyPlayerInRange(x, y, z, MIN_PLAYER_DISTANCE) then
         local ents = TheSim:FindEntities(x, y, z, RENEW_RADIUS, nil, RENEW_CANT_TAGS, RENEW_ONEOF_TAGS)
-        for i, v in ipairs(RENEWABLES) do
-            DoPrefabRenew(x, z, ents, v, 3)
+        for _, renewable in ipairs(RENEWABLES) do
+            DoPrefabRenew(x, z, ents, renewable, 3)
         end
     end
 

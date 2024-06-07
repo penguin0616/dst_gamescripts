@@ -546,6 +546,132 @@ end
 
 -------------------------------------------------------------------------------------------------
 
+local ANCIENT_TREE_DEFS = require("prefabs/ancienttree_defs").TREE_DEFS
+local ANCIENT_TREE_FRUIT_SYMBOLS = { "fruit" }
+
+local ANCIENT_TREE_ANIMSET = {
+    sway1         = {anim = "sway1_loop", hidesymbols = ANCIENT_TREE_FRUIT_SYMBOLS},
+    sway2         = {anim = "sway2_loop", hidesymbols = ANCIENT_TREE_FRUIT_SYMBOLS},
+    sway1_full    = {anim = "sway1_loop",                                         },
+    sway2_full    = {anim = "sway2_loop",                                         },
+}
+
+for type, data in pairs(ANCIENT_TREE_DEFS) do
+    local stump = type.."_stump"
+
+    ANCIENT_TREE_ANIMSET[stump] = {anim = "stump", hidesymbols = ANCIENT_TREE_FRUIT_SYMBOLS, minimap = "ancienttree_"..stump..".png", stump = true}
+end
+
+local function AncientTree_GetAnimFn(inst)
+    if inst:HasTag("stump") then
+        return inst.type.."_stump"
+    end
+
+    local sway = inst.AnimState:IsCurrentAnimation("sway2_loop") and "sway2" or "sway1"
+
+    if inst:HasTag("pickable") then
+        return sway.."_full"
+    end
+
+    return sway
+end
+
+local function AncientTree_MultColour(inst)
+    return 0.75 + math.random() * 0.25
+end
+
+local function CreateWaxedAncientTree(type, data)
+    local name = "ancienttree_"..type
+
+    local function common_post_init(inst)
+        inst.MiniMapEntity:SetPriority(3)
+
+        if data.shadow_size ~= nil then
+            inst.entity:AddDynamicShadow()
+
+            inst.DynamicShadow:SetSize(data.shadow_size, data.shadow_size)
+        end
+
+        if data.common_postinit ~= nil then
+            data.common_postinit(inst)
+        end
+    end
+
+    return WAXED_PLANTS.CreateWaxedPlant({
+        prefab=name,
+        bank=data.bank,
+        build=data.build,
+        minimapicon=name,
+        anim="sway1_loop",
+        action=data.workaction,
+        physics={MakeObstaclePhysics, data.physics_rad},
+        animset=ANCIENT_TREE_ANIMSET,
+        getanim_fn=AncientTree_GetAnimFn,
+        multcolor=AncientTree_MultColour,
+        common_postinit=common_post_init,
+        assets=ASSETS,
+    }) 
+end
+
+-------------------------------------------------------------------------------------------------
+
+local ANCIENT_TREE_SAPLING_ANIMSET = {
+    seed   = {anim = "idle_planted"},
+    sprout = {anim = "sprout_idle" },
+}
+
+local function AncientTreeSapling_GetAnimFn(inst)
+    if inst.statedata ~= nil then
+        return inst.statedata.name
+    end
+
+    return "seed"
+end
+
+local function AncientTreeSapling_GetDisplayNameFn(inst)
+    local is_seed = inst.savedata.anim == "seed"
+
+    return STRINGS.NAMES[is_seed and "ANCIENTTREE_SEED_PLANTED" or inst.displayname]
+end
+
+local function AncientTreeSapling_GetInventoryPrefab(inst)
+    local is_seed = inst.savedata.anim == "seed"
+
+    if is_seed then
+        return nil -- No dug prefab!
+    end
+
+    return inst.plantprefab.."_item_waxed"
+end
+
+local function CreateWaxedAncientTreeSapling(type, data)
+    local function common_post_init(inst)
+        inst.displaynamefn = AncientTreeSapling_GetDisplayNameFn
+
+        if data.common_postinit ~= nil then
+            data.common_postinit(inst)
+        end
+    end
+
+    local name = "ancienttree_"..type.."_sapling"
+
+    return WAXED_PLANTS.CreateWaxedPlant({
+        prefab=name,
+        bank=data.bank,
+        build=data.build,
+        anim="sprout_idle",
+        action="DIG",
+        animset=ANCIENT_TREE_SAPLING_ANIMSET,
+        inventoryitem=AncientTreeSapling_GetInventoryPrefab,
+        getanim_fn=AncientTreeSapling_GetAnimFn,
+        multcolor=AncientTree_MultColour,
+        common_postinit=common_post_init,
+        assets=ASSETS,
+    }) 
+end
+
+-------------------------------------------------------------------------------------------------
+
 local ret = {
     CreateWaxedBerryBush("berrybush"),
     CreateWaxedBerryBush("berrybush2"),
@@ -715,6 +841,11 @@ end
 
 for i, data in pairs(WEED_DEFS) do
     table.insert(ret, CreateWaxedWeedPlant(data))
+end
+
+for type, data in pairs(ANCIENT_TREE_DEFS) do
+    table.insert(ret, CreateWaxedAncientTree(type, data))
+    table.insert(ret, CreateWaxedAncientTreeSapling(type, data))
 end
 
 -------------------------------------------------------------------------------------------------

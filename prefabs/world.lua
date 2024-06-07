@@ -540,8 +540,11 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
         inst:AddComponent("farming_manager")
 
         inst:AddComponent("dockmanager")
+        inst:AddComponent("vinebridgemanager")
 
         inst:AddComponent("playerspawner")
+
+        inst:AddComponent("nightlightmanager")
 
         --World health management
         inst:AddComponent("skeletonsweeper")

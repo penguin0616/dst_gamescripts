@@ -154,6 +154,8 @@ local function fn()
 
     inst:ListenForEvent("onbuilt", onbuilt)
 
+    TheWorld:PushEvent("ms_registernightlight", inst)
+
     return inst
 end
 

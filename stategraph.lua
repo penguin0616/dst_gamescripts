@@ -194,6 +194,18 @@ function FrameEvent(frame, fn)
 	return TimeEvent(frame * FRAMES, fn)
 end
 
+function SoundTimeEvent(time, sound_event)
+    return TimeEvent(time, function(inst)
+        inst.SoundEmitter:PlaySound(sound_event)
+    end)
+end
+
+function SoundFrameEvent(frame, sound_event)
+    return TimeEvent(frame * FRAMES, function(inst)
+        inst.SoundEmitter:PlaySound(sound_event)
+    end)
+end
+
 local function Chronological(a, b)
 	return a.time < b.time
 end

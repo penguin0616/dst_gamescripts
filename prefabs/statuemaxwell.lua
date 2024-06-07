@@ -89,7 +89,7 @@ local function fn()
     inst.entity:AddNetwork()
 
     inst:AddTag("maxwell")
-    inst.entity:AddTag("statue")
+    inst:AddTag("statue")
 
     MakeObstaclePhysics(inst, .66)
 

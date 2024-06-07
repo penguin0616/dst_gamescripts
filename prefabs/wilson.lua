@@ -34,7 +34,11 @@ local function GetPointSpecialActions(inst, pos, useitem, right)
 				useitem = inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
 			end
 		end
-		if useitem ~= nil and useitem:HasTag("special_action_toss") and inst.components.skilltreeupdater:IsActivated("wilson_torch_7") then
+		if useitem and
+			useitem.prefab == "torch" and
+			inst.components.skilltreeupdater:IsActivated("wilson_torch_7") and
+			useitem:HasTag("special_action_toss")
+		then
 			return { ACTIONS.TOSS }
 		end
 	end

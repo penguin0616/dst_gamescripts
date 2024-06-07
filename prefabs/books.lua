@@ -222,7 +222,7 @@ local book_defs =
             local positions = {}
 
             for k = 1, numtentacles do
-                local theta = math.random() * 2 * PI
+                local theta = math.random() * TWOPI
                 local radius = math.random(3, 8)
 
                 local result_offset = FindValidPositionByFan(theta, radius, 12, function(offset)
@@ -549,7 +549,7 @@ local book_defs =
             local failed_spawn = 0
             
             for i=1, TUNING.BOOK_FISH_AMOUNT do
-                local theta = math.random() * 2 * PI
+                local theta = math.random() * TWOPI
                 local failed_attempts = 0
                 local max_failed_attempts = 36
 

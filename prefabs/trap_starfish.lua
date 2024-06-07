@@ -243,7 +243,6 @@ local function dug_trap_starfish()
     inst.AnimState:SetBuild("star_trap")
     inst.AnimState:PlayAnimation("inactive", true)
     inst.scrapbook_anim = "inactive"
-    inst.scrapbook_scale = 2
 
     MakeInventoryFloatable(inst, "med")
 

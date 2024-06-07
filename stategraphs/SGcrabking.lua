@@ -1,19 +1,33 @@
 require("stategraphs/commonstates")
 
 local function heal(inst)
-    inst.components.health:DoDelta(TUNING.CRABKING_REGEN + math.floor(inst.countgems(inst).orange/2) * TUNING.CRABKING_REGEN_BUFF )
+    inst.components.health:DoDelta(TUNING.CRABKING_REGEN + math.floor(inst.gemcount.orange/2) * TUNING.CRABKING_REGEN_BUFF )
 end
 
 local function testforlostrock(inst, rightarm)
-    if not inst.fixhits then
+
+    if inst.sg:HasStateTag("loserock_window") then
+        inst.sg:GoToState("fix_lostrock", rightarm)
+    else
+        inst.sg:GoToState("hit")
+    end
+
+    --[[if not inst.fixhits then
         inst.fixhits = 0
     end
 
-    if inst.fixhits == math.floor(inst.countgems(inst).orange/3) then
+    if inst.fixhits == math.floor(inst.gemcount.orange/3) then
         inst.sg:GoToState("fix_lostrock", rightarm)
         inst.fixhits = 0
     else
         inst.fixhits = inst.fixhits + 1
+    end]]
+end
+
+local function gemshine(inst, color)
+    if not inst.components.timer:TimerExists("gem_shine") then
+        inst:ShineSocketOfColor(color)
+        inst.components.timer:StartTimer("gem_shine",1.5)
     end
 end
 
@@ -31,9 +45,10 @@ local function spawnwaves(inst, numWaves, totalAngle, waveSpeed, wavePrefab, ini
     )
 end
 
-local function throwchunk(inst,prefab)
-    local pos = Vector3(inst.Transform:GetWorldPosition())
-    local chunk = inst.spawnchunk(inst,prefab,pos)
+local BOAT_MUST_TAGS = { "boat" }
+
+local function throwchunk(inst, prefab)
+    local chunk = inst:SpawnChunk(prefab, inst:GetPosition())
     chunk.Physics:SetMotorVel(math.random(12,25), math.random(0,10), 0)
 end
 
@@ -44,11 +59,9 @@ end
 local function GetTransitionState(inst)
     if inst.wantstosummonclaws then
         return "spawnclaws"
-    elseif inst.wantstosummonseatacks then
-        return "spawnstacks"
-    elseif inst.wantstoheal then
+    elseif inst.wantstoheal and inst:HasTag("icewall") then
         return "fix_pre"
-    elseif inst.wantstocast then
+    elseif inst.wantstofreeze then
         return "cast_pre"
     end
 end
@@ -66,7 +79,12 @@ local events =
     EventHandler("doattack", function(inst, data)
     end),
     EventHandler("activate", function(inst, data)
-        inst.sg:GoToState("inert_pst")
+        inst.sg:GoToState(data.isload and "idle" or "inert_pst")
+        
+        if not data.isload then
+            inst.components.timer:StartTimer("freeze_cooldown", 30)
+            inst:SpawnCannons()
+        end
     end),
     EventHandler("socket", function(inst, data)
         inst.sg:GoToState("socket")
@@ -213,7 +231,7 @@ local states =
          --   inst.AnimState:PlayAnimation("red_fx")
           --  inst.AnimState:PushAnimation("inert_pst",false)
             inst.AnimState:PlayAnimation("inert_pst")
-            inst.gemshine(inst,"red")
+            inst:ShineSocketOfColor("red")
         end,
 
         timeline=
@@ -286,9 +304,6 @@ local states =
         },
     },
 
-
-
-
     --------------------------------------------------------
     -- CAST attack
     --------------------------------------------------------
@@ -298,12 +313,8 @@ local states =
         tags = { "busy", "canrotate", "casting"},
 
         onenter = function(inst)
-            inst.wantstocast = nil
-            if inst.dofreezecast then
-                inst.AnimState:PlayAnimation("cast_blue_pre")
-            else
-                inst.AnimState:PlayAnimation("cast_purple_pre")
-            end
+            inst.AnimState:PlayAnimation("cast_blue_pre")
+
             inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/cast_pre")
         end,
 
@@ -322,46 +333,44 @@ local states =
             end),
         },
     },
+
     State{
         name = "cast_loop",
         tags = { "busy", "canrotate", "casting"},
 
-        onenter = function(inst)
-
-            if not inst.components.timer:TimerExists("casting_timer") then
-                inst.startcastspell(inst,inst.dofreezecast)
-                if inst.dofreezecast then
-                    inst.isfreezecast = true
-                    inst.components.timer:StartTimer("casting_timer",TUNING.CRABKING_CAST_TIME_FREEZE - math.floor(inst.countgems(inst).yellow/2))
-                else
-                    inst.components.timer:StartTimer("casting_timer",TUNING.CRABKING_CAST_TIME - math.floor(inst.countgems(inst).yellow/2))
-                end
-                inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/magic_LP","crabmagic")
-            end
-
-            if inst.isfreezecast then
-                inst.AnimState:PlayAnimation("cast_blue_loop")
-            else
-                inst.AnimState:PlayAnimation("cast_purple_loop")
-            end
-
-            inst.dofreezecast = nil
-
+        onenter = function(inst, wavetime)
+            inst:StartCastSpell(inst.dofreezecast)
+            inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/magic_LP","crabmagic")            
+            inst.AnimState:PlayAnimation("cast_blue_loop")
             inst.SoundEmitter:SetParameter("crabmagic", "intensity", 0)
+            inst.sg.statemem.elapsedtime = 0
+            inst.sg.statemem.wavetime = wavetime
         end,
 
-        onupdate = function(inst)
-            if inst.components.timer:TimerExists("casting_timer") then
-                local totaltime = TUNING.CRABKING_CAST_TIME - math.floor(inst.countgems(inst).yellow/2)
-                if inst.isfreezecast then
-                    totaltime = TUNING.CRABKING_CAST_TIME_FREEZE - math.floor(inst.countgems(inst).yellow/2)
+        onupdate = function(inst, dt)
+
+            inst.sg.statemem.elapsedtime = inst.sg.statemem.elapsedtime +dt
+
+            if not inst.sg.statemem.wavetime then            
+                SpawnAttackWaves(inst:GetPosition(), nil, 2.2, 8, nil, 2, nil, 2, true)
+                inst.sg.statemem.wavetime = 1
+            else
+                inst.sg.statemem.wavetime = inst.sg.statemem.wavetime - dt
+                if inst.sg.statemem.wavetime <= 0 then
+                    inst.sg.statemem.wavetime = nil
                 end
-                local intensity = 1- inst.components.timer:GetTimeLeft("casting_timer")/totaltime
-                inst.SoundEmitter:SetParameter("crabmagic", "intensity", intensity)
             end
-            if not inst.components.timer:TimerExists("gem_shine") then
-                inst.gemshine(inst,"yellow")
-                inst.components.timer:StartTimer("gem_shine",1.5)
+
+            local totaltime = TUNING.CRABKING_CAST_TIME_FREEZE
+            local intensity = 1- math.min(inst.sg.statemem.elapsedtime/totaltime,1)
+            inst.SoundEmitter:SetParameter("crabmagic", "intensity", intensity)
+            gemshine(inst, "blue")
+
+            local x, y, z = inst.Transform:GetWorldPosition()
+
+            -- Keep casting until there are no boats nearby.
+            if TheSim:CountEntities(x, 0, z, 14, BOAT_MUST_TAGS) <= 0 then
+                inst.sg:GoToState("cast_pst")
             end
         end,
 
@@ -381,14 +390,12 @@ local states =
         },
 
         onexit = function(inst)
+            inst.wavetime = nil
             if not inst.sg.statemem.keepcast then
 
-                inst:DoTaskInTime(0,function()
-                    inst.endcastspell(inst, inst.isfreezecast)
-                end)
+                inst:DoTaskInTime(0, inst.EndCastSpell)
 
                 inst.SoundEmitter:KillSound("crabmagic")
-                inst.isfreezecast = nil
             end
         end,
 
@@ -396,12 +403,7 @@ local states =
         {
             EventHandler("animover", function(inst)
                 inst.sg.statemem.keepcast = true
-                inst.sg:GoToState("cast_loop")
-            end),
-            EventHandler("timerdone", function(inst,data)
-                if data.name == "casting_timer" then
-                    inst.sg:GoToState("cast_pst", inst.isfreezecast)
-                end
+                inst.sg:GoToState("cast_loop", inst.sg.statemem.wavetime)
             end),
         },
     },
@@ -450,8 +452,8 @@ local states =
         timeline = {
             TimeEvent(39*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/inert_hide") end),
             TimeEvent(65*FRAMES, function(inst)
-                inst.spawnarms(inst)
-                inst.gemshine(inst,"green")
+                inst:SpawnClawArms()
+                inst:ShineSocketOfColor("green")
             end),
         },
 
@@ -503,30 +505,21 @@ local states =
         tags = { "canrotate", "fixing"},
 
         onenter = function(inst)
-            inst.sg.statemem.past_interrupt = true
-            inst.lastfixloop = nil
-            if not inst.components.timer:TimerExists("fix_timer") then
-                inst.components.timer:StartTimer("fix_timer",TUNING.CRABKING_FIX_TIME)
-            end
             inst.AnimState:PlayAnimation("fix_pre")
 
-            if not inst.components.timer:TimerExists("claw_regen_timer") then
-                inst.regenarm(inst)
-            end
-            inst.gemshine(inst,"orange")
+            inst:ShineSocketOfColor("orange")
         end,
 
         timeline=
         {
-            TimeEvent(16*FRAMES, function(inst)
-                inst.sg.statemem.past_interrupt = nil
+            TimeEvent(13*FRAMES, function(inst)
+                inst.sg:AddStateTag("loserock_window")
             end),
             TimeEvent(27*FRAMES, function(inst)
-                inst.sg.statemem.past_interrupt = true
                 inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/repair")
             end),
             TimeEvent(31*FRAMES, function(inst)
-                inst.fixhits = 0
+                inst.sg:RemoveStateTag("loserock_window")
                 heal(inst)
             end),
         },
@@ -534,10 +527,7 @@ local states =
         events =
         {
             EventHandler("attacked", function(inst)
-                if not inst.sg.statemem.past_interrupt then
-                    testforlostrock(inst,  not inst.sg.statemem.rightarm)
-                   -- inst.sg:GoToState("fix_lostrock", not inst.sg.statemem.rightarm)
-                end
+                testforlostrock(inst,  not inst.sg.statemem.rightarm)
             end),
             EventHandler("animover", function(inst)
                 inst.sg:GoToState("fix_loop")
@@ -547,10 +537,9 @@ local states =
 
     State{
         name = "fix_loop",
-        tags = { "canrotate", "fixing", "nointerrupt"},
+        tags = { "canrotate", "fixing", "loserock_window"},
 
         onenter = function(inst, rightarm)
-            inst.sg.statemem.past_interrupt = true
             local randomlist = {1,2,3,4}
             if inst.lastfixloop then
                 table.remove(randomlist,inst.lastfixloop)
@@ -561,15 +550,11 @@ local states =
             inst.sg.statemem.rightarm = rightarm
 
             inst.AnimState:PlayAnimation("fix_"..arm.."_loop_"..randomchoice)
-            inst.gemshine(inst,"orange")
+            inst:ShineSocketOfColor("orange")
         end,
 
         timeline=
-        {
-            TimeEvent(4*FRAMES, function(inst)
-                inst.sg:RemoveStateTag("nointerrupt")
-                --inst.sg.statemem.past_interrupt = nil
-             end),
+        {        
             TimeEvent(12*FRAMES, function(inst)
                 if inst.sg.statemem.rightarm then
                     inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/repair")
@@ -579,10 +564,9 @@ local states =
                 if not inst.sg.statemem.rightarm then
                     inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/repair")
                     end
-             end),
-            TimeEvent(20*FRAMES, function(inst) inst.sg:AddStateTag("nointerrupt")  end), -- inst.sg.statemem.past_interrupt = true
+             end),         
             TimeEvent(29*FRAMES, function(inst)
-                inst.fixhits = 0
+                inst.sg:RemoveStateTag("loserock_window")
                 heal(inst)
             end),
         },
@@ -594,14 +578,10 @@ local states =
         events =
         {
             EventHandler("attacked", function(inst)
-                if not inst.sg:HasStateTag("nointerrupt") then -- inst.sg.statemem.past_interrupt
-                    testforlostrock(inst, inst.sg.statemem.rightarm)
-                    --inst.sg:GoToState("fix_lostrock",inst.sg.statemem.rightarm)
-                end
+                testforlostrock(inst, inst.sg.statemem.rightarm)
             end),
             EventHandler("animover", function(inst)
-                if inst.components.health:GetPercent() >= 1 or not inst.wantstoheal then
-                    inst.finishfixing(inst)
+                if inst.components.health:GetPercent() >= 1 or not inst:HasTag("icewall") then
                     inst.sg:GoToState("fix_pst", not  inst.sg.statemem.rightarm)
                 else
 
@@ -634,11 +614,9 @@ local states =
         events =
         {
             EventHandler("animover", function(inst)
-                if inst.components.health:GetPercent() >= 1 or not inst.wantstoheal then
-                    inst.finishfixing(inst)
+                if inst.components.health:GetPercent() >= 1 or not inst:HasTag("icewall") then
                     inst.sg:GoToState("fix_pst", not  inst.sg.statemem.rightarm)
                 else
-
                     inst.sg:GoToState("fix_loop", not inst.sg.statemem.rightarm)
                 end
             end),
@@ -708,7 +686,7 @@ CommonStates.AddCombatStates(states,{
         TimeEvent(0 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/hit",nil,.5) end),
         TimeEvent(5 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/hit") end),
         TimeEvent(26 * FRAMES, function(inst)
-                if inst.countgems(inst).pearl >= 1 then
+                if inst.gemcount.pearl >= 1 then
                     local crown = SpawnPrefab("moon_altar_crown")
                     local pos = Vector3(inst.Transform:GetWorldPosition())
                     crown.components.heavyobstaclephysics:AddFallingStates()
@@ -729,11 +707,11 @@ CommonStates.AddCombatStates(states,{
                             end
                         end)
                 end
-                if inst.countgems(inst).pearl > 0 then
-                    inst.removegem(inst,"hermit_pearl")
-                    inst.addgem(inst,"hermit_cracked_pearl")
+                if inst.gemcount.pearl > 0 then
+                    inst:RemoveGem("hermit_pearl")
+                    inst:AddGem("hermit_cracked_pearl")
                 end
-                inst.dropgems(inst)
+                inst:DropSocketedGems()
             end),
         TimeEvent(28 * FRAMES, function(inst)
                 throwchunk(inst,"crabking_chip_high")

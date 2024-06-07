@@ -335,7 +335,7 @@ local function InstantlyBreakBoat(inst)
         k:PushEvent("onpresink")
     end
 
-    inst.sinkloot()
+    inst:sinkloot()
     if inst.postsinkfn then
         inst:postsinkfn()
     end

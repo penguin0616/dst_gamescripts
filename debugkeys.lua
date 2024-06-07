@@ -763,7 +763,7 @@ AddGameDebugKey(KEY_F8, function()
         return true
     end
     local pt = Vector3(player.Transform:GetWorldPosition())
-    local theta = math.random() * 2 * PI
+    local theta = math.random() * TWOPI
     local numrings = 10 --How many rings of stuff you spawn
     local radius = 2 --Initial distance from player
     local radius_step_distance = 1 --How much the radius increases per ring.
@@ -776,7 +776,7 @@ AddGameDebugKey(KEY_F8, function()
     local numspawned = 0
     -- Walk the circle trying to find a valid spawn point
     for i = 1, numrings do
-        local circ = 2*PI*radius
+        local circ = TWOPI*radius
         local numitems = circ * itemdensity
 
         for i = 1, numitems do
@@ -788,7 +788,7 @@ AddGameDebugKey(KEY_F8, function()
                 local spawn = SpawnPrefab(GetRandomItem(items))
                 spawn.Transform:SetPosition(wander_point:Get())
             end
-            theta = theta - (2 * PI / numitems)
+            theta = theta - (TWOPI / numitems)
         end
         radius = radius + radius_step_distance
     end

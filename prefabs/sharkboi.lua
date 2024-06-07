@@ -19,6 +19,7 @@ local prefabs =
 	"sharkboi_swipe_fx",
 	"splash_green_large",
 	"bootleg",
+	"chesspiece_sharkboi_sketch",
 	"sharkboi_water",
 }
 
@@ -332,6 +333,12 @@ local function GiveReward(inst, target)
 			target = nil
 		end
 		inst.stock = inst.stock - 1
+
+		-- If we got a good item, give them a picture of ourselves, to remember.
+		if inst.pendingreward == MAX_REWARDS then
+			LaunchAt(SpawnPrefab("chesspiece_sharkboi_sketch"), inst, target, 1, 2, 1)
+		end
+
 		for i = 1, inst.pendingreward do
 			LaunchAt(SpawnPrefab("bootleg"), inst, target, 1, 2, 1)
 		end

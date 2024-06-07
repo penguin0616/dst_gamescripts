@@ -89,7 +89,7 @@ local function fn()
 
     MakeObstaclePhysics(inst, 0.66)
 
-    inst.entity:AddTag("statue")
+    inst:AddTag("statue")
 
     inst.AnimState:SetBank("statue_small")
     inst.AnimState:SetBuild("statue_small")

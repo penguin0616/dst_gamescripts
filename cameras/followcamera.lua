@@ -21,7 +21,7 @@ local function onextramaxdist(self, extramaxdist, old)
         not self.paused and   -- NOTES(DiogoW): self.paused seems unused.
         (ThePlayer == nil or ThePlayer.components.playercontroller:IsEnabled())
     then
-        self.distancetarget = (self.maxdist - self.mindist) * 0.7 + self.mindist
+        self:MaximizeDistance()
     end
 end
 
@@ -198,6 +198,10 @@ function FollowCamera:SetTarget(inst)
     else
         self.targetpos.x, self.targetpos.y, self.targetpos.z = 0, 0, 0
     end
+end
+
+function FollowCamera:MaximizeDistance()
+    self.distancetarget = (self.maxdist - self.mindist) * 0.7 + self.mindist
 end
 
 function FollowCamera:Apply()

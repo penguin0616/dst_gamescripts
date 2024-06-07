@@ -1,4 +1,7 @@
+--Used by: storage_robot, winona_storage_robot
+
 require "behaviours/standstill"
+local StorageRobotCommon = require "prefabs/storage_robot_common"
 
 ---------------------------------------------------------------------------------------------------
 
@@ -47,7 +50,7 @@ local function PickUpAction(inst)
 
     ----------------
 
-    item = inst:FindItemToPickupAndStore(item)
+    item = StorageRobotCommon.FindItemToPickupAndStore(inst, item)
 
     if item == nil then
         return
@@ -55,7 +58,7 @@ local function PickUpAction(inst)
 
     inst.brain:IgnoreItem(item)
 
-    return BufferedAction(inst, item, item.components.trap ~= nil and ACTIONS.CHECKTRAP or ACTIONS.PICKUP, nil, nil, nil, nil, nil, nil, 0)
+    return BufferedAction(inst, item, ACTIONS.PICKUP, nil, nil, nil, nil, nil, nil, inst.PICKUP_ARRIVE_DIST)
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -69,7 +72,7 @@ local function StoreItemAction(inst)
 
     inst.brain:UnignoreItem()
 
-    local container = inst:FindContainerWithItem(item)
+    local container = StorageRobotCommon.FindContainerWithItem(inst, item)
 
     return container ~= nil and BufferedAction(inst, container, ACTIONS.STORE, item) or nil
 end
@@ -77,7 +80,7 @@ end
 ---------------------------------------------------------------------------------------------------
 
 local function GoHomeAction(inst)
-    local pos = inst:GetSpawnPoint()
+    local pos = StorageRobotCommon.GetSpawnPoint(inst)
 
     if pos == nil then
         return
@@ -117,7 +120,7 @@ function StorageRobotBrain:OnStart()
 end
 
 function StorageRobotBrain:OnInitializationComplete()
-    self.inst:UpdateSpawnPoint(true)
+    StorageRobotCommon.UpdateSpawnPoint(self.inst, true)
 end
 
 return StorageRobotBrain

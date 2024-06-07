@@ -171,7 +171,7 @@ OnPlayerJoined = function(self, player)
         local cached_player_leader_timeleft = self.cached_player_leader_timeleft
         if self.inst:GetDistanceSqToInst(player) <= TUNING.FOLLOWER_REFOLLOW_DIST_SQ and
         (not cached_player_leader_timeleft or cached_player_leader_timeleft > current_time) then
-            
+
             if player.components.leader then
                 player.components.leader:AddFollower(self.inst)
             else

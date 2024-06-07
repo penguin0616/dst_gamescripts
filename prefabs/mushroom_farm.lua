@@ -315,6 +315,8 @@ end
 local function domagicgrowth(inst, doer)
     if inst.components.harvestable:Grow() then
         inst.components.harvestable:Disable()
+        inst.components.trader:Disable()
+
         inst:DoTaskInTime(0.5, domagicgrowth)
     else
         inst.components.harvestable:Enable()

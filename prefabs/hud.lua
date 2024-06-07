@@ -135,6 +135,10 @@ local assets =
     Asset("ANIM", "anim/wagpunk_over.zip"),
 
     Asset("ANIM", "anim/scrap_monocle_over.zip"),
+    Asset("ANIM", "anim/nightvision_fruit_over.zip"),
+    Asset("ANIM", "anim/inspectacles_over.zip"),
+    Asset("ANIM", "anim/winona_inspectacles_fx.zip"),
+    Asset("ANIM", "anim/inspectacles.zip"),
 }
 
 local prefabs =

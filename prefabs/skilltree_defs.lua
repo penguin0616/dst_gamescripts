@@ -8,6 +8,7 @@ end
 local function CreateSkillTreeFor(characterprefab, skills)
     local RPC_LOOKUP = {}
     local rpc_id = 0
+    local total_locks = 0
     for skill_name, skill in orderedPairs(skills) do
         if skill.lock_open == nil then -- NOTES(JBK): Only include skills for this.
             skill.rpc_id = rpc_id
@@ -19,6 +20,8 @@ local function CreateSkillTreeFor(characterprefab, skills)
                 -- It will not be networked during initial skill selection.
                 PrintFixMe(string.format("Skill Tree for %s has TOO MANY skills! This will break networking.", characterprefab))
             end
+        else
+            total_locks = total_locks + 1
         end
         if skill.connects then -- NOTES(JBK): These skills unlock as an 'or' gate.
             if skill.connects[1] == nil then
@@ -64,6 +67,7 @@ local function CreateSkillTreeFor(characterprefab, skills)
     SKILLTREE_METAINFO[characterprefab] = { -- Must be first for metatable setting.
         RPC_LOOKUP = RPC_LOOKUP,
         TOTAL_SKILLS_COUNT = rpc_id,
+        TOTAL_LOCKS = total_locks,
     }
     SKILLTREE_DEFS[characterprefab] = skills
 end
@@ -222,6 +226,15 @@ local function MakeNoLunarLock(extra_data, not_root)
     return lock
 end
 
+local function MakePurelyVisualLock(skills, locknametoreplicate, locknamesuffix)
+    local locktoreplicate = skills[locknametoreplicate]
+    local lock = deepcopy(locktoreplicate)
+    lock.root = true
+    lock.connects = nil
+    skills[locknametoreplicate .. locknamesuffix] = lock
+    return lock
+end
+
 local FN = {
     CountSkills = CountSkills,
     HasTag = HasTag,
@@ -232,6 +245,7 @@ local FN = {
     MakeNoShadowLock = MakeNoShadowLock,
     MakeCelestialChampionLock = MakeCelestialChampionLock,
     MakeNoLunarLock = MakeNoLunarLock,
+    MakePurelyVisualLock = MakePurelyVisualLock,
 }
 
 local SKILLTREE_ORDERS = {}
@@ -243,20 +257,26 @@ local SKILLTREE_CHARACTERS = {
     "wormwood",
     "willow",
     "wathgrithr",
+    "winona",
+    "wurt",
 }
 
-for _, character in ipairs(SKILLTREE_CHARACTERS) do
-    local BuildSkillsData = require("prefabs/skilltree_"..character)
-
-    if BuildSkillsData then
-        local data = BuildSkillsData(FN)
-
-        if data then
-            CreateSkillTreeFor(character, data.SKILLS)
-            SKILLTREE_ORDERS[character] = data.ORDERS
+local function BuildAllData()
+    for _, character in ipairs(SKILLTREE_CHARACTERS) do
+        local BuildSkillsData = require("prefabs/skilltree_" .. character)
+    
+        if BuildSkillsData then
+            local data = BuildSkillsData(FN)
+    
+            if data then
+                CreateSkillTreeFor(character, data.SKILLS)
+                SKILLTREE_ORDERS[character] = data.ORDERS
+                SKILLTREE_METAINFO[character].BACKGROUND_SETTINGS = data.BACKGROUND_SETTINGS
+            end
         end
     end
 end
+BuildAllData()
 
 setmetatable(SKILLTREE_DEFS, {
     __newindex = function(t, k, v)
@@ -265,4 +285,20 @@ setmetatable(SKILLTREE_DEFS, {
     end,
 })
 
-return {SKILLTREE_DEFS = SKILLTREE_DEFS, SKILLTREE_METAINFO = SKILLTREE_METAINFO, CreateSkillTreeFor = CreateSkillTreeFor, SKILLTREE_ORDERS = SKILLTREE_ORDERS, FN = FN}
+local function DEBUG_REBUILD()
+    -- NOTES(JBK): This is used for debugging purposes and makes no safety checks.
+    for _, character in ipairs(SKILLTREE_CHARACTERS) do
+        package.loaded["prefabs/skilltree_" .. character] = nil
+    end
+    BuildAllData()
+end
+
+
+return {
+    SKILLTREE_DEFS = SKILLTREE_DEFS,
+    SKILLTREE_METAINFO = SKILLTREE_METAINFO,
+    CreateSkillTreeFor = CreateSkillTreeFor,
+    SKILLTREE_ORDERS = SKILLTREE_ORDERS,
+    FN = FN,
+    DEBUG_REBUILD = DEBUG_REBUILD,
+}

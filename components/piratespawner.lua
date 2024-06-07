@@ -1,4 +1,5 @@
-    --------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
 --[[ Pirate Spawner class definition ]]
 --------------------------------------------------------------------------
 
@@ -11,6 +12,7 @@ assert(TheWorld.ismastersim, "Pirate Spawner should not exist on client")
 --------------------------------------------------------------------------
 
 local SourceModifierList = require("util/sourcemodifierlist")
+local messagebottletreasures = require("messagebottletreasures")
 
 --------------------------------------------------------------------------
 --[[ Constants ]]
@@ -246,8 +248,8 @@ self.inst:DoTaskInTime(0,function()
 end)
 
 
-local RANGE = 40 -- distance from player to spawn the flotsam.  should be 5 more than wanted
-local SHORTRANGE = 5 -- radius that must be clear for flotsam to appear
+local RANGE = 38 -- distance from player to spawn the boat.  should be 5 more than wanted
+local SHORTRANGE = 5 -- radius that must be clear for boat to appear
 
 local function DoAnnouncePirates(player)
 	if not (player.components.health:IsDead() or player:HasTag("playerghost")) and player.entity:IsVisible() then 
@@ -356,7 +358,7 @@ local function GetSpawnPoint(platform)
                    #TheSim:FindEntities(spawnpoint_x, spawnpoint_y, spawnpoint_z, SHORTRANGE, nil, SPAWNPOINT_2_ONEOF_TAGS) <= 0
         end
 
-        local theta = math.random() * 2 * PI
+        local theta = math.random() * TWOPI
         local radius = RANGE
         local resultoffset = FindValidPositionByFan(theta, radius, 12, TestSpawnPoint)
 
@@ -366,17 +368,35 @@ local function GetSpawnPoint(platform)
     end
 end
 
-local function SpawnPiratesForPlayer(player)
+local function SpawnPiratesForPlayer(player, nodelivery, forcedelivery)
     --print("SPAWNING PIRATED FOR PLAYER",player.GUID)
 
     local spawnedPirates = false
     local boat =  player:GetCurrentPlatform()
-    if boat then       
-        local spawnpoint = GetSpawnPoint(boat)
+    if boat then
+        local spawnpoint = GetSpawnPoint(boat)        
 
         if spawnpoint ~= nil then
             spawnedPirates = true
             local shipdata = spawnpirateship(spawnpoint)
+
+            if forcedelivery or (math.random() < TUNING.MONKEY_PIRATE_TREASURE_BOAT_CHANCE and not nodelivery) then
+                shipdata.boat.components.boatcrew.status = "delivery"
+
+                local deflection = PI/4
+                local playerpos = player:GetPosition()
+                local theta = shipdata.boat:GetAngleToPoint(playerpos.x,0,playerpos.z)*DEGREES + ((math.random()*2*deflection)-deflection)
+                local radius = 100
+                local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
+                shipdata.boat.components.boatcrew:SetTarget(Vector3(playerpos.x +offset.x,0,playerpos.z +offset.z))
+
+                local x,y,z = shipdata.boat.Transform:GetWorldPosition()
+
+                messagebottletreasures.GenerateTreasure(Vector3(x+1.5, y, z+1.5))
+
+                local cannon = SpawnPrefab("boat_cannon")
+                cannon.Transform:SetPosition(x-1.5, y, z-1.5)
+            end
 
             self:SaveShipData(shipdata)
         end
@@ -407,7 +427,7 @@ local function onmegaflaredetonation(world,data)
                         if #players > 0 then
                             for i, player in ipairs(players) do
                                 if player:GetCurrentPlatform() then
-                                    SpawnPiratesForPlayer(player)
+                                    SpawnPiratesForPlayer(player, true)
                                     break
                                 end
                             end
@@ -484,7 +504,7 @@ function self:FindStashLocation()
 
         local randnode =  TheWorld.topology.nodes[ids[math.random(1,#ids)]]
         pt = Vector3(randnode.cent[1],0,randnode.cent[2])
-        local theta = math.random()* 2 * PI
+        local theta = math.random()*TWOPI
         local radius = 4 
         offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
 
@@ -596,6 +616,10 @@ function self:SpawnPirates(pt)
 end
 
 --self.ScheduleSpawn = ScheduleSpawn
+
+function self:SpawnPiratesForPlayer(player, nodelivery, forcedelivery)
+     SpawnPiratesForPlayer(player, nodelivery, forcedelivery)
+ end
 
 local GRACETIME = 10
 

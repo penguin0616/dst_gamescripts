@@ -81,9 +81,24 @@ local RETARGET_MUST_TAGS = { "_combat", "_health" }
 local RETARGET_CANT_TAGS = { "insect", "INLIMBO" }
 local RETARGET_ONEOF_TAGS = { "character", "animal", "monster" }
 local function KillerRetarget(inst)
+
+    local leader = inst.components.follower and inst.components.follower.leader
+    
     return FindEntity(inst, SpringCombatMod(20),
         function(guy)
-            return inst.components.combat:CanTarget(guy)
+
+            local musk = false
+
+            if guy.components.inventory then
+
+                guy.components.inventory:FindItem(function(thing)
+                    if thing:HasTag("mosquitomusk") then
+                        musk = true                    
+                    end
+                end)
+            end
+
+            return not musk and not inst.components.combat:IsAlly(guy) and inst.components.combat:CanTarget(guy) or nil
         end,
         RETARGET_MUST_TAGS,
         RETARGET_CANT_TAGS,
@@ -194,6 +209,10 @@ local function mosquito()
     MakeSmallBurnableCharacter(inst, "body", Vector3(0, -1, 1))
     MakeTinyFreezableCharacter(inst, "body", Vector3(0, -1, 1))
 
+
+    ------------------
+    inst:AddComponent("follower")
+    
     ------------------
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(TUNING.MOSQUITO_HEALTH)

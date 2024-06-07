@@ -88,6 +88,7 @@ function Pickable:OnRemoveFromEntity()
     self.inst:RemoveTag("pickable")
     self.inst:RemoveTag("barren")
     self.inst:RemoveTag("quickpick")
+    self.inst:RemoveTag("jostlepick")
 end
 
 local function OnRegen(inst)
@@ -223,6 +224,22 @@ function Pickable:SetUp(product, regen, number)
     self.baseregentime = regen
     self.regentime = regen
     self.numtoharvest = number or 1
+end
+
+function Pickable:RestartRegenTask(regen)
+    if self.baseregentime ~= nil and self.task ~= nil then
+        self.regentime = SpringGrowthMod(self.getregentimefn ~= nil and self.getregentimefn(self.inst) or self.baseregentime)
+
+        if not self.useexternaltimer then
+            self.task:Cancel()
+
+            self.task = self.inst:DoTaskInTime(self.regentime, OnRegen)
+            self.targettime = GetTime() + self.regentime
+        else
+            self.stopregentimer(self.inst)
+            self.startregentimer(self.inst, self.regentime)
+        end
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -432,17 +449,13 @@ function Pickable:MakeEmpty()
     self.canbepicked = false
 
     if not self.paused and self.baseregentime ~= nil then
-        local time = self.baseregentime
-        if self.getregentimefn ~= nil then
-            time = self.getregentimefn(self.inst)
-        end
-        time = SpringGrowthMod(time)
+        self.regentime = SpringGrowthMod(self.getregentimefn ~= nil and self.getregentimefn(self.inst) or self.baseregentime)
 
         if not self.useexternaltimer then
-            self.task = self.inst:DoTaskInTime(time, OnRegen)
-            self.targettime = GetTime() + time
+            self.task = self.inst:DoTaskInTime(self.regentime, OnRegen)
+            self.targettime = GetTime() + self.regentime
         else
-            self.startregentimer(self.inst, time)
+            self.startregentimer(self.inst, self.regentime)
         end
     end
 end
@@ -539,12 +552,13 @@ function Pickable:Pick(picker)
         self.canbepicked = false
 
         if self.baseregentime ~= nil and not (self.paused or self:IsBarren() or self.inst:HasTag("withered")) then
-            self.regentime = SpringGrowthMod(self.baseregentime)
+            self.regentime = SpringGrowthMod(self.getregentimefn ~= nil and self.getregentimefn(self.inst) or self.baseregentime)
 
             if not self.useexternaltimer then
                 if self.task ~= nil then
                     self.task:Cancel()
                 end
+
                 self.task = self.inst:DoTaskInTime(self.regentime, OnRegen)
                 self.targettime = GetTime() + self.regentime
             else

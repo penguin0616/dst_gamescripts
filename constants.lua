@@ -7,6 +7,7 @@ PI = math.pi
 PI2 = PI*2
 TWOPI = PI2
 SQRT2 = math.sqrt(2)
+GOLDENANGLE = PI * (3 - math.sqrt(5))
 DEGREES = PI/180
 RADIANS = 180/PI
 FRAMES = 1/30
@@ -1815,6 +1816,8 @@ MATERIALS =
     SHELL = "shell",
     NIGHTMARE = "nightmare",
 	DREADSTONE = "dreadstone",
+    SALT = "salt",
+    VITAE = "vitae",
 }
 
 FORGEMATERIALS =
@@ -1832,6 +1835,14 @@ UPGRADETYPES =
     MAST = "mast",
     SPEAR_LIGHTNING = "spear_lightning",
     CHEST = "chest",
+}
+
+SPELLTYPES =
+{
+    WURT_SHADOW = "wurt_shadow",
+    WURT_LUNAR = "wurt_lunar",
+    SHADOW_SWAMP_BOMB = "shadow_swamp_bomb",
+    LUNAR_SWAMP_BOMB = "lunar_swamp_bomb",
 }
 
 LOCKTYPE =
@@ -1857,6 +1868,18 @@ FUELTYPE =
 OCCUPANTTYPE =
 {
     BIRD = "bird",
+}
+
+VALID_KITCOON_BUILDS = {
+    "kitcoon_forest_build",
+    "kitcoon_savanna_build",
+    "kitcoon_deciduous_build",
+    "kitcoon_marsh_build",
+    "kitcoon_grass_build",
+    "kitcoon_rocky_build",
+    "kitcoon_desert_build",
+    "kitcoon_moon_build",
+    "kitcoon_yot_build", 
 }
 
 FOODTYPE =
@@ -1989,6 +2012,7 @@ TECH_SKILLTREE_BUILDER_TAG_OWNERS =
     wolfgang_coach = "wolfgang",
     wolfgang_dumbbell_crafting = "wolfgang",
 
+    leifidolcrafter = "woodie",
     woodcarver1 = "woodie",
     woodcarver2 = "woodie",
     woodcarver3 = "woodie",
@@ -1998,11 +2022,11 @@ TECH_SKILLTREE_BUILDER_TAG_OWNERS =
     fruitdragoncrafter = "wormwood",
     juicyberrybushcrafter = "wormwood",
     lightfliercrafter = "wormwood",
+    lunarplant_husk_crafter = "wormwood",
     lureplantcrafter = "wormwood",
     reedscrafter = "wormwood",
     saplingcrafter = "wormwood",
     syrupcrafter = "wormwood",
-    lunarplant_husk_crafter = "wormwood",
 
     battlesongcontainermaker = "wathgrithr",
     battlesonginstantrevivemaker = "wathgrithr",
@@ -2014,6 +2038,18 @@ TECH_SKILLTREE_BUILDER_TAG_OWNERS =
     wathgrithrshieldmaker = "wathgrithr",
 
     fire_mastery_1 = "willow",
+
+    charliet1maker = "winona",
+    portableengineer = "winona",
+    wagstafft1maker = "winona",
+    wagstafft2maker = "winona",
+
+    merm_swampmaster_offeringpot = "wurt",
+    merm_swampmaster_offeringpot_upgraded = "wurt",
+    mosquitocraft_1 = "wurt",
+    mosquitocraft_2 = "wurt",
+    [SPELLTYPES.LUNAR_SWAMP_BOMB.."_spelluser"] = "wurt",
+    [SPELLTYPES.SHADOW_SWAMP_BOMB.."_spelluser"] = "wurt",
 }
 
 -- IngredientMod must be one of the following values
@@ -2087,6 +2123,12 @@ DEPLOYSPACING =
     LARGE = 5,
 }
 
+--V2C: Deploy spacing is a legacy system where this is actually the distance
+--     between our center point and other objects' center points.
+--     For newer things, half of DEPLOYSPACING_RADIUS is used to indicate our
+--     actual footprint radius, combined with nearby objects that have called
+--     SetDeploySmartRadius (or physics size for inventoryitems) to determine
+--     required deploy spacing.
 DEPLOYSPACING_RADIUS =
 {
     [DEPLOYSPACING.DEFAULT] = 2,
@@ -2721,6 +2763,26 @@ LOADING_SCREEN_CONTROLLER_ID_LOOKUP =
     [CONTROL_ACTION] = CONTROL_CONTROLLER_ACTION,
     [CONTROL_FORCE_INSPECT] = CONTROL_INSPECT,
     [CONTROL_SHOW_PLAYER_STATUS] = CONTROL_MENU_MISC_4,
+}
+
+-- The games for inspectacles with netvar inspectacles_game range [0..7]
+INSPECTACLES_GAMES = {
+    NONE = 0,
+    WIRES = 1,
+    --GEARS = 2,
+    --TAPE = 3,
+    FREE1 = 2, -- FIXME(JBK): Adjust the enum for games added.
+    --FREE2 = 5,
+    --FREE3 = 6,
+}
+INSPECTACLES_GAMES_LOOKUP = {}
+for name, i in pairs(INSPECTACLES_GAMES) do
+    INSPECTACLES_GAMES_LOOKUP[i] = name
+end
+
+CHARLIERESIDUE_MAP_ACTIONS = {
+    NONE = 0,
+    WORMHOLE = 1,
 }
 
 -- Constants to reduce network overhead.

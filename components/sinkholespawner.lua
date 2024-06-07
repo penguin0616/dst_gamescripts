@@ -166,9 +166,9 @@ function SinkholeSpawner:SpawnSinkhole(spawnpt)
     local offset = Vector3(0, 0, 0)
     offset =
         IsValidSinkholePosition(offset) and offset or
-        FindValidPositionByFan(math.random() * 2 * PI, TUNING.ANTLION_SINKHOLE.RADIUS * 1.8 + math.random(), 9, IsValidSinkholePosition) or
-        FindValidPositionByFan(math.random() * 2 * PI, TUNING.ANTLION_SINKHOLE.RADIUS * 2.9 + math.random(), 17, IsValidSinkholePosition) or
-        FindValidPositionByFan(math.random() * 2 * PI, TUNING.ANTLION_SINKHOLE.RADIUS * 3.9 + math.random(), 17, IsValidSinkholePosition) or
+        FindValidPositionByFan(math.random() * TWOPI, TUNING.ANTLION_SINKHOLE.RADIUS * 1.8 + math.random(), 9, IsValidSinkholePosition) or
+        FindValidPositionByFan(math.random() * TWOPI, TUNING.ANTLION_SINKHOLE.RADIUS * 2.9 + math.random(), 17, IsValidSinkholePosition) or
+        FindValidPositionByFan(math.random() * TWOPI, TUNING.ANTLION_SINKHOLE.RADIUS * 3.9 + math.random(), 17, IsValidSinkholePosition) or
         nil
 
     if offset ~= nil then

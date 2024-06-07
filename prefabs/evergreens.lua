@@ -534,7 +534,7 @@ end
 
 local function onpineconetask(inst)
     local pt = inst:GetPosition()
-    local angle = math.random() * 2 * PI
+    local angle = math.random() * TWOPI
     pt.x = pt.x + math.cos(angle)
     pt.z = pt.z + math.sin(angle)
     inst.components.lootdropper:DropLoot(pt)

@@ -76,6 +76,13 @@ local function StartTravelSound(inst, doer)
     doer:PushEvent("wormholetravel", WORMHOLETYPE.WORM) --Event for playing local travel sound
 end
 
+local function OnResidueHookup(inst, residueowner, residue)
+    local skilltreeupdater = residueowner.components.skilltreeupdater
+    if skilltreeupdater and skilltreeupdater:IsActivated("winona_charlie_2") then
+        residue:SetMapActionContext(CHARLIERESIDUE_MAP_ACTIONS.WORMHOLE)
+    end
+end
+
 local function OnSave(inst, data)
 	if inst.disable_sanity_drain then
 		data.disable_sanity_drain = true
@@ -102,6 +109,7 @@ local function fn()
     inst.Physics:SetSphere(1)
 
     inst.MiniMapEntity:SetIcon("wormhole.png")
+    inst.MiniMapEntity:SetPriority(5)
 
     inst.AnimState:SetBank("teleporter_worm")
     inst.AnimState:SetBuild("teleporter_worm_build")
@@ -114,6 +122,8 @@ local function fn()
     inst:AddTag("alltrader")
 
     inst:AddTag("antlion_sinkhole_blocker")
+
+    inst:AddTag("wormhole")
 
     inst.entity:SetPristine()
 
@@ -146,6 +156,8 @@ local function fn()
     inst.components.trader.onaccept = onaccept
     inst.components.trader.deleteitemonaccept = false
 
+    local roseinspectable = inst:AddComponent("roseinspectable")
+    roseinspectable:SetOnResidueHookup(OnResidueHookup)
 
 	inst.OnSave = OnSave
 	inst.OnLoad = OnLoad

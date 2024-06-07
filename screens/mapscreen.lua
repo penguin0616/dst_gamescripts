@@ -178,7 +178,7 @@ end
 function MapScreen:UpdateMapActions(x, y, z)
     local playercontroller = ThePlayer and ThePlayer.components.playercontroller or nil
     if playercontroller and ThePlayer.components.playeractionpicker then
-        return playercontroller:UpdateActionsToMapActions(Vector3(x, y, z))
+        return playercontroller:UpdateActionsToMapActions(Vector3(x, y, z), self.maptarget)
     end
     return nil, nil
 end
@@ -477,15 +477,33 @@ function MapScreen:OnControl(control, down)
         self:DoZoomIn(0)
     elseif control == CONTROL_MAP_ZOOM_OUT then
         self:DoZoomOut(0)
-	elseif playercontroller and (control == CONTROL_SECONDARY or control == CONTROL_CONTROLLER_ATTACK) then
+	elseif playercontroller then
         local x, y, z = self:GetWorldPositionAtCursor()
-        local _, RMBaction = self:UpdateMapActions(x, y, z)
-        if RMBaction then
-            if not self.quitting and RMBaction.invobject ~= nil and RMBaction.invobject:HasTag("action_pulls_up_map") then
+        local LMBaction, RMBaction = self:UpdateMapActions(x, y, z)
+        if LMBaction and (control == CONTROL_PRIMARY or control == CONTROL_CONTROLLER_ACTION) then
+            if not self.quitting then
                 SetAutopaused(false)
                 self.quitting = true
             end
-			playercontroller:OnMapAction(RMBaction.action.code, Vector3(x, y, z))
+			playercontroller:OnMapAction(LMBaction.action.code, Vector3(x, y, z), self.maptarget)
+            if LMBaction.action.closes_map then
+                self.maptarget = nil
+                TheFrontEnd:PopScreen()
+                playercontroller._hack_ignore_held_controls = 0.1
+                playercontroller._hack_ignore_ups_for = {}
+            end
+        elseif RMBaction and (control == CONTROL_SECONDARY or control == CONTROL_CONTROLLER_ATTACK) then
+            if not self.quitting then
+                SetAutopaused(false)
+                self.quitting = true
+            end
+			playercontroller:OnMapAction(RMBaction.action.code, Vector3(x, y, z), self.maptarget)
+            if RMBaction.action.closes_map then
+                self.maptarget = nil
+                TheFrontEnd:PopScreen()
+                playercontroller._hack_ignore_held_controls = 0.1
+                playercontroller._hack_ignore_ups_for = {}
+            end
         end
     else
         return false

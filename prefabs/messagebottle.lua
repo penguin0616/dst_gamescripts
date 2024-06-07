@@ -10,12 +10,14 @@ local assets =
 	Asset("ANIM", "anim/swap_bottle.zip"),
 }
 
+local messagebottletreasures_prefabs = messagebottletreasures.GetPrefabs()
+
 local prefabs =
 {
 	"messagebottleempty",
 	"messagebottle_throwable",
 }
-JoinArrays(prefabs, messagebottletreasures.GetPrefabs())
+ConcatArrays(prefabs, messagebottletreasures_prefabs)
 
 local function playidleanim(inst)
 	local x, y, z = inst.Transform:GetWorldPosition()
@@ -98,11 +100,19 @@ local function messagebottlefn()
 	MakeInventoryPhysics(inst)
 	MakeInventoryFloatable(inst, "small", -0.04, 1)
 
+	--waterproofer (from waterproofer component) added to pristine state for optimization
+	inst:AddTag("waterproofer")
+
+	--mapspotrevealer (from mapspotrevealer component) added to pristine state for optimization
+	inst:AddTag("mapspotrevealer")
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
         return inst
     end
+
+	inst.scrapbook_removedeps = messagebottletreasures_prefabs
 
     inst:AddComponent("inspectable")
 	inst:AddComponent("inventoryitem")
@@ -145,6 +155,9 @@ local function emptybottlefn()
     inst.AnimState:SetBank("bottle")
     inst.AnimState:SetBuild("bottle")
 	inst.AnimState:PlayAnimation("idle")
+
+	--waterproofer (from waterproofer component) added to pristine state for optimization
+	inst:AddTag("waterproofer")
 
 	MakeInventoryPhysics(inst)
 	MakeInventoryFloatable(inst, "small", -0.04, 1)

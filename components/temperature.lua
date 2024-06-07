@@ -390,8 +390,18 @@ function Temperature:OnUpdate(dt, applyhealthdelta)
 
                     local heat = v.components.heater:GetHeat(self.inst)
                     if heat ~= nil then
-                        -- This produces a gentle falloff from 1 to zero.
-                        local heatfactor = 1 - self.inst:GetDistanceSqToInst(v) / ZERO_DISTSQ
+                        local dsqtoinst = self.inst:GetDistanceSqToInst(v)
+                        local heatfactor
+                        if v.components.heater:ShouldFalloff() then
+                            -- This produces a gentle falloff from 1 to zero.
+                            heatfactor = 1 - dsqtoinst / ZERO_DISTSQ
+                        else
+                            heatfactor = 1
+                        end
+                        local radius_cutoff = v.components.heater:GetHeatRadiusCutoff()
+                        if radius_cutoff and dsqtoinst > radius_cutoff * radius_cutoff then
+                            heatfactor = 0
+                        end
                         if self.inst:GetIsWet() then
                             heatfactor = heatfactor * TUNING.WET_HEAT_FACTOR_PENALTY
                         end

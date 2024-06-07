@@ -52,7 +52,7 @@ local function DropItem(inst, data)
 
 		if item ~= nil then
 			local x, y, z = inst.Transform:GetWorldPosition()
-			local dir = math.random() * PI * 2
+			local dir = math.random() * TWOPI
 			item.Transform:SetPosition(x + math.cos(dir) * DROP_OFFSET, y, z + math.sin(dir) * DROP_OFFSET)
 		end
 	end

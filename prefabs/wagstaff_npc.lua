@@ -378,8 +378,8 @@ end
 local function teleport_override_fn(inst)
 
     local pt = inst:GetPosition()
-    local offset = FindWalkableOffset(pt, math.random() * 2 * PI, 4, 8, true, false) or
-                    FindWalkableOffset(pt, math.random() * 2 * PI, 8, 8, true, false)
+    local offset = FindWalkableOffset(pt, math.random() * TWOPI, 4, 8, true, false) or
+                    FindWalkableOffset(pt, math.random() * TWOPI, 8, 8, true, false)
     if offset ~= nil then
         pt = pt + offset
     end
@@ -587,7 +587,7 @@ local function spawn_device(inst, erode_data)
     inst._device = SpawnPrefab("alterguardian_contained")
 
     local ipos = inst:GetPosition()
-    local offset = FindWalkableOffset(ipos, 2*PI*math.random(), 2.0, nil, true)
+    local offset = FindWalkableOffset(ipos, TWOPI*math.random(), 2.0, nil, true)
     if offset then
         ipos = ipos + offset
     end

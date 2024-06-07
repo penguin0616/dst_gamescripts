@@ -57,7 +57,7 @@ function DeployHelper:StartHelper(recipename, placerinst)
         self.delay = 2
     elseif not self.inst:IsAsleep() then
         self.delay = 2
-        self.inst:StartUpdatingComponent(self)
+		self.inst:StartWallUpdatingComponent(self)
         if self.onenablehelper then
             self.onenablehelper(self.inst, true, recipename, placerinst)
         end
@@ -71,14 +71,14 @@ end
 function DeployHelper:StopHelper()
     if self.delay then
         self.delay = nil
-        self.inst:StopUpdatingComponent(self)
+		self.inst:StopWallUpdatingComponent(self)
         if self.onenablehelper then
             self.onenablehelper(self.inst, false)
         end
     end
 end
 
-function DeployHelper:OnUpdate()
+function DeployHelper:OnWallUpdate()
     if self.delay > 1 then
         self.delay = self.delay - 1
     else

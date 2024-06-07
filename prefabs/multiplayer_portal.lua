@@ -75,7 +75,7 @@ local function MakePortal(name, bank, build, assets, prefabs, common_postinit, m
         inst:AddTag("multiplayer_portal")
         inst:AddTag("antlion_sinkhole_blocker")
 
-        inst:SetDeployExtraSpacing(2)
+		inst:SetDeploySmartRadius(2.5)
 
         inst.scrapbook_specialinfo = "MULTIPLAYERPORTAL"
         inst.scrapbook_proxy = "multiplayer_portal"

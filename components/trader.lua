@@ -84,6 +84,10 @@ function Trader:SetOnAccept(fn)
     self.onaccept = fn
 end
 
+function Trader:SetOnRefuse(fn)
+    self.onrefuse = fn
+end
+
 function Trader:SetAcceptStacks()
     self.acceptstacks = true
 end
@@ -141,12 +145,12 @@ function Trader:AcceptGift(giver, item, count)
         self.inst:PushEvent("trade", { giver = giver, item = item })
 
         return true
+    else
+        if self.onrefuse ~= nil then
+            self.onrefuse(self.inst, giver, item)
+        end
+        return false
     end
-
-    if self.onrefuse ~= nil then
-        self.onrefuse(self.inst, giver, item)
-    end
-    return false
 end
 
 function Trader:GetDebugString()

@@ -131,6 +131,8 @@ local function itemfn()
         return inst
     end
 
+    inst.scrapbook_animoffsety = 65
+
     inst:AddComponent("tradable")
 
     inst:AddComponent("inspectable")

@@ -193,7 +193,7 @@ function SkillTreeBuilder:SetFocusChangeDirs()
 	end
 end
 
-function SkillTreeBuilder:buildbuttons(panel,pos,data, offset)	
+function SkillTreeBuilder:buildbuttons(panel, pos, data, offset, root)	
 	for skill,subdata in pairs(data)do
 
 		local TILEUNIT = 37
@@ -251,9 +251,17 @@ function SkillTreeBuilder:buildbuttons(panel,pos,data, offset)
 		skillbutton:SetPosition(newpos.x,newpos.y)
 		skillimage:SetPosition(newpos.x,newpos.y)
 
+        skillbutton.clickoffset = Vector3(0, -1, 0)
+
 		self.skillgraphics[skill] = {}
 		self.skillgraphics[skill].button = skillbutton
 		self.skillgraphics[skill].frame = skillimage
+        self.skillgraphics[skill].button_decorations = subdata.button_decorations
+        if subdata.button_decorations ~= nil then
+            if subdata.button_decorations.init ~= nil then
+                subdata.button_decorations.init(skillbutton, root)
+            end
+        end
 		table.insert(self.buttongrid,{button=skillbutton,x=newpos.x,y=newpos.y})
 	end	
 end
@@ -277,19 +285,21 @@ function SkillTreeBuilder:CreatePanel(data, offset)
 	local maxcols = getMax(data.data,1)
 	local maxrows = getMax(data.data,2)
 
-	self:buildbuttons(panel,{x=0,y=0},data.data, offset)
+	self:buildbuttons(panel, {x=0,y=0}, data.data, offset, self.skilltreewidget.midlay)
 	
 	panel.c_width = maxcols * TILESIZE + ((maxcols -1) * SPACE)
 
-	local function getPOS()
-		for i,namedata in ipairs(skilltreedefs.SKILLTREE_ORDERS[self.target]) do
-			if namedata[1] == data.name then
-				return  namedata[2]
-			end
-		end	
-	end
-	panel.title:SetPosition(getPOS()[1],getPOS()[2]+ offset)
-	
+    local pos = nil
+    for i, namedata in ipairs(skilltreedefs.SKILLTREE_ORDERS[self.target]) do
+        if namedata[1] == data.name then
+            pos = namedata[2]
+            break
+        end
+    end
+    if pos then
+        panel.title:SetPosition(pos[1], pos[2] + offset)
+    end
+
 	panel.c_height = maxrows * TILESIZE + ((maxrows -1) * SPACE)
 
 	return panel
@@ -469,19 +479,50 @@ function SkillTreeBuilder:RefreshTree()
 					self.inst:DoTaskInTime(13/30, function()
 						graphics.button:SetTextures(ATLAS, IMAGE_UNLOCKED, IMAGE_UNLOCKED_OVER,IMAGE_UNLOCKED,IMAGE_UNLOCKED,IMAGE_UNLOCKED)
 					end)
+                    if graphics.button_decorations ~= nil then
+                        if graphics.button_decorations.onunlocked ~= nil then
+                            graphics.button_decorations.onunlocked(graphics.button, false)
+                        end
+                    end
+                else
+                    if graphics.button_decorations ~= nil then
+                        if graphics.button_decorations.onunlocked ~= nil then
+                            graphics.button_decorations.onunlocked(graphics.button, true)
+                        end
+                    end
 				end
 			else
 				graphics.button:SetTextures(ATLAS, IMAGE_LOCKED, IMAGE_LOCKED_OVER,IMAGE_LOCKED,IMAGE_LOCKED,IMAGE_LOCKED)
+                if graphics.button_decorations ~= nil then
+                    if graphics.button_decorations.onlocked ~= nil then
+                        graphics.button_decorations.onlocked(graphics.button, graphics.oldstatus == nil or graphics.oldstatus.lock_open == graphics.status.lock_open)
+                    end
+                end
 			end
 		elseif graphics.status.activated then
 			graphics.button:Show()
 			graphics.button:SetTextures(ATLAS, IMAGE_SELECTED, IMAGE_SELECTED_OVER,IMAGE_SELECTED,IMAGE_SELECTED,IMAGE_SELECTED)
+            if graphics.button_decorations ~= nil then
+                if graphics.button_decorations.onunlocked ~= nil then
+                    graphics.button_decorations.onunlocked(graphics.button, true)
+                end
+            end
 		elseif graphics.status.activatable and availableskillpoints > 0 then
 			graphics.button:Show()
 			graphics.button:SetTextures(ATLAS, IMAGE_SELECTABLE, IMAGE_SELECTABLE_OVER,IMAGE_SELECTABLE,IMAGE_SELECTABLE,IMAGE_SELECTABLE)
+            if graphics.button_decorations ~= nil then
+                if graphics.button_decorations.onlocked ~= nil then
+                    graphics.button_decorations.onlocked(graphics.button, true)
+                end
+            end
 		else
 			graphics.button:Show()
 			graphics.button:SetTextures(ATLAS, IMAGE_UNSELECTED, IMAGE_UNSELECTED_OVER,IMAGE_UNSELECTED,IMAGE_UNSELECTED,IMAGE_UNSELECTED)
+            if graphics.button_decorations ~= nil then
+                if graphics.button_decorations.onlocked ~= nil then
+                    graphics.button_decorations.onlocked(graphics.button, true)
+                end
+            end
 		end
 	end
 

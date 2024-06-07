@@ -28,13 +28,6 @@ local function Bloom(inst)
     inst.AnimState:SetFinalOffset(1)
 end
 
-local function BloomOrange(inst)
-    inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
---    inst.AnimState:SetMultColour(204/255,131/255,57/255,1)
-    inst.AnimState:SetMultColour(219/255,168/255,117/255,1)
-    inst.AnimState:SetFinalOffset(1)
-end
-
 local function OceanTreeLeafFxFallUpdate(inst)
     local x, y, z = inst.Transform:GetWorldPosition()
     inst.Transform:SetPosition(x, y - inst.fall_speed * FRAMES, z)
@@ -1895,13 +1888,13 @@ local fx =
         anim = "idle",
         fn = GroundOrientation,
     },
-    {
+    --[[{
         name = "mushroomsprout_glow",
         bank = "mushroomsprout_glow",
         build ="mushroomsprout_glow",
         anim = "mushroomsprout_glow",
         fn = FinalOffset1,
-    },
+    },]]
     {
         name = "messagebottle_break_fx",
         bank = "bottle",
@@ -2490,6 +2483,13 @@ local fx =
         sound = "dontstarve/characters/woodie/moose/hit",
     },
     {
+        name = "boat_bumper_hit_crabking",
+        bank = "boat_bumper",
+        build = "boat_bumper_crabking",
+        anim = "fx_shell",
+        sound = "dontstarve/characters/woodie/moose/hit",
+    },    
+    {
         name = "cannonball_used",
         bank = "cannonball_rock",
         build = "cannonball_rock",
@@ -3056,6 +3056,64 @@ local fx =
             end)
 
         end,
+    },
+    {
+        name = "repaired_kelp_timeout_fx",
+        bank = "boat_repair_kelp_fx",
+        build = "boat_repair_kelp_fx",
+        anim = "break",
+        fn = FinalOffset1,
+    },
+
+    {
+        name = "boat_otterden_erode",
+        bank = "boat_otterden",
+        build = "boat_otterden",
+        anim = "erode",
+        fn = function(inst)
+            inst.AnimState:SetScale(0.75,0.75,0.75)
+            inst.AnimState:SetSortOrder(ANIM_SORT_ORDER.OCEAN_BOAT)
+            inst.AnimState:SetFinalOffset(1)
+            inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
+            inst.AnimState:SetLayer(LAYER_BACKGROUND)
+        end,
+        nofaced = true,
+    },
+    {
+        name = "boat_otterden_erode_water",
+        bank = "boat_otterden",
+        build = "boat_otterden",
+        anim = "erode_water",
+        fn = function(inst)
+            inst.AnimState:SetScale(0.75,0.75,0.75)
+            inst.AnimState:SetSortOrder(ANIM_SORT_ORDER.OCEAN_BOAT)
+            inst.AnimState:SetFinalOffset(1)
+            inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
+            inst.AnimState:SetLayer(LAYER_BACKGROUND)
+            local length = 18
+            local alpha = 1
+            local delta = 1 / length
+            local task = inst:DoPeriodicTask(0, function(inst)
+                alpha = math.max(0, alpha - delta)
+                inst.AnimState:SetMultColour(1, 1, 1, alpha)
+            end)
+        end,
+        nofaced = true,
+    },
+    {
+        name = "fx_kelp_boat_fluff",
+        bank = "boat_repair_kelp_fx",
+        build = "boat_repair_kelp_fx",
+        anim = "break",
+        transform = Vector3(0.75, 0.75, 0.75),
+        fn = FinalOffsetNegative1,
+    },
+    {
+        name = "wurt_swamp_terraform_fx",
+        bank = "pond_splash_fx",
+        build = "pond_splash_fx",
+        sound = "aqol/new_test/squidgy",
+        anim = "swamp_splash",
     },
 }
 
