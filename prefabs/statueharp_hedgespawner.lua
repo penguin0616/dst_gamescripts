@@ -193,6 +193,8 @@ local function fn()
     ----------------------------------------------------------------------------------
     MakeHauntableWork(inst)
 
+    MakeRoseTarget_CreateFuel(inst)
+
     return inst
 end
 

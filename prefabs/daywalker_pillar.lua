@@ -757,6 +757,8 @@ local function fn()
 
     inst:DoTaskInTime((1 + math.random()) * 0.2, inst.ClearNearbyColliders)
 
+    MakeRoseTarget_CreateFuel_IncreasedHorror(inst)
+
 	return inst
 end
 

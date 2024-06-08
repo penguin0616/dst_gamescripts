@@ -313,8 +313,8 @@ local function OnBurnt(inst)
     DefaultBurntStructureFn(inst)
     StopSoundLoop(inst)
     if inst.components.fueled ~= nil then
-        inst:RemoveComponent("fueled")
 		ClearAllFuelLevels(inst)
+        inst:RemoveComponent("fueled")
     end
 	inst:RemoveComponent("portablestructure")
     inst.components.workable:SetOnWorkCallback(nil)

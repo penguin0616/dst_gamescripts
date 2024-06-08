@@ -206,7 +206,7 @@ end
 
 ------------------------------------------------------------------------------
 local EATFOOD_MUST_TAGS = { "edible_VEGGIE" }
-local EATFOOD_CANOT_TAGS = { "INLIMBO" }
+local EATFOOD_CANT_TAGS = { "INLIMBO" }
 local SCARY_TAGS = { "scarytoprey" }
 
 local function EatFoodAction(inst)
@@ -217,7 +217,9 @@ local function EatFoodAction(inst)
     end
 
     if target == nil and inst.components.follower.leader == nil then
-        target = FindEntity(inst, SEE_FOOD_DIST, function(item) return inst.components.eater:CanEat(item) end, EATFOOD_MUST_TAGS, EATFOOD_CANOT_TAGS)
+        target = FindEntity(inst, SEE_FOOD_DIST, function(item)
+            return inst.components.eater ~= nil and inst.components.eater:CanEat(item)
+        end, EATFOOD_MUST_TAGS, EATFOOD_CANT_TAGS)
         --check for scary things near the food
         if target ~= nil and (GetClosestInstWithTag(SCARY_TAGS, target, SEE_PLAYER_DIST) ~= nil or not target:IsOnValidGround()) then  -- NOTE this ValidGround check should be removed if merms start swimming
             target = nil

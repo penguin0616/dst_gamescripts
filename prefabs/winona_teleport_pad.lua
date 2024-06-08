@@ -111,11 +111,8 @@ end
 
 --------------------------------------------------------------------------
 
-local function SetLedEnabled(inst, enabled)
-	if inst._beacon == nil then
-		return
-	end
-	if enabled then
+local function OnLedDirty(inst)
+	if inst._led:value() then
 		inst._beacon.AnimState:OverrideSymbol("beacon_off", "winona_teleport_pad", "beacon_on")
 		inst._beacon.AnimState:SetSymbolBloom("beacon_off")
 		inst._beacon.AnimState:SetSymbolLightOverride("beacon_off", 0.5)
@@ -125,6 +122,13 @@ local function SetLedEnabled(inst, enabled)
 		inst._beacon.AnimState:ClearSymbolBloom("beacon_off")
 		inst._beacon.AnimState:SetSymbolLightOverride("beacon_off", 0)
 		inst._beacon.AnimState:SetLightOverride(0)
+	end
+end
+
+local function SetLedEnabled(inst, enabled)
+	inst._led:set(enabled)
+	if not TheNet:IsDedicated() then
+		OnLedDirty(inst)
 	end
 end
 
@@ -648,6 +652,7 @@ local function fn()
 
 	inst._wired = net_bool(inst.GUID, "winona_teleport_pad._wired", "wireddirty")
 	inst._syncanims = net_bool(inst.GUID, "winona_teleport_pad._syncanims", "syncanimsdirty")
+	inst._led = net_bool(inst.GUID, "winona_teleport_pad._led", "leddirty")
 
 	inst:AddComponent("updatelooper")
 	inst:AddComponent("colouraddersync")
@@ -693,6 +698,7 @@ local function fn()
 	if not TheWorld.ismastersim then
 		inst:ListenForEvent("wireddirty", OnWiredDirty)
 		inst:ListenForEvent("syncanimsdirty", OnSyncAnimsDirty)
+		inst:ListenForEvent("leddirty", OnLedDirty)
 
 		return inst
 	end

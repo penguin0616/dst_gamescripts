@@ -455,6 +455,19 @@ function InspectaclesParticipant:OnLoad(data)
     end
 end
 
+function InspectaclesParticipant:LongUpdate(dt)
+    if self.cooldowntask ~= nil then
+        local remaining = GetTaskRemaining(self.cooldowntask) - dt
+        self.cooldowntask:Cancel()
+        if remaining > 0 then
+            self.cooldowntask = self.inst:DoTaskInTime(cooldowntime, OnCooldownFinished_Bridge)
+        else
+            self.cooldowntask = nil
+            self:OnCooldownFinished()
+        end
+    end
+end
+
 --------------------------------------------------------------------------
 
 function InspectaclesParticipant:GetDebugString()

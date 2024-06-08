@@ -174,7 +174,7 @@ function MermKingManager:FindMermCandidate(throne)
 end
 
 function MermKingManager:ShouldGoToThrone(merm, throne)
-	if throne ~= nil and self:IsThroneValid(throne) then
+	if throne ~= nil and not merm:HasTag("shadowminion") and self:IsThroneValid(throne) then
 		if not self:GetKing() then
 			if not self:GetCandidate(throne) then
 				self.candidates[throne] = merm

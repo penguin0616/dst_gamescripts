@@ -239,7 +239,7 @@ function BoatLeak:SetState(state, skip_open)
         end)
 
     elseif state == "repaired_kelp" then
-        self:ChangeToRepaired("boat_repair_kelp", "waterlogged2/common/repairgoop") --TODO(DiogoW): Sound!
+        self:ChangeToRepaired("boat_repair_kelp", "meta4/boat_patch/kelp_place")
         self.inst.AnimState:SetBankAndPlayAnimation("boat_repair_kelp", "pre_idle")
         self:SetRepairedTime(
             self.current_state == "med_leak" and TUNING.BOAT_REPAIR_KELP_REPAIR_TIME_MED_LEAK

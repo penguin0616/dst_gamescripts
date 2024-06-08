@@ -919,31 +919,31 @@ local function ShouldLOOKATStopLocomotor(act)
 end
 
 ACTIONS.LOOKAT.strfn = function(act)
-	if act.invobject == nil then
-		local inventory = act.doer.replica.inventory
-		if inventory and inventory:EquipHasTag("closeinspector") then
-			return "CLOSEINSPECT"
-		end
-	end
+	return act.invobject == nil
+		and CLOSEINSPECTORUTIL.CanCloseInspect(act.doer, act.target or act:GetActionPoint())
+		and "CLOSEINSPECT"
+		or nil
 end
 
 ACTIONS.LOOKAT.fn = function(act)
 	--Try close inspection first
 	if act.invobject == nil and act.doer.components.inventory then
 		if act.target then
-			for k, v in pairs(EQUIPSLOTS) do
-				local equip = act.doer.components.inventory:GetEquippedItem(v)
-				if equip and equip.components.closeinspector then
-					local success, reason = equip.components.closeinspector:CloseInspectTarget(act.doer, act.target)
-					if not success then
-						act.doer.components.talker:Say(GetActionFailString(act.doer, "LOOKAT", reason))
+			if CLOSEINSPECTORUTIL.CanCloseInspect(act.doer, act.target) then
+				for k, v in pairs(EQUIPSLOTS) do
+					local equip = act.doer.components.inventory:GetEquippedItem(v)
+					if equip and equip.components.closeinspector then
+						local success, reason = equip.components.closeinspector:CloseInspectTarget(act.doer, act.target)
+						if not success then
+							act.doer.components.talker:Say(GetActionFailString(act.doer, "LOOKAT", reason))
+						end
+						return success, reason
 					end
-					return success, reason
 				end
 			end
 		else
 			local pt = act:GetActionPoint()
-			if pt then
+			if pt and CLOSEINSPECTORUTIL.CanCloseInspect(act.doer, pt) then
 				for k, v in pairs(EQUIPSLOTS) do
 					local equip = act.doer.components.inventory:GetEquippedItem(v)
 					if equip and equip.components.closeinspector then

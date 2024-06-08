@@ -136,6 +136,7 @@ local KEYSTONE_MUST_TAGS = { "crabking_icewall" }
 local ICE_ARENA_CLEANUP_MUST_TAGS = { "frozen", "_inventoryitem" }
 local ICE_ARENA_CLEANUP_CANT_TAGS = { "INLIMBO" }
 local SEASTACK_MUST_TAGS = { "seastack" }
+local SEASTACK_CANT_TAGS = { "waterplant" }
 local RETARGET_MUST_TAGS = { "_combat", "hostile" }
 local RETARGET_CANT_TAGS = { "wall", "INLIMBO", "crabking_ally" }
 local BOAT_MUST_TAGS = { "boat" }
@@ -971,7 +972,9 @@ local function DoDestroySeaStack(inst, doer, i)
 
     SpawnPrefab("crab_king_waterspout").Transform:SetPosition(inst.Transform:GetWorldPosition())
 
-    inst.components.workable:Destroy(doer)
+    if inst.components.workable ~= nil then
+        inst.components.workable:Destroy(doer)
+    end
 end
 
 local function SpawnCannons(inst)
@@ -988,7 +991,7 @@ local function SpawnCannons(inst)
 
     local x, y, z = inst.Transform:GetWorldPosition()
 
-    local stacks = TheSim:FindEntities(x, 0, z, 30, SEASTACK_MUST_TAGS)
+    local stacks = TheSim:FindEntities(x, 0, z, 30, SEASTACK_MUST_TAGS, SEASTACK_CANT_TAGS)
 
     for i, stack in ipairs(stacks) do
         inst.tasks["bubble_stack_"..i]  = stack:DoTaskInTime(0.3 + math.random() * 0.1, inst.BubbleSeaStack, inst, i)
@@ -1040,7 +1043,7 @@ end
 local function SpawnSeaStacks(inst)
     local x, y, z = inst.Transform:GetWorldPosition()
 
-    local numstacks =  math.max(0, TUNING.CRABKING_STACKS - TheSim:CountEntities(x, 0, z, 20, SEASTACK_MUST_TAGS))
+    local numstacks =  math.max(0, TUNING.CRABKING_STACKS - TheSim:CountEntities(x, 0, z, 20, SEASTACK_MUST_TAGS, SEASTACK_CANT_TAGS))
 
     if numstacks <= 0 then
         return

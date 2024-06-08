@@ -3,8 +3,6 @@ local RoseInspectableUser = Class(function(self, inst)
 
     self.cooldowntime = TUNING.SKILLS.WINONA.ROSEGLASSES_COOLDOWNTIME
     --self.cooldowntask = nil
-
-    self.contexts = {}
 end)
 
 function RoseInspectableUser:OnRemoveFromEntity()
@@ -30,16 +28,6 @@ function RoseInspectableUser:GoOnCooldown()
     end
 end
 
-function RoseInspectableUser:RegisterRosePointContext(contextname, checkfn, callbackfn)
-    -- NOTES(JBK): First in has highest priority on checks.
-    local toadd = type(contextname) == "table" and contextname or {
-        contextname = contextname,
-        checkfn = checkfn,
-        callbackfn = callbackfn,
-    }
-    table.insert(self.contexts, toadd)
-end
-
 --------------------------------------------------
 
 function RoseInspectableUser:OnCharlieResidueActivated(residue)
@@ -47,18 +35,17 @@ function RoseInspectableUser:OnCharlieResidueActivated(residue)
         return
     end
 
-    self:GoOnCooldown()
-
     if self.target ~= nil then
         local roseinspectable = self.target.components.roseinspectable
         if roseinspectable ~= nil then
             roseinspectable:DoRoseInspection(self.inst)
-        else
-            self:DoRoseInspectionOnTarget_Fallback()
+            self:GoOnCooldown()
         end
         self.target = nil
     else
-        self:DoRoseInspectionOnPoint()
+        if self:DoRoseInspectionOnPoint() then
+            self:GoOnCooldown()
+        end
         self.point = nil
     end
 end
@@ -115,43 +102,16 @@ end
 
 --------------------------------------------------
 
-local function OnFuelPresentation1(inst, x, z, upgraded)
-    --local fx = SpawnPrefab("FIXME(JBK) Add this when ready.")
-    --fx.Transform:SetPosition(x, 0, z)
-end
-local function OnFuelPresentation2(inst, x, z, upgraded)
-    local fx = SpawnPrefab(upgraded and "shadow_puff_solid" or "shadow_puff")
-    fx.Transform:SetPosition(x, 0, z)
-    inst:ReturnToScene()
-end
-
-function RoseInspectableUser:SpawnFuelAtPoint(x, y, z)
-    local skilltreeupdater = self.inst.components.skilltreeupdater
-    local upgraded = skilltreeupdater and skilltreeupdater:IsActivated("winona_charlie_2") and math.random() < TUNING.SKILLS.WINONA.ROSEGLASSES_UPGRADE_CHANCE or nil
-    local fuel = SpawnPrefab(upgraded and "horrorfuel" or "nightmarefuel")
-    fuel:RemoveFromScene()
-    fuel.Transform:SetPosition(x, 0, z)
-    fuel:DoTaskInTime(1.0, OnFuelPresentation1, x, z, upgraded)
-    fuel:DoTaskInTime(1.5, OnFuelPresentation2, x, z, upgraded)
-end
-
-function RoseInspectableUser:DoRoseInspectionOnTarget_Fallback()
-    self:SpawnFuelAtPoint(self.target.Transform:GetWorldPosition())
-end
-
-function RoseInspectableUser:DoRoseInspectionOnPoint_Fallback()
-    self:SpawnFuelAtPoint(self.point:Get())
-end
-
 function RoseInspectableUser:DoRoseInspectionOnPoint()
-    for _, context in ipairs(self.contexts) do
-        local success, data = context.checkfn(self.inst, self.point)
+    for _, config in ipairs(ROSEPOINT_CONFIGURATIONS) do
+        local success, data = config.checkfn(self.inst, self.point)
         if success then
-            context.callbackfn(self.inst, self.point, data)
-            return
+            config.callbackfn(self.inst, self.point, data)
+            return true
         end
     end
-    self:DoRoseInspectionOnPoint_Fallback()
+
+    return false
 end
 
 --------------------------------------------------
@@ -173,17 +133,22 @@ function RoseInspectableUser:TryToDoRoseInspectionOnTarget(target)
         return false, "ROSEGLASSES_COOLDOWN"
     end
 
-    if target.Physics and target.Physics:GetMass() ~= 0 then
-        return false, "ROSEGLASSES_INVALID"
-    end
+    if target.prefab ~= "charlieresidue" then
+        if target.Physics and target.Physics:GetMass() ~= 0 then
+            return false, "ROSEGLASSES_INVALID"
+        end
 
-    if target:HasAnyTag(self.InvalidTags) then
-        return false, "ROSEGLASSES_INVALID"
-    end
+        if target.components.roseinspectable == nil then
+            return false, "ROSEGLASSES_INVALID"
+        end
 
-    if target.prefab ~= "charlieresidue" then -- Not a fail case just do not spawn more residue nor link to residue.
+        if target:HasAnyTag(self.InvalidTags) then
+            return false, "ROSEGLASSES_INVALID"
+        end
+
         self:SetRoseInpectionOnTarget(target)
     end
+
     self:DoQuip("ANNOUNCE_ROSEGLASSES")
     return true
 end
@@ -233,6 +198,18 @@ function RoseInspectableUser:OnLoad(data)
 
     if data.cooldown ~= nil then
         self.cooldowntask = self.inst:DoTaskInTime(data.cooldown, self.OnCooldown_Bridge)
+    end
+end
+
+function RoseInspectableUser:LongUpdate(dt)
+    if self.cooldowntask ~= nil then
+        local remaining = GetTaskRemaining(self.cooldowntask) - dt
+        self.cooldowntask:Cancel()
+        if remaining > 0 then
+            self.cooldowntask = self.inst:DoTaskInTime(remaining, self.OnCooldown_Bridge)
+        else
+            self.cooldowntask = nil
+        end
     end
 end
 

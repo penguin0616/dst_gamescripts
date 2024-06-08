@@ -4534,6 +4534,7 @@ local function MakeHat(name)
 	end
 
 	fns.roseglasses_custom_init = function(inst)
+        inst:AddTag("roseglassesvision")
 		inst:AddTag("open_top_hat")
 	end
 

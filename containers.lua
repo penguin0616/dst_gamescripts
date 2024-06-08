@@ -606,7 +606,7 @@ end
 --[[ offering pot ]]
 --------------------------------------------------------------------------
 
-params.offeringpot =
+params.offering_pot =
 {
     widget =
     {
@@ -633,7 +633,7 @@ params.offeringpot =
     type = "cooker",
 }
 
-function params.offeringpot.itemtestfn(container, item, slot)
+function params.offering_pot.itemtestfn(container, item, slot)
     return not container.inst:HasTag("burnt") and item.prefab == "kelp"
 end
 
@@ -641,7 +641,7 @@ end
 --[[ offering pot II ]]
 --------------------------------------------------------------------------
 
-params.offeringpot2 =
+params.offering_pot_upgraded =
 {
     widget =
     {
@@ -672,7 +672,7 @@ params.offeringpot2 =
     type = "cooker",
 }
 
-params.offeringpot2.itemtestfn = params.offeringpot.itemtestfn
+params.offering_pot_upgraded.itemtestfn = params.offering_pot.itemtestfn
 
 --------------------------------------------------------------------------
 --[[ merm_toolshed ]]
@@ -710,6 +710,8 @@ function params.merm_toolshed.itemtestfn(container, item, slot)
         )
 end
 
+params.merm_toolshed_upgraded = deepcopy(params.merm_toolshed)
+
 --------------------------------------------------------------------------
 --[[ merm_armory ]]
 --------------------------------------------------------------------------
@@ -730,6 +732,8 @@ function params.merm_armory.itemtestfn(container, item, slot)
             (slot == nil and (item.prefab == "log" or item.prefab == "cutgrass"))
         )
 end
+
+params.merm_armory_upgraded = deepcopy(params.merm_armory)
 
 --------------------------------------------------------------------------
 --[[ livingtree_halloween ]]

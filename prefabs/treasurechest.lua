@@ -443,6 +443,7 @@ local function pandora_master_postinit(inst)
             SpawnPrefab("pandorachest_reset").Transform:SetPosition(inst.Transform:GetWorldPosition())
         end
     end, TheWorld)
+    MakeRoseTarget_CreateFuel_IncreasedHorror(inst)
 end
 
 --------------------------------------------------------------------------
@@ -481,6 +482,8 @@ local function minotuar_master_postinit(inst)
 
         inst:Remove()
     end, TheWorld)
+
+    MakeRoseTarget_CreateFuel_IncreasedHorror(inst)
 end
 
 

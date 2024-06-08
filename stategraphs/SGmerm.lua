@@ -476,7 +476,7 @@ local states =
                 local act = inst:GetBufferedAction()
                 local target = act.target
                 local tool = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) 
-                if target and target.components.workable and tool then
+                if target and target:IsValid() and target.components.workable and tool then
                     target.components.workable:WorkedBy(inst,tool.components.tool:GetEffectiveness(act.action))
                     tool:OnUsedAsItem(act.action, inst, target)
                 end
@@ -564,7 +564,7 @@ local states =
         onenter = function(inst)
             inst.components.combat:StartAttack()
             inst.Physics:Stop()
-            inst.AnimState:PlayAnimation("atk_threehit")
+            inst.AnimState:PlayAnimation("atk_combo")
 
             -- Reduce the combat damage number for the attack, so we get more total damage,
             -- but have some tuning control.
@@ -675,7 +675,7 @@ local states =
         name = "hit_shadow",
         tags = { "hot", "busy" },
 
-        onenter = function(inst)        
+        onenter = function(inst)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("disappear")
         end,

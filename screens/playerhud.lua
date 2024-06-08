@@ -27,6 +27,7 @@ local NutrientsOver = require "widgets/nutrientsover"
 local ScrapMonocleOver = require "widgets/scrapmonocleover"
 local NightVisionFruitOver = require "widgets/nightvisionfruitover"
 local InspectaclesOver = require("widgets/inspectaclesover")
+local RoseGlassesOver = require("widgets/roseglassesover")
 local BatOver = require "widgets/batover"
 local FlareOver = require "widgets/flareover"
 local EndOfMatchPopup = require "widgets/redux/endofmatchpopup"
@@ -178,6 +179,7 @@ function PlayerHud:CreateOverlays(owner)
     self.scrapmonocleover = self.overlayroot:AddChild(ScrapMonocleOver(owner))
     self.nightvisionfruitover = self.overlayroot:AddChild(NightVisionFruitOver(owner))
     self.inspectaclesover = self.overlayroot:AddChild(InspectaclesOver(owner))
+    self.roseglassesover = self.overlayroot:AddChild(RoseGlassesOver(owner))
     self.bloodover = self.overlayroot:AddChild(BloodOver(owner))
     self.beefbloodover = self.overlayroot:AddChild(BeefBloodOver(owner))
     self.iceover = self.overlayroot:AddChild(IceOver(owner))

@@ -18,6 +18,15 @@ local prefabs =
 }
 
 local function OnDeploy(inst, pt, deployer)
+    -- Making sure type and _plantdata are not nil somehow.
+    if inst.type == nil then
+        inst:SetType(GetRandomItemWithIndex(TREE_DEFS))
+    end
+
+    if inst._plantdata == nil then
+        inst:RandomizePlantData()
+    end
+
     local sapling = SpawnPrefab("ancienttree_"..inst.type.."_sapling")
     sapling.Transform:SetPosition(pt:Get())
     sapling.SoundEmitter:PlaySound("dontstarve/wilson/plant_tree")
@@ -53,7 +62,7 @@ local function OnLoad(inst, data)
     if data == nil then
         return
     end
-    
+
     if data.type ~= nil then
         inst:SetType(data.type)
     end

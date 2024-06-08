@@ -53,10 +53,14 @@ local PAULDRON_MODIFIER_KEY = "mermkingpauldronupgrade"
 --
 return MakeBuff("trident", {
         onattached = function(inst, target, symbol, offset, data)
-            target.components.combat.externaldamagemultipliers:SetModifier(inst, 1.05, TRIDENT_MODIFIER_KEY)
+            if target.components.combat ~= nil then
+                target.components.combat.externaldamagemultipliers:SetModifier(inst, 1.05, TRIDENT_MODIFIER_KEY)
+            end
         end,
         ondetached = function(inst, target)
-            target.components.combat.externaldamagemultipliers:RemoveModifier(inst, TRIDENT_MODIFIER_KEY)
+            if target.components.combat ~= nil then
+                target.components.combat.externaldamagemultipliers:RemoveModifier(inst, TRIDENT_MODIFIER_KEY)
+            end
         end,
     }),
     MakeBuff("crown", {
@@ -79,9 +83,15 @@ return MakeBuff("trident", {
     }),
     MakeBuff("pauldron", {
         onattached = function(inst, target, symbol, offset, data)
-            target.components.health.externalabsorbmodifiers:SetModifier(inst, 0.25, PAULDRON_MODIFIER_KEY)
+            if target.components.health ~= nil then
+                target.components.health.externalabsorbmodifiers:SetModifier(inst, 0.25, PAULDRON_MODIFIER_KEY)
+            end
         end,
         ondetached = function(inst, target)
-            target.components.health.externalabsorbmodifiers:RemoveModifier(inst, PAULDRON_MODIFIER_KEY)
+            if target.components.health ~= nil then
+                target.components.health.externalabsorbmodifiers:RemoveModifier(inst, PAULDRON_MODIFIER_KEY)
+            end
         end,
     })
+
+-- NOTES(JBK): Search string: mermking_gear_buffs

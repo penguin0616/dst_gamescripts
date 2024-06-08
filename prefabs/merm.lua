@@ -679,7 +679,7 @@ local function DoLunarMutation(inst)
     local leader = inst.components.follower ~= nil and inst.components.follower:GetLeader() or nil
 
     if leader ~= nil then
-        leader.components.leader:AddFollower(inst)
+        leader.components.leader:AddFollower(lunarmerm)
     end
 
     lunarmerm:PushEvent("mutated")
@@ -700,7 +700,8 @@ end
 local function living_merm_common_master(inst)
     inst:AddComponent("eater")
     inst.components.eater:SetDiet({ FOODGROUP.VEGETARIAN }, { FOODGROUP.VEGETARIAN })
-
+        
+    inst:AddComponent("sleeper")
     inst.components.sleeper:SetNocturnal(true)
     inst.components.sleeper:SetSleepTest(ShouldSleep)
     inst.components.sleeper:SetWakeTest(ShouldWakeUp)
@@ -708,6 +709,8 @@ local function living_merm_common_master(inst)
     inst:AddComponent("named")
     inst.components.named.possiblenames = STRINGS.MERMNAMES
     inst.components.named:PickNewName()
+
+    MakeMediumBurnableCharacter(inst, "pig_torso")
 end
 
 local function CreateFlameFx()
@@ -819,7 +822,6 @@ local function MakeMerm(name, assets, prefabs, common_postinit, master_postinit,
         inst:AddComponent("inspectable")
         inst:AddComponent("knownlocations")
         inst:AddComponent("follower")
-        inst:AddComponent("sleeper")
         inst:AddComponent("mermcandidate")
 
         inst:AddComponent("timer")
@@ -831,7 +833,6 @@ local function MakeMerm(name, assets, prefabs, common_postinit, master_postinit,
         trader.onrefuse = OnRefuseItem
         trader.deleteitemonaccept = false
 
-        MakeMediumBurnableCharacter(inst, "pig_torso")
         MakeMediumFreezableCharacter(inst, "pig_torso")
 
 
@@ -933,7 +934,6 @@ local function Guard_CanTripleAttack(inst)
         and math.random() < TUNING.MERMKING_TRIDENTBUFF_TRIPLEHIT_CHANCE
 end
 
---  living_merm_common_master(inst)
 local function guard_master(inst)
     inst.ShouldWaitForHelp = Guard_ShouldWaitForHelp
 
@@ -953,8 +953,10 @@ local function guard_master(inst)
     inst.components.combat:SetDefaultDamage(mermdamagecalculator(inst))
     inst.components.combat:SetAttackPeriod(TUNING.MERM_GUARD_ATTACK_PERIOD)
 
-    inst.components.sleeper:SetSleepTest(ShouldGuardSleep)
-    inst.components.sleeper:SetWakeTest(ShouldGuardWakeUp)
+    if inst.components.sleeper then
+        inst.components.sleeper:SetSleepTest(ShouldGuardSleep)
+        inst.components.sleeper:SetWakeTest(ShouldGuardWakeUp)
+    end
 
     inst.components.lootdropper:SetLoot(merm_guard_loot)
 
@@ -993,6 +995,10 @@ local function on_mermking_destroyed_downgrade(inst)
 end
 local function on_mermking_destroyed_anywhere(inst)
     inst:DoTaskInTime(math.random()*SLIGHTDELAY, on_mermking_destroyed_downgrade)
+end
+
+local function no_holes(pt)
+    return not TheWorld.Map:IsPointNearHole(pt)
 end
 
 local function OnAttackOther(inst, data)
@@ -1051,12 +1057,11 @@ local function common_master(inst)
     inst:ListenForEvent("onattackother", OnAttackOther) -- TODO @stevenm this could maybe be a (de)buff instead.
     inst:ListenForEvent("oneat", OnEat)
 
+
     if TheWorld.components.mermkingmanager and TheWorld.components.mermkingmanager:HasKingAnywhere() then
         RoyalUpgrade(inst)
     end
 end
-
---local function     living_merm_common_master(inst)
 
 -------------------------------------------------------------------------------
 -- SHADOW MERM DEFS
@@ -1258,7 +1263,8 @@ local function OnUpdateThorns(inst)
                     if inst.owner.components.combat ~= nil and
                         inst.owner.components.combat:CanTarget(v) and
                         not inst.owner.components.combat:IsAlly(v) and
-                        (not leader or not leader.components.combat:IsAlly(v))
+                        (not leader or not leader.components.combat:IsAlly(v)) and
+                        not v:HasTag("merm")
                     then
                         inst.ignore[v] = true
                         v.components.combat:GetAttacked(v.components.follower and v.components.follower:GetLeader() == inst.owner and inst or inst.owner, inst.damage, nil, nil, inst.spdmg)

@@ -712,12 +712,13 @@ function LocoMotor:PreviewAction(bufferedaction, run, try_instant)
 			self.inst:PreviewBufferedAction(bufferedaction)
 		else
 			local closeinspect = false
-			local inventory = self.inst.replica.inventory
-			if inventory and inventory:EquipHasTag("closeinspector") then
-				if bufferedaction.target then
+			if bufferedaction.target then
+				if CLOSEINSPECTORUTIL.CanCloseInspect(self.inst, bufferedaction.target) then
 					closeinspect = true
 					self:GoToEntity(bufferedaction.target, bufferedaction, run)
-				elseif action_pos then
+				end
+			elseif action_pos then
+				if CLOSEINSPECTORUTIL.CanCloseInspect(self.inst, action_pos) then
 					closeinspect = true
 					self:GoToPoint(nil, bufferedaction, run)
 				end
@@ -815,11 +816,13 @@ function LocoMotor:PushAction(bufferedaction, run, try_instant)
     elseif bufferedaction.action == ACTIONS.LOOKAT and
         self.inst.components.playercontroller ~= nil then
 		local closeinspect = false
-		if self.inst.components.inventory and self.inst.components.inventory:EquipHasTag("closeinspector") then
-			if bufferedaction.target then
+		if bufferedaction.target then
+			if CLOSEINSPECTORUTIL.CanCloseInspect(self.inst, bufferedaction.target) then
 				closeinspect = true
 				self:GoToEntity(bufferedaction.target, bufferedaction, run)
-			elseif action_pos then
+			end
+		elseif action_pos then
+			if CLOSEINSPECTORUTIL.CanCloseInspect(self.inst, action_pos) then
 				closeinspect = true
 				self:GoToPoint(nil, bufferedaction, run)
 			end

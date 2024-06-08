@@ -628,12 +628,10 @@ function Controls:OnUpdate(dt)
 				(self.owner.sg == nil or self.owner.sg:HasStateTag("moving") or self.owner.sg:HasStateTag("idle") or self.owner.sg:HasStateTag("channeling")) and
 				(self.owner:HasTag("moving") or self.owner:HasTag("idle") or self.owner:HasTag("channeling")) and
                 controller_target:HasTag("inspectable") then
-				local inventory = self.owner.replica.inventory
 				local actionstr =
-						inventory and
-						inventory:EquipHasTag("closeinspector") and
-						STRINGS.ACTIONS.LOOKAT.CLOSEINSPECT or
-						STRINGS.UI.HUD.INSPECT
+					CLOSEINSPECTORUTIL.CanCloseInspect(self.owner, controller_target) and
+					STRINGS.ACTIONS.LOOKAT.CLOSEINSPECT or
+					STRINGS.UI.HUD.INSPECT
 				table.insert(cmds, TheInput:GetLocalizedControl(controller_id, CONTROL_INSPECT).." "..actionstr)
             end
             if l ~= nil then

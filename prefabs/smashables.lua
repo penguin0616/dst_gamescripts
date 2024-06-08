@@ -287,6 +287,7 @@ local function makefn(name, asset, animated, smashsound, rubble, chair, deploy_s
         inst.smashsound = smashsound
 
         MakeHauntableWork(inst)
+        MakeRoseTarget_CreateFuel_IncreasedHorror(inst)
 
         return inst
     end

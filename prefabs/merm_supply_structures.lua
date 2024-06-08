@@ -371,7 +371,7 @@ local function CreateMermSupplyStructure(data)
         inst.components.workable:SetWorkLeft(4)
 
         inst:AddComponent("container")
-        inst.components.container:WidgetSetup(data.widget)
+        inst.components.container:WidgetSetup(data.prefab)
         inst.components.container.skipclosesnd = true
         inst.components.container.skipopensnd = true
 
@@ -417,7 +417,6 @@ return
         supplyprefab = "mermarmorhat",
         supplycost = ARMOR_COST,
         deployhelperfilter = "mermwatchtower",
-        widget = "merm_armory",
         assets = armory_assets,
         prefabs = armnory_prefabs,
     }),
@@ -431,7 +430,6 @@ return
         supplyprefab = "mermarmorupgradedhat",
         supplycost = ARMOR_COST,
         deployhelperfilter = "mermwatchtower",
-        widget = "merm_armory",
         assets = armory_assets,
         prefabs = armnory_prefabs,
     }),
@@ -445,7 +443,6 @@ return
         supplyprefab = "merm_tool",
         supplycost = TOOL_COST,
         deployhelperfilter = "mermhouse_crafted",
-        widget = "merm_toolshed",
         assets = toolshed_assets,
         prefabs = toolshed_prefabs,
     }),
@@ -459,7 +456,6 @@ return
         supplyprefab = "merm_tool_upgraded",
         supplycost = TOOL_COST,
         deployhelperfilter = "mermhouse_crafted",
-        widget = "merm_toolshed",
         assets = toolshed_assets,
         prefabs = toolshed_prefabs,
     }),

@@ -26,13 +26,14 @@ local BACKGROUND_SETTINGS = {
 
 local function CreateShelfDecor(shelfdata)
     return {
-        init = function(button, root)
+        init = function(button, root, fromfrontend)
             local Image = require("widgets/image")
             -- NOTES(JBK): Keeping requires in the function so this definition does not need to pull other files.
             button.clickoffset = Vector3(0, 0, 0)
 
             local shelves = {}
             button.shelves = shelves
+            local v = fromfrontend and 0.5 or 0
             for _, data in ipairs(shelfdata) do
                 local shelf = root:AddChild(Image(GetSkilltreeBG("winona_background.tex"), data.imagename))
                 shelf:MoveToBack()
@@ -45,16 +46,17 @@ local function CreateShelfDecor(shelfdata)
                     shelf:SetScale(data.scale, data.scale, 1)
                 end
                 shelf:SetPosition(data.x, data.y - 50) -- NOTES(JBK): - 50 is from root to midlay offset too busy to fixup offsets below.
-                shelf:SetTint(0, 0, 0, 0)
+                shelf:SetTint(v, v, v, 0)
                 table.insert(shelves, shelf)
             end
         end,
-        onlocked = function(button, instant)
+        onlocked = function(button, instant, fromfrontend)
+            local v = fromfrontend and 0.5 or 0
             for _, shelf in ipairs(button.shelves) do
-                shelf:SetTint(0, 0, 0, 1)
+                shelf:SetTint(v, v, v, 1)
             end
         end,
-        onunlocked = function(button, instant)
+        onunlocked = function(button, instant, fromfrontend)
             for _, shelf in ipairs(button.shelves) do
                 shelf:SetTint(1, 1, 1, 1)
             end

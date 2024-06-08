@@ -456,7 +456,7 @@ end
 -------------------------------------------------------------------------------------------------------------
 
 local function RedirectDamageToMoisture(inst, amount, overtime, cause, ignore_invincible, afflicter, ignore_absorb)
-    if ignore_absorb or amount >= 0 then
+    if ignore_absorb or amount >= 0 or overtime then
         return amount
     end
 

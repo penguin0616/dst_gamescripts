@@ -8063,7 +8063,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "Skill Tree Spotlight:\nWurt & Winona", -- NOTE(DiogoW): have "\nBeta Branch" back for next update.
+		MAINBANNER_BETA_TITLE = "Beta Branch",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -15922,9 +15922,9 @@ STRINGS.SKILLTREE = {
         WURT_CIV_3_TITLE = "Hardheaded I",
         WURT_CIV_3_2_TITLE = "Hardheaded II",
 
-        WURT_MERM_KING_HUNGER_1_TITLE = "WURT_MERM_KING_HUNGER_1_TITLE",
-        WURT_MERM_KING_HUNGER_2_TITLE = "WURT_MERM_KING_HUNGER_2_TITLE",
-        WURT_MERM_KING_HUNGER_3_TITLE = "WURT_MERM_KING_HUNGER_3_TITLE",
+        WURT_MERM_KING_HUNGER_1_TITLE = "Sated Sovereign I",
+        WURT_MERM_KING_HUNGER_2_TITLE = "Sated Sovereign II",
+        WURT_MERM_KING_HUNGER_3_TITLE = "Sated Sovereign III",
         WURT_MERM_FLEE_TITLE = "Sensible Swamp Fighter",
         WURT_PATHFINDER_TITLE = "Swamp Pathfinder",
         
@@ -15940,7 +15940,7 @@ STRINGS.SKILLTREE = {
         WURT_AMPHIBIAN_THICKSKIN_2_DESC = "Use wetness as protection more effectively.",
         WURT_AMPHIBIAN_HEALING_1_DESC = "Slowly regenerate health when wet. The more wet you are, the more health you regenerate.",
         WURT_AMPHIBIAN_HEALING_2_DESC = "Regenerate health when wet more effectively.",
-        WURT_MOSQUITO_CRAFT_1_DESC = "Learn to craft a cuddly buddy making Mosquitos neutral to you.",
+        WURT_MOSQUITO_CRAFT_1_DESC = "Learn to craft a cuddly buddy making Mosquitoes neutral to you.",
         WURT_MOSQUITO_CRAFT_2_DESC = "Learn to craft Mosquito based items: Skeeter Bomb, Fertilizzzer and Blood Shot",
         WURT_MOSQUITO_CRAFT_3_DESC = "Master the use of the Mosquito based items.",
 
@@ -15951,16 +15951,16 @@ STRINGS.SKILLTREE = {
         WURT_CIV_3_DESC = "Craft an Armermry to equip your Loyal Merm Guards with Swamp Brawler Helmets.",
         WURT_CIV_3_2_DESC = "Craft a Superior Armermry that provides Swamp Warrior Helmets.",
 
-        WURT_MERM_KING_HUNGER_1_DESC = "WURT_MERM_KING_HUNGER_1_DESC",
-        WURT_MERM_KING_HUNGER_2_DESC = "WURT_MERM_KING_HUNGER_2_DESC",
-        WURT_MERM_KING_HUNGER_3_DESC = "WURT_MERM_KING_HUNGER_3_DESC",
-        WURT_MERM_FLEE_DESC = "WURT_MERM_FLEE_DESC",
+        WURT_MERM_KING_HUNGER_1_DESC = "Increase the Merm King's maximum hunger.",
+        WURT_MERM_KING_HUNGER_2_DESC = "Increase the Merm King's maximum hunger even more.",
+        WURT_MERM_KING_HUNGER_3_DESC = "Slow the Merm King's digestion, so he takes longer to get hungry.",
+        WURT_MERM_FLEE_DESC = "Merm Guards will retreat from combat when low on health, and wait to be healed.",
 
         WURT_PATHFINDER_DESC = "Survivors near Wurt will move like her through the Marsh.",
         WURT_MERMKINGSHOULDERS_TITLE = "The King's Pauldron Quest",
-        WURT_MERMKINGSHOULDERS_DESC = "Add sculpting to the King's shoulders for greater stoutness in your Merm soldiers.",
+        WURT_MERMKINGSHOULDERS_DESC = "Add stony armor to the King's statuesque shoulders for greater stoutness in your Merm soldiers.",
         WURT_MERMKINGCROWN_TITLE = "The King's Crown Quest",
-        WURT_MERMKINGCROWN_DESC = "Gift him a crown worn by kings long passed, and your Merms will fight smarter so their lives may last.",
+        WURT_MERMKINGCROWN_DESC = "Gift him a crown worn by kings long passed, and your merms will fight smarter so their lives may last.",
         WURT_MERMKINGTRIDENT_TITLE = "The King's Trident Quest",
         WURT_MERMKINGTRIDENT_DESC = "Offer this weapon best wielded at sea, and your Merms will attack with the deftness of three.",
 

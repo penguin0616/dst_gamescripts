@@ -110,6 +110,7 @@ local function fn_kelp()
 
     inst.components.repairer.repairmaterial = MATERIALS.KELP
     inst.components.repairer.healthrepairvalue = TUNING.REPAIR_KELP_HEALTH * CACHED_KELP_RECIPE_COST
+    inst.components.repairer.boatrepairsound = "meta4/boat_patch/kelp_place"
 
     inst.components.burnable:SetBurnTime(TUNING.SMALL_BURNTIME)
 

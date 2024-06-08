@@ -493,6 +493,8 @@ local function postfn()
 
     inst:DoTaskInTime(0, setup)
 
+    MakeRoseTarget_CreateFuel(inst)
+
     return inst
 end
 

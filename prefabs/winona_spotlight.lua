@@ -271,7 +271,7 @@ local function _DoEnableHeat_Server(inst, enable)
         local heater = inst.components.heater
 		if heater == nil then
 			heater = inst:AddComponent("heater")
-            heater.heat = 100 -- NOTES(JBK): Same as emberlight from Willow.
+            heater.heat = 40 -- NOTES(JBK): less powerful as emberlight from Willow which is 100.
             heater:SetShouldFalloff(false)
             heater:SetHeatRadiusCutoff(inst.RADIUS)
 		end

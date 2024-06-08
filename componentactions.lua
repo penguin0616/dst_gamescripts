@@ -1989,6 +1989,12 @@ local COMPONENT_ACTIONS =
             end
         end,
 
+		remoteteleporter = function(inst, doer, target, actions, right)
+			if target == doer and (not inst:HasTag("engineering") or doer:HasTag("handyperson")) then
+				table.insert(actions, ACTIONS.REMOTE_TELEPORT)
+			end
+		end,
+
         spellcaster = function(inst, doer, target, actions, right)
             for k,v in pairs(SPELLTYPES) do
                 if inst:HasTag(v.."_spellcaster") and not doer:HasTag(v.."_spelluser") then

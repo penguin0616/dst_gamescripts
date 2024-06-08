@@ -7010,7 +7010,8 @@ function Tune(overrides)
                 INSPECTACLES_UPGRADE_CHANCE = 0.25,
 
                 ROSEGLASSES_COOLDOWNTIME = total_day_time * 0.5,
-                ROSEGLASSES_UPGRADE_CHANCE = 0.25,
+                ROSEGLASSES_UPGRADE_CHANCE = 0.05,
+                ROSEGLASSES_UPGRADE_CHANCE_INCREASED = 0.25,
 
                 CHARLIE_VINEBRIDGE_LENGTH_TILES = 3, -- How many tiles in a line can this make for each activation.
 

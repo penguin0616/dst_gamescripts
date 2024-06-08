@@ -218,7 +218,7 @@ local function holotele_OnRecipeScanned(inst, data)
 end
 
 local function holotelepad_common_postinit(inst)
-	inst.SCANNABLE_RECIPENAME = "winona_teleport_pad"
+	inst.SCANNABLE_RECIPENAME = "winona_teleport_pad_item"
 end
 
 local function holotelebrella_common_postinit(inst)

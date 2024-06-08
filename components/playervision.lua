@@ -71,6 +71,12 @@ local function OnEquipChanged(inst)
             inst:PushEvent("inspectaclesvision", {enabled = self.inspectaclesvision})
         end
     end
+    if self.roseglassesvision == not inst.replica.inventory:EquipHasTag("roseglassesvision") then
+        self.roseglassesvision = not self.roseglassesvision
+        if not self.forceroseglassesvision then
+            inst:PushEvent("roseglassesvision", {enabled = self.roseglassesvision})
+        end
+    end
 end
 
 local function OnInit(inst, self)
@@ -108,6 +114,8 @@ local PlayerVision = Class(function(self, inst)
     self.forcescrapmonolevision = false
     self.inspectaclesvision = false
     self.forceinspectaclesvision = false
+    self.roseglassesvision = false
+    self.forceroseglassesvision = false
     self.overridecctable = nil
     self.currentcctable = nil
     self.currentccphasefn = nil
@@ -145,6 +153,10 @@ end
 
 function PlayerVision:HasInspectaclesVision()
     return self.inspectaclesvision or self.forceinspectaclesvision
+end
+
+function PlayerVision:HasRoseGlassesVision()
+    return self.roseglassesvision or self.forceroseglassesvision
 end
 
 function PlayerVision:GetCCPhaseFn()
@@ -275,6 +287,15 @@ function PlayerVision:ForceInspectaclesVision(force)
         self.forceinspectaclesvision = force == true
         if not self.inspectaclesvision then
             self.inst:PushEvent("inspectaclesvision", {enabled = self.forceinspectaclesvision})
+        end
+    end
+end
+
+function PlayerVision:ForceRoseGlassesVision(force)
+    if not self.forceroseglassesvision ~= force then
+        self.forceroseglassesvision = force == true
+        if not self.roseglassesvision then
+            self.inst:PushEvent("roseglassesvision", {enabled = self.forceroseglassesvision})
         end
     end
 end

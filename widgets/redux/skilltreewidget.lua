@@ -31,9 +31,11 @@ local SkillTreeWidget = Class(Widget, function(self, prefabname, targetdata, fro
 
     local defs = skilltreedefs.SKILLTREE_METAINFO[prefabname]
     local tint_bright, tint_dim
+    local tint_bright_alpha, tint_dim_alpha
     if defs and defs.BACKGROUND_SETTINGS then
         local settings = defs.BACKGROUND_SETTINGS
         tint_bright, tint_dim = settings.tint_bright, settings.tint_dim
+        tint_bright_alpha, tint_dim_alpha = settings.tint_bright_alpha, settings.tint_dim_alpha
     end
 
     if self.fromfrontend then
@@ -46,7 +48,7 @@ local SkillTreeWidget = Class(Widget, function(self, prefabname, targetdata, fro
             color = UICOLOURS.GOLD
         end
         if color then
-            self.bg_tree:SetTint(color[1], color[2], color[3], 0.6)
+            self.bg_tree:SetTint(color[1], color[2], color[3], tint_bright_alpha or 0.6)
         end
     else
         local color
@@ -58,7 +60,7 @@ local SkillTreeWidget = Class(Widget, function(self, prefabname, targetdata, fro
             color = UICOLOURS.BLACK
         end
         if color then
-            self.bg_tree:SetTint(color[1], color[2], color[3], 1)
+            self.bg_tree:SetTint(color[1], color[2], color[3], tint_dim_alpha or 1)
         end
     end
 

@@ -17,45 +17,39 @@ local prefabs =
 local TARGET_MAX_DIST = 15
 local SKILL_ADDITIONAL_MOSQUITOS = 2
 
-local TARGET_CANT_TAGS = { "playerghost", "mosquito" }
+local TARGET_CANT_TAGS  = { "INLIMBO", "invisible", "notarget", "noattack", "playerghost", "mosquito" }
 local TARGET_ONEOF_TAGS = { "character", "animal", "monster" }
+
+local THROWN_SOUNDNAME = "toss"
+local IDLE_SOUNDNAME = "idle"
 
 local function IsMosquitoMusk(item)
     return item:HasTag("mosquitomusk")
 end
 
-local function SpawnMosquitos(inst)
-    inst.SoundEmitter:PlaySound("dontstarve/bee/beemine_explo") -- TODO.
-
+local function SpawnMosquitos(inst, attacker)
     local x, y, z = inst.Transform:GetWorldPosition()
-    inst:AddComponent("explosive")
-    inst.components.explosive.explosiverange = TUNING.BOMB_MOSQUITO_RANGE
-    inst.components.explosive.explosivedamage = TUNING.BOMB_MOSQUITO_DAMAGE
-    inst.components.explosive.lightonexplode = false
-    if inst.ispvp then
-        inst.components.explosive:SetPvpAttacker(inst.thrower or nil)
-    else
-        inst.components.explosive:SetAttacker(inst.thrower or nil)
-    end    
-    inst.components.explosive:OnBurnt()
 
     local x, y, z = inst.Transform:GetWorldPosition()
     local targets = TheSim:FindEntities(x, 0, z, TARGET_MAX_DIST, nil, TARGET_CANT_TAGS, TARGET_ONEOF_TAGS)
 
     local total_mosquitos = TUNING.MOSQUITOBOMB_MOSQUITOS
 
-    if inst.thrower ~= nil and
-        inst.thrower.components.skilltreeupdater ~= nil and
-        inst.thrower.components.skilltreeupdater:IsActivated("wurt_mosquito_craft_3")
+    if attacker ~= nil and
+        attacker.components.skilltreeupdater ~= nil and
+        attacker.components.skilltreeupdater:IsActivated("wurt_mosquito_craft_3")
     then
         total_mosquitos = total_mosquitos + SKILL_ADDITIONAL_MOSQUITOS
     end
 
     for i = 1, total_mosquitos do
         local mosquito = SpawnPrefab("mosquito")
-        mosquito.components.follower:SetLeader(inst.attacker or nil)
 
         if mosquito ~= nil then
+            if mosquito.components.follower ~= nil then
+                mosquito.components.follower:SetLeader(attacker or nil)
+            end
+
             local dist = math.random()
             local angle = math.random() * TWOPI
 
@@ -63,11 +57,41 @@ local function SpawnMosquitos(inst)
 
             if mosquito.components.combat ~= nil then
                 for _, target in ipairs(targets) do
-                    if mosquito.components.combat:CanTarget(target) and not mosquito.components.combat:IsAlly(target) and (target.components.inventory == nil or not target.components.inventory:FindItem(IsMosquitoMusk)) then
-                        mosquito.components.combat:SetTarget(target)
+                    if mosquito.components.combat:CanTarget(target) and
+                        not mosquito.components.combat:IsAlly(target) and
+                        (target.components.inventory == nil or not target.components.inventory:FindItem(IsMosquitoMusk)) then
+                        mosquito.components.combat:SuggestTarget(target)
 
                         break
                     end
+                end
+            end
+        end
+    end
+end
+
+local IMPACT_DAMAGE_MUST_TAGS = { "_combat", "_health" }
+local IMPACT_DAMAGE_CANT_TAGS = { "INLIMBO", "flight", "invisible", "notarget", "noattack", "mosquito" }
+
+local function DoImpactDamage(inst, attacker, pvpattacker)
+    local x, y, z = inst.Transform:GetWorldPosition()
+
+    local ents = TheSim:FindEntities(x, 0, z, TUNING.BOMB_MOSQUITO_RANGE, IMPACT_DAMAGE_MUST_TAGS, IMPACT_DAMAGE_CANT_TAGS)
+
+    for _, ent in ipairs(ents) do
+        if not ent:IsInLimbo() and ent:IsValid() and
+            (pvpattacker == nil or ent == pvpattacker or not ent:HasTag("player"))
+        then
+            if ent.components.combat ~= nil and not (ent.components.health ~= nil and ent.components.health:IsDead()) then
+                ent.components.combat:GetAttacked(inst, TUNING.BOMB_MOSQUITO_DAMAGE) -- NOTES(JBK): The component combat might remove itself in the GetAttacked callback!
+
+                if attacker ~= nil and
+                    ent:IsValid() and
+                    attacker:IsValid() and
+                    ent.components.combat ~= nil and
+                    not (ent.components.health ~= nil and ent.components.health:IsDead())
+                then
+                    ent.components.combat:SuggestTarget(attacker)
                 end
             end
         end
@@ -109,6 +133,10 @@ local function OnThrown(inst, attacker)
 
     inst.AnimState:PlayAnimation("spin_loop")
 
+    inst:KillIdleSound()
+
+    inst.SoundEmitter:PlaySound("meta4/mosquito_bomb/spin_lp", THROWN_SOUNDNAME)
+
     inst.Physics:SetMass(1)
     inst.Physics:SetFriction(0)
     inst.Physics:SetDamping(0)
@@ -118,18 +146,20 @@ local function OnThrown(inst, attacker)
     inst.Physics:CollidesWith(COLLISION.OBSTACLES)
     inst.Physics:CollidesWith(COLLISION.ITEMS)
     inst.Physics:SetCapsule(.2, .2)
-
-    inst.thrower = attacker
 end
 
 local function OnHit(inst, attacker, target)
-    inst.attacker = attacker
-    inst.spawntask = inst:DoTaskInTime(9*FRAMES, inst.SpawnMosquitos)
+    inst.SoundEmitter:KillSound(THROWN_SOUNDNAME)
+    inst.SoundEmitter:PlaySound("meta4/mosquito_bomb/explode")
+
+    local ispvp = attacker ~= nil and attacker:IsValid() and attacker:HasTag("player")
+
+    inst:DoImpactDamage(attacker, ispvp and attacker or nil)
+    inst:SpawnMosquitos(attacker)
 
     inst.AnimState:PlayAnimation("used")
 
     inst:ListenForEvent("animover", inst.Remove)
-    inst.persists = false
 end
 
 local function ReticuleTargetFn()
@@ -158,15 +188,25 @@ local function PlayFunnyIdle(inst)
 
     inst.AnimState:PlayAnimation("idle_loop")
 
+    local killsoundtime = inst.AnimState:GetCurrentAnimationLength()
+
     if loop_twice then
         inst.AnimState:PushAnimation("idle_loop")
 
         tasktime = tasktime * 1.25
+        killsoundtime = killsoundtime * 2
     end
 
     inst.AnimState:PushAnimation("idle")
 
-    inst._funnyidletask = inst:DoTaskInTime(tasktime, inst.PlayFunnyIdle)
+    inst.SoundEmitter:PlaySound("meta4/mosquito_bomb/idle_lp", IDLE_SOUNDNAME)
+
+    inst._killsoundtask = inst:DoTaskInTime(killsoundtime, inst.KillIdleSound)
+    inst._funnyidletask = inst:DoTaskInTime(tasktime,      inst.PlayFunnyIdle)
+end
+
+local function KillIdleSound(inst)
+    inst.SoundEmitter:KillSound(IDLE_SOUNDNAME)
 end
 
 local function OnEntityWake(inst)
@@ -229,7 +269,9 @@ local function fn()
     end
 
     inst.SpawnMosquitos = SpawnMosquitos
+    inst.DoImpactDamage = DoImpactDamage
     inst.PlayFunnyIdle  = PlayFunnyIdle
+    inst.KillIdleSound  = KillIdleSound
 
     inst:AddComponent("inspectable")
     inst:AddComponent("inventoryitem")

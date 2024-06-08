@@ -27,7 +27,7 @@ end
 
 prefabs = FlattenTree({prefabs, start_inv}, true)
 
-local function GetPointSpecialActions(inst, pos, useitem, right)
+local function GetPointSpecialActions(inst, pos, useitem, right, usereticulepos)
 	if right then
 		if useitem == nil then
 			local inventory = inst.replica.inventory
@@ -39,7 +39,21 @@ local function GetPointSpecialActions(inst, pos, useitem, right)
 			useitem.prefab == "roseglasseshat" and
 			useitem:HasTag("closeinspector")
 		then
-			return { ACTIONS.LOOKAT }
+			--match ReticuleTargetFn
+			if usereticulepos then
+				local pos2 = Vector3()
+				for r = 2.5, 1, -.25 do
+					pos2.x, pos2.y, pos2.z = inst.entity:LocalToWorldSpace(r, 0, 0)
+					if CLOSEINSPECTORUTIL.IsValidPos(inst, pos2) then
+						return { ACTIONS.LOOKAT }, pos2
+					end
+				end
+			end
+
+			--default, input pos is just the player's position
+			if CLOSEINSPECTORUTIL.IsValidPos(inst, pos) then
+				return { ACTIONS.LOOKAT }
+			end
 		end
 	end
 	return {}
@@ -51,7 +65,7 @@ local function ReticuleTargetFn()
 	local pos = Vector3()
 	for r = 2.5, 1, -.25 do
 		pos.x, pos.y, pos.z = player.entity:LocalToWorldSpace(r, 0, 0)
-		if ground:IsPassableAtPoint(pos:Get()) and not ground:IsGroundTargetBlocked(pos) then
+		if CLOSEINSPECTORUTIL.IsValidPos(player, pos) then
 			return pos
 		end
 	end
@@ -126,8 +140,7 @@ local function master_postinit(inst)
     if TheNet:GetServerGameMode() == "lavaarena" then
         event_server_data("lavaarena", "prefabs/winona").master_postinit(inst)
     else
-        local roseinspectableuser = inst:AddComponent("roseinspectableuser")
-        roseinspectableuser:RegisterRosePointContext(ROSEPOINT_CONFIGURATIONS.VINEBRIDGE)
+        inst:AddComponent("roseinspectableuser")
 
 		inst:ListenForEvent("ondeactivateskill_server", OnDeactivateSkill)
 

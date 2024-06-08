@@ -269,6 +269,7 @@ local function common_fn(anim)
     inst:AddComponent("workable")
 
     MakeHauntableWork(inst)
+    MakeRoseTarget_CreateFuel_IncreasedHorror(inst)
 
     return inst
 end

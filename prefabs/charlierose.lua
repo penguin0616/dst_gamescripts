@@ -70,9 +70,6 @@ local function fn()
 	inst.components.inventoryitem.canbepickedup = false
 	inst.components.inventoryitem.nobounce = true
 
-	inst:AddComponent("stackable")
-	inst.components.stackable.maxsize = TUNING.STACK_SIZE_LARGEITEM
-
 	inst:AddComponent("fuel")
 	inst.components.fuel.fuelvalue = TUNING.TINY_FUEL
 

@@ -158,6 +158,8 @@ local function OnPlayerDeath(inst, data)
 			if rose then
 				if rose.components.stackable then
 					rose.components.stackable:Get():Remove()
+                else
+                    rose:Remove()
 				end
 				inst.charlie_vinesave = true
 			end

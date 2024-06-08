@@ -629,7 +629,7 @@ local function AncientTreeSapling_GetAnimFn(inst)
 end
 
 local function AncientTreeSapling_GetDisplayNameFn(inst)
-    local is_seed = inst.savedata.anim == "seed"
+    local is_seed = inst.AnimState:IsCurrentAnimation(ANCIENT_TREE_SAPLING_ANIMSET.seed.anim)
 
     return STRINGS.NAMES[is_seed and "ANCIENTTREE_SEED_PLANTED" or inst.displayname]
 end

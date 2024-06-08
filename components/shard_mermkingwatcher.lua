@@ -182,7 +182,7 @@ if _ismastershard then
     self.OnMermKingPauldronsChanged = function(src, data)
         if not data then return end
 
-        (data.pickedup and self.AddPauldronsSource or self.RemovePauldronsSource)(self, data.shardid)
+        (data.pickedup and self.AddPauldronSource or self.RemovePauldronSource)(self, data.shardid)
     end
     inst:ListenForEvent("master_shardmermkingpauldron", self.OnMermKingPauldronsChanged, _world)
 else

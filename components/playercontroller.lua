@@ -4313,7 +4313,7 @@ function PlayerController:GetGroundUseSpecialAction(position, right)
 end
 
 function PlayerController:HasGroundUseSpecialAction(right)
-    return #self.inst.components.playeractionpicker:GetPointSpecialActions(self.inst:GetPosition(), nil, right) > 0
+	return #self.inst.components.playeractionpicker:GetPointSpecialActions(self.inst:GetPosition(), nil, right, true) > 0
 end
 
 local function ValidateItemUseAction(self, act, active_item, target)

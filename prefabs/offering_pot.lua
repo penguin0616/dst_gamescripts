@@ -11,25 +11,20 @@ local assets =
 {
     Asset("ANIM", "anim/offering_pot.zip"),
     Asset("ANIM", "anim/offering_pot_upgraded_build.zip"),
-	Asset("ANIM", "anim/ui_chest_2x2.zip"),	
+	Asset("ANIM", "anim/ui_chest_2x2.zip"),
 }
 
-local KELP_LAYERS =
-{
-	"kelp_1",
-	"kelp_2",
-	"kelp_3",
-	"kelp_4",
-	"kelp_5",
-	"kelp_6",	
-}
+local NUM_KELPS = 6
+local KELP_LAYERS = {}
+for i = 1, NUM_KELPS do
+    table.insert(KELP_LAYERS, "kelp_"..tostring(i))
+end
 
 ---------------------------------------------------------------
 -- PLACER EFFECTS
 local PLACER_SCALE = 1.9
 
 local function OnUpdatePlacerHelper(helperinst)
-
     if not helperinst.placerinst:IsValid() then
         helperinst.components.updatelooper:RemoveOnUpdateFn(OnUpdatePlacerHelper)
         helperinst.AnimState:SetAddColour(0, 0, 0, 0)
@@ -38,7 +33,6 @@ local function OnUpdatePlacerHelper(helperinst)
     else
         helperinst.AnimState:SetAddColour(0, 0, 0, 0)
     end
-
 end
 
 local function CreatePlacerRing()
@@ -67,7 +61,7 @@ local function CreatePlacerRing()
     inst.AnimState:SetScale(PLACER_SCALE, PLACER_SCALE)
 
     inst.AnimState:Hide("inner")
-    
+
     return inst
 end
 
@@ -121,8 +115,9 @@ end
 
 local function onbuilt(inst)
     inst.AnimState:PlayAnimation("place")
-    inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/sisturn/place")
     inst.AnimState:PushAnimation("idle", false)
+
+    inst.SoundEmitter:PlaySound("meta4/merm_alter/place")
     inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/sisturn/hit")
 end
 
@@ -135,26 +130,23 @@ local function countkelp(inst)
 end
 
 local function UpdateDecor(inst, data)
-    local count = countkelp(inst)
-   
-   	inst.AnimState:Hide("kelp_1")
-   	inst.AnimState:Hide("kelp_2")
-   	inst.AnimState:Hide("kelp_3")
-   	inst.AnimState:Hide("kelp_4")
-   	inst.AnimState:Hide("kelp_5")
-   	inst.AnimState:Hide("kelp_6")   	
+    inst.SoundEmitter:PlaySound("meta4/merm_alter/offering_place")
 
-   	if count > 0 then
-   		for i=1,count do
-   			inst.AnimState:Show("kelp_"..i)
-   		end
-   	end
+    local count = countkelp(inst)
+
+    for i = 1, NUM_KELPS do
+        if i <= count then
+            inst.AnimState:Show("kelp_"..i)
+        else
+            inst.AnimState:Hide("kelp_"..i)
+        end
+    end
 
     if not inst:HasTag("burnt") then
 		inst.AnimState:PlayAnimation("give")
 		inst.AnimState:PushAnimation("idle",true)
-	end   	
-	
+	end
+
 	TheWorld:PushEvent("ms_updateofferingpotstate", {inst = inst, count=count})
 end
 
@@ -182,9 +174,7 @@ local function onremove(inst)
 	TheWorld:PushEvent("ms_updateofferingpotstate", {inst = inst, count=0})
 end
 
-
 local function common_pre_mastersim(inst)
-
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
@@ -209,12 +199,11 @@ local function common_pre_mastersim(inst)
 
     --Dedicated server does not need deployhelper
     if not TheNet:IsDedicated() then
-        inst:AddComponent("deployhelper")
-     --   inst.components.deployhelper:AddRecipeFilter("mermhouse")
-        inst.components.deployhelper:AddRecipeFilter("mermhouse_crafted")
-        inst.components.deployhelper:AddRecipeFilter("mermwatchtower")
-        inst.components.deployhelper.onenablehelper = OnEnableHelper
-        inst.components.deployhelper.onstarthelper = OnStartHelper
+        local deployhelper = inst:AddComponent("deployhelper")
+        deployhelper:AddRecipeFilter("mermhouse_crafted")
+        deployhelper:AddRecipeFilter("mermwatchtower")
+        deployhelper.onenablehelper = OnEnableHelper
+        deployhelper.onstarthelper = OnStartHelper
     end
 
     return inst
@@ -226,12 +215,11 @@ local function common_pst_mastersim(inst)
 
     inst:AddComponent("lootdropper")
 
-    inst:AddComponent("workable")
-    inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
-    inst.components.workable:SetWorkLeft(4)
-    inst.components.workable:SetOnFinishCallback(onhammered)
-    inst.components.workable:SetOnWorkCallback(onhit)
-
+    local workable = inst:AddComponent("workable")
+    workable:SetWorkAction(ACTIONS.HAMMER)
+    workable:SetWorkLeft(4)
+    workable:SetOnFinishCallback(onhammered)
+    workable:SetOnWorkCallback(onhit)
 
     MakeSmallBurnable(inst, nil, nil, true)
     MakeSmallPropagator(inst)
@@ -252,10 +240,9 @@ end
 local function fn()
     local inst = CreateEntity()
 
-  	inst = common_pre_mastersim(inst)
+    inst = common_pre_mastersim(inst)
 
     inst.entity:SetPristine()
-
     if not TheWorld.ismastersim then
         return inst
     end
@@ -263,7 +250,7 @@ local function fn()
 	inst = common_pst_mastersim(inst)
 
 	inst:AddComponent("container")
-    inst.components.container:WidgetSetup("offeringpot")
+    inst.components.container:WidgetSetup("offering_pot")
 
     return inst
 end
@@ -271,11 +258,10 @@ end
 local function upgradedfn()
     local inst = CreateEntity()
 
-  	inst = common_pre_mastersim(inst)
+    inst = common_pre_mastersim(inst)
     inst.AnimState:SetBuild("offering_pot_upgraded_build")
 
     inst.entity:SetPristine()
-
     if not TheWorld.ismastersim then
         return inst
     end
@@ -283,15 +269,13 @@ local function upgradedfn()
 	inst = common_pst_mastersim(inst)
 
 	inst:AddComponent("container")
-    inst.components.container:WidgetSetup("offeringpot2")
+    inst.components.container:WidgetSetup("offering_pot_upgraded")
 
     return inst
 end
 
 local function placer_postinit_fn(inst)
 	inst.AnimState:Hide("inner")
-
-	--
 
     local inner = CreateEntity()
 
@@ -316,15 +300,8 @@ local function placer_postinit_fn(inst)
     inner.entity:SetParent(inst.entity)
     inst.components.placer:LinkEntity(inner)
 
-	--local recipe = AllRecipes.table_winters_feast
 	local inner_radius_scale = PLACER_SCALE --recipe ~= nil and recipe.min_spacing ~= nil and (recipe.min_spacing / 2.2) or 1 -- roughly lines up size of animation with blocking radius
     inner.AnimState:SetScale(inner_radius_scale, inner_radius_scale)
-
-	--
---[[
-	local outer_radius_scale = (TUNING.WINTERSFEASTTABLE.TABLE_RANGE + 1.4 ) / 4.5 -- roughly lines up size of animation with feast radius
-    inst.AnimState:SetScale(outer_radius_scale, outer_radius_scale)
-]]
 end
 
 return Prefab("offering_pot", fn, assets, prefabs),

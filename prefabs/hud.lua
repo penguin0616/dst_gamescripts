@@ -139,6 +139,7 @@ local assets =
     Asset("ANIM", "anim/inspectacles_over.zip"),
     Asset("ANIM", "anim/winona_inspectacles_fx.zip"),
     Asset("ANIM", "anim/inspectacles.zip"),
+    Asset("ANIM", "anim/roseglasseshat_over.zip"),
 }
 
 local prefabs =

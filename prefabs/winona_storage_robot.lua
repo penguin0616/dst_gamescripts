@@ -419,6 +419,7 @@ local function OnEnableHelper(inst, enabled, recipename, placerinst)
 		if inst.helper then
 			inst.helper:Remove()
 			inst.helper = nil
+			inst.OnRemoveEntity = nil
 		end
 	end
 end
@@ -526,6 +527,7 @@ local function fn()
 	inst:AddTag("storagerobot")
 	inst:AddTag("engineering")
 	inst:AddTag("engineeringbatterypowered")
+	inst:AddTag("usedeploystring")
 
 	inst._originx = net_float(inst.GUID, "winona_storage_robot._originx", "origindirty")
 	inst._originz = net_float(inst.GUID, "winona_storage_robot._originz", "origindirty")

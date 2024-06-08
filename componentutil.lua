@@ -98,12 +98,54 @@ function DecayCharlieResidueAndGoOnCooldownIfItExists(inst)
     roseinspectableuser:ForceDecayResidue()
     roseinspectableuser:GoOnCooldown()
 end
+
+local function OnFuelPresentation1(inst, x, z, upgraded)
+    --local fx = SpawnPrefab("FIXME(JBK) Add this when ready.")
+    --fx.Transform:SetPosition(x, 0, z)
+end
+local function OnFuelPresentation2(inst, x, z, upgraded)
+    local fx = SpawnPrefab(upgraded and "shadow_puff_solid" or "shadow_puff")
+    fx.Transform:SetPosition(x, 0, z)
+    inst:ReturnToScene()
+end
+local function OnRoseInspected_Fuel_Internal(inst, doer, odds)
+    local skilltreeupdater = doer.components.skilltreeupdater
+    local upgraded = skilltreeupdater and skilltreeupdater:IsActivated("winona_charlie_2") and math.random() < odds or nil
+    local fuel = SpawnPrefab(upgraded and "horrorfuel" or "nightmarefuel")
+    fuel:RemoveFromScene()
+    local x, y, z = inst.Transform:GetWorldPosition()
+    local radius = inst:GetPhysicsRadius(0)
+    if radius > 0 then
+        radius = radius + 1.5
+    end
+    local theta = math.random() * PI2
+    x, z = x + math.cos(theta) * radius, z + math.sin(theta) * radius
+    fuel.Transform:SetPosition(x, 0, z)
+    fuel:DoTaskInTime(1.0, OnFuelPresentation1, x, z, upgraded)
+    fuel:DoTaskInTime(1.5, OnFuelPresentation2, x, z, upgraded)
+end
+local function OnRoseInspected_Fuel(inst, doer)
+    OnRoseInspected_Fuel_Internal(inst, doer, TUNING.SKILLS.WINONA.ROSEGLASSES_UPGRADE_CHANCE)
+end
+local function OnRoseInspected_Fuel_IncreasedHorror(inst, doer)
+    OnRoseInspected_Fuel_Internal(inst, doer, TUNING.SKILLS.WINONA.ROSEGLASSES_UPGRADE_CHANCE_INCREASED)
+end
+function MakeRoseTarget_CreateFuel(inst)
+    local roseinspectable = inst:AddComponent("roseinspectable")
+    roseinspectable:SetOnRoseInspected(OnRoseInspected_Fuel)
+end
+function MakeRoseTarget_CreateFuel_IncreasedHorror(inst)
+    local roseinspectable = inst:AddComponent("roseinspectable")
+    roseinspectable:SetOnRoseInspected(OnRoseInspected_Fuel_IncreasedHorror)
+end
 --------------------------------------------------------------------------
 local function RosePoint_VineBridge_Check(inst, pt)
     local _world = TheWorld
-    local vinebridgemanager = _world.components.vinebridgemanager
-    if vinebridgemanager == nil then
-        return false
+    if _world.ismastersim then
+        local vinebridgemanager = _world.components.vinebridgemanager
+        if vinebridgemanager == nil then
+            return false
+        end
     end
 
     local _map = _world.Map
@@ -141,30 +183,26 @@ local function RosePoint_VineBridge_Check(inst, pt)
         sx, sz = sx - dx * 0.5, sz - dz * 0.5 -- Move half a tile backwards to go back onto a land tile.
     end
 
+    -- Center start to center of tile.
+    sx, sy, sz = _map:GetTileCenterPoint(sx, sy, sz)
+
     -- Scan for land.
     local hitland = false
     local spots = {}
-    --SpawnPrefab("yellowmooneye").Transform:SetPosition(sx, 0, sz)
     for i = 0, maxlength do -- Intentionally 0 to max to have a + 1 for the end tile cap inclusion.
         sx, sz = sx + dx, sz + dz
 
         local pt_offseted = Point(sx, 0, sz)
-        if _map:IsVisualGroundAtPoint(sx, 0, sz) then
-            --SpawnPrefab("bluemooneye").Transform:SetPosition(sx, 0, sz)
+        if _map:IsLandTileAtPoint(sx, 0, sz) then
             hitland = true
-            if not on_overhang and not _map:IsLandTileAtPoint(sx, 0, sz) then -- Hit an edge of the land turf on the other side but only one overhang is acceptable.
-                table.insert(spots, pt_offseted)
-            end
             break
         end
 
         if not _map:CanDeployDockAtPoint(pt_offseted, inst) then
-            --SpawnPrefab("redmooneye").Transform:SetPosition(sx, 0, sz)
             return false
         end
 
         table.insert(spots, pt_offseted)
-        --SpawnPrefab("greenmooneye").Transform:SetPosition(sx, 0, sz)
     end
 
     if not hitland or spots[1] == nil then
@@ -190,13 +228,65 @@ local function RosePoint_VineBridge_Do(inst, pt, spots)
     end
     return true
 end
--- NOTES(JBK): Functions and names for roseinspectableuser:RegisterRosePointContext() which are used in RoseInspectableUser:DoRoseInspectionOnPoint().
--- The order of priority is defined by what is used in the component's registration order.
+-- NOTES(JBK): Functions and names for CLOSEINSPECTORUTIL checks.
+-- The order of priority is defined by what is present in this table use the contextname to table.insert new ones.
 ROSEPOINT_CONFIGURATIONS = {
-    VINEBRIDGE = {
+    {
         contextname = "Vine Bridge",
         checkfn = RosePoint_VineBridge_Check,
         callbackfn = RosePoint_VineBridge_Do,
     },
 }
+--------------------------------------------------------------------------
+--closeinspector
+
+CLOSEINSPECTORUTIL = {}
+
+CLOSEINSPECTORUTIL.IsValidTarget = function(doer, target)
+    if TheWorld.ismastersim then
+        return not (
+            (target.Physics and target.Physics:GetMass() ~= 0) or
+            target.components.locomotor or
+            target.components.inventoryitem
+        )
+    else
+        return not (
+            (target.Physics and target.Physics:GetMass() ~= 0) or
+            target:HasTag("locomotor") or
+            target.replica.inventoryitem
+        )
+    end
+end
+
+CLOSEINSPECTORUTIL.IsValidPos = function(doer, pos)
+    for _, config in ipairs(ROSEPOINT_CONFIGURATIONS) do
+        if config.checkfn(doer, pos) then
+            return true
+        end
+    end
+
+    return false
+end
+
+CLOSEINSPECTORUTIL.CanCloseInspect = function(doer, targetorpos)
+    local hascloseinspector
+    if TheWorld.ismastersim then
+        hascloseinspector = doer and doer.components.inventory and doer.components.inventory:EquipHasTag("closeinspector")
+    else
+        hascloseinspector = doer and doer.replica.inventory and doer.replica.inventory:EquipHasTag("closeinspector")
+    end
+    if hascloseinspector then
+        if targetorpos:is_a(EntityScript) then
+            if not targetorpos:IsValid() then
+                return false
+            end
+            return CLOSEINSPECTORUTIL.IsValidTarget(doer, targetorpos)
+        else
+            return CLOSEINSPECTORUTIL.IsValidPos(doer, targetorpos)
+        end
+    end
+
+    return false
+end
+
 --------------------------------------------------------------------------

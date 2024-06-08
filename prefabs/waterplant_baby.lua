@@ -201,6 +201,7 @@ local function fn()
 
     inst:AddTag("ignorewalkableplatforms")
     inst:AddTag("seastack")
+    inst:AddTag("waterplant")
 
     inst.AnimState:SetBank("barnacle_plant")
     inst.AnimState:SetBuild("barnacle_plant_colour_swaps")

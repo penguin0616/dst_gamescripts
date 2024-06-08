@@ -631,6 +631,7 @@ local function fn()
     inst:AddComponent("colourtweener")
 
     MakeHauntableWork(inst)
+    MakeRoseTarget_CreateFuel_IncreasedHorror(inst)
 
     inst.OnLoadPostPass = OnLoadPostPass
     inst.OnPreLoad = OnPreLoad

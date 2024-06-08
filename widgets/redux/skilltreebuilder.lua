@@ -259,7 +259,7 @@ function SkillTreeBuilder:buildbuttons(panel, pos, data, offset, root)
         self.skillgraphics[skill].button_decorations = subdata.button_decorations
         if subdata.button_decorations ~= nil then
             if subdata.button_decorations.init ~= nil then
-                subdata.button_decorations.init(skillbutton, root)
+                subdata.button_decorations.init(skillbutton, root, self.fromfrontend)
             end
         end
 		table.insert(self.buttongrid,{button=skillbutton,x=newpos.x,y=newpos.y})
@@ -481,13 +481,13 @@ function SkillTreeBuilder:RefreshTree()
 					end)
                     if graphics.button_decorations ~= nil then
                         if graphics.button_decorations.onunlocked ~= nil then
-                            graphics.button_decorations.onunlocked(graphics.button, false)
+                            graphics.button_decorations.onunlocked(graphics.button, false, self.fromfrontend)
                         end
                     end
                 else
                     if graphics.button_decorations ~= nil then
                         if graphics.button_decorations.onunlocked ~= nil then
-                            graphics.button_decorations.onunlocked(graphics.button, true)
+                            graphics.button_decorations.onunlocked(graphics.button, true, self.fromfrontend)
                         end
                     end
 				end
@@ -495,7 +495,7 @@ function SkillTreeBuilder:RefreshTree()
 				graphics.button:SetTextures(ATLAS, IMAGE_LOCKED, IMAGE_LOCKED_OVER,IMAGE_LOCKED,IMAGE_LOCKED,IMAGE_LOCKED)
                 if graphics.button_decorations ~= nil then
                     if graphics.button_decorations.onlocked ~= nil then
-                        graphics.button_decorations.onlocked(graphics.button, graphics.oldstatus == nil or graphics.oldstatus.lock_open == graphics.status.lock_open)
+                        graphics.button_decorations.onlocked(graphics.button, graphics.oldstatus == nil or graphics.oldstatus.lock_open == graphics.status.lock_open, self.fromfrontend)
                     end
                 end
 			end
@@ -504,7 +504,7 @@ function SkillTreeBuilder:RefreshTree()
 			graphics.button:SetTextures(ATLAS, IMAGE_SELECTED, IMAGE_SELECTED_OVER,IMAGE_SELECTED,IMAGE_SELECTED,IMAGE_SELECTED)
             if graphics.button_decorations ~= nil then
                 if graphics.button_decorations.onunlocked ~= nil then
-                    graphics.button_decorations.onunlocked(graphics.button, true)
+                    graphics.button_decorations.onunlocked(graphics.button, true, self.fromfrontend)
                 end
             end
 		elseif graphics.status.activatable and availableskillpoints > 0 then
@@ -512,7 +512,7 @@ function SkillTreeBuilder:RefreshTree()
 			graphics.button:SetTextures(ATLAS, IMAGE_SELECTABLE, IMAGE_SELECTABLE_OVER,IMAGE_SELECTABLE,IMAGE_SELECTABLE,IMAGE_SELECTABLE)
             if graphics.button_decorations ~= nil then
                 if graphics.button_decorations.onlocked ~= nil then
-                    graphics.button_decorations.onlocked(graphics.button, true)
+                    graphics.button_decorations.onlocked(graphics.button, true, self.fromfrontend)
                 end
             end
 		else
@@ -520,7 +520,7 @@ function SkillTreeBuilder:RefreshTree()
 			graphics.button:SetTextures(ATLAS, IMAGE_UNSELECTED, IMAGE_UNSELECTED_OVER,IMAGE_UNSELECTED,IMAGE_UNSELECTED,IMAGE_UNSELECTED)
             if graphics.button_decorations ~= nil then
                 if graphics.button_decorations.onlocked ~= nil then
-                    graphics.button_decorations.onlocked(graphics.button, true)
+                    graphics.button_decorations.onlocked(graphics.button, true, self.fromfrontend)
                 end
             end
 		end
