@@ -143,6 +143,7 @@ local COMPONENT_ACTIONS =
     {
         activatable = function(inst, doer, actions, right)
             if inst:HasTag("inactive") then
+				--keep playercontroller.lua::GetPickupAction updated as well
 				if inst:HasTag("engineering") then
 					if not doer:HasTag("handyperson") then
 						return

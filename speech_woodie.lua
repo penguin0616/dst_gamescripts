@@ -397,7 +397,7 @@ return{
 
         CASTSPELL =
         {
---fallback to speech_wilson.lua 			TERRAFORM_TOO_SOON = "only_used_by_wurt",
+            TERRAFORM_TOO_SOON = "only_used_by_wurt",
         },
 
 		CASTAOE =
@@ -3526,11 +3526,12 @@ return{
         },
         WINONA_BATTERY_HIGH =
         {
-        	GENERIC = "Pretty odd looking gadget there.",
-        	LOWPOWER = "Just aboot dead.",
-        	OFF = "Plum tuckered.",
-        	BURNING = "Woah! Careful, Lucy!",
-        	BURNT = "That's a right shame.",
+			GENERIC = "Pretty odd looking gadget there.",
+			LOWPOWER = "Just aboot dead.",
+			OFF = "Plum tuckered.",
+			BURNING = "Woah! Careful, Lucy!",
+			BURNT = "That's a right shame.",
+			OVERLOADED = "Worked a little too hard, eh?",
         },
 		--v3 Winona
 		WINONA_REMOTE =

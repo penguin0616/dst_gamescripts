@@ -110,14 +110,19 @@ end
 
 --------------------------------------------------------------------------
 
-local function OnResidueHookup(inst, owner, residue)
+local function CanResidueBeSpawnedBy(inst, doer)
+    local skilltreeupdater = doer and doer.components.skilltreeupdater or nil
+    return skilltreeupdater and skilltreeupdater:IsActivated("winona_charlie_2") or false
+end
+
+local function OnResidueCreated(inst, owner, residue)
 	if not inst._isrose:value() then
 		setflowertype(inst, ROSE_NAME)
 		SpawnPrefab("small_puff").Transform:SetPosition(inst.Transform:GetWorldPosition())
 	end
 end
 
-local function OnRoseInspected(inst, doer)
+local function OnResidueActivated(inst, doer)
 	if inst._isrose:value() and doer and doer.components.inventory then
 		local rose = SpawnPrefab("charlierose")
 		doer.components.inventory:GiveItem(rose, nil, inst:GetPosition())
@@ -180,9 +185,10 @@ local function commonfn(isplanted)
 	inst:AddComponent("halloweenmoonmutable")
 	inst.components.halloweenmoonmutable:SetPrefabMutated("moonbutterfly_sapling")
 
-	inst:AddComponent("roseinspectable")
-	inst.components.roseinspectable:SetOnResidueHookup(OnResidueHookup)
-	inst.components.roseinspectable:SetOnRoseInspected(OnRoseInspected)
+	local roseinspectable = inst:AddComponent("roseinspectable")
+	roseinspectable:SetCanResidueBeSpawnedBy(CanResidueBeSpawnedBy)
+	roseinspectable:SetOnResidueCreated(OnResidueCreated)
+	roseinspectable:SetOnResidueActivated(OnResidueActivated)
 
     if TheWorld:HasTag("cave") then
         inst:WatchWorldState("iscaveday", OnIsCaveDay)

@@ -397,7 +397,7 @@ return{
 
         CASTSPELL =
         {
---fallback to speech_wilson.lua 			TERRAFORM_TOO_SOON = "only_used_by_wurt",
+            TERRAFORM_TOO_SOON = "only_used_by_wurt",
         },
 
 		CASTAOE =
@@ -3525,11 +3525,12 @@ return{
         },
         WINONA_BATTERY_HIGH =
         {
-        	GENERIC = "MORE POWER. YES",
-        	LOWPOWER = "DO NOT DIE ON ME, SISTER",
-        	OFF = "WHY",
-        	BURNING = "HURRY, SAVE IT",
-        	BURNT = "IT WAS A GOOD MACHINE",
+			GENERIC = "MORE POWER. YES",
+			LOWPOWER = "DO NOT DIE ON ME, SISTER",
+			OFF = "WHY",
+			BURNING = "HURRY, SAVE IT",
+			BURNT = "IT WAS A GOOD MACHINE",
+			OVERLOADED = "OVERALLS IS OVERWORKING THE MACHINES IN HER CARE. ABOMINABLE",
         },
 		--v3 Winona
 		WINONA_REMOTE =

@@ -973,8 +973,8 @@ ACTIONS.LOOKAT.fn = function(act)
 	end
 end
 
---local MAP_SELECT_WORMHOLE_MUST = { "CLASSIFIED", "globalmapicon", "fogrevealer" }
-ACTIONS_MAP_REMAP[ACTIONS.LOOKAT.code] = function(act, targetpos)
+local MAP_SELECT_WORMHOLE_MUST = { "CLASSIFIED", "globalmapicon", "wormholetrackericon" }
+ACTIONS_MAP_REMAP[ACTIONS.ACTIVATE.code] = function(act, targetpos)
     local doer = act.doer
     if doer == nil then
         return nil
@@ -998,16 +998,23 @@ ACTIONS_MAP_REMAP[ACTIONS.LOOKAT.code] = function(act, targetpos)
             end
         end
         if charlieresidue and charlieresidue:IsValid() then
+            local residuetarget = charlieresidue:GetTarget()
+            local rx, ry, rz = residuetarget.Transform:GetWorldPosition()
             local context = charlieresidue:GetMapActionContext()
             if context > CHARLIERESIDUE_MAP_ACTIONS.NONE then
                 if context == CHARLIERESIDUE_MAP_ACTIONS.WORMHOLE then
-                    act_remap = BufferedAction(doer, charlieresidue, ACTIONS.JUMPIN_MAP, nil, targetpos)
+                    local ents = TheSim:FindEntities(targetpos.x, targetpos.y, targetpos.z, TUNING.SKILLS.WINONA.WORMHOLE_DETECTION_RADIUS, MAP_SELECT_WORMHOLE_MUST)
+                    for _, ent in ipairs(ents) do
+                        local ex, ey, ez = ent.Transform:GetWorldPosition()
+                        if ex ~= rx and ez ~= rz then
+                            act_remap = BufferedAction(doer, charlieresidue, ACTIONS.JUMPIN_MAP, nil, targetpos)
+                            break
+                        end
+                    end
                 end
             end
         end
     end
-
-    -- FIXME(JBK): Autoaim for wormhole icons on minimap.
 
     return act_remap
 end
@@ -2450,13 +2457,14 @@ ACTIONS.JUMPIN_MAP.stroverridefn = function(act)
 end
 
 local WORMHOLE_MUST_TAGS = {"wormhole"}
-local function DoCharlieResidueMapAction(act, target, residue_context)
+local function DoCharlieResidueMapAction(act, target, charlieresidue, residue_context)
     if residue_context == CHARLIERESIDUE_MAP_ACTIONS.WORMHOLE then
+        local residuetarget = charlieresidue:GetTarget()
         local pt = act:GetActionPoint()
         local teleporterexit = nil
-        local wormholes = TheSim:FindEntities(pt.x, pt.y, pt.z, 20, WORMHOLE_MUST_TAGS)
+        local wormholes = TheSim:FindEntities(pt.x, pt.y, pt.z, TUNING.SKILLS.WINONA.WORMHOLE_DETECTION_RADIUS, WORMHOLE_MUST_TAGS)
         for _, wormhole in ipairs(wormholes) do
-            if wormhole.components.teleporter ~= nil then
+            if wormhole.components.teleporter ~= nil and wormhole ~= residuetarget then
                 teleporterexit = wormhole
                 break
             end
@@ -2474,15 +2482,17 @@ end
 ACTIONS.JUMPIN_MAP.fn = function(act)
     if act.doer ~= nil and act.doer.sg ~= nil and act.doer.sg.currentstate.name == "jumpin_pre" then
         local target = act.target
+        local charlieresidue = nil
         local residue_context = CHARLIERESIDUE_MAP_ACTIONS.NONE
         if target ~= nil and target.prefab == "charlieresidue" then
+            charlieresidue = target
             residue_context = target:GetMapActionContext()
             target = target:GetTarget()
             target = target and target:IsValid() and target or nil
         end
         if target ~= nil and target.components.teleporter ~= nil and target.components.teleporter:IsActive() then
             if residue_context > CHARLIERESIDUE_MAP_ACTIONS.NONE then
-                if not DoCharlieResidueMapAction(act, target, residue_context) then
+                if not DoCharlieResidueMapAction(act, target, charlieresidue, residue_context) then
                     act.doer.sg:GoToState("idle")
                 end
             else

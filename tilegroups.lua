@@ -60,6 +60,19 @@ function TileGroupManager__index:IsNoiseTile(tile)
     return false
 end
 
+function TileGroupManager__index:IsTemporaryTile(tile)
+    -- A group for tiles that are used with the undertile component,
+    -- to help avoid collisions in temporary tiles trying to go onto
+    -- the same spot.
+    return (tile == WORLD_TILES.CHARLIE_VINE)
+        or (tile == WORLD_TILES.FARMING_SOIL)
+        or (tile == WORLD_TILES.LUNAR_MARSH)
+        or (tile == WORLD_TILES.MONKEY_DOCK)
+        or (tile == WORLD_TILES.OCEAN_ICE)
+        or (tile == WORLD_TILES.RIFT_MOON)
+        or (tile == WORLD_TILES.SHADOW_MARSH)
+end
+
 local is_worldgen = rawget(_G, "WORLDGEN_MAIN") ~= nil
 if is_worldgen then return end
 

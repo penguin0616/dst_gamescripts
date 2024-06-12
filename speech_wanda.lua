@@ -397,7 +397,7 @@ return{
 
         CASTSPELL =
         {
---fallback to speech_wilson.lua 			TERRAFORM_TOO_SOON = "only_used_by_wurt",
+            TERRAFORM_TOO_SOON = "only_used_by_wurt",
         },
 
 		CASTAOE =
@@ -3525,11 +3525,12 @@ return{
         },
         WINONA_BATTERY_HIGH =
         {
-        	GENERIC = "I see she's also been incorporating gems into her designs.",
-        	LOWPOWER = "A fresh gem should keep it going a while longer.",
-        	OFF = "It ran out of magical energy.",
-        	BURNING = "I probably should have warned her that was going to happen.",
-        	BURNT = "I wonder how quickly she can build a new one...",
+			GENERIC = "I see she's also been incorporating gems into her designs.",
+			LOWPOWER = "A fresh gem should keep it going a while longer.",
+			OFF = "It ran out of magical energy.",
+			BURNING = "I probably should have warned her that was going to happen.",
+			BURNT = "I wonder how quickly she can build a new one...",
+			OVERLOADED = "Can't push these gems too hard.",
         },
 		--v3 Winona
 		WINONA_REMOTE =

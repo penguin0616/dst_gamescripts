@@ -1043,7 +1043,7 @@ end
 local function SpawnSeaStacks(inst)
     local x, y, z = inst.Transform:GetWorldPosition()
 
-    local numstacks =  math.max(0, TUNING.CRABKING_STACKS - TheSim:CountEntities(x, 0, z, 20, SEASTACK_MUST_TAGS, SEASTACK_CANT_TAGS))
+    local numstacks =  math.max(0, TUNING.CRABKING_STACKS - TheSim:CountEntities(x, 0, z, 20, SEASTACK_MUST_TAGS))
 
     if numstacks <= 0 then
         return

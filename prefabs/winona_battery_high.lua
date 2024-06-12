@@ -59,6 +59,21 @@ local function ConfigureSkillTreeUpgrades(inst, builder)
 	end
 end
 
+local function CalcShardRegenSpeedMult(inst)
+	return TUNING.WINONA_BATTERY_HIGH_SHARD_REGEN_MULT[math.clamp(inst._shard_level, 1, 3)]
+		* CalcEfficiencyMult(inst)
+end
+
+local function CalcShardRegenDelay(inst)
+	return TUNING.WINONA_BATTERY_HIGH_SHARD_DELAY * CalcShardRegenSpeedMult(inst)
+end
+
+local function CalcOverloadThreshold(inst)
+	return TUNING.WINONA_BATTERY_HIGH_OVERLOAD_THRESHOLD --base
+		* #inst._gems / 3 --capacity
+		* CalcShardRegenSpeedMult(inst)
+end
+
 --------------------------------------------------------------------------
 
 local IDLE_CHARGE_SOUND_FRAMES = { 0, 3, 17, 20 }
@@ -131,7 +146,7 @@ local function GetGemSymbol(slot)
     return "gem"..tostring(GEMSLOTS - slot + 1)
 end
 
-local function SetLunarEnergyEnabled(inst, enable)
+local function SetBrillianceEnergyEnabled(inst, enable)
 	if enable then
 		inst.AnimState:Show("PB_ENERGY")
 		inst.AnimState:SetSymbolLightOverride("rack_frame", 0.1)
@@ -171,6 +186,51 @@ local function SetLunarEnergyEnabled(inst, enable)
 	end
 end
 
+local BRILLIANCE_HUE = 0.3083
+local BRILLIANCE_SAT = 0.65
+local SHARD_HUE = 0.1833
+local SHARD_SAT = 0.5
+
+local function RefreshEnergyFX(inst)
+	if inst._brilliance_level > 0 then
+		inst.AnimState:SetSymbolHue("m2", BRILLIANCE_HUE)
+		inst.AnimState:SetSymbolSaturation("m2", BRILLIANCE_SAT)
+	elseif inst._shard_level > 0 then
+		inst.AnimState:SetSymbolHue("m2", SHARD_HUE)
+		inst.AnimState:SetSymbolSaturation("m2", SHARD_SAT)
+	else
+		inst.AnimState:SetSymbolHue("m2", 0)
+		inst.AnimState:SetSymbolSaturation("m2", 1)
+	end
+	SetBrillianceEnergyEnabled(inst, inst._brilliance_level > 0)
+end
+
+local function OnUpdateShardLoad(inst)
+	local t = inst.components.timer:GetTimeLeft("shardload") or 0
+	local max = CalcOverloadThreshold(inst)
+	local n = math.ceil((1 - t / max) * #inst._gems * NUM_LEVELS / 3)
+	if n == 1 then
+		inst.AnimState:ClearOverrideSymbol("m2")
+	else
+		inst.AnimState:OverrideSymbol("m2", "winona_battery_high", "m"..tostring(math.clamp(n + 1, 1, 7)))
+	end
+end
+
+local function StartUpdatingShardLoad(inst)
+	if not inst._updatingshardload then
+		inst._updatingshardload = true
+		inst.components.updatelooper:AddOnUpdateFn(OnUpdateShardLoad)
+	end
+end
+
+local function StopUpdatingShardLoad(inst)
+	if inst._updatingshardload then
+		inst._updatingshardload = false
+		inst.components.updatelooper:RemoveOnUpdateFn(OnUpdateShardLoad)
+	end
+end
+
+--used by item as well
 local function SetGem(inst, slot, gemname, item)
 	if inst._gemsymfollowers[slot] then
 		inst._gemsymfollowers[slot]:Remove()
@@ -182,7 +242,6 @@ local function SetGem(inst, slot, gemname, item)
 		fx.Follower:FollowSymbol(inst.GUID, symbol, 0, 0, 0, true)
 		inst._gemsymfollowers[slot] = fx
 		inst.AnimState:ClearOverrideSymbol(symbol)
-		SetLunarEnergyEnabled(inst, true)
 		inst._brilliance_level = inst._brilliance_level + 1
 	elseif gemname == "alterguardianhatshard" then
 		local fx = SpawnPrefab("alterguardianhatshard_symbol_fx")
@@ -193,7 +252,6 @@ local function SetGem(inst, slot, gemname, item)
 		end
 		inst._gemsymfollowers[slot] = fx
 		inst.AnimState:ClearOverrideSymbol(symbol)
-		SetLunarEnergyEnabled(inst, true)
 		if inst._shard_level == 0 then
 			inst.components.fueled.rate_modifiers:SetModifier(inst, 0, "shard")
 		end
@@ -201,7 +259,6 @@ local function SetGem(inst, slot, gemname, item)
 	else
 		inst._gemsymfollowers[slot] = nil
 		inst.AnimState:OverrideSymbol(symbol, "gems", "swap_"..gemname)
-		SetLunarEnergyEnabled(inst, next(inst._gemsymfollowers) ~= nil)
 	end
 end
 
@@ -211,7 +268,6 @@ local function UnsetGem(inst, slot, gemdata)
 	if inst._gemsymfollowers[slot] then
 		inst._gemsymfollowers[slot]:Remove()
 		inst._gemsymfollowers[slot] = nil
-		SetLunarEnergyEnabled(inst, next(inst._gemsymfollowers) ~= nil)
 	end
 	local gemname = type(gemdata) == "table" and gemdata.prefab or gemdata
 	if gemname == "purebrilliance" then
@@ -409,6 +465,9 @@ local function OnHitAnimOver(inst)
         if inst.components.fueled:IsEmpty() then
             inst.AnimState:PlayAnimation("idle_empty")
             StopIdleChargeSounds(inst)
+		elseif inst:IsOverloaded() then
+			inst.AnimState:PlayAnimation("idle_overloaded", true)
+			StopIdleChargeSounds(inst)
         else
             inst.AnimState:PlayAnimation("idle_charge", true)
             if not inst:IsAsleep() then
@@ -485,6 +544,9 @@ local function OnBurnt(inst)
     if inst.components.fueled ~= nil then
         inst:RemoveComponent("fueled")
     end
+	inst.components.timer:StopTimer("overloaded")
+	inst.components.timer:StopTimer("shardload")
+	StopUpdatingShardLoad(inst)
 	inst:RemoveComponent("portablestructure")
     inst.components.workable:SetOnWorkCallback(nil)
 	inst.components.workable:SetOnFinishCallback(OnWorkedBurnt)
@@ -509,8 +571,10 @@ local function GetStatus(inst)
         return "BURNT"
     elseif inst.components.burnable ~= nil and inst.components.burnable:IsBurning() then
         return "BURNING"
+	elseif inst:IsOverloaded() then
+		return "OVERLOADED"
     end
-    local level = inst.components.fueled ~= nil and inst.components.fueled:GetCurrentSection() or nil
+	local level = inst._shard_level <= 0 and inst.components.fueled and inst.components.fueled:GetCurrentSection() or nil
     return level ~= nil
         and (   (level <= 0 and "OFF") or
                 (level <= 1 and "LOWPOWER")
@@ -518,6 +582,7 @@ local function GetStatus(inst)
         or nil
 end
 
+--used by item as well
 local function ShatterGems(inst, keepnumgems)
     local i = #inst._gems
     if i > keepnumgems then
@@ -529,6 +594,78 @@ local function ShatterGems(inst, keepnumgems)
             i = i - 1
         end
     end
+end
+
+local function SetOverloaded(inst, overloaded)
+	if not overloaded then
+		inst.components.timer:StopTimer("overloaded")
+		local section = inst._shard_level > 0 and #inst._gems * NUM_LEVELS / 3 or inst.components.fueled:GetCurrentSection()
+		if section > 0 then
+			inst.AnimState:OverrideSymbol("m2", "winona_battery_high", "m"..tostring(math.clamp(section + 1, 1, 7)))
+			inst.AnimState:SetSymbolLightOverride("m2", 0.2)
+			inst.AnimState:SetSymbolBloom("m2")
+			inst.AnimState:ClearOverrideSymbol("plug")
+			if not inst.components.fueled.consuming then
+				inst.components.fueled:StartConsuming()
+				BroadcastCircuitChanged(inst)
+				if inst.components.circuitnode:IsConnected() then
+					StartBattery(inst)
+				end
+				if not inst:IsAsleep() then
+					StartSoundLoop(inst)
+				end
+			end
+			if not POPULATING then
+				PlayHitAnim(inst)
+				inst.SoundEmitter:PlaySound("dontstarve/common/together/battery/up")
+			else
+				inst.AnimState:PlayAnimation("idle_charge", true)
+				if not inst:IsAsleep() then
+					StartIdleChargeSounds(inst)
+				end
+			end
+		end
+	else
+		if not inst.components.timer:TimerExists("overloaded") then
+			inst.components.timer:StartTimer("overloaded", TUNING.WINONA_BATTERY_HIGH_OVERLOAD_DURATION)
+		end
+		inst.components.fueled:StopConsuming()
+		BroadcastCircuitChanged(inst)
+		StopBattery(inst)
+		StopSoundLoop(inst)
+		inst.AnimState:OverrideSymbol("m2", "winona_battery_high", "m1")
+		inst.AnimState:SetSymbolLightOverride("m2", 0)
+		inst.AnimState:ClearSymbolBloom("m2")
+		inst.AnimState:OverrideSymbol("plug", "winona_battery_high", "plug_off")
+		if not POPULATING then
+			PlayHitAnim(inst)
+			inst.SoundEmitter:PlaySound("dontstarve/common/together/battery/down")
+		else
+			inst.AnimState:PlayAnimation("idle_overloaded", true)
+			StopIdleChargeSounds(inst)
+		end
+	end
+end
+
+local function IsOverloaded(inst)
+	return inst.components.timer:TimerExists("overloaded")
+end
+
+local function OnTimerDone(inst, data)
+	if data then
+		if data.name == "shardloaddelay" then
+			inst.components.timer:ResumeTimer("shardload")
+			StartUpdatingShardLoad(inst)
+		elseif data.name == "shardload" then
+			StopUpdatingShardLoad(inst)
+			OnUpdateShardLoad(inst)
+		elseif data.name == "overloaded" then
+			SetOverloaded(inst, false)
+			inst.components.timer:StartTimer("shardload", CalcOverloadThreshold(inst))
+			StartUpdatingShardLoad(inst)
+			OnUpdateShardLoad(inst)
+		end
+	end
 end
 
 local function OnFuelEmpty(inst)
@@ -548,10 +685,13 @@ local function OnFuelEmpty(inst)
         inst.SoundEmitter:PlaySound("dontstarve/common/together/battery/down")
     end
     ShatterGems(inst, 0)
+	RefreshEnergyFX(inst)
 end
 
 local function OnFuelSectionChange(new, old, inst)
-	if new == 1 then
+	if inst._shard_level > 0 then
+		OnUpdateShardLoad(inst)
+	elseif new == 1 then
 		inst.AnimState:ClearOverrideSymbol("m2")
 	else
 		inst.AnimState:OverrideSymbol("m2", "winona_battery_high", "m"..tostring(math.clamp(new + 1, 1, 7)))
@@ -562,18 +702,46 @@ local function OnFuelSectionChange(new, old, inst)
     UpdateSoundLoop(inst, new)
     if new > 0 then
         ShatterGems(inst, math.ceil(new / LEVELS_PER_GEM))
+		RefreshEnergyFX(inst)
     end
 end
 
-local function ConsumeBatteryAmount(inst, amt, doer)
+local function ConsumeBatteryAmount(inst, cost, share, doer)
 	if inst._shard_level > 0 then
-	else
-		inst.components.fueled:DoDelta(-amt * CalcEfficiencyMult(inst), doer)
-	end
-end
+		local amt = TUNING.WINONA_BATTERY_HIGH_OVERLOAD_THRESHOLD / NUM_LEVELS --cost of one bar
+		amt = cost.shard * amt + 0.0001 --0.0001 to prevent bar flicker
+		amt = (amt * CalcShardRegenSpeedMult(inst)) / (share or 1)
+		local threshold = CalcOverloadThreshold(inst)
+		local t = inst.components.timer:GetTimeLeft("shardload")
+		if t then
+			t = t + amt
+			if t < threshold then
+				inst.components.timer:PauseTimer("shardload")
+				inst.components.timer:SetTimeLeft("shardload", t)
+				StopUpdatingShardLoad(inst)
+				OnUpdateShardLoad(inst)
+			else
+				t = nil
+				inst.components.timer:StopTimer("shardload")
+				StopUpdatingShardLoad(inst)
+				SetOverloaded(inst, true)
+			end
+		elseif amt < threshold then
+			t = amt
+			inst.components.timer:StartTimer("shardload", t, true)
+			StopUpdatingShardLoad(inst)
+			OnUpdateShardLoad(inst)
+		else
+			SetOverloaded(inst, true)
+		end
 
-local function ConsumeBatterySections(inst, sections, doer)
-	ConsumeBatteryAmount(inst, sections * inst.components.fueled.maxfuel / NUM_LEVELS + 0.01)
+		inst.components.timer:StopTimer("shardloaddelay")
+		if t then
+			inst.components.timer:StartTimer("shardloaddelay", CalcShardRegenDelay(inst))
+		end
+	else
+		inst.components.fueled:DoDelta(-cost.fuel / (share or 1) * CalcEfficiencyMult(inst), doer)
+	end
 end
 
 local function OnSave(inst, data)
@@ -582,6 +750,9 @@ local function OnSave(inst, data)
     data.gems = #inst._gems > 0 and inst._gems or nil
 
 	if not data.burnt then
+		--fueled component does not save max fuel! assumes prefabs initialize fuel
+		data.initfuel = inst.components.fueled:IsFull() or nil
+
 		--skilltree
 		data.noidledrain = inst._noidledrain or nil
 		data.efficiency = inst._efficiency > 0 and inst._efficiency or nil
@@ -590,6 +761,11 @@ end
 
 local function OnLoad(inst, data, ents)
     if data ~= nil then
+		if data.initfuel then
+			--fueled component does not save max fuel! assumes prefabs initialize fuel
+			inst.components.fueled:InitializeFuelLevel(inst.components.fueled.maxfuel)
+		end
+
         if data.gems ~= nil and #inst._gems < GEMSLOTS then
 			local keepnumgems = math.ceil(inst.components.fueled:GetCurrentSection() / LEVELS_PER_GEM)
             for i, v in ipairs(data.gems) do
@@ -610,6 +786,7 @@ local function OnLoad(inst, data, ents)
                 end
             end
 			ShatterGems(inst, keepnumgems)
+			RefreshEnergyFX(inst)
         end
         if data.burnt then
             inst.components.burnable.onburnt(inst)
@@ -619,13 +796,23 @@ local function OnLoad(inst, data, ents)
 			ApplyEfficiencyBonus(inst)
 
 			if not inst.components.fueled:IsEmpty() then
-				if not inst.components.fueled.consuming then
-					inst.components.fueled:StartConsuming()
-					BroadcastCircuitChanged(inst)
-				end
-				inst.AnimState:PlayAnimation("idle_charge", true)
-				if not inst:IsAsleep() then
-				    StartIdleChargeSounds(inst)
+				if inst:IsOverloaded() then
+					SetOverloaded(inst, true)
+				else
+					if not inst.components.fueled.consuming then
+						inst.components.fueled:StartConsuming()
+						BroadcastCircuitChanged(inst)
+					end
+					if inst._shard_level > 0 then
+						if inst.components.timer:TimerExists("shardload") then
+							StartUpdatingShardLoad(inst)
+						end
+						OnUpdateShardLoad(inst)
+					end
+					inst.AnimState:PlayAnimation("idle_charge", true)
+					if not inst:IsAsleep() then
+						StartIdleChargeSounds(inst)
+					end
 				end
 				inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1)
 			end
@@ -654,8 +841,10 @@ local function OnBuilt3(inst)
 		inst.AnimState:ClearOverrideSymbol(sym)
 		inst.AnimState:SetSymbolLightOverride(sym, 0)
 		inst.AnimState:ClearSymbolBloom(sym)
+		inst.AnimState:SetSymbolHue(sym, 0)
+		inst.AnimState:SetSymbolSaturation(sym, 1)
 	end
-	local section = inst.components.fueled:GetCurrentSection()
+	local section = inst._shard_level > 0 and #inst._gems * NUM_LEVELS / 3 or inst.components.fueled:GetCurrentSection()
 	if section <= 0 then
 		inst.AnimState:OverrideSymbol("m2", "winona_battery_high", "m1")
 	elseif section == 1 then
@@ -716,17 +905,27 @@ local function OnBuilt(inst, data)
 end
 
 local function OnDeployed(inst)
-	local section = inst.components.fueled:GetCurrentSection()
+	local section = inst._shard_level > 0 and #inst._gems * NUM_LEVELS / 3 or inst.components.fueled:GetCurrentSection()
 	local maxsymbol = "m"..tostring(section + 1)
 	inst.AnimState:ClearOverrideSymbol("m2")
 	for i = section + 2, 7 do
 		inst.AnimState:OverrideSymbol("m"..tostring(i), "winona_battery_high", maxsymbol)
 	end
 	if section > 0 then
+		local hue, sat
+		if inst._brilliance_level > 0 then
+			hue, sat = BRILLIANCE_HUE, BRILLIANCE_SAT
+		elseif inst._shard_level > 0 then
+			hue, sat = SHARD_HUE, SHARD_SAT
+		else
+			hue, sat = 0, 1
+		end
 		for i = 3, 7 do
 			local sym = "m"..tostring(i)
 			inst.AnimState:SetSymbolLightOverride(sym, 0.2)
 			inst.AnimState:SetSymbolBloom(sym)
+			inst.AnimState:SetSymbolHue(sym, hue)
+			inst.AnimState:SetSymbolSaturation(sym, sat)
 		end
 	end
 	DoBuiltOrDeployed(inst, "deploy", "meta4/winona_battery/battery_high_deploy", 22)
@@ -837,10 +1036,13 @@ local function OnGemGiven(inst, giver, item)
 			table.insert(inst._gems, item.prefab)
 		end
         SetGem(inst, #inst._gems, item.prefab, item)
+		RefreshEnergyFX(inst)
         if #inst._gems >= GEMSLOTS then
             inst.components.trader:Disable()
         end
         inst.SoundEmitter:PlaySound("dontstarve/common/telebase_gemplace")
+		inst.components.timer:StopTimer("shardloaddelay")
+		inst.components.timer:StopTimer("shardload")
     end
 
 	local curamt = inst.components.fueled.currentfuel
@@ -866,8 +1068,12 @@ local function OnGemGiven(inst, giver, item)
 
 	item:Remove()
 
-    PlayHitAnim(inst)
-    inst.SoundEmitter:PlaySound("dontstarve/common/together/battery/up")
+	if inst:IsOverloaded() then
+		SetOverloaded(inst, false)
+	else
+		PlayHitAnim(inst)
+		inst.SoundEmitter:PlaySound("dontstarve/common/together/battery/up")
+	end
 end
 
 --------------------------------------------------------------------------
@@ -904,6 +1110,12 @@ local function fn()
 	inst.AnimState:SetSymbolLightOverride("sprk_2", 0.3)
 	inst.AnimState:SetSymbolLightOverride("pb_energy_loop", 0.5)
 	inst.AnimState:SetSymbolBloom("pb_energy_loop")
+	--for overloaded
+	inst.AnimState:SetSymbolLightOverride("panel_glow_outer", 0.2)
+	inst.AnimState:SetSymbolBloom("panel_glow_other")
+	inst.AnimState:SetSymbolLightOverride("panel_edge", 0.2)
+	inst.AnimState:SetSymbolBloom("panel_edge")
+	--
 	inst.AnimState:Hide("PB_ENERGY")
 
     inst.MiniMapEntity:SetIcon("winona_battery_high.png")
@@ -949,6 +1161,8 @@ local function fn()
     inst.components.fueled.maxfuel = TUNING.WINONA_BATTERY_HIGH_MAX_FUEL_TIME
     inst.components.fueled.fueltype = FUELTYPE.MAGIC
 
+	inst:AddComponent("timer")
+
     inst:AddComponent("lootdropper")
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
@@ -971,6 +1185,7 @@ local function fn()
     inst:ListenForEvent("onbuilt", OnBuilt)
     inst:ListenForEvent("ondeconstructstructure", DropGems)
     inst:ListenForEvent("engineeringcircuitchanged", OnCircuitChanged)
+	inst:ListenForEvent("timerdone", OnTimerDone)
 
     MakeHauntableWork(inst)
     MakeMediumBurnable(inst, nil, nil, true)
@@ -985,7 +1200,7 @@ local function fn()
     inst.OnEntityWake = OnEntityWake
 	inst.CheckElementalBattery = CheckElementalBattery
 	inst.ConsumeBatteryAmount = ConsumeBatteryAmount
-	inst.ConsumeBatterySections = ConsumeBatterySections
+	inst.IsOverloaded = IsOverloaded
 
 	--skilltree
 	inst._noidledrain = false
@@ -1073,6 +1288,7 @@ local function OnDeploy(inst, pt, deployer)
 		obj.components.fueled:SetPercent(inst.components.fueled:GetPercent())
 		CopyAllProperties(inst, obj)
 		ApplyEfficiencyBonus(obj)
+		RefreshEnergyFX(obj)
 		OnDeployed(obj)
 		PreventCharacterCollisionsWithPlacedObjects(obj)
 	end

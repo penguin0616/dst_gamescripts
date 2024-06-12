@@ -525,19 +525,14 @@ local function hastargetboat(inst, arc)
     end
 
     if #cannons > 0 then
-        local targetboats = TheSim:FindEntities(px, py, pz, 20, BOAT_MUST)
+        local targetboats = TheSim:FindEntities(px, py, pz, 25, BOAT_MUST)
 
         if #targetboats > 0 then
             for _, boat in ipairs(targetboats) do
                 if not inst.components.crewmember or boat ~= inst.components.crewmember.boat then
                     for _, cannon in ipairs(cannons)do
-                        if not cannon.components.timer:TimerExists("monkey_biz") then
-                            local angle = (arc ~= nil and cannon:GetAngleToPoint(boat:GetPosition():Get()))
-                                or nil
-
-                            if arc == nil or arc > math.abs( DiffAngle(angle, cannon.Transform:GetRotation()) ) then
-                                return {cannon=cannon,boat=boat}
-                            end
+                        if not cannon.components.timer:TimerExists("monkey_biz") and cannon:GetDistanceSqToInst(boat) < 25*25 then
+                            return {cannon=cannon,boat=boat}
                         end
                     end
                 end
@@ -547,7 +542,6 @@ local function hastargetboat(inst, arc)
 end
 
 local function findcannonspot(inst, cannon, boat)
-
     local cannonpos = cannon:GetPosition()
     local radius = 2
     local theta = boat:GetAngleToPoint(cannonpos.x, cannonpos.y, cannonpos.z)* DEGREES
@@ -564,19 +558,45 @@ local function gotocannon(inst)
     local data = hastargetboat(inst, arc)
     if data and data.cannon and data.boat then
         local pos = findcannonspot(inst, data.cannon, data.boat)
-        return BufferedAction(inst, nil, ACTIONS.WALKTO, nil, pos)
+        if pos then
+            return BufferedAction(inst, nil, ACTIONS.WALKTO, nil, pos)
+        end
+    end
+end
+
+local function monkeyinarc(inst, cannon, target)
+
+
+    local tx,ty,tz = target.Transform:GetWorldPosition()
+    local mx,my,mz = inst.Transform:GetWorldPosition()
+    local angle_to_target = cannon:GetAngleToPoint(tx, ty, tz)
+    local angle_to_monkey = cannon:GetAngleToPoint(mx, my, mz)
+
+    local function finddiff(a1,a2)
+        local diff = math.abs(a1 - a2)
+        if diff > 180 then
+            diff = math.abs(diff - 360)
+        end
+        return diff
+    end
+    local anglediff =  finddiff(angle_to_target,angle_to_monkey)
+    
+    print(inst.GUID, anglediff)
+
+    if anglediff < 90 then
+        return true
     end
 end
 
 local function firecannon(inst)
     local arc = (not inst.components.crewmember and 45) or nil
     local data = hastargetboat(inst, arc)
-    if data and data.cannon and data.cannon:GetDistanceSqToInst(inst) < 2*2 and data.boat then
+
+    if data and data.cannon and data.boat and data.cannon:GetDistanceSqToInst(inst) < 2*2 and data.boat and not monkeyinarc(inst, data.cannon, data.boat) then
         local bx, by, bz = data.boat.Transform:GetWorldPosition()
         data.cannon.Transform:SetRotation(data.cannon:GetAngleToPoint(bx, by, bz) + math.random()*60-30)
         return BufferedAction(inst, data.cannon, ACTIONS.BOAT_CANNON_SHOOT)
     end
-
 end
 
 local function shouldrun(inst)

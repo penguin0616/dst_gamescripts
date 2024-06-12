@@ -321,7 +321,7 @@ local WORLDGEN_GROUP = {
 			["moon_fruitdragon"] = {value = "default", image = "moon_fruitdragon.tex", world = {"forest"}},
 			["ocean_shoal"] = {value = "default", image = "ocean_shoal.tex", world = {"forest"}},
 			["ocean_wobsterden"] = {value = "default", image = "ocean_wobsterden.tex", world = {"forest"}},
-			["ocean_otterdens"] = {value = "default", image = "otterden.tex", world={"forest"}},
+			["ocean_otterdens"] = {value = "default", image = "ocean_otterdens.tex", world={"forest"}},
 		}
 	},
 	["resources"] = {

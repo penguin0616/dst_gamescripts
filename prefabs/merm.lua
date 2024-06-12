@@ -43,6 +43,9 @@ local prefabs =
     "mermking_buff_pauldron",
 
     "lunarmerm_thorns_fx",
+
+    "shadow_merm_spawn_poof_fx",
+    "shadow_merm_smacked_poof_fx",
 }
 
 local merm_loot =
@@ -92,19 +95,17 @@ local SLIGHTDELAY = 1
 
 local LOW_HEALTH_PERCENT = 0.2
 
-local function mermdamagecalculator(inst, addbuff)
-    local king = false
-    if TheWorld.components.mermkingmanager and TheWorld.components.mermkingmanager:HasKingAnywhere() then
-        king = true
-    end
-    local damage = king and TUNING.MERM_DAMAGE_KINGBONUS or TUNING.MERM_DAMAGE
+local function MermDamageCalculator(inst)
+    local hasking = TheWorld.components.mermkingmanager ~= nil and TheWorld.components.mermkingmanager:HasKingAnywhere()
+
+    local damage = hasking and TUNING.MERM_DAMAGE_KINGBONUS or TUNING.MERM_DAMAGE
 
     if inst:HasTag("guard") then
-        damage = king and TUNING.MERM_GUARD_DAMAGE or TUNING.PUNY_MERM_DAMAGE
+        damage = hasking and TUNING.MERM_GUARD_DAMAGE or TUNING.PUNY_MERM_DAMAGE
     end
 
-    if inst:GetDebuff("wurt_shadow_merm_planar") or addbuff then
-        damage = damage - 20
+    if inst.components.planardamage ~= nil then
+        damage = damage - inst.components.planardamage:GetBaseDamage()
     end
 
     return damage
@@ -435,7 +436,7 @@ local function RoyalUpgrade(inst)
     end
 
     inst.components.health:SetMaxHealth(TUNING.MERM_HEALTH_KINGBONUS)
-    inst.components.combat:SetDefaultDamage(mermdamagecalculator(inst))
+    inst.components.combat:SetDefaultDamage(inst:MermDamageCalculator())
     inst.Transform:SetScale(1.05, 1.05, 1.05)
 end
 
@@ -445,7 +446,7 @@ local function RoyalDowngrade(inst)
     end
 
     inst.components.health:SetMaxHealth(TUNING.MERM_HEALTH)
-    inst.components.combat:SetDefaultDamage(mermdamagecalculator(inst))
+    inst.components.combat:SetDefaultDamage(inst:MermDamageCalculator())
     inst.Transform:SetScale(1, 1, 1)
 end
 
@@ -455,7 +456,7 @@ local function RoyalGuardUpgrade(inst)
     end
 
     inst.components.health:SetMaxHealth(TUNING.MERM_GUARD_HEALTH)
-    inst.components.combat:SetDefaultDamage(mermdamagecalculator(inst))
+    inst.components.combat:SetDefaultDamage(inst:MermDamageCalculator())
     if inst:HasTag("lunarminion") then
         inst.AnimState:SetBuild("merm_guard_lunar_build")
     else
@@ -470,7 +471,7 @@ local function RoyalGuardDowngrade(inst)
     end
 
     inst.components.health:SetMaxHealth(TUNING.PUNY_MERM_HEALTH)
-    inst.components.combat:SetDefaultDamage(mermdamagecalculator(inst))
+    inst.components.combat:SetDefaultDamage(inst:MermDamageCalculator())
     if inst:HasTag("lunarminion") then
         inst.AnimState:SetBuild("merm_guard_small_lunar_build")
     else
@@ -657,8 +658,15 @@ local function itemget(inst,data)
     end
 end
 
-local function DoThorns(inst)
+local function ShadowMerm_OnItemEquipped(inst, data)
+    inst._equipschanged:push()
 
+    if not TheNet:IsDedicated() then
+        inst:_OnEquipsChanged()
+    end
+end
+
+local function DoThorns(inst)
     SpawnPrefab("lunarmerm_thorns_fx"):SetFXOwner(inst)
 
     if inst.SoundEmitter ~= nil then
@@ -853,7 +861,7 @@ local function MakeMerm(name, assets, prefabs, common_postinit, master_postinit,
 
         inst.TestForLunarMutation = TestForLunarMutation
         inst.DoLunarMutation = DoLunarMutation
-        inst.mermdamagecalculator = mermdamagecalculator
+        inst.MermDamageCalculator = MermDamageCalculator
         inst.TestForShadowDeath = TestForShadowDeath
         inst.DoThorns = DoThorns
 
@@ -950,7 +958,7 @@ local function guard_master(inst)
     inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
 
     inst.components.health:SetMaxHealth(TUNING.MERM_GUARD_HEALTH)
-    inst.components.combat:SetDefaultDamage(mermdamagecalculator(inst))
+    inst.components.combat:SetDefaultDamage(inst:MermDamageCalculator())
     inst.components.combat:SetAttackPeriod(TUNING.MERM_GUARD_ATTACK_PERIOD)
 
     if inst.components.sleeper then
@@ -1043,7 +1051,7 @@ local function common_master(inst)
     inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
 
     inst.components.health:SetMaxHealth(TUNING.MERM_HEALTH)
-    inst.components.combat:SetDefaultDamage(mermdamagecalculator(inst))
+    inst.components.combat:SetDefaultDamage(inst:MermDamageCalculator())
     inst.components.combat:SetAttackPeriod(TUNING.MERM_ATTACK_PERIOD)
 
     MakeHauntablePanic(inst)
@@ -1066,8 +1074,16 @@ end
 -------------------------------------------------------------------------------
 -- SHADOW MERM DEFS
 
-local function shadow_merm_common(inst)
+local function CLIENT_ShadowMerm_OnEquipsChanged(inst)
+    if inst.highlightchildren ~= nil then
+        for _, child in ipairs(inst.highlightchildren) do
+            child.AnimState:SetMultColour(0, 0, 0, .5)
+            child.AnimState:UsePointFiltering(true)
+        end
+    end
+end
 
+local function shadow_merm_common(inst)
     common_common(inst)
     inst:SetPhysicsRadiusOverride(0.5)
 
@@ -1076,6 +1092,14 @@ local function shadow_merm_common(inst)
     inst.AnimState:UsePointFiltering(true)
 
     inst.AnimState:SetMultColour(0,0,0,0.5)
+
+    inst._equipschanged = net_event(inst.GUID, "merm_shadow._equipschanged")
+
+    inst._OnEquipsChanged = CLIENT_ShadowMerm_OnEquipsChanged
+
+    if not TheWorld.ismastersim then
+        inst:ListenForEvent("merm_shadow._equipschanged", inst._OnEquipsChanged)
+    end
 end
 
 local function shadow_merm_master(inst)
@@ -1088,7 +1112,7 @@ local function shadow_merm_master(inst)
     inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
 
     inst.components.health:SetMaxHealth(TUNING.MERM_HEALTH)
-    inst.components.combat:SetDefaultDamage(mermdamagecalculator(inst))
+    inst.components.combat:SetDefaultDamage(inst:MermDamageCalculator())
     inst.components.combat:SetAttackPeriod(TUNING.MERM_ATTACK_PERIOD)
 
     inst:AddComponent("planardamage")
@@ -1099,6 +1123,8 @@ local function shadow_merm_master(inst)
     inst.components.lootdropper:SetLoot(merm_shadow_loot)
 
     inst.components.follower.maxfollowtime = TUNING.MERM_LOYALTY_MAXTIME
+
+    inst:ListenForEvent("equip", ShadowMerm_OnItemEquipped)
 end
 
 local function shadow_mermguard_common(inst)
@@ -1109,6 +1135,14 @@ local function shadow_mermguard_common(inst)
     inst:AddTag("shadow_aligned")
     inst.AnimState:UsePointFiltering(true)
     inst.AnimState:SetMultColour(0,0,0,0.5)
+
+    inst._equipschanged = net_event(inst.GUID, "merm_shadow._equipschanged")
+
+    inst._OnEquipsChanged = CLIENT_ShadowMerm_OnEquipsChanged
+
+    if not TheWorld.ismastersim then
+        inst:ListenForEvent("merm_shadow._equipschanged", inst._OnEquipsChanged)
+    end
 end
 
 local function shadow_mermguard_master(inst)
@@ -1119,7 +1153,7 @@ local function shadow_mermguard_master(inst)
     inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
 
     inst.components.health:SetMaxHealth(TUNING.MERM_GUARD_HEALTH)
-    inst.components.combat:SetDefaultDamage(mermdamagecalculator(inst))
+    inst.components.combat:SetDefaultDamage(inst:MermDamageCalculator())
     inst.components.combat:SetAttackPeriod(TUNING.MERM_GUARD_ATTACK_PERIOD)
 
     inst:AddComponent("planardamage")
@@ -1128,6 +1162,8 @@ local function shadow_mermguard_master(inst)
     inst.components.lootdropper:SetLoot(merm_shadow_loot)
 
     inst.components.follower.maxfollowtime = TUNING.MERM_LOYALTY_MAXTIME
+
+    inst:ListenForEvent("equip", ShadowMerm_OnItemEquipped)
 end
 
 -------------------------------------------------------------------------------
@@ -1185,7 +1221,7 @@ local function lunar_merm_master(inst)
     inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
 
     inst.components.health:SetMaxHealth(TUNING.MERM_LUNAR_HEALTH)
-    inst.components.combat:SetDefaultDamage(mermdamagecalculator(inst))
+    inst.components.combat:SetDefaultDamage(inst:MermDamageCalculator())
     inst.components.combat:SetAttackPeriod(TUNING.MERM_ATTACK_PERIOD)
 
     inst:AddComponent("planardamage")
@@ -1223,7 +1259,7 @@ local function lunar_mermguard_master(inst)
     inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
 
     inst.components.health:SetMaxHealth(TUNING.MERM_LUNAR_GUARD_HEALTH)
-    inst.components.combat:SetDefaultDamage(mermdamagecalculator(inst))
+    inst.components.combat:SetDefaultDamage(inst:MermDamageCalculator())
     inst.components.combat:SetAttackPeriod(TUNING.MERM_GUARD_ATTACK_PERIOD)
 
     inst:AddComponent("planardamage")

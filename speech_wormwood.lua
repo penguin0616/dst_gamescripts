@@ -397,7 +397,7 @@ return{
 
         CASTSPELL =
         {
---fallback to speech_wilson.lua 			TERRAFORM_TOO_SOON = "only_used_by_wurt",
+            TERRAFORM_TOO_SOON = "only_used_by_wurt",
         },
 
 		CASTAOE =
@@ -3529,11 +3529,12 @@ return{
         },
         WINONA_BATTERY_HIGH =
         {
-        	GENERIC = "Big Machine Feeder!",
-        	LOWPOWER = "Sleepy?",
-        	OFF = "Oh. Needs sparkly",
-        	BURNING = "No fire! No!",
-        	BURNT = "Fire hurt it",
+			GENERIC = "Big Machine Feeder!",
+			LOWPOWER = "Sleepy?",
+			OFF = "Oh. Needs sparkly",
+			BURNING = "No fire! No!",
+			BURNT = "Fire hurt it",
+			OVERLOADED = "Oh. Machine not happy...",
         },
 		--v3 Winona
 		WINONA_REMOTE =

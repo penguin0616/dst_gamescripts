@@ -209,7 +209,9 @@ local function GetClosestToolShed(inst, dist)
                 return ent -- High priority.
             end
 
-            shed = ent
+            if shed == nil then
+                shed = ent
+            end
         end
     end
 

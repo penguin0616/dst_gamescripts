@@ -10,8 +10,6 @@ local prefabs = {
     "wurt_swamp_terraformer",
     "wurt_terraform_projectile",
 
-    "wurt_swampzone_shadow",
-
     "wurt_merm_planar",
 
     "wurt_terraform_cast_debuff",
@@ -264,6 +262,8 @@ local function OnHitTerraformer(inst, attacker, target)
     terraformer.tile = inst._terraform_tile_type or WORLD_TILES.SHADOW_MARSH
     terraformer:DoTerraform()
 
+    inst.SoundEmitter:PlaySound("dontstarve/impacts/impact_flesh_med_dull")
+
     if inst._extra_onhit_fn then
         inst._extra_onhit_fn(inst, attacker, target)
     end
@@ -271,11 +271,16 @@ local function OnHitTerraformer(inst, attacker, target)
     inst:Remove()
 end
 
+local function PlayProjectileSpawnSound(inst)
+    inst.SoundEmitter:PlaySound("dontstarve/impacts/impact_flesh_med_dull")
+end
+
 local function terraform_projectile()
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
+    inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
 
     inst.entity:AddPhysics()
@@ -307,6 +312,8 @@ local function terraform_projectile()
     complexprojectile:SetHorizontalSpeed(0.1)
     complexprojectile:SetLaunchOffset(Vector3(0, 20, 0))
     complexprojectile:SetOnHit(OnHitTerraformer)
+
+    inst:DoTaskInTime(0, PlayProjectileSpawnSound)
 
     return inst
 end

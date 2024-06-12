@@ -397,7 +397,7 @@ return{
 
         CASTSPELL =
         {
---fallback to speech_wilson.lua 			TERRAFORM_TOO_SOON = "only_used_by_wurt",
+            TERRAFORM_TOO_SOON = "only_used_by_wurt",
         },
 
 		CASTAOE =
@@ -3525,11 +3525,12 @@ return{
         },
         WINONA_BATTERY_HIGH =
         {
-        	GENERIC = "It's good to see her keeping an open mind.",
-        	LOWPOWER = "The magical focus will wear out soon.",
-        	OFF = "It needs a new magic focus.",
-        	BURNING = "Oh dear, who did this?",
-        	BURNT = "I do hope she'll build another.",
+			GENERIC = "It's good to see her keeping an open mind.",
+			LOWPOWER = "The magical focus will wear out soon.",
+			OFF = "It needs a new magic focus.",
+			BURNING = "Oh dear, who did this?",
+			BURNT = "I do hope she'll build another.",
+			OVERLOADED = "Poor thing overworked itself.",
         },
 		--v3 Winona
 		WINONA_REMOTE =

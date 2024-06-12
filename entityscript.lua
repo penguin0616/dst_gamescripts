@@ -605,6 +605,16 @@ function EntityScript:AddComponent(name)
     local lower_name = string.lower(name)
     if self.lower_components_shadow[lower_name] ~= nil then
         print("component "..name.." already exists on entity "..tostring(self).."!"..debugstack_oneline(3))
+		local existingcmp = self.components[lower_name]
+		if existingcmp == nil then
+			for k, v in pairs(self.components) do
+				if string.lower(k) == lower_name then
+					existingcmp = v
+					break
+				end
+			end
+		end
+		return existingcmp
     end
 
     local cmp = LoadComponent(name)

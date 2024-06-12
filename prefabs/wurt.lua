@@ -14,7 +14,6 @@ local prefabs =
 {
 	"wurt_tentacle_warning",
 
-    "wurt_terraformer_bomb",
     "quagmire_portal_player_splash_fx", -- FIXME(DiogoW): TEMP!
     "merm_shadow",
     "mermguard_shadow",
@@ -229,7 +228,7 @@ end
 
 local PAULDRON_BUFF_NAME, PAULDRON_BUFF_PREFAB = "mermkingpauldronbuff", "mermking_buff_pauldron"
 local function TryRoyalUpgradePauldron(inst, silent)
-    if not inst.components.skilltreeupdater:IsActivated("wurt_mermkingpauldron")
+    if not inst.components.skilltreeupdater:IsActivated("wurt_mermkingshoulders")
             or not TheWorld.components.mermkingmanager
             or not TheWorld.components.mermkingmanager:HasPauldronAnywhere() then
         return
@@ -277,7 +276,7 @@ local function additional_OnFollowerAdded(inst, follower)
     if skilltreeupdater:IsActivated("wurt_mermkingcrown") and mermkingmanager:HasCrownAnywhere() then
         follower:AddDebuff(CROWN_BUFF_NAME, CROWN_BUFF_PREFAB)
     end
-    if skilltreeupdater:IsActivated("wurt_mermkingpauldron") and mermkingmanager:HasPauldronAnywhere() then
+    if skilltreeupdater:IsActivated("wurt_mermkingshoulders") and mermkingmanager:HasPauldronAnywhere() then
         follower:AddDebuff(PAULDRON_BUFF_NAME, PAULDRON_BUFF_PREFAB)
     end
 end
@@ -562,11 +561,12 @@ local function master_postinit(inst)
 
     -- Keep in sync with merm + mermking (minus bonuses for TUNING balancing)!
     local foodaffinity = inst.components.foodaffinity
-    foodaffinity:AddFoodtypeAffinity(FOODTYPE.VEGGIE, 1.33)
-    foodaffinity:AddPrefabAffinity  ("kelp",          1.33) -- prevents the negative stats, otherwise foodtypeaffinity would have suffice
-    foodaffinity:AddPrefabAffinity  ("kelp_cooked",   1.33) -- prevents the negative stats, otherwise foodtypeaffinity would have suffice
-    foodaffinity:AddPrefabAffinity  ("durian",        1.93) -- veggi bonus + 15
-    foodaffinity:AddPrefabAffinity  ("durian_cooked", 1.93) -- veggi bonus + 15
+    foodaffinity:AddFoodtypeAffinity(FOODTYPE.VEGGIE,    1.33)
+    foodaffinity:AddPrefabAffinity  ("kelp",             1.33) -- prevents the negative stats, otherwise foodtypeaffinity would have suffice
+    foodaffinity:AddPrefabAffinity  ("kelp_cooked",      1.33) -- prevents the negative stats, otherwise foodtypeaffinity would have suffice
+    foodaffinity:AddPrefabAffinity  ("boatpatch_kelp",   1.33) -- prevents the negative stats, otherwise foodtypeaffinity would have suffice
+    foodaffinity:AddPrefabAffinity  ("durian",           1.93) -- veggi bonus + 15
+    foodaffinity:AddPrefabAffinity  ("durian_cooked",    1.93) -- veggi bonus + 15
 
     local itemaffinity = inst:AddComponent("itemaffinity")
     itemaffinity:AddAffinity("hutch_fishbowl", nil, TUNING.DAPPERNESS_MED, 1)
@@ -635,11 +635,13 @@ local function OnAttached(inst, target)
     inst.components.timer:StartTimer("expire", TUNING.WURT_PLANAR_TIME_BUFF_LASTS)
 
     if target ~= nil and target:IsValid() and target.components.combat ~= nil then
-        target.components.combat:SetDefaultDamage(target:mermdamagecalculator(true))
         target.components.planardamage:SetBaseDamage(TUNING.WURT_PLANAR_BUFF_DAMAGE)
+        target.components.combat:SetDefaultDamage(target:MermDamageCalculator())
 
         if target:HasTag("shadowminion") then
             local fx = SpawnPrefab("wurt_shadow_merm_planar_fx")
+            fx.SoundEmitter:PlaySound("meta4/shadow_merm/buff_idle", "loop")
+
             inst.bufffx = fx
             fx.AnimState:PlayAnimation("buff_pre")
             fx.AnimState:PushAnimation("buff_idle")
@@ -659,12 +661,14 @@ end
 local function OnDetached(inst, target)
     if target ~= nil and target:IsValid() and target.components.combat ~= nil then
         target.components.planardamage:SetBaseDamage(0)
-        target.components.combat:SetDefaultDamage(target:mermdamagecalculator())
+        target.components.combat:SetDefaultDamage(target:MermDamageCalculator())
     end
     if target:HasTag("shadowminion") then
         if inst.bufffx and inst.bufffx:IsValid() then
             local fx = inst.bufffx
+            fx.SoundEmitter:KillSound("loop")
             fx.AnimState:PlayAnimation("buff_pst")
+            fx.SoundEmitter:PlaySound("meta4/shadow_merm/buff_pst")
             fx:ListenForEvent("animover", function() fx:Remove() end)
         end
     elseif target:HasTag("lunarminion") then
@@ -723,6 +727,7 @@ local function shadowbufffn_fx()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
     inst.entity:AddFollower()
+    inst.entity:AddSoundEmitter()
 
     inst:AddTag("FX")
 

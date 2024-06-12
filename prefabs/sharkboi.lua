@@ -335,13 +335,15 @@ local function GiveReward(inst, target)
 		inst.stock = inst.stock - 1
 
 		-- If we got a good item, give them a picture of ourselves, to remember.
-		if inst.pendingreward == MAX_REWARDS then
+		if inst.sketchgiven == nil and inst.pendingreward == MAX_REWARDS then
+			inst.sketchgiven = true
 			LaunchAt(SpawnPrefab("chesspiece_sharkboi_sketch"), inst, target, 1, 2, 1)
 		end
 
 		for i = 1, inst.pendingreward do
 			LaunchAt(SpawnPrefab("bootleg"), inst, target, 1, 2, 1)
 		end
+
 		inst.SoundEmitter:PlaySound("dontstarve/common/dropGeneric")
 		inst.pendingreward = nil
 	end
@@ -543,6 +545,7 @@ local function OnSave(inst, data)
 	data.voice = inst.voice
 	data.aggro = inst:HasTag("hostile") or nil
 	data.reward = inst.pendingreward or nil
+	data.sketchgiven = inst.sketchgiven or nil
 	if inst.stock and inst.stock < MAX_TRADES then
 		data.stock = inst.stock
 	end
@@ -563,6 +566,10 @@ local function OnLoad(inst, data)
 			end
 			if data.stock and data.stock < MAX_TRADES then
 				inst.stock = data.stock
+			end
+
+			if data.sketchgiven then
+				inst.sketchgiven = data.sketchgiven
 			end
 		end
 	elseif data and data.aggro then

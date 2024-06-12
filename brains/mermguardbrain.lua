@@ -78,7 +78,9 @@ local function GetClosestArmory(inst, dist)
                 return ent -- High priority.
             end
 
-            armory = ent
+            if armory == nil then
+                armory = ent
+            end
         end
     end
 

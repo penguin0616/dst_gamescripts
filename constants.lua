@@ -1827,7 +1827,7 @@ FORGEMATERIALS =
     WAGPUNKBITS = "wagpunk_bits",
 }
 
-UPGRADETYPES =
+UPGRADETYPES = -- NOTES(JBK): Keep this table updated in export_accountitems.lua [EAITAB]
 {
     DEFAULT = "default",
     SPIDER = "spider",
@@ -1837,7 +1837,7 @@ UPGRADETYPES =
     CHEST = "chest",
 }
 
-SPELLTYPES =
+SPELLTYPES = -- NOTES(JBK): Keep this table updated in export_accountitems.lua [EAITAB]
 {
     WURT_SHADOW = "wurt_shadow",
     WURT_LUNAR = "wurt_lunar",

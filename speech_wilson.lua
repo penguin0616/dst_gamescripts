@@ -3535,11 +3535,12 @@ return {
         },
         WINONA_BATTERY_HIGH =
         {
-        	GENERIC = "Hey! That's not science!",
-        	LOWPOWER = "It'll turn off soon.",
-        	OFF = "Science beats magic, every time.",
-        	BURNING = "It's on fire!",
-        	BURNT = "Science couldn't save it.",
+			GENERIC = "Hey! That's not science!",
+			LOWPOWER = "It'll turn off soon.",
+			OFF = "Science beats magic, every time.",
+			BURNING = "It's on fire!",
+			BURNT = "Science couldn't save it.",
+			OVERLOADED = "It's about to explode! ...Sorry, old habit from my lab days.",
         },
 		--v3 Winona
 		WINONA_REMOTE =

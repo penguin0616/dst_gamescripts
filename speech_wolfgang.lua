@@ -397,7 +397,7 @@ return{
 
         CASTSPELL =
         {
---fallback to speech_wilson.lua 			TERRAFORM_TOO_SOON = "only_used_by_wurt",
+            TERRAFORM_TOO_SOON = "only_used_by_wurt",
         },
 
 		CASTAOE =
@@ -3526,11 +3526,12 @@ return{
         },
         WINONA_BATTERY_HIGH =
         {
-        	GENERIC = "Fixing lady doohickeys.",
-        	LOWPOWER = "It does not look so good.",
-        	OFF = "Fixing lady, quick, come fix!",
-        	BURNING = "Is burning!",
-        	BURNT = "Is all burned up.",
+			GENERIC = "Fixing lady doohickeys.",
+			LOWPOWER = "It does not look so good.",
+			OFF = "Fixing lady, quick, come fix!",
+			BURNING = "Is burning!",
+			BURNT = "Is all burned up.",
+			OVERLOADED = "Is supposed to do that, yes?",
         },
 		--v3 Winona
 		WINONA_REMOTE =

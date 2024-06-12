@@ -17,9 +17,11 @@ end
 ---------------------------------------------------------------------
 
 function NightLightManager:IsNightLightDataInAnyTag(nightlightdata, tags)
-    for _, tag in ipairs(tags) do
-        if nightlightdata.node_tags[tag] ~= nil then
-            return true
+    if nightlightdata.node_tags ~= nil then
+        for _, tag in ipairs(tags) do
+            if nightlightdata.node_tags[tag] ~= nil then
+                return true
+            end
         end
     end
 
@@ -92,7 +94,6 @@ NightLightManager.OnRegisterNightLight_Bridge = function(inst, nightlight)
 end
 function NightLightManager:OnRegisterNightLight(nightlight)
     local nightlightdata = {}
-    self.nightlights[nightlight] = nightlightdata
     local function onremove()
         self.nightlights[nightlight] = nil
     end
@@ -102,11 +103,14 @@ function NightLightManager:OnRegisterNightLight(nightlight)
             onbuilttask:Cancel()
             onbuilttask = nil
         end
-        self:UpdateNightLightPosition(nightlight)
+        if nightlight:GetCurrentPlatform() == nil then
+            self.nightlights[nightlight] = nightlightdata
+            self.inst:ListenForEvent("onremove", onremove, nightlight)
+            self:UpdateNightLightPosition(nightlight)
+        end
     end
     nightlightdata.onremove = onremove
     nightlightdata.onbuilt = onbuilt
-    self.inst:ListenForEvent("onremove", onremove, nightlight)
     self.inst:ListenForEvent("onbuilt", onbuilt, nightlight)
     onbuilttask = nightlight:DoTaskInTime(0, onbuilt)
 end

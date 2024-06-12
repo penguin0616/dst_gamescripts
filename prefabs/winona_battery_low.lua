@@ -156,7 +156,7 @@ local function CanBeUsedAsBattery(inst, user)
 end
 
 local function UseAsBattery(inst, user)
-	inst:ConsumeBatteryAmount(BATTERY_COST / TUNING.WINONA_BATTERY_LOW_FUEL_RATE_MULT, user)
+	inst:ConsumeBatteryAmount(BATTERY_COST / TUNING.WINONA_BATTERY_LOW_FUEL_RATE_MULT, 1, user)
 end
 
 --------------------------------------------------------------------------
@@ -382,8 +382,8 @@ local function CanAddFuelItem(inst, item, doer)
 			doer.components.skilltreeupdater:IsActivated(item.prefab == "horrorfuel" and "winona_shadow_2" or "winona_shadow_1"))
 end
 
---V2C: this is newly supported callback, that happens earlier, just before the fuel item is destroyed
-local function OnAddFuelItem(inst, item, fuelvalue)
+--used by item as well
+local function OnAddFuelAdjustLevels(inst, item, fuelvalue)
 	--normally, horror > nightmare > chem,
 	--except the item we JUST added jumps to highest priority
 	local max = inst.components.fueled.currentfuel
@@ -397,6 +397,11 @@ local function OnAddFuelItem(inst, item, fuelvalue)
 		inst._nightmare_level = inst._nightmare_level + fuelvalue
 		AdjustLevelsByPriority(inst, "_nightmare_level", "_horror_level", "_chemical_level")
 	end
+end
+
+--V2C: this is newly supported callback, that happens earlier, just before the fuel item is destroyed
+local function OnAddFuelItem(inst, item, fuelvalue)
+	OnAddFuelAdjustLevels(inst, item, fuelvalue)
 	RefreshFuelTypeEffects(inst)
 end
 
@@ -438,14 +443,8 @@ local function OnFuelSectionChange(new, old, inst)
     end
 end
 
-local function ConsumeBatteryAmount(inst, amt, doer)
-	inst.components.fueled:DoDelta(-amt * CalcFuelRateRescale(inst) * CalcEfficiencyMult(inst), doer)
-	OnUpdateFueled(inst)
-end
-
-local function ConsumeBatterySections(inst, sections, doer)
-	local amt = sections * inst.components.fueled.maxfuel / NUM_LEVELS + 0.01
-	inst.components.fueled:DoDelta(-amt, doer)
+local function ConsumeBatteryAmount(inst, amt, share, doer)
+	inst.components.fueled:DoDelta(-amt / (share or 1) * CalcFuelRateRescale(inst) * CalcEfficiencyMult(inst), doer)
 	OnUpdateFueled(inst)
 end
 
@@ -807,7 +806,6 @@ local function fn()
     inst.OnEntityWake = OnEntityWake
 	inst.CheckElementalBattery = CheckElementalBattery
 	inst.ConsumeBatteryAmount = ConsumeBatteryAmount
-	inst.ConsumeBatterySections = ConsumeBatterySections
 
 	--skilltree
 	inst._noidledrain = false
@@ -955,6 +953,7 @@ local function itemfn()
 	inst:AddComponent("fueled")
 	inst.components.fueled:InitializeFuelLevel(TUNING.WINONA_BATTERY_LOW_MAX_FUEL_TIME)
 	inst.components.fueled:SetMultiplierFn(CalcFuelMultiplier)
+	inst.components.fueled:SetTakeFuelItemFn(OnAddFuelAdjustLevels)
 	inst.components.fueled:SetTakeFuelFn(SERVER_PlayFuelSound)
 	inst.components.fueled.fueltype = FUELTYPE.CHEMICAL
 	inst.components.fueled.secondaryfueltype = FUELTYPE.NIGHTMARE

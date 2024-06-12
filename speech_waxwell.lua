@@ -397,7 +397,7 @@ return{
 
         CASTSPELL =
         {
---fallback to speech_wilson.lua 			TERRAFORM_TOO_SOON = "only_used_by_wurt",
+            TERRAFORM_TOO_SOON = "only_used_by_wurt",
         },
 
 		CASTAOE =
@@ -3525,11 +3525,12 @@ return{
         },
         WINONA_BATTERY_HIGH =
         {
-        	GENERIC = "At least she has the sense to use gems.",
-        	LOWPOWER = "I think it's losing power.",
-        	OFF = "Magic isn't so easy, is it?",
-        	BURNING = "I'm going to pretend I don't see it.",
-        	BURNT = "Oh. What a pity.",
+			GENERIC = "At least she has the sense to use gems.",
+			LOWPOWER = "I think it's losing power.",
+			OFF = "Magic isn't so easy, is it?",
+			BURNING = "I'm going to pretend I don't see it.",
+			BURNT = "Oh. What a pity.",
+			OVERLOADED = "Give it a rest.",
         },
 		--v3 Winona
 		WINONA_REMOTE =

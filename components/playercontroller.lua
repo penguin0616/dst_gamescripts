@@ -1655,7 +1655,10 @@ local function GetPickupAction(self, target, tool)
     elseif target:HasTag("minesprung") and not target:HasTag("mine_not_reusable") then
         return ACTIONS.RESETMINE
     elseif target:HasTag("inactive") and not target:HasTag("activatable_forcenopickup") and target.replica.inventoryitem == nil then
-        return (not target:HasTag("wall") or self.inst:IsNear(target, 2.5)) and ACTIONS.ACTIVATE or nil
+		return (not target:HasTag("wall") or self.inst:IsNear(target, 2.5))
+			and (not target:HasTag("engineering") or self.inst:HasTag("handyperson"))
+			and ACTIONS.ACTIVATE
+			or nil
     elseif target.replica.inventoryitem ~= nil and
         target.replica.inventoryitem:CanBePickedUp() and
 		not (target:HasTag("heavy") or (target:HasTag("fire") and not target:HasTag("lighter")) or target:HasTag("catchable")) and
@@ -4143,16 +4146,20 @@ function PlayerController:GetMapActions(position, maptarget)
 
     self.inst.checkingmapactions = true -- NOTES(JBK): Workaround flag to not add function argument changes for this task and lets things opt-in to special handling.
 
-    local lmbact = self.inst.components.playeractionpicker:GetLeftClickActions(pos)[1]
+    local lmbact = self.inst.components.playeractionpicker:GetLeftClickActions(pos, maptarget)[1]
     if lmbact then
         lmbact.maptarget = maptarget
         LMBaction = self:RemapMapAction(lmbact, position)
     end
 
-    local rmbact = self.inst.components.playeractionpicker:GetRightClickActions(pos)[1]
+    local rmbact = self.inst.components.playeractionpicker:GetRightClickActions(pos, maptarget)[1]
     if rmbact then
         rmbact.maptarget = maptarget
         RMBaction = self:RemapMapAction(rmbact, position)
+    end
+
+    if RMBaction and LMBaction and RMBaction.action == LMBaction.action then -- NOTES(JBK): If the actions are the same for the same target remove the LMBaction.
+        LMBaction = nil
     end
 
     self.inst.checkingmapactions = nil

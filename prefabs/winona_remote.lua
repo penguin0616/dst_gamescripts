@@ -206,21 +206,21 @@ local ELEMENTAL_VOLLEY_ICONS =
 	shadow =
 	{
 		idle = { anim = "icon_target_shadow" },
-		focus = { anim = "icon_target_shadow_focus" },
+		focus = { anim = "icon_target_shadow_focus", loop = true },
 		down = { anim = "icon_target_shadow_pressed" },
 		disabled = { anim = "icon_target_shadow_disabled" },
 	},
 	lunar =
 	{
 		idle = { anim = "icon_target_lunar" },
-		focus = { anim = "icon_target_lunar_focus" },
+		focus = { anim = "icon_target_lunar_focus", loop = true },
 		down = { anim = "icon_target_lunar_pressed" },
 		disabled = { anim = "icon_target_lunar_disabled" },
 	},
 	hybrid =
 	{
 		idle = { anim = "icon_target_hybrid" },
-		focus = { anim = "icon_target_hybrid_focus" },
+		focus = { anim = "icon_target_hybrid_focus", loop = true },
 		down = { anim = "icon_target_hybrid_pressed" },
 		disabled = { anim = "icon_target_hybrid_disabled" },
 	},
@@ -260,7 +260,7 @@ local SPELLS =
 		anims =
 		{
 			idle = { anim = "icon_target" },
-			focus = { anim = "icon_target_focus" },
+			focus = { anim = "icon_target_focus", loop = true },
 			down = { anim = "icon_target_pressed" },
 			disabled = { anim = "icon_target_disabled" },
 		},
@@ -292,7 +292,7 @@ local SPELLS =
 		anims =
 		{
 			idle = { anim = "icon_boost" },
-			focus = { anim = "icon_boost_focus" },
+			focus = { anim = "icon_boost_focus", loop = true },
 			down = { anim = "icon_boost_pressed" },
 			disabled = { anim = "icon_boost_disabled" },
 		},
@@ -324,7 +324,7 @@ local SPELLS =
 		anims =
 		{
 			idle = { anim = "icon_wake" },
-			focus = { anim = "icon_wake_focus" },
+			focus = { anim = "icon_wake_focus", loop = true },
 			down = { anim = "icon_wake_pressed" },
 			disabled = { anim = "icon_wake_disabled" },
 		},

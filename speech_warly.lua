@@ -397,7 +397,7 @@ return{
 
         CASTSPELL =
         {
---fallback to speech_wilson.lua 			TERRAFORM_TOO_SOON = "only_used_by_wurt",
+            TERRAFORM_TOO_SOON = "only_used_by_wurt",
         },
 
 		CASTAOE =
@@ -3525,11 +3525,12 @@ return{
         },
         WINONA_BATTERY_HIGH =
         {
-        	GENERIC = "It's nice to have Winona around.",
-        	LOWPOWER = "It's getting a bit low, Winona.",
-        	OFF = "What sort of fuel does this take?",
-        	BURNING = "It, oh, it appears to be on fire.",
-        	BURNT = "Crisp, non?",
+			GENERIC = "It's nice to have Winona around.",
+			LOWPOWER = "It's getting a bit low, Winona.",
+			OFF = "What sort of fuel does this take?",
+			BURNING = "It, oh, it appears to be on fire.",
+			BURNT = "Crisp, non?",
+			OVERLOADED = "Too hot!",
         },
 		--v3 Winona
 		WINONA_REMOTE =

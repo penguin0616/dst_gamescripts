@@ -138,7 +138,7 @@ function RoseInspectableUser:TryToDoRoseInspectionOnTarget(target)
             return false, "ROSEGLASSES_INVALID"
         end
 
-        if target.components.roseinspectable == nil then
+        if target.components.roseinspectable == nil or not target.components.roseinspectable:CanResidueBeSpawnedBy(self.inst) then
             return false, "ROSEGLASSES_INVALID"
         end
 

@@ -127,6 +127,9 @@ local function fn()
     inst.CanTossOnMap = CanTossOnMap
     inst.InitMapDecorations = InitMapDecorations
     inst.CalculateMapDecorations = CalculateMapDecorations
+    inst.valid_map_actions = {
+        [ACTIONS.TOSS] = true,
+    }
 
     inst.entity:SetPristine()
 

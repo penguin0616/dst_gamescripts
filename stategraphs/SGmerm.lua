@@ -128,8 +128,14 @@ local events =
     end),
 
     EventHandler("shadowmerm_spawn", function(inst,data)
-        inst.sg:GoToState("shadow_Spawn", data)
+        inst.sg:GoToState("shadow_spawn", data)
     end),
+
+--[[
+    EventHandler("lunar_transform", function(inst,data)
+        inst.sg:GoToState("lunar_transform", data)
+    end),
+]]
 }
 
 local function go_to_idle(inst)
@@ -467,12 +473,12 @@ local states =
 
         onenter = function(inst)
             inst.Physics:Stop()
-            inst.AnimState:PlayAnimation("atk_weapon")
+            inst.AnimState:PlayAnimation("work")
         end,
 
         timeline =
         {
-            TimeEvent(10 * FRAMES, function(inst)
+            TimeEvent(14 * FRAMES, function(inst)
                 local act = inst:GetBufferedAction()
                 local target = act.target
                 local tool = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) 
@@ -518,15 +524,19 @@ local states =
     },
 
     State{
-        name = "shadow_Spawn",
+        name = "shadow_spawn",
         tags = { "busy" },
 
         onenter = function(inst, data)
             ToggleOffCharacterCollisions(inst)
             inst.components.locomotor:Stop()
-            inst.components.locomotor:EnableGroundSpeedMultiplier(false)            
+            inst.components.locomotor:EnableGroundSpeedMultiplier(false)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("smacked")
+
+            inst.SoundEmitter:PlaySound("meta4/shadow_merm/smacked_poof")
+            local fx = SpawnPrefab("shadow_merm_spawn_poof_fx")
+            fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
         end,
 
         onexit = function(inst)
@@ -548,6 +558,9 @@ local states =
                 inst.components.locomotor:Stop()
                 inst.components.locomotor:EnableGroundSpeedMultiplier(true)
                 inst.Physics:ClearMotorVelOverride()
+
+                local fx = SpawnPrefab("shadow_merm_smacked_poof_fx")
+                fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
             end),
         },
 
@@ -564,7 +577,7 @@ local states =
         onenter = function(inst)
             inst.components.combat:StartAttack()
             inst.Physics:Stop()
-            inst.AnimState:PlayAnimation("atk_combo")
+            inst.AnimState:PlayAnimation("atk_triplepunch")
 
             -- Reduce the combat damage number for the attack, so we get more total damage,
             -- but have some tuning control.
@@ -673,7 +686,7 @@ local states =
 
     State{
         name = "hit_shadow",
-        tags = { "hot", "busy" },
+        tags = { "hit", "busy" },
 
         onenter = function(inst)
             inst.Physics:Stop()
@@ -727,8 +740,30 @@ local states =
 
         timeline =
         {
+            FrameEvent(12, go_to_idle),
+        },
+
+        events =
+        {
+            EventHandler("animover", go_to_idle)
+        },
+    }, 
+
+--[[
+    State{
+        name = "lunar_transform",
+        tags = {"busy" },
+
+        onenter = function(inst)
+            inst.AnimState:PlayAnimation("tansform")
+            inst.Physics:Stop()
+        
+        end,
+
+        timeline =
+        {
             FrameEvent(12, function(inst)
-                inst.sg:GoToState("idle")
+             
             end),
         },
 
@@ -736,8 +771,8 @@ local states =
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("idle") end)
         },
-    }, 
-       
+    },
+]]
 }
 
 CommonStates.AddWalkStates(states,

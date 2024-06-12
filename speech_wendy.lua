@@ -397,7 +397,7 @@ return{
 
         CASTSPELL =
         {
---fallback to speech_wilson.lua 			TERRAFORM_TOO_SOON = "only_used_by_wurt",
+            TERRAFORM_TOO_SOON = "only_used_by_wurt",
         },
 
 		CASTAOE =
@@ -3529,11 +3529,12 @@ return{
         },
         WINONA_BATTERY_HIGH =
         {
-        	GENERIC = "This one looks odd.",
-        	LOWPOWER = "It's slowly dying.",
-        	OFF = "I think it wants... gems...",
-        	BURNING = "Oh no...",
-        	BURNT = "It all crumbles to ash, in the end.",
+			GENERIC = "This one looks odd.",
+			LOWPOWER = "It's slowly dying.",
+			OFF = "I think it wants... gems...",
+			BURNING = "Oh no...",
+			BURNT = "It all crumbles to ash, in the end.",
+			OVERLOADED = "It takes a lot of breaks.",
         },
 		--v3 Winona
 		WINONA_REMOTE =

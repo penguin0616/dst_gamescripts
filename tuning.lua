@@ -3580,11 +3580,12 @@ function Tune(overrides)
         WINONA_CATAPULT_MAX_RANGE = 15,
         WINONA_CATAPULT_ATTACK_PERIOD = 2.5,
         WINONA_CATAPULT_AOE_RADIUS = 1.25,
+		WINONA_CATAPULT_VOLLEY_QUEUE_SIZE = 3,
         WINONA_CATAPULT_KEEP_TARGET_BUFFER = 5,
 		WINONA_CATAPULT_POWER_LOAD_SLEEP_MODE = 0.05,
 		WINONA_CATAPULT_POWER_LOAD_IDLE = 0.1,
-		WINONA_CATAPULT_ATTACK_POWER_COST = total_day_time / 120,
-		WINONA_CATAPULT_MEGA_ATTACK_POWER_COST = total_day_time / 3 + 0.0001,
+		WINONA_CATAPULT_ATTACK_POWER_COST = { fuel = total_day_time / 120, shard = 0.125 },
+		WINONA_CATAPULT_MEGA_ATTACK_POWER_COST = { fuel = total_day_time / 3 + 0.0001, shard = 1 },
 		WINONA_CATAPULT_SLEEP_MODE_DELAY = 30,
 
 		WINONA_SPOTLIGHT_RADIUS = 6.4 / 1.5,
@@ -3612,7 +3613,18 @@ function Tune(overrides)
         WINONA_BATTERY_LOW_MAX_FUEL_TIME = seg_time * 6,
         WINONA_BATTERY_LOW_FUEL_RATE_MULT = .375, --changes max fuel to last 1 full day, while still only costing 2 nitre
 		WINONA_BATTERY_LOW_SHADOW_FUEL_RATE_MULT = .1875, --changes max fuel to last 2 full days
+
         WINONA_BATTERY_HIGH_MAX_FUEL_TIME = total_day_time * 6,
+		WINONA_BATTERY_HIGH_SHARD_DELAY = 4, --seconds
+		WINONA_BATTERY_HIGH_SHARD_REGEN_MULT =
+		{
+			1,
+			0.5,
+			0.25,
+		},
+		WINONA_BATTERY_HIGH_OVERLOAD_THRESHOLD = 2, --seconds
+		WINONA_BATTERY_HIGH_OVERLOAD_DURATION = 10, --seconds
+
 		WINONA_BATTERY_RANGE = 6.6, --includes footprint
 		WINONA_BATTERY_MIN_LOAD = 0.1,
 
@@ -4043,6 +4055,11 @@ function Tune(overrides)
 
             GRASS_BOAT = {
                 RADIUS = 3,
+            },
+
+            OTTERDEN_BOAT = {
+                RADIUS = 3.75,
+                HEALTH = 100,
             },
 
             ANCIENT_BOAT = {
@@ -7014,6 +7031,7 @@ function Tune(overrides)
                 ROSEGLASSES_UPGRADE_CHANCE_INCREASED = 0.25,
 
                 CHARLIE_VINEBRIDGE_LENGTH_TILES = 3, -- How many tiles in a line can this make for each activation.
+                WORMHOLE_DETECTION_RADIUS = 20, -- Units away from a target position for valid action use.
 
 				BATTERY_EFFICIENCY_RATE_MULT =
 				{
@@ -7038,6 +7056,7 @@ function Tune(overrides)
 				SPOTLIGHT_RADIUS2 = 6.4,
 				SPOTLIGHT_MIN_RANGE2 = 7.8,
 				SPOTLIGHT_MAX_RANGE2 = 26,
+                SPOTLIGHT_HEAT_VALUE = 60, -- NOTES(JBK): less powerful as emberlight from Willow which is 100.
 
 				QUICKCHARGE_MULT = 1 + 1.0, --100% faster
             },
@@ -7670,12 +7689,13 @@ function Tune(overrides)
 
         ANCIENTTREE_GROW_TIME =
         {
-            {base=12*total_day_time, random=3*total_day_time}, -- Seed.
-            {base=15*total_day_time, random=5*total_day_time}, -- Sprout.
+            { base =  5*total_day_time, random = 2*total_day_time }, -- Seed:   3-7  days.
+            { base = 10*total_day_time, random = 2*total_day_time }, -- Sprout: 8-12 days.
         },
 
         ANCIENTTREE_WORK = 20,
-        ANCIENT_TREE_SEED_CHANCE_RATE = 0.003,
+        ANCIENT_TREE_SEED_CHANCE_RATE = 0.004, -- Per day. Reaches 0.6 at day 150.
+        ANCIENT_TREE_SEED_MIN_CHANCE = 0.1,
         ANCIENT_TREE_SEED_MAX_CHANCE = 0.6,
 
         ANCIENTTREE_NIGHTVISION_FRUIT_BUFF_DURATION = total_day_time / 2,
@@ -7759,10 +7779,11 @@ function Tune(overrides)
 
         MERMKING_TRIDENTBUFF_TRIPLEHIT_CHANCE = 0.33,
         MERMKING_TRIDENTBUFF_TRIPLEHIT_DAMAGECHANGE = 0.5,
-
         MERMKING_CROWNBUFF_DODGE_COOLDOWN = 10,
         MERMKING_CROWNBUFF_DODGE_SPEED = 8.5,
         MERMKING_CROWNBUFF_SANITYAURA_MOD = 0.95,
+        MERMKING_PAULDRONBUFF_DEFENSEPERCENT = 0.15,
+        MERMKING_PAULDRONBUFF_DEFENSEPERCENT_PLAYER = 0.10,
 
         MERM_LUNAR_GUARD_HEALTH = 660+40,
         MERM_LUNAR_HEALTH = (250 * 2)+40,

@@ -18,6 +18,9 @@ local events =
 			if not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("hit") then
 				inst.sg:GoToState("attack", data.targetpos)
 			elseif inst.sg.mem.volleyqueue then
+				if #inst.sg.mem.volleyqueue >= TUNING.WINONA_CATAPULT_VOLLEY_QUEUE_SIZE then
+					table.remove(inst.sg.mem.volleyqueue, 1)
+				end
 				table.insert(inst.sg.mem.volleyqueue, data.targetpos)
 			else
 				inst.sg.mem.volleyqueue = { data.targetpos }
@@ -30,6 +33,9 @@ local events =
 			if not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("hit") then
 				inst.sg:GoToState("attack", { pos = data.targetpos, mega = true })
 			elseif inst.sg.mem.elemvolleyqueue then
+				if #inst.sg.mem.elemvolleyqueue >= TUNING.WINONA_CATAPULT_VOLLEY_QUEUE_SIZE then
+					table.remove(inst.sg.mem.elemvolleyqueue, 1)
+				end
 				table.insert(inst.sg.mem.elemvolleyqueue, data.targetpos)
 			else
 				inst.sg.mem.elemvolleyqueue = { data.targetpos }
@@ -316,7 +322,7 @@ local states =
 
 			local numshadow, numlunar, numtotal = 0, 0, 0
 			inst.components.circuitnode:ForEachNode(function(inst, node)
-				if node.components.fueled and not node.components.fueled:IsEmpty() then
+				if node.components.fueled and not node.components.fueled:IsEmpty() and not (node.IsOverloaded and node:IsOverloaded()) then
 					local elem = node:CheckElementalBattery()
 					if elem == "horror" then
 						numshadow = numshadow + 1
@@ -327,31 +333,33 @@ local states =
 				end
 			end)
 			if numtotal > 0 then
-				local costperbattery
+				local cost, share
 				if numshadow == 0 and numlunar == 0 then
 					inst.sg.statemem.mega = nil
-					costperbattery = TUNING.WINONA_CATAPULT_ATTACK_POWER_COST / numtotal
+					cost = TUNING.WINONA_CATAPULT_ATTACK_POWER_COST
+					share = numtotal
 				else
-					costperbattery = (inst.sg.statemem.mega and TUNING.WINONA_CATAPULT_MEGA_ATTACK_POWER_COST or TUNING.WINONA_CATAPULT_ATTACK_POWER_COST) / (numshadow + numlunar)
+					cost = inst.sg.statemem.mega and TUNING.WINONA_CATAPULT_MEGA_ATTACK_POWER_COST or TUNING.WINONA_CATAPULT_ATTACK_POWER_COST
+					share = numshadow + numlunar
 					inst.sg.statemem.elemental = numshadow > 0 and (numlunar > 0 and "hybrid" or "shadow") or "lunar"
 				end
 				inst.components.circuitnode:ForEachNode(function(inst, node)
-					if node.components.fueled and not node.components.fueled:IsEmpty() then
+					if node.components.fueled and not node.components.fueled:IsEmpty() and not (node.IsOverloaded and node:IsOverloaded()) then
 						if inst.sg.statemem.elemental == "shadow" then
 							if node:CheckElementalBattery() == "horror" then
-								node:ConsumeBatteryAmount(costperbattery, inst)
+								node:ConsumeBatteryAmount(cost, share, inst)
 							end
 						elseif inst.sg.statemem.elemental == "lunar" then
 							if node:CheckElementalBattery() == "brilliance" then
-								node:ConsumeBatteryAmount(costperbattery, inst)
+								node:ConsumeBatteryAmount(cost, share, inst)
 							end
 						elseif inst.sg.statemem.elemental == "hybrid" then
 							local elem = node:CheckElementalBattery()
 							if elem == "horror" or elem == "brilliance" then
-								node:ConsumeBatteryAmount(costperbattery, inst)
+								node:ConsumeBatteryAmount(cost, share, inst)
 							end
 						else
-							node:ConsumeBatteryAmount(costperbattery, inst)
+							node:ConsumeBatteryAmount(cost, share, inst)
 						end
 					end
 				end)

@@ -65,7 +65,7 @@ return MakeBuff("trident", {
     }),
     MakeBuff("crown", {
         onattached = function(inst, target, symbol, offset, data)
-            if target:HasTag("mermguard") then
+            if not target.isplayer and target:HasTag("mermguard") then
                 local attackdodger = target:AddComponent("attackdodger")
                 attackdodger.ondodgefn = function(inst, attacker) inst:PushEvent("attackdodged", attacker) end
                 attackdodger.cooldowntime = TUNING.MERMKING_CROWNBUFF_DODGE_COOLDOWN
@@ -75,7 +75,9 @@ return MakeBuff("trident", {
             end
         end,
         ondetached = function(inst, target)
-            target:RemoveComponent("attackdodger")
+            if not target.isplayer then
+                target:RemoveComponent("attackdodger")
+            end
             if target.components.sanity then
                 target.components.sanity.neg_aura_modifiers:RemoveModifier(inst, CROWN_MODIFIER_KEY)
             end
@@ -84,7 +86,9 @@ return MakeBuff("trident", {
     MakeBuff("pauldron", {
         onattached = function(inst, target, symbol, offset, data)
             if target.components.health ~= nil then
-                target.components.health.externalabsorbmodifiers:SetModifier(inst, 0.25, PAULDRON_MODIFIER_KEY)
+                local buff_amount = (target.isplayer and TUNING.MERMKING_PAULDRONBUFF_DEFENSEPERCENT_PLAYER)
+                    or TUNING.MERMKING_PAULDRONBUFF_DEFENSEPERCENT
+                target.components.health.externalabsorbmodifiers:SetModifier(inst, buff_amount, PAULDRON_MODIFIER_KEY)
             end
         end,
         ondetached = function(inst, target)

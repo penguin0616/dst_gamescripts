@@ -107,6 +107,8 @@ local otterden_prefabs =
     "boat_otterden_erode_water",
     "fx_grass_boat_fluff",
     "otterden",
+    "boat_otterden_player_collision",
+    "boat_otterden_item_collision",
 }
 
 local item_prefabs =
@@ -1051,14 +1053,14 @@ local function otterden_on_update(inst, dt)
     -- If we're already missing our den, we should already be degrading,
     -- so don't waste cycles checking map tiles or anything, and
     -- don't accidentally stop doing the degrading for that.
-    -- TODO @stevenm is it worth refactoring this to increase the degeneration rate when both conditions are met?
     local den = inst.components.entitytracker:GetEntity("otterden")
     if not den then return end
 
     local hullhealth = inst.components.hullhealth
     local boat_tile = TheWorld.Map:GetTileAtPoint(inst.Transform:GetWorldPosition())
-    -- TODO @stevenm do we need to check IsOceanTile? Can we just assume that the boat should never be off-ocean?
-    if boat_tile ~= GROUND.OCEAN_COASTAL and boat_tile ~= GROUND.OCEAN_COASTAL_SHORE
+    if boat_tile ~= WORLD_TILES.OCEAN_COASTAL
+            and boat_tile ~= WORLD_TILES.OCEAN_COASTAL_SHORE
+            and boat_tile ~= WORLD_TILES.OCEAN_WATERLOG
             and TileGroupManager:IsOceanTile(boat_tile) then
         if hullhealth.selfdegradingtime == 0 then
             otterden_start_erosion(inst)
@@ -1153,9 +1155,9 @@ local function otterden_fn()
     local bank = "boat_otterden"
     local build = "boat_otterden"
     local OTTERDEN_BOAT_DATA = {
-        radius = TUNING.BOAT.GRASS_BOAT.RADIUS,
-        max_health = 0.5 * TUNING.BOAT.HEALTH, -- TODO @stevenm
-        item_collision_prefab = "boat_grass_item_collision",
+        radius = TUNING.BOAT.OTTERDEN_BOAT.RADIUS,
+        max_health = TUNING.BOAT.OTTERDEN_BOAT.HEALTH,
+        item_collision_prefab = "boat_otterden_item_collision",
         boatlip_prefab = "boatlip_otterden",
         minimap_image = "boat_otterden.png",
     }
@@ -1166,7 +1168,7 @@ local function otterden_fn()
     inst.walksound = "marsh"
     inst.second_walk_sound = "tallgrass"
 
-    inst.components.walkableplatform.player_collision_prefab = "boat_grass_player_collision"
+    inst.components.walkableplatform.player_collision_prefab = "boat_otterden_player_collision"
 
     if not TheNet:IsDedicated() then
         local tuft_angle, tuft_offset
@@ -1174,7 +1176,7 @@ local function otterden_fn()
         for i = 1, NUM_TUFTS do
             local tuft = CLIENT_MakeOtterdenTuft(inst)
             tuft_angle = GetRandomWithVariance((i * TWOPI/NUM_TUFTS), PI/6)
-            tuft_offset = 1.0 + (OTTERDEN_BOAT_DATA.radius - 1.2) * (math.sqrt(math.random()))
+            tuft_offset = 1.0 + (OTTERDEN_BOAT_DATA.radius * 0.5) * (math.sqrt(math.random()))
             tuft.Transform:SetPosition(
                 tuft_offset * math.cos(tuft_angle),
                 0,
@@ -1564,6 +1566,14 @@ local function boat_ice_item_collision_fn()
     return boat_item_collision_template(TUNING.OCEAN_ICE_RADIUS)
 end
 
+local function boat_otterden_player_collision_fn()
+    return boat_player_collision_template(TUNING.BOAT.OTTERDEN_BOAT.RADIUS)
+end
+
+local function boat_otterden_item_collision_fn()
+    return boat_item_collision_template(TUNING.BOAT.OTTERDEN_BOAT.RADIUS)
+end
+
 local function ancient_placer_postinit(inst)
     inst.AnimState:SetScale(ANCIENT_BOAT_SCALE, ANCIENT_BOAT_SCALE)
 end
@@ -1582,6 +1592,8 @@ return Prefab("boat", wood_fn, wood_assets, prefabs),
        MakePlacer("boat_ancient_item_placer", "boat_yotd", "boat_ancient", "idle_full", true, false, false, nil, nil, nil, ancient_placer_postinit, 6),
 
        Prefab("boat_otterden", otterden_fn, otterden_assets, otterden_prefabs),
+       Prefab("boat_otterden_player_collision", boat_otterden_player_collision_fn),
+       Prefab("boat_otterden_item_collision", boat_otterden_item_collision_fn),
 
        Prefab("boat_grass", grass_fn, grass_assets, grass_prefabs),
        Prefab("boat_grass_player_collision", boat_grass_player_collision_fn),

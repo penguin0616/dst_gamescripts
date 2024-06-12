@@ -1,7 +1,8 @@
 local function OnCooldownOver(inst)
-    inst.components.attackdodger.cooldowntask = nil
-
-    inst.components.attackdodger.oncooldown = false
+    if inst.components.attackdodger ~= nil then
+        inst.components.attackdodger.cooldowntask = nil
+        inst.components.attackdodger.oncooldown = false
+    end
 end
 
 local AttackDodger = Class(function(self, inst)

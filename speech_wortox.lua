@@ -397,7 +397,7 @@ return{
 
         CASTSPELL =
         {
---fallback to speech_wilson.lua 			TERRAFORM_TOO_SOON = "only_used_by_wurt",
+            TERRAFORM_TOO_SOON = "only_used_by_wurt",
         },
 
 		CASTAOE =
@@ -3531,11 +3531,12 @@ return{
         },
         WINONA_BATTERY_HIGH =
         {
-        	GENERIC = "Ooohoohoo! The mortal learned magic!",
-        	LOWPOWER = "Winding down, waning.",
-        	OFF = "Playtime's over!",
-        	BURNING = "Hoohoohoo!",
-        	BURNT = "How hilarious!",
+			GENERIC = "Ooohoohoo! The mortal learned magic!",
+			LOWPOWER = "Winding down, waning.",
+			OFF = "Playtime's over!",
+			BURNING = "Hoohoohoo!",
+			BURNT = "How hilarious!",
+			OVERLOADED = "It fired up and fizzled out, hyuyu!",
         },
 		--v3 Winona
 		WINONA_REMOTE =

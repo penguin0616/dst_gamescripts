@@ -330,6 +330,7 @@ local function OnGuardEnterLimbo(inst)
 end
 
 local function CallGuards(inst)
+    inst:RemoveTag("companion")
     local merm_positions =
     {
         { x =  2.5, z =  2.5 },
@@ -363,6 +364,7 @@ local function CallGuards(inst)
 end
 
 local function ReturnMerms(inst)
+    inst:AddTag("companion")
     inst.guards = inst.guards or {}
 
     for _, guard in ipairs(inst.guards) do
@@ -535,6 +537,7 @@ local function fn()
     inst:AddTag("merm")
     inst:AddTag("mermking")
     inst:AddTag("wet")
+    inst:AddTag("companion")
 
     inst:AddTag("trader")
     inst:AddTag("alltrader")

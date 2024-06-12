@@ -4504,6 +4504,9 @@ local function MakeHat(name)
 				inst.components.closeinspector:SetInspectTargetFn(fns.roseglasses_inspecttarget)
 				inst.components.closeinspector:SetInspectPointFn(fns.roseglasses_inspectpoint)
 			end
+            if owner.components.skilltreeupdater:IsActivated("winona_charlie_2") then
+                owner:AddTag("wormholetracker")
+            end
 		else
 			inst:RemoveComponent("closeinspector")
 		end
@@ -4513,6 +4516,9 @@ local function MakeHat(name)
 		if inst._owner then
 			inst:RemoveEventCallback("onactivateskill_server", inst._onskillrefresh, inst._owner)
 			inst:RemoveEventCallback("ondeactivateskill_server", inst._onskillrefresh, inst._owner)
+            if owner == nil then
+                inst._owner:RemoveTag("wormholetracker")
+            end
 		end
 		inst._owner = owner
 		if owner then

@@ -108,7 +108,7 @@ local function OnFuelPresentation2(inst, x, z, upgraded)
     fx.Transform:SetPosition(x, 0, z)
     inst:ReturnToScene()
 end
-local function OnRoseInspected_Fuel_Internal(inst, doer, odds)
+local function OnResidueActivated_Fuel_Internal(inst, doer, odds)
     local skilltreeupdater = doer.components.skilltreeupdater
     local upgraded = skilltreeupdater and skilltreeupdater:IsActivated("winona_charlie_2") and math.random() < odds or nil
     local fuel = SpawnPrefab(upgraded and "horrorfuel" or "nightmarefuel")
@@ -124,19 +124,19 @@ local function OnRoseInspected_Fuel_Internal(inst, doer, odds)
     fuel:DoTaskInTime(1.0, OnFuelPresentation1, x, z, upgraded)
     fuel:DoTaskInTime(1.5, OnFuelPresentation2, x, z, upgraded)
 end
-local function OnRoseInspected_Fuel(inst, doer)
-    OnRoseInspected_Fuel_Internal(inst, doer, TUNING.SKILLS.WINONA.ROSEGLASSES_UPGRADE_CHANCE)
+local function OnResidueActivated_Fuel(inst, doer)
+    OnResidueActivated_Fuel_Internal(inst, doer, TUNING.SKILLS.WINONA.ROSEGLASSES_UPGRADE_CHANCE)
 end
-local function OnRoseInspected_Fuel_IncreasedHorror(inst, doer)
-    OnRoseInspected_Fuel_Internal(inst, doer, TUNING.SKILLS.WINONA.ROSEGLASSES_UPGRADE_CHANCE_INCREASED)
+local function OnResidueActivated_Fuel_IncreasedHorror(inst, doer)
+    OnResidueActivated_Fuel_Internal(inst, doer, TUNING.SKILLS.WINONA.ROSEGLASSES_UPGRADE_CHANCE_INCREASED)
 end
 function MakeRoseTarget_CreateFuel(inst)
     local roseinspectable = inst:AddComponent("roseinspectable")
-    roseinspectable:SetOnRoseInspected(OnRoseInspected_Fuel)
+    roseinspectable:SetOnResidueActivated(OnResidueActivated_Fuel)
 end
 function MakeRoseTarget_CreateFuel_IncreasedHorror(inst)
     local roseinspectable = inst:AddComponent("roseinspectable")
-    roseinspectable:SetOnRoseInspected(OnRoseInspected_Fuel_IncreasedHorror)
+    roseinspectable:SetOnResidueActivated(OnResidueActivated_Fuel_IncreasedHorror)
 end
 --------------------------------------------------------------------------
 local function RosePoint_VineBridge_Check(inst, pt)
@@ -153,14 +153,9 @@ local function RosePoint_VineBridge_Check(inst, pt)
     local maxlength = TUNING.SKILLS.WINONA.CHARLIE_VINEBRIDGE_LENGTH_TILES
 
     local sx, sy, sz = pt:Get()
-    local on_overhang = false
     if _map:IsOceanTileAtPoint(sx, 0, sz) then
-        if not _map:IsVisualGroundAtPoint(sx, 0, sz) then
-            -- On water entirely with no ground reference.
-            return false
-        end
-        -- We are on an overhang let the code below know to apply an offset to get off of it.
-        on_overhang = true
+        -- We want the player to be fully on land to initiate this.
+        return false
     end
 
     -- Get direction vector from the player instance because it is the most context sensitive for directionality.
@@ -176,11 +171,6 @@ local function RosePoint_VineBridge_Check(inst, pt)
         -- Vertical.
         dx = 0
         dz = dz < 0 and -TILE_SCALE or TILE_SCALE
-    end
-
-
-    if on_overhang then
-        sx, sz = sx - dx * 0.5, sz - dz * 0.5 -- Move half a tile backwards to go back onto a land tile.
     end
 
     -- Center start to center of tile.

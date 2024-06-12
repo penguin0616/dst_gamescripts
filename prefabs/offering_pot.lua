@@ -103,7 +103,7 @@ end
 
 local function onhit(inst, worker, workleft)
     if workleft > 0 and not inst:HasTag("burnt") then
-        inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/sisturn/hit")
+        inst.SoundEmitter:PlaySound("meta4/merm_alter/offering_place")
         inst.AnimState:PlayAnimation("hit")
         inst.AnimState:PushAnimation("idle")
 
@@ -118,7 +118,7 @@ local function onbuilt(inst)
     inst.AnimState:PushAnimation("idle", false)
 
     inst.SoundEmitter:PlaySound("meta4/merm_alter/place")
-    inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/sisturn/hit")
+    inst.SoundEmitter:PlaySound("meta4/merm_alter/offering_place")
 end
 
 local function countkelp(inst)

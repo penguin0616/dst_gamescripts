@@ -215,7 +215,9 @@ local function GenerateTreasure(pt, overrideprefab, spawn_as_empty, postfn)
 			end
 
 			if _container ~= nil and not _container:IsFull() then
-				if math.random() < math.min(TUNING.ANCIENT_TREE_SEED_MAX_CHANCE, TheWorld.state.cycles * TUNING.ANCIENT_TREE_SEED_CHANCE_RATE) then
+				if math.random() <= math.clamp(
+					TheWorld.state.cycles * TUNING.ANCIENT_TREE_SEED_CHANCE_RATE, TUNING.ANCIENT_TREE_SEED_MIN_CHANCE, TUNING.ANCIENT_TREE_SEED_MAX_CHANCE
+				) then
 					_container:GiveItem(SpawnPrefab("ancienttree_seed"))
 				end
 

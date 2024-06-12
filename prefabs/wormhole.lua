@@ -76,7 +76,12 @@ local function StartTravelSound(inst, doer)
     doer:PushEvent("wormholetravel", WORMHOLETYPE.WORM) --Event for playing local travel sound
 end
 
-local function OnResidueHookup(inst, residueowner, residue)
+local function CanResidueBeSpawnedBy(inst, doer)
+    local skilltreeupdater = doer and doer.components.skilltreeupdater or nil
+    return skilltreeupdater and skilltreeupdater:IsActivated("winona_charlie_2") or false
+end
+
+local function OnResidueCreated(inst, residueowner, residue)
     local skilltreeupdater = residueowner.components.skilltreeupdater
     if skilltreeupdater and skilltreeupdater:IsActivated("winona_charlie_2") then
         residue:SetMapActionContext(CHARLIERESIDUE_MAP_ACTIONS.WORMHOLE)
@@ -93,6 +98,14 @@ local function OnLoad(inst, data)
 	if data ~= nil and data.disable_sanity_drain then
 		inst.disable_sanity_drain = true
 	end
+end
+
+local function CreateHiddenGlobalIcon(inst)
+    inst.hiddenglobalicon = SpawnPrefab("globalmapiconunderfog")
+    inst.hiddenglobalicon.MiniMapEntity:SetPriority(50) -- NOTES(JBK): This could be put to a constant for map actions that should go over everything as a reserved flag.
+    inst.hiddenglobalicon.MiniMapEntity:SetRestriction("wormholetracker")
+    inst.hiddenglobalicon:AddTag("wormholetrackericon")
+    inst.hiddenglobalicon:TrackEntity(inst)
 end
 
 local function fn()
@@ -157,10 +170,13 @@ local function fn()
     inst.components.trader.deleteitemonaccept = false
 
     local roseinspectable = inst:AddComponent("roseinspectable")
-    roseinspectable:SetOnResidueHookup(OnResidueHookup)
+	roseinspectable:SetCanResidueBeSpawnedBy(CanResidueBeSpawnedBy)
+    roseinspectable:SetOnResidueCreated(OnResidueCreated)
 
 	inst.OnSave = OnSave
 	inst.OnLoad = OnLoad
+
+    inst:DoTaskInTime(0, CreateHiddenGlobalIcon)
 
     return inst
 end

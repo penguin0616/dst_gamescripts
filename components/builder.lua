@@ -397,9 +397,7 @@ function Builder:AddRecipe(recname)
 end
 
 function Builder:RemoveRecipe(recname)
-	if table.contains(self.recipes, recname) then
-		table.remove(self.recipes, recname)
-	end
+	table.removearrayvalue(self.recipes, recname)
 	self.inst.replica.builder:RemoveRecipe(recname)
 end
 

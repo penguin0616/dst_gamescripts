@@ -397,7 +397,7 @@ return{
 
         CASTSPELL =
         {
---fallback to speech_wilson.lua 			TERRAFORM_TOO_SOON = "only_used_by_wurt",
+            TERRAFORM_TOO_SOON = "only_used_by_wurt",
         },
 
 		CASTAOE =
@@ -3525,11 +3525,12 @@ return{
         },
         WINONA_BATTERY_HIGH =
         {
-        	GENERIC = "Tis fueled by glorious magic.",
-        	LOWPOWER = "T'will not hold out much longer!",
-        	OFF = "It hath lost its incredible power!",
-        	BURNING = "Tis engulfed in flame!",
-        	BURNT = "'Twas devoured by Hel's fire!",
+			GENERIC = "Tis fueled by glorious magic.",
+			LOWPOWER = "T'will not hold out much longer!",
+			OFF = "It hath lost its incredible power!",
+			BURNING = "Tis engulfed in flame!",
+			BURNT = "'Twas devoured by Hel's fire!",
+			OVERLOADED = "It must catch its breath.",
         },
 		--v3 Winona
 		WINONA_REMOTE =

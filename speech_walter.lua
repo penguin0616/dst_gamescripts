@@ -397,7 +397,7 @@ return{
 
         CASTSPELL =
         {
---fallback to speech_wilson.lua 			TERRAFORM_TOO_SOON = "only_used_by_wurt",
+            TERRAFORM_TOO_SOON = "only_used_by_wurt",
         },
 
 		CASTAOE =
@@ -3525,11 +3525,12 @@ return{
         },
         WINONA_BATTERY_HIGH =
         {
-        	GENERIC = "How does it work?",
-        	LOWPOWER = "I think we need to hook up a another generator to this generator.",
-        	OFF = "It ran out of gem power.",
-        	BURNING = "Ah!! That's how forest fires start!",
-        	BURNT = "Well... I guess Winona'll have to build a new one.",
+			GENERIC = "How does it work?",
+			LOWPOWER = "I think we need to hook up a another generator to this generator.",
+			OFF = "It ran out of gem power.",
+			BURNING = "Ah!! That's how forest fires start!",
+			BURNT = "Well... I guess Winona'll have to build a new one.",
+			OVERLOADED = "I think it's too hot, Woby.",
         },
 		--v3 Winona
 		WINONA_REMOTE =

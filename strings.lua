@@ -10103,7 +10103,7 @@ STRINGS.UI =
         DAYWALKER2 = "Scrappy Werepig",
         SHARKBOI = "Frostjaw",
 
-        OTTERS = "Marotter Dens",
+        OCEAN_OTTERDENS = "Marotter Dens",
         OTTERS_SETTING = "Marotters",
 		-- End of world customization strings
     },
@@ -15283,7 +15283,7 @@ STRINGS.SKILLTREE = {
         --COMBAT = "COMBAT", -- Intentionally commented out.
 
         AMPHIBIAN = "AMPHIBIAN",
-        SWAMPMASTER = "SWAMP MASTER",
+        SWAMPMASTER = "MERMDOM",
     },
 
     ONLINE_DATA_USER_OFFLINE = "Login to use online skillset data.",
@@ -15880,11 +15880,11 @@ STRINGS.SKILLTREE = {
         WINONA_SHADOW_3_DESC = "Use your Handy Remote to select a target for a shadow-infused Catapult attack.",
 
         WINONA_CHARLIE_1_TITLE = "Shadow Seeker I",
-        WINONA_CHARLIE_1_DESC = "The Queen imparts a design for enchanted glasses that reveal hidden traces of shadow magic. Does she want you to find her?",
+        WINONA_CHARLIE_1_DESC = "The Queen imparts a design for enchanted glasses that reveal hidden traces of shadow magic.\nDoes she want you to find her?",
         
         WINONA_CHARLIE_2_LOCK_DESC = "Requires the Shadow Seeker I skill, and to not have Founder's Keepers II to unlock.",
         WINONA_CHARLIE_2_TITLE = "Shadow Seeker II",
-        WINONA_CHARLIE_2_DESC = "The Queen will watch over you.",
+        WINONA_CHARLIE_2_DESC = "Become more adept at locating traces of shadow magic.\nThe Queen will watch over you.",
         -- Lunar.
         WINONA_LUNAR_1_TITLE = "Enlightened G.E.M.erator",
         WINONA_LUNAR_1_DESC = "Learn how to utilize Enlightened Shards as a fuel source for G.E.M.erators.",
@@ -15944,12 +15944,12 @@ STRINGS.SKILLTREE = {
         WURT_MOSQUITO_CRAFT_2_DESC = "Learn to craft Mosquito based items: Skeeter Bomb, Fertilizzzer and Blood Shot",
         WURT_MOSQUITO_CRAFT_3_DESC = "Master the use of the Mosquito based items.",
 
-        WURT_CIV_1_DESC = "Craft a Communal Kelp Dish to entice faster Merm growth.",
-        WURT_CIV_1_2_DESC = "Craft a Superior Communal Kelp Dish that holds more kelp for even faster Merm growth.",
-        WURT_CIV_2_DESC = "Craft a Shoddy Tool Shed to equip your Merm workers with Shoddy Tools.",
-        WURT_CIV_2_2_DESC = "Craft a Slightly Less Shoddy Tool shed that provides Slightly Less Shoddy Tools.",
-        WURT_CIV_3_DESC = "Craft an Armermry to equip your Loyal Merm Guards with Swamp Brawler Helmets.",
-        WURT_CIV_3_2_DESC = "Craft a Superior Armermry that provides Swamp Warrior Helmets.",
+        WURT_CIV_1_DESC = "Learn to craft the Communal Kelp Dish to entice faster Merm growth.",
+        WURT_CIV_1_2_DESC = "Learn to craft the Superior Communal Kelp Dish, it holds more kelp for even faster Merm growth.",
+        WURT_CIV_2_DESC = "Learn to craft the Shoddy Tool Shed to equip your Merm workers with Shoddy Tools.",
+        WURT_CIV_2_2_DESC = "Learn to craft the Slightly Less Shoddy Tool shed, it provides Slightly Less Shoddy Tools.",
+        WURT_CIV_3_DESC = "Learn to craft the Armermry to equip your Loyal Merm Guards with Swamp Brawler Helmets.",
+        WURT_CIV_3_2_DESC = "Learn to craft the Superior Armermry, it provides Swamp Warrior Helmets.",
 
         WURT_MERM_KING_HUNGER_1_DESC = "Increase the Merm King's maximum hunger.",
         WURT_MERM_KING_HUNGER_2_DESC = "Increase the Merm King's maximum hunger even more.",
@@ -15965,7 +15965,7 @@ STRINGS.SKILLTREE = {
         WURT_MERMKINGTRIDENT_DESC = "Offer this weapon best wielded at sea, and your Merms will attack with the deftness of three.",
 
         WURT_ALLEGIANCE_LOCK_1_DESC = "Learn 12 skills to unlock.",
-        WURT_LUNAR_ALLEGIANCE_1_DESC = "Grant your loyal Merms the wondrous gift of Lunar mutation by feeding them moonglass.\nEmpower your mutant merm with Planer power using Pure Brilliance.",
+        WURT_LUNAR_ALLEGIANCE_1_DESC = "Grant your loyal Merms the wondrous gift of Lunar mutation by feeding them Moon Shards.\nEmpower your mutant merm with Planar power using Pure Brilliance.",
         WURT_LUNAR_ALLEGIANCE_2_DESC = "Morph any piece of land into sweet sweet Marsh.",
         WURT_SHADOW_ALLEGIANCE_1_DESC = "Your Merm followers will have one foot in the Shadow world.\nInfuse shadow merm with Planar power using Pure Horror.",
         WURT_SHADOW_ALLEGIANCE_2_DESC = "No land shall be safe from the dark and beautiful corruption of the Marsh.",

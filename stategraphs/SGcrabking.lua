@@ -370,6 +370,7 @@ local states =
 
             -- Keep casting until there are no boats nearby.
             if TheSim:CountEntities(x, 0, z, 14, BOAT_MUST_TAGS) <= 0 then
+                inst:DoTaskInTime(0, inst.EndCastSpell)
                 inst.sg:GoToState("cast_pst")
             end
         end,
@@ -391,10 +392,8 @@ local states =
 
         onexit = function(inst)
             inst.wavetime = nil
+
             if not inst.sg.statemem.keepcast then
-
-                inst:DoTaskInTime(0, inst.EndCastSpell)
-
                 inst.SoundEmitter:KillSound("crabmagic")
             end
         end,

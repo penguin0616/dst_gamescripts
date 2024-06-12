@@ -3525,11 +3525,12 @@ return{
         },
         WINONA_BATTERY_HIGH =
         {
-        	GENERIC = "What it do?",
-        	LOWPOWER = "It looking tired.",
-        	OFF = "It supposed to be doing something?",
-        	BURNING = "It supposed to do that, florp?",
-        	BURNT = "Oh well.",
+			GENERIC = "What it do?",
+			LOWPOWER = "It looking tired.",
+			OFF = "It supposed to be doing something?",
+			BURNING = "It supposed to do that, florp?",
+			BURNT = "Oh well.",
+			OVERLOADED = "Glorp! Hot! Hot!",
         },
 		--v3 Winona
 		WINONA_REMOTE =

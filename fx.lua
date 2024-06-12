@@ -3115,6 +3115,22 @@ local fx =
         sound = "aqol/new_test/squidgy",
         anim = "swamp_splash",
     },
+
+    {
+        name = "shadow_merm_spawn_poof_fx",
+        bank = "merm_shadow_fx",
+        build = "merm_shadow_fx",
+        anim = "spawn_poof",
+        sound = "meta4/shadow_merm/spawn_poof",
+    }, 
+
+    {
+        name = "shadow_merm_smacked_poof_fx",
+        bank = "merm_shadow_fx",
+        build = "merm_shadow_fx",
+        anim = "smacked_poof",
+        sound = "meta4/shadow_merm/smacked_poof",
+    },        
 }
 
 for cratersteamindex = 1, 4 do

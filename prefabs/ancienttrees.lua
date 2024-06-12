@@ -189,6 +189,18 @@ local function Sapling_CheckGrowConstraints(inst)
     end
 end
 
+local function Sapling_DoMagicGrowthFn(inst, doer)
+    inst.magic_growth_delay = nil
+
+    inst:CheckGrowConstraints()
+
+    if not inst.components.growable:IsGrowing() then
+        return -- Paused or stopped.
+    end
+
+    inst.components.growable:DoGrowth()
+end
+
 local function Sapling_GetStatus(inst)
     local pausereasons = inst.components.growable.pausereasons
 
@@ -310,6 +322,13 @@ local function Full_OnWorkedFinish(inst, worker)
         end
     end
 
+    local seed = inst.components.lootdropper:SpawnLootPrefab("ancienttree_seed", is_right and right or left)
+
+    if seed ~= nil then
+        seed:SetType(inst.type)
+        inst:TransferPlantData(seed)
+    end
+
     inst:MakeStump()
 
     inst:DoTaskInTime(16*FRAMES, ShakeCamera)
@@ -413,6 +432,7 @@ local function MakeAncientTree(name, data)
 
         inst:AddTag("plant")
         inst:AddTag("tree")
+        inst:AddTag("no_force_grow")
         inst:AddTag("ancienttree")
 
         if data.shelter then
@@ -502,6 +522,8 @@ local function MakeAncientTree(name, data)
 
         inst.displaynamefn = Sapling_DisplayNameFn
 
+        inst:AddTag("silviculture")
+
         if data.common_postinit ~= nil then
             data.common_postinit(inst)
         end
@@ -534,6 +556,8 @@ local function MakeAncientTree(name, data)
         inst.components.inspectable.getstatus = Sapling_GetStatus
 
         inst:AddComponent("growable")
+        inst.components.growable.magicgrowable = true
+        inst.components.growable.domagicgrowthfn = Sapling_DoMagicGrowthFn
         inst.components.growable.stages = GROWTH_STAGES
         inst.components.growable:SetStage(1)
         inst.components.growable:StartGrowing()

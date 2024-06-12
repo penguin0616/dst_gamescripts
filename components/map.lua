@@ -208,7 +208,7 @@ end
 --           -supports missing min_spacing param
 local function IsNearOther(other, pt, min_spacing_sq, min_spacing)
     --FindEntities range check is <=, but we want <
-	if min_spacing_sq <= 0 then
+	if min_spacing_sq <= 0 and other:HasTag("structure") then
 		--special case (e.g. minisigns use DEPLOYSPACING.NONE)
 		if other.deploy_extra_spacing then
 			min_spacing_sq = other.deploy_extra_spacing * other.deploy_extra_spacing
