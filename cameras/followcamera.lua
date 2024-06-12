@@ -14,12 +14,14 @@ local function onmaxdist(self, maxdist, old)
 end
 
 local function onextramaxdist(self, extramaxdist, old)
-    self.maxdist = self.maxdist - (old or 0)
+    old = old or 0
 
-    if self:CanControl() and
+    self.maxdist = self.maxdist - old
+
+    if extramaxdist ~= old and
+        self:CanControl() and
         not self.cutscene and -- NOTES(DiogoW): self.cutscene seems unused.
-        not self.paused and   -- NOTES(DiogoW): self.paused seems unused.
-        (ThePlayer == nil or ThePlayer.components.playercontroller:IsEnabled())
+        not self.paused       -- NOTES(DiogoW): self.paused seems unused.
     then
         self:MaximizeDistance()
     end

@@ -156,7 +156,7 @@ local function CanBeUsedAsBattery(inst, user)
 end
 
 local function UseAsBattery(inst, user)
-	inst:ConsumeBatteryAmount(BATTERY_COST / TUNING.WINONA_BATTERY_LOW_FUEL_RATE_MULT, 1, user)
+	inst:ConsumeBatteryAmount({ fuel = BATTERY_COST / TUNING.WINONA_BATTERY_LOW_FUEL_RATE_MULT }, 1, user)
 end
 
 --------------------------------------------------------------------------
@@ -443,8 +443,8 @@ local function OnFuelSectionChange(new, old, inst)
     end
 end
 
-local function ConsumeBatteryAmount(inst, amt, share, doer)
-	inst.components.fueled:DoDelta(-amt / (share or 1) * CalcFuelRateRescale(inst) * CalcEfficiencyMult(inst), doer)
+local function ConsumeBatteryAmount(inst, cost, share, doer)
+	inst.components.fueled:DoDelta(-cost.fuel / (share or 1) * CalcFuelRateRescale(inst) * CalcEfficiencyMult(inst), doer)
 	OnUpdateFueled(inst)
 end
 

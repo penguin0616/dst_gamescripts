@@ -740,6 +740,7 @@ local function pstbossfn()
     inst.Transform:SetFourFaced()
 
     inst:AddTag("nomagic")
+	inst:AddTag("character")
     inst:AddTag("wagstaff_npc")
     inst:AddTag("trader_just_show")
 
@@ -996,6 +997,7 @@ local function MutationsQuestFn()
     inst.Transform:SetFourFaced()
 
     inst:AddTag("nomagic")
+	inst:AddTag("character")
     inst:AddTag("wagstaff_npc")
 
     inst.AnimState:SetBank("wilson")
@@ -1086,6 +1088,7 @@ local function WagpunkFn()
     inst.Transform:SetFourFaced()
 
     inst:AddTag("nomagic")
+	inst:AddTag("character")
     inst:AddTag("wagstaff_npc")
 
     inst.AnimState:SetBank("wilson")

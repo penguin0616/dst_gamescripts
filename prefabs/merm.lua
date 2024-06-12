@@ -1100,6 +1100,10 @@ local function shadow_merm_common(inst)
     if not TheWorld.ismastersim then
         inst:ListenForEvent("merm_shadow._equipschanged", inst._OnEquipsChanged)
     end
+
+    if not TheNet:IsDedicated() then
+        inst:DoTaskInTime(0, inst._OnEquipsChanged) -- Load.
+    end
 end
 
 local function shadow_merm_master(inst)
@@ -1142,6 +1146,10 @@ local function shadow_mermguard_common(inst)
 
     if not TheWorld.ismastersim then
         inst:ListenForEvent("merm_shadow._equipschanged", inst._OnEquipsChanged)
+    end
+
+    if not TheNet:IsDedicated() then
+        inst:DoTaskInTime(0, inst._OnEquipsChanged) -- Load.
     end
 end
 

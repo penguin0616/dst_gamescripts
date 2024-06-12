@@ -68,7 +68,8 @@ local function DoTerraform(inst, pattern_fn, is_load)
 
             -- Avoid swamping up impassable tiles (ocean, cave void)
             -- and other temporary tiles (monkey docks, ocean ice, Charlie vines, etc)
-            if not TileGroupManager:IsImpassableTile(current_tile)
+            if not TileGroupManager:IsOceanTile(current_tile)
+                    and not TileGroupManager:IsImpassableTile(current_tile)
                     and not TileGroupManager:IsTemporaryTile(current_tile) then
                 inst:DoTaskInTime(
                     FRAMES * (TUNING.WURT_TERRAFORMING_FX_BASE + TUNING.WURT_TERRAFORMING_FX_RAND * pattern_percent),

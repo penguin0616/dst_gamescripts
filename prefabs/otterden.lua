@@ -181,7 +181,13 @@ end
 
 -- Fire
 local function OnIgnited(inst, source, doer)
-    inst.components.childspawner:ReleaseAllChildren(doer)
+    local childspawner = inst.components.childspawner
+    for child in pairs(childspawner.childrenoutside) do
+        if child.components.combat then
+            child.components.combat:SuggestTarget(doer)
+        end
+    end
+    childspawner:ReleaseAllChildren(doer)
 
     DefaultBurnFn(inst, source, doer)
 end
@@ -324,6 +330,7 @@ local function fn()
     inst:AddTag("angry_when_rowed")
     inst:AddTag("pickable_search_str") -- To change the action string, b/c searchable piggybacks on ACTIONS.PICK
     inst:AddTag("soulless")
+    inst:AddTag("wet")
 
     MakeSnowCoveredPristine(inst)
 
@@ -385,6 +392,7 @@ local function fn()
     --
     local burnable = MakeMediumBurnable(inst)
     burnable:SetOnIgniteFn(OnIgnited)
+    burnable:SetOnBurntFn(OnKilled)
 
     --
     MakeHauntable(inst)

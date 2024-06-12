@@ -15244,7 +15244,7 @@ STRINGS.PYROMANCY = {
 STRINGS.ENGINEER_REMOTE = {
 	VOLLEY = "Target",
 	WAKEUP = "Arm Catapult",
-	BOOST = "Rapid-Fire",
+	BOOST = "Barrage",
 	ELEMENTAL_VOLLEY = "Planar Strike",
 }
 

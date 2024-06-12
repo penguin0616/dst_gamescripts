@@ -106,6 +106,7 @@ end
 
 local function NightVision_OnPickedFn(inst, picker)
     inst.AnimState:Hide("fruit")
+    inst.AnimState:SetLightOverride(0)
     inst._showing_fruits = false
 
     inst.sounds.ambience = NIGHTVISION_AMBIENCE_SOUND.EMPTY
@@ -118,6 +119,7 @@ end
 
 local function NightVision_OnMakeEmptyFn(inst)
     inst.AnimState:Hide("fruit")
+    inst.AnimState:SetLightOverride(0)
     inst._showing_fruits = false
 
     inst.sounds.ambience = NIGHTVISION_AMBIENCE_SOUND.EMPTY
@@ -130,6 +132,8 @@ end
 
 local function NightVision_OnRegenFn(inst)
     if not (TheWorld.state.isnight or TheWorld:HasTag("cave")) then
+        inst.components.pickable.caninteractwith = false
+
         return
     end
 

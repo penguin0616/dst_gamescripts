@@ -234,7 +234,11 @@ local states =
         {
             --SoundFrameEvent(10, "dontstarve/creatures/spider/attack"),
             --SoundFrameEvent(10, "dontstarve/creatures/spider/attack_grunt"),
-            FrameEvent(19, function(inst) inst.components.combat:DoAttack(inst.sg.statemem.target) end),
+            FrameEvent(18, function(inst) 
+                    inst:PlaySound("meta4/crabcritter/f18_atk_fx")
+                    
+                    inst.components.combat:DoAttack(inst.sg.statemem.target) 
+                end),
         },
 
         events = OnAnimOver("idle"),

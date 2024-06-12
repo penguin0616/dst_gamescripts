@@ -72,6 +72,7 @@ function Teleporter:UseTemporaryExit(doer, temporaryexit)
     local success = self:Activate(doer)
     self.stopcamerafades = nil
     self.travelarrivetime = travelarrivetime
+    self.targetTeleporterTemporary = nil
     return success
 end
 

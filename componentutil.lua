@@ -237,13 +237,15 @@ CLOSEINSPECTORUTIL.IsValidTarget = function(doer, target)
         return not (
             (target.Physics and target.Physics:GetMass() ~= 0) or
             target.components.locomotor or
-            target.components.inventoryitem
+            target.components.inventoryitem or
+            target:HasTag("character")
         )
     else
         return not (
             (target.Physics and target.Physics:GetMass() ~= 0) or
             target:HasTag("locomotor") or
-            target.replica.inventoryitem
+            target.replica.inventoryitem or
+            target:HasTag("character")
         )
     end
 end
@@ -259,13 +261,13 @@ CLOSEINSPECTORUTIL.IsValidPos = function(doer, pos)
 end
 
 CLOSEINSPECTORUTIL.CanCloseInspect = function(doer, targetorpos)
-    local hascloseinspector
+    local inventory
     if TheWorld.ismastersim then
-        hascloseinspector = doer and doer.components.inventory and doer.components.inventory:EquipHasTag("closeinspector")
+        inventory = doer and doer.components.inventory or nil
     else
-        hascloseinspector = doer and doer.replica.inventory and doer.replica.inventory:EquipHasTag("closeinspector")
+        inventory = doer and doer.replica.inventory or nil
     end
-    if hascloseinspector then
+    if inventory and inventory:EquipHasTag("closeinspector") then
         if targetorpos:is_a(EntityScript) then
             if not targetorpos:IsValid() then
                 return false

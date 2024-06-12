@@ -300,6 +300,11 @@ local function terraform_projectile()
     inst:AddTag("NOCLICK")
     inst:AddTag("projectile") -- from 'complexprojectile'
 
+    if not TheNet:IsDedicated() then
+        local groundshadowhandler = inst:AddComponent("groundshadowhandler")
+        groundshadowhandler:SetSize(0.8, 0.5)
+    end
+
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst
