@@ -10,6 +10,7 @@ local prefabs =
 {
 	"reticuleaoecatapultvolley",
 	"reticuleaoecatapultvolleyping",
+	"reticuleaoecatapultelementalvolley",
 	"reticuleaoecatapultwakeup",
 	"reticuleaoecatapultwakeupping",
 	"reticuleaoewinonaengineeringping",
@@ -24,13 +25,13 @@ end
 local CATAPULT_TAGS = { "catapult", "engineering" }
 local CATAPULT_NO_TAGS = { "burnt" }
 
-local function ForEachCatapult(inst, pos, fn)
+local function ForEachCatapult(inst, doer, pos, fn)
 	local success = false
 
 	--NOTE: FindEntities is <= max range test
 	for i, v in ipairs(TheSim:FindEntities(pos.x, 0, pos.z, TUNING.WINONA_CATAPULT_MAX_RANGE, CATAPULT_TAGS, CATAPULT_NO_TAGS)) do
 		if v.IsPowered == nil or v:IsPowered() then
-			if fn(inst, pos, v) then
+			if fn(inst, doer, pos, v) then
 				success = true
 			end
 		end
@@ -38,7 +39,7 @@ local function ForEachCatapult(inst, pos, fn)
 	return success
 end
 
-local function PingCatapult(inst, pos, catapult)
+local function PingCatapult(inst, doer, pos, catapult)
 	local ping = SpawnPrefab("reticuleaoewinonaengineeringping")
 	ping.Transform:SetPosition(catapult.Transform:GetWorldPosition())
 	ping.Transform:SetRotation(catapult.Transform:GetRotation())
@@ -59,20 +60,20 @@ end
 
 --------------------------------------------------------------------------
 
-local function TryVolley(inst, pos, catapult)
+local function TryVolley(inst, doer, pos, catapult)
 	local min_range = TUNING.WINONA_CATAPULT_MIN_RANGE
 	if catapult:GetDistanceSqToPoint(pos) >= min_range * min_range then
-		catapult:PushEvent("activewakeup")
-		catapult:PushEvent("dovolley", { targetpos = pos })
+		catapult:PushEvent("activewakeup", { doer = doer })
+		catapult:PushEvent("dovolley", { doer = doer, targetpos = pos })
 		return true
 	end
 	return false
 end
 
-local function TryPingVolley(inst, pos, catapult)
+local function TryPingVolley(inst, doer, pos, catapult)
 	local min_range = TUNING.WINONA_CATAPULT_MIN_RANGE
 	if catapult:GetDistanceSqToPoint(pos) >= min_range * min_range then
-		return PingCatapult(inst, pos, catapult)
+		return PingCatapult(inst, doer, pos, catapult)
 	end
 	return false
 end
@@ -80,7 +81,7 @@ end
 local function VolleySpellFn(inst, doer, pos)
 	if inst.components.fueled:IsEmpty() then
 		return false, "NO_BATTERY"
-	elseif ForEachCatapult(inst, pos, TryVolley) then
+	elseif ForEachCatapult(inst, doer, pos, TryVolley) then
 		inst.components.fueled:DoDelta(-TUNING.WINONA_REMOTE_COST)
 		return true
 	end
@@ -90,7 +91,7 @@ end
 local function VolleyUpdatePositionFn(inst, pos, reticule, ease, smoothing, dt)
 	reticule.Transform:SetPosition(pos:Get())
 	if reticule.prefab == "reticuleaoecatapultvolleyping" then
-		ForEachCatapult(inst, pos, TryPingVolley)
+		ForEachCatapult(inst, nil, pos, TryPingVolley)
 	else
 		TriggerDeployHelpers(pos.x, 0, pos.z, 64, nil, reticule)
 	end
@@ -98,40 +99,81 @@ end
 
 --------------------------------------------------------------------------
 
-local function TryElementalVolley(inst, pos, catapult)
+local function CanElementalVolley(inst, doer, pos, catapult)
 	local min_range = TUNING.WINONA_CATAPULT_MIN_RANGE
 	if catapult:GetDistanceSqToPoint(pos) >= min_range * min_range then
-		local haselement = false
-		if catapult.components.circuitnode then
-			catapult.components.circuitnode:ForEachNode(function(inst, node)
-				local elem = node:CheckElementalBattery()
-				if elem == "horror" or elem == "brilliance" then
-					haselement = true
+		local canshadow, canlunar
+		local skilltreeupdater = doer and doer.components.skilltreeupdater or nil
+		if skilltreeupdater then
+			canshadow = skilltreeupdater:IsActivated("winona_shadow_3")
+			canlunar = skilltreeupdater:IsActivated("winona_lunar_3")
+		end
+		if canshadow or canlunar then
+			if TheWorld.ismastersim then
+				local matchelem = (not canshadow and "brilliance") or (not canlunar and "horror") or nil
+				local haselement = false
+				if catapult.components.circuitnode then
+					catapult.components.circuitnode:ForEachNode(function(inst, node)
+						if node.components.fueled and not node.components.fueled:IsEmpty() and not (node.IsOverloaded and node:IsOverloaded()) then
+							local elem = node:CheckElementalBattery()
+							if matchelem then
+								if elem == matchelem then
+									haselement = true
+								end
+							elseif elem == "horror" or elem == "brilliance" then
+								haselement = true
+							end
+						end
+					end)
 				end
-			end)
-			if haselement then
-				catapult:PushEvent("activewakeup")
-				catapult:PushEvent("doelementalvolley", { targetpos = pos })
-				return true
+				return haselement
 			end
+			--clients check this instead
+			return catapult:HasPowerAlignment((not canshadow and "lunar") or (not canlunar and "shadow") or nil--[[either]])
 		end
 	end
 	return false
 end
 
+local function TryElementalVolley(inst, doer, pos, catapult)
+	if CanElementalVolley(inst, doer, pos, catapult) then
+		local skilltreeupdater = doer.components.skilltreeupdater
+		local canshadow = skilltreeupdater:IsActivated("winona_shadow_3")
+		local canlunar = skilltreeupdater:IsActivated("winona_lunar_3")
+		local element = (not canshadow and "lunar") or (not canlunar and "shadow") or "hybrid"
+		catapult:PushEvent("activewakeup", { doer = doer })
+		catapult:PushEvent("doelementalvolley", { doer = doer, targetpos = pos, element = element })
+		return true
+	end
+	return false
+end
+
+local function TryPingElementalVolley(inst, doer, pos, catapult)
+	return CanElementalVolley(inst, doer, pos, catapult) and PingCatapult(inst, doer, pos, catapult)
+end
+
 local function ElementalVolleySpellFn(inst, doer, pos)
 	if inst.components.fueled:IsEmpty() then
 		return false, "NO_BATTERY"
-	elseif ForEachCatapult(inst, pos, TryElementalVolley) then
+	elseif ForEachCatapult(inst, doer, pos, TryElementalVolley) then
 		inst.components.fueled:DoDelta(-TUNING.WINONA_REMOTE_COST)
 		return true
 	end
 	return false, "NO_CATAPULTS"
 end
 
+local function ElementalVolleyUpdatePositionFn(inst, pos, reticule, ease, smoothing, dt)
+	reticule.Transform:SetPosition(pos:Get())
+	if reticule.prefab == "reticuleaoecatapultvolleyping" then
+		ForEachCatapult(inst, ThePlayer, pos, TryPingElementalVolley)
+	else
+		TriggerDeployHelpers(pos.x, 0, pos.z, 64, nil, reticule)
+	end
+end
+
 --------------------------------------------------------------------------
 
-local function TryWakeUp(inst, pos, catapult)
+local function TryWakeUp(inst, doer, pos, catapult)
 	catapult:PushEvent("activewakeup")
 	return true
 end
@@ -139,7 +181,7 @@ end
 local function WakeUpSpellFn(inst, doer, pos)
 	if inst.components.fueled:IsEmpty() then
 		return false, "NO_BATTERY"
-	elseif ForEachCatapult(inst, pos, TryWakeUp) then
+	elseif ForEachCatapult(inst, doer, pos, TryWakeUp) then
 		inst.components.fueled:DoDelta(-TUNING.WINONA_REMOTE_COST)
 		return true
 	end
@@ -149,7 +191,7 @@ end
 local function WakeUpUpdatePositionFn(inst, pos, reticule, ease, smoothing, dt)
 	reticule.Transform:SetPosition(pos:Get())
 	if reticule.prefab == "reticuleaoecatapultwakeupping" then
-		ForEachCatapult(inst, pos, PingCatapult)
+		ForEachCatapult(inst, ThePlayer, pos, PingCatapult)
 	else
 		TriggerDeployHelpers(pos.x, 0, pos.z, 64, nil, reticule)
 	end
@@ -157,16 +199,16 @@ end
 
 --------------------------------------------------------------------------
 
-local function TryBoost(inst, pos, catapult)
-	catapult:PushEvent("activewakeup")
-	catapult:PushEvent("catapultspeedboost")
+local function TryBoost(inst, doer, pos, catapult)
+	catapult:PushEvent("activewakeup", { doer = doer })
+	catapult:PushEvent("catapultspeedboost", { doer = doer })
 	return true
 end
 
 local function BoostSpellFn(inst, doer, pos)
 	if inst.components.fueled:IsEmpty() then
 		return false, "NO_BATTERY"
-	elseif ForEachCatapult(inst, pos, TryBoost) then
+	elseif ForEachCatapult(inst, doer, pos, TryBoost) then
 		inst.components.fueled:DoDelta(-TUNING.WINONA_REMOTE_COST)
 		return true
 	end
@@ -336,9 +378,9 @@ local SPELLS =
 			inst.components.spellbook:SetSpellName(STRINGS.ENGINEER_REMOTE.ELEMENTAL_VOLLEY)
 			inst.components.aoetargeting:SetDeployRadius(0)
 			inst.components.aoetargeting:SetShouldRepeatCastFn(ShouldRepeatCast)
-			inst.components.aoetargeting.reticule.reticuleprefab = "reticuleaoecatapultvolley"
+			inst.components.aoetargeting.reticule.reticuleprefab = "reticuleaoecatapultelementalvolley"
 			inst.components.aoetargeting.reticule.pingprefab = "reticuleaoecatapultvolleyping"
-			inst.components.aoetargeting.reticule.updatepositionfn = VolleyUpdatePositionFn
+			inst.components.aoetargeting.reticule.updatepositionfn = ElementalVolleyUpdatePositionFn
 			if TheWorld.ismastersim then
 				inst.components.aoetargeting:SetTargetFX("reticuleaoehostiletarget_1d25")
 				inst.components.aoespell:SetSpellFn(ElementalVolleySpellFn)
@@ -574,6 +616,7 @@ local function fn()
 	inst.AnimState:SetBank("winona_remote")
 	inst.AnimState:SetBuild("winona_remote")
 	inst.AnimState:PlayAnimation("idle")
+	inst.AnimState:OverrideSymbol("wire", "winona_remote", "dummy")
 
 	inst:AddTag("remotecontrol")
 	inst:AddTag("engineering")

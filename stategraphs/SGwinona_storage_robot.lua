@@ -36,12 +36,16 @@ local states =
 			else
 				inst.AnimState:PlayAnimation("idle", true)
 			end
+
+			inst.SoundEmitter:PlaySound("meta4/winbot/idle_lp", "idle_lp")
 		end,
 
 		onexit = function(inst)
 			if not inst.sg.statemem.keepnofaced then
 				inst.Transform:SetFourFaced()
 			end
+
+			inst.SoundEmitter:KillSound("idle_lp")
 		end,
 	},
 
@@ -53,6 +57,8 @@ local states =
 			inst.components.locomotor:Stop()
 			inst.Transform:SetNoFaced()
 			inst.AnimState:PlayAnimation("poweron")
+
+			inst.SoundEmitter:PlaySound("meta4/winbot/poweron")
 		end,
 
 		timeline =
@@ -78,6 +84,8 @@ local states =
 			inst.components.locomotor:Stop()
 			inst.Transform:SetNoFaced()
 			inst.AnimState:PlayAnimation("poweroff")
+
+			inst.SoundEmitter:PlaySound("meta4/winbot/poweroff")
 		end,
 
 		events =
@@ -103,6 +111,8 @@ local states =
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("pickup")
+
+			inst.SoundEmitter:PlaySound("meta4/winbot/pickup")
 		end,
 
 		timeline =
@@ -161,6 +171,8 @@ local states =
 			inst.Transform:SetNoFaced()
 			inst.AnimState:PlayAnimation("dropoff")
 			inst.Physics:SetMass(0)
+
+			inst.SoundEmitter:PlaySound("meta4/winbot/dropoff")
 		end,
 
 		timeline =
@@ -193,6 +205,13 @@ local states =
 	},
 }
 
-CommonStates.AddRunStates(states)
+CommonStates.AddRunStates(states, nil, nil, nil, nil, {
+	startonenter = function(inst)
+		inst.SoundEmitter:PlaySound("meta4/winbot/run_lp", "run_lp")
+	end,
+	endonenter = function(inst)
+		inst.SoundEmitter:KillSound("run_lp")
+	end,
+})
 
 return StateGraph("winona_storage_robot", states, events, "poweron", actionhandlers)

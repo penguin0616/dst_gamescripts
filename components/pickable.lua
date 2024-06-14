@@ -226,22 +226,6 @@ function Pickable:SetUp(product, regen, number)
     self.numtoharvest = number or 1
 end
 
-function Pickable:RestartRegenTask(regen)
-    if self.baseregentime ~= nil and self.task ~= nil then
-        self.regentime = SpringGrowthMod(self.getregentimefn ~= nil and self.getregentimefn(self.inst) or self.baseregentime)
-
-        if not self.useexternaltimer then
-            self.task:Cancel()
-
-            self.task = self.inst:DoTaskInTime(self.regentime, OnRegen)
-            self.targettime = GetTime() + self.regentime
-        else
-            self.stopregentimer(self.inst)
-            self.startregentimer(self.inst, self.regentime)
-        end
-    end
-end
-
 -------------------------------------------------------------------------------
 --V2C: Sadly, these weren't being used most of the time
 --     so for consitency, don't use them anymore -__ -"

@@ -637,7 +637,6 @@ local function fn()
 	inst:AddTag("engineering")
 	inst:AddTag("engineeringbatterypowered")
 	inst:AddTag("structure")
-	inst:AddTag("remote_teleport_dest")
 
 	inst.Transform:SetEightFaced()
 
@@ -646,7 +645,7 @@ local function fn()
 	inst.AnimState:PlayAnimation("pad_idle")
 	inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
 	inst.AnimState:SetLayer(LAYER_BACKGROUND)
-	inst.AnimState:SetSortOrder(2)
+	inst.AnimState:SetSortOrder(3)
 
 	inst.MiniMapEntity:SetIcon("winona_teleport_pad.png")
 
@@ -746,6 +745,7 @@ local function fn()
 
 	inst._flash = nil
 	inst._inittask = inst:DoTaskInTime(0, OnInit)
+    TheWorld:PushEvent("ms_registerwinonateleportpad", inst)
 
 	return inst
 end

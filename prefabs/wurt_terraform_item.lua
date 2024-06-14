@@ -198,7 +198,7 @@ local function wurt_swampbomb_shadow()
     inst.swap_file = "swap_wurt_swampbomb"
     inst.swap_symbol = "swap_shadow"
 
-    inst._terraform_tile_type = WORLD_TILES.SHADOW_MARSH
+    inst._terraform_tile_type = "SHADOW"
 
     inst.components.spellcaster:SetSpellType(SPELLTYPES.SHADOW_SWAMP_BOMB)
 
@@ -247,7 +247,7 @@ local function wurt_swampbomb_lunar()
     inst.swap_file = "swap_wurt_swampbomb"
     inst.swap_symbol = "swap_lunar"
 
-    inst._terraform_tile_type = WORLD_TILES.LUNAR_MARSH
+    inst._terraform_tile_type = "LUNAR"
     inst._extra_onhit_fn = OnHit_Lunar
 
     inst.components.spellcaster:SetSpellType(SPELLTYPES.LUNAR_SWAMP_BOMB)
@@ -259,10 +259,8 @@ end
 local function OnHitTerraformer(inst, attacker, target)
     local terraformer = SpawnPrefab("wurt_swamp_terraformer")
     terraformer.Transform:SetPosition(inst.Transform:GetWorldPosition())
-    terraformer.tile = inst._terraform_tile_type or WORLD_TILES.SHADOW_MARSH
+    terraformer:SetType(inst._terraform_tile_type or "SHADOW")
     terraformer:DoTerraform()
-
-    inst.SoundEmitter:PlaySound("dontstarve/impacts/impact_flesh_med_dull")
 
     if inst._extra_onhit_fn then
         inst._extra_onhit_fn(inst, attacker, target)

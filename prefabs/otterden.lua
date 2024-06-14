@@ -184,10 +184,10 @@ local function OnIgnited(inst, source, doer)
     local childspawner = inst.components.childspawner
     for child in pairs(childspawner.childrenoutside) do
         if child.components.combat then
-            child.components.combat:SuggestTarget(doer)
+            child.components.combat:SuggestTarget(doer or source)
         end
     end
-    childspawner:ReleaseAllChildren(doer)
+    childspawner:ReleaseAllChildren(doer or source)
 
     DefaultBurnFn(inst, source, doer)
 end

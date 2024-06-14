@@ -461,12 +461,12 @@ end
 
 local function OnHitAnimOver(inst)
     inst:RemoveEventCallback("animover", OnHitAnimOver)
-    if inst.AnimState:IsCurrentAnimation("hit") then
+	if inst.AnimState:IsCurrentAnimation(inst._hitanim) then
         if inst.components.fueled:IsEmpty() then
             inst.AnimState:PlayAnimation("idle_empty")
             StopIdleChargeSounds(inst)
 		elseif inst:IsOverloaded() then
-			inst.AnimState:PlayAnimation("idle_overloaded", true)
+			inst.AnimState:PlayAnimation("overload_idle", true)
 			StopIdleChargeSounds(inst)
         else
             inst.AnimState:PlayAnimation("idle_charge", true)
@@ -475,12 +475,14 @@ local function OnHitAnimOver(inst)
             end
         end
     end
+	inst._hitanim = nil
 end
 
-local function PlayHitAnim(inst)
+local function PlayHitAnim(inst, customanim)
     inst:RemoveEventCallback("animover", OnHitAnimOver)
     inst:ListenForEvent("animover", OnHitAnimOver)
-    inst.AnimState:PlayAnimation("hit")
+	inst._hitanim = customanim or (inst:IsOverloaded() and "overload_hit") or "hit"
+	inst.AnimState:PlayAnimation(inst._hitanim)
     StopIdleChargeSounds(inst)
 end
 
@@ -616,7 +618,7 @@ local function SetOverloaded(inst, overloaded)
 				end
 			end
 			if not POPULATING then
-				PlayHitAnim(inst)
+				PlayHitAnim(inst, "overload_pst")
 				inst.SoundEmitter:PlaySound("dontstarve/common/together/battery/up")
 			else
 				inst.AnimState:PlayAnimation("idle_charge", true)
@@ -638,10 +640,10 @@ local function SetOverloaded(inst, overloaded)
 		inst.AnimState:ClearSymbolBloom("m2")
 		inst.AnimState:OverrideSymbol("plug", "winona_battery_high", "plug_off")
 		if not POPULATING then
-			PlayHitAnim(inst)
+			PlayHitAnim(inst, "overload_pre")
 			inst.SoundEmitter:PlaySound("dontstarve/common/together/battery/down")
 		else
-			inst.AnimState:PlayAnimation("idle_overloaded", true)
+			inst.AnimState:PlayAnimation("overload_idle", true)
 			StopIdleChargeSounds(inst)
 		end
 	end
@@ -670,7 +672,6 @@ end
 
 local function OnFuelEmpty(inst)
     inst.components.fueled:StopConsuming()
-    BroadcastCircuitChanged(inst)
     StopBattery(inst)
     StopSoundLoop(inst)
     inst.AnimState:OverrideSymbol("m2", "winona_battery_high", "m1")
@@ -686,6 +687,7 @@ local function OnFuelEmpty(inst)
     end
     ShatterGems(inst, 0)
 	RefreshEnergyFX(inst)
+	BroadcastCircuitChanged(inst)
 end
 
 local function OnFuelSectionChange(new, old, inst)
@@ -701,8 +703,12 @@ local function OnFuelSectionChange(new, old, inst)
     inst.AnimState:ClearOverrideSymbol("plug")
     UpdateSoundLoop(inst, new)
     if new > 0 then
+		local hadbrilliance = inst._brilliance_level > 0
         ShatterGems(inst, math.ceil(new / LEVELS_PER_GEM))
 		RefreshEnergyFX(inst)
+		if hadbrilliance ~= (inst._brilliance_level > 0) then
+			BroadcastCircuitChanged(inst)
+		end
     end
 end
 
@@ -710,7 +716,7 @@ local function ConsumeBatteryAmount(inst, cost, share, doer)
 	if inst._shard_level > 0 then
 		local amt = TUNING.WINONA_BATTERY_HIGH_OVERLOAD_THRESHOLD / NUM_LEVELS --cost of one bar
 		amt = cost.shard * amt + 0.0001 --0.0001 to prevent bar flicker
-		amt = (amt * CalcShardRegenSpeedMult(inst)) / (share or 1)
+		amt = amt * CalcShardRegenSpeedMult(inst) / (share or 1) * CalcEfficiencyMult(inst)
 		local threshold = CalcOverloadThreshold(inst)
 		local t = inst.components.timer:GetTimeLeft("shardload")
 		if t then
@@ -1064,6 +1070,8 @@ local function OnGemGiven(inst, giver, item)
         if not inst:IsAsleep() then
             StartSoundLoop(inst)
         end
+	elseif item.prefab == "purebrilliance" and inst._brilliance_level == 1 then
+		BroadcastCircuitChanged(inst)
     end
 
 	item:Remove()
@@ -1302,6 +1310,9 @@ end
 local function Item_OnSave(inst, data)
 	data.gems = #inst._gems > 0 and inst._gems or nil
 
+	--fueled component does not save max fuel! assumes prefabs initialize fuel
+	data.initfuel = inst.components.fueled:IsFull() or nil
+
 	--skilltree
 	data.noidledrain = inst._noidledrain or nil
 	data.efficiency = inst._efficiency > 0 and inst._efficiency or nil
@@ -1309,6 +1320,11 @@ end
 
 local function Item_OnLoad(inst, data, ents)
 	if data then
+		if data.initfuel then
+			--fueled component does not save max fuel! assumes prefabs initialize fuel
+			inst.components.fueled:InitializeFuelLevel(inst.components.fueled.maxfuel)
+		end
+
 		if data.gems and #inst._gems < GEMSLOTS then
 			local keepnumgems = math.ceil(inst.components.fueled:GetCurrentSection() / LEVELS_PER_GEM)
 			for i, v in ipairs(data.gems) do

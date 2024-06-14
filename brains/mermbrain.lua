@@ -221,7 +221,11 @@ end
 local function GetClosestToolShedPosition(inst, dist)
     local shed = GetClosestToolShed(inst, dist)
 
-    return shed ~= nil and shed:GetPosition() or nil
+    if shed ~= nil then
+        local distance = shed:GetPhysicsRadius(0)
+
+        return inst:GetPositionAdjacentTo(shed, distance)
+    end
 end
 
 local function NeedsToolAndFoundTool(inst)
@@ -237,7 +241,7 @@ local function CollectTool(inst)
         return
     end
 
-    local shed = GetClosestToolShed(inst, 2.2)
+    local shed = GetClosestToolShed(inst, 2.5)
 
     if shed ~= nil then
         inst:PushEvent("merm_use_building", { target = shed })
@@ -364,7 +368,7 @@ function MermBrain:OnStart()
         }, 0.1))
 
 
-    local root = PriorityNode(
+    local main_nodes = PriorityNode(
     {
         IfNode(function() return TheWorld.components.mermkingmanager and TheWorld.components.mermkingmanager.king end, "Panic, With King",
             BrainCommon.PanicWhenScared(self.inst, .25, "MERM_TALK_PANICBOSS_KING")),
@@ -457,7 +461,10 @@ function MermBrain:OnStart()
 
         FaceEntity(self.inst, GetFaceTargetFn, KeepFaceTargetFn),
         Wander(self.inst, GetNoLeaderHomePos, MAX_WANDER_DIST),
+
     }, .25)
+
+    local root = WhileNode(function() return not self.inst.sg:HasStateTag("jumping") end, "pause for jump", main_nodes)
 
     self.bt = BT(self.inst, root)
 end

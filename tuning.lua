@@ -3587,6 +3587,13 @@ function Tune(overrides)
 		WINONA_CATAPULT_ATTACK_POWER_COST = { fuel = total_day_time / 120, shard = 0.125 },
 		WINONA_CATAPULT_MEGA_ATTACK_POWER_COST = { fuel = total_day_time / 3 + 0.0001, shard = 1 },
 		WINONA_CATAPULT_SLEEP_MODE_DELAY = 30,
+		WINONA_CATAPULT_BASIC_SLEEP_MODE_DELAY = 20,
+
+		TRAP_VINES_DAMAGE = 12,
+		TRAP_VINES_PLANAR_DAMAGE = 12,
+		TRAP_VINES_HIT_COOLDOWN = 1.5,
+		TRAP_VINES_DURATION = 120,
+		TRAP_VINES_SPEEDMULT = 2 / 3,
 
 		WINONA_SPOTLIGHT_RADIUS = 6.4 / 1.5,
 		WINONA_SPOTLIGHT_MIN_RANGE = 5.4,
@@ -3596,7 +3603,6 @@ function Tune(overrides)
 
 		WINONA_TELEBRELLA_MAX_FUEL_TIME = total_day_time * 15,
 		WINONA_TELEBRELLA_TELEPORT_FUEL = total_day_time,
-		WINONA_TELEBRELLA_TELEPORT_RANGE = 200,
 		WINONA_TELEBRELLA_RECHARGE_RATE = -15,
 		WINONA_TELEBRELLA_POWER_LOAD_CHARGING = 0.1,
 
@@ -6504,7 +6510,7 @@ function Tune(overrides)
         PIRATE_SPAWN_MAX = 1,
       --  PIRATE_SPAWN_DELAY = {min=day_time/2, max=20*day_time}, --{min=30, max=180},
         PIRATE_SPAWN_DELAY = {min=20, max=30}, --{min=30, max=180},
-		PIRATE_STASH_INV_SIZE = 20,
+		PIRATE_STASH_INV_SIZE = 30,
 
         CREWMEMBER_TARGET_DSQ = 100, -- 10 * 10
         BOATCREW_LOOT_PER_MEMBER = 3,
@@ -7032,6 +7038,7 @@ function Tune(overrides)
 
                 CHARLIE_VINEBRIDGE_LENGTH_TILES = 3, -- How many tiles in a line can this make for each activation.
                 WORMHOLE_DETECTION_RADIUS = 20, -- Units away from a target position for valid action use.
+                TELEPAD_DETECTION_RADIUS = 2, -- Units away for an ideal teleport find, setting to the size of the teleporter approximately.
 
 				BATTERY_EFFICIENCY_RATE_MULT =
 				{

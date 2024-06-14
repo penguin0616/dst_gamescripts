@@ -573,12 +573,12 @@ local actionhandlers =
                 or nil
         end),
     ActionHandler(ACTIONS.NET,
-        function(inst)
-            return not inst.sg:HasStateTag("prenet")
-                and (inst.sg:HasStateTag("netting") and
-                    "bugnet" or
-                    "bugnet_start")
-                or nil
+        function(inst, action)
+            if action.invobject == nil then
+                return "doshortaction"
+            end
+
+            return not inst.sg:HasStateTag("prenet") and (inst.sg:HasStateTag("netting") and "bugnet" or "bugnet_start") or nil
         end),
 
     ActionHandler(ACTIONS.FISH, "fishing_pre"),
@@ -647,9 +647,13 @@ local actionhandlers =
     ActionHandler(ACTIONS.UPGRADE, "dolongaction"),
     ActionHandler(ACTIONS.ACTIVATE,
         function(inst, action)
-            local obj = action.target or action.invobject
             return action.target.components.activatable ~= nil
-                and (   (action.target.components.activatable.standingaction and "dostandingaction") or
+				and (	(	action.target:HasTag("engineering") and (
+								(inst:HasTag("scientist") and "dolongaction") or
+								(not inst:HasTag("handyperson") and "dolongestaction")
+							)
+						) or
+						(action.target.components.activatable.standingaction and "dostandingaction") or
                         (action.target.components.activatable.quickaction and "doshortaction") or
                         "dolongaction"
                     )

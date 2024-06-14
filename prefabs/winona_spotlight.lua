@@ -30,11 +30,46 @@ local prefabs_item =
 --------------------------------------------------------------------------
 
 --CLIENT safe!
+local function OnIsSummer(inst, issummer)
+	if issummer then
+		inst._lightinst:RemoveHeat()
+		local head = inst._headinst or inst._clientheadinst
+		if head then
+			head:SetHeated(false)
+		end
+	else
+		inst._lightinst:AddHeat()
+		local head = inst._headinst or inst._clientheadinst
+		if head then
+			head:SetHeated(true)
+		end
+	end
+end
+
+--CLIENT safe!
+local function StartHeatWatcher(inst)
+	if not inst._heatwatcher then
+		inst._heatwatcher = true
+		inst:WatchWorldState("issummer", OnIsSummer)
+		OnIsSummer(inst, TheWorld.state.issummer)
+	end
+end
+
+--CLIENT safe!
+local function StopHeatWatcher(inst)
+	if inst._heatwatcher then
+		inst._heatwatcher = nil
+		inst:StopWatchingWorldState("issummer", OnIsSummer)
+		OnIsSummer(inst, true) --force disable heat
+	end
+end
+
+--CLIENT safe!
 local function ApplySkillBonuses(inst)
 	if inst._heated:value() then
-		inst._lightinst:AddHeat()
+		StartHeatWatcher(inst)
 	else
-		inst._lightinst:RemoveHeat()
+		StopHeatWatcher(inst)
 	end
 
 	if inst._ranged:value() then
@@ -638,6 +673,10 @@ local function OnUpdateLightServer(inst, dt)
 end
 
 local function EnableTargetSearch(inst, enable)
+	if inst._turnofftask then
+		inst._turnofftask:Cancel()
+		inst._turnofftask = nil
+	end
 	if not enable then
 		inst._updatedelay = nil
 		SetTarget(inst, nil)
@@ -652,10 +691,13 @@ local function EnableTargetSearch(inst, enable)
 end
 
 local function OnIsDarkOrCold(inst)
-	EnableTargetSearch(inst,
-		(TheWorld.state.isnight and not TheWorld.state.isfullmoon) or
+	if (TheWorld.state.isnight and not TheWorld.state.isfullmoon) or
 		(inst._heated:value() and TheWorld.state.iswinter)
-	)
+	then
+		EnableTargetSearch(inst, true)
+	elseif inst._turnofftask == nil then
+		inst._turnofftask = inst:DoTaskInTime(2 + math.random() * 0.5, EnableTargetSearch, false)
+	end
 end
 
 local function SetPowered(inst, powered, duration)
@@ -1165,11 +1207,23 @@ end
 
 --------------------------------------------------------------------------
 
+local function Head_SetHeated(inst, heated)
+	if inst.lightshaft then --dedi server does not have this
+		local anim = heated and "light_shimmer_heat" or "light_shimmer"
+		if not inst.lightshaft.AnimState:IsCurrentAnimation(anim) then
+			inst.lightshaft.AnimState:PlayAnimation(anim, true)
+		end
+	end
+end
+
 local function OnHeadEntityReplicated(inst)
     local parent = inst.entity:GetParent()
     if parent ~= nil and parent.prefab == "winona_spotlight" then
         parent.highlightchildren = { inst }
         parent._clientheadinst = inst
+		if parent._heated:value() and not TheWorld.state.issummer then
+			inst:SetHeated(true)
+		end
     end
 end
 
@@ -1198,10 +1252,12 @@ local function headfn()
 
 	--Dedicated server does not need to spawn the local fx
 	if not TheNet:IsDedicated() then
-		local fx = CreateLightShaft()
-		fx.entity:SetParent(inst.entity)
-		fx.Follower:FollowSymbol(inst.GUID, "light_shaft_follow", 0, 0, 0, true)
+		inst.lightshaft = CreateLightShaft()
+		inst.lightshaft.entity:SetParent(inst.entity)
+		inst.lightshaft.Follower:FollowSymbol(inst.GUID, "light_shaft_follow", 0, 0, 0, true)
 	end
+
+	inst.SetHeated = Head_SetHeated
 
     if not TheWorld.ismastersim then
         inst.OnEntityReplicated = OnHeadEntityReplicated

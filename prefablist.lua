@@ -1173,6 +1173,7 @@ PREFABFILES = {
   "trap_bramble",
   "trap_starfish",
   "trap_teeth",
+  "trap_vines",
   "treasurechest",
   "treegrowthsolution",
   "trident",

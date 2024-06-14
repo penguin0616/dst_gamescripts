@@ -34,6 +34,10 @@ local function CalcAoeRadiusMult(inst)
 	return TUNING.SKILLS.WINONA.CATAPULT_AOE_RADIUS_MULT[inst._aoe] or 1
 end
 
+local function CalcSleepModeDelay(inst)
+	return inst._basic and TUNING.WINONA_CATAPULT_BASIC_SLEEP_MODE_DELAY or TUNING.WINONA_CATAPULT_SLEEP_MODE_DELAY
+end
+
 local function RefreshAttackPeriod(inst)
 	inst.components.combat:SetAttackPeriod(
 		TUNING.WINONA_CATAPULT_ATTACK_PERIOD *
@@ -47,28 +51,25 @@ local function ApplySkillBonuses(inst)
 	inst.AOE_RADIUS = TUNING.WINONA_CATAPULT_AOE_RADIUS * CalcAoeRadiusMult(inst)
 end
 
---used by item as well
 local function ConfigureSkillTreeUpgrades(inst, builder)
 	local skilltreeupdater = builder and builder.components.skilltreeupdater or nil
 	if skilltreeupdater then
-		inst._speed =
+		local speed =
 			(skilltreeupdater:IsActivated("winona_catapult_speed_3") and 3) or
 			(skilltreeupdater:IsActivated("winona_catapult_speed_2") and 2) or
 			(skilltreeupdater:IsActivated("winona_catapult_speed_1") and 1) or
 			0
-		inst._aoe =
+		local aoe =
 			(skilltreeupdater:IsActivated("winona_catapult_aoe_3") and 3) or
 			(skilltreeupdater:IsActivated("winona_catapult_aoe_2") and 2) or
 			(skilltreeupdater:IsActivated("winona_catapult_aoe_1") and 1) or
 			0
+		local dirty = inst._speed ~= speed or inst._aoe ~= aoe
+		inst._speed = speed
+		inst._aoe = aoe
+		return dirty
 	end
-end
-
---used by item as well
-local function CopyAllProperties(src, dest)
-	--skilltree
-	dest._speed = src._speed
-	dest._aoe = src._aoe
+	return false
 end
 
 --------------------------------------------------------------------------
@@ -170,7 +171,7 @@ end
 
 local function OnNewCombatTarget(inst, data)
 	inst.components.timer:PauseTimer("active_time")
-	inst.components.timer:SetTimeLeft("active_time", TUNING.WINONA_CATAPULT_SLEEP_MODE_DELAY)
+	inst.components.timer:SetTimeLeft("active_time", CalcSleepModeDelay(inst))
 end
 
 local function OnDroppedTarget(inst, data)
@@ -202,7 +203,6 @@ local function ChangeToItem(inst)
 	item.AnimState:PushAnimation("idle_ground", false)
 	item.SoundEmitter:PlaySound("meta4/winona_catapult/collapse")
 	item.hp = inst.components.health:GetPercent()
-	CopyAllProperties(inst, item)
 	if inst._wired then
 		item.SoundEmitter:PlaySound("dontstarve/common/together/spot_light/electricity", nil, .5)
 		SpawnPrefab("winona_battery_sparks").Transform:SetPosition(inst.Transform:GetWorldPosition())
@@ -280,7 +280,10 @@ local function OnBurnt(inst)
     inst:AddTag("notarget") -- just in case???
 end
 
-local function DoBuiltOrDeployed(inst, state)
+local function DoBuiltOrDeployed(inst, state, doer)
+	ConfigureSkillTreeUpgrades(inst, doer)
+	ApplySkillBonuses(inst)
+
     if inst._inittask ~= nil then
         inst._inittask:Cancel()
         inst._inittask = nil
@@ -291,9 +294,7 @@ local function DoBuiltOrDeployed(inst, state)
 end
 
 local function OnBuilt(inst, data)
-	ConfigureSkillTreeUpgrades(inst, data and data.builder or nil)
-	ApplySkillBonuses(inst)
-	DoBuiltOrDeployed(inst, "place")
+	DoBuiltOrDeployed(inst, "place", data and data.builder or nil)
 end
 
 local function OnDismantle(inst)--, doer)
@@ -322,6 +323,7 @@ local function OnSave(inst, data)
 		--skilltree
 		data.speed = inst._speed > 0 and inst._speed or nil
 		data.aoe = inst._aoe > 0 and inst._aoe or nil
+		data.basic = inst._basic or nil
     end
 end
 
@@ -337,6 +339,7 @@ local function OnLoad(inst, data)
 		if data then
 			inst._speed = data.speed or 0
 			inst._aoe = data.aoe or 0
+			inst._basic = data.basic or false
 			ApplySkillBonuses(inst)
 		else
 			--since we skipped ApplySkillBonuses, need to do this in case we have "boost"
@@ -402,6 +405,40 @@ local function OnUpdateVolleyHelper(helperinst)
 			distsq >= TUNING.WINONA_CATAPULT_MIN_RANGE * TUNING.WINONA_CATAPULT_MIN_RANGE and
 			helperinst.entity:GetParent():IsPowered()
 		then
+			helperinst.AnimState:SetAddColour(0.25, 0.75, 0.25, 0)
+		else
+			helperinst.AnimState:SetAddColour(0, 0, 0, 0)
+		end
+	end
+end
+
+local function OnUpdateElementalVolleyHelper(helperinst)
+	if not helperinst.placerinst:IsValid() then
+		helperinst.components.updatelooper:RemoveOnUpdateFn(OnUpdateVolleyHelper)
+		helperinst.AnimState:SetAddColour(0, 0, 0, 0)
+	else
+		local canshadow, canlunar
+		local skilltreeupdater = ThePlayer and ThePlayer.components.skilltreeupdater or nil
+		if skilltreeupdater then
+			canshadow = skilltreeupdater:IsActivated("winona_shadow_3")
+			canlunar = skilltreeupdater:IsActivated("winona_lunar_3")
+		end
+
+		local inrange
+		if (canshadow or canlunar) and
+			helperinst.entity:GetParent():HasPowerAlignment((not canshadow and "lunar") or (not canlunar and "shadow") or nil--[[either]]) and
+			helperinst.entity:GetParent():IsPowered()
+		then
+			local distsq = helperinst:GetDistanceSqToInst(helperinst.placerinst)
+			--<= >= match Volley spell FindEntities and min range tests
+			if distsq <= TUNING.WINONA_CATAPULT_MAX_RANGE * TUNING.WINONA_CATAPULT_MAX_RANGE and
+				distsq >= TUNING.WINONA_CATAPULT_MIN_RANGE * TUNING.WINONA_CATAPULT_MIN_RANGE
+			then
+				inrange = true
+			end
+		end
+
+		if inrange then
 			helperinst.AnimState:SetAddColour(0.25, 0.75, 0.25, 0)
 		else
 			helperinst.AnimState:SetAddColour(0, 0, 0, 0)
@@ -491,6 +528,13 @@ local function OnEnableHelper(inst, enabled, recipename, placerinst)
 				inst.helper.components.updatelooper:AddOnUpdateFn(OnUpdateVolleyHelper)
 				inst.helper.placerinst = placerinst
 				OnUpdateVolleyHelper(inst.helper)
+			elseif recipename == "catapult_elementalvolley" then
+				inst.helper = CreatePlacerBatteryRing()
+				inst.helper.entity:SetParent(inst.entity)
+				inst.helper:AddComponent("updatelooper")
+				inst.helper.components.updatelooper:AddOnUpdateFn(OnUpdateElementalVolleyHelper)
+				inst.helper.placerinst = placerinst
+				OnUpdateElementalVolleyHelper(inst.helper)
 			elseif recipename == "catapult_wakeup" then
 				inst.helper = CreatePlacerBatteryRing()
 				inst.helper.entity:SetParent(inst.entity)
@@ -704,7 +748,7 @@ local function SetActiveMode(inst, active)
 			--no target on load, but could've saved while we had target
 			inst.components.timer:ResumeTimer("active_time")
 		else
-			inst.components.timer:StartTimer("active_time", TUNING.WINONA_CATAPULT_SLEEP_MODE_DELAY, inst.components.combat:HasTarget())
+			inst.components.timer:StartTimer("active_time", CalcSleepModeDelay(inst), inst.components.combat:HasTarget())
 		end
 		inst.components.combat:SetRetargetFunction(1, RetargetFn)
 		inst:ListenForEvent("timerdone", OnTimerDone)
@@ -742,11 +786,25 @@ local function OnAllowReactivate(inst)
 	end
 end
 
-local function OnActivate(inst)--, doer)
+local function OnActivate(inst, doer)
+	local dirty
+	if not (doer and doer:HasTag("handyperson")) then
+		dirty = inst._speed ~= 0 or inst._aoe ~= 0
+		inst._speed = 0
+		inst._aoe = 0
+		inst._basic = true
+	else
+		inst._basic = false
+		dirty = ConfigureSkillTreeUpgrades(inst, doer)
+	end
+	if dirty then
+		ApplySkillBonuses(inst)
+	end
+
 	DoLedRapidBlinkOn(inst, not inst:IsActiveMode())
 	inst:SetActiveMode(true)
 	--extend time, silent fail if timer doesn't exist (shouldn't happen tho!)
-	inst.components.timer:SetTimeLeft("active_time", TUNING.WINONA_CATAPULT_SLEEP_MODE_DELAY)
+	inst.components.timer:SetTimeLeft("active_time", CalcSleepModeDelay(inst))
 	inst:DoTaskInTime(1, OnAllowReactivate)
 	return true
 end
@@ -790,10 +848,10 @@ local function IsActiveMode(inst)
 	return inst.components.timer:TimerExists("active_time")
 end
 
-local function OnActiveWakeup(inst)
+local function OnActiveWakeup(inst, data)
 	if inst.components.activatable then
 		inst.components.activatable.inactive = true
-		inst.components.activatable:DoActivate(nil)
+		inst.components.activatable:DoActivate(data and data.doer or nil)
 	end
 end
 
@@ -821,13 +879,36 @@ local function DoWireSparks(inst)
     end
 end
 
-local function NotifyCircuitChanged(inst, node)
-    node:PushEvent("engineeringcircuitchanged")
+local ELEMENTS = { "shadow", "lunar", "hybrid" }
+local ELEMENT_ID = table.invert(ELEMENTS)
+
+local function HasPowerAlignment(inst, element)
+	local poweredelement = inst._poweralignment:value()
+	if element then
+		return poweredelement == ELEMENT_ID[element]
+			or poweredelement == ELEMENT_ID.hybrid
+	end
+	return poweredelement ~= 0
 end
 
 local function OnCircuitChanged(inst)
+	local hasshadow, haslunar
+	--Update our available element
     --Notify other connected batteries
-    inst.components.circuitnode:ForEachNode(NotifyCircuitChanged)
+	inst.components.circuitnode:ForEachNode(function(inst, node)
+		node:PushEvent("engineeringcircuitchanged")
+
+		if node.components.fueled and not node.components.fueled:IsEmpty() and not (node.IsOverloaded and node:IsOverloaded()) then
+			local elem = node:CheckElementalBattery()
+			if elem == "horror" then
+				hasshadow = true
+			elseif elem == "brilliance" then
+				haslunar = true
+			end
+		end
+	end)
+
+	inst._poweralignment:set(hasshadow and (haslunar and ELEMENT_ID.hybrid or ELEMENT_ID.shadow) or (haslunar and ELEMENT_ID.lunar) or 0)
 end
 
 local function OnConnectCircuit(inst)--, node)
@@ -859,9 +940,6 @@ local function OnDisconnectCircuit(inst)--, node)
         end
     end
 end
-
-local ELEMENTS = { "shadow", "lunar", "hybrid" }
-local ELEMENT_ID = table.invert(ELEMENTS)
 
 local function CreateElementalRock()
 	local inst = CreateEntity()
@@ -909,7 +987,7 @@ end
 
 local function OnStartAttack(inst, element)
 	--extend time, silent fail if timer doesn't exist (shouldn't happen tho!)
-	inst.components.timer:SetTimeLeft("active_time", TUNING.WINONA_CATAPULT_SLEEP_MODE_DELAY)
+	inst.components.timer:SetTimeLeft("active_time", CalcSleepModeDelay(inst))
 
 	local elemid = ELEMENT_ID[element] or 0
 	if elemid ~= inst._element:value() then
@@ -952,7 +1030,13 @@ local function fn()
 
     inst.MiniMapEntity:SetIcon("winona_catapult.png")
 
+	--used for attack visuals
 	inst._element = net_tinybyte(inst.GUID, "winona_catapult._element", "elementdirty")
+
+	--shadow/lunar/hybrid power aligment
+	inst._poweralignment = net_tinybyte(inst.GUID, "winona_catapult._poweralignment")
+	inst.HasPowerAlignment = HasPowerAlignment
+
 	inst._ispowered = net_bool(inst.GUID, "winona_catapult._ispowered")
 	inst.IsPowered = IsPowered
 
@@ -967,6 +1051,7 @@ local function fn()
         inst.components.deployhelper:AddRecipeFilter("winona_battery_high")
 		inst.components.deployhelper:AddKeyFilter("winona_battery_engineering")
 		inst.components.deployhelper:AddKeyFilter("catapult_volley")
+		inst.components.deployhelper:AddKeyFilter("catapult_elementalvolley")
 		inst.components.deployhelper:AddKeyFilter("catapult_wakeup")
         inst.components.deployhelper.onenablehelper = OnEnableHelper
 		inst.components.deployhelper.onstarthelper = OnStartHelper
@@ -1062,6 +1147,7 @@ local function fn()
 	--skilltree
 	inst._speed = 0
 	inst._aoe = 0
+	inst._basic = false
 
 	inst.AOE_RADIUS = TUNING.WINONA_CATAPULT_AOE_RADIUS
 
@@ -1128,9 +1214,7 @@ local function OnDeploy(inst, pt, deployer)
 		obj.Physics:SetCollides(false)
 		obj.Physics:Teleport(pt.x, 0, pt.z)
 		obj.Physics:SetCollides(true)
-		CopyAllProperties(inst, obj)
-		ApplySkillBonuses(obj)
-		DoBuiltOrDeployed(obj, "deploy")
+		DoBuiltOrDeployed(obj, "deploy", deployer)
 		PreventCharacterCollisionsWithPlacedObjects(obj)
 		if inst.hp then
 			obj.components.health:SetPercent(math.max(inst.hp, 0.1))
@@ -1139,27 +1223,15 @@ local function OnDeploy(inst, pt, deployer)
 	inst:Remove()
 end
 
-local function Item_OnPreBuilt(inst, builder, materials, recipe)
-	ConfigureSkillTreeUpgrades(inst, builder)
-end
-
 local function Item_OnSave(inst, data)
 	if inst.hp and inst.hp < 1 then
 		data.hp = math.max(0, inst.hp)
 	end
-
-	--skilltree
-	data.speed = inst._speed > 0 and inst._speed or nil
-	data.aoe = inst._aoe > 0 and inst._aoe or nil
 end
 
 local function Item_OnLoad(inst, data)
 	if data then
 		inst.hp = data.hp or nil
-
-		--skilltree
-		inst._speed = data.speed or 0
-		inst._aoe = data.aoe or 0
 	end
 end
 
@@ -1204,11 +1276,6 @@ local function itemfn()
 	MakeMediumBurnable(inst)
 	MakeMediumPropagator(inst)
 
-	--skilltree
-	inst._speed = 0
-	inst._aoe = 0
-
-	inst.onPreBuilt = Item_OnPreBuilt
 	inst.OnSave = Item_OnSave
 	inst.OnLoad = Item_OnLoad
 

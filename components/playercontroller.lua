@@ -1650,13 +1650,21 @@ local function GetPickupAction(self, target, tool)
 
     if target:HasTag("quagmireharvestabletree") and not target:HasTag("fire") then
         return ACTIONS.HARVEST_TREE
+    elseif target:HasTag("grabbable") and
+        target:HasTag("mosquito") and
+        self.inst.components.skilltreeupdater ~= nil and
+        self.inst.components.skilltreeupdater:IsActivated("wurt_mosquito_craft_3") and
+        self.inst.replica.inventory ~= nil and
+        self.inst.replica.inventory:HasItemWithTag("mosquitomusk", 1)
+    then
+        -- NOTES(DiogoW): Please refactor this if more cases are added...
+        return ACTIONS.NET
     elseif target:HasTag("trapsprung") then
         return ACTIONS.CHECKTRAP
     elseif target:HasTag("minesprung") and not target:HasTag("mine_not_reusable") then
         return ACTIONS.RESETMINE
     elseif target:HasTag("inactive") and not target:HasTag("activatable_forcenopickup") and target.replica.inventoryitem == nil then
 		return (not target:HasTag("wall") or self.inst:IsNear(target, 2.5))
-			and (not target:HasTag("engineering") or self.inst:HasTag("handyperson"))
 			and ACTIONS.ACTIVATE
 			or nil
     elseif target.replica.inventoryitem ~= nil and

@@ -144,13 +144,9 @@ local COMPONENT_ACTIONS =
         activatable = function(inst, doer, actions, right)
             if inst:HasTag("inactive") then
 				--keep playercontroller.lua::GetPickupAction updated as well
-				if inst:HasTag("engineering") then
-					if not doer:HasTag("handyperson") then
-						return
-					elseif right and doer:HasTag("portableengineer") then
-						--portableengineer needs r.click for dismantle
-						return
-					end
+				if right and inst:HasTag("engineering") and doer:HasTag("portableengineer") then
+					--portableengineer needs r.click for dismantle
+					return
 				elseif not right and (inst.replica.inventoryitem or inst:HasTag("activatable_forceright")) then
 					--no l.click for inventoryitem or forceright
 					return
@@ -358,6 +354,22 @@ local COMPONENT_ACTIONS =
         fertilizerresearchable = function(inst, doer, actions, right)
             if right then
                 PlantRegistryResearch(inst, doer, actions)
+            end
+        end,
+
+        grabbable = function(inst, doer, actions, right)
+            if not right then
+                return
+            end
+
+            -- NOTES(DiogoW): Please refactor this if more cases are added, spellcaster types is a good example.
+            if inst:HasTag("mosquito") and
+                doer.components.skilltreeupdater ~= nil and
+                doer.components.skilltreeupdater:IsActivated("wurt_mosquito_craft_3") and
+                doer.replica.inventory ~= nil and
+                doer.replica.inventory:HasItemWithTag("mosquitomusk", 1)
+            then
+                table.insert(actions, ACTIONS.NET)
             end
         end,
 

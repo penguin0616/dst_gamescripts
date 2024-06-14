@@ -133,10 +133,12 @@ end
 function MakeRoseTarget_CreateFuel(inst)
     local roseinspectable = inst:AddComponent("roseinspectable")
     roseinspectable:SetOnResidueActivated(OnResidueActivated_Fuel)
+    roseinspectable:SetForcedInduceCooldownOnActivate(true)
 end
 function MakeRoseTarget_CreateFuel_IncreasedHorror(inst)
     local roseinspectable = inst:AddComponent("roseinspectable")
     roseinspectable:SetOnResidueActivated(OnResidueActivated_Fuel_IncreasedHorror)
+    roseinspectable:SetForcedInduceCooldownOnActivate(true)
 end
 --------------------------------------------------------------------------
 local function RosePoint_VineBridge_Check(inst, pt)
@@ -225,6 +227,8 @@ ROSEPOINT_CONFIGURATIONS = {
         contextname = "Vine Bridge",
         checkfn = RosePoint_VineBridge_Check,
         callbackfn = RosePoint_VineBridge_Do,
+        --forcedcooldown = nil,
+        --cooldownfn = nil,
     },
 }
 --------------------------------------------------------------------------
@@ -251,9 +255,22 @@ CLOSEINSPECTORUTIL.IsValidTarget = function(doer, target)
 end
 
 CLOSEINSPECTORUTIL.IsValidPos = function(doer, pos)
+    local is_cooldown_rose = true
+    local player_classified = doer.player_classified
+    if player_classified then
+        is_cooldown_rose = player_classified.roseglasses_cooldown:value()
+    end
     for _, config in ipairs(ROSEPOINT_CONFIGURATIONS) do
-        if config.checkfn(doer, pos) then
-            return true
+        local will_cooldown = false
+        if config.forcedcooldown ~= nil then
+            will_cooldown = config.forcedcooldown
+        elseif config.cooldownfn ~= nil then
+            will_cooldown = config.cooldownfn(self.inst, self.point, data)
+        end
+        if not will_cooldown or (will_cooldown and not is_cooldown_rose) then
+            if config.checkfn(doer, pos) then
+                return true
+            end
         end
     end
 

@@ -486,6 +486,11 @@ local states =
                     target.components.workable:WorkedBy(inst,tool.components.tool:GetEffectiveness(act.action))
                     tool:OnUsedAsItem(act.action, inst, target)
                 end
+
+                if target ~= nil and act.action == ACTIONS.MINE then
+                    PlayMiningFX(inst, target)
+                end
+            
                 inst:PerformBufferedAction()
             end),
         },
@@ -525,42 +530,34 @@ local states =
 
     State{
         name = "shadow_spawn",
-        tags = { "busy" },
+        tags = { "canrotate", "busy", "jumping" },
 
         onenter = function(inst, data)
             ToggleOffCharacterCollisions(inst)
             inst.components.locomotor:Stop()
             inst.components.locomotor:EnableGroundSpeedMultiplier(false)
-            inst.Physics:Stop()
+            inst.Physics:SetMotorVelOverride(-8, 0, 0)
             inst.AnimState:PlayAnimation("smacked")
 
-            inst.SoundEmitter:PlaySound("meta4/shadow_merm/smacked_poof")
-            local fx = SpawnPrefab("shadow_merm_spawn_poof_fx")
-            fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+            SpawnPrefab("shadow_merm_spawn_poof_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
         end,
 
         onexit = function(inst)
             ToggleOnCharacterCollisions(inst)
-            inst.components.locomotor:Stop()
             inst.components.locomotor:EnableGroundSpeedMultiplier(true)
             inst.Physics:ClearMotorVelOverride()
+            inst.Physics:Stop()
         end,
 
         timeline =
         {
-
-            TimeEvent(0 * FRAMES, function(inst)
-                inst.Physics:SetMotorVelOverride(-6,0,0)
-            end),
-
-
             TimeEvent(14 * FRAMES, function(inst)
-                inst.components.locomotor:Stop()
+                ToggleOnCharacterCollisions(inst)
                 inst.components.locomotor:EnableGroundSpeedMultiplier(true)
                 inst.Physics:ClearMotorVelOverride()
+                inst.Physics:Stop()
 
-                local fx = SpawnPrefab("shadow_merm_smacked_poof_fx")
-                fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+                SpawnPrefab("shadow_merm_smacked_poof_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
             end),
         },
 

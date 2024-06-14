@@ -14,7 +14,9 @@ local prefabs =
 {
 	"wurt_tentacle_warning",
 
-    "quagmire_portal_player_splash_fx", -- FIXME(DiogoW): TEMP!
+    "wurt_water_splash_1",
+    "wurt_water_splash_2",
+    "wurt_water_splash_3",
     "merm_shadow",
     "mermguard_shadow",
     "merm_lunar",
@@ -454,8 +456,10 @@ end
 
 -------------------------------------------------------------------------------------------------------------
 
+local NUM_SPLASH_FX = 3
+
 local function RedirectDamageToMoisture(inst, amount, overtime, cause, ignore_invincible, afflicter, ignore_absorb)
-    if ignore_absorb or amount >= 0 or overtime then
+    if ignore_absorb or amount >= 0 or overtime or afflicter == nil then
         return amount
     end
 
@@ -470,11 +474,22 @@ local function RedirectDamageToMoisture(inst, amount, overtime, cause, ignore_in
     local rate = TUNING.SKILLS.WURT.WETNESS_MOISTURE_ABSORBTION[level]
     local absorbtion = math.min(-amount, moisture / rate)
 
-    --print(string.format("Trading %2.2f moisture for %2.2f life! Took %2.2f damage. Original damage was %2.2f.", absorbtion * rate, absorbtion, amount + absorbtion, amount))
-
     inst.components.moisture:DoDelta(-absorbtion * rate)
 
-    SpawnPrefab("quagmire_portal_player_splash_fx").Transform:SetPosition(inst.Transform:GetWorldPosition()) --FIXME(DiogoW): TEMP!
+    ---- FX -----
+
+    local max_absorbtion = TUNING.MAX_WETNESS / rate
+    local fx_size = math.ceil(Lerp(0, NUM_SPLASH_FX, absorbtion / max_absorbtion))
+
+    local fx = SpawnPrefab("wurt_water_splash_"..fx_size)
+
+    if fx ~= nil then
+        inst:AddChild(fx)
+    end
+
+    --------------
+
+    --print(string.format("Trading %2.2f moisture for %2.2f life! Took %2.2f damage. Original damage was %2.2f.", absorbtion * rate, absorbtion, amount + absorbtion, amount))
 
     return amount + absorbtion
 end

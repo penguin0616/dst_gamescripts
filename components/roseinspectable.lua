@@ -1,6 +1,8 @@
 local RoseInspectable = Class(function(self, inst)
     self.inst = inst
 
+    --self.forcedinducedcooldown = false
+    --self.willinducecooldownonactivatefn = nil
     --self.onresidueactivatedfn = nil
     --self.onresiduecreatedfn = nil
     --self.canresiduebespawnedbyfn = nil
@@ -24,6 +26,26 @@ function RoseInspectable:CanResidueBeSpawnedBy(doer)
     end
 
     return self.canresiduebespawnedbyfn(self.inst, doer)
+end
+
+function RoseInspectable:SetForcedInduceCooldownOnActivate(bool)
+    self.forcedinducedcooldown = bool
+end
+
+function RoseInspectable:SetWillInduceCooldownOnActivate(fn)
+    self.willinducecooldownonactivatefn = fn
+end
+
+function RoseInspectable:WillInduceCooldownOnActivate(doer)
+    if self.forcedinducedcooldown ~= nil then
+        return self.forcedinducedcooldown
+    end
+
+    if self.willinducecooldownonactivatefn ~= nil then
+        return self.willinducecooldownonactivatefn(self.inst, doer)
+    end
+
+    return false
 end
 
 function RoseInspectable:HookupResidue(residueowner, residue)

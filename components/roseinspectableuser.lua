@@ -9,6 +9,7 @@ function RoseInspectableUser:OnRemoveFromEntity()
     if self.cooldowntask ~= nil then
         self.cooldowntask:Cancel()
         self.cooldowntask = nil
+        self:OnCooldown()
     end
 end
 
@@ -24,7 +25,7 @@ function RoseInspectableUser:GoOnCooldown()
         self.cooldowntask = nil
     end
     if self.cooldowntime ~= nil then
-        self.cooldowntask = self.inst:DoTaskInTime(self.cooldowntime, self.OnCooldown_Bridge)
+        self:ApplyCooldown(self.cooldowntime)
     end
 end
 
@@ -38,8 +39,13 @@ function RoseInspectableUser:OnCharlieResidueActivated(residue)
     if self.target ~= nil then
         local roseinspectable = self.target.components.roseinspectable
         if roseinspectable ~= nil then
-            roseinspectable:DoRoseInspection(self.inst)
-            self:GoOnCooldown()
+            local will_cooldown = roseinspectable:WillInduceCooldownOnActivate(self.inst)
+            if not will_cooldown or (will_cooldown and not self:IsInCooldown()) then
+                roseinspectable:DoRoseInspection(self.inst)
+                self:GoOnCooldown()
+            else
+                self:DoQuip("ROSEGLASSES_COOLDOWN", true)
+            end
         end
         self.target = nil
     else
@@ -103,20 +109,41 @@ end
 --------------------------------------------------
 
 function RoseInspectableUser:DoRoseInspectionOnPoint()
+    local is_cooldown = self:IsInCooldown()
+    local dofailquip = false
     for _, config in ipairs(ROSEPOINT_CONFIGURATIONS) do
+        local will_cooldown = false
+        if config.forcedcooldown ~= nil then
+            will_cooldown = config.forcedcooldown
+        elseif config.cooldownfn ~= nil then
+            will_cooldown = config.cooldownfn(self.inst, self.point, data)
+        end
         local success, data = config.checkfn(self.inst, self.point)
         if success then
-            config.callbackfn(self.inst, self.point, data)
-            return true
+            if not will_cooldown or (will_cooldown and not is_cooldown) then
+                config.callbackfn(self.inst, self.point, data)
+                return will_cooldown
+            else
+                dofailquip = true
+            end
         end
     end
 
+    if dofailquip then
+        self:DoQuip("ROSEGLASSES_COOLDOWN", true)
+    end
     return false
 end
 
 --------------------------------------------------
 
-function RoseInspectableUser:DoQuip(reason)
+function RoseInspectableUser:DoQuip(reason, failed)
+    if failed then
+        if self.inst.components.talker then
+            self.inst.components.talker:Say(GetActionFailString(self.inst, "LOOKAT", reason))
+        end
+        return
+    end
     if self.quipcooldowntime ~= nil and self.quipcooldowntime > GetTime() then
         return
     end
@@ -126,24 +153,26 @@ function RoseInspectableUser:DoQuip(reason)
     end
 end
 
-RoseInspectableUser.InvalidTags = {"_inventoryitem", "locomotor", "lunar_aligned", "notroseinspectable"}
+RoseInspectableUser.InvalidTags = {"lunar_aligned", "notroseinspectable"}
 
 function RoseInspectableUser:TryToDoRoseInspectionOnTarget(target)
-    if self:IsInCooldown() then
-        return false, "ROSEGLASSES_COOLDOWN"
-    end
-
     if target.prefab ~= "charlieresidue" then
-        if target.Physics and target.Physics:GetMass() ~= 0 then
-            return false, "ROSEGLASSES_INVALID"
-        end
-
-        if target.components.roseinspectable == nil or not target.components.roseinspectable:CanResidueBeSpawnedBy(self.inst) then
+        if not CLOSEINSPECTORUTIL.IsValidTarget(self.inst, target) then
             return false, "ROSEGLASSES_INVALID"
         end
 
         if target:HasAnyTag(self.InvalidTags) then
             return false, "ROSEGLASSES_INVALID"
+        end
+
+        local roseinspectable = target.components.roseinspectable
+        if roseinspectable == nil or not roseinspectable:CanResidueBeSpawnedBy(self.inst) then
+            return false, "ROSEGLASSES_INVALID"
+        end
+
+        local will_cooldown = roseinspectable:WillInduceCooldownOnActivate(self.inst)
+        if will_cooldown and self:IsInCooldown() then
+            return false, "ROSEGLASSES_COOLDOWN"
         end
 
         self:SetRoseInpectionOnTarget(target)
@@ -154,10 +183,6 @@ function RoseInspectableUser:TryToDoRoseInspectionOnTarget(target)
 end
 
 function RoseInspectableUser:TryToDoRoseInspectionOnPoint(pt)
-    if self:IsInCooldown() then
-        return false, "ROSEGLASSES_COOLDOWN"
-    end
-
     self:SetRoseInpectionOnPoint(pt)
 
     self:DoQuip("ANNOUNCE_ROSEGLASSES")
@@ -170,8 +195,19 @@ RoseInspectableUser.OnCooldown_Bridge = function(inst)
     local self = inst.components.roseinspectableuser
     self:OnCooldown()
 end
+function RoseInspectableUser:ApplyCooldown(duration)
+    self.cooldowntask = self.inst:DoTaskInTime(duration, self.OnCooldown_Bridge)
+    local player_classified = self.inst.player_classified
+    if player_classified then
+        player_classified.roseglasses_cooldown:set(true)
+    end
+end
 function RoseInspectableUser:OnCooldown()
     self.cooldowntask = nil
+    local player_classified = self.inst.player_classified
+    if player_classified then
+        player_classified.roseglasses_cooldown:set(false)
+    end
 end
 
 function RoseInspectableUser:IsInCooldown()
@@ -197,7 +233,7 @@ function RoseInspectableUser:OnLoad(data)
     end
 
     if data.cooldown ~= nil then
-        self.cooldowntask = self.inst:DoTaskInTime(data.cooldown, self.OnCooldown_Bridge)
+        self:ApplyCooldown(data.cooldown)
     end
 end
 
@@ -206,9 +242,9 @@ function RoseInspectableUser:LongUpdate(dt)
         local remaining = GetTaskRemaining(self.cooldowntask) - dt
         self.cooldowntask:Cancel()
         if remaining > 0 then
-            self.cooldowntask = self.inst:DoTaskInTime(remaining, self.OnCooldown_Bridge)
+            self:ApplyCooldown(remaining)
         else
-            self.cooldowntask = nil
+            self:OnCooldown()
         end
     end
 end

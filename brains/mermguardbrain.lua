@@ -90,7 +90,11 @@ end
 local function GetClosestArmoryPosition(inst, dist)
     local armory = GetClosestArmory(inst, dist)
 
-    return armory ~= nil and armory:GetPosition() or nil
+    if armory ~= nil then
+        local distance = armory:GetPhysicsRadius(0)
+
+        return inst:GetPositionAdjacentTo(armory, distance)
+    end
 end
 
 local function NeedsArmorAndFoundArmor(inst)
@@ -106,7 +110,7 @@ local function CollectArmor(inst)
         return
     end
 
-    local armory = GetClosestArmory(inst, 2.2)
+    local armory = GetClosestArmory(inst, 2.5)
 
     if armory ~= nil then
         inst:PushEvent("merm_use_building", { target = armory })

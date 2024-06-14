@@ -276,6 +276,11 @@ local function reticuleaoecatapultvolley_postinit(inst)
 	inst.AnimState:SetLightOverride(1)
 end
 
+local function reticuleaoecatapultelementalvolley_postinit(inst)
+	inst.deployhelper_key = "catapult_elementalvolley"
+	inst.AnimState:SetLightOverride(1)
+end
+
 local function reticuleaoecatapultwakeup_postinit(inst)
 	inst.deployhelper_key = "catapult_wakeup"
 	inst.AnimState:SetLightOverride(1)
@@ -298,6 +303,11 @@ return MakeReticule("reticuleaoe", "idle", true),
 			build = "winona_catapult_placement",
 			anim = "idle_1d25_4d4_16d6",
 		}, true, reticuleaoecatapultvolley_postinit),
+	MakeReticule("reticuleaoecatapultelementalvolley", {
+			bank = "winona_catapult_placement",
+			build = "winona_catapult_placement",
+			anim = "idle_1d25_4d4_16d6",
+		}, true, reticuleaoecatapultelementalvolley_postinit),
 	MakeReticule("reticuleaoecatapultwakeup", {
 			bank = "winona_catapult_placement",
 			build = "winona_catapult_placement",

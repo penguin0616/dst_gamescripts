@@ -103,7 +103,6 @@ local function FindGroundFoodToEatAction(inst)
 
     local buffered_action = BufferedAction(inst, target, ACTIONS.EAT)
     buffered_action:AddSuccessAction(function()
-        -- TODO @stevenm base this timer on the food value of the food?
         inst.components.timer:StartTimer(ISNT_HUNGRY_NAME, TUNING.OTTER_EAT_DELAY)
     end)
 
@@ -294,6 +293,10 @@ function OtterBrain:OnStart()
         FailIfSuccessDecorator(ConditionWaitNode(function() return not self.inst.sg:HasStateTag("jumping") end, "Block While Jumping")),
         -----------------------------------------------------------------------------------------
 
+        WhileNode( function() return (self.inst.components.health ~= nil and self.inst.components.health.takingfiredamage)
+                                or (self.inst.components.burnable ~= nil and self.inst.components.burnable:IsBurning()) end,
+                                "OnFire",
+            Panic(self.inst)),
         ChaseAndAttack(self.inst, STEAL_CHASE_TIMEOUT_TIME, 1.5 * self.max_wander_dist),
         WhileNode( IsHungry_Redirect, "Is Hungry",
             -- TODO @stevenm do we want to condition any of this behaviour on time-of-year...?

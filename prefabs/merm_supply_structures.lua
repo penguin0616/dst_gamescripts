@@ -3,8 +3,6 @@ require "prefabutil"
 local armnory_prefabs =
 {
     "collapse_small",
-    "mermarmorhat",
-    "mermarmorupgradedhat",
 }
 
 local armory_assets =
@@ -18,8 +16,6 @@ local armory_assets =
 local toolshed_prefabs =
 {
     "collapse_small",
-    "merm_tool",
-    "merm_tool_upgraded",
 }
 
 local toolshed_assets =
@@ -351,6 +347,8 @@ local function CreateMermSupplyStructure(data)
             return inst
         end
 
+        inst.scrapbook_hide = data.hiddensymbol ~= nil and { data.hiddensymbol } or nil
+
         inst._closed = true
 
         inst.supply_prefab = data.supplyprefab
@@ -398,7 +396,10 @@ local function CreateMermSupplyStructure(data)
         return inst
     end
 
-    return Prefab(data.prefab, fn, data.assets, data.prefabs)
+    local prefabs = shallowcopy(data.prefabs)
+    table.insert(prefabs, data.supplyprefab)
+
+    return Prefab(data.prefab, fn, data.assets, prefabs)
 end
 
 local function CreateMermSupplyStructurePlacer(data)

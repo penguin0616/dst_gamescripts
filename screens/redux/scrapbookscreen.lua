@@ -1649,8 +1649,9 @@ function ScrapbookScreen:PopulateInfoPanel(entry)
 			animstate:MakeFacingDirty()
 		end
 
-		if data.alpha then
-			animstate:SetMultColour(1, 1, 1, data.alpha)
+		if data.alpha or data.multcolour then
+			local r, g, b = unpack(data.multcolour or {1, 1, 1})
+			animstate:SetMultColour(r, g, b, data.alpha or 1)
 		end
 
 		if data.overridebuild then

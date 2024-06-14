@@ -64,7 +64,31 @@ local function onplayerfinishedreadingnote(player)
 	player:RemoveEventCallback("animover", onplayerfinishedreadingnote)
 end
 
+local function ShouldForceMapReveal(inst)
+	local hermit = TheWorld.components.messagebottlemanager ~= nil and TheWorld.components.messagebottlemanager:GetHermitCrab() or nil
+
+	if hermit == nil or not hermit.pearlgiven then
+		return false -- The Pearl doesn't exist yet.
+	end
+
+	if TheSim:FindFirstEntityWithTag("hermitpearl") then
+		return false -- The Pearl or Cracked Pearl exist.
+	end
+
+	local crabking = TheSim:FindFirstEntityWithTag("crabking")
+
+	if crabking ~= nil and crabking.gemcount ~= nil then
+		return crabking.gemcount.pearl <= 0 -- Checking if crabking has the Pearl.
+	end
+
+	return true -- The Cracked Pearl has been given to Hermit.
+end
+
 local function prereveal(inst, doer)
+	if ShouldForceMapReveal(inst, doer) then
+		return true
+	end
+
 	local bottle_contains_note = false
 
 	if TheWorld.components.messagebottlemanager ~= nil then

@@ -15831,7 +15831,7 @@ STRINGS.SKILLTREE = {
     WINONA = {
         -- Low shelf.
         WINONA_SPOTLIGHT_HEATED_TITLE = "Hotlight",
-        WINONA_SPOTLIGHT_HEATED_DESC = "Upgrade your Spotlights to give off heat.",
+        WINONA_SPOTLIGHT_HEATED_DESC = "Upgrade your Spotlights to give off heat when it's cold out.",
         WINONA_SPOTLIGHT_RANGE_TITLE = "Spacious Spotlight",
         WINONA_SPOTLIGHT_RANGE_DESC = "Upgrade your Spotlights to illuminate a larger area.",
         WINONA_PORTABLE_STRUCTURES_TITLE = "Portability",
@@ -15942,7 +15942,7 @@ STRINGS.SKILLTREE = {
         WURT_AMPHIBIAN_HEALING_2_DESC = "Regenerate health when wet more effectively.",
         WURT_MOSQUITO_CRAFT_1_DESC = "Learn to craft a cuddly buddy making Mosquitoes neutral to you.",
         WURT_MOSQUITO_CRAFT_2_DESC = "Learn to craft Mosquito based items: Skeeter Bomb, Fertilizzzer and Blood Shot",
-        WURT_MOSQUITO_CRAFT_3_DESC = "Master the use of the Mosquito based items.",
+        WURT_MOSQUITO_CRAFT_3_DESC = "Master the use of the Mosquito based items.\n\nWith the help of Lil' Itchy, catch mosquitos right from the air.",
 
         WURT_CIV_1_DESC = "Learn to craft the Communal Kelp Dish to entice faster Merm growth.",
         WURT_CIV_1_2_DESC = "Learn to craft the Superior Communal Kelp Dish, it holds more kelp for even faster Merm growth.",

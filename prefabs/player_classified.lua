@@ -492,6 +492,15 @@ fns.OnInspectaclesGameDirty = function(inst)
     end
 end
 
+-- Winona Rose Glasses
+fns.OnRoseGlassesCooldownDirty = function(inst)
+    if inst._parent ~= nil then
+        inst._parent:PushEvent("roseglassescooldownchanged", {
+            isincooldown = inst.roseglasses_cooldown:value(),
+        })
+    end
+end
+
 ------------------------------------------------------------------------------
 
 local function OnMoistureDirty(inst)
@@ -1126,6 +1135,7 @@ local function RegisterNetListeners_common(inst)
     inst:ListenForEvent("startfarmingmusicevent", fns.StartFarmingMusicEvent)
     inst:ListenForEvent("ingredientmoddirty", fns.RefreshCrafting)
     inst:ListenForEvent("inspectacles_gamedirty", fns.OnInspectaclesGameDirty)
+    inst:ListenForEvent("roseglasses_cooldowndirty", fns.OnRoseGlassesCooldownDirty)
 end
 
 local function RegisterNetListeners(inst)
@@ -1178,6 +1188,7 @@ function fns.OnInitialDirtyStates(inst)
     fns.OnIsInMiasmaDirty(inst)
     fns.OnIsAcidSizzlingDirty(inst)
     fns.OnInspectaclesGameDirty(inst)
+    fns.OnRoseGlassesCooldownDirty(inst)
     OnGiftsDirty(inst)
     fns.OnYotbSkinDirty(inst)
     OnMountHurtDirty(inst)
@@ -1298,6 +1309,8 @@ local function fn()
     inst.inspectacles_posz = net_shortint(inst.GUID, "inspectacles_posz", "inspectacles_poszdirty")
     inst.inspectacles_posx:set(0)
     inst.inspectacles_posz:set(0)
+    -- Winona rose glasses
+    inst.roseglasses_cooldown = net_bool(inst.GUID, "roseglasses_cooldown", "roseglasses_cooldowndirty")
 
     -- oldager
     inst.oldager_yearpercent = net_float(inst.GUID, "oldager.yearpercent")

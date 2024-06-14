@@ -189,6 +189,7 @@ local function commonfn(isplanted)
 	roseinspectable:SetCanResidueBeSpawnedBy(CanResidueBeSpawnedBy)
 	roseinspectable:SetOnResidueCreated(OnResidueCreated)
 	roseinspectable:SetOnResidueActivated(OnResidueActivated)
+	roseinspectable:SetForcedInduceCooldownOnActivate(true)
 
     if TheWorld:HasTag("cave") then
         inst:WatchWorldState("iscaveday", OnIsCaveDay)

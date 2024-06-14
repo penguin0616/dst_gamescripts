@@ -31,14 +31,14 @@ local events =
 		if inst.sg.mem.ison and data and data.targetpos and not inst.components.health:IsDead() then
 			inst.sg.mem.volleyqueue = nil
 			if not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("hit") then
-				inst.sg:GoToState("attack", { pos = data.targetpos, mega = true })
+				inst.sg:GoToState("attack", { pos = data.targetpos, mega = data.element })
 			elseif inst.sg.mem.elemvolleyqueue then
 				if #inst.sg.mem.elemvolleyqueue >= TUNING.WINONA_CATAPULT_VOLLEY_QUEUE_SIZE then
 					table.remove(inst.sg.mem.elemvolleyqueue, 1)
 				end
-				table.insert(inst.sg.mem.elemvolleyqueue, data.targetpos)
+				table.insert(inst.sg.mem.elemvolleyqueue, { pos = data.targetpos, mega = data.element })
 			else
-				inst.sg.mem.elemvolleyqueue = { data.targetpos }
+				inst.sg.mem.elemvolleyqueue = { { pos = data.targetpos, mega = data.element } }
 			end
 		end
 	end),
@@ -55,12 +55,12 @@ local events =
 local function TryQueuedVolley(inst)
 	if inst:IsActiveMode() then
 		if inst.sg.mem.elemvolleyqueue then
-			local targetpos = table.remove(inst.sg.mem.elemvolleyqueue, 1)
+			local data = table.remove(inst.sg.mem.elemvolleyqueue, 1)
 			if #inst.sg.mem.elemvolleyqueue <= 0 then
 				inst.sg.mem.elemvolleyqueue = nil
 			end
-			if targetpos then
-				inst.sg:GoToState("attack", { pos = targetpos, mega = true })
+			if data then
+				inst.sg:GoToState("attack", data)
 				return true
 			end
 		end
@@ -315,7 +315,7 @@ local states =
 				inst.sg.statemem.targetpos = Vector3(target:Get())
 				inst:ForceFacePoint(inst.sg.statemem.targetpos)
 			elseif target and target.mega then
-				inst.sg.statemem.mega = true
+				inst.sg.statemem.mega = target.mega
 				inst.sg.statemem.targetpos = Vector3(target.pos:Get())
 				inst:ForceFacePoint(inst.sg.statemem.targetpos)
 			end
@@ -333,16 +333,51 @@ local states =
 				end
 			end)
 			if numtotal > 0 then
-				local cost, share
-				if numshadow == 0 and numlunar == 0 then
-					inst.sg.statemem.mega = nil
-					cost = TUNING.WINONA_CATAPULT_ATTACK_POWER_COST
-					share = numtotal
-				else
-					cost = inst.sg.statemem.mega and TUNING.WINONA_CATAPULT_MEGA_ATTACK_POWER_COST or TUNING.WINONA_CATAPULT_ATTACK_POWER_COST
-					share = numshadow + numlunar
-					inst.sg.statemem.elemental = numshadow > 0 and (numlunar > 0 and "hybrid" or "shadow") or "lunar"
+				local cost, share, sharehorror, sharebrilliance
+
+				if inst.sg.statemem.mega == "shadow" then
+					if numshadow > 0 then
+						share = numshadow
+						inst.sg.statemem.elemental = "shadow"
+					else
+						inst.sg.statemem.mega = nil
+					end
+				elseif inst.sg.statemem.mega == "lunar" then
+					if numlunar > 0 then
+						share = numlunar
+						inst.sg.statemem.elemental = "lunar"
+					else
+						inst.sg.statemem.mega = nil
+					end
+				elseif inst.sg.statemem.mega == "hybrid" then
+					if numshadow == 0 and numlunar == 0 then
+						inst.sg.statemem.mega = nil
+					elseif numshadow == 0 then
+						share = numlunar
+						inst.sg.statemem.elemental = "lunar"
+					elseif numlunar == 0 then
+						share = numshadow
+						inst.sg.statemem.elemental = "shadow"
+					else
+						--sharehorror = numshadow
+						--sharebrilliance = numlunar
+						share = numshadow + numlunar --#TODO: split share when the shadow effect is separated out
+						inst.sg.statemem.elemental = "hybrid"
+					end
 				end
+
+				if inst.sg.statemem.mega then
+					cost = TUNING.WINONA_CATAPULT_MEGA_ATTACK_POWER_COST
+				else
+					cost = TUNING.WINONA_CATAPULT_ATTACK_POWER_COST
+					if inst._basic or (numshadow == 0 and numlunar == 0) then
+						share = numtotal
+					else
+						share = numshadow + numlunar
+						inst.sg.statemem.elemental = numshadow > 0 and (numlunar > 0 and "hybrid" or "shadow") or "lunar"
+					end
+				end
+
 				inst.components.circuitnode:ForEachNode(function(inst, node)
 					if node.components.fueled and not node.components.fueled:IsEmpty() and not (node.IsOverloaded and node:IsOverloaded()) then
 						if inst.sg.statemem.elemental == "shadow" then
@@ -355,8 +390,10 @@ local states =
 							end
 						elseif inst.sg.statemem.elemental == "hybrid" then
 							local elem = node:CheckElementalBattery()
-							if elem == "horror" or elem == "brilliance" then
-								node:ConsumeBatteryAmount(cost, share, inst)
+							if elem == "horror" then
+								node:ConsumeBatteryAmount(cost, sharehorror or share, inst)
+							elseif elem == "brilliance" then
+								node:ConsumeBatteryAmount(cost, sharebrilliance or share, inst)
 							end
 						else
 							node:ConsumeBatteryAmount(cost, share, inst)
@@ -392,7 +429,7 @@ local states =
                 inst.components.combat:StartAttack()
                 local x, y, z = inst.Transform:GetWorldPosition()
                 inst.sg.statemem.rock = SpawnPrefab("winona_catapult_projectile")
-				inst.sg.statemem.rock:SetElementalRock(inst.sg.statemem.elemental, inst.sg.statemem.mega)
+				inst.sg.statemem.rock:SetElementalRock(inst.sg.statemem.elemental, inst.sg.statemem.mega ~= nil)
 				inst.sg.statemem.rock:SetAoeRadius(inst.sg.statemem.mega and inst.AOE_RADIUS * 2 or inst.AOE_RADIUS, inst._aoe)
                 inst.sg.statemem.rock.Transform:SetPosition(x, y, z)
                 local pos = inst.sg.statemem.targetpos

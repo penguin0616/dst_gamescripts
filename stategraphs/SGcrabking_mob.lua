@@ -235,7 +235,7 @@ local states =
             --SoundFrameEvent(10, "dontstarve/creatures/spider/attack"),
             --SoundFrameEvent(10, "dontstarve/creatures/spider/attack_grunt"),
             FrameEvent(18, function(inst) 
-                    inst:PlaySound("meta4/crabcritter/f18_atk_fx")
+                    inst:PlaySound("f18_atk_fx")
                     
                     inst.components.combat:DoAttack(inst.sg.statemem.target) 
                 end),
@@ -283,6 +283,9 @@ local states =
             inst.Physics:SetMotorVelOverride(8,0,0)
             inst.components.combat:StartAttack()
             inst.AnimState:PlayAnimation("atk_loop",true)
+
+            inst.SoundEmitter:PlaySound("meta4/crabcritter/atk2_spin_lp","spin")
+            
             inst.sg.statemem.targets = targets or {}
         end,
 
@@ -294,6 +297,7 @@ local states =
             inst.components.locomotor:Stop()
             inst.components.locomotor:EnableGroundSpeedMultiplier(true)
             inst.Physics:ClearMotorVelOverride()
+            inst.SoundEmitter:KillSound("spin")
         end,
 
         ontimeout = function(inst)

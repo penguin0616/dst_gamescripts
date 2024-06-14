@@ -375,6 +375,7 @@ local function OnFuelEmpty(inst)
 	SetFuelEmpty(inst, false)
 end
 
+--used by item as well
 local function CanAddFuelItem(inst, item, doer)
 	return not (item and item.components.fuel and item.components.fuel.fueltype == FUELTYPE.NIGHTMARE)
 		or (doer ~= nil and
@@ -401,8 +402,17 @@ end
 
 --V2C: this is newly supported callback, that happens earlier, just before the fuel item is destroyed
 local function OnAddFuelItem(inst, item, fuelvalue)
+	local hadhorror = inst._horror_level > 0
 	OnAddFuelAdjustLevels(inst, item, fuelvalue)
 	RefreshFuelTypeEffects(inst)
+	if hadhorror ~= (inst._horror_level > 0) then
+		if inst.components.fueled.accepting and not inst.components.fueled:IsEmpty() then
+			--don't broadcast now if we're gonna broadcast below in OnAddFuel again
+			if inst.components.fueled.consuming then
+				BroadcastCircuitChanged(inst)
+			end
+		end
+	end
 end
 
 local function OnAddFuel(inst)
@@ -423,9 +433,13 @@ local function OnAddFuel(inst)
 end
 
 local function OnUpdateFueled(inst)
+	local hadhorror = inst._horror_level > 0
 	--reversed priority so we consume strongest fuel first
 	AdjustLevelsByPriority(inst, "_chemical_level", "_nightmare_level", "_horror_level")
 	RefreshFuelTypeEffects(inst)
+	if hadhorror ~= (inst._horror_level > 0) then
+		BroadcastCircuitChanged(inst)
+	end
 end
 
 local function OnFuelSectionChange(new, old, inst)
@@ -951,6 +965,7 @@ local function itemfn()
 	inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.PLACER_DEFAULT)
 
 	inst:AddComponent("fueled")
+	inst.components.fueled:SetCanTakeFuelItemFn(CanAddFuelItem)
 	inst.components.fueled:InitializeFuelLevel(TUNING.WINONA_BATTERY_LOW_MAX_FUEL_TIME)
 	inst.components.fueled:SetMultiplierFn(CalcFuelMultiplier)
 	inst.components.fueled:SetTakeFuelItemFn(OnAddFuelAdjustLevels)

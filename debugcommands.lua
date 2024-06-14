@@ -2802,9 +2802,10 @@ function d_createscrapbookdata(print_missing_icons, noreset)
         AddInfo( "bank",  t.scrapbook_bank or t.AnimState:GetCurrentBankName() ) --see comments above
         AddInfo( "anim",  anim )
 
-        AddInfo( "facing",  t.scrapbook_facing )
+        AddInfo( "facing", t.scrapbook_facing )
 
-        AddInfo( "alpha",  t.scrapbook_alpha )
+        AddInfo( "multcolour", t.scrapbook_multcolour )
+        AddInfo( "alpha", t.scrapbook_alpha )
 
         if t.scrapbook_overridedata then
             if type(t.scrapbook_overridedata[1]) ~= "table" then
@@ -3124,7 +3125,7 @@ function d_createscrapbookdata(print_missing_icons, noreset)
                 if character ~= nil then
                     AddInfo( "craftingprefab", character )
                 else
-                    print(string.format("[!!!!]  Recipe builder tag [ %s ] isn't in RECIPE_BUILDER_TAG_LOOKUP...", recipe.builder_tag))
+                    print(string.format("[!!!!]  Recipe builder tag [ %s ] isn't in TECH_SKILLTREE_BUILDER_TAG_OWNERS or RECIPE_BUILDER_TAG_LOOKUP ...", recipe.builder_tag))
                 end
             end
 

@@ -1476,9 +1476,15 @@ ACTIONS.NET.fn = function(act)
         act.target.components.workable ~= nil and
         act.target.components.workable:CanBeWorked() and
         act.target.components.workable:GetWorkAction() == ACTIONS.NET and
-        not (act.target.components.health ~= nil and act.target.components.health:IsDead()) then
+        not (act.target.components.health ~= nil and act.target.components.health:IsDead())
+    then
+        if act.invobject == nil and act.target.components.grabbable ~= nil and not act.target.components.grabbable:CanGrab(act.doer) then
+            return false
+        end
+
         act.target.components.workable:WorkedBy(act.doer)
     end
+
     return true
 end
 
@@ -1778,10 +1784,18 @@ ACTIONS.ADDFUEL.fn = function(act)
         if fuel then
             if act.target.components.fueled and act.target.components.fueled:TakeFuelItem(fuel, act.doer) then
                 return true
-            else
-                --print("False")
-                act.doer.components.inventory:GiveItem(fuel)
             end
+			--print("False")
+			if act.invobject ~= fuel and
+				act.invobject == act.doer.components.inventory:GetActiveItem() and
+				act.invobject.components.stackable and
+				not act.invobject.components.stackable:IsFull()
+			then
+				fuel = act.invobject.components.stackable:Put(fuel)
+			end
+			if fuel then
+				act.doer.components.inventory:GiveItem(fuel)
+			end
         end
 	elseif act.doer.components.fueler then
         if act.target.components.fueled and act.target.components.fueled:TakeFuelItem(nil, act.doer) then

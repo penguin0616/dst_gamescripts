@@ -592,17 +592,30 @@ local function OnSave(inst, data)
 end
 
 local function spawn_shadow_merm(inst)
-    local merm = "merm_shadow"
-    if inst:HasTag("guard") then
-        merm = "mermguard_shadow"
+    local prefab = inst:HasTag("guard") and "mermguard_shadow" or "merm_shadow"
+
+    local shadowmerm = SpawnPrefab(prefab)
+    shadowmerm.Transform:SetPosition(inst.Transform:GetWorldPosition())
+    shadowmerm.Transform:SetRotation(inst.Transform:GetRotation())
+
+    if inst.shadow_spawn_old_leader ~= nil and
+        inst.shadow_spawn_old_leader:IsValid() and
+        inst.shadow_spawn_old_leader.components.leader ~= nil
+    then
+        inst.shadow_spawn_old_leader.components.leader:AddFollower(shadowmerm)
     end
-    local shadow = SpawnPrefab(merm)
 
-    shadow.Transform:SetPosition(inst.Transform:GetWorldPosition())
-    shadow.Transform:SetRotation(inst.Transform:GetRotation())
-    inst.shadow_spawn_old_leader.components.leader:AddFollower(shadow)
+    local home = inst.components.homeseeker ~= nil and inst.components.homeseeker:GetHome() or nil
 
-    shadow:PushEvent("shadowmerm_spawn")
+    inst:PushEvent("detachchild")
+
+    if home ~= nil and home.components.childspawner ~= nil then
+        home.components.childspawner:TakeOwnership(shadowmerm)
+    end
+
+    shadowmerm.components.combat:SetTarget(inst.components.combat.target)
+
+    shadowmerm:PushEvent("shadowmerm_spawn")
 end
 
 local function OnLoad(inst, data)
@@ -614,7 +627,7 @@ end
 local function TestForShadowDeath(inst)
     if not inst:HasTag("shadowminion") and inst.shadow_spawn_old_leader then
         spawn_shadow_merm(inst)
-    end    
+    end
 end
 
 local function newcombattarget(inst, data)
@@ -690,7 +703,18 @@ local function DoLunarMutation(inst)
         leader.components.leader:AddFollower(lunarmerm)
     end
 
+    local home = inst.components.homeseeker ~= nil and inst.components.homeseeker:GetHome() or nil
+
+    inst:PushEvent("detachchild")
+
+    if home ~= nil and home.components.childspawner ~= nil then
+        home.components.childspawner:TakeOwnership(lunarmerm)
+    end
+
+    lunarmerm.components.combat:SetTarget(inst.components.combat.target)
+
     lunarmerm:PushEvent("mutated")
+    lunarmerm.SoundEmitter:PlaySound("meta4/lunar_merm/transform")
 
     inst:Remove()
 
@@ -943,6 +967,10 @@ local function Guard_CanTripleAttack(inst)
 end
 
 local function guard_master(inst)
+    -- Let the lootdropper take care of adding these dependencies correctly.
+    inst.scrapbook_deps = { "mermguard_lunar", "mermguard_shadow", "mermking" }
+    inst.scrapbook_damage = { TUNING.PUNY_MERM_DAMAGE, TUNING.MERM_GUARD_DAMAGE }
+
     inst.ShouldWaitForHelp = Guard_ShouldWaitForHelp
 
     -- Limit the triple attack upgrade to the merm guards
@@ -1039,6 +1067,9 @@ local function OnAttackOther(inst, data)
 end
 
 local function common_master(inst)
+    -- Let the lootdropper take care of adding these dependencies correctly.
+    inst.scrapbook_deps = { "merm_lunar", "merm_shadow" }
+    inst.scrapbook_damage = { TUNING.MERM_DAMAGE, TUNING.MERM_DAMAGE_KINGBONUS }
 
     inst.components.locomotor.runspeed = TUNING.MERM_RUN_SPEED
     inst.components.locomotor.walkspeed = TUNING.MERM_WALK_SPEED
@@ -1109,6 +1140,8 @@ end
 local function shadow_merm_master(inst)
     common_master(inst)
 
+    inst.scrapbook_multcolour = { 0, 0, 0 }
+
     inst:RemoveComponent("sleeper")
    
     inst.components.combat:SetAttackPeriod(TUNING.MERM_ATTACK_PERIOD)
@@ -1155,6 +1188,8 @@ end
 
 local function shadow_mermguard_master(inst)
     guard_master(inst)
+
+    inst.scrapbook_multcolour = { 0, 0, 0 }
 
     inst.components.combat:SetAttackPeriod(TUNING.MERM_ATTACK_PERIOD)
     inst.components.combat:SetRetargetFunction(1, RetargetFn)

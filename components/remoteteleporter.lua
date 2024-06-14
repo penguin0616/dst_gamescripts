@@ -59,33 +59,51 @@ function RemoteTeleporter:Teleport_Internal(from_x, from_z, to_x, to_z, doer)
         self.onteleportedfn(self.inst, doer, true)
     end
 end
-local TAGS = { "remote_teleport_dest" }
-function RemoteTeleporter:Teleport(doer)
-	local x, y, z = doer.Transform:GetWorldPosition()
-	local physrad = doer:GetPhysicsRadius(0)
-	local originx, originz
-	local originrangesq = 2 + physrad
-	originrangesq = originrangesq * originrangesq
 
-	for i, v in ipairs(TheSim:FindEntities(x, y, z, TUNING.WINONA_TELEBRELLA_TELEPORT_RANGE, TAGS)) do
-		if self.checkdestinationfn == nil or self.checkdestinationfn(self.inst, v, doer) then
-			local x1, y1, z1 = v.Transform:GetWorldPosition()
-			if distsq(x, z, x1, z1) >= originrangesq then
-                self:Teleport_Internal(x, z, x1, z1, doer)
-				return true
-			elseif originx == nil then
-				originx, originz = x1, z1
-			end
-		end
-	end
-	if originx then
-        self:Teleport_Internal(x, z, originx, originz, doer)
-		return true
-	end
-	if self.onteleportedfn then
-		self.onteleportedfn(self.inst, doer, false)
-	end
-	return false, "NODEST"
+function RemoteTeleporter:Teleport(doer)
+    local winonateleportpadmanager = TheWorld.components.winonateleportpadmanager
+    local targets = winonateleportpadmanager and winonateleportpadmanager:GetAllWinonaTeleportPads() or nil
+    if targets ~= nil then
+        local exclude_radius_sq = doer:GetPhysicsRadius(0) + TUNING.SKILLS.WINONA.TELEPAD_DETECTION_RADIUS
+        exclude_radius_sq = exclude_radius_sq * exclude_radius_sq
+
+        local x, y, z = doer.Transform:GetWorldPosition()
+        local closest_outofcamera, closest_outofcameradsq, closest_outofcamerax, closest_outofcameraz
+        local furthest_incamera, furthest_incameradsq, furthest_incamerax, furthest_incameraz
+        for target, _ in pairs(targets) do
+            if self.checkdestinationfn == nil or self.checkdestinationfn(self.inst, target, doer) then
+                local x1, y1, z1 = target.Transform:GetWorldPosition()
+                local dsq = distsq(x, z, x1, z1)
+                if dsq > exclude_radius_sq then
+                    if closest_outofcameradsq == nil or dsq < closest_outofcameradsq then
+                        closest_outofcamera = target
+                        closest_outofcameradsq = dsq
+                        closest_outofcamerax, closest_outofcameraz = x1, z1
+                    end
+                else
+                    if furthest_incameradsq == nil or dsq > furthest_incameradsq then
+                        furthest_incamera = target
+                        furthest_incameradsq = dsq
+                        furthest_incamerax, furthest_incameraz = x1, z1
+                    end
+                end
+            end
+        end
+
+        if closest_outofcamera ~= nil then
+            self:Teleport_Internal(x, z, closest_outofcamerax, closest_outofcameraz, doer)
+            return true
+        end
+        if furthest_incamera ~= nil then
+            self:Teleport_Internal(x, z, furthest_incamerax, furthest_incameraz, doer)
+            return true
+        end
+    end
+
+    if self.onteleportedfn then
+        self.onteleportedfn(self.inst, doer, false)
+    end
+    return false, "NODEST"
 end
 
 function RemoteTeleporter:OnStartTeleport(doer)

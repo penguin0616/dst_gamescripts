@@ -66,14 +66,15 @@ end
 local function OnGrowthFull(inst)
     local tree = SpawnPrefab("ancienttree_"..inst.type)
 
-    tree.Transform:SetPosition(inst.Transform:GetWorldPosition())
-
     if tree ~= nil then
+        tree.Transform:SetPosition(inst.Transform:GetWorldPosition())
+
+        inst:TransferPlantData(tree)
+        tree:UpdatePickableRegenTime()
+
         if tree.components.pickable ~= nil then
             tree.components.pickable:MakeEmpty()
         end
-
-        inst:TransferPlantData(tree)
 
         if inst:IsAsleep() then
             tree.AnimState:PlayAnimation(math.random() < .5 and "sway1_loop" or "sway2_loop", true)
@@ -229,11 +230,6 @@ end
 local function PlantData_OnLoad(inst, data)
     if data ~= nil and data.plantdata ~= nil then
         inst._plantdata = data.plantdata
-
-        if inst.components.pickable ~= nil then
-            inst.components.pickable.baseregentime = inst._plantdata.fruit_regen
-            inst.components.pickable:RestartRegenTask()
-        end
     end
 end
 
@@ -355,6 +351,13 @@ local function Full_OnRegenFn(inst)
     end
 end
 
+local function Full_UpdatePickableRegenTime(inst)
+    if inst.components.pickable ~= nil and inst._plantdata ~= nil and inst._plantdata.fruit_regen ~= nil then
+        inst.components.pickable.regentime = inst._plantdata.fruit_regen
+        inst.components.pickable.baseregentime = inst._plantdata.fruit_regen
+    end
+end
+
 local function Full_OnSave(inst, data)
     PlantData_OnSave(inst, data)
 
@@ -370,6 +373,8 @@ local function Full_OnLoad(inst, data)
         inst:MakeStump()
         inst.AnimState:PlayAnimation("stump")
     end
+
+    inst:UpdatePickableRegenTime()
 end
 
 local function Full_OnEntityWake(inst)
@@ -465,6 +470,7 @@ local function MakeAncientTree(name, data)
         inst.AnimState:SetMultColour(multcolor, multcolor, multcolor, 1)
 
         inst.TransferPlantData = TransferPlantData
+        inst.UpdatePickableRegenTime = Full_UpdatePickableRegenTime
         inst.MakeStump = Full_MakeStump
         
         inst:AddComponent("inspectable")

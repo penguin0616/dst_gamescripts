@@ -3064,7 +3064,6 @@ local fx =
         anim = "break",
         fn = FinalOffset1,
     },
-
     {
         name = "boat_otterden_erode",
         bank = "boat_otterden",
@@ -3112,25 +3111,84 @@ local fx =
         name = "wurt_swamp_terraform_fx",
         bank = "pond_splash_fx",
         build = "pond_splash_fx",
-        sound = "aqol/new_test/squidgy",
         anim = "swamp_splash",
     },
-
     {
         name = "shadow_merm_spawn_poof_fx",
         bank = "merm_shadow_fx",
         build = "merm_shadow_fx",
         anim = "spawn_poof",
         sound = "meta4/shadow_merm/spawn_poof",
-    }, 
-
+        fn = function(inst)
+            inst.AnimState:SetFinalOffset(1)
+            inst.AnimState:SetMultColour(1, 1, 1, .5)
+        end,
+    },
     {
         name = "shadow_merm_smacked_poof_fx",
         bank = "merm_shadow_fx",
         build = "merm_shadow_fx",
         anim = "smacked_poof",
         sound = "meta4/shadow_merm/smacked_poof",
-    },        
+        fn = function(inst)
+            inst.AnimState:SetFinalOffset(1)
+            inst.AnimState:SetFrame(14)
+            inst.AnimState:SetMultColour(1, 1, 1, .5)
+        end,
+    },
+    {
+        name = "wurt_water_splash_1",
+        bank = "splash_water_rot",
+        build = "wurt_splash_fx",
+        anim = "watershield_small",
+        sound = "turnoftides/common/together/water/splash/bird",
+        fn = FinalOffset1,
+    },
+    {
+        name = "wurt_water_splash_2",
+        bank = "splash_water_rot",
+        build = "wurt_splash_fx",
+        anim = "watershield_medium",
+        sound = "turnoftides/common/together/water/splash/small",
+        fn = FinalOffset1,
+    },
+    {
+        name = "wurt_water_splash_3",
+        bank = "splash_water_rot",
+        build = "wurt_splash_fx",
+        anim = "watershield_large",
+        sound = "turnoftides/common/together/water/splash/jump_medium",
+        fn = FinalOffset1,
+    },
+
+    {
+        name = "wurt_terraformer_fx_shadow",
+        bank = "cane_shadow_fx",
+        build = "cane_shadow_fx",
+        anim = "shad1",
+        tintalpha = 0.5,
+        fn = function(inst)
+            inst.AnimState:PlayAnimation("shad"..math.random(3))
+        end,
+    },
+
+    {
+        name = "wurt_terraformer_fx_lunar",
+        bank = "moon_altar_link_fx",
+        build ="moon_altar_link_fx",
+        anim = "fx1",
+        tintalpha = 0.5,
+        fn = function(inst)
+            inst.AnimState:SetScale(0.5,0.5,0.5)
+
+            local rand = math.random()
+            inst.AnimState:PlayAnimation(
+                (rand < 0.33 and "fx1")
+                or (rand < 0.67 and "fx2")
+                or "fx3"
+            )
+        end
+    },
 }
 
 for cratersteamindex = 1, 4 do

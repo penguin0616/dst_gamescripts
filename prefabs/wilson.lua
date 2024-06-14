@@ -72,7 +72,9 @@ local function common_postinit(inst)
         inst:AddTag("quagmire_potmaster")
         inst:AddTag("quagmire_shopper")
     end
-    
+
+	inst:AddTag("scientist")
+
     --bearded (from beard component) added to pristine state for optimization
     inst:AddTag("bearded")
 

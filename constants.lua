@@ -2046,6 +2046,10 @@ TECH_SKILLTREE_BUILDER_TAG_OWNERS =
 
     merm_swampmaster_offeringpot = "wurt",
     merm_swampmaster_offeringpot_upgraded = "wurt",
+    merm_swampmaster_mermtoolshed = "wurt",
+    merm_swampmaster_mermtoolshed_upgraded = "wurt",
+    merm_swampmaster_mermarmory = "wurt",
+    merm_swampmaster_mermarmory_upgraded = "wurt",
     mosquitocraft_1 = "wurt",
     mosquitocraft_2 = "wurt",
     [SPELLTYPES.LUNAR_SWAMP_BOMB.."_spelluser"] = "wurt",
