@@ -464,7 +464,9 @@ function MermBrain:OnStart()
 
     }, .25)
 
-    local root = WhileNode(function() return not self.inst.sg:HasStateTag("jumping") end, "pause for jump", main_nodes)
+    local root = PriorityNode({
+            WhileNode(function() return not self.inst.sg:HasStateTag("jumping") end, "pause for jump", main_nodes)
+        }, .25)
 
     self.bt = BT(self.inst, root)
 end

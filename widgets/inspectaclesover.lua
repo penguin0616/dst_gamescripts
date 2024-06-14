@@ -102,6 +102,7 @@ function InspectaclesOver:StartPing()
     self:OnUpdate()
     self.pinger:Show()
     self.pinger:GetAnimState():PlayAnimation("radar")
+    TheFocalPoint.SoundEmitter:PlaySound("meta4/hologram_device/ping")
     local duration = self.pinger.inst.AnimState:GetCurrentAnimationLength() + FRAMES
     self.pingtask = self.pinger.inst:DoTaskInTime(duration, self.PingerStop)
 end

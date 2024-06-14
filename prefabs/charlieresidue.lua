@@ -20,6 +20,7 @@ local function CreateFX()
 
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
+    inst.entity:AddSoundEmitter()
 
 	inst.AnimState:SetBank("charlieresidue")
 	inst.AnimState:SetBuild("charlieresidue")
@@ -27,6 +28,8 @@ local function CreateFX()
 	inst.AnimState:PushAnimation("idle")
 	inst.AnimState:Hide("mouseover")
 	inst.AnimState:SetFinalOffset(7)
+
+    inst.SoundEmitter:PlaySound("meta4/charlie_residue/idle_lp", "residueloop")
 
 	return inst
 end
@@ -99,6 +102,7 @@ local function OnAnimState_Client(inst)
 		inst._fx.entity:SetParent(nil)
 		inst._fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
 		inst._fx.AnimState:PlayAnimation("pst")
+        inst._fx.SoundEmitter:KillSound("residueloop")
 		inst._fx:ListenForEvent("animover", inst._fx.Remove)
 		inst._fx = nil
 		inst.highlightchildren = nil

@@ -112,6 +112,7 @@ local function CreateAnim(build)
 
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
+    inst.entity:AddSoundEmitter()
 
 	inst.AnimState:SetBank("inspectaclesbox")
 	inst.AnimState:SetBuild(build)
@@ -124,6 +125,8 @@ local function CreateAnim(build)
 	projectedeffects:SetCutoffHeight(-1)
 	projectedeffects:SetIntensity(-1.0)
 	projectedeffects:SetOnDecayCallback(inst.Remove)
+    
+    inst.SoundEmitter:PlaySound("meta4/hologram_device/hologram_lp", "hololoop")
 
 	return inst
 end
@@ -139,6 +142,8 @@ end
 
 local function KillClientAnim(inst)
 	if inst._anim then
+        inst._anim.SoundEmitter:KillSound("hololoop")
+        inst._anim.SoundEmitter:PlaySound("meta4/hologram_device/hologram_pst")
 		inst._anim:AddTag("FX")
 		inst._anim:AddTag("NOCLICK")
 		inst._anim.entity:SetCanSleep(false)

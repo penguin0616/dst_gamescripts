@@ -187,6 +187,8 @@ end
 
 local function OnSpawnNewBoatLeak(inst, data)
 	if data ~= nil and data.pt ~= nil then
+        data.pt.y = 0
+
 		local leak = SpawnPrefab("boat_leak")
 		leak.Transform:SetPosition(data.pt:Get())
 		leak.components.boatleak.isdynamic = true

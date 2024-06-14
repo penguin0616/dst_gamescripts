@@ -298,6 +298,8 @@ local function empty_loot_function() end
 local function OnSpawnNewBoatLeak(inst, data)
     if data == nil or data.pt == nil then return end
 
+    data.pt.y = 0
+
     local leak = SpawnPrefab("boat_leak")
     leak.Transform:SetPosition(data.pt:Get())
     leak.components.boatleak.isdynamic = true

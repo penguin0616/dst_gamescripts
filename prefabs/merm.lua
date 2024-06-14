@@ -743,6 +743,7 @@ local function living_merm_common_master(inst)
     inst.components.named:PickNewName()
 
     MakeMediumBurnableCharacter(inst, "pig_torso")
+    MakeMediumFreezableCharacter(inst, "pig_torso")
 end
 
 local function CreateFlameFx()
@@ -864,9 +865,6 @@ local function MakeMerm(name, assets, prefabs, common_postinit, master_postinit,
         trader.onaccept = OnGetItemFromPlayer
         trader.onrefuse = OnRefuseItem
         trader.deleteitemonaccept = false
-
-        MakeMediumFreezableCharacter(inst, "pig_torso")
-
 
         inst:ListenForEvent("timerdone", OnTimerDone)
         inst:ListenForEvent("attacked", OnAttacked)
