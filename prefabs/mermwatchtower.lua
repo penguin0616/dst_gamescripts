@@ -212,23 +212,37 @@ end
 
 ---------------------------------------------------------------------------------------------
 
-local function updatespawningtime(inst,data)
+local MAX_COUNT = 6 -- Max num slots of a offering_pot, this shouldn't be static...
 
-    if not data.inst or data.inst:GetDistanceSqToInst(inst) > TUNING.WURT_OFFERING_POT_RANGE * TUNING.WURT_OFFERING_POT_RANGE then
-        return  
+local function UpdateSpawningTime(inst, data)
+    if data.inst == nil or
+        not data.inst:IsValid() or
+        data.inst:GetDistanceSqToInst(inst) > TUNING.WURT_OFFERING_POT_RANGE * TUNING.WURT_OFFERING_POT_RANGE
+    then
+        return
+    end
+
+    local timer   = inst.components.worldsettingstimer
+    local spawner = inst.components.childspawner
+
+    if timer == nil or spawner == nil then
+        return
     end
 
     inst.kelpofferings[data.inst.GUID] =  data.count and data.count > 0 and data.count or nil
 
     local topcount = 0
-    for i,count in pairs(inst.kelpofferings) do
-        if topcount < count then
-            topcount = count 
+
+    for _, count in pairs(inst.kelpofferings) do
+        if count > topcount then
+            topcount = count
         end
     end
 
-    local mult = Remap(topcount,0,4,1,TUNING.WURT_MAX_OFFERING_REGEN_MULT)
-    inst.components.worldsettingstimer:SetMaxTime("ChildSpawner_RegenPeriod",  TUNING.MERMWATCHTOWER_REGEN_TIME * mult )
+    local mult = Remap(topcount, 0, MAX_COUNT, 1, TUNING.WURT_MAX_OFFERING_REGEN_MULT)
+
+    timer:SetMaxTime("ChildSpawner_RegenPeriod", TUNING.MERMWATCHTOWER_REGEN_TIME * mult)
+    spawner:SetRegenPeriod(TUNING.MERMWATCHTOWER_REGEN_TIME * mult)
 end
 
 local function fn()
@@ -305,9 +319,9 @@ local function fn()
     MakeLargePropagator(inst)
     MakeSnowCovered(inst)
 
-    inst.updatespawningtime = updatespawningtime
+    inst.UpdateSpawningTime = UpdateSpawningTime
     inst.kelpofferings = {}
-    inst:ListenForEvent("ms_updateofferingpotstate", function(world,data) updatespawningtime(inst,data) end, TheWorld)
+    inst:ListenForEvent("ms_updateofferingpotstate", function(_, data) inst:UpdateSpawningTime(data) end, TheWorld)
 
     inst:ListenForEvent("onbuilt", onbuilt)
 

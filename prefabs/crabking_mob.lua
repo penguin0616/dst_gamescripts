@@ -232,6 +232,8 @@ local function KnightFn()
 
     inst.components.sanityaura.aura = -TUNING.SANITYAURA_MED
 
+    inst.components.sleeper:SetResistance(10)
+
     return inst
 end
 

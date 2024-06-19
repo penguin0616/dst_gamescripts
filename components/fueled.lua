@@ -215,7 +215,7 @@ function Fueled:TakeFuelItem(item, doer)
 
 		if item ~= nil then
 			if self.ontakefuelitemfn then
-				self.ontakefuelitemfn(self.inst, item, fuelvalue)
+				self.ontakefuelitemfn(self.inst, item, fuelvalue, doer)
 			end
 	        item:Remove()
 		end

@@ -202,7 +202,7 @@ local function StealCharacterFood(inst)
 
         if character_food ~= nil and #character_food > 0 then
             local food_to_steal = character_food[math.random(#character_food)]
-            local buffered_action = BufferedAction(inst, food_to_steal, ACTIONS.STEAL)
+            local buffered_action = BufferedAction(inst, food_to_steal, ACTIONS.STEAL, nil, nil, nil, TUNING.OTTER_ATTACK_RANGE)
             buffered_action.validfn = function()
                 return (food_to_steal.components.inventoryitem ~= nil
                     and food_to_steal.components.inventoryitem:IsHeld())
@@ -211,7 +211,6 @@ local function StealCharacterFood(inst)
                 inst.components.timer:StartTimer(STEAL_COOLDOWN_NAME, GetRandomWithVariance(5, 2))
             end
             buffered_action:AddSuccessAction(inst._start_steal_cooldown_callback)
-            buffered_action.attack = true
             return buffered_action
         end
     end

@@ -89,6 +89,9 @@ local function CreateMermTool(data)
         inst.components.tool:SetAction(ACTIONS.CHOP, tuning.EFFICIENCY)
         inst.components.tool:SetAction(ACTIONS.MINE, tuning.EFFICIENCY)
         inst.components.tool:SetAction(ACTIONS.DIG, tuning.EFFICIENCY)
+        
+        inst:AddInherentAction(ACTIONS.TILL)
+        inst:AddComponent("farmtiller")
 
         inst:AddComponent("equippable")
         inst.components.equippable:SetOnEquip(OnEquip)
@@ -100,6 +103,7 @@ local function CreateMermTool(data)
         inst.components.finiteuses:SetConsumption(ACTIONS.CHOP, tuning.CONSUMPTION.CHOP)
         inst.components.finiteuses:SetConsumption(ACTIONS.MINE, tuning.CONSUMPTION.MINE)
         inst.components.finiteuses:SetConsumption(ACTIONS.DIG,  tuning.CONSUMPTION.DIG )
+        inst.components.finiteuses:SetConsumption(ACTIONS.TILL, tuning.CONSUMPTION.TILL )
         inst.components.finiteuses:SetOnFinished(inst.Remove)
 
         inst:ListenForEvent("ondropped", ondropped)

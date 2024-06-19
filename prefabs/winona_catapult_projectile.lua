@@ -11,7 +11,7 @@ local prefabs =
 local ELEMENTS = { "shadow", "lunar", "hybrid" }
 local ELEMENT_ID = table.invert(ELEMENTS)
 
-local NO_TAGS_PVP = { "INLIMBO", "ghost", "playerghost", "FX", "NOCLICK", "DECOR", "notarget", "companion", "shadowminion" }
+local NO_TAGS_PVP = { "INLIMBO", "ghost", "playerghost", "FX", "NOCLICK", "DECOR", "notarget", "companion", "shadowminion", "wall" }
 local NO_TAGS = { "player" }
 for i, v in ipairs(NO_TAGS_PVP) do
     table.insert(NO_TAGS, v)
@@ -26,11 +26,15 @@ local function ResetDamage(inst, attacker)
 	attacker.components.damagetypebonus:RemoveBonus("lunar_aligned", inst)
 end
 
-local function ConfigureElementalDamage(inst, attacker, element)
+local function ConfigureElementalDamage(inst, attacker, element, mega)
 	if element then
-		if inst.mega then
+		if mega then
 			attacker.components.combat:SetDefaultDamage(0)
-			attacker.components.planardamage:SetBaseDamage(TUNING.WINONA_CATAPULT_MEGA_PLANAR_DAMAGE)
+			if element == "shadow" then
+				attacker.components.planardamage:SetBaseDamage(TUNING.WINONA_CATAPULT_PLANAR_DAMAGE)
+			else
+				attacker.components.planardamage:SetBaseDamage(TUNING.WINONA_CATAPULT_MEGA_PLANAR_DAMAGE)
+			end
 		elseif element == "hybrid" then
 			attacker.components.combat:SetDefaultDamage(TUNING.WINONA_CATAPULT_HYBRID_NON_PLANAR_DAMAGE)
 			attacker.components.planardamage:SetBaseDamage(TUNING.WINONA_CATAPULT_HYBRID_PLANAR_DAMAGE)
@@ -48,15 +52,17 @@ local function ConfigureElementalDamage(inst, attacker, element)
 	end
 end
 
-local function DoAOEAttack(inst, x, z, attacker, element)
+local function DoAOEAttack(inst, x, z, attacker, caster, element, mega)
 	if attacker and attacker.components.combat and attacker:IsValid() then
 		attacker.components.combat.ignorehitrange = true
-		ConfigureElementalDamage(inst, attacker, element)
+		ConfigureElementalDamage(inst, attacker, element, mega)
 	else
 		attacker = nil
 	end
 	inst.components.combat.ignorehitrange = true
-	ConfigureElementalDamage(inst, inst, element)
+	ConfigureElementalDamage(inst, inst, element, mega)
+
+	local caster_combat = caster and caster:IsValid() and caster.components.combat or nil
 
 	local hit = false
 	for i, v in ipairs(TheSim:FindEntities(x, 0, z, inst.AOE_RADIUS + AOE_RANGE_PADDING, COMBAT_TAGS, TheNet:GetPVPEnabled() and NO_TAGS_PVP or NO_TAGS)) do
@@ -65,13 +71,27 @@ local function DoAOEAttack(inst, x, z, attacker, element)
 			v:GetDistanceSqToPoint(x, 0, z) < inst.components.combat:CalcHitRangeSq(v) and
 			inst.components.combat:CanTarget(v)
 		then
-			if attacker and not (v.components.combat.target and v.components.combat.target:HasTag("player")) then
-				--if target is not targeting a player, then use the catapult as attacker to draw aggro
-				attacker.components.combat:DoAttack(v)
-			else
-				inst.components.combat:DoAttack(v)
+			local isally
+			if caster_combat then
+				isally = caster_combat:IsAlly(v)
+			elseif not TheNet:GetPVPEnabled() and
+				not (v.components.combat and v.components.combat:HasTarget() and v.components.combat.target:HasTag("player")) and
+				(	v:HasTag("companion") or
+					(v.components.follower and v.components.follower:GetLeader() and v.components.follower:GetLeader():HasTag("player"))
+				)
+			then
+				isally = true
 			end
-			hit = true
+
+			if not isally then
+				if attacker and not (v.components.combat.target and v.components.combat.target:HasTag("player")) then
+					--if target is not targeting a player, then use the catapult as attacker to draw aggro
+					attacker.components.combat:DoAttack(v)
+				else
+					inst.components.combat:DoAttack(v)
+				end
+				hit = true
+			end
 		end
 	end
 
@@ -100,11 +120,16 @@ for k, v in pairs(COLLAPSIBLE_WORK_ACTIONS) do
 	table.insert(COLLAPSIBLE_TAGS, k.."_workable")
 end
 
-local NON_COLLAPSIBLE_TAGS = { "FX", --[["NOCLICK",]] "DECOR", "INLIMBO", "structure", "wall" }
+local NON_COLLAPSIBLE_TAGS = { "FX", --[["NOCLICK",]] "DECOR", "INLIMBO", --[["structure",]] "wall" }
 
 local function DoAOEWork(inst, x, z)
 	for i, v in ipairs(TheSim:FindEntities(x, 0, z, inst.AOE_RADIUS + WORK_RADIUS_PADDING, nil, NON_COLLAPSIBLE_TAGS, COLLAPSIBLE_TAGS)) do
-		if v:IsValid() and not v:IsInLimbo() then
+		if v:IsValid() and not v:IsInLimbo() and
+			(	not v:HasTag("structure") or
+				v.components.childspawner or
+				v:HasTag("cavedweller")
+			)
+		then
 			local isworkable = false
 			if v.components.workable then
 				local work_action = v.components.workable:GetWorkAction()
@@ -117,8 +142,8 @@ local function DoAOEWork(inst, x, z)
 			end
 			if isworkable then
 				v.components.workable:Destroy(inst)
-				if v:IsValid() and v:HasTag("stump") then
-					v:Remove()
+				if v:IsValid() and v:HasTag("stump") and v.components.workable and v.components.workable:CanBeWorked() then
+					v.components.workable:Destroy(inst)
 				end
 			elseif v.components.pickable and v.components.pickable:CanBePicked() and not v:HasTag("intense") then
 				v.components.pickable:Pick(inst)
@@ -163,7 +188,7 @@ end
 local TRAP_TAGS = { "trap_vines" }
 local DEPLOY_IGNORE_TAGS = { "flower", "_inventoryitem", "projectile", "trap_vines", "NOBLOCK", "locomotor", "character", "invisible", "FX", "INLIMBO", "DECOR" }
 
-local function SpawnTrapRing(inst, x, z, attacker, r, n, theta)
+local function SpawnTrapRing(inst, x, z, attacker, caster, r, n, theta)
 	local delta = TWOPI / n
 	local map = TheWorld.Map
 	local pt = Vector3(0, 0, 0)
@@ -177,31 +202,84 @@ local function SpawnTrapRing(inst, x, z, attacker, r, n, theta)
 			local trap = SpawnPrefab("trap_vines")
 			trap.Transform:SetPosition(pt:Get())
 			trap.attacker = attacker
+			trap.caster = caster
 		end
 		theta = theta + delta
 	end
 end
 
-local function SpawnAOETrap(inst, x, z, attacker)
+--attacker is the catapult, caster is the player if available
+local function SpawnAOETrap(inst, x, z, attacker, caster)
 	local theta = math.random() * TWOPI
 
 	if inst.AOE_LEVEL == 1 then
-		SpawnTrapRing(inst, x, z, attacker, 0, 1, theta)
-		SpawnTrapRing(inst, x, z, attacker, 1.6, 5, theta)
-		SpawnTrapRing(inst, x, z, attacker, 3, 10, theta + TWOPI / 20)
+		SpawnTrapRing(inst, x, z, attacker, caster, 0, 1, theta)
+		SpawnTrapRing(inst, x, z, attacker, caster, 1.6, 5, theta)
+		SpawnTrapRing(inst, x, z, attacker, caster, 3, 10, theta + TWOPI / 20)
 	else
-		SpawnTrapRing(inst, x, z, attacker, 1, 3, theta)
-		SpawnTrapRing(inst, x, z, attacker, 2.4, 8, theta + TWOPI / 15)
+		SpawnTrapRing(inst, x, z, attacker, caster, 1, 3, theta)
+		SpawnTrapRing(inst, x, z, attacker, caster, 2.4, 8, theta + TWOPI / 15)
 		if inst.AOE_LEVEL >= 2 then
-			SpawnTrapRing(inst, x, z, attacker, 3.7, 12, theta + TWOPI / 2)
+			SpawnTrapRing(inst, x, z, attacker, caster, 3.7, 12, theta + TWOPI / 2)
 			if inst.AOE_LEVEL >= 3 then
-				SpawnTrapRing(inst, x, z, attacker, 5, 16, theta + TWOPI / 91)
+				SpawnTrapRing(inst, x, z, attacker, caster, 5, 16, theta + TWOPI / 91)
 			end
 		end
 	end
 end
 
 --------------------------------------------------------------------------
+
+local function CreateAOEBase(anim, scale)
+	local inst = CreateEntity()
+
+	inst:AddTag("FX")
+	inst:AddTag("NOCLICK")
+	--[[Non-networked entity]]
+	--inst.entity:SetCanSleep(false) --commented out; follow parent sleep instead
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+
+	inst.AnimState:SetBank("winona_catapult_projectile")
+	inst.AnimState:SetBuild("winona_catapult_projectile")
+	inst.AnimState:PlayAnimation(anim)
+	inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
+	inst.AnimState:SetLayer(LAYER_BACKGROUND)
+	inst.AnimState:SetSortOrder(3)
+	if scale then
+		inst.AnimState:SetScale(scale, scale)
+	end
+
+	inst.persists = false
+
+	inst:ListenForEvent("animover", inst.Remove)
+
+	return inst
+end
+
+local function OnAOEBaseDirty(inst)
+	local fx
+	local scale = TUNING.WINONA_CATAPULT_AOE_RADIUS / 2.5
+	local aoelevel = inst.aoebase:value()
+	if aoelevel >= 4 then
+		--mega lunar or hybrid
+		aoelevel = aoelevel - 4
+		fx = CreateAOEBase("aoe_special", scale * (TUNING.SKILLS.WINONA.CATAPULT_AOE_RADIUS_MULT[aoelevel] or 1))
+		if inst.AnimState:IsCurrentAnimation("impact"..(aoelevel ~= 0 and tostring(aoelevel) or "").."_special") then
+			fx.AnimState:SetTime(inst.AnimState:GetCurrentAnimationTime())
+		end
+	else
+		local element = ELEMENTS[inst.element:value()]
+		fx = CreateAOEBase("aoe_"..(element or "dirt"), scale * (TUNING.SKILLS.WINONA.CATAPULT_AOE_RADIUS_MULT[aoelevel] or 1))
+		if inst.AnimState:IsCurrentAnimation("impact"..(aoelevel ~= 0 and tostring(aoelevel) or "")..(element and ("_"..element) or "")) then
+			fx.AnimState:SetTime(inst.AnimState:GetCurrentAnimationTime())
+		end
+	end
+	fx.entity:SetParent(inst.entity)
+end
 
 local function OnHit(inst, attacker, target)
     local x, y, z = inst.Transform:GetWorldPosition()
@@ -211,10 +289,21 @@ local function OnHit(inst, attacker, target)
 	local element = ELEMENTS[inst.element:value()]
 	if not inst.mega then
 		inst.AnimState:PlayAnimation("impact"..(inst.AOE_LEVEL ~= 0 and tostring(inst.AOE_LEVEL) or "")..(element and ("_"..element) or ""))
+		inst.aoebase:set_local(0) --force dirty in case level 0
+		inst.aoebase:set(inst.AOE_LEVEL)
+		--Dedicated server does not need to spawn the local fx
+		if not TheNet:IsDedicated() then
+			OnAOEBaseDirty(inst)
+		end
 	elseif element == "shadow" then
-		inst.AnimState:PlayAnimation("impact2_shadow")
+		inst.AnimState:PlayAnimation("shadow_absorb")
 	else--hybrid or lunar => show the lunar
 		inst.AnimState:PlayAnimation("impact"..(inst.AOE_LEVEL ~= 0 and tostring(inst.AOE_LEVEL) or "").."_special")
+		inst.aoebase:set(4 + inst.AOE_LEVEL)
+		--Dedicated server does not need to spawn the local fx
+		if not TheNet:IsDedicated() then
+			OnAOEBaseDirty(inst)
+		end
 	end
     inst:ListenForEvent("animover", inst.Remove)
 
@@ -227,11 +316,11 @@ local function OnHit(inst, attacker, target)
 	if inst.mega and (element == "lunar" or element == "hybrid") then
 		DoAOEWork(inst, x, z)
 	end
-	if not (inst.mega and element == "shadow") then
-		DoAOEAttack(inst, x, z, attacker, element)
-	end
+	--if not (inst.mega and element == "shadow") then
+		DoAOEAttack(inst, x, z, attacker, inst.caster, element, inst.mega)
+	--end
 	if inst.mega and (element == "shadow" or element == "hybrid") then
-		SpawnAOETrap(inst, x, z, attacker)
+		SpawnAOETrap(inst, x, z, attacker, inst.caster)
 	end
 	if inst.mega and (element == "lunar" or element == "hybrid") then
 		TossItems(inst, x, z)
@@ -329,7 +418,6 @@ local function fn()
     inst.Physics:SetDamping(0)
 	inst.Physics:SetRestitution(0)
     inst.Physics:SetCollisionGroup(COLLISION.ITEMS)
-    inst.Physics:ClearCollisionMask()
     inst.Physics:CollidesWith(COLLISION.GROUND)
     inst.Physics:SetSphere(.4)
 
@@ -341,6 +429,7 @@ local function fn()
 
     inst.hideanim = net_bool(inst.GUID, "winona_catapult_projectile.hideanim", "hideanimdirty")
 	inst.element = net_tinybyte(inst.GUID, "winona_catapult_projectile.element", "elementdirty")
+	inst.aoebase = net_tinybyte(inst.GUID, "winona_catapult_projectile.aoebase")
 
     --Dedicated server does not need to spawn the local animation
     if not TheNet:IsDedicated() then

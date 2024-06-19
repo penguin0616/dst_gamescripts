@@ -115,23 +115,25 @@ local function DoTerraform(inst, pattern_fn, is_load)
     local pattern_count = #x_pattern
     if pattern_count > 0 then
         for i = 1, pattern_count do
-            local pattern_percent = i/pattern_count
             tile_x = middle_tile_x + x_pattern[i]
             tile_y = middle_tile_y + y_pattern[i]
-            local current_tile = _map:GetTile(tile_x, tile_y)
+            if _map:CanTerraformAtTile(tile_x, tile_y) then
+                local current_tile = _map:GetTile(tile_x, tile_y)
 
-            -- Avoid swamping up impassable tiles (ocean, cave void)
-            -- and other temporary tiles (monkey docks, ocean ice, Charlie vines, etc)
-            if not TileGroupManager:IsOceanTile(current_tile)
-                    and not TileGroupManager:IsImpassableTile(current_tile)
-                    and not TileGroupManager:IsTemporaryTile(current_tile) then
-                inst:DoTaskInTime(
-                    FRAMES * (TUNING.WURT_TERRAFORMING_FX_BASE + TUNING.WURT_TERRAFORMING_FX_RAND * pattern_percent),
-                    TerraformTileCallback, tile_x, tile_y, current_tile
-                )
+                -- Avoid swamping up impassable tiles (ocean, cave void)
+                -- and other temporary tiles (monkey docks, ocean ice, Charlie vines, etc)
+                if not TileGroupManager:IsOceanTile(current_tile)
+                        and not TileGroupManager:IsImpassableTile(current_tile)
+                        and not TileGroupManager:IsTemporaryTile(current_tile) then
+                    local pattern_percent = i/pattern_count
+                    inst:DoTaskInTime(
+                        FRAMES * (TUNING.WURT_TERRAFORMING_FX_BASE + TUNING.WURT_TERRAFORMING_FX_RAND * pattern_percent),
+                        TerraformTileCallback, tile_x, tile_y, current_tile
+                    )
 
-                if not is_load then
-                    table.insert(inst._terraformed_tiles, {tile_x, tile_y})
+                    if not is_load then
+                        table.insert(inst._terraformed_tiles, {tile_x, tile_y})
+                    end
                 end
             end
         end

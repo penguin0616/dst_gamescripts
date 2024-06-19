@@ -1,3 +1,18 @@
+local function VolleyData(data)
+	local skilltreeupdater = data.doer and data.doer.components.skilltreeupdater or nil
+	return
+	{
+		doer = data.doer,
+		pos = data.targetpos,
+		mega = data.element, --only elementalvolley has this
+		aoe = skilltreeupdater and
+			(	(skilltreeupdater:IsActivated("winona_catapult_aoe_3") and 3) or
+				(skilltreeupdater:IsActivated("winona_catapult_aoe_2") and 2) or
+				(skilltreeupdater:IsActivated("winona_catapult_aoe_1") and 1)
+			) or 0,
+	}
+end
+
 local events =
 {
     EventHandler("doattack", function(inst, data)
@@ -16,14 +31,14 @@ local events =
 		if inst.sg.mem.ison and data and data.targetpos and not inst.components.health:IsDead() then
 			inst.sg.mem.elemvolleyqueue = nil
 			if not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("hit") then
-				inst.sg:GoToState("attack", data.targetpos)
+				inst.sg:GoToState("attack", VolleyData(data))
 			elseif inst.sg.mem.volleyqueue then
 				if #inst.sg.mem.volleyqueue >= TUNING.WINONA_CATAPULT_VOLLEY_QUEUE_SIZE then
 					table.remove(inst.sg.mem.volleyqueue, 1)
 				end
-				table.insert(inst.sg.mem.volleyqueue, data.targetpos)
+				table.insert(inst.sg.mem.volleyqueue, VolleyData(data))
 			else
-				inst.sg.mem.volleyqueue = { data.targetpos }
+				inst.sg.mem.volleyqueue = { VolleyData(data) }
 			end
 		end
 	end),
@@ -31,14 +46,14 @@ local events =
 		if inst.sg.mem.ison and data and data.targetpos and not inst.components.health:IsDead() then
 			inst.sg.mem.volleyqueue = nil
 			if not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("hit") then
-				inst.sg:GoToState("attack", { pos = data.targetpos, mega = data.element })
+				inst.sg:GoToState("attack", VolleyData(data))
 			elseif inst.sg.mem.elemvolleyqueue then
 				if #inst.sg.mem.elemvolleyqueue >= TUNING.WINONA_CATAPULT_VOLLEY_QUEUE_SIZE then
 					table.remove(inst.sg.mem.elemvolleyqueue, 1)
 				end
-				table.insert(inst.sg.mem.elemvolleyqueue, { pos = data.targetpos, mega = data.element })
+				table.insert(inst.sg.mem.elemvolleyqueue, VolleyData(data))
 			else
-				inst.sg.mem.elemvolleyqueue = { { pos = data.targetpos, mega = data.element } }
+				inst.sg.mem.elemvolleyqueue = { VolleyData(data) }
 			end
 		end
 	end),
@@ -65,12 +80,12 @@ local function TryQueuedVolley(inst)
 			end
 		end
 		if inst.sg.mem.volleyqueue then
-			local targetpos = table.remove(inst.sg.mem.volleyqueue, 1)
+			local data = table.remove(inst.sg.mem.volleyqueue, 1)
 			if #inst.sg.mem.volleyqueue <= 0 then
 				inst.sg.mem.volleyqueue = nil
 			end
-			if targetpos then
-				inst.sg:GoToState("attack", targetpos)
+			if data then
+				inst.sg:GoToState("attack", data)
 				return true
 			end
 		end
@@ -311,11 +326,10 @@ local states =
 					inst.sg.statemem.targetpos = target:GetPosition()
 					inst:ForceFacePoint(inst.sg.statemem.targetpos)
 				end
-			elseif Vector3.is_instance(target) then
-				inst.sg.statemem.targetpos = Vector3(target:Get())
-				inst:ForceFacePoint(inst.sg.statemem.targetpos)
-			elseif target and target.mega then
+			elseif target then
+				inst.sg.statemem.caster = target.doer
 				inst.sg.statemem.mega = target.mega
+				inst.sg.statemem.aoe = target.aoe
 				inst.sg.statemem.targetpos = Vector3(target.pos:Get())
 				inst:ForceFacePoint(inst.sg.statemem.targetpos)
 			end
@@ -333,10 +347,13 @@ local states =
 				end
 			end)
 			if numtotal > 0 then
-				local cost, share, sharehorror, sharebrilliance
+				local cost, share
+				local costhorror, sharehorror
+				local costbrilliance, sharebrilliance
 
 				if inst.sg.statemem.mega == "shadow" then
 					if numshadow > 0 then
+						cost = TUNING.WINONA_CATAPULT_MEGA_SHADOW_POWER_COST
 						share = numshadow
 						inst.sg.statemem.elemental = "shadow"
 					else
@@ -344,6 +361,7 @@ local states =
 					end
 				elseif inst.sg.statemem.mega == "lunar" then
 					if numlunar > 0 then
+						cost = TUNING.WINONA_CATAPULT_MEGA_LUNAR_POWER_COST
 						share = numlunar
 						inst.sg.statemem.elemental = "lunar"
 					else
@@ -353,24 +371,25 @@ local states =
 					if numshadow == 0 and numlunar == 0 then
 						inst.sg.statemem.mega = nil
 					elseif numshadow == 0 then
+						cost = TUNING.WINONA_CATAPULT_MEGA_LUNAR_POWER_COST
 						share = numlunar
 						inst.sg.statemem.elemental = "lunar"
 					elseif numlunar == 0 then
+						cost = TUNING.WINONA_CATAPULT_MEGA_SHADOW_POWER_COST
 						share = numshadow
 						inst.sg.statemem.elemental = "shadow"
 					else
-						--sharehorror = numshadow
-						--sharebrilliance = numlunar
-						share = numshadow + numlunar --#TODO: split share when the shadow effect is separated out
+						costhorror = TUNING.WINONA_CATAPULT_MEGA_SHADOW_POWER_COST
+						costbrilliance = TUNING.WINONA_CATAPULT_MEGA_LUNAR_POWER_COST
+						sharehorror = numshadow
+						sharebrilliance = numlunar
 						inst.sg.statemem.elemental = "hybrid"
 					end
 				end
 
-				if inst.sg.statemem.mega then
-					cost = TUNING.WINONA_CATAPULT_MEGA_ATTACK_POWER_COST
-				else
+				if inst.sg.statemem.mega == nil then
 					cost = TUNING.WINONA_CATAPULT_ATTACK_POWER_COST
-					if inst._basic or (numshadow == 0 and numlunar == 0) then
+					if inst._engineerid == nil or (numshadow == 0 and numlunar == 0) then
 						share = numtotal
 					else
 						share = numshadow + numlunar
@@ -391,9 +410,9 @@ local states =
 						elseif inst.sg.statemem.elemental == "hybrid" then
 							local elem = node:CheckElementalBattery()
 							if elem == "horror" then
-								node:ConsumeBatteryAmount(cost, sharehorror or share, inst)
+								node:ConsumeBatteryAmount(costhorror or cost, sharehorror or share, inst)
 							elseif elem == "brilliance" then
-								node:ConsumeBatteryAmount(cost, sharebrilliance or share, inst)
+								node:ConsumeBatteryAmount(costlunar or cost, sharebrilliance or share, inst)
 							end
 						else
 							node:ConsumeBatteryAmount(cost, share, inst)
@@ -427,11 +446,38 @@ local states =
             end),
             TimeEvent(21 * FRAMES, function(inst)
                 inst.components.combat:StartAttack()
-                local x, y, z = inst.Transform:GetWorldPosition()
+
                 inst.sg.statemem.rock = SpawnPrefab("winona_catapult_projectile")
 				inst.sg.statemem.rock:SetElementalRock(inst.sg.statemem.elemental, inst.sg.statemem.mega ~= nil)
-				inst.sg.statemem.rock:SetAoeRadius(inst.sg.statemem.mega and inst.AOE_RADIUS * 2 or inst.AOE_RADIUS, inst._aoe)
+
+				local aoe = inst._aoe
+				local radius = inst.AOE_RADIUS
+				if inst.sg.statemem.aoe then
+					--override to volley caster's skills
+					aoe = inst.sg.statemem.aoe
+					radius = TUNING.WINONA_CATAPULT_AOE_RADIUS * (TUNING.SKILLS.WINONA.CATAPULT_AOE_RADIUS_MULT[aoe] or 1)
+				end
+				inst.sg.statemem.rock:SetAoeRadius(
+					(not inst.sg.statemem.mega and radius) or
+					(inst.sg.statemem.elemental ~= "shadow" and radius * 2) or
+					TUNING.WINONA_CATAPULT_AOE_RADIUS, --mega shadow is always smallest hit, but spawns vines in larger area
+					aoe --this is the aoe level, used separately from the calulated radius
+				)
+
+				if inst.sg.statemem.caster then
+					inst.sg.statemem.rock.caster = inst.sg.statemem.caster
+				elseif inst._engineerid then
+					for i, v in ipairs(AllPlayers) do
+						if v.userid == inst._engineerid then
+							inst.sg.statemem.rock.caster = v
+							break
+						end
+					end
+				end
+
+				local x, y, z = inst.Transform:GetWorldPosition()
                 inst.sg.statemem.rock.Transform:SetPosition(x, y, z)
+
                 local pos = inst.sg.statemem.targetpos
                 if pos == nil then
                     --in case of missing target, toss a rock random distance in front of current facing

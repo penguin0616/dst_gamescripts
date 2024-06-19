@@ -28,6 +28,9 @@ local TRADE_DIST = 20
 
 local DIG_TAGS = { "DIG_workable", "tree" }
 local DIG_CANT_TAGS = { "carnivalgame_part", "event_trigger", "waxedplant" }
+local SOILMUST = {"soil"}
+local SOILMUSTNOT = {"merm_soil_blocker","farm_debris"}
+local FARM_DEBRIS_TAGS = {"farm_debris"}
 
 local MermBrain = Class(Brain, function(self, inst)
     Brain._ctor(self, inst)
@@ -355,6 +358,177 @@ local function TargetFollowDistFn(inst)
     return (MAX_FOLLOW_DIST - MIN_FOLLOW_DIST) * (1.0 - loyalty) * boatmod * math.random() + MIN_FOLLOW_DIST
 end
 
+
+local function collectdigsites(inst, digsites, tile)
+    local cent = Vector3(TheWorld.Map:GetTileCenterPoint(tile[1], 0, tile[2]))
+    local soils = TheSim:FindEntities(cent.x, 0, cent.z, 2, SOILMUST, SOILMUSTNOT)
+    
+    if #soils < 9 then
+        local dist = 4/3
+        for dx=-dist,dist,dist do
+            local dobreak = false
+            for dz=-dist,dist,dist do
+                --local test = SpawnPrefab("cutgrass")
+                --test.Transform:SetPosition(cent.x+dx,0, cent.z+dz)
+                local localsoils = TheSim:FindEntities(cent.x+dx,0, cent.z+dz, 0.21, SOILMUST, SOILMUSTNOT)
+
+                           -- print("CAN TILL",cent.x+dx,0,cent.z+dz, TheWorld.Map:CanTillSoilAtPoint(cent.x+dx,0,cent.z+dz))
+
+                if #localsoils < 1 and TheWorld.Map:CanTillSoilAtPoint(cent.x+dx,0,cent.z+dz) then
+
+                        --local test = SpawnPrefab("cutgrass")
+                        --test.Transform:SetPosition(cent.x+dx,0, cent.z+dz)
+                        --test:AddTag("NOBLOCK")
+
+                    table.insert(digsites,{pos = Vector3(cent.x+dx,0,cent.z+dz), tile = tile })
+                  --  dobreak = true
+                --    break
+                end
+             --   if dobreak == true then break endp
+            end
+        end
+    end 
+    return digsites
+end
+
+-------------------------------------------------------------
+-- nodeassistleader functions
+local function findtillpos(inst)
+    local tiles = {}
+    
+    if not inst.digtile then
+
+        -- collect garden tiles in a 9x9 grid
+        local RANGE = 4
+        local pos = Vector3(inst.Transform:GetWorldPosition())
+
+        for x=-RANGE,RANGE,1 do
+            for z=-RANGE,RANGE,1 do
+                local tx = pos.x + (x*4)
+                local tz = pos.z + (z*4)
+                local tile = TheWorld.Map:GetTileAtPoint(tx, 0, tz)
+                if tile == WORLD_TILES.FARMING_SOIL then
+                    table.insert(tiles,{tx,tz})
+                end
+            end
+        end
+    else
+        table.insert(tiles,inst.digtile)
+    end
+
+    -- find diggable places in those tiles.
+    local digsites = {}
+    for i,tile in ipairs(tiles)do
+        digsites = collectdigsites(inst,digsites, tile)
+    end
+
+    if #digsites > 0 then
+        local pos = digsites[math.random(1,#digsites)].pos
+        inst.digtile = digsites[math.random(1,#digsites)].tile
+        return pos
+    end
+
+    inst.digtile = nil
+end
+
+local function findTillTarget(inst,finddist)
+    return findtillpos(inst)
+end
+local function findDigTarget(inst,finddist)
+    return FindEntity(inst, finddist, nil, FARM_DEBRIS_TAGS)
+end
+
+local function TillAction(inst, leaderdist, finddist)
+    local pos = findtillpos(inst)
+    local tool = inst.components.inventory ~= nil and inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) or nil
+    if pos and tool then
+
+        pos = Vector3(pos.x -0.02 + math.random()*0.04,0,pos.z -0.02 + math.random()*0.04)
+
+        local marker = SpawnPrefab("merm_soil_marker")
+        marker.Transform:SetPosition(pos.x,pos.y,pos.z)
+        return BufferedAction(inst, nil, ACTIONS.TILL, tool, pos )
+    end
+end
+
+local function DigAction(inst, leaderdist, finddist)
+    local target = FindEntity(inst, finddist, nil, FARM_DEBRIS_TAGS)
+    if target == nil and inst.components.follower.leader ~= nil then
+        target = FindEntity(inst.components.follower.leader, finddist, nil, FARM_DEBRIS_TAGS)
+    end
+
+    if target ~= nil then
+        if inst.stump_target ~= nil then
+            target = inst.stump_target
+            inst.stump_target = nil
+        end
+
+        return BufferedAction(inst, target, ACTIONS.DIG)
+    end 
+end
+
+   ----
+
+local dig_clump_starter = function(inst,finddist)
+    local target = findDigTarget(inst,finddist)
+
+    if not target then
+        target = findTillTarget(inst,finddist)
+    end
+
+    local leaderisdigging = inst.components.follower.leader ~= nil and
+                    inst.components.follower.leader.sg ~= nil and
+                    inst.components.follower.leader.sg:HasStateTag("digging")
+
+    local leaderistilling = inst.components.follower.leader ~= nil and
+                    inst.components.follower.leader.sg ~= nil and
+                    inst.components.follower.leader.sg:HasStateTag("tilling")
+
+    return (leaderisdigging or leaderistilling) and (inst.stump_target or target) or nil
+end
+local dig_clump_keepgoing = function(inst, leaderdist, finddist)
+    return inst.stump_target ~= nil
+        or (inst.components.follower.leader ~= nil and
+            inst:IsNear(inst.components.follower.leader, leaderdist))
+end
+local dig_clump_finder = function(inst, leaderdist, finddist)
+    local action = DigAction(inst, leaderdist, finddist)
+    if not action then
+        action = TillAction(inst, leaderdist, finddist)
+    end
+    return action
+end
+
+   ----
+
+local function dig_stump_starter(inst,finddist)
+    local target = FindEntity(inst, finddist, nil, DIG_TAGS, DIG_CANT_TAGS)
+    return inst.stump_target or target or nil
+end
+
+local function dig_stump_keepgoing(inst, leaderdist, finddist)
+    return inst.stump_target ~= nil
+        or (inst.components.follower.leader ~= nil and
+            inst:IsNear(inst.components.follower.leader, leaderdist))
+end
+
+local function dig_stump_finder(inst, leaderdist, finddist)
+    local target = FindEntity(inst, finddist, nil, DIG_TAGS, DIG_CANT_TAGS)
+    if target == nil and inst.components.follower.leader ~= nil then
+        target = FindEntity(inst.components.follower.leader, finddist, nil, DIG_TAGS, DIG_CANT_TAGS)
+    end
+    if target ~= nil then
+        if inst.stump_target ~= nil then
+            target = inst.stump_target
+            inst.stump_target = nil
+        end
+
+        return BufferedAction(inst, target, ACTIONS.DIG)
+    end
+end
+
+---------------------------------------------------------------
+
 function MermBrain:OnStart()
     local in_contest = WhileNode( function() return self.inst:HasTag("NPC_contestant") end, "In contest",
         PriorityNode({
@@ -368,7 +542,7 @@ function MermBrain:OnStart()
         }, 0.1))
 
 
-    local main_nodes = PriorityNode(
+    local NODES = PriorityNode(
     {
         IfNode(function() return TheWorld.components.mermkingmanager and TheWorld.components.mermkingmanager.king end, "Panic, With King",
             BrainCommon.PanicWhenScared(self.inst, .25, "MERM_TALK_PANICBOSS_KING")),
@@ -405,33 +579,22 @@ function MermBrain:OnStart()
                 ),
             }, .25)),
 
+        WhileNode(function() return HasDigTool(self.inst) end, "Garden with tool",
+            BrainCommon.NodeAssistLeaderDoAction(self, {
+                action = "DIG", -- Required.
+                chatterstring = "MERM_TALK_HELP_TILL",
+                starter = dig_clump_starter,
+                keepgoing = dig_clump_keepgoing,
+                finder = dig_clump_finder,
+            })),
+
         WhileNode(function() return HasDigTool(self.inst) end, "dig stump with tool",
             BrainCommon.NodeAssistLeaderDoAction(self, {
                 action = "CHOP", -- Required.
                 chatterstring = "MERM_TALK_HELP_CHOP_WOOD",
-                starter = function(inst,finddist)
-                            local target = FindEntity(inst, finddist, nil, DIG_TAGS, DIG_CANT_TAGS)
-                            return inst.stump_target or target or nil
-                        end,
-                keepgoing = function(inst, leaderdist, finddist)
-                            return inst.stump_target ~= nil
-                                or (inst.components.follower.leader ~= nil and
-                                    inst:IsNear(inst.components.follower.leader, leaderdist))
-                        end,
-                finder = function(inst, leaderdist, finddist)
-                            local target = FindEntity(inst, finddist, nil, DIG_TAGS, DIG_CANT_TAGS)
-                            if target == nil and inst.components.follower.leader ~= nil then
-                                target = FindEntity(inst.components.follower.leader, finddist, nil, DIG_TAGS, DIG_CANT_TAGS)
-                            end
-                            if target ~= nil then
-                                if inst.stump_target ~= nil then
-                                    target = inst.stump_target
-                                    inst.stump_target = nil
-                                end
-
-                                return BufferedAction(inst, target, ACTIONS.DIG)
-                            end
-                        end,
+                starter = dig_stump_starter,
+                keepgoing = dig_stump_keepgoing,
+                finder = dig_stump_finder,
             })),
 
         BrainCommon.NodeAssistLeaderDoAction(self, {
@@ -465,8 +628,8 @@ function MermBrain:OnStart()
     }, .25)
 
     local root = PriorityNode({
-            WhileNode(function() return not self.inst.sg:HasStateTag("jumping") end, "pause for jump", main_nodes)
-        }, .25)
+        WhileNode(function() return not self.inst.sg:HasStateTag("jumping") end, "pause for jump", NODES)
+    }, .25)
 
     self.bt = BT(self.inst, root)
 end

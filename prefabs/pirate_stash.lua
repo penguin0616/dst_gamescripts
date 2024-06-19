@@ -124,13 +124,17 @@ local function OnInventoryFull(inst, leftovers)
         leftovers:Remove()
 
     elseif leftovers.components.inventoryitem ~= nil then
+        local x, y, z = inst.Transform:GetWorldPosition()
+
         leftovers.components.inventoryitem:DoDropPhysics(x, 0, z, true)
 
     elseif leftovers.Physics ~= nil then
         Launch(item, item, 1)
 
     else
-        leftovers.Transform:SetPosition(inst.Transform:GetWorldPosition())
+        local x, y, z = inst.Transform:GetWorldPosition()
+
+        leftovers.Transform:SetPosition(x, 0, z)
     end
 end
 

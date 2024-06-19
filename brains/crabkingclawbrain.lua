@@ -11,8 +11,8 @@ require "behaviours/leashandavoid"
 
 local WAMDER_DIST = 2
 local LEASH_DIST = 18
-local TARGET_LEASH_DIST = 6
-local CREABKING_RADIUS = 5.5
+local TARGET_LEASH_DIST = 3
+local CRABKING_RADIUS = 5
 
 local function findavoidanceobjectfn(inst)
     if inst.crabking then
@@ -20,24 +20,49 @@ local function findavoidanceobjectfn(inst)
     end
 end
 
-local function ShouldAttack(self)
-    if self.inst.components.combat:InCooldown() then
-        return 
+local function AttackTarget(inst)
+    if inst.components.combat:InCooldown() then 
+        return nil
     end
-    local target = self.inst.components.combat.target
+    local target = inst.components.combat.target
     if not target then
         return nil
     end
 
-    local x, y, z = self.inst.Transform:GetWorldPosition()
+    local x, y, z = inst.Transform:GetWorldPosition()
     local tx, ty, tz = target.Transform:GetWorldPosition()
-    local range = self.inst.components.combat.attackrange
+    local range = inst.components.combat.attackrange
 
-    if VecUtil_LengthSq(x - tx, z - tz) > range * range then
-        return false
+    if inst:GetDistanceSqToInst(target) > range * range then
+        return nil
     end
 
-    return true
+    inst:FacePoint(target:GetPosition())
+    return BufferedAction(inst, target, ACTIONS.ATTACK)
+end
+
+local function CircleBoat(inst)
+    local target = inst.components.combat.target
+    if not target then
+        return nil
+    end    
+    local platform = target:GetCurrentPlatform()
+    if not platform then
+        return nil
+    end
+
+    local x,y,z = target.Transform:GetWorldPosition()
+    local px,py,pz = platform.Transform:GetWorldPosition()
+    local theta = platform:GetAngleToPoint(x,y,z)*DEGREES
+    local radius= platform.components.hull:GetRadius() + 1
+
+    local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
+
+    local pos = offset and Vector3(px,py,pz) + offset
+
+    if pos and inst:GetDistanceSqToPoint(pos) > 1 then
+        return pos
+    end    
 end
 
 local CrabkingClawBrain = Class(Brain, function(self, inst)
@@ -48,13 +73,13 @@ function CrabkingClawBrain:OnStart()
     local root = PriorityNode(
     {
 
-        WhileNode(function() return ShouldAttack(self) end, nil, StandAndAttack(self.inst)),
-        --Leash(self.inst, function() return self.inst.components.knownlocations:GetLocation("spawnpoint") end, LEASH_DIST*2, LEASH_DIST, false),
+        DoAction(self.inst, AttackTarget, "AttackTarget"),
 
+        IfNode(function() return CircleBoat(self.inst) and true or false end, "circle",
+            LeashAndAvoid(self.inst, findavoidanceobjectfn, CRABKING_RADIUS, function() return CircleBoat(self.inst) end, 1, 1.5, false)),
 
-        LeashAndAvoid(self.inst, findavoidanceobjectfn, CREABKING_RADIUS,  function() return self.inst.components.combat.target and Vector3(self.inst.components.combat.target.Transform:GetWorldPosition())  end, LEASH_DIST, 5, false),
+        LeashAndAvoid(self.inst, findavoidanceobjectfn, CRABKING_RADIUS, function() return self.inst.components.combat.target and Vector3(self.inst.components.combat.target.Transform:GetWorldPosition())  end, TARGET_LEASH_DIST, 5, false),
 
-        LeashAndAvoid(self.inst, findavoidanceobjectfn, CREABKING_RADIUS, function() return self.inst.components.combat.target and Vector3(self.inst.components.combat.target.Transform:GetWorldPosition())  end, TARGET_LEASH_DIST, 5, false),
         Wander(self.inst, function() return self.inst.components.knownlocations:GetLocation("spawnpoint") end, WAMDER_DIST,
             {
                 minwalktime=0.5,

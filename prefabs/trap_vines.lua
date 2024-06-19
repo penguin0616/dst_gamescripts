@@ -21,7 +21,7 @@ local AOE_RANGE_PADDING = 3
 local NO_TAGS_PVP = { "flying", "INLIMBO", "ghost", "playerghost", "FX", "NOCLICK", "DECOR", "notarget", "companion", "shadowminion" }
 local NO_TAGS = shallowcopy(NO_TAGS_PVP)
 table.insert(NO_TAGS, "player")
-local COMBAT_TAGS = { "_combat" }
+local COMBAT_TAGS = { "_combat", "locomotor" }
 
 local TARGETS = {}
 
@@ -30,18 +30,18 @@ local function ForgetTarget(target)
 	target:RemoveEventCallback("onremove", ForgetTarget)
 end
 
-local function TryDoDamage(inst, target, attacker)
+local function TryDoDamage(inst, target)--, attacker)
 	if not TARGETS[target] then
 		TARGETS[target] = true
 		target:DoTaskInTime(TUNING.TRAP_VINES_HIT_COOLDOWN, ForgetTarget)
 		target:ListenForEvent("onremove", ForgetTarget)
 
-		if attacker and not (target.components.combat.target and target.components.combat.target:HasTag("player")) then
+		--[[if attacker and not (target.components.combat.target and target.components.combat.target:HasTag("player")) then
 			--if target is not targeting a player, then use the catapult as attacker to draw aggro
 			attacker.components.combat:DoAttack(target)
-		else
+		else]]
 			inst.components.combat:DoAttack(target)
-		end
+		--end
 		return true
 	end
 end
@@ -74,13 +74,20 @@ local function OnUpdate(inst)
 	local ents = TheSim:FindEntities(x, y, z, AOE_RADIUS + AOE_RANGE_PADDING, COMBAT_TAGS, TheNet:GetPVPEnabled() and NO_TAGS_PVP or NO_TAGS)
 
 	if #ents > 0 then
-		if inst.attacker and inst.attacker.components.combat and inst.attacker:IsValid() then
+		--[[if inst.attacker and inst.attacker.components.combat and inst.attacker:IsValid() then
 			inst.attacker.components.combat.ignorehitrange = true
 			inst.attacker.components.combat:SetDefaultDamage(TUNING.TRAP_VINES_DAMAGE)
 			inst.attacker.components.planardamage:SetBaseDamage(TUNING.TRAP_VINES_PLANAR_DAMAGE)
 			inst.attacker.components.damagetypebonus:AddBonus("lunar_aligned", inst, TUNING.WINONA_CATAPULT_DAMAGETYPE_MULT)
 		else
 			inst.attacker = nil
+		end]]
+
+		local caster_combat
+		if inst.caster and inst.caster:IsValid() then
+			caster_combat = inst.caster.components.combat
+		else
+			inst.caster = nil
 		end
 
 		local jiggle = false
@@ -88,26 +95,39 @@ local function OnUpdate(inst)
 			if v:IsValid() and
 				v.entity:IsVisible() and
 				v:GetDistanceSqToPoint(x, y, z) < inst.components.combat:CalcHitRangeSq(v) and
-				inst.components.combat:CanTarget(v) and
-				v.Physics
+				inst.components.combat:CanTarget(v)
 			then
-				ApplyDebuff(inst, v)
+				local isally
+				if caster_combat then
+					isally = caster_combat:IsAlly(v)
+				elseif not TheNet:GetPVPEnabled() and
+					not (v.components.combat and v.components.combat:HasTarget() and v.components.combat.target:HasTag("player")) and
+					(	v:HasTag("companion") or
+						(v.components.follower and v.components.follower:GetLeader() and v.components.follower:GetLeader():HasTag("player"))
+					)
+				then
+					isally = true
+				end
 
-				local vx, vy, vz = v.Physics:GetVelocity()
-				if vx ~= 0 or vy ~= 0 or vz ~= 0 then
-					jiggle = true
-					TryDoDamage(inst, v, inst.attacker)
+				if not isally then
+					ApplyDebuff(inst, v)
+
+					local vx, vy, vz = v.Physics:GetVelocity()
+					if vx ~= 0 or vy ~= 0 or vz ~= 0 then
+						jiggle = true
+						TryDoDamage(inst, v)--, inst.attacker)
+					end
 				end
 			end
 		end
 
-		if inst.attacker then
+		--[[if inst.attacker then
 			inst.attacker.components.combat.ignorehitrange = false
 			inst.attacker.components.combat:SetDefaultDamage(TUNING.WINONA_CATAPULT_DAMAGE)
 			inst.attacker.components.planardamage:SetBaseDamage(0)
 			inst.attacker.components.damagetypebonus:RemoveBonus("shadow_aligned", inst)
 			inst.attacker.components.damagetypebonus:RemoveBonus("lunar_aligned", inst)
-		end
+		end]]
 
 		if jiggle and not (inst.AnimState:IsCurrentAnimation("jiggle") and inst.AnimState:GetCurrentAnimationFrame() < 8) then
 			inst.AnimState:PlayAnimation("jiggle"..tostring(inst.variation))
@@ -225,6 +245,9 @@ local function fn()
 	inst.DespawnTrap = DespawnTrap
 	inst.OnSave = OnSave
 	inst.OnLoad = OnLoad
+
+	--inst.attacker is the catapult that spawned us
+	--inst.caster is the player that triggered the catapult
 
 	return inst
 end

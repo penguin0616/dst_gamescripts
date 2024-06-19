@@ -177,11 +177,19 @@ local function OnAnimState_Client(inst)
 			inst._anim.AnimState:PushAnimation("open_loop")
 			inst._anim.components.projectedeffects:MakeOpaque()
 			inst._anim.components.projectedeffects:LockDecay(true)
+            if not inst._anim._chuffing then
+                inst._anim._chuffing = true
+                inst._anim.SoundEmitter:PlaySound("meta4/wires_minigame/item_dispense_lp", "chuffing")
+            end
 		elseif inst._animstate:value() == ANIM_STATE["open_loop"] then
 			--open for loot fling
 			inst._anim.AnimState:PlayAnimation("open_loop", true)
 			inst._anim.components.projectedeffects:MakeOpaque()
 			inst._anim.components.projectedeffects:LockDecay(true)
+            if not inst._anim._chuffing then
+                inst._anim._chuffing = true
+                inst._anim.SoundEmitter:PlaySound("meta4/wires_minigame/item_dispense_lp", "chuffing")
+            end
 		elseif inst._animstate:value() == ANIM_STATE["open_pst"] then
 			--close and decay after loot fling
 			inst._anim.AnimState:PlayAnimation("open_pst")
@@ -189,6 +197,10 @@ local function OnAnimState_Client(inst)
 			inst._anim.components.projectedeffects:MakeOpaque()
 			inst._anim.components.projectedeffects:SetDecayTime(1.5)
 			inst._anim.components.projectedeffects:LockDecay(false)
+            if inst._anim._chuffing then
+                inst._anim._chuffing = nil
+                inst._anim.SoundEmitter:KillSound("chuffing")
+            end
 			KillClientAnim(inst)
 		elseif inst._animstate:value() == ANIM_STATE["closed"] then
 			--close and decay after loot fling
@@ -196,6 +208,10 @@ local function OnAnimState_Client(inst)
 			inst._anim.components.projectedeffects:MakeOpaque()
 			inst._anim.components.projectedeffects:SetDecayTime(0.5)
 			inst._anim.components.projectedeffects:LockDecay(false)
+            if inst._anim._chuffing then
+                inst._anim._chuffing = nil
+                inst._anim.SoundEmitter:KillSound("chuffing")
+            end
 			KillClientAnim(inst)
 		end
 	end
@@ -221,6 +237,12 @@ local function SetAnimState(inst, state, delay, cb)
 		inst._animtask:Cancel()
 	end
 	inst._animtask = cb and inst:DoTaskInTime(delay, cb) or nil
+end
+
+local function OnChuffSnd_Client(inst)
+    if inst._anim then
+        inst._anim.SoundEmitter:PlaySound("meta4/wires_minigame/item_dispense_pst")
+    end
 end
 
 local function OnIsProjected_Client(inst)
@@ -297,6 +319,10 @@ local function DoLootPinata_DoFling(inst)
         local pt = inst:GetPosition()
         pt.y = LOOT_VERTICAL_OFFSET
         inst.components.lootdropper:FlingItem(loot, pt)
+        inst._chuffsnd:push()
+        if inst._inspectaclesowner.HUD then
+            OnChuffSnd_Client(inst)
+        end
     end
 
     inst._inspectacleslootsindex = inst._inspectacleslootsindex + 1
@@ -364,6 +390,7 @@ local function commonfn(build)
     inst:AddTag("ignorewalkableplatforms")
 	inst:AddTag("CLASSIFIED")
 
+    inst._chuffsnd = net_event(inst.GUID, "inspectaclesbox._chuffsndevent")
 	inst._isprojected = net_bool(inst.GUID, "inspectaclesbox._isprojected", "isprojecteddirty")
 	inst._animstate = net_tinybyte(inst.GUID, "inspectaclesbox._animstate", "animstatedirty")
 	inst._ANIMBUILD = build
@@ -371,6 +398,7 @@ local function commonfn(build)
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
+		inst:ListenForEvent("inspectaclesbox._chuffsndevent", OnChuffSnd_Client)
 		inst:ListenForEvent("isprojecteddirty", OnIsProjected_Client)
 		inst:ListenForEvent("animstatedirty", OnAnimState_Client)
 

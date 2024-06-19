@@ -43,17 +43,42 @@ local function ApplyEfficiencyBonus(inst)
 	end
 end
 
---used by item as well
+local function IsEngineerOnline(inst)
+	if inst._engineerid then
+		local clients = TheNet:GetClientTable()
+		if clients then
+			local isdedicated = not TheNet:GetServerIsClientHosted()
+			for i, v in ipairs(clients) do
+				if not isdedicated or v.performance == nil then
+					if v.userid == inst._engineerid then
+						--no inst if it's on another shard, so can't test :HasTag("handyperson")
+						return v.prefab == "winona"
+					end
+				end
+			end
+		end
+	end
+	return false
+end
+
 local function ConfigureSkillTreeUpgrades(inst, builder)
 	local skilltreeupdater = builder and builder.components.skilltreeupdater or nil
-	if skilltreeupdater then
-		inst._noidledrain = skilltreeupdater:IsActivated("winona_battery_idledrain")
-		inst._efficiency =
-			(skilltreeupdater:IsActivated("winona_battery_efficiency_3") and 3) or
+
+	local noidledrain = skilltreeupdater ~= nil and skilltreeupdater:IsActivated("winona_battery_idledrain")
+
+	local efficiency = skilltreeupdater and
+		(	(skilltreeupdater:IsActivated("winona_battery_efficiency_3") and 3) or
 			(skilltreeupdater:IsActivated("winona_battery_efficiency_2") and 2) or
-			(skilltreeupdater:IsActivated("winona_battery_efficiency_1") and 1) or
-			0
-	end
+			(skilltreeupdater:IsActivated("winona_battery_efficiency_1") and 1)
+		) or 0
+
+	local dirty = inst._noidledrain ~= noidledrain or inst._efficiency ~= efficiency
+
+	inst._noidledrain = noidledrain
+	inst._efficiency = efficiency
+	inst._engineerid = builder and builder:HasTag("handyperson") and builder.userid or nil
+
+	return dirty
 end
 
 --------------------------------------------------------------------------
@@ -82,7 +107,10 @@ local function StopBattery(inst)
 end
 
 local function UpdateCircuitPower(inst)
-    inst._circuittask = nil
+	if inst._circuittask then
+		inst._circuittask:Cancel()
+		inst._circuittask = nil
+	end
     if inst.components.fueled ~= nil then
         if inst.components.fueled.consuming then
 			local total_load = 0
@@ -125,9 +153,6 @@ end
 local function BroadcastCircuitChanged(inst)
     --Notify other connected nodes, so that they can notify their connected batteries
     inst.components.circuitnode:ForEachNode(NotifyCircuitChanged)
-    if inst._circuittask ~= nil then
-        inst._circuittask:Cancel()
-    end
     UpdateCircuitPower(inst)
 end
 
@@ -242,10 +267,6 @@ local function CopyAllProperties(src, dest)
 	dest._chemical_level = src._chemical_level
 	dest._nightmare_level = src._nightmare_level
 	dest._horror_level = src._horror_level
-
-	--skilltree
-	dest._noidledrain = src._noidledrain
-	dest._efficiency = src._efficiency
 end
 
 local function CheckElementalBattery(inst)
@@ -384,7 +405,7 @@ local function CanAddFuelItem(inst, item, doer)
 end
 
 --used by item as well
-local function OnAddFuelAdjustLevels(inst, item, fuelvalue)
+local function OnAddFuelAdjustLevels(inst, item, fuelvalue, doer)
 	--normally, horror > nightmare > chem,
 	--except the item we JUST added jumps to highest priority
 	local max = inst.components.fueled.currentfuel
@@ -401,7 +422,18 @@ local function OnAddFuelAdjustLevels(inst, item, fuelvalue)
 end
 
 --V2C: this is newly supported callback, that happens earlier, just before the fuel item is destroyed
-local function OnAddFuelItem(inst, item, fuelvalue)
+local function OnAddFuelItem(inst, item, fuelvalue, doer)
+	local dirty
+	if not (doer and doer:HasTag("handyperson")) and IsEngineerOnline(inst) then
+		--original winona still online, don't de-level
+		dirty = false
+	else
+		dirty = ConfigureSkillTreeUpgrades(inst, doer)
+		if dirty then
+			ApplyEfficiencyBonus(inst)
+		end
+	end
+
 	local hadhorror = inst._horror_level > 0
 	OnAddFuelAdjustLevels(inst, item, fuelvalue)
 	RefreshFuelTypeEffects(inst)
@@ -411,7 +443,12 @@ local function OnAddFuelItem(inst, item, fuelvalue)
 			if inst.components.fueled.consuming then
 				BroadcastCircuitChanged(inst)
 			end
+			dirty = false --BroadcastCircuitChanged here or below, so don't need to UpdateCircuitPower
 		end
+	end
+
+	if dirty then
+		UpdateCircuitPower(inst)
 	end
 end
 
@@ -466,6 +503,22 @@ local function CalcFuelMultiplier(inst, fuel_obj)
 	return fuel_obj.components.fuel.fueltype == FUELTYPE.NIGHTMARE and 0.5 or 1
 end
 
+local function OnUsedIndirectly(inst, doer)
+	if (doer and doer.userid or nil) == inst._engineerid then
+		if doer:HasTag("engineerid") then
+			--skip if this is already mine and I'm still an engineer (didn't swap chars)
+			return
+		end
+	elseif IsEngineerOnline(inst) then
+		--skip if engineer is still online
+		return
+	end
+	if ConfigureSkillTreeUpgrades(inst, doer) then
+		ApplyEfficiencyBonus(inst)
+		UpdateCircuitPower(inst)
+	end
+end
+
 local function OnSave(inst, data)
 	if inst.components.burnable and inst.components.burnable:IsBurning() or inst:HasTag("burnt") then
 		data.burnt = true
@@ -476,6 +529,7 @@ local function OnSave(inst, data)
 		--skilltree
 		data.noidledrain = inst._noidledrain or nil
 		data.efficiency = inst._efficiency > 0 and inst._efficiency or nil
+		data.engineerid = inst._engineerid
 	end
 end
 
@@ -503,6 +557,7 @@ local function OnLoad(inst, data, ents)
 		if data then
 			inst._noidledrain = data.noidledrain or false
 			inst._efficiency = data.efficiency or 0
+			inst._engineerid = data.engineerid
 			ApplyEfficiencyBonus(inst)
 		end
     end
@@ -579,7 +634,10 @@ local function OnBuilt1(inst, section)
     end
 end
 
-local function DoBuiltOrDeployed(inst, anim, sound, powerupframe, connectframe)
+local function DoBuiltOrDeployed(inst, doer, anim, sound, powerupframe, connectframe)
+	ConfigureSkillTreeUpgrades(inst, doer)
+	ApplyEfficiencyBonus(inst)
+
     if inst._inittask ~= nil then
         inst._inittask:Cancel()
         inst._inittask = nil
@@ -613,21 +671,18 @@ local function DoBuiltOrDeployed(inst, anim, sound, powerupframe, connectframe)
 end
 
 local function OnBuilt(inst, data)
-	ConfigureSkillTreeUpgrades(inst, data and data.builder or nil)
-	ApplyEfficiencyBonus(inst)
-	DoBuiltOrDeployed(inst, "place", "dontstarve/common/together/battery/place", 60, 66)
+	DoBuiltOrDeployed(inst, data and data.builder or nil, "place", "dontstarve/common/together/battery/place", 60, 66)
 end
 
-local function OnDeployed(inst, item)
+local function OnDeployed(inst, item, deployer)
 	inst.components.fueled:SetDepletedFn(nil)
 	inst.components.fueled:SetSectionCallback(nil)
 	inst.components.fueled:SetPercent(item.components.fueled:GetPercent())
 	inst.components.fueled:SetDepletedFn(OnFuelEmpty)
 	inst.components.fueled:SetSectionCallback(OnFuelSectionChange)
 	CopyAllProperties(item, inst)
-	ApplyEfficiencyBonus(inst)
 	RefreshFuelTypeEffects(inst)
-	DoBuiltOrDeployed(inst, "deploy", "meta4/winona_battery/battery_low_deploy", 16, 22)
+	DoBuiltOrDeployed(inst, deployer, "deploy", "meta4/winona_battery/battery_low_deploy", 16, 22)
 end
 
 --------------------------------------------------------------------------
@@ -806,6 +861,14 @@ local function fn()
 
     inst:ListenForEvent("onbuilt", OnBuilt)
     inst:ListenForEvent("engineeringcircuitchanged", OnCircuitChanged)
+	inst:ListenForEvent("winona_batteryskillchanged", function(world, user)
+		if user.userid == inst._engineerid then
+			if ConfigureSkillTreeUpgrades(inst, user) then
+				ApplyEfficiencyBonus(inst)
+				UpdateCircuitPower(inst)
+			end
+		end
+	end, TheWorld)
 
     MakeHauntableWork(inst)
     MakeMediumBurnable(inst, nil, nil, true)
@@ -820,10 +883,12 @@ local function fn()
     inst.OnEntityWake = OnEntityWake
 	inst.CheckElementalBattery = CheckElementalBattery
 	inst.ConsumeBatteryAmount = ConsumeBatteryAmount
+	inst.OnUsedIndirectly = OnUsedIndirectly
 
 	--skilltree
 	inst._noidledrain = false
 	inst._efficiency = 0
+	inst._engineerid = nil
 
 	inst._chemical_level = inst.components.fueled.currentfuel
 	inst._nightmare_level = 0
@@ -875,7 +940,7 @@ local function OnDeploy(inst, pt, deployer)
 		obj.Physics:SetCollides(false)
 		obj.Physics:Teleport(pt.x, 0, pt.z)
 		obj.Physics:SetCollides(true)
-		OnDeployed(obj, inst)
+		OnDeployed(obj, inst, deployer)
 		PreventCharacterCollisionsWithPlacedObjects(obj)
 	end
 	inst:Remove()
@@ -901,17 +966,9 @@ local function SERVER_PlayFuelSound(inst)
 	end
 end
 
-local function Item_OnPreBuilt(inst, builder, materials, recipe)
-	ConfigureSkillTreeUpgrades(inst, builder)
-end
-
 local function Item_OnSave(inst, data)
 	data.nightmare = inst._nightmare_level > 0 and inst._nightmare_level or nil
 	data.horror = inst._horror_level > 0 and inst._horror_level or nil
-
-	--skilltree
-	data.noidledrain = inst._noidledrain or nil
-	data.efficiency = inst._efficiency > 0 and inst._efficiency or nil
 end
 
 local function Item_OnLoad(inst, data, ents)
@@ -920,10 +977,6 @@ local function Item_OnLoad(inst, data, ents)
 		inst._horror_level = data.horror or 0
 		inst._chemical_level = inst.components.fueled.currentfuel
 		AdjustLevelsByPriority(inst, "_horror_level", "_nightmare_level", "_chemical_level")
-
-		--skilltree
-		inst._noidledrain = data.noidledrain or false
-		inst._efficiency = data.efficiency or 0
 	end
 end
 
@@ -980,15 +1033,10 @@ local function itemfn()
 	MakeMediumBurnable(inst)
 	MakeMediumPropagator(inst)
 
-	--skilltree
-	inst._noidledrain = false
-	inst._efficiency = 0
-
 	inst._chemical_level = inst.components.fueled.currentfuel
 	inst._nightmare_level = 0
 	inst._horror_level = 0
 
-	inst.onPreBuilt = Item_OnPreBuilt
 	inst.OnSave = Item_OnSave
 	inst.OnLoad = Item_OnLoad
 

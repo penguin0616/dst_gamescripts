@@ -268,6 +268,8 @@ local function fn()
         return inst
     end
 
+    inst.scrapbook_weapondamage = TUNING.BOMB_MOSQUITO_DAMAGE
+
     inst.SpawnMosquitos = SpawnMosquitos
     inst.DoImpactDamage = DoImpactDamage
     inst.PlayFunnyIdle  = PlayFunnyIdle

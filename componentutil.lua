@@ -155,10 +155,6 @@ local function RosePoint_VineBridge_Check(inst, pt)
     local maxlength = TUNING.SKILLS.WINONA.CHARLIE_VINEBRIDGE_LENGTH_TILES
 
     local sx, sy, sz = pt:Get()
-    if _map:IsOceanTileAtPoint(sx, 0, sz) then
-        -- We want the player to be fully on land to initiate this.
-        return false
-    end
 
     -- Get direction vector from the player instance because it is the most context sensitive for directionality.
     local dirx, _, dirz = inst.Transform:GetWorldPosition()
@@ -177,6 +173,16 @@ local function RosePoint_VineBridge_Check(inst, pt)
 
     -- Center start to center of tile.
     sx, sy, sz = _map:GetTileCenterPoint(sx, sy, sz)
+
+    if _map:IsOceanTileAtPoint(sx, 0, sz) then
+        -- Push back the start point a tile to see if that is valid.
+        sx, sz = sx - dx, sz - dz
+    end
+
+    if not _map:IsLandTileAtPoint(sx, 0, sz) then
+        -- We want the player to be fully on land to initiate this.
+        return false
+    end
 
     -- Scan for land.
     local hitland = false

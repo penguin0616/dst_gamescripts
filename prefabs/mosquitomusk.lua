@@ -41,6 +41,7 @@ local function fn()
     inst:AddComponent("inventoryitem")
 
     inst:AddComponent("perishable")
+    inst.components.perishable.onperishreplacement = "spoiled_food"
     inst.components.perishable:SetPerishTime(TUNING.PERISH_FASTISH)
     inst.components.perishable:StartPerishing()
 

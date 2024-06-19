@@ -268,7 +268,7 @@ local function TargetFollowTargetDistFn(inst)
 end
 
 function MermBrain:OnStart()
-    local root = PriorityNode(
+    local NODES = PriorityNode(
     {
 		BrainCommon.PanicTrigger(self.inst),
 
@@ -351,6 +351,10 @@ function MermBrain:OnStart()
 
         FaceEntity(self.inst, GetFaceTargetFn, KeepFaceTargetFn),
         Wander(self.inst, GetNoLeaderHomePos, MAX_WANDER_DIST),
+    }, .25)
+
+    local root = PriorityNode({
+        WhileNode(function() return not self.inst.sg:HasStateTag("jumping") end, "pause for jump", NODES)
     }, .25)
 
     self.bt = BT(self.inst, root)

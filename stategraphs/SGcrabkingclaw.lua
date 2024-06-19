@@ -94,6 +94,7 @@ end
 local actionhandlers =
 {
     ActionHandler(ACTIONS.HAMMER, "attack"),
+    ActionHandler(ACTIONS.ATTACK, "attack"),
 }
 
 local events =
@@ -214,8 +215,8 @@ local states =
 		onenter = function(inst, target)
 			inst.components.locomotor:Stop()
 			inst.Transform:SetEightFaced()
-			inst.AnimState:PlayAnimation("atk")                    
-
+			inst.AnimState:PlayAnimation("atk")
+            inst.components.combat:RestartCooldown()
 			inst.components.combat:StartAttack()
 
 			if target and target:IsValid() then
@@ -257,6 +258,7 @@ local states =
 		},
 
 		onexit = function(inst)
+            inst:ClearBufferedAction()
 			if inst.sg.statemem.swipefx and inst.sg.statemem.swipefx:IsValid() then
 				inst.sg.statemem.swipefx:Remove()
 			end
@@ -272,7 +274,7 @@ local states =
 
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
-            play_shadow_animation(inst, "hit")            
+            play_shadow_animation(inst, "hit")
         end,
 
         events =
@@ -293,7 +295,7 @@ local states =
             end
             inst.AnimState:PlayAnimation("death")
             RemovePhysicsColliders(inst)
-            inst.components.lootdropper:DropLoot(inst:GetPosition())           
+            inst.components.lootdropper:DropLoot(inst:GetPosition())
         end,
     },    
 

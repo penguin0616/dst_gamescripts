@@ -156,27 +156,30 @@ end
 RoseInspectableUser.InvalidTags = {"lunar_aligned", "notroseinspectable"}
 
 function RoseInspectableUser:TryToDoRoseInspectionOnTarget(target)
-    if target.prefab ~= "charlieresidue" then
-        if not CLOSEINSPECTORUTIL.IsValidTarget(self.inst, target) then
-            return false, "ROSEGLASSES_INVALID"
-        end
-
-        if target:HasAnyTag(self.InvalidTags) then
-            return false, "ROSEGLASSES_INVALID"
-        end
-
-        local roseinspectable = target.components.roseinspectable
-        if roseinspectable == nil or not roseinspectable:CanResidueBeSpawnedBy(self.inst) then
-            return false, "ROSEGLASSES_INVALID"
-        end
-
-        local will_cooldown = roseinspectable:WillInduceCooldownOnActivate(self.inst)
-        if will_cooldown and self:IsInCooldown() then
-            return false, "ROSEGLASSES_COOLDOWN"
-        end
-
-        self:SetRoseInpectionOnTarget(target)
+    if target.prefab == "charlieresidue" then
+        self:ForceDecayResidue()
+        return false, "ROSEGLASSES_DISMISS"
     end
+
+    if not CLOSEINSPECTORUTIL.IsValidTarget(self.inst, target) then
+        return false, "ROSEGLASSES_INVALID"
+    end
+
+    if target:HasAnyTag(self.InvalidTags) then
+        return false, "ROSEGLASSES_INVALID"
+    end
+
+    local roseinspectable = target.components.roseinspectable
+    if roseinspectable == nil or not roseinspectable:CanResidueBeSpawnedBy(self.inst) then
+        return false, "ROSEGLASSES_INVALID"
+    end
+
+    local will_cooldown = roseinspectable:WillInduceCooldownOnActivate(self.inst)
+    if will_cooldown and self:IsInCooldown() then
+        return false, "ROSEGLASSES_COOLDOWN"
+    end
+
+    self:SetRoseInpectionOnTarget(target)
 
     self:DoQuip("ANNOUNCE_ROSEGLASSES")
     return true

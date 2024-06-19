@@ -111,6 +111,7 @@ local function OnPutInInventory(inst, owner)
 		inst._inittask:Cancel()
 		inst._inittask = nil
 	end
+	inst._landed_owner = nil
 	inst._owner = owner
 	inst._quickcharge = false
 	inst.components.circuitnode:Disconnect()
@@ -125,11 +126,18 @@ local function OnDropped(inst)
 		then
 			inst._quickcharge = true
 		end
+		inst._landed_owner = inst._owner
 		inst._owner = nil
 	end
 
 	if inst.components.inventoryitem.is_landed then
 		inst.components.circuitnode:ConnectTo("engineeringbattery")
+		if inst._landed_owner then
+			inst.components.circuitnode:ForEachNode(function(inst, node)
+				node:OnUsedIndirectly(inst._landed_owner)
+			end)
+			inst._landed_owner = nil
+		end
 	else
 		inst.components.circuitnode:Disconnect()
 	end
@@ -143,7 +151,13 @@ end
 local function OnLanded(inst)
 	if not (inst.components.circuitnode:IsEnabled() or inst.components.inventoryitem:IsHeld()) then
 		inst.components.circuitnode:ConnectTo("engineeringbattery")
+		if inst._landed_owner and inst._landed_owner:IsValid() then
+			inst.components.circuitnode:ForEachNode(function(inst, node)
+				node:OnUsedIndirectly(inst._landed_owner)
+			end)
+		end
 	end
+	inst._landed_owner = nil
 end
 
 local function OnSave(inst, data)
@@ -193,7 +207,7 @@ local function OnStartTeleport(inst, doer)
 	inst.components.fueled:StopConsuming()
 end
 
-local function OnTeleported(inst, doer, success)
+local function OnTeleported(inst, doer, success)--, target, items)
 	local amt = inst.components.fueled.currentfuel
 	if amt > 0.00001 then
 		amt = math.min(TUNING.WINONA_TELEBRELLA_TELEPORT_FUEL, amt - 0.00001)

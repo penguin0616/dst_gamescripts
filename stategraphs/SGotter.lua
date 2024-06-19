@@ -151,12 +151,17 @@ CommonStates.AddSimpleActionState(states, "drop", "drop", nil, BUSY_TAGS, nil, {
 })
 CommonStates.AddSimpleActionState(states, "gohome", "sleep_pre", 23*FRAMES, BUSY_TAGS)
 
-CommonStates.AddSimpleActionState(states, "steal", "attack", nil, BUSY_TAGS, nil, {
+CommonStates.AddSimpleActionState(states, "steal", "attack", nil, nil, "taunt", {
     SoundFrameEvent(0, "meta4/otter/attack_f0"),
     SoundFrameEvent(4, "meta4/otter/vo_attack_f4"),
-    FrameEvent(6, function(inst)
+    FrameEvent(10, function(inst)
         inst:PerformBufferedAction()
     end),
+},
+{
+    onexit = function(inst)
+        inst:ClearBufferedAction()
+    end,
 })
 
 local ATTACK_FRAME = 15

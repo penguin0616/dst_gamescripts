@@ -190,6 +190,8 @@ local CHIP_SIZES =
     "crabking_chip_med",
 }
 
+
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
 
 local function GetFreezeRange(inst)
@@ -329,9 +331,9 @@ local function OnAttacked(inst, data)
 end
 
 local function OnRemove(inst)
-    if inst.arms == nil or next(inst.arms) == nil then
-        return
-    end
+        if inst.arms == nil or next(inst.arms) == nil then
+            return
+        end
 
         for i, arm in ipairs(inst.arms) do
             if arm.task ~= nil then
@@ -369,6 +371,13 @@ local function KillKeyStone(ent)
     end
 end
 
+local function startendicetask(inst)
+    if inst.end_ice_task == nil then
+        local time = math.max(3, Remap(inst.gemcount.blue, 0, 11, 25, 3 ))
+        inst.end_ice_task = inst:DoTaskInTime(time, inst.EndIceStage)
+    end
+end
+
 local function OnKeyStoneRemoved(inst, stone)
     if inst.keystones ~= nil then
         table.removearrayvalue(inst.keystones, stone)
@@ -380,11 +389,7 @@ local function OnKeyStoneRemoved(inst, stone)
 
     inst:RemoveTag("notarget")
 
-    if inst.end_ice_task == nil then
-        local time = math.max(3, Remap(inst.gemcount.blue, 0, 11, 25, 3 ))
-
-        inst.end_ice_task = inst:DoTaskInTime(time, inst.EndIceStage)
-    end
+    startendicetask(inst)
 
     local x, y, z = stone.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x, 0, z, 3, KEYSTONE_MUST_TAGS)
@@ -407,6 +412,7 @@ local function OnCannonTowerRemoved(inst, tower)
     end
 
     -- This auto sets the crabking into doing the ice afte X time.
+    --[[
     if inst.tasks.cannondead_triggerice_task == nil then
         inst.tasks.cannondead_triggerice_task = inst:DoTaskInTime(12, function()
             inst.tasks.cannondead_triggerice_task = nil
@@ -414,6 +420,7 @@ local function OnCannonTowerRemoved(inst, tower)
             inst.damagetotal = (inst.damagetotal or 0) - TUNING.CRABKING_FREEZE_THRESHOLD
         end)
     end
+    ]]
 end
 
 local function CleanUpArena(inst, remove)
@@ -543,7 +550,7 @@ local function OnSave(inst, data)
 
         for i, stone in pairs(inst.keystones) do
             if stone:IsValid() then
-                data.keystones[i] = stone.GUID
+                table.insert(data.keystones,stone.GUID)
                 table.insert(ents, stone.GUID)
             end
         end
@@ -650,7 +657,17 @@ local function OnLoadPostPass(inst, newents, data)
         inst.AnimState:Show("water")
         inst:DoTaskInTime(0, function() inst.Physics:SetCapsule(ICEHOLE_PHYSICS_RADIUS, 2) end)
 
-        if inst.keystones ~= nil and #inst.keystones == #KEYSTONE_POSITIONS then
+
+        local keystonecount = 0
+        
+        for i,stone in ipairs(inst.keystones) do
+            if stone then
+                keystonecount = keystonecount + 1
+            end
+        end
+
+        if inst.keystones ~= nil and #inst.keystones < #KEYSTONE_POSITIONS then
+            startendicetask(inst)
             inst:AddTag("notarget")
         end
     else
@@ -847,11 +864,14 @@ local function EndCastSpell(inst, lastwasfreeze)
     inst:AddTag("icewall")
     inst:AddTag("notarget")
 
+    inst.components.timer:StartTimer("taunt",TUNING.CRABKING_TAUNTTIME)
+
+    inst.wantstotaunt = true
     inst.wantstoheal = nil
     inst.wantstofreeze = nil
 
     SpawnPrefab("crabking_ring_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
-
+    inst:PushEvent("ck_taunt")
     for radius=1, MAXRANGE do
         inst.tasks["spawnice_"..radius] = inst:DoTaskInTime(radius*.2 + .2, inst.DoSpawnIceTile, radius)
     end
@@ -980,11 +1000,6 @@ end
 local function SpawnCannons(inst)
     inst.tasks.spawncannons = nil
 
-    if inst.tasks.cannondead_triggerice_task ~= nil then
-        inst.tasks.cannondead_triggerice_task:Cancel()
-        inst.tasks.cannondead_triggerice_task = nil
-    end
-
     if inst.cannontowers == nil then
         inst.cannontowers = {}
     end
@@ -1075,6 +1090,24 @@ local function OnArmRemoved(inst, armpos)
     inst.arms[armpos].task = inst:DoTaskInTime(15, inst.DoSpawnArm, armpos)
 
     inst.components.timer:StartTimer("claw_regen_delay"..armpos, TUNING.CRABKING_CLAW_RESPAWN_DELAY)
+
+    local noarms = true
+    for i, arm in ipairs(inst.arms) do
+        if arm.prefab ~= nil then
+            noarms = false
+            break
+        end
+    end
+
+
+    if noarms and inst.tasks.triggerice_task == nil then
+
+        inst.tasks.triggerice_task = inst:DoTaskInTime(5, function()
+
+            inst.tasks.triggerice_task = nil
+            inst.damagetotal = (inst.damagetotal or 0) - TUNING.CRABKING_FREEZE_THRESHOLD
+        end)
+    end
 end
 
 local function IsValidArmSpawnPoint(x, z)
@@ -1303,7 +1336,7 @@ local function OnHealthChange(inst, data)
         inst.damagetotal = 0
     end
 
-    if data ~= nil and data.amount ~= nil and not data.instant then
+    if data ~= nil and data.amount ~= nil and not data.instant and data.amount < 0 then
         inst.damagetotal = inst.damagetotal + data.amount
     end
 

@@ -63,7 +63,7 @@ local FIND_TARGET_DIST = 12
 local function GetShootTargetPosition(inst, target)
     local x, y, z = target.Transform:GetWorldPosition()
 
-    local radius = math.random() * 8
+    local radius = math.random() * 6
     local theta = PI2 * math.random()
 
     local offset = Vector3(radius * math.cos(theta), 0, -radius * math.sin(theta))

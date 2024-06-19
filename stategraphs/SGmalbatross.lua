@@ -1,6 +1,6 @@
 require("stategraphs/commonstates")
 
-local SWOOP_LOOP_TARGET_CANT_TAGS = {"INLIMBO", "fx", "malbatross", "boat"}
+local SWOOP_LOOP_TARGET_CANT_TAGS = {"INLIMBO", "fx", "malbatross", "boat", "boatbumper"}
 local SWOOP_LOOP_TARGET_ONEOF_TAGS = {"tree", "mast", "_health"}
 
 local actionhandlers =

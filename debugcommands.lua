@@ -2184,30 +2184,24 @@ local function Scrapbook_DefineType(t, entry)
     elseif t:HasOneOfTags({"epic", "crabking"}) or t.prefab == "shadow_rook" or t.prefab == "shadow_bishop" or t.prefab == "shadow_knight" then
         thingtype = "giant"
 
-    elseif entry == "balloonvest" or entry == "balloonhat"  or entry == "balloonspeed" then
-        thingtype = "item"
-
-    elseif t.prefab == "pumpkin_lantern" then
+    elseif t.prefab == "pumpkin_lantern" or t.prefab == "eyeturret" then
         thingtype = "thing"
 
     elseif t.prefab == "fused_shadeling_bomb" or
         t.prefab == "smallghost" or
-        t.prefab == "mushgnome" or
         t.prefab == "wobybig" or
         t.prefab == "stagehand"
     then
         thingtype = "creature"
 
-    elseif t.components.health and
-        not t:HasOneOfTags({"structure", "farm_plant", "tree", "plant", "moonstorm_static", "wall", "boatbumper", "groundspike", "smashable", "boat"}) and
-        t.prefab ~= "hedgehound_bush" and
-        t.prefab ~= "eyeturret" and
-        t.prefab ~= "spiderhole" and
-        t.prefab ~= "slurtlehole"
-    then
+    elseif t:HasTag("NPCcanaggro") or (
+        t.components.health ~= nil and
+        t.sg ~= nil and
+        not t:HasOneOfTags({ "structure", "boatbumper", "boat" })
+    ) then
         thingtype = "creature"
 
-    elseif t.components.inventoryitem and not t.components.health then
+    elseif t.components.inventoryitem and (not t.components.health or t.components.equippable) then
         thingtype = "item"
     end
 

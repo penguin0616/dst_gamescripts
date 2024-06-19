@@ -6,6 +6,8 @@ local assets =
 local prefabs =
 {
     "wurt_merm_planar",
+    "horrorfuel_castfx",
+    "horrorfuel_castfx_mount",
 }
 --------------------------------------------------------------------------
 
@@ -168,6 +170,8 @@ local function fn()
     if not TheNet:IsDedicated() then
         inst.core = CreateCore()
         inst.core.entity:SetParent(inst.entity)
+
+        inst.highlightchildren = { inst.core }
     end
 
     inst.entity:SetPristine()
@@ -202,7 +206,9 @@ local function fn()
     inst.components.spellcaster.canusefrominventory = true
     inst.components.spellcaster.canonlyuseonlocomotorspvp = true
 
-    inst.fxcolour = {102/255, 16/255, 16/255}
+    inst.lightcolour = {102/255, 16/255, 16/255}
+    inst.fxprefab = "horrorfuel_castfx"
+    inst.castsound = "rifts2/thrall_generic/vocalization_big" -- TODO(DiogoW)
 
     return inst
 end

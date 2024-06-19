@@ -3585,14 +3585,15 @@ function Tune(overrides)
 		WINONA_CATAPULT_POWER_LOAD_SLEEP_MODE = 0.05,
 		WINONA_CATAPULT_POWER_LOAD_IDLE = 0.1,
 		WINONA_CATAPULT_ATTACK_POWER_COST = { fuel = total_day_time / 120, shard = 0.125 },
-		WINONA_CATAPULT_MEGA_ATTACK_POWER_COST = { fuel = total_day_time / 3 + 0.0001, shard = 1 },
+		WINONA_CATAPULT_MEGA_LUNAR_POWER_COST = { fuel = total_day_time / 3 + 0.0001, shard = 1 },
+		WINONA_CATAPULT_MEGA_SHADOW_POWER_COST = { fuel = total_day_time / 6 + 0.0001, shard = 1 },
 		WINONA_CATAPULT_SLEEP_MODE_DELAY = 30,
 		WINONA_CATAPULT_BASIC_SLEEP_MODE_DELAY = 20,
 
-		TRAP_VINES_DAMAGE = 12,
-		TRAP_VINES_PLANAR_DAMAGE = 12,
+		TRAP_VINES_DAMAGE = 14,
+		TRAP_VINES_PLANAR_DAMAGE = 20,
 		TRAP_VINES_HIT_COOLDOWN = 1.5,
-		TRAP_VINES_DURATION = 120,
+		TRAP_VINES_DURATION = 300,
 		TRAP_VINES_SPEEDMULT = 2 / 3,
 
 		WINONA_SPOTLIGHT_RADIUS = 6.4 / 1.5,
@@ -3608,6 +3609,8 @@ function Tune(overrides)
 
 		WINONA_TELEPORT_PAD_FOOTPRINT = 2,
 		WINONA_TELEPORT_PAD_POWER_LOAD_IDLE = 0.05,
+		WINONA_TELEPORT_PAD_POWER_COST_MIN = { fuel = total_day_time * 1 + 0.0001, shard = 3 },
+		WINONA_TELEPORT_PAD_POWER_COST_MAX = { fuel = total_day_time * 2 + 0.0001, shard = 5.99 },
 
 		WINONA_STORAGE_ROBOT_WORK_RADIUS = 15,
 		WINONA_STORAGE_ROBOT_RUNSPEED = 5,
@@ -5198,12 +5201,12 @@ function Tune(overrides)
         CRABKING_AOE_RANGE = 3,
         CRABKING_AOE_SCALE = 0.8,
         CRABKING_ATTACK_PERIOD = 4,
-        CRABKING_ATTACK_TARGETRANGE = 16,
+        CRABKING_ATTACK_TARGETRANGE = 25,
         CRABKING_CANNONTIMER = 10,
 
         CRABKING_STAGE1_THRESHOLD = 0.90,
 
-        CRABKING_FREEZE_THRESHOLD = 2000,
+        CRABKING_FREEZE_THRESHOLD = 1500,
 
         CRABKING_ICEWALL_HEALTH = 100,
         CRABKING_ICEWALL_HEALTH_BONUS = 200,
@@ -5236,6 +5239,8 @@ function Tune(overrides)
         MORTAR_DAMAGE_STAGE_2 = 30,
         MORTAR_DAMAGE_STAGE_3 = 40,
         MORTAR_DAMAGE_STAGE_4 = 50,
+
+        CRABKING_TAUNTTIME = 10,
 
         TRIDENT =
         {
@@ -7678,9 +7683,9 @@ function Tune(overrides)
         OTTER_DAMAGE = 35,
         OTTER_RUNSPEED = 6,
         OTTER_WALKSPEED = 3,
-        OTTER_TARGET_RANGE = 2,
+        OTTER_HIT_RANGE = 2,
+        OTTER_ATTACK_RANGE = 3,
         OTTER_ATTACK_PERIOD = 4,
-        OTTER_TARGET_DISTANCE = 8,
         OTTER_KEEPTARGET_DISTANCE = 20,
         OTTER_SHARETARGET_DISTANCE = 20,
         OTTER_MAX_INVENTORY_ITEMS = 3,
@@ -7765,6 +7770,7 @@ function Tune(overrides)
                 CHOP = 1,
                 MINE = 3,
                 DIG  = 3,
+                TILL  = 1,
             },
             EFFICIENCY = 0.25,
         },
@@ -7776,6 +7782,7 @@ function Tune(overrides)
                 CHOP = 1,
                 MINE = 3,
                 DIG  = 3,
+                TILL  = 1,
             },
             EFFICIENCY = 0.5,
         },
@@ -7795,6 +7802,7 @@ function Tune(overrides)
         MERM_LUNAR_GUARD_HEALTH = 660+40,
         MERM_LUNAR_HEALTH = (250 * 2)+40,
         MERM_LUNAR_THORN_DAMAGE = 40,
+
 
     }
 

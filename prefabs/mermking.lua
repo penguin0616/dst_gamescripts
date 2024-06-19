@@ -561,6 +561,7 @@ local function fn()
     foodaffinity:AddFoodtypeAffinity(FOODTYPE.VEGGIE, 1)
     foodaffinity:AddPrefabAffinity  ("kelp",          1) -- prevents the negative stats
     foodaffinity:AddPrefabAffinity  ("kelp_cooked",   1) -- prevents the negative stats
+    foodaffinity:AddPrefabAffinity  ("boatpatch_kelp",1) -- prevents the negative stats
     foodaffinity:AddPrefabAffinity  ("durian",        1) -- prevents the negative stats
     foodaffinity:AddPrefabAffinity  ("durian_cooked", 1) -- prevents the negative stats
 

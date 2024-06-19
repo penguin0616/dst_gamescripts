@@ -130,11 +130,14 @@ local states =
 
         onenter = function(inst)
             inst.AnimState:PlayAnimation("death")
-            inst:PlaySound("death_vocal")
+            
 
             inst.Physics:Stop()
 
             RemovePhysicsColliders(inst)
+            
+            inst:PlaySound("death_vocal")
+            inst:PlaySound("death_fx")            
 
             inst.components.lootdropper:DropLoot()
         end,
@@ -207,13 +210,13 @@ local states =
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
-
             inst.AnimState:PlayAnimation("taunt")
-            inst:PlaySound("taunt_vocal")
         end,
-
+        timeline=
+        {
+            FrameEvent(14, function(inst)  inst:PlaySound("taunt_fx_f14") end),
+        },
         events = OnAnimOver("idle"),
-
     },
 
     State{
@@ -323,7 +326,7 @@ local states =
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("hit")
             inst:PlaySound("hit_vocal")
-            
+            inst:PlaySound("hit")            
         end,
 
         events = OnAnimOver("idle"),
@@ -367,6 +370,13 @@ local states =
             end
         end,
 
+        timeline =
+        {
+            TimeEvent(22*FRAMES, function(inst)
+                inst:PlaySound("break_water_fx_f22")
+            end),
+        },
+
         events=
         {
             EventHandler("animover", function(inst) inst:Remove() end),
@@ -382,6 +392,13 @@ local states =
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("break_land")
         end,
+
+        timeline =
+        {
+            TimeEvent(22*FRAMES, function(inst)
+                inst:PlaySound("break_land_fx_f22")
+            end),
+        },
 
         events = OnAnimOver("idle"),
     },
@@ -400,6 +417,7 @@ local states =
             end
 
             inst:PlaySound("dive_vocal")
+            inst:PlaySound("dive_fx")
 
             inst.AnimState:PlayAnimation("dive")
             inst.components.locomotor:Stop()
@@ -492,12 +510,17 @@ CommonStates.AddSleepStates(states,
 {
     starttimeline = {
         SoundFrameEvent(0, "meta4/crabcritter/sleep_pre_vocal"),
+        SoundFrameEvent(14, "meta4/crabcritter/sleep_pre_fx_f14"),
+
+
+
     },
     sleeptimeline ={
         SoundFrameEvent(35, "meta4/crabcritter/sleep_lp_vocal"),
     },
     waketimeline = {
         SoundFrameEvent(0, "meta4/crabcritter/sleep_pst_vocal"),
+        SoundFrameEvent(8, "meta4/crabcritter/sleep_pst_fx_f8"),
     },
 })
 

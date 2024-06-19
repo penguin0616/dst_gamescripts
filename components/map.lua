@@ -94,6 +94,7 @@ function Map:IsValidTileAtPoint(x, y, z)
     return not TileGroupManager:IsInvalidTile(tile)
 end
 
+-- Terraform tests
 local TERRAFORMBLOCKER_TAGS = { "terraformblocker" }
 local TERRAFORMBLOCKER_IGNORE_TAGS = { "INLIMBO" }
 function Map:CanTerraformAtPoint(x, y, z)
@@ -111,12 +112,27 @@ function Map:CanTerraformAtPoint(x, y, z)
     return true
 end
 
+function Map:CanTerraformAtTile(x, y)
+    local tile = self:GetTile(x, y)
+    if TERRAFORM_IMMUNE[tile] or not TileGroupManager:IsLandTile(tile) then
+        return false
+    elseif TERRAFORM_EXTRA_SPACING > 0 then
+        local cx, _, cz = self:GetTileCenterPoint(x, y)
+        for _, blocker in ipairs(TheSim:FindEntities(cx, 0, cz, TERRAFORM_EXTRA_SPACING, TERRAFORMBLOCKER_TAGS, TERRAFORMBLOCKER_IGNORE_TAGS)) do
+            if blocker.entity:IsVisible() and
+                    blocker:GetDistanceSqToPoint(cx, 0, cz) < blocker.terraform_extra_spacing * blocker.terraform_extra_spacing then
+                return false
+            end
+        end
+    end
+    return true
+end
+
 function Map:CanPlowAtPoint(x, y, z)
-    local tile = self:GetTileAtPoint(x, y, z)
     if not self:CanPlantAtPoint(x, y, z) then
         return false
     elseif TERRAFORM_EXTRA_SPACING > 0 then
-        for i, v in ipairs(TheSim:FindEntities(x, 0, z, TERRAFORM_EXTRA_SPACING, TERRAFORMBLOCKER_TAGS, TERRAFORMBLOCKER_IGNORE_TAGS)) do
+        for _, v in ipairs(TheSim:FindEntities(x, 0, z, TERRAFORM_EXTRA_SPACING, TERRAFORMBLOCKER_TAGS, TERRAFORMBLOCKER_IGNORE_TAGS)) do
             if v.entity:IsVisible() and
                 v:GetDistanceSqToPoint(x, 0, z) < v.terraform_extra_spacing * v.terraform_extra_spacing then
                 return false
@@ -130,6 +146,7 @@ function Map:CanPlaceTurfAtPoint(x, y, z)
     return self:GetTileAtPoint(x, y, z) == WORLD_TILES.DIRT
 end
 
+--
 function Map:CanPlantAtPoint(x, y, z)
     local tile = self:GetTileAtPoint(x, y, z)
 
@@ -152,13 +169,14 @@ function Map:IsFarmableSoilAtPoint(x, y, z)
     return self:GetTileAtPoint(x, y, z) == WORLD_TILES.FARMING_SOIL
 end
 
-local DEPLOY_IGNORE_TAGS = { "NOBLOCK", "player", "FX", "INLIMBO", "DECOR", "walkableplatform", "walkableperipheral" }
+local DEPLOY_IGNORE_TAGS = { "NOBLOCK", "player", "FX", "INLIMBO", "DECOR", "walkableplatform", "walkableperipheral"}
 
 local DEPLOY_IGNORE_TAGS_NOPLAYER = shallowcopy(DEPLOY_IGNORE_TAGS)
 table.removearrayvalue(DEPLOY_IGNORE_TAGS_NOPLAYER, "player")
 
 local TILLSOIL_IGNORE_TAGS = shallowcopy(DEPLOY_IGNORE_TAGS)
 table.insert(TILLSOIL_IGNORE_TAGS, "soil")
+table.insert(TILLSOIL_IGNORE_TAGS, "merm")
 
 local WALKABLEPERIPHERAL_DEPLOY_IGNORE_TAGS = shallowcopy(DEPLOY_IGNORE_TAGS)
 table.removearrayvalue(WALKABLEPERIPHERAL_DEPLOY_IGNORE_TAGS, "walkableperipheral")

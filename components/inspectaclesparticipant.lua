@@ -168,7 +168,13 @@ function InspectaclesParticipant:IsParticipantClose(range)
     range = range or 4
     local rangesq = range * range
 
-    local posx, posz = self.posx or self.CLIENT_posx, self.posz or self.CLIENT_posz
+    local posx, posz
+    if self.box then
+        local x, y, z = self.box.Transform:GetWorldPosition()
+        posx, posz = x, z
+    else
+        posx, posz = self.posx or self.CLIENT_posx, self.posz or self.CLIENT_posz
+    end
     local x, y, z = self.inst.Transform:GetWorldPosition()
     local dx, dz = x - posx, z - posz
     return dx * dx + dz * dz < rangesq
@@ -201,7 +207,7 @@ function InspectaclesParticipant:NetworkCurrentGame()
     end
 
     player_classified.inspectacles_game:set_local(0) -- Force an event push in case of same game duplicates.
-    if self.hide or not self.game then
+    if self:ShouldStopGameInteractions() then
         player_classified.inspectacles_game:set(0)
         player_classified.inspectacles_posx:set(0)
         player_classified.inspectacles_posz:set(0)
@@ -210,6 +216,10 @@ function InspectaclesParticipant:NetworkCurrentGame()
         player_classified.inspectacles_posx:set(self.posx)
         player_classified.inspectacles_posz:set(self.posz)
     end
+end
+
+function InspectaclesParticipant:ShouldStopGameInteractions()
+    return not self.ismastersim or self.hide or not self.game or self.shardid ~= TheShard:GetShardId()
 end
 
 function InspectaclesParticipant:SetCurrentGame(gameid, posx, posz)
@@ -223,6 +233,7 @@ function InspectaclesParticipant:SetCurrentGame(gameid, posx, posz)
         self.posz = posz
         self.puzzle = self:CalculateGamePuzzle(gameid, posx, posz)
         self.puzzledata = self:GetPuzzleData(self.puzzle)
+        self.shardid = self.shardid or TheShard:GetShardId()
         -- Do not set upgraded here set it only in CreateNewAndOrShowCurrentGame.
     else
         self.posx = nil
@@ -230,11 +241,10 @@ function InspectaclesParticipant:SetCurrentGame(gameid, posx, posz)
         self.puzzle = nil
         self.puzzledata = nil
         self.upgraded = nil
+        self.shardid = nil
     end
 
-    if not self.hide then
-        self:NetworkCurrentGame()
-    end
+    self:NetworkCurrentGame()
 end
 
 local function NoHoles(pt)
@@ -267,13 +277,32 @@ function InspectaclesParticipant:FindGameLocation(gameid)
     return pt.x + foundoffset.x, pt.z + foundoffset.z
 end
 
+local BLOCKERS_ONEOF_TAGS = {"structure", "blocker", "antlion_sinkhole_blocker"}
+local BLOCKERS_RADIUS = 2
+local BLOCKERS_ATTEMPTS_TO_FIND_CLEARING = 10
 function InspectaclesParticipant:CreateBox()
     if not self.ismastersim or self.box then
         return
     end
 
 	self.box = SpawnPrefab(self:IsUpgradedBox() and "inspectaclesbox2" or "inspectaclesbox")
-    self.box.Transform:SetPosition(self.posx, 0, self.posz)
+    local spawnx, spawnz = self.posx, self.posz
+    local ents = TheSim:FindEntities(spawnx, 0, spawnz, BLOCKERS_RADIUS, nil, nil, BLOCKERS_ONEOF_TAGS)
+    if ents[1] ~= nil then -- Not clear.
+        local offset = nil
+        for tries = 1, BLOCKERS_ATTEMPTS_TO_FIND_CLEARING do
+            local pt = Vector3(spawnx, 0, spawnz)
+            offset = FindWalkableOffset(pt, math.random() * PI2, BLOCKERS_RADIUS, 8, true, true)
+            if offset ~= nil then
+                spawnx, spawnz = spawnx + offset.x, spawnz + offset.z -- Intentional random walk.
+                ents = TheSim:FindEntities(spawnx, 0, spawnz, BLOCKERS_RADIUS, nil, nil, BLOCKERS_ONEOF_TAGS)
+                if ents[1] == nil then -- Clear!
+                    break
+                end
+            end
+        end
+    end
+    self.box.Transform:SetPosition(spawnx, 0, spawnz)
     if self:IsFreeGame(self.game) then
         self.box:SetRepaired()
     end
@@ -286,8 +315,12 @@ function InspectaclesParticipant:CreateBox()
     end, self.inst)
 end
 
+function InspectaclesParticipant:CanCreateGameInWorld()
+    return not TheWorld:HasTag("cave")
+end
+
 function InspectaclesParticipant:CreateNewAndOrShowCurrentGame()
-    if not self.ismastersim or self.cooldowntask ~= nil then
+    if not self.ismastersim or self.cooldowntask ~= nil or not self:CanCreateGameInWorld() then
         return false
     end
 
@@ -311,7 +344,7 @@ function InspectaclesParticipant:CreateNewAndOrShowCurrentGame()
 end
 
 function InspectaclesParticipant:FinishCurrentGame()
-    if not self.ismastersim or not self.game or self.hide then
+    if self:ShouldStopGameInteractions() then
         return
     end
 
@@ -428,6 +461,7 @@ function InspectaclesParticipant:OnSave()
             posx = self.posx,
             posz = self.posz,
             upgraded = self.upgraded,
+            shardid = self.shardid,
         }
     end
 
@@ -449,6 +483,7 @@ function InspectaclesParticipant:OnLoad(data)
     if data.game then
         local gameid = INSPECTACLES_GAMES[data.game]
         self.hide = data.hide
+        self.shardid = data.shardid or TheShard:GetShardId()
         self:SetCurrentGame(gameid, data.posx or 0, data.posz or 0)
     elseif data.cooldown then
         self:ApplyCooldown(data.cooldown)
@@ -481,8 +516,9 @@ function InspectaclesParticipant:GetDebugString()
     local posx = self.posx or self.CLIENT_posx
     local posz = self.posz or self.CLIENT_posz
     local puzzle = self.puzzle or self.CLIENT_puzzle
+    local shardid = self.shardid or "N/A"
 
-    return string.format("%s%s @(%d, %d) Puzzle %X", self.hide and "[HIDDEN] " or "", game, posx, posz, puzzle)
+    return string.format("%s%s @(%d, %d) Puzzle %X Shard %s", self.hide and "[HIDDEN] " or "", game, posx, posz, puzzle, shardid)
 end
 
 return InspectaclesParticipant

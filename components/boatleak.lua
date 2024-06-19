@@ -273,12 +273,14 @@ function BoatLeak:IsFinishedSpawning()
 end
 
 -- Note: Currently save and load is only used for dynamic leaks (e.g. caused by cookie cutter). Saving/loading
--- for leaks caused by collision is handled from HullHealth.
+-- for leaks caused by collision is handled from HullHealth. Don't save plugged states.
 function BoatLeak:OnSave(data)
-	return (self.current_state ~= nil and self.isdynamic) and {
-            leak_state = self.current_state,
+    if self.current_state ~= nil and self.isdynamic then
+        return {
+            leak_state = UNPLUG_STATES_LOOKUP[self.current_state] or self.current_state,
             repaired_timeout = self:GetRemainingRepairedTime(),
-        } or nil
+        }
+    end
 end
 
 local function on_load_delayed_callback(inst, leak_state, repaired_timeout)

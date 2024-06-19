@@ -145,7 +145,7 @@ local function OnUpdateProjectile(inst)
     local targets = TheSim:FindEntities(x, 0, z, TUNING.CANNONBALL_RADIUS, nil, PROJECTILE_EXCLUDE_TAGS, PROJECTILE_MUST_ONE_OF_TAGS) -- Set y to zero to look for objects on the ground
     for i, target in ipairs(targets) do
         -- Ignore hitting bumpers while flying through the air
-        if target ~= nil and target ~= inst.components.complexprojectile.attacker and not target:HasTag("boatbumper") then
+        if target ~= nil and target ~= inst and target ~= inst.components.complexprojectile.attacker and not target:HasTag("boatbumper") then
             -- NOTES(JBK): If things are on_other_boat they should get hit and hurt but conditionally if they are on the same boat.
             local on_other_boat = selfboat == nil or target:GetCurrentPlatform() ~= selfboat
             local is_wall = target:HasTag("wall")

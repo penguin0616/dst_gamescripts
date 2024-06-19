@@ -35,7 +35,7 @@ local function CalcAoeRadiusMult(inst)
 end
 
 local function CalcSleepModeDelay(inst)
-	return inst._basic and TUNING.WINONA_CATAPULT_BASIC_SLEEP_MODE_DELAY or TUNING.WINONA_CATAPULT_SLEEP_MODE_DELAY
+	return inst._engineerid and TUNING.WINONA_CATAPULT_SLEEP_MODE_DELAY or TUNING.WINONA_CATAPULT_BASIC_SLEEP_MODE_DELAY
 end
 
 local function RefreshAttackPeriod(inst)
@@ -53,23 +53,26 @@ end
 
 local function ConfigureSkillTreeUpgrades(inst, builder)
 	local skilltreeupdater = builder and builder.components.skilltreeupdater or nil
-	if skilltreeupdater then
-		local speed =
-			(skilltreeupdater:IsActivated("winona_catapult_speed_3") and 3) or
+
+	local speed = skilltreeupdater and
+		(	(skilltreeupdater:IsActivated("winona_catapult_speed_3") and 3) or
 			(skilltreeupdater:IsActivated("winona_catapult_speed_2") and 2) or
-			(skilltreeupdater:IsActivated("winona_catapult_speed_1") and 1) or
-			0
-		local aoe =
-			(skilltreeupdater:IsActivated("winona_catapult_aoe_3") and 3) or
+			(skilltreeupdater:IsActivated("winona_catapult_speed_1") and 1)
+		) or 0
+
+	local aoe = skilltreeupdater and
+		(	(skilltreeupdater:IsActivated("winona_catapult_aoe_3") and 3) or
 			(skilltreeupdater:IsActivated("winona_catapult_aoe_2") and 2) or
-			(skilltreeupdater:IsActivated("winona_catapult_aoe_1") and 1) or
-			0
-		local dirty = inst._speed ~= speed or inst._aoe ~= aoe
-		inst._speed = speed
-		inst._aoe = aoe
-		return dirty
-	end
-	return false
+			(skilltreeupdater:IsActivated("winona_catapult_aoe_1") and 1)
+		) or 0
+
+	local dirty = inst._speed ~= speed or inst._aoe ~= aoe
+
+	inst._speed = speed
+	inst._aoe = aoe
+	inst._engineerid = builder and builder:HasTag("handyperson") and builder.userid or nil
+
+	return dirty
 end
 
 --------------------------------------------------------------------------
@@ -202,7 +205,6 @@ local function ChangeToItem(inst)
 	item.AnimState:PlayAnimation("collapse")
 	item.AnimState:PushAnimation("idle_ground", false)
 	item.SoundEmitter:PlaySound("meta4/winona_catapult/collapse")
-	item.hp = inst.components.health:GetPercent()
 	if inst._wired then
 		item.SoundEmitter:PlaySound("dontstarve/common/together/spot_light/electricity", nil, .5)
 		SpawnPrefab("winona_battery_sparks").Transform:SetPosition(inst.Transform:GetWorldPosition())
@@ -280,7 +282,7 @@ local function OnBurnt(inst)
     inst:AddTag("notarget") -- just in case???
 end
 
-local function DoBuiltOrDeployed(inst, state, doer)
+local function DoBuiltOrDeployed(inst, doer, state)
 	ConfigureSkillTreeUpgrades(inst, doer)
 	ApplySkillBonuses(inst)
 
@@ -294,7 +296,7 @@ local function DoBuiltOrDeployed(inst, state, doer)
 end
 
 local function OnBuilt(inst, data)
-	DoBuiltOrDeployed(inst, "place", data and data.builder or nil)
+	DoBuiltOrDeployed(inst, data and data.builder or nil, "place")
 end
 
 local function OnDismantle(inst)--, doer)
@@ -323,7 +325,7 @@ local function OnSave(inst, data)
 		--skilltree
 		data.speed = inst._speed > 0 and inst._speed or nil
 		data.aoe = inst._aoe > 0 and inst._aoe or nil
-		data.basic = inst._basic or nil
+		data.engineerid = inst._engineerid
     end
 end
 
@@ -339,7 +341,7 @@ local function OnLoad(inst, data)
 		if data then
 			inst._speed = data.speed or 0
 			inst._aoe = data.aoe or 0
-			inst._basic = data.basic or false
+			inst._engineerid = data.engineerid
 			ApplySkillBonuses(inst)
 		else
 			--since we skipped ApplySkillBonuses, need to do this in case we have "boost"
@@ -777,6 +779,17 @@ local function OnReadyForConnection(inst)
 	inst.components.circuitnode:ConnectTo("engineeringbattery")
 	if inst.components.circuitnode:IsConnected() then
 		inst._autoactivetask = inst:DoTaskInTime(0.55, OnAutoActiveTaskEnded)
+
+		if inst._engineerid then
+			for i, v in ipairs(AllPlayers) do
+				if v.userid == inst._engineerid then
+					inst.components.circuitnode:ForEachNode(function(inst, node)
+						node:OnUsedIndirectly(v)
+					end)
+					break
+				end
+			end
+		end
 	end
 end
 
@@ -787,20 +800,14 @@ local function OnAllowReactivate(inst)
 end
 
 local function OnActivate(inst, doer)
-	local dirty
-	if not (doer and doer:HasTag("handyperson")) then
-		dirty = inst._speed ~= 0 or inst._aoe ~= 0
-		inst._speed = 0
-		inst._aoe = 0
-		inst._basic = true
-	else
-		inst._basic = false
-		dirty = ConfigureSkillTreeUpgrades(inst, doer)
+	if (doer and doer.userid or nil) ~= inst._engineerid then
+		if ConfigureSkillTreeUpgrades(inst, doer) then
+			ApplySkillBonuses(inst)
+		end
 	end
-	if dirty then
-		ApplySkillBonuses(inst)
-	end
-
+	inst.components.circuitnode:ForEachNode(function(inst, node)
+		node:OnUsedIndirectly(doer)
+	end)
 	DoLedRapidBlinkOn(inst, not inst:IsActiveMode())
 	inst:SetActiveMode(true)
 	--extend time, silent fail if timer doesn't exist (shouldn't happen tho!)
@@ -1122,6 +1129,13 @@ local function fn()
     inst:ListenForEvent("engineeringcircuitchanged", OnCircuitChanged)
 	inst:ListenForEvent("activewakeup", OnActiveWakeup)
 	inst:ListenForEvent("catapultspeedboost", OnCatapultSpeedBoost)
+	inst:ListenForEvent("winona_catapultskillchanged", function(world, user)
+		if user.userid == inst._engineerid then
+			if ConfigureSkillTreeUpgrades(inst, user) then
+				ApplySkillBonuses(inst)
+			end
+		end
+	end, TheWorld)
 
     MakeHauntableWork(inst)
     MakeMediumBurnable(inst, nil, nil, true)
@@ -1147,7 +1161,7 @@ local function fn()
 	--skilltree
 	inst._speed = 0
 	inst._aoe = 0
-	inst._basic = false
+	inst._engineerid = nil
 
 	inst.AOE_RADIUS = TUNING.WINONA_CATAPULT_AOE_RADIUS
 
@@ -1214,25 +1228,10 @@ local function OnDeploy(inst, pt, deployer)
 		obj.Physics:SetCollides(false)
 		obj.Physics:Teleport(pt.x, 0, pt.z)
 		obj.Physics:SetCollides(true)
-		DoBuiltOrDeployed(obj, "deploy", deployer)
+		DoBuiltOrDeployed(obj, deployer, "deploy")
 		PreventCharacterCollisionsWithPlacedObjects(obj)
-		if inst.hp then
-			obj.components.health:SetPercent(math.max(inst.hp, 0.1))
-		end
 	end
 	inst:Remove()
-end
-
-local function Item_OnSave(inst, data)
-	if inst.hp and inst.hp < 1 then
-		data.hp = math.max(0, inst.hp)
-	end
-end
-
-local function Item_OnLoad(inst, data)
-	if data then
-		inst.hp = data.hp or nil
-	end
 end
 
 local function itemfn()
@@ -1275,9 +1274,6 @@ local function itemfn()
 
 	MakeMediumBurnable(inst)
 	MakeMediumPropagator(inst)
-
-	inst.OnSave = Item_OnSave
-	inst.OnLoad = Item_OnLoad
 
 	return inst
 end

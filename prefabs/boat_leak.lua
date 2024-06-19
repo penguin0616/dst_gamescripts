@@ -14,12 +14,12 @@ local function onsprungleak(inst)
         inst:AddComponent("hauntable")
         inst.components.hauntable.cooldown = TUNING.HAUNT_COOLDOWN_SMALL
         inst.components.hauntable.hauntvalue = TUNING.HAUNT_TINY
+
+        inst.components.updatelooper:AddOnUpdateFn(inst.FindLeakBlocker)
     end
 
     inst:RemoveTag("NOCLICK")
     inst:RemoveTag("NOBLOCK")
-
-    inst.components.updatelooper:AddOnUpdateFn(inst.FindLeakBlocker)
 end
 
 local function onrepairedleak(inst)
@@ -27,12 +27,12 @@ local function onrepairedleak(inst)
         inst:RemoveComponent("inspectable")
 
         inst:RemoveComponent("hauntable")
+
+        inst.components.updatelooper:RemoveOnUpdateFn(inst.FindLeakBlocker)
     end
 
     inst:AddTag("NOCLICK")
     inst:AddTag("NOBLOCK")
-
-    inst.components.updatelooper:RemoveOnUpdateFn(inst.FindLeakBlocker)
 end
 
 local function checkforleakimmune(inst)

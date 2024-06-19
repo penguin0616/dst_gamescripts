@@ -661,13 +661,14 @@ local function OnAttached(inst, target)
             fx.AnimState:PlayAnimation("buff_pre")
             fx.AnimState:PushAnimation("buff_idle")
             fx.entity:SetParent(target.entity)
+            --target.planarbuffed:set(true) --FIXME(DiogoW): Uncomment this when art is changed.
 
         elseif target:HasTag("lunarminion") then
             local fx = SpawnPrefab("wurt_lunar_merm_planar_fx")
             inst.bufffx = fx
             fx.entity:SetParent(target.entity)
             target.AnimState:AddOverrideBuild("merm_lunar_eye_build")
-            target.lunarbuffed:set(true)
+            target.planarbuffed:set(true)
             target.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
         end
     end
@@ -686,9 +687,12 @@ local function OnDetached(inst, target)
             fx.SoundEmitter:PlaySound("meta4/shadow_merm/buff_pst")
             fx:ListenForEvent("animover", function() fx:Remove() end)
         end
+
+        target.planarbuffed:set(false)
+
     elseif target:HasTag("lunarminion") then
         target.AnimState:ClearOverrideBuild("merm_lunar_eye_build")
-        target.lunarbuffed:set(false)
+        target.planarbuffed:set(false)
         target.AnimState:ClearBloomEffectHandle()
 
         local fx = SpawnPrefab("wurt_lunar_merm_planar_fx")

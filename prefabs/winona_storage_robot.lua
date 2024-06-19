@@ -155,10 +155,13 @@ local function OnDeactivateRobot(inst)
 		inst:ClearBufferedAction()
 		inst:RemoveEventCallback("teleported", OnTeleported)
 		inst:RemoveComponent("locomotor")
+		inst.Physics:ClearMotorVelOverride()
+		inst.Physics:Stop()
 		inst.components.inventory:CloseAllChestContainers()
 		inst.components.fueled:StopConsuming()
 		inst.Transform:SetNoFaced()
 		inst.AnimState:PlayAnimation("idle_off")
+		inst.SoundEmitter:KillAllSounds()
 		ChangeToInventoryItemPhysics(inst, 1, PHYSICS_RADIUS)
 		StorageRobotCommon.ClearSpawnPoint(inst)
 		inst._isactive:set(false)
@@ -201,6 +204,7 @@ local function OnPutInInventory(inst, owner)
 		inst._inittask:Cancel()
 		inst._inittask = nil
 	end
+	inst._landed_owner = nil
 	inst._owner = owner
 	inst._quickcharge = false
 	OnDeactivateRobot(inst)
@@ -216,11 +220,18 @@ local function OnDropped(inst)
 		then
 			inst._quickcharge = true
 		end
+		inst._landed_owner = inst._owner
 		inst._owner = nil
 	end
 
 	if inst.components.inventoryitem.is_landed then
 		inst.components.circuitnode:ConnectTo("engineeringbattery")
+		if inst._landed_owner then
+			inst.components.circuitnode:ForEachNode(function(inst, node)
+				node:OnUsedIndirectly(inst._landed_owner)
+			end)
+			inst._landed_owner = nil
+		end
 	else
 		inst.components.circuitnode:Disconnect()
 	end
@@ -234,7 +245,13 @@ end
 local function OnLanded(inst)
 	if not (inst.sg or inst.components.circuitnode:IsEnabled() or inst.components.inventoryitem:IsHeld()) then
 		inst.components.circuitnode:ConnectTo("engineeringbattery")
+		if inst._landed_owner and inst._landed_owner:IsValid() then
+			inst.components.circuitnode:ForEachNode(function(inst, node)
+				node:OnUsedIndirectly(inst._landed_owner)
+			end)
+		end
 	end
+	inst._landed_owner = nil
 end
 
 local function OnSectionChanged(newsection, oldsection, inst)--, doer)

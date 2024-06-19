@@ -101,7 +101,7 @@ local function OnLoad(inst, data)
 end
 
 local function CreateHiddenGlobalIcon(inst)
-    inst.hiddenglobalicon = SpawnPrefab("globalmapiconunderfog")
+    inst.hiddenglobalicon = SpawnPrefab("globalmapiconseeable")
     inst.hiddenglobalicon.MiniMapEntity:SetPriority(50) -- NOTES(JBK): This could be put to a constant for map actions that should go over everything as a reserved flag.
     inst.hiddenglobalicon.MiniMapEntity:SetRestriction("wormholetracker")
     inst.hiddenglobalicon:AddTag("wormholetrackericon")

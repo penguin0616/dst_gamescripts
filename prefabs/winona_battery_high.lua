@@ -46,17 +46,42 @@ local function ApplyEfficiencyBonus(inst)
 	end
 end
 
---used by item as well
+local function IsEngineerOnline(inst)
+	if inst._engineerid then
+		local clients = TheNet:GetClientTable()
+		if clients then
+			local isdedicated = not TheNet:GetServerIsClientHosted()
+			for i, v in ipairs(clients) do
+				if not isdedicated or v.performance == nil then
+					if v.userid == inst._engineerid then
+						--no inst if it's on another shard, so can't test :HasTag("handyperson")
+						return v.prefab == "winona"
+					end
+				end
+			end
+		end
+	end
+	return false
+end
+
 local function ConfigureSkillTreeUpgrades(inst, builder)
 	local skilltreeupdater = builder and builder.components.skilltreeupdater or nil
-	if skilltreeupdater then
-		inst._noidledrain = skilltreeupdater:IsActivated("winona_battery_idledrain")
-		inst._efficiency =
-			(skilltreeupdater:IsActivated("winona_battery_efficiency_3") and 3) or
+
+	local noidledrain = skilltreeupdater ~= nil and skilltreeupdater:IsActivated("winona_battery_idledrain")
+
+	local efficiency = skilltreeupdater and
+		(	(skilltreeupdater:IsActivated("winona_battery_efficiency_3") and 3) or
 			(skilltreeupdater:IsActivated("winona_battery_efficiency_2") and 2) or
-			(skilltreeupdater:IsActivated("winona_battery_efficiency_1") and 1) or
-			0
-	end
+			(skilltreeupdater:IsActivated("winona_battery_efficiency_1") and 1)
+		) or 0
+
+	local dirty = inst._noidledrain ~= noidledrain or inst._efficiency ~= efficiency
+
+	inst._noidledrain = noidledrain
+	inst._efficiency = efficiency
+	inst._engineerid = builder and builder:HasTag("handyperson") and builder.userid or nil
+
+	return dirty
 end
 
 local function CalcShardRegenSpeedMult(inst)
@@ -319,7 +344,10 @@ local function StopBattery(inst)
 end
 
 local function UpdateCircuitPower(inst)
-    inst._circuittask = nil
+	if inst._circuittask then
+		inst._circuittask:Cancel()
+		inst._circuittask = nil
+	end
     if inst.components.fueled ~= nil then
         if inst.components.fueled.consuming then
 			local total_load = 0
@@ -362,9 +390,6 @@ end
 local function BroadcastCircuitChanged(inst)
     --Notify other connected nodes, so that they can notify their connected batteries
     inst.components.circuitnode:ForEachNode(NotifyCircuitChanged)
-    if inst._circuittask ~= nil then
-        inst._circuittask:Cancel()
-    end
     UpdateCircuitPower(inst)
 end
 
@@ -443,10 +468,6 @@ local function CopyAllProperties(src, dest)
 			SetGem(dest, #dest._gems, v)
 		end
 	end
-
-	--skilltree
-	dest._noidledrain = src._noidledrain
-	dest._efficiency = src._efficiency
 end
 
 local function ChangeToItem(inst)
@@ -762,6 +783,7 @@ local function OnSave(inst, data)
 		--skilltree
 		data.noidledrain = inst._noidledrain or nil
 		data.efficiency = inst._efficiency > 0 and inst._efficiency or nil
+		data.engineerid = inst._engineerid
 	end
 end
 
@@ -797,8 +819,10 @@ local function OnLoad(inst, data, ents)
         if data.burnt then
             inst.components.burnable.onburnt(inst)
 		else
+			--skilltree
 			inst._noidledrain = data.noidledrain or false
 			inst._efficiency = data.efficiency or 0
+			inst._engineerid = data.engineerid
 			ApplyEfficiencyBonus(inst)
 
 			if not inst.components.fueled:IsEmpty() then
@@ -887,7 +911,10 @@ local function OnBuilt2(inst)
     end
 end
 
-local function DoBuiltOrDeployed(inst, anim, sound, connectframe)
+local function DoBuiltOrDeployed(inst, doer, anim, sound, connectframe)
+	ConfigureSkillTreeUpgrades(inst, doer)
+	ApplyEfficiencyBonus(inst)
+
     if inst._inittask ~= nil then
         inst._inittask:Cancel()
         inst._inittask = nil
@@ -905,12 +932,10 @@ local function DoBuiltOrDeployed(inst, anim, sound, connectframe)
 end
 
 local function OnBuilt(inst, data)
-	ConfigureSkillTreeUpgrades(inst, data and data.builder or nil)
-	ApplyEfficiencyBonus(inst)
-	DoBuiltOrDeployed(inst, "place", "dontstarve/common/together/battery/place_2", 60)
+	DoBuiltOrDeployed(inst, data and data.builder or nil, "place", "dontstarve/common/together/battery/place_2", 60)
 end
 
-local function OnDeployed(inst)
+local function OnDeployed(inst, deployer)
 	local section = inst._shard_level > 0 and #inst._gems * NUM_LEVELS / 3 or inst.components.fueled:GetCurrentSection()
 	local maxsymbol = "m"..tostring(section + 1)
 	inst.AnimState:ClearOverrideSymbol("m2")
@@ -934,7 +959,7 @@ local function OnDeployed(inst)
 			inst.AnimState:SetSymbolSaturation(sym, sat)
 		end
 	end
-	DoBuiltOrDeployed(inst, "deploy", "meta4/winona_battery/battery_high_deploy", 22)
+	DoBuiltOrDeployed(inst, deployer, "deploy", "meta4/winona_battery/battery_high_deploy", 22)
 end
 
 --------------------------------------------------------------------------
@@ -1033,7 +1058,18 @@ local function ItemTradeTest(inst, item, doer)
     return true
 end
 
-local function OnGemGiven(inst, giver, item)
+local function OnGemGiven(inst, doer, item)
+	local dirty
+	if not (doer and doer:HasTag("handyperson")) and IsEngineerOnline(inst) then
+		--original winona still online, don't de-level
+		dirty = false
+	else
+		dirty = ConfigureSkillTreeUpgrades(inst, doer)
+		if dirty then
+			ApplyEfficiencyBonus(inst)
+		end
+	end
+
     if #inst._gems < GEMSLOTS then
 		if item.prefab == "alterguardianhatshard" then
 			local data, refs = item:GetSaveRecord()
@@ -1072,6 +1108,8 @@ local function OnGemGiven(inst, giver, item)
         end
 	elseif item.prefab == "purebrilliance" and inst._brilliance_level == 1 then
 		BroadcastCircuitChanged(inst)
+	elseif dirty then
+		UpdateCircuitPower(inst) --since we didn't BroadcastCircuitChanged
     end
 
 	item:Remove()
@@ -1081,6 +1119,22 @@ local function OnGemGiven(inst, giver, item)
 	else
 		PlayHitAnim(inst)
 		inst.SoundEmitter:PlaySound("dontstarve/common/together/battery/up")
+	end
+end
+
+local function OnUsedIndirectly(inst, doer)
+	if (doer and doer.userid or nil) == inst._engineerid then
+		if doer:HasTag("engineerid") then
+			--skip if this is already mine and I'm still an engineer (didn't swap chars)
+			return
+		end
+	elseif IsEngineerOnline(inst) then
+		--skip if engineer is still online
+		return
+	end
+	if ConfigureSkillTreeUpgrades(inst, doer) then
+		ApplyEfficiencyBonus(inst)
+		UpdateCircuitPower(inst)
 	end
 end
 
@@ -1194,6 +1248,14 @@ local function fn()
     inst:ListenForEvent("ondeconstructstructure", DropGems)
     inst:ListenForEvent("engineeringcircuitchanged", OnCircuitChanged)
 	inst:ListenForEvent("timerdone", OnTimerDone)
+	inst:ListenForEvent("winona_batteryskillchanged", function(world, user)
+		if user.userid == inst._engineerid then
+			if ConfigureSkillTreeUpgrades(inst, user) then
+				ApplyEfficiencyBonus(inst)
+				UpdateCircuitPower(inst)
+			end
+		end
+	end, TheWorld)
 
     MakeHauntableWork(inst)
     MakeMediumBurnable(inst, nil, nil, true)
@@ -1209,10 +1271,12 @@ local function fn()
 	inst.CheckElementalBattery = CheckElementalBattery
 	inst.ConsumeBatteryAmount = ConsumeBatteryAmount
 	inst.IsOverloaded = IsOverloaded
+	inst.OnUsedIndirectly = OnUsedIndirectly
 
 	--skilltree
 	inst._noidledrain = false
 	inst._efficiency = 0
+	inst._engineerid = nil
 
     inst._gems = {}
 	inst._gemsymfollowers = {}
@@ -1295,16 +1359,11 @@ local function OnDeploy(inst, pt, deployer)
 		obj.Physics:SetCollides(true)
 		obj.components.fueled:SetPercent(inst.components.fueled:GetPercent())
 		CopyAllProperties(inst, obj)
-		ApplyEfficiencyBonus(obj)
 		RefreshEnergyFX(obj)
-		OnDeployed(obj)
+		OnDeployed(obj, deployer)
 		PreventCharacterCollisionsWithPlacedObjects(obj)
 	end
 	inst:Remove()
-end
-
-local function Item_OnPreBuilt(inst, builder, materials, recipe)
-	ConfigureSkillTreeUpgrades(inst, builder)
 end
 
 local function Item_OnSave(inst, data)
@@ -1312,10 +1371,6 @@ local function Item_OnSave(inst, data)
 
 	--fueled component does not save max fuel! assumes prefabs initialize fuel
 	data.initfuel = inst.components.fueled:IsFull() or nil
-
-	--skilltree
-	data.noidledrain = inst._noidledrain or nil
-	data.efficiency = inst._efficiency > 0 and inst._efficiency or nil
 end
 
 local function Item_OnLoad(inst, data, ents)
@@ -1341,10 +1396,6 @@ local function Item_OnLoad(inst, data, ents)
 			end
 			ShatterGems(inst, keepnumgems)
 		end
-
-		--skilltree
-		inst._idlenodrain = data.idlenodrain or false
-		inst._efficiency = data.efficiency or 0
 	end
 end
 
@@ -1397,16 +1448,11 @@ local function itemfn()
 
 	inst:ListenForEvent("ondeconstructstructure", DropGems)
 
-	--skilltree
-	inst._noidledrain = false
-	inst._efficiency = 0
-
 	inst._gems = {}
 	inst._gemsymfollowers = {}
 	inst._shard_level = 0
 	inst._brilliance_level = 0
 
-	inst.onPreBuilt = Item_OnPreBuilt
 	inst.OnSave = Item_OnSave
 	inst.OnLoad = Item_OnLoad
 

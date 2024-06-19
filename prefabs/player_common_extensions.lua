@@ -766,6 +766,23 @@ local function OnRespawnFromVineSave(inst)
 
 	inst.components.inventory:Show()
 
+	inst.components.burnable:Extinguish(true, 0)
+	inst.components.freezable:Reset()
+	inst.components.grogginess:ResetGrogginess()
+	inst.components.moisture:ForceDry(true, inst)
+	inst.components.temperature:SetTemp(TUNING.STARTING_TEMP)
+
+	inst.components.debuffable:Enable(false) --removes all debuffs
+	inst.components.debuffable:Enable(true)
+
+	if inst.components.sanity:GetRealPercent() < TUNING.SANITY_BECOME_SANE_THRESH then
+		inst.components.sanity:SetPercent(TUNING.SANITY_BECOME_SANE_THRESH, true)
+	end
+
+	if inst.components.hunger:GetPercent() < 0.2 then
+		inst.components.hunger:SetPercent(0.2, true)
+	end
+
 	inst.components.health:SetCurrentHealth(TUNING.RESURRECT_HEALTH * (inst.resurrect_multiplier or 1))
 	inst.components.health:ForceUpdateHUD(true)
 
@@ -1001,6 +1018,7 @@ local function OnPostActivateHandshake_Server(inst, state) -- NOTES(JBK): Use Po
         skilltreeupdater:SendFromSkillTreeBlob(inst)
     elseif state == POSTACTIVATEHANDSHAKE.READY then
         -- Good state.
+		inst:PushEvent("ms_skilltreeinitialized")
     else
         print("OnPostActivateHandshake_Server got a bad state:", inst, state)
     end

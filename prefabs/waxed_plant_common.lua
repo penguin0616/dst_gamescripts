@@ -451,7 +451,7 @@ local function CreateDugWaxedPlant(data)
 
         inst.AnimState:SetBank(bank)
         inst.AnimState:SetBuild(build)
-        inst.AnimState:PlayAnimation(data.anim or "dropped")
+        inst.AnimState:PlayAnimation(data.animname or "dropped")
 
         MakeInventoryFloatable(inst, unpack(data.floater or {}))
 

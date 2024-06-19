@@ -648,12 +648,12 @@ local function MakeAncientTree(name, data)
         Prefab("ancienttree_"..name.."_sapling_item", SaplingItemFn, assets),
         MakePlacer("ancienttree_"..name.."_sapling_item_placer", data.bank, data.build, "sprout_idle"),
         WAXED_PLANTS.CreateDugWaxedPlant({
-            name    = "ancienttree_"..name.."_sapling",
-            prefab  = "ancienttree_"..name.."_sapling_item",
-            bank    = data.bank,
-            build   = data.build,
-            anim    = "sprout_item",
-            floater = {"large", 0.2, 0.55},
+            name     = "ancienttree_"..name.."_sapling",
+            prefab   = "ancienttree_"..name.."_sapling_item",
+            bank     = data.bank,
+            build    = data.build,
+            animname = "sprout_item",
+            floater  = {"large", 0.2, 0.55},
             master_postinit = WaxedSaplingItem_MasterPostInit,
         })
 

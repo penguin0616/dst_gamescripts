@@ -129,7 +129,7 @@ local states =
 
         onenter = function(inst)
             inst.AnimState:PlayAnimation("shoot")
-
+            inst.SoundEmitter:PlaySound("meta4/mortars/shoot")
             inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
         end,
 

@@ -8,19 +8,26 @@ require "behaviours/minperiod"
 require "giantutils"
 
 local function ShouldHaveClaws(inst)
-    
-    if not inst:HasTag("icewall") and not inst.arms then
-       
+    if not inst:HasTag("icewall") and not inst.arms and not inst.components.timer:TimerExists("taunt") and not inst.sg:HasStateTag("casting") then
         inst.wantstosummonclaws = true
     end
     return nil
 end
 
 local function ShouldHeal(inst)
-    if inst.components.health:GetPercent() < 1 and inst:HasTag("icewall") then
+    if inst.components.health:GetPercent() < 1 and inst:HasTag("icewall") and not inst.components.timer:TimerExists("taunt") then
         inst.wantstoheal = true
     else
         inst.wantstoheal = nil
+    end
+    return nil
+end
+
+local function ShouldTaunt(inst)
+    if inst.components.timer:TimerExists("taunt") then
+        inst.wantstotaunt = true
+    else
+        inst.wantstotaunt = nil
     end
     return nil
 end
@@ -30,7 +37,7 @@ local TARGET_ONEOF_TAGS = {"character","animal","monster","smallcreature"}
 
 local function ShouldFreeze(inst)
 
-    if not inst:HasTag("icewall") and inst.damagetotal and inst.damagetotal <= -TUNING.CRABKING_FREEZE_THRESHOLD and inst.components.health:GetPercent() < TUNING.CRABKING_STAGE1_THRESHOLD  then        
+    if not inst:HasTag("icewall") and inst.damagetotal and inst.damagetotal <= -TUNING.CRABKING_FREEZE_THRESHOLD and inst.components.health:GetPercent() <= TUNING.CRABKING_STAGE1_THRESHOLD  then
         local x,y,z = inst.Transform:GetWorldPosition()
         local boatents = TheSim:FindEntities(x,y,z, 25, BOAT_TAG)
 
@@ -70,7 +77,7 @@ local function ShouldCannon(inst)
                 end
             end
         end
-        if #boatents > 0 or #ents > 0 then            
+        if #boatents > 0 or #ents > 0 then
             inst.wantstocannon = true
         end
     end

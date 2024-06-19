@@ -420,6 +420,7 @@ local function fn()
 
     inst:AddTag("character")
     inst:AddTag("wagstaff_npc")
+    inst:AddTag("moistureimmunity")
 
     inst.AnimState:SetBank("wilson")
     inst.AnimState:SetBuild("wagstaff")
@@ -742,6 +743,7 @@ local function pstbossfn()
     inst:AddTag("nomagic")
 	inst:AddTag("character")
     inst:AddTag("wagstaff_npc")
+    inst:AddTag("moistureimmunity")
     inst:AddTag("trader_just_show")
 
     --trader (from trader component) added to pristine state for optimization
@@ -999,6 +1001,7 @@ local function MutationsQuestFn()
     inst:AddTag("nomagic")
 	inst:AddTag("character")
     inst:AddTag("wagstaff_npc")
+    inst:AddTag("moistureimmunity")
 
     inst.AnimState:SetBank("wilson")
     inst.AnimState:SetBuild("wagstaff")
@@ -1090,6 +1093,7 @@ local function WagpunkFn()
     inst:AddTag("nomagic")
 	inst:AddTag("character")
     inst:AddTag("wagstaff_npc")
+    inst:AddTag("moistureimmunity")
 
     inst.AnimState:SetBank("wilson")
     inst.AnimState:SetBuild("wagstaff")

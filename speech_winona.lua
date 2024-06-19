@@ -426,6 +426,7 @@ return{
 			-- Winona specific
 			ROSEGLASSES_INVALID = "No signs of Charlie.",
 			ROSEGLASSES_COOLDOWN = "Let's take a breather.",
+            ROSEGLASSES_DISMISS = "Drat, I lost the trail!",
 			--
 		},
 

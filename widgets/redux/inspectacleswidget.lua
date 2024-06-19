@@ -108,8 +108,9 @@ end
 
 function InspectaclesWidget:CheckSolvedState()
     if not self.solved and next(self.parentscreen.solution) == nil then
+        TheFrontEnd:GetSound():PlaySound("meta4/wires_minigame/connect_success")
         self.solved = true
-        self.solvedt = -0.25 -- Negative time to allow pending animations to play to finish.
+        self.solvedt = -0.4 -- Negative time to allow pending animations to play to finish.
         self:StartUpdating()
     end
 end
@@ -128,6 +129,10 @@ end
 function InspectaclesWidget:OnUpdate(dt)
     if self.solved then
         self.solvedt = self.solvedt + dt
+        if not self.solvedrev and self.solvedt > 0 then
+            self.solvedrev = true
+            TheFrontEnd:GetSound():PlaySound("meta4/wires_minigame/powerup_rev")
+        end
         local percent = self.solvedt / self.SOLVEDTIMETOANIMATE
         local duty_cycle_background = 0.75 -- Percentage of time needed to get to max brightness.
         local max_brightness_background = 0.25
@@ -616,6 +621,13 @@ end
 function InspectaclesWidget:TurnWireOn(button, direction, loading)
     if direction and (button.offwires[direction] or loading) then
         button.wires[direction]:GetAnimState():PlayAnimation(loading and "wire_extend_idle" or "wire_extend")
+        if not loading then
+            local t = GetStaticTime()
+            if t ~= self.lastsoundtime then
+                self.lastsoundtime = t
+                TheFrontEnd:GetSound():PlaySound("meta4/wires_minigame/wire_connect")
+            end
+        end
         button.offwires[direction] = nil
         if not loading and next(button.offwires) == nil then
             self.parentscreen.solution[button.index] = nil
@@ -627,6 +639,13 @@ end
 function InspectaclesWidget:TurnWireOff(button, direction, loading)
     if direction and (not button.offwires[direction] or loading) then
         button.wires[direction]:GetAnimState():PlayAnimation(loading and "wire_retract_idle" or "wire_retract")
+        if not loading then
+            local t = GetStaticTime()
+            if t ~= self.lastsoundtime then
+                self.lastsoundtime = t
+                TheFrontEnd:GetSound():PlaySound("meta4/wires_minigame/wire_disconnect")
+            end
+        end
         button.offwires[direction] = true
         self.parentscreen.solution[button.index] = true
     end
@@ -749,6 +768,7 @@ function InspectaclesWidget:CreateExitNode_WIRES(x, y, maze)
 end
 
 function InspectaclesWidget:OnRotatedWire(button)
+    TheFrontEnd:GetSound():PlaySound("meta4/wires_minigame/rotate")
     for _, DIR in ipairs(DIRS) do
         if button.wires[DIR] then
             self:TurnWireOff(button, DIR)
@@ -812,6 +832,7 @@ function InspectaclesWidget:CalculatePerimeterSpot(numindex)
 end
 
 function InspectaclesWidget:AddGameUI_WIRES(puzzledata)
+    TheFrontEnd:GetSound():PlaySound("meta4/wires_minigame/minigame_popup")
     self.wireexits = {}
     -- Maze generation code is the same as this minigame for creating paths.
     -- We will use hunt and kill for the simplicity of implementation and the grid size being small.
@@ -921,6 +942,7 @@ function InspectaclesWidget:AddGameUI_WIRES(puzzledata)
             button.OnGainFocus = OnGainFocus
             button.OnLoseFocus = OnLoseFocus
             button:AddRotationHookups(self.OnRotatedWire, self.OnRotatedWire)
+            button.stopclicksound = true
             local rotation = puzzledata:GetNext() * 90
             button:SetTileRotation(rotation)
         end
@@ -1002,11 +1024,9 @@ function InspectaclesWidget:OnControl(control, down)
             end
 
             if doprimaryclick and button.OnPrimaryClick then
-                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
                 button:OnPrimaryClick()
             end
             if dosecondaryclick and button.OnSecondaryClick then
-                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
                 button:OnSecondaryClick()
             end
             if doprimaryclick or dosecondaryclick then

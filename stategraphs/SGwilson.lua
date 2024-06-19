@@ -574,7 +574,7 @@ local actionhandlers =
         end),
     ActionHandler(ACTIONS.NET,
         function(inst, action)
-            if action.invobject == nil then
+            if action.invobject == nil or not action.invobject:HasTag(ACTIONS.NET.id.."_tool") then
                 return "doshortaction"
             end
 
@@ -13330,22 +13330,25 @@ local states =
             inst.components.locomotor:Stop()
 
             local item = inst.bufferedaction ~= nil and inst.bufferedaction.invobject or nil
-            inst.sg.statemem.fxcolour = item ~= nil and item.fxcolour or { 1, 1, 1 }
-            inst.sg.statemem.castsound = item ~= nil and item.castsound or nil
+
+            inst.sg.statemem.fxprefab    = item ~= nil and item.fxprefab    or "purebrilliance_castfx"
+            inst.sg.statemem.lightcolour = item ~= nil and item.lightcolour or { 1, 1, 1 }
+            inst.sg.statemem.castsound   = item ~= nil and item.castsound   or nil
         end,
 
         timeline =
         {
             TimeEvent(7 * FRAMES, function(inst)
-                inst.sg.statemem.stafffx = SpawnPrefab((inst.components.rider ~= nil and inst.components.rider:IsRiding()) and "cointosscastfx_mount" or "cointosscastfx")
-                inst.sg.statemem.stafffx.entity:SetParent(inst.entity)
-                inst.sg.statemem.stafffx:SetUp(inst.sg.statemem.fxcolour)
-                inst.sg.statemem.stafffx.AnimState:Hide("coin") -- FIXME(DiogoW): Temp for beta, waiting for actual art.
+                local mounted = inst.components.rider ~= nil and inst.components.rider:IsRiding()
+                local prefab = inst.sg.statemem.fxprefab..(mounted and "_mount" or "")
+
+                inst.sg.statemem.spellfx = SpawnPrefab(prefab)
+                inst.sg.statemem.spellfx.entity:SetParent(inst.entity)
             end),
             TimeEvent(15 * FRAMES, function(inst)
-                inst.sg.statemem.stafflight = SpawnPrefab("staff_castinglight")
-                inst.sg.statemem.stafflight.Transform:SetPosition(inst.Transform:GetWorldPosition())
-                inst.sg.statemem.stafflight:SetUp(inst.sg.statemem.fxcolour, 1.2, .33)
+                inst.sg.statemem.spelllight = SpawnPrefab("staff_castinglight")
+                inst.sg.statemem.spelllight.Transform:SetPosition(inst.Transform:GetWorldPosition())
+                inst.sg.statemem.spelllight:SetUp(inst.sg.statemem.lightcolour, 1.2, .33)
             end),
             TimeEvent(13 * FRAMES, function(inst)
                 if inst.sg.statemem.castsound then
@@ -13353,8 +13356,8 @@ local states =
                 end
             end),
             TimeEvent(53 * FRAMES, function(inst)
-                inst.sg.statemem.stafffx = nil --Can't be cancelled anymore
-                inst.sg.statemem.stafflight = nil --Can't be cancelled anymore
+                inst.sg.statemem.spellfx = nil --Can't be cancelled anymore
+                inst.sg.statemem.spelllight = nil --Can't be cancelled anymore
                 inst:PerformBufferedAction()
             end),
 			TimeEvent(70 * FRAMES, function(inst)
@@ -13378,11 +13381,11 @@ local states =
             if inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:Enable(true)
             end
-            if inst.sg.statemem.stafffx ~= nil and inst.sg.statemem.stafffx:IsValid() then
-                inst.sg.statemem.stafffx:Remove()
+            if inst.sg.statemem.spellfx ~= nil and inst.sg.statemem.spellfx:IsValid() then
+                inst.sg.statemem.spellfx:Remove()
             end
-            if inst.sg.statemem.stafflight ~= nil and inst.sg.statemem.stafflight:IsValid() then
-                inst.sg.statemem.stafflight:Remove()
+            if inst.sg.statemem.spelllight ~= nil and inst.sg.statemem.spelllight:IsValid() then
+                inst.sg.statemem.spelllight:Remove()
             end
         end,
     },
@@ -16192,7 +16195,7 @@ local states =
 
     State{
         name = "till",
-        tags = { "doing", "busy" },
+        tags = { "doing", "busy", "tilling" },
 
         onenter = function(inst)
 			local equippedTool = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)

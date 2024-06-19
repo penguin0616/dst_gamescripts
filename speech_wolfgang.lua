@@ -426,6 +426,7 @@ return{
 			-- Winona specific
 --fallback to speech_wilson.lua 			ROSEGLASSES_INVALID = "only_used_by_winona",
 --fallback to speech_wilson.lua 			ROSEGLASSES_COOLDOWN = "only_used_by_winona",
+--fallback to speech_wilson.lua             ROSEGLASSES_DISMISS = "only_used_by_winona",
 			--
 		},
 

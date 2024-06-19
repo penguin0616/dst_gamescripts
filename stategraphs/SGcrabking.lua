@@ -11,17 +11,6 @@ local function testforlostrock(inst, rightarm)
     else
         inst.sg:GoToState("hit")
     end
-
-    --[[if not inst.fixhits then
-        inst.fixhits = 0
-    end
-
-    if inst.fixhits == math.floor(inst.gemcount.orange/3) then
-        inst.sg:GoToState("fix_lostrock", rightarm)
-        inst.fixhits = 0
-    else
-        inst.fixhits = inst.fixhits + 1
-    end]]
 end
 
 local function gemshine(inst, color)
@@ -57,7 +46,9 @@ local function spawnwave(inst, time)
 end
 
 local function GetTransitionState(inst)
-    if inst.wantstosummonclaws then
+    if inst.components.timer:TimerExists("taunt") then
+        return "taunt"
+    elseif inst.wantstosummonclaws then
         return "spawnclaws"
     elseif inst.wantstoheal and inst:HasTag("icewall") then
         return "fix_pre"
@@ -85,6 +76,9 @@ local events =
             inst.components.timer:StartTimer("freeze_cooldown", 30)
             inst:SpawnCannons()
         end
+    end),
+    EventHandler("ck_taunt", function(inst, data)
+        inst.sg:GoToState("taunt")
     end),
     EventHandler("socket", function(inst, data)
         inst.sg:GoToState("socket")
@@ -133,6 +127,72 @@ local states =
             EventHandler("attacked", function(inst)
                 inst.sg:GoToState("hit_light")
             end),
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("idle")
+            end),
+        },
+    },
+
+    --------------------------------------------------------
+    -- TAUNT
+    --------------------------------------------------------
+
+    State{
+        name = "taunt",
+        tags = { "canrotate" },
+
+        onenter = function(inst, pushanim)
+            inst.AnimState:PlayAnimation("taunt_pre")
+        end,
+
+        events =
+        {
+
+            EventHandler("attacked", function(inst)
+                inst.sg:GoToState("hit_light")
+            end),            
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("taunt_loop")
+            end),
+        },
+    },
+
+    State{
+        name = "taunt_loop",
+        tags = { "canrotate" },
+
+        onenter = function(inst, pushanim)
+            inst.AnimState:PlayAnimation("taunt_loop")
+        end,
+
+        onupdate = function(inst)
+            if not inst.components.timer:TimerExists("taunt") then
+                inst.sg:GoToState("taunt_pst")
+            end
+        end,
+
+        events =
+        {
+            EventHandler("attacked", function(inst)
+                inst.components.timer:StopTimer("taunt")
+                inst.sg:GoToState("hit_light")
+            end),            
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("taunt_loop")
+            end),
+        },
+    },
+
+    State{
+        name = "taunt_pst",
+        tags = { "canrotate" },
+
+        onenter = function(inst, pushanim)
+            inst.AnimState:PlayAnimation("taunt_pst")
+        end,
+
+        events =
+        {
             EventHandler("animover", function(inst)
                 inst.sg:GoToState("idle")
             end),
@@ -340,18 +400,20 @@ local states =
 
         onenter = function(inst, wavetime)
             inst:StartCastSpell(inst.dofreezecast)
-            inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/magic_LP","crabmagic")            
+            inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/magic_LP","crabmagic")
             inst.AnimState:PlayAnimation("cast_blue_loop")
             inst.SoundEmitter:SetParameter("crabmagic", "intensity", 0)
             inst.sg.statemem.elapsedtime = 0
             inst.sg.statemem.wavetime = wavetime
+
+            inst.components.timer:StartTimer("do_wave_push",4)
         end,
 
         onupdate = function(inst, dt)
 
             inst.sg.statemem.elapsedtime = inst.sg.statemem.elapsedtime +dt
 
-            if not inst.sg.statemem.wavetime then            
+            if not inst.sg.statemem.wavetime then
                 SpawnAttackWaves(inst:GetPosition(), nil, 2.2, 8, nil, 2, nil, 2, true)
                 inst.sg.statemem.wavetime = 1
             else
@@ -368,9 +430,8 @@ local states =
 
             local x, y, z = inst.Transform:GetWorldPosition()
 
-            -- Keep casting until there are no boats nearby.
+            -- Keep casting until there are no boats nearby. (also times out)
             if TheSim:CountEntities(x, 0, z, 14, BOAT_MUST_TAGS) <= 0 then
-                inst:DoTaskInTime(0, inst.EndCastSpell)
                 inst.sg:GoToState("cast_pst")
             end
         end,
@@ -387,7 +448,6 @@ local states =
             TimeEvent(23*FRAMES, function(inst) if math.random() < 0.5 then inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/cast_pre") end end),
             TimeEvent(23*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/chatter")  end),
             TimeEvent(25*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/common/together/electricity/light",nil,.25) end),
-            -- TimeEvent(26*FRAMES, function(inst) inst.SoundEmitter:KillSound("crabmagic") end),
         },
 
         onexit = function(inst)
@@ -400,6 +460,11 @@ local states =
 
         events =
         {
+            EventHandler("timerdone", function(inst,data)
+                if data.name == "do_wave_push" then
+                    inst.sg:GoToState("cast_pst")
+                end
+            end),
             EventHandler("animover", function(inst)
                 inst.sg.statemem.keepcast = true
                 inst.sg:GoToState("cast_loop", inst.sg.statemem.wavetime)
@@ -417,6 +482,7 @@ local states =
             else
                 inst.AnimState:PlayAnimation("cast_purple_pst")
             end
+            inst:EndCastSpell()
         end,
 
         timeline=
@@ -442,7 +508,6 @@ local states =
         tags = { "busy", "canrotate", "spawning"},
 
         onenter = function(inst)
-            --inst.components.timer:StartTimer("clawsummon_cooldown",TUNING.CRABKING_CLAW_SUMMON_DELAY)
             inst.wantstosummonclaws = nil
             inst.AnimState:PlayAnimation("inert_pre")
             inst.AnimState:PushAnimation("inert_pst",false)
@@ -505,8 +570,6 @@ local states =
 
         onenter = function(inst)
             inst.AnimState:PlayAnimation("fix_pre")
-
-            inst:ShineSocketOfColor("orange")
         end,
 
         timeline=
@@ -519,6 +582,7 @@ local states =
             end),
             TimeEvent(31*FRAMES, function(inst)
                 inst.sg:RemoveStateTag("loserock_window")
+                inst:ShineSocketOfColor("orange")
                 heal(inst)
             end),
         },
@@ -549,7 +613,6 @@ local states =
             inst.sg.statemem.rightarm = rightarm
 
             inst.AnimState:PlayAnimation("fix_"..arm.."_loop_"..randomchoice)
-            inst:ShineSocketOfColor("orange")
         end,
 
         timeline=
@@ -566,6 +629,7 @@ local states =
              end),         
             TimeEvent(29*FRAMES, function(inst)
                 inst.sg:RemoveStateTag("loserock_window")
+                inst:ShineSocketOfColor("orange")
                 heal(inst)
             end),
         },

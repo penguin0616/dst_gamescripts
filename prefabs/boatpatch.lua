@@ -114,6 +114,9 @@ local function fn_kelp()
 
     inst.components.burnable:SetBurnTime(TUNING.SMALL_BURNTIME)
 
+    inst:AddComponent("bait")
+    inst:AddComponent("tradable")
+
     inst:AddComponent("perishable")
     inst.components.perishable.onperishreplacement = "spoiled_food"
     inst.components.perishable:SetPerishTime(TUNING.PERISH_MED)

@@ -266,14 +266,19 @@ local function PushSyncAnims(inst, anim)
 	inst._syncanims:set(true)
 end
 
-local function OnBuilt2(inst)
+local function OnBuilt2(inst, doer)
 	inst:RemoveTag("NOCLICK")
 	if not inst:HasTag("burnt") then
 		inst.components.circuitnode:ConnectTo("engineeringbattery")
+		if doer and doer:IsValid() then
+			inst.components.circuitnode:ForEachNode(function(inst, node)
+				node:OnUsedIndirectly(doer)
+			end)
+		end
 	end
 end
 
-local function DoBuiltOrDeployed(inst)
+local function DoBuiltOrDeployed(inst, doer)
 	if inst._inittask then
 		inst._inittask:Cancel()
 		inst._inittask = nil
@@ -285,7 +290,7 @@ local function DoBuiltOrDeployed(inst)
 	inst.AnimState:PlayAnimation("pad_deploy")
 	inst.AnimState:PushAnimation("pad_idle", false)
 	--inst.SoundEmitter:PlaySound(sound)
-	inst:DoTaskInTime(8 * FRAMES, OnBuilt2)
+	inst:DoTaskInTime(8 * FRAMES, OnBuilt2, doer)
 
 	PushSyncAnims(inst, "pad_deploy")
 end
@@ -623,6 +628,29 @@ end
 
 --------------------------------------------------------------------------
 
+local function OnRemoteTeleportReceived(inst, data)
+	local share = 0
+	inst.components.circuitnode:ForEachNode(function(inst, node)
+		if node.components.fueled and not node.components.fueled:IsEmpty() and not (node.IsOverloaded and node:IsOverloaded()) then
+			share = share + 1
+		end
+	end)
+
+	if share > 0 then
+		local mincost = TUNING.WINONA_TELEPORT_PAD_POWER_COST_MIN
+		local maxcost = TUNING.WINONA_TELEPORT_PAD_POWER_COST_MAX
+		local numitems = data and data.items and #data.items or 0
+		local k = math.min(1, numitems / 6)
+		local cost = { fuel = Lerp(mincost.fuel, maxcost.fuel, k), shard = Lerp(mincost.shard, maxcost.shard, k) }
+		local doer = data and data.doer or nil
+		inst.components.circuitnode:ForEachNode(function(inst, node)
+			node:ConsumeBatteryAmount(cost, share, doer)
+		end)
+	end
+end
+
+--------------------------------------------------------------------------
+
 local function fn()
 	local inst = CreateEntity()
 
@@ -731,6 +759,7 @@ local function fn()
 	inst.components.powerload:SetLoad(TUNING.WINONA_TELEPORT_PAD_POWER_LOAD_IDLE, true)
 
 	inst:ListenForEvent("engineeringcircuitchanged", OnCircuitChanged)
+	inst:ListenForEvent("remoteteleportreceived", OnRemoteTeleportReceived)
 	inst:ListenForEvent("animover", OnAnimOver)
 
 	MakeHauntableWork(inst)
@@ -789,7 +818,7 @@ local function OnDeploy(inst, pt, deployer, rot)
 	if obj then
 		obj.Transform:SetPosition(pt.x, 0, pt.z)
 		obj.Transform:SetRotation(rot)
-		DoBuiltOrDeployed(obj)
+		DoBuiltOrDeployed(obj, deployer)
 	end
 	inst:Remove()
 end

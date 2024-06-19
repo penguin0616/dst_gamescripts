@@ -492,7 +492,7 @@ local function CreateTerraformBlocker(parent)
 
     inst.entity:AddTransform()
 
-    inst:SetTerraformExtraSpacing(TERRAFORM_BLOCKER_RADIUS)
+    inst:SetTerraformExtraSpacing(TERRAFORM_BLOCKER_RADIUS + 0.01)
 
     return inst
 end

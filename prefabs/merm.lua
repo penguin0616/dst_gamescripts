@@ -19,6 +19,10 @@ local assets =
     Asset("ANIM", "anim/merm_guard_lunar_build.zip"),
     Asset("ANIM", "anim/merm_guard_small_lunar_build.zip"),
 
+    Asset("ANIM", "anim/merm_shadow_build.zip"),
+    Asset("ANIM", "anim/merm_guard_shadow_build.zip"),
+    --Asset("ANIM", "anim/merm_guard_shadow_lunar_build.zip"), -- TODO(DiogoW): Missing small build!
+
     Asset("ANIM", "anim/merm_actions_skills.zip"),
 
     Asset("SOUND", "sound/merm.fsb"),
@@ -26,7 +30,7 @@ local assets =
 
 local assetsfx =
 {
-    Asset("ANIM", "anim/bramblefx.zip"),
+    Asset("ANIM", "anim/merm_lunar_spike_fx.zip"),
 }
 
 local prefabs =
@@ -46,6 +50,7 @@ local prefabs =
 
     "shadow_merm_spawn_poof_fx",
     "shadow_merm_smacked_poof_fx",
+    "merm_soil_marker",
 }
 
 local merm_loot =
@@ -457,11 +462,13 @@ local function RoyalGuardUpgrade(inst)
 
     inst.components.health:SetMaxHealth(TUNING.MERM_GUARD_HEALTH)
     inst.components.combat:SetDefaultDamage(inst:MermDamageCalculator())
-    if inst:HasTag("lunarminion") then
-        inst.AnimState:SetBuild("merm_guard_lunar_build")
-    else
-        inst.AnimState:SetBuild("merm_guard_build")
-    end    
+
+    local build =
+        (inst:HasTag("lunarminion")  and "merm_guard_lunar_build" ) or
+        (inst:HasTag("shadowminion") and "merm_guard_shadow_build") or
+        "merm_guard_build"
+
+    inst.AnimState:SetBuild(build)
     inst.Transform:SetScale(1, 1, 1)
 end
 
@@ -472,11 +479,13 @@ local function RoyalGuardDowngrade(inst)
 
     inst.components.health:SetMaxHealth(TUNING.PUNY_MERM_HEALTH)
     inst.components.combat:SetDefaultDamage(inst:MermDamageCalculator())
-    if inst:HasTag("lunarminion") then
-        inst.AnimState:SetBuild("merm_guard_small_lunar_build")
-    else
-        inst.AnimState:SetBuild("merm_guard_small_build")
-    end
+
+    local build =
+        (inst:HasTag("lunarminion")  and "merm_guard_small_lunar_build" ) or
+        (inst:HasTag("shadowminion") and "merm_guard_small_build") or --TODO(DiogoW): Missing small build!
+        "merm_guard_small_build"
+
+    inst.AnimState:SetBuild(build)
     inst.Transform:SetScale(0.9, 0.9, 0.9)
 end
 
@@ -746,7 +755,7 @@ local function living_merm_common_master(inst)
     MakeMediumFreezableCharacter(inst, "pig_torso")
 end
 
-local function CreateFlameFx()
+local function CreateFlameFx(parent)
     local inst = CreateEntity()
 
     inst:AddTag("FX")
@@ -764,9 +773,14 @@ local function CreateFlameFx()
 
     inst.AnimState:SetBank("pigman")
     inst.AnimState:SetBuild("merm_actions_skills")
-    inst.AnimState:PlayAnimation("flame", true)
+
+    local anim = parent:HasTag("shadowminion") and "alternateeyes" or "flame"
+
+    inst.AnimState:PlayAnimation(anim, true)
+
     --inst.AnimState:SetSymbolLightOverride("fx_flame_red", 1)
     --inst.AnimState:SetSymbolLightOverride("fx_red", 1)
+
     inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()))
 
     return inst
@@ -840,6 +854,7 @@ local function MakeMerm(name, assets, prefabs, common_postinit, master_postinit,
         foodaffinity:AddFoodtypeAffinity(FOODTYPE.VEGGIE, 1)
         foodaffinity:AddPrefabAffinity  ("kelp",          1) -- prevents the negative stats
         foodaffinity:AddPrefabAffinity  ("kelp_cooked",   1) -- prevents the negative stats
+        foodaffinity:AddPrefabAffinity  ("boatpatch_kelp",1) -- prevents the negative stats
         foodaffinity:AddPrefabAffinity  ("durian",        1) -- prevents the negative stats
         foodaffinity:AddPrefabAffinity  ("durian_cooked", 1) -- prevents the negative stats
 
@@ -1103,6 +1118,36 @@ end
 -------------------------------------------------------------------------------
 -- SHADOW MERM DEFS
 
+
+local function AddEyeSpecialEffect(inst)
+    local flamesL = CreateFlameFx(inst)
+    flamesL.entity:SetParent(inst.entity)
+    flamesL.Follower:FollowSymbol(inst.GUID, "flameL", nil, nil, nil, true)
+    inst.flamesL = flamesL
+
+    local flamesR = CreateFlameFx(inst)
+    flamesR.entity:SetParent(inst.entity)
+    flamesR.Follower:FollowSymbol(inst.GUID, "flameR", nil, nil, nil, true)
+    inst.flamesR = flamesR
+end
+
+local function RemoveEyeSpecialEffect(inst)
+    if inst.flamesL then
+        inst.flamesL:Remove()
+    end
+    if inst.flamesR then
+        inst.flamesR:Remove()
+    end
+end
+
+local function planarbuffed_changed(inst)
+    if inst.planarbuffed:value() then
+        AddEyeSpecialEffect(inst)
+    else
+        RemoveEyeSpecialEffect(inst)
+    end
+end
+
 local function CLIENT_ShadowMerm_OnEquipsChanged(inst)
     if inst.highlightchildren ~= nil then
         for _, child in ipairs(inst.highlightchildren) do
@@ -1114,6 +1159,7 @@ end
 
 local function shadow_merm_common(inst)
     common_common(inst)
+    inst.AnimState:SetBuild("merm_shadow_build")
     inst:SetPhysicsRadiusOverride(0.5)
 
     inst:AddTag("shadowminion")
@@ -1123,6 +1169,7 @@ local function shadow_merm_common(inst)
     inst.AnimState:SetMultColour(0,0,0,0.5)
 
     inst._equipschanged = net_event(inst.GUID, "merm_shadow._equipschanged")
+    inst.planarbuffed = net_bool(inst.GUID, "merm.planarbuffed", "planarbuffeddirty")
 
     inst._OnEquipsChanged = CLIENT_ShadowMerm_OnEquipsChanged
 
@@ -1132,6 +1179,7 @@ local function shadow_merm_common(inst)
 
     if not TheNet:IsDedicated() then
         inst:DoTaskInTime(0, inst._OnEquipsChanged) -- Load.
+        inst:ListenForEvent("planarbuffeddirty", planarbuffed_changed)
     end
 end
 
@@ -1141,6 +1189,9 @@ local function shadow_merm_master(inst)
     inst.scrapbook_multcolour = { 0, 0, 0 }
 
     inst:RemoveComponent("sleeper")
+
+    inst.components.locomotor:SetTriggersCreep(false)
+    inst.components.locomotor.pathcaps = { ignorecreep = true }
    
     inst.components.combat:SetAttackPeriod(TUNING.MERM_ATTACK_PERIOD)
     inst.components.combat:SetRetargetFunction(1, RetargetFn)
@@ -1164,6 +1215,7 @@ end
 
 local function shadow_mermguard_common(inst)
     guard_common(inst)
+    inst.AnimState:SetBuild("merm_guard_shadow_build")
     inst:SetPhysicsRadiusOverride(0.5)
 
     inst:AddTag("shadowminion")
@@ -1172,6 +1224,7 @@ local function shadow_mermguard_common(inst)
     inst.AnimState:SetMultColour(0,0,0,0.5)
 
     inst._equipschanged = net_event(inst.GUID, "merm_shadow._equipschanged")
+    inst.planarbuffed = net_bool(inst.GUID, "merm.planarbuffed", "planarbuffeddirty")
 
     inst._OnEquipsChanged = CLIENT_ShadowMerm_OnEquipsChanged
 
@@ -1181,6 +1234,7 @@ local function shadow_mermguard_common(inst)
 
     if not TheNet:IsDedicated() then
         inst:DoTaskInTime(0, inst._OnEquipsChanged) -- Load.
+        inst:ListenForEvent("planarbuffeddirty", planarbuffed_changed)
     end
 end
 
@@ -1188,6 +1242,9 @@ local function shadow_mermguard_master(inst)
     guard_master(inst)
 
     inst.scrapbook_multcolour = { 0, 0, 0 }
+
+    inst.components.locomotor:SetTriggersCreep(false)
+    inst.components.locomotor.pathcaps = { ignorecreep = true }
 
     inst.components.combat:SetAttackPeriod(TUNING.MERM_ATTACK_PERIOD)
     inst.components.combat:SetRetargetFunction(1, RetargetFn)
@@ -1210,44 +1267,15 @@ end
 -------------------------------------------------------------------------------
 -- LUNAR MERM DEFS
 
-local function SetLunarEyeFire(inst)
-    local flamesL = CreateFlameFx()
-    flamesL.entity:SetParent(inst.entity)
-    flamesL.Follower:FollowSymbol(inst.GUID, "flameL", nil, nil, nil, true)
-    inst.flamesL = flamesL
-
-    local flamesR = CreateFlameFx()
-    flamesR.entity:SetParent(inst.entity)
-    flamesR.Follower:FollowSymbol(inst.GUID, "flameR", nil, nil, nil, true)
-    inst.flamesR = flamesR
-end
-
-local function RemoveLunarEyeFire(inst)
-    if inst.flamesL then
-        inst.flamesL:Remove()
-    end
-    if inst.flamesR then
-        inst.flamesR:Remove()
-    end
-end
-
-local function lunarbuff_changed(inst)
-    if inst.lunarbuffed:value() then
-        SetLunarEyeFire(inst)
-    else
-        RemoveLunarEyeFire(inst)
-    end
-end
-
 local function lunar_merm_common(inst)
     common_common(inst)
     inst.AnimState:SetBuild("merm_lunar_build")
     inst:SetPhysicsRadiusOverride(0.5)
 
-    inst.lunarbuffed = net_bool(inst.GUID, "merm.lunarbuffed", "lunarbuffeddirty")
+    inst.planarbuffed = net_bool(inst.GUID, "merm.planarbuffed", "planarbuffeddirty")
 
     if not TheNet:IsDedicated() then
-        inst:ListenForEvent("lunarbuffeddirty", lunarbuff_changed)
+        inst:ListenForEvent("planarbuffeddirty", planarbuffed_changed)
     end
 
     inst:AddTag("lunarminion")
@@ -1280,10 +1308,10 @@ local function lunar_mermguard_common(inst)
     inst.AnimState:SetBuild("merm_guard_lunar_build")
     inst:SetPhysicsRadiusOverride(0.5)
 
-    inst.lunarbuffed = net_bool(inst.GUID, "merm.lunarbuffed", "lunarbuffeddirty")
+    inst.planarbuffed = net_bool(inst.GUID, "merm.planarbuffed", "planarbuffeddirty")
 
     if not TheNet:IsDedicated() then
-        inst:ListenForEvent("lunarbuffeddirty", lunarbuff_changed)
+        inst:ListenForEvent("planarbuffeddirty", planarbuffed_changed)
     end
 
     inst:AddTag("lunarminion")
@@ -1313,11 +1341,10 @@ end
 
 -----------------------------------------------------------------------------
 
---DSV uses 4 but ignores physics radius
 local MAXRANGE = 3
-local NO_TAGS_NO_PLAYERS =  { "bramble_resistant", "INLIMBO", "notarget", "noattack", "flight", "invisible", "wall", "player", "companion" }
-local NO_TAGS =             { "bramble_resistant", "INLIMBO", "notarget", "noattack", "flight", "invisible", "wall", "playerghost" }
-local COMBAT_TARGET_TAGS = { "_combat" }
+local NO_TAGS_NO_PLAYERS =  { "merm", "INLIMBO", "notarget", "noattack", "flight", "invisible", "wall", "player", "companion" }
+local NO_TAGS            =  { "merm", "INLIMBO", "notarget", "noattack", "flight", "invisible", "wall", "playerghost" }
+local COMBAT_TARGET_TAGS =  { "_combat" }
 
 local function OnUpdateThorns(inst)
     inst.range = inst.range + .75
@@ -1328,9 +1355,10 @@ local function OnUpdateThorns(inst)
             v:IsValid() and
             v.entity:IsVisible() and
             v.components.combat ~= nil and
-            not (v.components.inventory ~= nil and
-                v.components.inventory:EquipHasTag("bramble_resistant")) then
+            not v:HasTag("merm")
+        then
             local range = inst.range + v:GetPhysicsRadius(0)
+
             if v:GetDistanceSqToPoint(x, y, z) < range * range then
                 if inst.owner ~= nil and not inst.owner:IsValid() then
                     inst.owner = nil
@@ -1340,8 +1368,7 @@ local function OnUpdateThorns(inst)
                     if inst.owner.components.combat ~= nil and
                         inst.owner.components.combat:CanTarget(v) and
                         not inst.owner.components.combat:IsAlly(v) and
-                        (not leader or not leader.components.combat:IsAlly(v)) and
-                        not v:HasTag("merm")
+                        (not leader or not leader.components.combat:IsAlly(v))
                     then
                         inst.ignore[v] = true
                         v.components.combat:GetAttacked(v.components.follower and v.components.follower:GetLeader() == inst.owner and inst or inst.owner, inst.damage, nil, nil, inst.spdmg)
@@ -1379,9 +1406,13 @@ local function SetFXOwner(inst, owner)
     inst.owner = owner
     inst.canhitplayers = not owner:HasTag("player") or TheNet:GetPVPEnabled()
     inst.ignore[owner] = true
+
+    if owner:HasDebuff("wurt_merm_planar") then
+        inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+    end
 end
 
-local function MakeFX(name, anim, damage, planardamage)
+local function MakeLunarMermThornsFx(name, anim, damage)
     local function fxfn()
         local inst = CreateEntity()
 
@@ -1389,23 +1420,18 @@ local function MakeFX(name, anim, damage, planardamage)
         inst.entity:AddAnimState()
         inst.entity:AddNetwork()
 
-        if planardamage then
-            inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
-        end
-
         inst:AddTag("FX")
         inst:AddTag("thorny")
-        if name == "bramblefx_trap" then
-            inst:AddTag("trapdamage")
-        end
 
         inst.Transform:SetFourFaced()
 
-        inst.AnimState:SetBank("bramblefx")
-        inst.AnimState:SetBuild("bramblefx")
+        inst.AnimState:SetBank("merm_lunar_spike_fx")
+        inst.AnimState:SetBuild("merm_lunar_spike_fx")
         inst.AnimState:PlayAnimation(anim)
 
-        inst:SetPrefabNameOverride("bramblefx")
+        inst.AnimState:SetFinalOffset(-1)
+
+        inst:SetPrefabNameOverride("bramblefx") -- Nice string for death announcement.
 
         inst.entity:SetPristine()
 
@@ -1419,7 +1445,6 @@ local function MakeFX(name, anim, damage, planardamage)
         inst:ListenForEvent("animover", inst.Remove)
         inst.persists = false
         inst.damage = TUNING[damage]
-        inst.spdmg = planardamage and { planar = TUNING[planardamage] } or nil
         inst.range = .75
         inst.ignore = {}
         inst.canhitplayers = true
@@ -1432,10 +1457,33 @@ local function MakeFX(name, anim, damage, planardamage)
 
     return Prefab(name, fxfn, assetsfx)
 end
+
+    local function soilmarkerfn()
+        local inst = CreateEntity()
+
+        inst.entity:AddTransform()
+        inst.entity:AddNetwork()
+
+        inst:AddTag("NOBLOCK")
+        inst:AddTag("merm_soil_blocker")
+        
+        inst.entity:SetPristine()
+
+        if not TheWorld.ismastersim then
+            return inst
+        end
+
+        inst.persists = false
+        
+        inst:DoTaskInTime(5,function() inst:Remove() end)
+
+        return inst
+    end
 return MakeMerm("merm", assets, prefabs, common_common, common_master),
        MakeMerm("mermguard", assets, prefabs, guard_common, guard_master),
        MakeMerm("merm_shadow", assets, prefabs, shadow_merm_common, shadow_merm_master,{unliving=true}),
        MakeMerm("mermguard_shadow", assets, prefabs, shadow_mermguard_common, shadow_mermguard_master,{unliving=true}),
        MakeMerm("merm_lunar", assets, prefabs, lunar_merm_common, lunar_merm_master),
        MakeMerm("mermguard_lunar", assets, prefabs, lunar_mermguard_common, lunar_mermguard_master),
-       MakeFX("lunarmerm_thorns_fx", "idle", "MERM_LUNAR_THORN_DAMAGE")
+       MakeLunarMermThornsFx("lunarmerm_thorns_fx", "idle", "MERM_LUNAR_THORN_DAMAGE"),
+       Prefab("merm_soil_marker", soilmarkerfn)

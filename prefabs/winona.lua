@@ -9,6 +9,7 @@ local assets =
 	Asset("ANIM", "anim/player_mount_winona_remotecast.zip"),
 	Asset("ANIM", "anim/winona_death.zip"),
 	Asset("ANIM", "anim/winona_teleport.zip"),
+	Asset("ANIM", "anim/winona_mount_teleport.zip"),
     Asset("SCRIPT", "scripts/prefabs/skilltree_winona.lua"),
 }
 
@@ -79,15 +80,76 @@ local function OnSetOwner(inst)
 	end
 end
 
+local function CheckCatapultSkillChanged(inst, skill)
+	if skill == "winona_catapult_speed_1" or
+		skill == "winona_catapult_speed_2" or
+		skill == "winona_catapult_speed_3" or
+		skill == "winona_catapult_aoe_1" or
+		skill == "winona_catapult_aoe_2" or
+		skill == "winona_catapult_aoe_3"
+	then
+		TheWorld:PushEvent("winona_catapultskillchanged", inst)
+		return true
+	end
+end
+
+local function CheckSpotlightSkillChanged(inst, skill)
+	if skill == "winona_spotlight_heated" or
+		skill == "winona_spotlight_ranged"
+	then
+		TheWorld:PushEvent("winona_spotlightskillchanged", inst)
+		return true
+	end
+end
+
+local function CheckBatterySkillChanged(inst, skill)
+	if skill == "winona_battery_idledrain" or
+		skill == "winona_battery_efficiency_1" or
+		skill == "winona_battery_efficiency_2" or
+		skill == "winona_battery_efficiency_3"
+	then
+		TheWorld:PushEvent("winona_batteryskillchanged", inst)
+		return true
+	end
+end
+
+local function OnActivateSkill(inst, data)
+	if data then
+		local changed =
+			CheckCatapultSkillChanged(inst, data.skill) or
+			CheckSpotlightSkillChanged(inst, data.skill) or
+			CheckBatterySkillChanged(inst, data.skill)
+	end
+end
+
 local function OnDeactivateSkill(inst, data)
 	if data then
-		if data.skill == "winona_wagstaff_2" then
+		if CheckCatapultSkillChanged(inst, data.skill) or
+			CheckSpotlightSkillChanged(inst, data.skill) or
+			CheckBatterySkillChanged(inst, data.skill)
+		then
+			--do nothing
+		elseif data.skill == "winona_wagstaff_2" then
 			inst.components.builder:RemoveRecipe("winona_teleport_pad")
 			inst.components.builder:RemoveRecipe("winona_telebrella")
 		elseif data.skill == "winona_wagstaff_1" then
 			inst.components.builder:RemoveRecipe("winona_storage_robot")
 		end
 	end
+end
+
+local function OnSkillTreeInitialized(inst)
+	local skilltreeupdater = inst.components.skilltreeupdater
+	if not (skilltreeupdater and skilltreeupdater:IsActivated("winona_wagstaff_2")) then
+		inst.components.builder:RemoveRecipe("winona_teleport_pad")
+		inst.components.builder:RemoveRecipe("winona_telebrella")
+	elseif not (skilltreeupdater and skilltreeupdater:IsActivated("winona_wagstaff_1")) then
+		inst.components.builder:RemoveRecipe("winona_storage_robot")
+	end
+
+	TheWorld:PushEvent("winona_catapultskillchanged", inst)
+	TheWorld:PushEvent("winona_spotlightskillchanged", inst)
+	TheWorld:PushEvent("winona_batteryskillchanged", inst)
 end
 
 local function OnSave(inst, data)
@@ -142,7 +204,9 @@ local function master_postinit(inst)
     else
         inst:AddComponent("roseinspectableuser")
 
+		inst:ListenForEvent("onactivateskill_server", OnActivateSkill)
 		inst:ListenForEvent("ondeactivateskill_server", OnDeactivateSkill)
+		inst:ListenForEvent("ms_skilltreeinitialized", OnSkillTreeInitialized)
 
 		inst.OnSave = OnSave
 		inst.OnPreLoad = OnPreLoad

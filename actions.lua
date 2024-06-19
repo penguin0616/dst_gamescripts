@@ -541,7 +541,7 @@ ACTIONS =
     USE_WEREFORM_SKILL = Action({ rmb=true, distance=math.huge }),
 
     -- WINONA
-    REMOTE_TELEPORT = Action({ rmb = true, invalid_hold_action = true }),
+    REMOTE_TELEPORT = Action({ rmb = true, invalid_hold_action = true, mount_valid = true }),
 
     -- Rifts
     SCYTHE = Action({ rmb=true, distance=1.8, rangecheckfn=DefaultRangeCheck, invalid_hold_action=true }),
@@ -1478,7 +1478,7 @@ ACTIONS.NET.fn = function(act)
         act.target.components.workable:GetWorkAction() == ACTIONS.NET and
         not (act.target.components.health ~= nil and act.target.components.health:IsDead())
     then
-        if act.invobject == nil and act.target.components.grabbable ~= nil and not act.target.components.grabbable:CanGrab(act.doer) then
+        if (act.invobject == nil or not act.invobject:HasTag(ACTIONS.NET.id.."_tool")) and act.target.components.grabbable ~= nil and not act.target.components.grabbable:CanGrab(act.doer) then
             return false
         end
 
@@ -3906,9 +3906,9 @@ ACTIONS.TILL.fn = function(act)
 		if act.invobject.components.farmtiller ~= nil then
 			return act.invobject.components.farmtiller:Till(act:GetActionPoint(), act.doer)
 		elseif act.invobject.components.quagmire_tiller ~= nil then --Quagmire
-        return act.invobject.components.quagmire_tiller:Till(act:GetActionPoint(), act.doer)
+        	return act.invobject.components.quagmire_tiller:Till(act:GetActionPoint(), act.doer)
+        end
     end
-end
 end
 
 ACTIONS.PLANTSOIL.fn = function(act)

@@ -1719,3 +1719,21 @@ function d_addemotekeys()
 
 end
 
+
+function d_gettiles()
+                            local pos = Vector3(ThePlayer.Transform:GetWorldPosition())
+                            local tiles = {}
+                            for x=-5,5,1 do
+                                for z=-5,5,1 do
+                                    local tx = pos.x + (x*4)
+                                    local tz = pos.z + (z*4)
+                                    local tile = TheWorld.Map:GetTileAtPoint(tx, 0, tz)
+                                    if tile == WORLD_TILES.FARMING_SOIL then
+                                        table.insert(tiles,{tx,tz})
+                                    end
+                                end
+                            end
+                            dumptable(tiles,1,1)
+
+end
+

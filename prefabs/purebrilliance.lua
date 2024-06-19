@@ -4,6 +4,13 @@ local assets =
     Asset("INV_IMAGE", "purebrilliance"),
 }
 
+local prefabs =
+{
+    "wurt_merm_planar",
+    "purebrilliance_castfx",
+    "purebrilliance_castfx_mount",
+}
+
 local assets_fx =
 {
     Asset("ANIM", "anim/purebrilliance.zip"),
@@ -81,7 +88,9 @@ local function fn()
     inst.components.spellcaster.canusefrominventory = true
     inst.components.spellcaster.canonlyuseonlocomotorspvp = true
 
-    inst.fxcolour = {53/255, 132/255, 148/255}
+    inst.lightcolour = {53/255, 132/255, 148/255}
+    inst.fxprefab = "purebrilliance_castfx"
+    inst.castsound = "rifts3/mutated_deerclops/stunned_pst_f0" -- TODO(DiogoW)
 
     --
     MakeHauntableLaunch(inst)
@@ -116,5 +125,5 @@ local function symbolfxfn()
     return inst
 end
 
-return Prefab("purebrilliance", fn, assets),
+return Prefab("purebrilliance", fn, assets, prefabs),
     Prefab("purebrilliance_symbol_fx", symbolfxfn, assets_fx)

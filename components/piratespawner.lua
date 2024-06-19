@@ -72,8 +72,8 @@ local function SendLootToStash(inst, stash, owner)
 end
 
 local function Pirate_AnnounceRetreat(inst)
-    if not k.components.health:IsDead() then
-        k:PushEvent("victory", { say = STRINGS["MONKEY_TALK_RETREAT"][math.random(1, #STRINGS["MONKEY_TALK_RETREAT"])] })
+    if not inst.components.health:IsDead() then
+        inst:PushEvent("victory", { say = STRINGS["MONKEY_TALK_RETREAT"][math.random(1, #STRINGS["MONKEY_TALK_RETREAT"])] })
     end
 end
 
@@ -84,8 +84,8 @@ local function HitByCannon(boat, data)
 
     boat.components.boatcrew.flee = true
 
-    for k, v in pairs(boat.components.boatcrew.members) do
-        k:DoTaskInTime(math.random()* 0.3 + 0.2 , Pirate_AnnounceRetreat)
+    for member, _ in pairs(boat.components.boatcrew.members) do
+        member:DoTaskInTime(math.random()* 0.3 + 0.2 , Pirate_AnnounceRetreat)
     end
 end
 

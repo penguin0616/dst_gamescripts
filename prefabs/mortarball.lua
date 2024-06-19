@@ -157,7 +157,7 @@ local function OnUpdateProjectile(inst)
     for i, target in ipairs(targets) do
 
         -- Ignore hitting bumpers while flying through the air
-        if target ~= nil and target ~= inst.components.complexprojectile.attacker and not target:HasTag("boatbumper") then
+        if target ~= nil and target ~= inst and target ~= inst.components.complexprojectile.attacker and not target:HasTag("boatbumper") then
             -- Do damage to entities with health
             if target.components.combat and GetTime() - target.components.combat.lastwasattackedtime > TUNING.CANNONBALL_PASS_THROUGH_TIME_BUFFER then
                 local damage = inst.components.combat.defaultdamage

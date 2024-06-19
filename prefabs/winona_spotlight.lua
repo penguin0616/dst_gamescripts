@@ -84,48 +84,19 @@ local function ApplySkillBonuses(inst)
 	inst._lightinst:SetRadius(inst.RADIUS)
 end
 
---used by item as well
 local function ConfigureSkillTreeUpgrades(inst, builder)
 	local skilltreeupdater = builder and builder.components.skilltreeupdater or nil
-	if skilltreeupdater then
-		local heated = skilltreeupdater:IsActivated("winona_spotlight_heated")
-		if type(inst._heated) ~= "boolean" then
-			inst._heated:set(heated)
-		else
-			inst._heated = heated
-		end
 
-		local ranged = skilltreeupdater:IsActivated("winona_spotlight_range")
-		if type(inst._ranged) ~= "boolean" then
-			inst._ranged:set(ranged)
-		else
-			inst._ranged = ranged
-		end
-	end
-end
+	local heated = skilltreeupdater ~= nil and skilltreeupdater:IsActivated("winona_spotlight_heated")
+	local ranged = skilltreeupdater ~= nil and skilltreeupdater:IsActivated("winona_spotlight_range")
 
---used by item as well
-local function CopyAllProperties(src, dest)
-	--skilltree
-	local heated = src._heated
-	if type(heated) ~= "boolean" then
-		heated = heated:value()
-	end
-	if type(dest._heated) ~= "boolean" then
-		dest._heated:set(heated)
-	else
-		dest._heated = heated
-	end
+	local dirty = inst._heated:value() ~= heated or inst._ranged:value() ~= ranged
 
-	local ranged = src._ranged
-	if type(ranged) ~= "boolean" then
-		ranged = ranged:value()
-	end
-	if type(dest._ranged) ~= "boolean" then
-		dest._ranged:set(ranged)
-	else
-		dest._ranged = ranged
-	end
+	inst._heated:set(heated)
+	inst._ranged:set(ranged)
+	inst._engineerid = builder and builder:HasTag("handyperson") and builder.userid or nil
+
+	return dirty
 end
 
 --------------------------------------------------------------------------
@@ -742,11 +713,16 @@ end
 
 --------------------------------------------------------------------------
 
-local function OnBuilt2(inst)
+local function OnBuilt2(inst, doer)
     if inst.components.workable:CanBeWorked() then
         inst:RemoveTag("NOCLICK")
         if not inst:HasTag("burnt") then
             inst.components.circuitnode:ConnectTo("engineeringbattery")
+			if doer and doer:IsValid() then
+				inst.components.circuitnode:ForEachNode(function(inst, node)
+					node:OnUsedIndirectly(doer)
+				end)
+			end
         end
     end
 end
@@ -759,7 +735,10 @@ local function OnBuilt3(inst)
     end
 end
 
-local function DoBuiltOrDeployed(inst, fastforward, sound)
+local function DoBuiltOrDeployed(inst, doer, fastforward, sound)
+	ConfigureSkillTreeUpgrades(inst, doer)
+	ApplySkillBonuses(inst)
+
     if inst._inittask ~= nil then
         inst._inittask:Cancel()
         inst._inittask = nil
@@ -775,14 +754,12 @@ local function DoBuiltOrDeployed(inst, fastforward, sound)
 		inst._headinst.AnimState:SetFrame(fastforward)
 	end
 	inst.SoundEmitter:PlaySound(sound)
-	inst:DoTaskInTime((37 - fastforward) * FRAMES, OnBuilt2)
+	inst:DoTaskInTime((37 - fastforward) * FRAMES, OnBuilt2, doer)
     inst:ListenForEvent("animover", OnBuilt3)
 end
 
 local function OnBuilt(inst, data)
-	ConfigureSkillTreeUpgrades(inst, data and data.builder or nil)
-	ApplySkillBonuses(inst)
-	DoBuiltOrDeployed(inst, 0, "dontstarve/common/together/spot_light/place")
+	DoBuiltOrDeployed(inst, data and data.builder or nil, 0, "dontstarve/common/together/spot_light/place")
 end
 
 --------------------------------------------------------------------------
@@ -793,7 +770,6 @@ local function ChangeToItem(inst)
 	item.AnimState:PlayAnimation("collapse")
 	item.AnimState:PushAnimation("idle_ground", false)
 	item.SoundEmitter:PlaySound("meta4/winona_spotlight/collapse")
-	CopyAllProperties(inst, item)
 	if inst._wired then
 		item.SoundEmitter:PlaySound("dontstarve/common/together/spot_light/electricity", nil, .5)
 		SpawnPrefab("winona_battery_sparks").Transform:SetPosition(inst.Transform:GetWorldPosition())
@@ -979,6 +955,7 @@ local function OnSave(inst, data)
 		--skilltree
 		data.heated = inst._heated:value() or nil
 		data.ranged = inst._ranged:value() or nil
+		data.engineerid = inst._engineerid
     end
 end
 
@@ -992,8 +969,10 @@ local function OnLoad(inst, data)
                 inst.Transform:SetRotation(data.lightdir)
             end
         else
+			--skilltree
 			inst._heated:set(data.heated or false)
 			inst._ranged:set(data.ranged or false)
+			inst._engineerid = data.engineerid
 			ApplySkillBonuses(inst)
 
             local dirty = false
@@ -1159,6 +1138,13 @@ local function fn()
 
     inst:ListenForEvent("onbuilt", OnBuilt)
     inst:ListenForEvent("engineeringcircuitchanged", OnCircuitChanged)
+	inst:ListenForEvent("winona_spotlightskillchanged", function(world, user)
+		if user.userid == inst._engineerid then
+			if ConfigureSkillTreeUpgrades(inst, user) then
+				ApplySkillBonuses(inst)
+			end
+		end
+	end, TheWorld)
 
     MakeHauntableWork(inst)
     MakeMediumBurnable(inst, nil, nil, true)
@@ -1170,6 +1156,9 @@ local function fn()
     inst.OnEntitySleep = OnEntitySleep
     inst.OnEntityWake = OnEntityWake
     inst.AddBatteryPower = AddBatteryPower
+
+	--skilltree
+	inst._engineerid = nil
 
     inst._wired = nil
     inst._flash = nil
@@ -1321,29 +1310,10 @@ local function OnDeploy(inst, pt, deployer)
 		obj.Physics:SetCollides(false)
 		obj.Physics:Teleport(pt.x, 0, pt.z)
 		obj.Physics:SetCollides(true)
-		CopyAllProperties(inst, obj)
-		ApplySkillBonuses(obj)
-		DoBuiltOrDeployed(obj, 22, "meta4/winona_spotlight/deploy")
+		DoBuiltOrDeployed(obj, deployer, 22, "meta4/winona_spotlight/deploy")
 		PreventCharacterCollisionsWithPlacedObjects(obj)
 	end
 	inst:Remove()
-end
-
-local function Item_OnPreBuilt(inst, builder, materials, recipe)
-	ConfigureSkillTreeUpgrades(inst, builder)
-end
-
-local function Item_OnSave(inst, data)
-	--skilltree
-	data.heated = inst._heated or nil
-	data.ranged = inst._ranged or nil
-end
-
-local function Item_OnLoad(inst, data)
-	if data then
-		inst._heated = data.heated or false
-		inst._ranged = data.ranged or false
-	end
 end
 
 local function itemfn()
@@ -1386,14 +1356,6 @@ local function itemfn()
 
 	MakeMediumBurnable(inst)
 	MakeMediumPropagator(inst)
-
-	--skilltree
-	inst._heated = false
-	inst._ranged = false
-
-	inst.onPreBuilt = Item_OnPreBuilt
-	inst.OnSave = Item_OnSave
-	inst.OnLoad = Item_OnLoad
 
 	return inst
 end

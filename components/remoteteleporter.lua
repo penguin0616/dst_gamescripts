@@ -40,24 +40,38 @@ end
 
 local ITEM_MUST_TAGS = {"_inventoryitem",}
 local ITEM_CANT_TAGS = {"INLIMBO", "FX", "NOCLICK", "DECOR",}
-function RemoteTeleporter:Teleport_Internal(from_x, from_z, to_x, to_z, doer)
+function RemoteTeleporter:Teleport_Internal(target, from_x, from_z, to_x, to_z, doer)
+	local items
     if self.itemteleportradius ~= nil then
-        local items = TheSim:FindEntities(from_x, 0, from_z, self.itemteleportradius, ITEM_MUST_TAGS, ITEM_CANT_TAGS)
-        for _, item in ipairs(items) do
-            local ix, iy, iz = item.Transform:GetWorldPosition()
-            local dx, dz = ix - from_x, iz - from_z
-            if item.Physics then
-                item.Physics:Teleport(to_x + dx, 0, to_z + dz)
-            else
-                item.Transform:SetPosition(to_x + dx, 0, to_z + dz)
-            end
+		items = TheSim:FindEntities(from_x, 0, from_z, self.itemteleportradius, ITEM_MUST_TAGS, ITEM_CANT_TAGS)
+		for i = #items, 1, -1 do
+			local item = items[i]
+			if item.components.inventoryitem.canbepickedup then
+				local ix, iy, iz = item.Transform:GetWorldPosition()
+				local dx, dz = ix - from_x, iz - from_z
+				local platform = item:GetCurrentPlatform()
+				if platform ~= nil then
+					platform.components.walkableplatform:RemoveObject(item) -- NOTES(JBK): Temporary workaround function for teleporting things off of a boat past entity sleep range. [TBTWARWB]
+				end
+				if item.Physics then
+					item.Physics:Teleport(to_x + dx, 0, to_z + dz)
+				else
+					item.Transform:SetPosition(to_x + dx, 0, to_z + dz)
+				end
+				item:PushEvent("teleported")
+			else
+				items[i] = items[#items]
+				items[#items] = nil
+			end
         end
     end
 
     doer.Physics:Teleport(to_x, 0, to_z)
+	doer:PushEvent("teleported")
     if self.onteleportedfn then
-        self.onteleportedfn(self.inst, doer, true)
+        self.onteleportedfn(self.inst, doer, true, target, items)
     end
+	target:PushEvent("remoteteleportreceived", { teleporter = self.inst, doer = doer, items = items })
 end
 
 function RemoteTeleporter:Teleport(doer)
@@ -91,17 +105,17 @@ function RemoteTeleporter:Teleport(doer)
         end
 
         if closest_outofcamera ~= nil then
-            self:Teleport_Internal(x, z, closest_outofcamerax, closest_outofcameraz, doer)
+            self:Teleport_Internal(closest_outofcamera, x, z, closest_outofcamerax, closest_outofcameraz, doer)
             return true
         end
         if furthest_incamera ~= nil then
-            self:Teleport_Internal(x, z, furthest_incamerax, furthest_incameraz, doer)
+            self:Teleport_Internal(furthest_incamera, x, z, furthest_incamerax, furthest_incameraz, doer)
             return true
         end
     end
 
     if self.onteleportedfn then
-        self.onteleportedfn(self.inst, doer, false)
+        self.onteleportedfn(self.inst, doer, false, nil)
     end
     return false, "NODEST"
 end
@@ -109,12 +123,6 @@ end
 function RemoteTeleporter:OnStartTeleport(doer)
 	if self.onstartteleportfn then
 		self.onstartteleportfn(self.inst, doer)
-	end
-end
-
-function RemoteTeleporter:OnTeleportedFn(doer, success)
-	if self.onteleportedfn then
-		self.onteleportedfn(self.inst, doer, success)
 	end
 end
 

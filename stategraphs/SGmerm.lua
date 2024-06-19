@@ -40,6 +40,7 @@ local actionhandlers =
     ActionHandler(ACTIONS.HAMMER, "hammer"),
     ActionHandler(ACTIONS.MARK, "chop"),
     ActionHandler(ACTIONS.PICKUP, "pickup"),
+    ActionHandler(ACTIONS.TILL, tool_or_chop),
 }
 
 local events =
