@@ -59,8 +59,8 @@ local states=
 				local ents = TheSim:FindEntities(x, 0, z, TUNING.MOSQUITO_BURST_RANGE, SPLAT_DAMAGE_MUST_TAGS, SPLAT_DAMAGE_CANT_TAGS)
 
 				for _, ent in ipairs(ents) do
-                    print(ent, not ent:IsInLimbo(), ent.components.combat ~= nil)
-					if not ent:IsInLimbo() and ent.components.combat ~= nil then
+                   -- print(ent, not ent:IsInLimbo(), ent.components.combat ~= nil,  inst.components.combat:IsAlly(ent), inst.lastleader  )
+					if not ent:IsInLimbo() and ent.components.combat ~= nil and ent ~= inst.lastleader and  (not inst.lastleader or not ent.components.combat:IsAlly(inst.lastleader)) then
 						ent.components.combat:GetAttacked(inst, TUNING.MOSQUITO_BURST_DAMAGE, nil)
 					end
 				end
@@ -77,7 +77,6 @@ local states=
         tags = {"busy"},
 
         onenter = function(inst)
-
 			inst.SoundEmitter:KillSound("buzz")
 			if not inst.toofat then
 				inst.SoundEmitter:PlaySound(inst.sounds.death)

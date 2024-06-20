@@ -412,7 +412,7 @@ local states =
 							if elem == "horror" then
 								node:ConsumeBatteryAmount(costhorror or cost, sharehorror or share, inst)
 							elseif elem == "brilliance" then
-								node:ConsumeBatteryAmount(costlunar or cost, sharebrilliance or share, inst)
+								node:ConsumeBatteryAmount(costbrilliance or cost, sharebrilliance or share, inst)
 							end
 						else
 							node:ConsumeBatteryAmount(cost, share, inst)

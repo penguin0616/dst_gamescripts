@@ -17361,7 +17361,8 @@ local states =
             EventHandler("animqueueover", function(inst)
 				if inst.AnimState:AnimDone() then
 					if inst.sg.statemem.stopfurling then
-						inst.sg:GoToState("idle")
+                        inst.AnimState:PlayAnimation("pull_big_pst", false)
+						inst.sg:GoToState("idle", true)
 					else
 						inst.sg.statemem.not_interrupted = true
 						inst.sg:GoToState("furl", inst.sg.mem.furl_target) -- _repeat_delay

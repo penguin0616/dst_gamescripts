@@ -69,9 +69,9 @@ function RemoteTeleporter:Teleport_Internal(target, from_x, from_z, to_x, to_z, 
     doer.Physics:Teleport(to_x, 0, to_z)
 	doer:PushEvent("teleported")
     if self.onteleportedfn then
-        self.onteleportedfn(self.inst, doer, true, target, items)
+		self.onteleportedfn(self.inst, doer, true, target, items, from_x, from_z)
     end
-	target:PushEvent("remoteteleportreceived", { teleporter = self.inst, doer = doer, items = items })
+	target:PushEvent("remoteteleportreceived", { teleporter = self.inst, doer = doer, items = items, from_x = from_x, from_z = from_z })
 end
 
 function RemoteTeleporter:Teleport(doer)

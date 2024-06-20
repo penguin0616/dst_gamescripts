@@ -99,14 +99,21 @@ function DecayCharlieResidueAndGoOnCooldownIfItExists(inst)
     roseinspectableuser:GoOnCooldown()
 end
 
-local function OnFuelPresentation1(inst, x, z, upgraded)
-    --local fx = SpawnPrefab("FIXME(JBK) Add this when ready.")
-    --fx.Transform:SetPosition(x, 0, z)
+local function OnFuelPresentation3(inst)
+    inst:ReturnToScene()
+    if inst.components.inventoryitem ~= nil then
+        inst.components.inventoryitem:OnDropped(true, .5)
+    end
 end
 local function OnFuelPresentation2(inst, x, z, upgraded)
     local fx = SpawnPrefab(upgraded and "shadow_puff_solid" or "shadow_puff")
     fx.Transform:SetPosition(x, 0, z)
-    inst:ReturnToScene()
+    inst:DoTaskInTime(3 * FRAMES, OnFuelPresentation3)
+end
+local function OnFuelPresentation1(inst, x, z, upgraded)
+    local fx = SpawnPrefab((upgraded or TheWorld:HasTag("cave")) and "charlie_snap_solid" or "charlie_snap")
+    fx.Transform:SetPosition(x, 2, z)
+    inst:DoTaskInTime(25 * FRAMES, OnFuelPresentation2, x, z, upgraded)
 end
 local function OnResidueActivated_Fuel_Internal(inst, doer, odds)
     local skilltreeupdater = doer.components.skilltreeupdater
@@ -121,8 +128,7 @@ local function OnResidueActivated_Fuel_Internal(inst, doer, odds)
     local theta = math.random() * PI2
     x, z = x + math.cos(theta) * radius, z + math.sin(theta) * radius
     fuel.Transform:SetPosition(x, 0, z)
-    fuel:DoTaskInTime(1.0, OnFuelPresentation1, x, z, upgraded)
-    fuel:DoTaskInTime(1.5, OnFuelPresentation2, x, z, upgraded)
+    fuel:DoTaskInTime(0.5, OnFuelPresentation1, x, z, upgraded)
 end
 local function OnResidueActivated_Fuel(inst, doer)
     OnResidueActivated_Fuel_Internal(inst, doer, TUNING.SKILLS.WINONA.ROSEGLASSES_UPGRADE_CHANCE)
@@ -141,6 +147,92 @@ function MakeRoseTarget_CreateFuel_IncreasedHorror(inst)
     roseinspectable:SetForcedInduceCooldownOnActivate(true)
 end
 --------------------------------------------------------------------------
+local function RosePoint_VineBridge_Check_HandleOverhangs(sx, sz, TILE_SCALE, _map) -- Internal.
+    -- If a point lays on an overhang we need to adjust it so that it is not on an overhang by reflecting it over the tile border first.
+    local cx, cy, cz = _map:GetTileCenterPoint(sx, 0, sz)
+    local dx, dz = cx - sx, cz - sz
+    local signdx, signdz = dx < 0 and -1 or 1, dz < 0 and -1 or 1
+    local absdx, absdz = math.abs(dx), math.abs(dz)
+    local ishorizontal = absdx > absdz
+    local rsx, rsz, dirx, dirz
+    if ishorizontal then
+        rsx = sx + 2 * (absdx - TILE_SCALE * 0.5) * signdx
+        rsz = sz
+        dirx = signdx * TILE_SCALE
+        dirz = 0
+    else
+        rsx = sx
+        rsz = sz + 2 * (absdz - TILE_SCALE * 0.5) * signdz
+        dirx = 0
+        dirz = signdz * TILE_SCALE
+    end
+    if _map:IsLandTileAtPoint(rsx, 0, rsz) then
+        return rsx, rsz, dirx, dirz
+    end
+
+    -- We have reflected from an overhang onto another overhang along a coastline fallback to rectangle direction.
+    if not ishorizontal then -- Flip the logic so the reflection happens in the opposite direction.
+        rsx = sx + 2 * (absdx - TILE_SCALE * 0.5) * signdx
+        rsz = sz
+        dirx = signdx * TILE_SCALE
+        dirz = 0
+    else
+        rsx = sx
+        rsz = sz + 2 * (absdz - TILE_SCALE * 0.5) * signdz
+        dirx = 0
+        dirz = signdz * TILE_SCALE
+    end
+    if _map:IsLandTileAtPoint(rsx, 0, rsz) then
+        return rsx, rsz, dirx, dirz
+    end
+
+    -- We are on a corner of a tile reflect both points so we are on the solid tile first and then use non-overhang protocols.
+    rsx = sx + 2 * (absdx - TILE_SCALE * 0.5) * signdx
+    rsz = sz + 2 * (absdz - TILE_SCALE * 0.5) * signdz
+    return rsx, rsz, nil, nil
+end
+local function RosePoint_VineBridge_Check_HandleGround(sx, sz, TILE_SCALE, _map) -- Internal.
+    -- We are on a ground tile so we will first do a diamond direction check first and then a rectangle fallback.
+    local cx, cy, cz = _map:GetTileCenterPoint(sx, 0, sz)
+    local dx, dz = cx - sx, cz - sz
+    local signdx, signdz = dx < 0 and -1 or 1, dz < 0 and -1 or 1
+    local absdx, absdz = math.abs(dx), math.abs(dz)
+    local ishorizontal = absdx > absdz
+    local rsx, rsz, dirx, dirz
+    if ishorizontal then
+        rsx = sx + 2 * (absdx - TILE_SCALE * 0.5) * signdx
+        rsz = sz
+        dirx = -signdx * TILE_SCALE
+        dirz = 0
+    else
+        rsx = sx
+        rsz = sz + 2 * (absdz - TILE_SCALE * 0.5) * signdz
+        dirx = 0
+        dirz = -signdz * TILE_SCALE
+    end
+    if _map:IsOceanTileAtPoint(rsx, 0, rsz) then
+        return dirx, dirz
+    end
+
+    -- Check the other adjacent diagonal path.
+    if not ishorizontal then
+        rsx = sx + 2 * (absdx - TILE_SCALE * 0.5) * signdx
+        rsz = sz
+        dirx = -signdx * TILE_SCALE
+        dirz = 0
+    else
+        rsx = sx
+        rsz = sz + 2 * (absdz - TILE_SCALE * 0.5) * signdz
+        dirx = 0
+        dirz = -signdz * TILE_SCALE
+    end
+    if _map:IsOceanTileAtPoint(rsx, 0, rsz) then
+        return dirx, dirz
+    end
+
+    -- We are too far in land for tiles to be able to be chosen.
+    return nil, nil
+end
 local function RosePoint_VineBridge_Check(inst, pt)
     local _world = TheWorld
     if _world.ismastersim then
@@ -154,45 +246,40 @@ local function RosePoint_VineBridge_Check(inst, pt)
     local TILE_SCALE = TILE_SCALE
     local maxlength = TUNING.SKILLS.WINONA.CHARLIE_VINEBRIDGE_LENGTH_TILES
 
+    -- NOTES(JBK): We want the player position to not be involved for the bridge construction at all.
+    -- So we will need to transform the point into a position that makes the most sense given the geometric nature of tiles.
     local sx, sy, sz = pt:Get()
+    local dirx, dirz
 
-    -- Get direction vector from the player instance because it is the most context sensitive for directionality.
-    local dirx, _, dirz = inst.Transform:GetWorldPosition()
-    local dx, dz = sx - dirx, sz - dirz
+    if _map:IsOceanTileAtPoint(sx, 0, sz) and _map:IsVisualGroundAtPoint(sx, 0, sz) then
+        sx, sz, dirx, dirz = RosePoint_VineBridge_Check_HandleOverhangs(sx, sz, TILE_SCALE, _map)
+    end
+    
+    if dirx == nil then
+        if not _map:IsLandTileAtPoint(sx, 0, sz) then
+            return false
+        end
 
-    -- Convert floating precision to horizontal and vertical we do not need to worry about dist being zero because we are modifying the values here to always have a magnitude.
-    if math.abs(dx) > math.abs(dz) then
-        -- Horizontal.
-        dx = dx < 0 and -TILE_SCALE or TILE_SCALE
-        dz = 0
-    else
-        -- Vertical.
-        dx = 0
-        dz = dz < 0 and -TILE_SCALE or TILE_SCALE
+        dirx, dirz = RosePoint_VineBridge_Check_HandleGround(sx, sz, TILE_SCALE, _map)
     end
 
-    -- Center start to center of tile.
-    sx, sy, sz = _map:GetTileCenterPoint(sx, sy, sz)
-
-    if _map:IsOceanTileAtPoint(sx, 0, sz) then
-        -- Push back the start point a tile to see if that is valid.
-        sx, sz = sx - dx, sz - dz
-    end
-
-    if not _map:IsLandTileAtPoint(sx, 0, sz) then
-        -- We want the player to be fully on land to initiate this.
+    if dirx == nil or _map:IsTemporaryTileAtPoint(sx, 0, sz) then
         return false
     end
+
+    -- We now have a valid direction and starting point align our tile ray trace to tile coordinates finally.
+    sx, sy, sz = _map:GetTileCenterPoint(sx, 0, sz)
 
     -- Scan for land.
     local hitland = false
     local spots = {}
     for i = 0, maxlength do -- Intentionally 0 to max to have a + 1 for the end tile cap inclusion.
-        sx, sz = sx + dx, sz + dz
+        sx, sz = sx + dirx, sz + dirz
 
         local pt_offseted = Point(sx, 0, sz)
-        if _map:IsLandTileAtPoint(sx, 0, sz) then
-            hitland = true
+        local tile_current = _map:GetTileAtPoint(sx, 0, sz)
+        if TileGroupManager:IsLandTile(tile_current) then
+            hitland = not TileGroupManager:IsTemporaryTile(tile_current)
             break
         end
 
@@ -207,6 +294,8 @@ local function RosePoint_VineBridge_Check(inst, pt)
         return false
     end
 
+    spots.direction = {x = dirx, z = dirz,}
+
     return true, spots
 end
 local function RosePoint_VineBridge_Do(inst, pt, spots)
@@ -216,6 +305,7 @@ local function RosePoint_VineBridge_Do(inst, pt, spots)
     local spawndata = {
         base_time = 0.5,
         random_time = 0.0,
+        direction = spots.direction,
     }
     for i, spot in ipairs(spots) do
         spawndata.base_time = 0.25 * i

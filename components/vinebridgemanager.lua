@@ -10,6 +10,7 @@ self.inst = inst
 --self.marked_for_delete_grid = nil
 --self.duration_grid = nil
 --self.damage_prefabs_grid = nil
+--self.bridge_anims_grid = nil
 
 -- Cache for speed.
 local _world = TheWorld
@@ -28,6 +29,7 @@ local function initialize_grids()
     self.marked_for_delete_grid = DataGrid(self.WIDTH, self.HEIGHT)
     self.duration_grid = DataGrid(self.WIDTH, self.HEIGHT)
     self.damage_prefabs_grid = DataGrid(self.WIDTH, self.HEIGHT)
+	self.bridge_anims_grid = DataGrid(self.WIDTH, self.HEIGHT)
 end
 inst:ListenForEvent("worldmapsetsize", initialize_grids, _world)
 
@@ -37,8 +39,8 @@ local function destroy_vinebridge_at_point(world, dx, dz, vinebridgemanager, dat
     vinebridgemanager:DestroyVineBridgeAtPoint(dx, 0, dz, data)
 end
 
-local function create_vinebridge_at_point(world, dx, dz, vinebridgemanager)
-    vinebridgemanager:CreateVineBridgeAtPoint(dx, 0, dz)
+local function create_vinebridge_at_point(world, dx, dz, vinebridgemanager, direction)
+    vinebridgemanager:CreateVineBridgeAtPoint(dx, 0, dz, direction)
 end
 
 local function start_destroy_for_tile(_, txy, wid, vinebridgemanager)
@@ -46,9 +48,9 @@ local function start_destroy_for_tile(_, txy, wid, vinebridgemanager)
     vinebridgemanager:QueueDestroyForVineBridgeAtPoint(center_x, center_y, center_z)
 end
 
-function self:CreateVineBridgeAtPoint(x, y, z)
+function self:CreateVineBridgeAtPoint(x, y, z, direction)
     local tile_x, tile_y = _map:GetTileCoordsAtPoint(x, y, z)
-    return self:CreateVineBridgeAtTile(tile_x, tile_y, x, z)
+    return self:CreateVineBridgeAtTile(tile_x, tile_y, x, z, direction)
 end
 
 
@@ -66,7 +68,7 @@ function self:FixupFloaterObjects(x, z, tile_radius_plus_overhang, is_ocean_tile
         end
     end
 end
-function self:CreateVineBridgeAtTile(tile_x, tile_y, x, z)
+function self:CreateVineBridgeAtTile(tile_x, tile_y, x, z, direction)
     local current_tile = nil
     local undertile = _world.components.undertile
     if undertile then
@@ -81,7 +83,14 @@ function self:CreateVineBridgeAtTile(tile_x, tile_y, x, z)
         undertile:SetTileUnderneath(tile_x, tile_y, current_tile)
     end
 
-    self.duration_grid:SetDataAtPoint(tile_x, tile_y, TUNING.VINEBRIDGE_HEALTH)
+	local tile_index = self.duration_grid:GetIndex(tile_x, tile_y)
+	local tile_data = self.duration_grid:GetDataAtIndex(tile_index)
+	if tile_data then
+		tile_data[1] = TUNING.VINEBRIDGE_HEALTH
+		tile_data[2] = direction
+	else
+		self.duration_grid:SetDataAtIndex(tile_index, { TUNING.VINEBRIDGE_HEALTH, direction })
+	end
 
     if not x or not z then
         local tx, _, tz = _map:GetTileCenterPoint(tile_x, tile_y)
@@ -92,6 +101,8 @@ function self:CreateVineBridgeAtTile(tile_x, tile_y, x, z)
     local tile_radius_plus_overhang = ((TILE_SCALE / 2) + 1.0) * 1.4142
     self:FixupFloaterObjects(x, z, tile_radius_plus_overhang)
 
+	self:SpawnBridgeAnim(tile_index, x, z, direction)
+
     return true
 end
 
@@ -99,14 +110,15 @@ function self:QueueCreateVineBridgeAtPoint(x, y, z, data)
     local tile_x, tile_y = _map:GetTileCoordsAtPoint(x, y, z)
     local data_at_point = self.duration_grid:GetDataAtPoint(tile_x, tile_y)
     if not data_at_point then
-        self.duration_grid:SetDataAtPoint(tile_x, tile_y, TUNING.VINEBRIDGE_HEALTH)
-
         local base_time, random_time = 0.5, 0.3
+        local direction
         if data then
             base_time = data.base_time or base_time
             random_time = data.random_time or random_time
+            direction = data.direction
         end
-        _world:DoTaskInTime(base_time + (random_time * math.random()), create_vinebridge_at_point, x, z, self)
+		self.duration_grid:SetDataAtPoint(tile_x, tile_y, { TUNING.VINEBRIDGE_HEALTH, direction })
+        _world:DoTaskInTime(base_time + (random_time * math.random()), create_vinebridge_at_point, x, z, self, direction)
     end
 end
 
@@ -142,7 +154,11 @@ function self:DestroyVineBridgeAtPoint(x, y, z, data)
     self.marked_for_delete_grid:SetDataAtIndex(grid_index, nil)
     self.duration_grid:SetDataAtIndex(grid_index, nil)
 
-    
+	local fx = self.bridge_anims_grid:GetDataAtIndex(grid_index)
+	if fx then
+		fx:KillFX()
+	end
+	self.bridge_anims_grid:SetDataAtIndex(grid_index, nil)
 
     -- If we're swapping to an ocean tile, do like a broken boat would do and deal with everything in our tile bounds
     if IsOceanTile(old_tile) then
@@ -240,9 +256,9 @@ end
 
 function self:DamageVineBridgeAtTile(tx, ty, damage)
     local tile_index = self.duration_grid:GetIndex(tx, ty)
-    local current_tile_health = self.duration_grid:GetDataAtIndex(tile_index)
+	local tile_data = self.duration_grid:GetDataAtIndex(tile_index)
     local dx, dy, dz = _map:GetTileCenterPoint(tx,ty)
-    if not current_tile_health or current_tile_health == 0 then
+	if not tile_data or (tile_data[1] or 0) == 0 then
         -- Exit early if there's no data, or the tile was
         -- already damaged to its breaking point before this.
         return nil
@@ -250,7 +266,7 @@ function self:DamageVineBridgeAtTile(tx, ty, damage)
         -- We don't technically need this set here, but if somebody wants to inspect
         -- health and test for 0 elsewhere, it's useful to have an accurate representation.
         local new_health = math.min(math.max(0, current_tile_health - damage), TUNING.VINEBRIDGE_HEALTH)
-        self.duration_grid:SetDataAtIndex(tile_index, new_health)
+		tile_data[1] = new_health
 
         self:SpawnDamagePrefab(tile_index, new_health)
 
@@ -280,6 +296,25 @@ function self:SpawnDamagePrefab(tile_index, health)
             damage_prefab:Remove()
         end
     end
+end
+
+function self:SpawnBridgeAnim(tile_index, x, z, direction)
+	local fx = self.bridge_anims_grid:GetDataAtIndex(tile_index)
+	if fx == nil then
+		fx = SpawnPrefab("vine_bridge_fx")
+		fx.Transform:SetPosition(x, 0, z)
+		fx.Transform:SetRotation(
+			(direction.x > 0 and -90) or
+			(direction.x < 0 and 90) or
+			(direction.z > 0 and 180) or
+			0
+		)
+		self.bridge_anims_grid:SetDataAtIndex(tile_index, fx)
+
+		if POPULATING then
+			fx:SkipPre()
+		end
+	end
 end
 
 --------------------------------------------------------------------------
@@ -321,9 +356,15 @@ function self:OnLoad(data)
         -- health grid should get cleaned up when that destroy resolves.
         self.duration_grid:Load(data.duration)
         for i, health in pairs(self.duration_grid.grid) do
-            if health then
-                self:SpawnDamagePrefab(i, health)
-            end
+			if type(health) == "table" then
+				local tile_x, tile_y = self.duration_grid:GetXYFromIndex(i)
+				local x, y, z = _map:GetTileCenterPoint(tile_x, tile_y)
+				self:SpawnBridgeAnim(i, x, z, health[2])
+				self:SpawnDamagePrefab(i, health[1])
+			else
+				--backward compatibility: duration_grid used to be just health value, now is an array { health, duration }
+				self:SpawnDamagePrefab(i, health)
+			end
         end
     end
 end

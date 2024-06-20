@@ -15,6 +15,7 @@ local function onsprungleak(inst)
         inst.components.hauntable.cooldown = TUNING.HAUNT_COOLDOWN_SMALL
         inst.components.hauntable.hauntvalue = TUNING.HAUNT_TINY
 
+        inst._wettargets = {}
         inst.components.updatelooper:AddOnUpdateFn(inst.FindLeakBlocker)
     end
 
@@ -29,6 +30,7 @@ local function onrepairedleak(inst)
         inst:RemoveComponent("hauntable")
 
         inst.components.updatelooper:RemoveOnUpdateFn(inst.FindLeakBlocker)
+        inst._wettargets = nil
     end
 
     inst:AddTag("NOCLICK")
@@ -118,6 +120,12 @@ local function FindLeakBlocker(inst, dt)
 
         inst.components.boatleak:SetPlugged(false)
 
+        for target in pairs(inst._wettargets) do
+            target.components.moisture:RemoveRateBonus(inst)
+        end
+
+        inst._wettargets = {}
+
         return
     end
 
@@ -130,13 +138,26 @@ local function FindLeakBlocker(inst, dt)
         local moisture = ent.components.moisture
 
         if moisture ~= nil then
-            moisture:DoDelta(TUNING.BOATLEAK_PLUG_WETNESS * dt * (1 - moisture:GetWaterproofness()))
+            if not inst._wettargets[ent] then
+                inst._wettargets[ent] = true
+                moisture:AddRateBonus(inst, TUNING.BOATLEAK_PLUG_WETNESS)
+            end
         end
 
         heavyitem = heavyitem or ent.components.floater == nil
 
         if ent.components.inventoryitem ~= nil then
             inventoryitems[ent] = true
+        end
+    end
+
+    for target in pairs(inst._wettargets) do
+        if not target:IsValid() or target.components.moisture == nil then
+            inst._wettargets[target] = nil
+
+        elseif not table.contains(ents, target) then
+            target.components.moisture:RemoveRateBonus(inst)
+            inst._wettargets[target] = nil
         end
     end
 

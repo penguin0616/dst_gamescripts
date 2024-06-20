@@ -637,11 +637,19 @@ local function OnRemoteTeleportReceived(inst, data)
 	end)
 
 	if share > 0 then
+		local fuelscale = 1
+		local shardscale = 1
+		if data.from_x then
+			local x, y, z = inst.Transform:GetWorldPosition()
+			local k = math.min(1, math.sqrt(distsq(data.from_x, data.from_z, x, z)) / 1200)
+			fuelscale = k * k
+			shardscale = 1 - k
+			shardscale = 1 - shardscale * shardscale * shardscale
+		end
+
 		local mincost = TUNING.WINONA_TELEPORT_PAD_POWER_COST_MIN
 		local maxcost = TUNING.WINONA_TELEPORT_PAD_POWER_COST_MAX
-		local numitems = data and data.items and #data.items or 0
-		local k = math.min(1, numitems / 6)
-		local cost = { fuel = Lerp(mincost.fuel, maxcost.fuel, k), shard = Lerp(mincost.shard, maxcost.shard, k) }
+		local cost = { fuel = Lerp(mincost.fuel, maxcost.fuel, fuelscale), shard = Lerp(mincost.shard, maxcost.shard, shardscale) }
 		local doer = data and data.doer or nil
 		inst.components.circuitnode:ForEachNode(function(inst, node)
 			node:ConsumeBatteryAmount(cost, share, doer)

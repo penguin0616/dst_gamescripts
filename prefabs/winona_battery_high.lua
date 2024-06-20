@@ -1123,7 +1123,7 @@ local function OnGemGiven(inst, doer, item)
 end
 
 local function OnUsedIndirectly(inst, doer)
-	if (doer and doer.userid or nil) == inst._engineerid then
+	if doer and doer.userid == inst._engineerid then
 		if doer:HasTag("engineerid") then
 			--skip if this is already mine and I'm still an engineer (didn't swap chars)
 			return

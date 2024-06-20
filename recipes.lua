@@ -1160,6 +1160,7 @@ DeconstructRecipe("portablespicer",					{Ingredient("goldnugget", 2), Ingredient
 DeconstructRecipe("steeringwheel",					{Ingredient("boards", 2), Ingredient("rope", 1)})
 DeconstructRecipe("anchor", 						{Ingredient("boards", 2), Ingredient("rope", 3), Ingredient("cutstone", 3)})
 DeconstructRecipe("mast",   						{Ingredient("boards", 3), Ingredient("rope", 3), Ingredient("silk",     8)})
+DeconstructRecipe("mast_broken",   					{Ingredient("boards", 3), Ingredient("rope", 3), Ingredient("silk",     8)})
 DeconstructRecipe("mast_malbatross",				{Ingredient("driftwood_log", 3), Ingredient("rope", 3), Ingredient("malbatross_feathered_weave", 4)})
 DeconstructRecipe("purplemooneye",					{Ingredient("moonrockcrater", 1), Ingredient("purplegem", 1)})
 DeconstructRecipe("bluemooneye",					{Ingredient("moonrockcrater", 1), Ingredient("bluegem",   1)})

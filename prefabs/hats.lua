@@ -4381,15 +4381,43 @@ local function MakeHat(name)
         inst.inspectacles_ticktask = inst:DoPeriodicTask(tick_time, fns.inspectacles_tick, sync_delay)
     end
 
+	fns.inspecatles_fx_activate = function(fx)
+		fx.task = nil
+		fx.activate:set(true)
+	end
+
     fns.inspectacles_onequip = function(inst, owner)
         fns.opentop_onequip(inst, owner)
+
+		if inst.fx then
+			inst.fx:Remove()
+		end
+		inst.fx = SpawnPrefab("inspectacleshat_fx")
+		inst.fx:AttachToOwner(owner)
+		inst.fx.task = inst.fx:DoTaskInTime(0.2, fns.inspecatles_fx_activate)
+
         inst:ListenForEvent("newstate", fns.inspectacles_stopusingitem, owner)
 
         inst:DoTaskInTime(0, function() if owner:IsValid() then fns.inspectacles_findgame(inst, owner) end end) -- Delay a frame for unsafe load order.
     end
 
+	fns.inspectacles_onequiptomodel = function(inst, owner, from_ground)
+		fns.simple_onequiptomodel(inst, owner, from_ground)
+
+		if inst.fx and inst.fx.task then
+			inst.fx.task:Cancel()
+			inst.fx.task = nil
+		end
+	end
+
     fns.inspectacles_onunequip = function(inst, owner)
         _onunequip(inst, owner)
+
+		if inst.fx then
+			inst.fx:Remove()
+			inst.fx = nil
+		end
+
         inst:RemoveEventCallback("newstate", fns.inspectacles_stopusingitem, owner)
         if inst:HasTag("inuse") then
             inst.components.useableitem:StopUsingItem()
@@ -4471,6 +4499,7 @@ local function MakeHat(name)
         inst.components.equippable.restrictedtag = "wagstafft1maker"
         inst.components.equippable:SetOnEquip(fns.inspectacles_onequip)
         inst.components.equippable:SetOnUnequip(fns.inspectacles_onunequip)
+		inst.components.equippable:SetOnEquipToModel(fns.inspectacles_onequiptomodel)
 
         inst:AddComponent("useableitem")
         inst.components.useableitem:SetOnUseFn(fns.inspectacles_onuse)
@@ -4813,6 +4842,7 @@ local function MakeHat(name)
     elseif name == "mermarmorupgraded" then
         fn = fns.mermarmorupgraded
     elseif name == "inspectacles" then
+		prefabs = { "inspectacleshat_fx" }
         fn = fns.inspectacles
         table.insert(assets, Asset("INV_IMAGE", "inspectacleshat_cooldown"))
         table.insert(assets, Asset("INV_IMAGE", "inspectacleshat_signal"))
@@ -5003,6 +5033,51 @@ local function voidclothhat_fx_common_postinit(inst)
 	inst.buffed = net_bool(inst.GUID, "voidclothhat_fx.buffed", "buffeddirty")
 	if not TheNet:IsDedicated() then
 		inst:ListenForEvent("buffeddirty", voidclothhat_fx_buffeddirty)
+	end
+end
+
+local function inspectacleshat_CreateFxFollowFrame(i)
+	local inst = CreateEntity()
+
+	--[[Non-networked entity]]
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+
+	inst:AddTag("FX")
+
+	inst.AnimState:SetBank("inspectacleshat")
+	inst.AnimState:SetBuild("hat_inspectacles")
+	inst.anim = "activate"..tostring(i)
+	inst.AnimState:SetPercent(inst.anim, 0)
+	inst.AnimState:SetSymbolLightOverride("light_overlay", 0.5)
+	inst.AnimState:SetLightOverride(0.05)
+
+	inst:AddComponent("highlightchild")
+
+	inst.persists = false
+
+	return inst
+end
+
+local function inspectacleshat_fx_activatedirty(inst)
+	if inst.fx then
+		if inst.activate:value() then
+			for i, v in ipairs(inst.fx) do
+				v.AnimState:PlayAnimation(v.anim)
+			end
+		else
+			for i, v in ipairs(inst.fx) do
+				v.AnimState:SetPercent(v.anim, 0)
+			end
+		end
+	end
+end
+
+local function inspectacleshat_fx_common_postinit(inst)
+	inst.activate = net_bool(inst.GUID, "inspectacleshat_fx.activate", "activatedirty")
+	if not TheNet:IsDedicated() then
+		inst:ListenForEvent("activatedirty", inspectacleshat_fx_activatedirty)
 	end
 end
 
@@ -5215,6 +5290,13 @@ return  MakeHat("straw"),
                        Asset("ANIM", "anim/hat_wagpunk_04.zip"),  
                        Asset("ANIM", "anim/hat_wagpunk_05.zip") },
         }),
+		MakeFollowFx("inspectacleshat_fx", {
+			createfn = inspectacleshat_CreateFxFollowFrame,
+			common_postinit = inspectacleshat_fx_common_postinit,
+			framebegin = 1,
+			frameend = 3,
+			assets = { Asset("ANIM", "anim/hat_inspectacles.zip") },
+		}),
 
         Prefab("minerhatlight", minerhatlightfn),
         Prefab("alterguardianhatlight", alterguardianhatlightfn),

@@ -174,7 +174,7 @@ end
 --------------------------------------------------------------------------
 
 local function TryWakeUp(inst, doer, pos, catapult)
-	catapult:PushEvent("activewakeup")
+	catapult:PushEvent("activewakeup", { doer = doer })
 	return true
 end
 

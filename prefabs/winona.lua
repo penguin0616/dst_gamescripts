@@ -51,7 +51,7 @@ local function GetPointSpecialActions(inst, pos, useitem, right, usereticulepos)
 				end
 			end
 
-			--default, input pos is just the player's position
+			--default
 			if CLOSEINSPECTORUTIL.IsValidPos(inst, pos) then
 				return { ACTIONS.LOOKAT }
 			end

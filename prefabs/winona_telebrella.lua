@@ -207,7 +207,7 @@ local function OnStartTeleport(inst, doer)
 	inst.components.fueled:StopConsuming()
 end
 
-local function OnTeleported(inst, doer, success)--, target, items)
+local function OnTeleported(inst, doer, success)--, target, items, from_x, from_Z)
 	local amt = inst.components.fueled.currentfuel
 	if amt > 0.00001 then
 		amt = math.min(TUNING.WINONA_TELEBRELLA_TELEPORT_FUEL, amt - 0.00001)

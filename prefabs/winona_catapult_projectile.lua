@@ -126,8 +126,9 @@ local function DoAOEWork(inst, x, z)
 	for i, v in ipairs(TheSim:FindEntities(x, 0, z, inst.AOE_RADIUS + WORK_RADIUS_PADDING, nil, NON_COLLAPSIBLE_TAGS, COLLAPSIBLE_TAGS)) do
 		if v:IsValid() and not v:IsInLimbo() and
 			(	not v:HasTag("structure") or
-				v.components.childspawner or
-				v:HasTag("cavedweller")
+				(v.components.childspawner and not v:HasTag("playerowned")) or
+				(v:HasTag("statue") and not v:HasTag("sculpture")) or
+				v:HasTag("smashable")
 			)
 		then
 			local isworkable = false

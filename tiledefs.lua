@@ -1121,6 +1121,7 @@ TileManager.AddTile(
         walksound="dontstarve/movement/walk_grass",
         snowsound="dontstarve/movement/run_snow",
         mudsound="dontstarve/movement/run_mud",
+        isinvisibletile = true,
         cannotbedug = true,
         hard = true,
         istemptile = true,

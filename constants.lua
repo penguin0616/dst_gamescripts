@@ -700,12 +700,14 @@ GROUND_FLOORING = {} --These tiles are flooring (stuff shouldn't grow on them)
 GROUND_HARD = {} --not plantable
 GROUND_ROADWAYS = {} -- Player speed boosting enabled.
 GROUND_NOGROUNDOVERLAYS = {} -- Stops rendering of snow or water etc overlays this table is immutable after initialization or engine crashes may occur.
+GROUND_INVISIBLETILES = {} -- Stops rendering of the tile top and skirt but will still have overlays this table is immutable after initialization or engine crashes may occur.
 GROUND_ISTEMPTILE = {} -- Tiles that are temporarily placed as a layer using the undertile component.
 
 FALLOFF_IDS = {
     FALLOFF = 1,
     DOCK_FALLOFF = 2,
     OCEANICE_FALLOFF = 3,
+    INVISIBLE = 4,
 }
 
 GROUND_CREEP_IDS = {

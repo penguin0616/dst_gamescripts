@@ -501,6 +501,18 @@ local function OnRespawnedFromGhost(inst)
     inst:RefreshWetnessSkills()
 end
 
+local function OnAllegianceMarshTile(inst, ontile)
+    if inst.components.moisture == nil then
+        return
+    end
+
+    if ontile then
+        inst.components.moisture:AddRateBonus(inst, TUNING.SKILLS.WURT.ALLEGIANCE_MARSHTILE_MOISTURE_RATE, "marsh_wetness")
+    else
+        inst.components.moisture:RemoveRateBonus(inst, "marsh_wetness")
+    end
+end
+
 local function OnWetnessChanged(inst, data)
     local percent = inst.components.moisture:GetMoisturePercent()
     local skilltreeupdater = inst.components.skilltreeupdater
@@ -540,7 +552,9 @@ local function RefreshWetnessSkills(inst)
         inst:ListenForEvent("ms_respawnedfromghost", inst._onrespawnedfromghost)
     end
 
-    if not is_dead and inst.components.skilltreeupdater ~= nil and inst.components.skilltreeupdater:CountSkillTag("amphibian") > 0 then
+    local skilltreeupdater = inst.components.skilltreeupdater
+
+    if not is_dead and skilltreeupdater ~= nil and skilltreeupdater:CountSkillTag("amphibian") > 0 then
         if inst._onmoisturedelta == nil then
             inst._onmoisturedelta = OnWetnessChanged
 
@@ -557,6 +571,35 @@ local function RefreshWetnessSkills(inst)
         inst._onmoisturedelta(inst)
 
         inst._onmoisturedelta = nil
+    end
+
+    local areaaware = inst.components.areaaware
+
+    if areaaware == nil then
+        return
+    end
+
+    -- The WORLD_TILES.LUNAR_MARSH watcher has already been started by all players.
+    if not is_dead and skilltreeupdater:HasSkillTag("marsh_wetness") then
+        if inst._onallegiancemarshtile == nil then
+            inst._onallegiancemarshtile = OnAllegianceMarshTile
+            inst.components.areaaware:StartWatchingTile(WORLD_TILES.SHADOW_MARSH)
+
+            inst:ListenForEvent("on_LUNAR_MARSH_tile",  inst._onallegiancemarshtile)
+            inst:ListenForEvent("on_SHADOW_MARSH_tile", inst._onallegiancemarshtile)
+
+            inst.components.areaaware:_ForceUpdate() -- Test for effects.
+        end
+
+    elseif inst._onallegiancemarshtile ~= nil then
+        inst.components.areaaware:StopWatchingTile(WORLD_TILES.SHADOW_MARSH)
+
+        inst:RemoveEventCallback("on_LUNAR_MARSH_tile",  inst._onallegiancemarshtile)
+        inst:RemoveEventCallback("on_SHADOW_MARSH_tile", inst._onallegiancemarshtile)
+
+        inst._onallegiancemarshtile(inst, false) -- Remove effects.
+
+        inst._onallegiancemarshtile = nil
     end
 end
 

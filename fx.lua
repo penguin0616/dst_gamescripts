@@ -235,6 +235,29 @@ local fx =
         end,
     },
     {
+        name = "charlie_snap",
+        bank = "charliesnap",
+        build = "charliesnap",
+        anim = "snap",
+        tint = Vector3(0, 0, 0),
+        tintalpha = .7,
+        fn = function(inst)
+            inst.entity:AddSoundEmitter()
+            inst:DoTaskInTime(21 * FRAMES, function() inst.SoundEmitter:PlaySound("meta4/shadow_snap/snap") end)
+        end,
+    },
+    {
+        name = "charlie_snap_solid",
+        bank = "charliesnap",
+        build = "charliesnap",
+        anim = "snap",
+        tint = Vector3(0, 0, 0),
+        fn = function(inst)
+            inst.entity:AddSoundEmitter()
+            inst:DoTaskInTime(21 * FRAMES, function() inst.SoundEmitter:PlaySound("meta4/shadow_snap/snap") end)
+        end,
+    },
+    {
         name = "shadow_puff",
         bank = "sand_puff",
         build = "sand_puff",
@@ -3163,7 +3186,7 @@ local fx =
         bank = "splash_water_rot",
         build = "wurt_splash_fx",
         anim = "watershield_small",
-        sound = "turnoftides/common/together/water/splash/bird", -- TODO(DiogoW)
+        sound = "meta4/wurt/water_shield",
         fn = FinalOffset1,
     },
     {
@@ -3171,7 +3194,7 @@ local fx =
         bank = "splash_water_rot",
         build = "wurt_splash_fx",
         anim = "watershield_medium",
-        sound = "turnoftides/common/together/water/splash/small", -- TODO(DiogoW)
+        sound = "meta4/wurt/water_shield",
         fn = FinalOffset1,
     },
     {
@@ -3179,7 +3202,7 @@ local fx =
         bank = "splash_water_rot",
         build = "wurt_splash_fx",
         anim = "watershield_large",
-        sound = "turnoftides/common/together/water/splash/jump_medium", -- TODO(DiogoW)
+        sound = "meta4/wurt/water_shield",
         fn = FinalOffset1,
     },
     {

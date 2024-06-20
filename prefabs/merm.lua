@@ -21,7 +21,7 @@ local assets =
 
     Asset("ANIM", "anim/merm_shadow_build.zip"),
     Asset("ANIM", "anim/merm_guard_shadow_build.zip"),
-    --Asset("ANIM", "anim/merm_guard_shadow_lunar_build.zip"), -- TODO(DiogoW): Missing small build!
+    Asset("ANIM", "anim/merm_guard_small_shadow_build.zip"),
 
     Asset("ANIM", "anim/merm_actions_skills.zip"),
 
@@ -482,7 +482,7 @@ local function RoyalGuardDowngrade(inst)
 
     local build =
         (inst:HasTag("lunarminion")  and "merm_guard_small_lunar_build" ) or
-        (inst:HasTag("shadowminion") and "merm_guard_small_build") or --TODO(DiogoW): Missing small build!
+        (inst:HasTag("shadowminion") and "merm_guard_small_shadow_build") or
         "merm_guard_small_build"
 
     inst.AnimState:SetBuild(build)
@@ -1162,6 +1162,8 @@ local function shadow_merm_common(inst)
     inst.AnimState:SetBuild("merm_shadow_build")
     inst:SetPhysicsRadiusOverride(0.5)
 
+    inst.DynamicShadow:Enable(false)
+
     inst:AddTag("shadowminion")
     inst:AddTag("shadow_aligned")
     inst.AnimState:UsePointFiltering(true)
@@ -1217,6 +1219,8 @@ local function shadow_mermguard_common(inst)
     guard_common(inst)
     inst.AnimState:SetBuild("merm_guard_shadow_build")
     inst:SetPhysicsRadiusOverride(0.5)
+
+    inst.DynamicShadow:Enable(false)
 
     inst:AddTag("shadowminion")
     inst:AddTag("shadow_aligned")

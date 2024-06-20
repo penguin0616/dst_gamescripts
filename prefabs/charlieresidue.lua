@@ -3,6 +3,11 @@ local assets =
 	Asset("ANIM", "anim/charlieresidue.zip"),
 }
 
+local prefabs = {
+    "charlie_snap",
+    "charlie_snap_solid",
+}
+
 local ANIM_STATE =
 {
 	["pre"] = 0,
@@ -204,4 +209,4 @@ local function fn()
 	return inst
 end
 
-return Prefab("charlieresidue", fn, assets)
+return Prefab("charlieresidue", fn, assets, prefabs)

@@ -170,8 +170,12 @@ function RoseInspectableUser:TryToDoRoseInspectionOnTarget(target)
     end
 
     local roseinspectable = target.components.roseinspectable
-    if roseinspectable == nil or not roseinspectable:CanResidueBeSpawnedBy(self.inst) then
+    if roseinspectable == nil then
         return false, "ROSEGLASSES_INVALID"
+    end
+
+    if not roseinspectable:CanResidueBeSpawnedBy(self.inst) then
+        return false, "ROSEGLASSES_STUMPED"
     end
 
     local will_cooldown = roseinspectable:WillInduceCooldownOnActivate(self.inst)

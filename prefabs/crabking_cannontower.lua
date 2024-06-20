@@ -202,6 +202,10 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------------------
 
+local function onhit(inst)    
+    inst.SoundEmitter:PlaySound("dontstarve/common/destroy_stone")
+end
+
 local function UpdateMortarArt(inst)
     if inst.redgemcount ~= nil and inst.redgemcount > 3 then
         inst.AnimState:AddOverrideBuild(inst.redgemcount > 7 and "cannonball_rock_lvl3_build" or "cannonball_rock_lvl2_build")
@@ -279,6 +283,8 @@ local function fn()
     inst:AddComponent("combat")
     inst.components.combat.noimpactsound = true
     inst.components.combat:SetHurtSound("meta4/mortars/impact_small")
+    inst.components.combat.onhitfn = onhit
+
 
     inst:AddComponent("health")
     inst.components.health.nofadeout = true

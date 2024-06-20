@@ -147,7 +147,6 @@ local states =
 
         events =
         {
-
             EventHandler("attacked", function(inst)
                 inst.sg:GoToState("hit_light")
             end),            
@@ -164,6 +163,13 @@ local states =
         onenter = function(inst, pushanim)
             inst.AnimState:PlayAnimation("taunt_loop")
         end,
+
+        timeline=
+        {
+            TimeEvent(9*FRAMES, function(inst) inst.SoundEmitter:PlaySound("meta4/crabking/clack") end),
+            TimeEvent(11*FRAMES, function(inst) inst.SoundEmitter:PlaySound("meta4/crabking/clack") end),
+
+        },
 
         onupdate = function(inst)
             if not inst.components.timer:TimerExists("taunt") then

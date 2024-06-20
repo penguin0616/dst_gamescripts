@@ -83,6 +83,11 @@ function Map:IsOceanTileAtPoint(x, y, z)
     return TileGroupManager:IsOceanTile(tile)
 end
 
+function Map:IsTemporaryTileAtPoint(x, y, z)
+    local tile = self:GetTileAtPoint(x, y, z)
+    return TileGroupManager:IsTemporaryTile(tile)
+end
+
 function Map:IsOceanAtPoint(x, y, z, allow_boats)
     return self:IsOceanTileAtPoint(x, y, z)                             -- Location is in the ocean tile range
         and not self:IsVisualGroundAtPoint(x, y, z)                     -- Location is NOT in the world overhang space

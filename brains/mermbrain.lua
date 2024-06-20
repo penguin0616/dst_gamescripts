@@ -29,7 +29,7 @@ local TRADE_DIST = 20
 local DIG_TAGS = { "DIG_workable", "tree" }
 local DIG_CANT_TAGS = { "carnivalgame_part", "event_trigger", "waxedplant" }
 local SOILMUST = {"soil"}
-local SOILMUSTNOT = {"merm_soil_blocker","farm_debris"}
+local SOILMUSTNOT = {"merm_soil_blocker","farm_debris","NOBLOCK"}
 local FARM_DEBRIS_TAGS = {"farm_debris"}
 
 local MermBrain = Class(Brain, function(self, inst)

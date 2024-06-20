@@ -437,6 +437,7 @@ return {
 			ROSEGLASSES_INVALID = "only_used_by_winona",
 			ROSEGLASSES_COOLDOWN = "only_used_by_winona",
             ROSEGLASSES_DISMISS = "only_used_by_winona",
+            ROSEGLASSES_STUMPED = "only_used_by_winona",
 			--
 		},
 

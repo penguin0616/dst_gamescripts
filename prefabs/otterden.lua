@@ -79,8 +79,7 @@ end
 
 -- Spawner Functions
 local function OnGoHome(inst, child)
-    inst.SoundEmitter:PlaySound("dontstarve/pig/pig_in_hut", "ottersound")
-    inst.SoundEmitter:PlaySound("waterlogged2/common/repairgoop")
+    inst.SoundEmitter:PlaySound("meta4/otter_den/enter")
 
     -- What do we do when the inventory is full...?
     -- Could leave stuff around the den, could complicate the child to check for
@@ -101,14 +100,15 @@ local function change_otter_sleeping_inside_state(inst, new_state)
     inst._is_sleeping_inside = new_state
     if new_state then
         inst.components.timer:ResumeTimer(SLEEP_TIMER_NAME)
+        inst.SoundEmitter:PlaySound("dontstarve/pig/pig_in_hut", "ottersound")
     else
         inst.components.timer:PauseTimer(SLEEP_TIMER_NAME)
+        inst.SoundEmitter:KillSound("ottersound")
     end
 end
 
 local function OnSpawned(inst, child)
-    inst.SoundEmitter:PlaySound("waterlogged2/common/repairgoop")
-    inst.SoundEmitter:KillSound("ottersound")
+    inst.SoundEmitter:PlaySound("meta4/otter_den/enter")
 end
 
 local function OnOccupied(inst)

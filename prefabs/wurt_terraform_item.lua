@@ -1,9 +1,12 @@
-local easing = require("easing")
-
 local assets =
 {
     Asset("ANIM", "anim/wurt_swampbomb.zip"),
     Asset("ANIM", "anim/swap_wurt_swampbomb.zip"),
+}
+
+local fx_assets =
+{
+    Asset("ANIM", "anim/wurt_swampitem_charged_fx.zip"),
 }
 
 local prefabs = {
@@ -13,6 +16,8 @@ local prefabs = {
     "wurt_merm_planar",
 
     "wurt_terraform_cast_debuff",
+    "wurt_swampitem_shadow_chargedfx",
+    "wurt_swampitem_lunar_chargedfx",
 }
 
 local TERRAFORM_DEBUFF_TIMER_NAME = "buffover"
@@ -79,12 +84,35 @@ local function CanCastTerraformingSpell(doer, target, position)
 end
 
 -- Rechargeable
+local function add_charged_fx(inst, owner)
+    if not inst._charged_vfx then
+        local charged_vfx = SpawnPrefab(inst._fx_type or "wurt_swampitem_shadow_chargedfx")
+        charged_vfx.entity:AddFollower()
+        charged_vfx.entity:SetParent(owner.entity)
+        charged_vfx.Follower:FollowSymbol(owner.GUID, "swap_object", 0, -100, 0)
+        inst._charged_vfx = charged_vfx
+    end
+end
+local function remove_charged_fx(inst)
+    if inst._charged_vfx then
+        inst._charged_vfx:Remove()
+        inst._charged_vfx = nil
+    end
+end
+
 local function OnDischarged(inst)
     inst.components.spellcaster:SetSpellFn(nil)
+
+    remove_charged_fx(inst)
 end
 
 local function OnCharged(inst)
     inst.components.spellcaster:SetSpellFn(CastTerraformingSpell)
+
+    local owner = inst.components.inventoryitem:GetGrandOwner()
+    if owner then
+        add_charged_fx(inst, owner)
+    end
 end
 
 -- Equippable
@@ -92,11 +120,19 @@ local function onequip(inst, owner)
     owner.AnimState:OverrideSymbol("swap_object", inst.swap_file, inst.swap_symbol)
     owner.AnimState:Show("ARM_carry")
     owner.AnimState:Hide("ARM_normal")
+
+    local owner_debuffable = owner.components.debuffable
+    local cant_terraform_debuff = (owner_debuffable and owner_debuffable:GetDebuff("wurt_terraform_cast_debuff"))
+    if not cant_terraform_debuff then
+        add_charged_fx(inst, owner)
+    end
 end
 local function unequip(inst, owner)
     owner.AnimState:ClearOverrideSymbol("swap_object")
     owner.AnimState:Hide("ARM_carry")
     owner.AnimState:Show("ARM_normal")
+
+    remove_charged_fx(inst)
 end
 
 -- Inventory item
@@ -199,6 +235,7 @@ local function wurt_swampbomb_shadow()
     inst.swap_symbol = "swap_shadow"
 
     inst._terraform_tile_type = "SHADOW"
+    inst._fx_type = "wurt_swampitem_shadow_chargedfx"
 
     inst.components.spellcaster:SetSpellType(SPELLTYPES.SHADOW_SWAMP_BOMB)
 
@@ -249,6 +286,7 @@ local function wurt_swampbomb_lunar()
 
     inst._terraform_tile_type = "LUNAR"
     inst._extra_onhit_fn = OnHit_Lunar
+    inst._fx_type = "wurt_swampitem_lunar_chargedfx"
 
     inst.components.spellcaster:SetSpellType(SPELLTYPES.LUNAR_SWAMP_BOMB)
 
@@ -354,7 +392,51 @@ local function cant_terraform_debuff_fn()
     return inst
 end
 
+-- Charged FX
+local function charged_fx_common(anim)
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddNetwork()
+
+    inst.AnimState:SetBank("wurt_swampitem_charged_fx")
+    inst.AnimState:SetBuild("wurt_swampitem_charged_fx")
+    inst.AnimState:PlayAnimation(anim or "lunar", true)
+    inst.AnimState:SetFinalOffset(-1)
+    inst.AnimState:SetMultColour(1, 1, 1, 0.5)
+    inst.AnimState:UsePointFiltering(true)
+
+    inst:AddTag("FX")
+
+    inst.entity:SetPristine()
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1)
+
+    inst.persists = false
+
+    return inst
+end
+
+local function wurt_swampitem_shadow_fx()
+    return charged_fx_common("shadow")
+end
+
+local function wurt_swampitem_lunar_fx()
+    local inst = charged_fx_common("lunar")
+
+    inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+    inst.AnimState:SetLightOverride(.1)
+
+    return inst
+end
+
 return Prefab("wurt_swampitem_shadow", wurt_swampbomb_shadow, assets, prefabs),
+    Prefab("wurt_swampitem_shadow_chargedfx", wurt_swampitem_shadow_fx, fx_assets),
     Prefab("wurt_swampitem_lunar", wurt_swampbomb_lunar, assets, prefabs),
+    Prefab("wurt_swampitem_lunar_chargedfx", wurt_swampitem_lunar_fx, fx_assets),
     Prefab("wurt_terraform_projectile", terraform_projectile, assets),
     Prefab("wurt_terraform_cast_debuff", cant_terraform_debuff_fn)

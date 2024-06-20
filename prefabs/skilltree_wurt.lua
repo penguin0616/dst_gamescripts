@@ -95,11 +95,25 @@ local function BuildSkillsData(SkillTreeFns)
                 if inst.components.temperature ~= nil then
                     inst.components.temperature.maxmoisturepenalty = inst.components.temperature.maxmoisturepenalty + TUNING.SKILLS.WURT.MAX_MOISTURE_TEMPERATURE_PENALTY_OFFSET
                 end
+
+                local moisture = inst.components.moisture
+
+                if moisture ~= nil then
+                    moisture.optimalPlayerTempDrying = moisture.optimalPlayerTempDrying + TUNING.SKILLS.WURT.OPTIMAL_TEMPERATURE_DRYING_OFFSET
+                    moisture.maxPlayerTempDrying     = moisture.maxPlayerTempDrying     + TUNING.SKILLS.WURT.MAX_TEMPERATURE_DRYING_OFFSET
+                end
             end,
 
             ondeactivate = function(inst)
                 if inst.components.temperature ~= nil then
                     inst.components.temperature.maxmoisturepenalty = inst.components.temperature.maxmoisturepenalty - TUNING.SKILLS.WURT.MAX_MOISTURE_TEMPERATURE_PENALTY_OFFSET
+                end
+
+                local moisture = inst.components.moisture
+
+                if moisture ~= nil then
+                    moisture.optimalPlayerTempDrying = moisture.optimalPlayerTempDrying - TUNING.SKILLS.WURT.OPTIMAL_TEMPERATURE_DRYING_OFFSET
+                    moisture.maxPlayerTempDrying     = moisture.maxPlayerTempDrying     - TUNING.SKILLS.WURT.MAX_TEMPERATURE_DRYING_OFFSET
                 end
             end,
 
@@ -125,7 +139,7 @@ local function BuildSkillsData(SkillTreeFns)
         wurt_amphibian_thickskin_2 = {
             pos = {WETNESS_POS_X, POS_Y_5},
             group = "amphibian",
-            tags = {"amphibian", "wetness_defense"},
+            tags = {"amphibian", "wetness_defense", "marsh_wetness"},
             onactivate   = RefreshWetnessSkills,
             ondeactivate = RefreshWetnessSkills,
         },
@@ -146,7 +160,7 @@ local function BuildSkillsData(SkillTreeFns)
         wurt_amphibian_healing_2 = {
             pos = {WETNESS_POS_X + TILEGAP, POS_Y_5},
             group = "amphibian",
-            tags = {"amphibian", "wetness_healing"},
+            tags = {"amphibian", "wetness_healing", "marsh_wetness"},
             onactivate   = RefreshWetnessSkills,
             ondeactivate = RefreshWetnessSkills,
         },

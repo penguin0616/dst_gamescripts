@@ -149,6 +149,13 @@ local function CanGrabFn(inst, doer)
     return doer.components.inventory:HasItemWithTag("mosquitomusk", 1)
 end
 
+
+local function OnChangedLeader(inst, new_leader, prev_leader)
+    if new_leader ~= nil then
+        inst.lastleader = new_leader
+    end
+end
+
 local function mosquito()
     local inst = CreateEntity()
 
@@ -233,6 +240,7 @@ local function mosquito()
 
     ------------------
     inst:AddComponent("follower")
+    inst.components.follower.OnChangedLeader = OnChangedLeader
     
     ------------------
     inst:AddComponent("health")

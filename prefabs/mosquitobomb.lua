@@ -59,6 +59,7 @@ local function SpawnMosquitos(inst, attacker)
                 for _, target in ipairs(targets) do
                     if mosquito.components.combat:CanTarget(target) and
                         not mosquito.components.combat:IsAlly(target) and
+                        (not mosquito.components.follower.leader or not mosquito.components.follower.leader.components.combat:IsAlly(target) ) and                     
                         (target.components.inventory == nil or not target.components.inventory:FindItem(IsMosquitoMusk)) then
                         mosquito.components.combat:SuggestTarget(target)
 

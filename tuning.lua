@@ -3609,7 +3609,7 @@ function Tune(overrides)
 
 		WINONA_TELEPORT_PAD_FOOTPRINT = 2,
 		WINONA_TELEPORT_PAD_POWER_LOAD_IDLE = 0.05,
-		WINONA_TELEPORT_PAD_POWER_COST_MIN = { fuel = total_day_time * 1 + 0.0001, shard = 3 },
+		WINONA_TELEPORT_PAD_POWER_COST_MIN = { fuel = total_day_time / 120, shard = 0.125 },
 		WINONA_TELEPORT_PAD_POWER_COST_MAX = { fuel = total_day_time * 2 + 0.0001, shard = 5.99 },
 
 		WINONA_STORAGE_ROBOT_WORK_RADIUS = 15,
@@ -3643,7 +3643,7 @@ function Tune(overrides)
 		WINONA_REMOTE_RECHARGE_RATE = -4,
 		WINONA_REMOTE_POWER_LOAD_CHARGING = 0.1,
 
-        VINEBRIDGE_DURATION = 10,--seg_time * 3,
+        VINEBRIDGE_DURATION = 18,
         VINEBRIDGE_HEALTH = 200,
 
         --v2 Willow
@@ -7075,6 +7075,8 @@ function Tune(overrides)
 
             WURT = {
                 MAX_MOISTURE_TEMPERATURE_PENALTY_OFFSET = -20,
+                OPTIMAL_TEMPERATURE_DRYING_OFFSET = -1.5, -- New value = 0.5
+                MAX_TEMPERATURE_DRYING_OFFSET = -4, -- New value = 1
 
                 MERM_KING_MAX_HUNGER_MULT = {
                     1.25, -- Level 1.
@@ -7097,6 +7099,8 @@ function Tune(overrides)
                     { amount = 0.5, period = 6.5 }, -- Level 1: "37" a day.
                     { amount = 0.5, period = 4.0 }, -- Level 2: "60" a day.
                 },
+
+                ALLEGIANCE_MARSHTILE_MOISTURE_RATE = 0.5,
 
                 ALLEGIANCE_SHADOW_RESIST = 0.9,
                 ALLEGIANCE_VS_LUNAR_BONUS = 1.1,

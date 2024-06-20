@@ -1109,7 +1109,7 @@ local ExampleLayout =
 		{
 			item_area1 = {math.random() >= .5 and "spoiled_fish_small" or "spoiled_fish"},
 			item_area2 = {math.random() >= .5 and "twigs" or "cutgrass"},
-			mast_area = {"mast"},
+			mast_area = {"mast_broken"},
 			fishing_item_area = {"chum"},
 			seastack_area = function() return math.random() < 0.9 and {"seastack"} or nil end
 		},
