@@ -96,6 +96,10 @@ local function OnPutInInventory(inst, owner)
 	if owner.HUD then
 		OnAnimState_Client(inst)
 	end
+	if inst._onremoveowner then
+		inst:RemoveEventCallback("onremove", inst._onremoveowner, inst._owner)
+		inst._onremoveowner = nil
+	end
 	inst:SetItemClassifiedOwner(owner) --won't overwrite if already set
 	if inst._killtask then
 		inst._killtask:Cancel()
@@ -120,6 +124,10 @@ local function OnDropped(inst)
 		inst.Network:SetClassifiedTarget(inst._owner)
 		if inst._owner.HUD then
 			OnAnimState_Client(inst)
+		end
+		if inst._onremoveowner == nil then
+			inst._onremoveowner = function() inst:Remove() end
+			inst:ListenForEvent("onremove", inst._onremoveowner, inst._owner)
 		end
 	end
 	if inst._killtask then

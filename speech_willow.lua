@@ -5322,8 +5322,8 @@ return{
         MERM_ARMORY_UPGRADED = "I can't look inside? But that just makes me want to even more!",
         MERM_TOOLSHED = "What a nice, flammable-looking tool shed!",
         MERM_TOOLSHED_UPGRADED = "What a nice, flammable-looking tool shed!",
-        MERMARMORHAT = "It doesn't look like it'd actually protect your head very well.",
-        MERMARMORUPGRADEDHAT = "It doesn't look like it'd actually protect your head very well.",
+        MERMARMORHAT = "Who wants to wear a stupid merm hat anyway?",
+        MERMARMORUPGRADEDHAT = "Who wants to wear a stupid merm hat anyway?",
         MERM_TOOL = "It'd be handy if it wasn't so badly made.",
         MERM_TOOL_UPGRADED = "It'd be handy if it wasn't so badly made.",
 

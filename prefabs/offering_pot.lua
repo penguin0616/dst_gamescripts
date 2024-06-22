@@ -181,6 +181,67 @@ local function OnRemoved(inst)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
+local function checkforcallerdist(inst)
+    local keep = true
+    if inst.merm_caller and inst.merm_caller:IsValid() then
+        if inst:GetDistanceSqToInst(inst.merm_caller) > 20*20 then
+            keep = false
+        end
+    else
+        keep = false
+    end
+
+    if not keep then
+        if inst.caller_task then
+            inst.caller_task:Cancel()
+            inst.caller_task = nil
+        end
+    end
+end
+
+local MERM_MUST = {"merm"}
+local function OnActivate(inst,doer)
+    doer.components.talker:Say(GetString(doer, "ANNOUNCE_GATHER_MERM"))
+    inst.components.activatable.inactive = true
+
+    if doer:HasTag("merm")then
+        inst.merm_caller = doer
+        inst.caller_task = inst:DoPeriodicTask(1,function() checkforcallerdist(inst) end)
+    end
+    return true
+end
+
+local function CanActivateFn(inst,doer)
+    -- in use
+    if inst.merm_caller then
+        return false , "BUSY"
+    end
+
+    -- no kelp
+    if not inst.components.container:FindItem(function(item) return true end) then
+        return false , "NOKELP"
+    end    
+
+    return true
+end
+
+local function GetVerb()
+    return "GATHER_MERM"
+end
+
+local function AnswerCall(inst, merm)
+    local kelp = inst.components.container:FindItem(function(item) return true end)    
+    if kelp then
+        merm.components.inventory:GiveItem(kelp) 
+        merm:dohiremerms(inst.merm_caller, kelp)
+        merm:PushBufferedAction(BufferedAction(merm, kelp, ACTIONS.EAT))
+        
+    end
+    kelp = inst.components.container:FindItem(function(item) return true end)
+    if not kelp then
+        inst.merm_caller = nil
+    end
+end
 
 local function MakeOfferingPot(name, build, large)
     local function fn()
@@ -218,6 +279,8 @@ local function MakeOfferingPot(name, build, large)
             deployhelper.onstarthelper = OnStartHelper
         end
 
+        inst.GetActivateVerb = GetVerb
+
         inst.entity:SetPristine()
 
         if not TheWorld.ismastersim then
@@ -240,6 +303,12 @@ local function MakeOfferingPot(name, build, large)
         workable:SetOnFinishCallback(OnHammered)
         workable:SetOnWorkCallback(OnHit)
 
+        local activatable = inst:AddComponent("activatable")
+        activatable.CanActivateFn = CanActivateFn
+        activatable.OnActivate = OnActivate
+        activatable.forcerightclickaction = true
+        activatable.quickaction = true
+
         inst:ListenForEvent("itemget",  inst.UpdateDecor)
         inst:ListenForEvent("itemlose", inst.UpdateDecor)
 
@@ -248,6 +317,8 @@ local function MakeOfferingPot(name, build, large)
 
         inst.OnSave = OnSave
         inst.OnLoad = OnLoad
+
+        inst.AnswerCall = AnswerCall
 
         if large then
             MakeLargeBurnable(inst, nil, nil, true)

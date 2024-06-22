@@ -5319,8 +5319,8 @@ return{
         MERM_ARMORY_UPGRADED = "\"Mermfok Ownlee\"... hmph. How childish.",
         MERM_TOOLSHED = "Father had a tool shed, though he hardly used it.",
         MERM_TOOLSHED_UPGRADED = "Father had a tool shed, though he hardly used it.",
-        MERMARMORHAT = "A meager attempt at protection.",
-        MERMARMORUPGRADEDHAT = "A meager attempt at protection.",
+        MERMARMORHAT = "I’m not a merm.",
+        MERMARMORUPGRADEDHAT = "I’m not a merm.",
         MERM_TOOL = "It's only slightly better than useless.",
         MERM_TOOL_UPGRADED = "It's only slightly better than useless.",
 

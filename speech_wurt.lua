@@ -989,6 +989,8 @@ return{
     ANNOUNCE_OTTERBOAT_OUTOFSHALLOWS = "Glorp! Back to shallow, back to shallow!",
     ANNOUNCE_OTTERBOAT_DENBROKEN = "No fair! Didn't know wasn't supposed to break fishrat house!",
 
+    ANNOUNCE_GATHER_MERM = "Come, hungry Mermfolk! Feast and follow me! Flort!",
+
 	BATTLECRY =
 	{
 		GENERIC = "Not scared of you, florp!",
@@ -5315,8 +5317,8 @@ return{
         MERM_ARMORY_UPGRADED = "Best Mermfolk fighting hat here!",
         MERM_TOOLSHED = "Mermfolk tools inside.",
         MERM_TOOLSHED_UPGRADED = "These Mermfolk tools better.",
-        MERMARMORHAT = "Protect Mermfolk head.",
-        MERMARMORUPGRADEDHAT = "Fight for glory of Mermfolk!",
+        MERMARMORHAT = "Only for big Mermfolk, glorp…",
+        MERMARMORUPGRADEDHAT = "Only for big Mermfolk, glorp…",
         MERM_TOOL = "Made for hardworking Mermfolk!",
         MERM_TOOL_UPGRADED = "Made for hardest working Mermfolk!",
 

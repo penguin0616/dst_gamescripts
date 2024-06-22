@@ -267,6 +267,50 @@ local function TargetFollowTargetDistFn(inst)
     return math.max(math.sqrt(target.compoponents.combat:CalcAttackRangeSq()) + MIN_FOLLOW_TARGET_DIST, DEFAULT_FOLLOW_TARGET_DIST)
 end
 
+
+-----------------------------------------------
+
+local POT_MUST = {"offering_pot"}
+local function shouldanswercall(inst)
+    
+    if inst:HasTag("lunarminion") or inst:HasTag("shadowminion") or inst.components.follower.leader then
+        return nil
+    end
+
+    local x,y,z = inst.Transform:GetWorldPosition()
+    local pots = TheSim:FindEntities(x,y,z, 30, POT_MUST)
+    if #pots > 0 then
+        for i=#pots, 1,-1 do
+            local pot = pots[i]
+
+            if not pot.merm_caller or #pot.components.container:FindItems(function() return true end) < 1 then
+                table.remove(pots,i)
+            end
+        end
+        if #pots > 0 then
+            inst.answerpotcall = pots[1]
+        else
+            inst.answerpotcall = nil
+        end        
+    end
+
+    if inst.answerpotcall then
+        return true
+    end
+end
+
+local function Getcalledofferingpot(inst)
+    return inst.answerpotcall and inst.answerpotcall:GetPosition() or nil
+end
+
+local function answercall(inst)
+    if inst.answerpotcall then
+        inst.answerpotcall:AnswerCall(inst)
+    end
+end
+
+-------------------------------------------
+
 function MermBrain:OnStart()
     local NODES = PriorityNode(
     {
@@ -335,6 +379,12 @@ function MermBrain:OnStart()
             action = "MINE", -- Required.
             chatterstring = "MERM_TALK_HELP_MINE_ROCK",
         }),
+
+        IfNode(function() return shouldanswercall(self.inst) end, "answering call",
+            PriorityNode({
+                Leash(self.inst, Getcalledofferingpot , 2.1, 2, true),
+                DoAction(self.inst, answercall, "answe call", true ),
+            }, 0.25)),
 
         ChattyNode(self.inst, "MERM_TALK_FIND_FOOD", -- TODO(JBK): MERM_TALK_ATTEMPT_TRADE
             FaceEntity(self.inst, GetTraderFn, KeepTraderFn)),

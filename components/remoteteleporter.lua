@@ -59,6 +59,9 @@ function RemoteTeleporter:Teleport_Internal(target, from_x, from_z, to_x, to_z, 
 					item.Transform:SetPosition(to_x + dx, 0, to_z + dz)
 				end
 				item:PushEvent("teleported")
+                if item.components.inventoryitem ~= nil then
+                    item.components.inventoryitem:SetLanded(false, true)
+                end
 			else
 				items[i] = items[#items]
 				items[#items] = nil

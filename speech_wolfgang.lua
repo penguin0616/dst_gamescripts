@@ -5316,8 +5316,8 @@ return{
         MERM_ARMORY_UPGRADED = "For fish man only.",
         MERM_TOOLSHED = "No Wolfgangs allowed. Aw.",
         MERM_TOOLSHED_UPGRADED = "No Wolfgangs allowed. Aw.",
-        MERMARMORHAT = "Wolfgang look handsome in fish man hat?",
-        MERMARMORUPGRADEDHAT = "Oh, nice hat, but smell fishy.",
+        MERMARMORHAT = "Is helmet special for fish man",
+        MERMARMORUPGRADEDHAT = "Is helmet special for fish man",
         MERM_TOOL = "Fish man tools for fish man work.",
         MERM_TOOL_UPGRADED = "Fish man tool not bad.",
 

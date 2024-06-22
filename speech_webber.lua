@@ -5315,8 +5315,8 @@ return{
         MERM_ARMORY_UPGRADED = "They don't seem to like sharing their toys.",
         MERM_TOOLSHED = "Aww, how come we're not allowed inside?",
         MERM_TOOLSHED_UPGRADED = "Aww, how come we're not allowed inside?",
-        MERMARMORHAT = "Wurt says it's armor, but it just looks like a funny hat to us.",
-        MERMARMORUPGRADEDHAT = "Wurt says it's armor, but it just looks like a funny hat to us.",
+        MERMARMORHAT = "Merms only? No fair.",
+        MERMARMORUPGRADEDHAT = "Merms only? No fair.",
         MERM_TOOL = "Wow, it does everything! Sort of.",
         MERM_TOOL_UPGRADED = "Wow, it does everything! Sort of.",
 

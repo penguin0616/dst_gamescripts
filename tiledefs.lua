@@ -1416,6 +1416,7 @@ TileManager.AddTile(
         walksound="dontstarve/movement/walk_mud",
         snowsound="dontstarve/movement/run_snow",
         mudsound="dontstarve/movement/run_mud",
+        istemptile = true,
     },
     {
         name="map_edge",

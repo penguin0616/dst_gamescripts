@@ -626,6 +626,7 @@ local function MakeAncientTree(name, data)
         inst.components.inspectable:SetNameOverride("ancienttree_sapling_item")
 
         inst:AddComponent("deployable")
+        inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.PLACER_DEFAULT)
         inst.components.deployable.ondeploy = Sapling_OnDeploy
 
         inst.OnSave = PlantData_OnSave

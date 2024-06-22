@@ -233,6 +233,9 @@ local function RosePoint_VineBridge_Check_HandleGround(sx, sz, TILE_SCALE, _map)
     -- We are too far in land for tiles to be able to be chosen.
     return nil, nil
 end
+local function RosePoint_VineBridge_StopVinesToTile(tile)
+    return TileGroupManager:IsTemporaryTile(tile) and tile ~= WORLD_TILES.FARMING_SOIL
+end
 local function RosePoint_VineBridge_Check(inst, pt)
     local _world = TheWorld
     if _world.ismastersim then
@@ -263,7 +266,12 @@ local function RosePoint_VineBridge_Check(inst, pt)
         dirx, dirz = RosePoint_VineBridge_Check_HandleGround(sx, sz, TILE_SCALE, _map)
     end
 
-    if dirx == nil or _map:IsTemporaryTileAtPoint(sx, 0, sz) then
+    if dirx == nil then
+        return false
+    end
+
+    local tile = _map:GetTileAtPoint(sx, 0, sz)
+    if RosePoint_VineBridge_StopVinesToTile(tile) then
         return false
     end
 
@@ -279,7 +287,7 @@ local function RosePoint_VineBridge_Check(inst, pt)
         local pt_offseted = Point(sx, 0, sz)
         local tile_current = _map:GetTileAtPoint(sx, 0, sz)
         if TileGroupManager:IsLandTile(tile_current) then
-            hitland = not TileGroupManager:IsTemporaryTile(tile_current)
+            hitland = not RosePoint_VineBridge_StopVinesToTile(tile_current)
             break
         end
 
@@ -374,24 +382,29 @@ CLOSEINSPECTORUTIL.IsValidPos = function(doer, pos)
 end
 
 CLOSEINSPECTORUTIL.CanCloseInspect = function(doer, targetorpos)
-    local inventory
-    if TheWorld.ismastersim then
-        inventory = doer and doer.components.inventory or nil
-    else
-        inventory = doer and doer.replica.inventory or nil
-    end
-    if inventory and inventory:EquipHasTag("closeinspector") then
-        if targetorpos:is_a(EntityScript) then
-            if not targetorpos:IsValid() then
-                return false
-            end
-            return CLOSEINSPECTORUTIL.IsValidTarget(doer, targetorpos)
-        else
-            return CLOSEINSPECTORUTIL.IsValidPos(doer, targetorpos)
-        end
-    end
+	if doer == nil then
+		return false
+	elseif TheWorld.ismastersim then
+		if not (doer.components.inventory and doer.components.inventory:EquipHasTag("closeinspector")) or
+			(doer.components.rider and doer.components.rider:IsRiding())
+		then
+			return false
+		end
+	else
+		local inventory = doer.replica.inventory
+		if not (inventory and inventory:EquipHasTag("closeinspector")) then
+			return false
+		end
+		local rider = doer.replica.rider
+		if rider and rider:IsRiding() then
+			return false
+		end
+	end
 
-    return false
+	if targetorpos:is_a(EntityScript) then
+		return targetorpos:IsValid() and CLOSEINSPECTORUTIL.IsValidTarget(doer, targetorpos)
+	end
+	return CLOSEINSPECTORUTIL.IsValidPos(doer, targetorpos)
 end
 
 --------------------------------------------------------------------------

@@ -925,6 +925,7 @@ function InspectaclesWidget:AddGameUI_WIRES(puzzledata)
         for _, wire in pairs(button.wires) do
             wire:GetAnimState():SetAddColour(0.2, 0.2, 0.2, 0.1)
         end
+        TheFrontEnd:GetSound():PlaySound("meta4/winona_UI/hover")
     end
     local function OnLoseFocus(button)
         for _, wire in pairs(button.wires) do

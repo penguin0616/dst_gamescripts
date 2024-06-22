@@ -5321,8 +5321,8 @@ return{
         MERM_ARMORY_UPGRADED = "Get your merm hats here!",
         MERM_TOOLSHED = "I know a toolshed when I see one.",
         MERM_TOOLSHED_UPGRADED = "I know a toolshed when I see one.",
-        MERMARMORHAT = "Safety first, I guess.",
-        MERMARMORUPGRADEDHAT = "I can tell a lot of effort went into this.",
+        MERMARMORHAT = "Ain’t my style.",
+        MERMARMORUPGRADEDHAT = "Ain’t my style.",
         MERM_TOOL = "Should get the job done... I hope.",
         MERM_TOOL_UPGRADED = "It's an improvement.",
 

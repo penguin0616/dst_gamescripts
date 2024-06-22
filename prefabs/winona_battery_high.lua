@@ -1390,6 +1390,7 @@ local function Item_OnLoad(inst, data, ents)
 				if type(v) == "table" then
 					local gem = SpawnSaveRecord(v)
 					SetGem(inst, #inst._gems, v.prefab, gem)
+                    gem:Remove()
 				else
 					SetGem(inst, #inst._gems, v)
 				end

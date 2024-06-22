@@ -34,6 +34,7 @@ local _ice_damage_prefabs_grid = nil
 local WIDTH = nil
 local HEIGHT = nil
 
+local CRACK_MUST_TAGS = {"ice_crack_fx"}
 local IGNORE_ICE_DROWNING_ONREMOVE_TAGS = { "ignorewalkableplatforms", "ignorewalkableplatformdrowning", "activeprojectile", "flying", "FX", "DECOR", "INLIMBO" }
 
 --------------------------------------------------------------------------
@@ -71,7 +72,6 @@ local function spawn_degrade_piece(center_x, center_z, spawn_angle)
     ice_degrade_fx.Transform:SetPosition(center_x, 0, center_z)
 end
 
-
 local function destroy_ice_at_point(world, dx, dz, oceanicemanager, data)
     -- HACK for stopping the ice breaking until better plan is implimented
     local sharkboimanager = world.components.sharkboimanager
@@ -87,7 +87,6 @@ local function destroy_ice_at_point(world, dx, dz, oceanicemanager, data)
     end
     -- END HACK
     oceanicemanager:DestroyIceAtPoint(dx, 0, dz, data)
-
 end
 
 local function create_ice_at_point(world, dx, dz, oceanicemanager)
@@ -98,6 +97,13 @@ local function start_destroy_for_tile(_, txy, wid, oceanicemanager)
     local center_x, center_y, center_z = _map:GetTileCenterPoint(txy % wid, math.floor(txy / wid))
 
     oceanicemanager:QueueDestroyForIceAtPoint(center_x, center_y, center_z)
+end
+
+local function removecrackedicefx(dx, dz)
+    local cracks = TheSim:FindEntities(dx, 0, dz, 4.5, CRACK_MUST_TAGS)
+    for i=#cracks, 1, -1 do
+        cracks[i]:Remove()
+    end
 end
 
 --------------------------------------------------------------------------
@@ -278,6 +284,8 @@ function self:DestroyIceAtPoint(x, y, z, data)
                     end
                 end
 
+    removecrackedicefx(dx, dz)
+
     _map:SetTile(tile_x, tile_y, old_tile)
 
     local grid_index = _marked_for_delete_grid:GetIndex(tile_x, tile_y)
@@ -375,6 +383,37 @@ function self:DestroyIceAtPoint(x, y, z, data)
     return true
 end
 
+local function spawncracks(x,z)
+    local tx, ty = TheWorld.Map:GetTileCoordsAtPoint(x, 0, z)
+    local cx, cy, cz = TheWorld.Map:GetTileCenterPoint(tx, ty)
+
+    local S = TheWorld.Map:IsLandTileAtPoint(cx+4,cy,cz)
+    local N = TheWorld.Map:IsLandTileAtPoint(cx-4,cy,cz)
+    local E = TheWorld.Map:IsLandTileAtPoint(cx,cy,cz+4)
+    local W = TheWorld.Map:IsLandTileAtPoint(cx,cy,cz-4)
+
+    local function spawnfx(lx,lz, rot)  
+        if #TheSim:FindEntities(lx, 0, lz, 1, CRACK_MUST_TAGS)  < 1 then
+            local fx = SpawnPrefab("ice_crack_grid_fx")
+            fx.Transform:SetPosition(lx, 0, lz)
+            fx.Transform:SetRotation(rot)        
+        end
+    end
+
+    if N then
+        spawnfx(cx-2, cz,0)
+    end
+    if S then
+        spawnfx(cx+2, cz,180)
+    end
+    if E then
+        spawnfx(cx, cz+2,90)
+    end
+    if W then
+        spawnfx(cx, cz-2,270)
+    end
+end
+
 function self:QueueDestroyForIceAtPoint(x, y, z, data)
     local tile_x, tile_y = _map:GetTileCoordsAtPoint(x, y, z)
     local ice_data_at_point = _ice_health_grid:GetDataAtPoint(tile_x, tile_y)
@@ -383,8 +422,11 @@ function self:QueueDestroyForIceAtPoint(x, y, z, data)
         _marked_for_delete_grid:SetDataAtPoint(tile_x, tile_y, true)
 
         SpawnPrefab("fx_ice_crackle").Transform:SetPosition(x, 0, z)
-
+        
         local time = data and data.destroytime or (70 + math.random(0, 10))*FRAMES
+
+        spawncracks(x,z)
+
         _world:DoTaskInTime(time, destroy_ice_at_point, x, z, self, data)
 
         -- Send a breaking message to all of the prefabs on this point.

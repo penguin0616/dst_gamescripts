@@ -3988,7 +3988,12 @@ function PlayerController:OnRemoteLeftClick(actioncode, position, target, isrele
 
         --Default fallback lmb action is WALKTO
         --Possible for lmb action to switch to rmb after autoequip
-        lmb =  (lmb == nil and
+		--V2C: LOOKAT was added to support closeinspect
+		lmb =  (actioncode == ACTIONS.LOOKAT.code and
+				(lmb == nil or lmb.action == ACTIONS.WALKTO) and
+				mod_name == nil and
+				BufferedAction(self.inst, target, ACTIONS.LOOKAT, nil, position))
+			or (lmb == nil and
                 actioncode == ACTIONS.WALKTO.code and
                 mod_name == nil and
                 BufferedAction(self.inst, nil, ACTIONS.WALKTO, nil, position))

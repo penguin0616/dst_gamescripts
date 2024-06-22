@@ -11,7 +11,7 @@ local prefabs =
 ----------------------------------------------------------------------------------------------------------------------------------------------
 
 local function CanHeal(inst, target, doer)
-    if not target:HasTag("merm") then
+    if not (target:HasTag("merm") and not target:HasTag("mermdisguise")) then
         return false, "NOT_MERM"
     end
 

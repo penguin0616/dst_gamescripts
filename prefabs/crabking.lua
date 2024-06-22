@@ -133,7 +133,6 @@ local ICEHOLE_PHYSICS_RADIUS = 6.0
 ----------------------------------------------------------------------------------------------------------------------------------------------
 
 local KEYSTONE_MUST_TAGS = { "crabking_icewall" }
-local ICE_ARENA_CLEANUP_MUST_TAGS = { "frozen", "_inventoryitem" }
 local ICE_ARENA_CLEANUP_CANT_TAGS = { "INLIMBO" }
 local SEASTACK_MUST_TAGS = { "seastack" }
 local SEASTACK_CANT_TAGS = { "waterplant" }
@@ -143,6 +142,21 @@ local BOAT_MUST_TAGS = { "boat" }
 local CRABKING_SPELLGENERATOR_MUST_TAGS = { "crabking_spellgenerator" }
 local REPAIRED_PATCH_MUST_TAGS = { "boat_repaired_patch" }
 local LEAK_MUST_TAGS = { "boatleak" }
+
+local COLLAPSIBLE_WORK_ACTIONS =
+{
+    CHOP = true,
+    DIG = true,
+    HAMMER = true,
+    MINE = true,
+}
+
+local COLLAPSIBLE_TAGS = { "_combat", "NPC_workable", "frozen", "oceanfish" }
+for k, v in pairs(COLLAPSIBLE_WORK_ACTIONS) do
+    table.insert(COLLAPSIBLE_TAGS, k.."_workable")
+end
+
+local NON_COLLAPSIBLE_TAGS = { "epic", "boat", "flying", "shadow", "ghost", "playerghost", "player", "FX", "INLIMBO" }
 
 local DECOR_SYMBOL_LOOKUP =
 {
@@ -156,7 +170,7 @@ local DECOR_SYMBOL_LOOKUP =
 }
 
 local GEM_TO_COLOR_LOOKUP =
-{   
+{
     bluegem         = "blue",
     redgem          = "red",
     purplegem       = "purple",
@@ -659,7 +673,7 @@ local function OnLoadPostPass(inst, newents, data)
 
 
         local keystonecount = 0
-        
+
         for i,stone in ipairs(inst.keystones) do
             if stone then
                 keystonecount = keystonecount + 1
@@ -723,9 +737,17 @@ local function LaunchCrabMob(inst, prefab)
 
         if TheWorld.Map:IsVisualGroundAtPoint(pos.x+offset.x, 0, pos.z+offset.z) then
             local mob = inst:LaunchProjectile(pos+offset, prefab)
-    
+
             mob.components.sleeper:SetSleepTest(nil)
             mob.components.sleeper:SetWakeTest(nil)
+
+            local resistance = 2 + (math.floor(inst.gemcount.purple/4) * 10)
+
+            if mob:HasTag("crab_mob_knight") then
+                resistance = resistance + 10
+            end
+
+            mob.components.sleeper:SetResistance(resistance)
 
             mob.components.health:SetMaxHealth(mob.components.health.currenthealth + (math.floor(inst.gemcount.purple+1/2) * TUNING.CRABKING_MOB_HEALTH_BONUS) )
             mob.components.health:SetPercent(1) -- For pushing events?
@@ -781,6 +803,47 @@ local function RemoveIceArena(inst, instant)
     end
 end
 
+local function CleanUpAreaForIceTile(inst, x, z)
+    local ents = TheSim:FindEntities(x, 0, z, TILE_SCALE, nil, NON_COLLAPSIBLE_TAGS, COLLAPSIBLE_TAGS)
+
+    for _, ent in ipairs(ents) do
+        if ent:IsValid() and ent:IsOnOcean(false) then
+            local isworkable = false
+            if ent.components.workable ~= nil then
+                local work_action = ent.components.workable:GetWorkAction()
+                    --V2C: nil action for NPC_workable (e.g. campfires)
+                --     allow digging spawners (e.g. rabbithole)
+                isworkable = (
+                        (work_action == nil and ent:HasTag("NPC_workable")) or
+                        (work_action ~= nil and ent.components.workable:CanBeWorked() and COLLAPSIBLE_WORK_ACTIONS[work_action.id])
+                )
+            end
+
+            local health = ent.components.health
+            local locomotor = ent.components.locomotor
+
+            if ent:HasTag("frozen") and ent.components.inventoryitem ~= nil then
+                ent:Remove()
+
+            elseif isworkable and ent.components.inventoryitem == nil then
+                ent.components.workable:Destroy(inst)
+
+                if ent:IsValid() and ent:HasTag("stump") then
+                    ent:Remove()
+                end
+
+            elseif health ~= nil and locomotor ~= nil and locomotor:IsAquatic() then
+                if not health:IsDead() then
+                    health:Kill()
+                end
+
+            elseif ent:HasTag("oceanfish") then
+                ent:Remove()
+            end
+        end
+    end
+end
+
 local function DoSpawnIceTile(inst, radius)
     inst.tasks["spawnice_"..radius] = nil
 
@@ -799,16 +862,7 @@ local function DoSpawnIceTile(inst, radius)
                 local nz = (tile_y - height/2) * TILE_SCALE
 
                 if not (TheSim:CountEntities(nx, 0, nz, 8, BOAT_MUST_TAGS) > 0) and not TheWorld.Map:IsVisualGroundAtPoint(nx, 0, nz) then
-                    local ents = TheSim:FindEntities(nx, 0, nz, TILE_SCALE, ICE_ARENA_CLEANUP_MUST_TAGS, ICE_ARENA_CLEANUP_CANT_TAGS)
-
-                    for _, ent in pairs(ents) do
-                        if ent.prefab == "ice" then
-                            ent:Remove()
-
-                        elseif ent.components.workable ~= nil then
-                            ent.components.workable:Destroy(inst)
-                        end
-                    end
+                    CleanUpAreaForIceTile(inst, nx, nz)
 
                     TheWorld.components.oceanicemanager:CreateIceAtPoint(nx, 0, nz)
                 end
@@ -822,14 +876,6 @@ local function DoSpawnIceWall(inst)
 
     inst.AnimState:Show("water")
     inst.Physics:SetCapsule(ICEHOLE_PHYSICS_RADIUS, 2)
-
-    for i=1, TUNING.CRABKING_BASE_MINIONS + (math.floor(inst.gemcount.purple/2)) do
-        inst:LaunchCrabMob("crabking_mob")
-    end
-
-    if inst.components.health:GetPercent() < 0.35 then
-        inst:LaunchCrabMob("crabking_mob_knight")
-    end
 
     inst.keystones = {}
 
@@ -873,10 +919,22 @@ local function EndCastSpell(inst, lastwasfreeze)
     SpawnPrefab("crabking_ring_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
     inst:PushEvent("ck_taunt")
     for radius=1, MAXRANGE do
-        inst.tasks["spawnice_"..radius] = inst:DoTaskInTime(radius*.2 + .2, inst.DoSpawnIceTile, radius)
+        inst.tasks["spawnice_"..radius] = inst:DoTaskInTime(radius*0.2 + 0.2, inst.DoSpawnIceTile, radius)
     end
 
-    inst.tasks.spawnwall = inst:DoTaskInTime(MAXRANGE*.2 + .2 , inst.DoSpawnIceWall)
+    inst.tasks.spawnwall = inst:DoTaskInTime(0.4, inst.DoSpawnIceWall)
+
+    inst.tasks.spawnminion = inst:DoTaskInTime(0.2 * MAXRANGE, function()
+        for i=1, TUNING.CRABKING_BASE_MINIONS + (math.floor(inst.gemcount.purple/2)) do
+            inst:LaunchCrabMob("crabking_mob")
+        end
+
+        if inst.components.health:GetPercent() < 0.35 then
+            inst:LaunchCrabMob("crabking_mob_knight")
+        end
+
+        inst:ShineSocketOfColor("purple")
+    end)
 
     inst.dofreezecast = nil
 
@@ -1020,6 +1078,8 @@ local function SpawnCannons(inst)
             inst:SpawnCannonTower(i, nil, numcannons)
         end
     end
+
+    inst:ShineSocketOfColor("yellow")
 end
 
 local function OnFreeze(inst)
@@ -1070,7 +1130,7 @@ local function SpawnSeaStacks(inst)
         local offset = Vector3(radius * math.cos(theta), 0, -radius * math.sin(theta))
 
         local x2, y2, z2 = x + radius * math.cos(theta), 0, z - radius * math.sin(theta)
-    
+
         if not TheWorld.Map:GetPlatformAtPoint(x2, z2) and TheSim:CountEntities(x2, 0, z2, 3, SEASTACK_MUST_TAGS) <= 0 then
             inst.tasks.spawnseastacks = inst:DoTaskInTime(math.random()*0.5, inst.DoSpawnSeaStack, x2, z2)
         end
@@ -1159,6 +1219,8 @@ local function TrySpawningArm(inst, armpos, numclaws)
         inst.arms[armpos] = arm
 
         arm.components.health:SetMaxHealth(TUNING.CRABKING_CLAW_HEALTH + (math.floor(inst.gemcount.green/4) * TUNING.CRABKING_CLAW_HEALTH_BOOST))
+        arm.components.combat:SetDefaultDamage(TUNING.CRABKING_CLAW_PLAYER_DAMAGE + (math.floor(inst.gemcount.green/2) * TUNING.CRABKING_CLAW_DAMAGE_BOOST))
+        
         arm.armpos = armpos
         arm.crabking = inst -- Saved in prefab.
 
@@ -1186,10 +1248,6 @@ local function DoSpawnArm(inst, armpos, fx)
     end
 
     inst.arms[armpos].task = inst:DoPeriodicTask(0.3, TrySpawningArm, nil, armpos, numclaws)
-
-    if fx ~= nil then
-        inst:ShineSocketOfColor("green")
-    end
 end
 
 local function SpawnClawArms(inst)
@@ -1235,7 +1293,7 @@ local function AddGem(inst,gemname)
 end
 
 local function UpdateGemCount(inst)
-    local gems = 
+    local gems =
     {
         red    = 0,
         blue   = 0,
@@ -1255,10 +1313,10 @@ local function UpdateGemCount(inst)
 
     for i, data in pairs(inst.socketed) do
         local color = GEM_TO_COLOR_LOOKUP[data.itemprefab]
-        
+
         if color ~= nil and gems[color] then
             gems[color] = gems[color] + 1
-        
+
         elseif data.itemprefab == "opalpreciousgem" then
             gems.green  = gems.green  + 1
             gems.yellow = gems.yellow + 1
@@ -1616,7 +1674,7 @@ local function fn()
     inst:ListenForEvent("healthdelta", inst.OnHealthChange)
     inst:ListenForEvent("freeze", inst.OnFreeze)
     inst:ListenForEvent("icefloebreak", inst.onicetilebreak, TheWorld)
-    
+
     inst:UpdateGemCount()
 
     inst:ClearAllSocketDecorations()
@@ -1664,146 +1722,6 @@ local function burble(inst)
 
     dogeyserburbletask(inst)
 end
-
-local function endgeyser(inst)
-    inst:DoTaskInTime(2.4,function()
-        if inst.burbletask then
-            inst.burbletask:Cancel()
-            inst.burbletask = nil
-        end
-    end)
-    local extrageysers = 0
-    if inst.crab and inst.crab:IsValid() then
-        extrageysers = math.floor(inst.crab.gemcount.purple/2)
-    end
-    for i=1,TUNING.CRABKING_DEADLY_GEYSERS + extrageysers do
-        inst:DoTaskInTime(math.random()*0.4,function()
-            local MAXRADIUS = 4.5
-            local x,y,z = inst.Transform:GetWorldPosition()
-            local theta = math.random()*TWOPI
-            local radius = math.pow(math.random(),0.8)* MAXRADIUS
-            local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
-            local prefab = "crab_king_waterspout"
-            if TheWorld.Map:IsOceanAtPoint(x+offset.x, 0, z+offset.z) then
-                local fx = SpawnPrefab(prefab)
-                fx.Transform:SetPosition(x+offset.x,y+offset.y,z+offset.z)
-
-                local INITIAL_LAUNCH_HEIGHT = 0.1
-                local SPEED = 8
-                local CANT_HAVE_TAGS = {"INLIMBO", "outofreach", "DECOR"}
-                local function launch_away(inst, position)
-                    local ix, iy, iz = inst.Transform:GetWorldPosition()
-                    inst.Physics:Teleport(ix, iy + INITIAL_LAUNCH_HEIGHT, iz)
-
-                    local px, py, pz = position:Get()
-                    local angle = (180 - inst:GetAngleToPoint(px, py, pz)) * DEGREES
-                    local sina, cosa = math.sin(angle), math.cos(angle)
-                    inst.Physics:SetVel(SPEED * cosa, 4 + SPEED, SPEED * sina)
-                end
-                local affected_entities = TheSim:FindEntities(x+offset.x,y+offset.y,z+offset.z, 2, nil, CANT_HAVE_TAGS)
-                for _, v in ipairs(affected_entities) do
-                    if v.components.oceanfishable ~= nil then
-                        -- Launch fishable things because why not.
-
-                        local projectile = v.components.oceanfishable:MakeProjectile()
-                        if projectile.components.weighable ~= nil then
-                            projectile.components.weighable.prefab_override_owner = inst.fisher_prefab
-                        end
-                        local position = Vector3(x+offset.x,y+offset.y,z+offset.z)
-                        if projectile.components.complexprojectile then
-                            projectile.components.complexprojectile:SetHorizontalSpeed(16)
-                            projectile.components.complexprojectile:SetGravity(-30)
-                            projectile.components.complexprojectile:SetLaunchOffset(Vector3(0, 0.5, 0))
-                            projectile.components.complexprojectile:SetTargetOffset(Vector3(0, 0.5, 0))
-
-                            local v_position = v:GetPosition()
-                            local launch_position = v_position + (v_position - position):Normalize() * SPEED
-                            projectile.components.complexprojectile:Launch(launch_position, projectile)
-                        else
-                            launch_away(projectile, position)
-                        end
-                    end
-                end
-
-
-            else
-                local boat = TheWorld.Map:GetPlatformAtPoint(x+offset.x, z+offset.z)
-                if boat then
-                    local pt = Vector3(x+offset.x,0,z+offset.z)
-                    boat.components.health:DoDelta(-TUNING.CRABKING_GEYSER_BOATDAMAGE)
-
-                    -- look for patches
-                    local nearpatch = TheSim:FindEntities(pt.x, 0, pt.z, 2, REPAIRED_PATCH_MUST_TAGS)
-                    for i,patch in pairs(nearpatch)do
-                        pt = Vector3(patch.Transform:GetWorldPosition())
-                        patch:Remove()
-                        break
-                    end
-
-                    boat:PushEvent("spawnnewboatleak", {pt = pt, leak_size = "small_leak", playsoundfx = true})
-                end
-            end
-        end)
-    end
-
-    inst:DoTaskInTime(1, inst.Remove)
-end
-
-local function geyserfn()
-    local inst = CreateEntity()
-
-    inst.entity:AddTransform()
-    inst.entity:AddSoundEmitter()
-    inst.entity:AddNetwork()
-
-    inst:AddTag("NOCLICK")
-    inst:AddTag("fx")
-    inst:AddTag("crabking_spellgenerator")
-
-    inst.entity:SetPristine()
-    if not TheWorld.ismastersim then
-        return inst
-    end
-
-    inst:AddComponent("age")
-
-    inst.persists = false
-
-    inst.burble = burble
-    inst.dogeyserburbletask = dogeyserburbletask
-
-    inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/bubble_LP","burble")
-    inst.SoundEmitter:SetParameter("burble", "intensity", 0)
-    inst.burblestarttime = GetTime()
-    inst.burbleintensity = inst:DoPeriodicTask(1,function()
-            local totalcasttime = TUNING.CRABKING_CAST_TIME - ((inst.crab and inst.crab:IsValid()) and math.floor(inst.crab.gemcount.yellow/2) or 0)
-            local intensity = math.min(1,( GetTime() - inst.burblestarttime ) / totalcasttime)
-
-            inst.SoundEmitter:SetParameter("burble", "intensity", intensity)
-      end)
-    inst:ListenForEvent("onremove", function()
-        if inst.burbletask then
-            inst.burbletask:Cancel()
-            inst.burbletask = nil
-        end
-        if inst.burbleintensity then
-            inst.burbleintensity:Cancel()
-            inst.burbleintensity = nil
-        end
-        inst.SoundEmitter:KillSound("burble")
-    end)
-
-    inst:ListenForEvent("endspell", function()
-        endgeyser(inst)
-    end)
-
-    inst:DoTaskInTime(TUNING.CRABKING_CAST_TIME+2,function()
-        endgeyser(inst)
-    end)
-
-    return inst
-end
-
 
 -- FREEZE FX
 
@@ -2029,7 +1947,6 @@ local function chipfn(type)
 end
 
 return Prefab("crabking", fn, assets, prefabs),
-       --Prefab("crabking_geyserspawner", geyserfn, nil, geyserprefabs),
        --Prefab("crabking_feeze", freezefn, nil, freezeprefabs),
        Prefab("crabking_chip_high", function() return chipfn("high") end, chipassets),
        Prefab("crabking_chip_med",  function() return chipfn("mid") end, chipassets),

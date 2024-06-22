@@ -368,23 +368,10 @@ local function collectdigsites(inst, digsites, tile)
         for dx=-dist,dist,dist do
             local dobreak = false
             for dz=-dist,dist,dist do
-                --local test = SpawnPrefab("cutgrass")
-                --test.Transform:SetPosition(cent.x+dx,0, cent.z+dz)
                 local localsoils = TheSim:FindEntities(cent.x+dx,0, cent.z+dz, 0.21, SOILMUST, SOILMUSTNOT)
-
-                           -- print("CAN TILL",cent.x+dx,0,cent.z+dz, TheWorld.Map:CanTillSoilAtPoint(cent.x+dx,0,cent.z+dz))
-
                 if #localsoils < 1 and TheWorld.Map:CanTillSoilAtPoint(cent.x+dx,0,cent.z+dz) then
-
-                        --local test = SpawnPrefab("cutgrass")
-                        --test.Transform:SetPosition(cent.x+dx,0, cent.z+dz)
-                        --test:AddTag("NOBLOCK")
-
                     table.insert(digsites,{pos = Vector3(cent.x+dx,0,cent.z+dz), tile = tile })
-                  --  dobreak = true
-                --    break
                 end
-             --   if dobreak == true then break endp
             end
         end
     end 
@@ -464,7 +451,7 @@ local function DigAction(inst, leaderdist, finddist)
         end
 
         return BufferedAction(inst, target, ACTIONS.DIG)
-    end 
+    end
 end
 
    ----
@@ -524,6 +511,45 @@ local function dig_stump_finder(inst, leaderdist, finddist)
         end
 
         return BufferedAction(inst, target, ACTIONS.DIG)
+    end
+end
+
+local POT_MUST = {"offering_pot"}
+local function shouldanswercall(inst)
+    
+    if inst:HasTag("lunarminion") or inst:HasTag("shadowminion") or inst.components.follower.leader then
+        return nil
+    end
+
+    local x,y,z = inst.Transform:GetWorldPosition()
+    local pots = TheSim:FindEntities(x,y,z, 30, POT_MUST)
+    if #pots > 0 then
+        for i=#pots, 1,-1 do
+            local pot = pots[i]
+
+            if not pot.merm_caller or #pot.components.container:FindItems(function() return true end) < 1 then
+                table.remove(pots,i)
+            end
+        end
+        if #pots > 0 then
+            inst.answerpotcall = pots[1]
+        else
+            inst.answerpotcall = nil
+        end        
+    end
+
+    if inst.answerpotcall then
+        return true
+    end
+end
+
+local function Getcalledofferingpot(inst)
+    return inst.answerpotcall and inst.answerpotcall:GetPosition() or nil
+end
+
+local function answercall(inst)
+    if inst.answerpotcall then
+        inst.answerpotcall:AnswerCall(inst)
     end
 end
 
@@ -606,6 +632,12 @@ function MermBrain:OnStart()
             action = "MINE", -- Required.
             chatterstring = "MERM_TALK_HELP_MINE_ROCK",
         }),
+
+        IfNode(function() return shouldanswercall(self.inst) end, "answering call",
+            PriorityNode({
+                Leash(self.inst, Getcalledofferingpot , 2.1, 2, true),
+                DoAction(self.inst, answercall, "answe call", true ),
+            }, 0.25)),
 
         ChattyNode(self.inst, "MERM_TALK_FIND_FOOD", -- TODO(JBK): MERM_TALK_ATTEMPT_TRADE
             FaceEntity(self.inst, GetTraderFn, KeepTraderFn)),

@@ -726,6 +726,11 @@ function LocoMotor:PreviewAction(bufferedaction, run, try_instant)
 			if not closeinspect then
 				self:Stop()
 
+				--V2C: since LOOKAT now has an action handler for closeinspect support,
+				--     we can use options.instant to bypass it during preview.
+				--     see EntityScript:PreviewBufferedAction
+				bufferedaction.options.instant = true
+
 				if bufferedaction.target ~= nil then
 					self:FaceMovePoint(bufferedaction.target.Transform:GetWorldPosition())
 				end

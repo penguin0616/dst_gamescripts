@@ -5315,8 +5315,8 @@ return{
         MERM_ARMORY_UPGRADED = "The fishmongers seem to be doing quite well for themselves.",
         MERM_TOOLSHED = "What have they cooked up in there?",
         MERM_TOOLSHED_UPGRADED = "What have they cooked up in there?",
-        MERMARMORHAT = "Such an avant-garde chapeau!",
-        MERMARMORUPGRADEDHAT = "Such an avant-garde chapeau!",
+        MERMARMORHAT = "It is not a fit for me.",
+        MERMARMORUPGRADEDHAT = "It is not a fit for me.",
         MERM_TOOL = "The right tool for any job, non?",
         MERM_TOOL_UPGRADED = "The right tool for any job, non?",
 

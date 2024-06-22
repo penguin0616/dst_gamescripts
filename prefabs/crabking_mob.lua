@@ -212,6 +212,8 @@ end
 local function KnightFn()
     local inst = CreateCommon("crabking_mob", "crabking_mob_knight_build", KnightCommongPostInit )
 
+    inst:AddTag("crab_mob_knight")
+
     if not TheWorld.ismastersim then
         return inst
     end

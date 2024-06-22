@@ -9,7 +9,14 @@ local function CreateSkillTreeFor(characterprefab, skills)
     local RPC_LOOKUP = {}
     local rpc_id = 0
     local total_locks = 0
+    local hasdefaultfocus = false
     for skill_name, skill in orderedPairs(skills) do
+        if skill.defaultfocus then
+            if hasdefaultfocus then
+                PrintFixMe(string.format("Skill Tree for %s has TOO MANY defaultfocus skills! This will be bad for controllers.", characterprefab))
+            end
+            hasdefaultfocus = true
+        end
         if skill.lock_open == nil then -- NOTES(JBK): Only include skills for this.
             skill.rpc_id = rpc_id
             RPC_LOOKUP[rpc_id] = skill_name
@@ -57,6 +64,9 @@ local function CreateSkillTreeFor(characterprefab, skills)
                 end
             end
         end
+    end
+    if not hasdefaultfocus then
+        PrintFixMe(string.format("Skill Tree for %s is missing defaultfocus for one of the skills! This is where controllers start when the menu is pulled up.", characterprefab))
     end
     for skill_name, skill in pairs(skills) do
         if not (skill.root or skill.must_have_one_of or skill.must_have_all_of) then

@@ -569,6 +569,41 @@ local states =
     },
 
     State{
+        name = "shadow_loyaltyover",
+        tags = { "canrotate", "busy", "jumping" },
+
+        onenter = function(inst, data)
+            ToggleOffCharacterCollisions(inst)
+            inst.components.locomotor:Stop()
+            inst.components.locomotor:EnableGroundSpeedMultiplier(false)
+            inst.Physics:SetMotorVelOverride(-8, 0, 0)
+            inst.AnimState:PlayAnimation("smacked")
+        end,
+
+        onexit = function(inst) inst:Remove() end,
+
+        timeline =
+        {
+            FrameEvent(14, function(inst)
+                ToggleOnCharacterCollisions(inst)
+                inst.components.locomotor:EnableGroundSpeedMultiplier(true)
+                inst.Physics:ClearMotorVelOverride()
+                inst.Physics:Stop()
+
+                SpawnPrefab("shadow_merm_smacked_poof_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
+            end),
+            FrameEvent(15, function(inst)
+                inst:Remove()
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst) inst:Remove() end),
+        },
+    },
+
+    State{
         name = "tri_attack",
         tags = { "attack", "busy" },
 

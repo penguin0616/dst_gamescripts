@@ -1938,6 +1938,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_monkey_run.zip"),
 
         Asset("ANIM", "anim/player_acting.zip"),
+		Asset("ANIM", "anim/player_closeinspect.zip"),
 
         Asset("ANIM", "anim/player_attack_pillows.zip"),
 

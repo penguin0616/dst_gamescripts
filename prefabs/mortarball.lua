@@ -13,7 +13,9 @@ local prefabs_item =
 local prefabs =
 {
     "bullkelp_root",
-    "cannonball_used",
+    "mortarball_used",
+    "mortarball_used_ice",
+    "mortarball_used_wood",
     "crab_king_waterspout",
     "wave_splash",
 }
@@ -53,6 +55,8 @@ end
 
 local function OnHit(inst, attacker, target)
 
+    local hittype = "mortarball_used"
+
     -- Do splash damage upon hitting the ground
     inst.components.combat:DoAreaAttack(inst, TUNING.CANNONBALL_SPLASH_RADIUS, nil, nil, nil, AREAATTACK_EXCLUDE_TAGS)
 
@@ -76,6 +80,10 @@ local function OnHit(inst, attacker, target)
 
         local damage = inst.components.combat.defaultdamage        
         target.components.health:DoDelta(-damage/2)
+
+        if target:HasTag("wood") then
+            hittype = "mortarball_used_wood"
+        end
     end
 
     -- Look for stuff on the ocean/ground and launch them
@@ -139,13 +147,18 @@ local function OnHit(inst, attacker, target)
         SpawnPrefab("crab_king_waterspout").Transform:SetPosition(inst.Transform:GetWorldPosition())
     -- Landed on ground
     else
-        SpawnPrefab("cannonball_used").Transform:SetPosition(inst.Transform:GetWorldPosition())
+        if TheWorld.Map:IsOceanIceAtPoint(inst.Transform:GetWorldPosition()) then
+             hittype = "mortarball_used_ice"
+        end
 
         if TheWorld.components.dockmanager ~= nil then
             -- Damage any docks we hit.
             local damage = inst.components.combat.defaultdamage
             TheWorld.components.dockmanager:DamageDockAtPoint(x, y, z, damage)
+             hittype = "mortarball_used_wood"             
         end
+
+        SpawnPrefab(hittype).Transform:SetPosition(inst.Transform:GetWorldPosition())
     end
     inst:Remove()
 end

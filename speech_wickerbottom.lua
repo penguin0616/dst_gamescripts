@@ -5315,8 +5315,8 @@ return{
         MERM_ARMORY_UPGRADED = "\"Mermfolk Ownlee\"? Hm. I see more spelling lessons are in order.",
         MERM_TOOLSHED = "A place for everything, and everything in its place.",
         MERM_TOOLSHED_UPGRADED = "A place for everything, and everything in its place.",
-        MERMARMORHAT = "Merms possess naturally thick craniums, but some extra padding won't hurt.",
-        MERMARMORUPGRADEDHAT = "Merms possess naturally thick craniums, but some extra padding won't hurt.",
+        MERMARMORHAT = "This helmet was specifically made to fit the merm cranium.",
+        MERMARMORUPGRADEDHAT = "This helmet was specifically made to fit the merm cranium.",
         MERM_TOOL = "While crudely made, I admit it's far more efficient than their usual methods.",
         MERM_TOOL_UPGRADED = "While crudely made, I admit it's far more efficient than their usual methods.",
 

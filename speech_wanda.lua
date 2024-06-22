@@ -5315,8 +5315,8 @@ return{
         MERM_ARMORY_UPGRADED = "I doubt there's anything in there worth my time.",
         MERM_TOOLSHED = "I doubt there's anything in there worth my time.",
         MERM_TOOLSHED_UPGRADED = "I doubt there's anything in there worth my time.",
-        MERMARMORHAT = "Everyone likes a good hat.",
-        MERMARMORUPGRADEDHAT = "Everyone likes a good hat.",
+        MERMARMORHAT = "It’s for a merm.",
+        MERMARMORUPGRADEDHAT = "It’s for a merm.",
         MERM_TOOL = "I doubt it'll stand the test of time.",
         MERM_TOOL_UPGRADED = "I doubt it'll stand the test of time.",
 

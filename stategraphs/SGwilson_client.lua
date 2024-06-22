@@ -744,6 +744,7 @@ local actionhandlers =
     end),
 
 	ActionHandler(ACTIONS.REMOTE_TELEPORT, "remote_teleport_pre"),
+	ActionHandler(ACTIONS.LOOKAT, "closeinspect"),
 
     ActionHandler(ACTIONS.INCINERATE, "doshortaction"),
 }
@@ -5985,6 +5986,55 @@ local states =
 		ontimeout = function(inst)
 			inst:ClearBufferedAction()
 			inst.sg:GoToState("idle")
+		end,
+	},
+
+	State{
+		name = "closeinspect",
+		tags = { "idle", "canrotate" },
+		server_states = { "run_stop", "closeinspect" },
+
+		onenter = function(inst)
+			inst.components.locomotor:Stop()
+			inst:PerformPreviewBufferedAction()
+
+			local rider = inst.replica.rider
+			if rider and rider:IsRiding() or inst.replica.inventory:IsHeavyLifting() or IsChannelCasting(inst) then
+				if inst.sg.lasttags and inst.sg.lasttags["moving"] then
+					ConfigureRunState(inst)
+					inst.AnimState:PlayAnimation(GetRunStateAnim(inst).."_pst")
+					inst.sg:GoToState("idle", true)
+				else
+					inst.sg:GoToState("idle")
+				end
+				return
+			end
+
+			inst.AnimState:PlayAnimation("closeinspect_pre")
+			inst.AnimState:PushAnimation("closeinspect_loop")
+			inst.sg:SetTimeout(TIMEOUT)
+
+			inst.sg.statemem.run_stop_hash = hash("run_stop")
+		end,
+
+		onupdate = function(inst)
+			if inst.sg:ServerStateMatches() then
+				if inst.entity:FlattenMovementPrediction() then
+					if inst.player_classified.currentstate:value() == inst.sg.statemem.run_stop_hash then
+						return
+					end
+					inst.sg:GoToState("idle", "noanim")
+				end
+			elseif inst.bufferedaction == nil then
+				inst.AnimState:PlayAnimation("closeinspect_pst")
+				inst.sg:GoToState("idle", true)
+			end
+		end,
+
+		ontimeout = function(inst)
+			inst:ClearBufferedAction()
+			inst.AnimState:PlayAnimation("closeinspect_pst")
+			inst.sg:GoToState("idle", true)
 		end,
 	},
 }

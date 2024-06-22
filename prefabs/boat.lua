@@ -864,11 +864,19 @@ local function grass_fn()
     return inst
 end
 
+
 local function pirate_initialize(inst)
-    local ents = inst.components.walkableplatform:GetEntitiesOnPlatform() 
-    for entity_on_platform in pairs(ents) do
-        if entity_on_platform:HasTag("boatcannon") then
-            table.insert(inst.cannons, entity_on_platform)
+    local ents = inst.components.walkableplatform:GetEntitiesOnPlatform()
+
+    local function oncannonremoved(cannon)
+        table.removearrayvalue(inst.cannons, cannon)
+    end
+
+    for ent in pairs(ents) do
+        if ent:HasTag("boatcannon") then
+            table.insert(inst.cannons, ent)
+
+            ent:ListenForEvent("onremove", oncannonremoved)
         end
     end
 end

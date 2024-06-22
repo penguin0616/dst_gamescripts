@@ -5315,8 +5315,8 @@ return{
         MERM_ARMORY_UPGRADED = "Apparently, I'm not invited. Oh how shall I ever go on.",
         MERM_TOOLSHED = "I'm certain there's nothing inside I'd want.",
         MERM_TOOLSHED_UPGRADED = "I'm certain there's nothing inside I'd want.",
-        MERMARMORHAT = "The poor fools must think they look very dapper.",
-        MERMARMORUPGRADEDHAT = "The poor fools must think they look very dapper.",
+        MERMARMORHAT = "Does it look I have the bulbous head of a merm?",
+        MERMARMORUPGRADEDHAT = "Does it look I have the bulbous head of a merm?",
         MERM_TOOL = "Why specialize when you can be mediocre at everything, hm?",
         MERM_TOOL_UPGRADED = "Why specialize when you can be mediocre at everything, hm?",
 

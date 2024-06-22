@@ -5315,8 +5315,8 @@ return{
         MERM_ARMORY_UPGRADED = "Aww, can't I just take a little peek inside?",
         MERM_TOOLSHED = "I wonder what kind of bog monster secrets they're hiding in there...",
         MERM_TOOLSHED_UPGRADED = "I wonder what kind of bog monster secrets they're hiding in there...",
-        MERMARMORHAT = "I wish they had one in my size...",
-        MERMARMORUPGRADEDHAT = "I wish they had one in my size...",
+        MERMARMORHAT = "Aww, merms get all the good stuff.",
+        MERMARMORUPGRADEDHAT = "Aww, merms get all the good stuff.",
         MERM_TOOL = "It must be really hard to make things when you have claws for hands.",
         MERM_TOOL_UPGRADED = "It must be really hard to make things when you have claws for hands.",
 

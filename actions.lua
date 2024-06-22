@@ -819,7 +819,7 @@ ACTIONS.RUMMAGE.fn = function(act)
             act.doer:PushEvent("closecontainer", { container = targ })
             return true
         elseif targ:HasTag("mermonly") and not act.doer:HasTag("merm") then
-            return false, "NOTAMERM"            
+            return false, "NOTAMERM"
         elseif targ:HasTag("mastercookware") and not act.doer:HasTag("masterchef") then
             return false, "NOTMASTERCHEF"
         --elseif targ:HasTag("professionalcookware") and not act.doer:HasTag("professionalchef") then
@@ -933,9 +933,13 @@ ACTIONS.LOOKAT.fn = function(act)
 				for k, v in pairs(EQUIPSLOTS) do
 					local equip = act.doer.components.inventory:GetEquippedItem(v)
 					if equip and equip.components.closeinspector then
+						if ShouldLOOKATStopLocomotor(act) then
+							act.doer.components.locomotor:Stop()
+						end
 						local success, reason = equip.components.closeinspector:CloseInspectTarget(act.doer, act.target)
 						if not success then
-							act.doer.components.talker:Say(GetActionFailString(act.doer, "LOOKAT", reason))
+							local sgparam = { closeinspect = true }
+							act.doer.components.talker:Say(GetActionFailString(act.doer, "LOOKAT", reason), nil, nil, nil, nil, nil, nil, nil, nil, sgparam)
 						end
 						return success, reason
 					end
@@ -947,9 +951,13 @@ ACTIONS.LOOKAT.fn = function(act)
 				for k, v in pairs(EQUIPSLOTS) do
 					local equip = act.doer.components.inventory:GetEquippedItem(v)
 					if equip and equip.components.closeinspector then
+						if ShouldLOOKATStopLocomotor(act) then
+							act.doer.components.locomotor:Stop()
+						end
 						local success, reason = equip.components.closeinspector:CloseInspectPoint(act.doer, pt)
 						if not success then
-							act.doer.components.talker:Say(GetActionFailString(act.doer, "LOOKAT", reason))
+							local sgparam = { closeinspect = true }
+							act.doer.components.talker:Say(GetActionFailString(act.doer, "LOOKAT", reason), nil, nil, nil, nil, nil, nil, nil, nil, sgparam)
 						end
 						return success, reason
 					end
@@ -2020,8 +2028,8 @@ ACTIONS.STORE.fn = function(act)
     if target.components.container ~= nil and act.invobject.components.inventoryitem ~= nil and act.doer.components.inventory ~= nil then
         if target:HasTag("mastercookware") and not act.doer:HasTag("masterchef") then
             return false, "NOTMASTERCHEF"
-        --elseif target:HasTag("professionalcookware") and not act.doer:HasTag("professionalchef") then
-            --return false, "NOTPROCHEF"
+        elseif target:HasTag("mermonly") and not act.doer:HasTag("merm") then
+            return false, "NOTAMERM"
         elseif not target.components.container:IsOpenedBy(act.doer) and not target.components.container:CanOpen() then
             return false, "INUSE"
         end

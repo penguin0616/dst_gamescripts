@@ -1081,7 +1081,8 @@ end
 FE_MUSIC =
     (FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT] ~= nil and FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT].sound) or
     (SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT] ~= nil and SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT].sound) or
-    "dontstarve/music/music_FE_junkyardhog"
+    "dontstarve/music/music_FE_winonawurt"
+    --"dontstarve/music/music_FE_junkyardhog"
     --"dontstarve/music/music_FE_riftsthree"
     --"dontstarve/music/music_FE_survivorsguideone"
     --"dontstarve/music/music_FE_shadowrift"
@@ -2038,6 +2039,7 @@ TECH_SKILLTREE_BUILDER_TAG_OWNERS =
     spearwathgrithrlightningmaker = "wathgrithr",
     wathgrithrimprovedhatmaker = "wathgrithr",
     wathgrithrshieldmaker = "wathgrithr",
+    [UPGRADETYPES.SPEAR_LIGHTNING.."_upgradeuser"] = "wathgrithr",
 
     fire_mastery_1 = "willow",
 

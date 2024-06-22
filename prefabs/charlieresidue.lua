@@ -83,11 +83,24 @@ local function SetFXOwner(inst, owner)
 		inst._inittask = nil
 		inst.Network:SetClassifiedTarget(owner)
 		inst:ListenForEvent("onremove", function() inst:Remove() end, owner)
-		--#TODO: also remove if owner loses skill
 		if owner.HUD then
 			InitClientFX(inst)
 		end
-		inst:DoTaskInTime(0.5, OnIdle)
+		if owner.components.playervision and owner.components.playervision:HasRoseGlassesVision() then
+			inst:ListenForEvent("ondeactivateskill_server", function(owner, data)
+				if data and data.skill == "winona_charlie_1" then
+					inst:Decay()
+				end
+			end, owner)
+			inst:ListenForEvent("roseglassesvision", function(owner, data)
+				if not data.enabled then
+					inst:Decay()
+				end
+			end, owner)
+			inst:DoTaskInTime(0.5, OnIdle)
+		else
+			inst:Decay()
+		end
 	end
 end
 
@@ -115,12 +128,15 @@ local function OnAnimState_Client(inst)
 end
 
 local function Decay(inst)
-	inst._animstate:set(ANIM_STATE["pst"])
-	if inst._fx then
-		OnAnimState_Client(inst)
+	if not inst.killed then
+		inst.killed = true
+		inst._animstate:set(ANIM_STATE["pst"])
+		if inst._fx then
+			OnAnimState_Client(inst)
+		end
+		inst:AddTag("NOCLICK")
+		inst:DoTaskInTime(0.5, inst.Remove)
 	end
-	inst:AddTag("NOCLICK")
-	inst:DoTaskInTime(0.5, inst.Remove)
 end
 
 local function OnActivate(inst, doer)

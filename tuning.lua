@@ -5160,6 +5160,7 @@ function Tune(overrides)
         CRABKING_CLAW_RUN_SPEED = 4,
         CRABKING_CLAW_RESPAWN_DELAY = 30,-- time each claw must regen for before being spawnable
         CRABKING_CLAW_PLAYER_DAMAGE = 40,
+        CRABKING_CLAW_DAMAGE_BOOST = 10,
         CRABKING_CLAW_REGEN_DELAY = 5,  -- time between regening claws while healing
         CRABKING_BASE_CLAWS = 5,
         CRABKING_BASE_CANNONS = 4,

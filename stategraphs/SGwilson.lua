@@ -1470,7 +1470,14 @@ local events =
                 inst.sg:GoToState("acting_talk")
             end
         elseif inst.sg:HasStateTag("idle") and not inst.sg:HasStateTag("notalking") then
-			if not inst:HasTag("mime") then
+			if data.sgparam and data.sgparam.closeinspect and
+				not (	inst.components.rider:IsRiding() or
+						inst.components.inventory:IsHeavyLifting() or
+						inst:IsChannelCasting()
+					)
+			then
+				inst.sg:GoToState("closeinspect")
+			elseif not inst:HasTag("mime") then
 				inst.sg:GoToState("talk", data.noanim)
 			elseif not inst.components.inventory:IsHeavyLifting() then
 				--Don't do it even if mounted!
@@ -1480,6 +1487,17 @@ local events =
 			inst.sg.mem.queuetalk_timeout = data.duration + GetTime()
 		end
     end),
+
+	EventHandler("silentcloseinspect", function(inst)
+		if inst.sg:HasStateTag("idle") and not inst.sg:HasStateTag("notalking") and
+			not (	inst.components.rider:IsRiding() or
+					inst.components.inventory:IsHeavyLifting() or
+					inst:IsChannelCasting()
+				)
+		then
+			inst.sg:GoToState("closeinspect", true)
+		end
+	end),
 
     EventHandler("powerup_wurt",
         function(inst)
@@ -5919,6 +5937,32 @@ local states =
 
         onexit = StopTalkSound,
     },
+
+	State{
+		name = "closeinspect",
+		tags = { "idle", "talking" },
+
+		onenter = function(inst, silent)
+			inst.AnimState:PlayAnimation("closeinspect_pre")
+			inst.AnimState:PushAnimation("closeinspect_loop")
+			if not silent then
+				DoTalkSound(inst)
+			end
+			inst.sg:SetTimeout(2)
+		end,
+
+		ontimeout = function(inst)
+			inst.AnimState:PlayAnimation("closeinspect_pst")
+			inst.sg:GoToState("idle", true)
+		end,
+
+		events =
+		{
+			EventHandler("donetalking", StopTalkSound),
+		},
+
+		onexit = StopTalkSound,
+	},
 
     -- Same as above, but intended for use during stageplays, so it eschews the "idle" tag,
     -- and goes to "acting_idle" when it finishes instead.

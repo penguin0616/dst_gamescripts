@@ -141,6 +141,7 @@ local function BuildSkillsData(SkillTreeFns)
             connects = {
                 "winona_gadget_recharge",
             },
+            defaultfocus = true,
         },
         winona_gadget_recharge = {
             title = STRINGS.SKILLTREE.WINONA.WINONA_GADGET_RECHARGE_TITLE,
@@ -173,6 +174,9 @@ local function BuildSkillsData(SkillTreeFns)
                 "winona_catapult_speed_1",
                 "winona_catapult_aoe_1",
                 "winona_battery_efficiency_1",
+            },
+            forced_focus = {
+                down = "winona_spotlight_heated",
             },
         },
         -- Mid shelf.
@@ -265,6 +269,9 @@ local function BuildSkillsData(SkillTreeFns)
             pos = {ORIGIN_MID_SHELF_X + 200, ORIGIN_MID_SHELF_Y + 0},
             group = "midshelf",
             tags = {"midshelf"},
+            forced_focus = {
+                down = "winona_battery_idledrain",
+            },
         },
         winona_portable_structures_lock = {
             desc = STRINGS.SKILLTREE.WINONA.WINONA_PORTABLE_STRUCTURES_LOCK_DESC,
@@ -340,6 +347,9 @@ local function BuildSkillsData(SkillTreeFns)
             pos = {ORIGIN_SHADOW_SHELF_X + 0, ORIGIN_SHADOW_SHELF_Y + SHELF_SKILL_HEIGHT},
             group = "charlie",
             tags = {"charlie"},
+            forced_focus = {
+                left = "winona_charlie_2",
+            },
         },
         winona_shadow_3_lock = {
             desc = STRINGS.SKILLTREE.WINONA.WINONA_SHADOW_3_LOCK_DESC,
@@ -404,6 +414,9 @@ local function BuildSkillsData(SkillTreeFns)
                 "winona_charlie_2_lock",
             },
             button_decorations = WINONA_DECOR_CHARLIE,
+            forced_focus = {
+                right = "winona_shadow_2",
+            },
         },
         -- Lunar.
         winona_lunar_1 = {
@@ -426,6 +439,9 @@ local function BuildSkillsData(SkillTreeFns)
             tags = {"wagstaff"},
             connects = {
                 "winona_lunar_3",
+            },
+            forced_focus = {
+                right = "winona_wagstaff_2",
             },
         },
         winona_lunar_3_lock = {
@@ -483,6 +499,9 @@ local function BuildSkillsData(SkillTreeFns)
                 "winona_wagstaff_2_lock",
             },
             button_decorations = WINONA_DECOR_WAGSTAFF,
+            forced_focus = {
+                left = "winona_lunar_2",
+            },
         },
     }
 

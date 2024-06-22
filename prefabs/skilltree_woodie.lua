@@ -405,6 +405,7 @@ local function BuildSkillsData(SkillTreeFns)
             connects = {
                 "woodie_human_quickpicker_2",
             },
+            defaultfocus = true,
         },
 
         -- Collect stuff faster.

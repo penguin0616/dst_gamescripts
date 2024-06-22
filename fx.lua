@@ -2541,6 +2541,27 @@ local fx =
         anim = "used",
     },
     {
+        name = "mortarball_used",
+        bank = "cannonball_rock",
+        build = "cannonball_rock",
+        anim = "used",
+        sound = "meta4/mortars/cannonball_hit",
+    },
+    {
+        name = "mortarball_used_wood",
+        bank = "cannonball_rock",
+        build = "cannonball_rock",
+        anim = "used",
+        sound = "meta4/mortars/cannonball_hit_wood",
+    },
+    {
+        name = "mortarball_used_ice",
+        bank = "cannonball_rock",
+        build = "cannonball_rock",
+        anim = "used",
+        sound = "meta4/mortars/cannonball_hit_ice",
+    },
+    {
         name = "monkey_cursed_pre_fx",
         bank = "monkey_change_fx",
         build = "monkey_change_fx",
@@ -2954,38 +2975,7 @@ local fx =
             end)
         end,
     },
-    {
-        name = "fx_ice_crackle",
-        bank = "fx_dock_crackleandpop",
-        build = "fx_dock_crackleandpop",
-        anim = "crackle",
-        sound = "turnoftides/common/together/boat/creak",
-        fn = function(inst)
-            inst.entity:AddSoundEmitter()
-            inst.SoundEmitter:PlaySoundWithParams("dontstarve_DLC001/common/iceboulder_hit")
-            inst:DoTaskInTime(2*FRAMES, function(i)
-                i.SoundEmitter:PlaySoundWithParams("dontstarve_DLC001/common/iceboulder_hit", {intensity=0.1})
-            end)
-            inst:DoTaskInTime(14*FRAMES, function(i)
-                i.SoundEmitter:PlaySoundWithParams("dontstarve_DLC001/common/iceboulder_hit", {intensity=0.1})
-            end)
-            inst:DoTaskInTime(25*FRAMES, function(i)
-                i.SoundEmitter:PlaySoundWithParams("dontstarve_DLC001/common/iceboulder_hit", {intensity=0.1})
-            end)
-            inst:DoTaskInTime(29*FRAMES, function(i)
-                i.SoundEmitter:PlaySound("dontstarve_DLC001/common/iceboulder_hit")
-            end)
-            inst:DoTaskInTime(33*FRAMES, function(i)
-                i.SoundEmitter:PlaySoundWithParams("dontstarve_DLC001/common/iceboulder_hit", {intensity=0.2})
-            end)
-            inst:DoTaskInTime(45*FRAMES, function(i)
-                i.SoundEmitter:PlaySoundWithParams("dontstarve_DLC001/common/iceboulder_hit", {intensity=0.2})
-            end)
-            inst:DoTaskInTime(52*FRAMES, function(i)
-                i.SoundEmitter:PlaySoundWithParams("dontstarve_DLC001/common/iceboulder_hit", {intensity=0.3})
-            end)
-        end,
-    },
+
     {
         name = "fx_ice_pop",
         bank = "fx_dock_crackleandpop",
@@ -3306,6 +3296,38 @@ local fx =
             end
         end,
     },
+
+    {
+        name = "fx_ice_crackle",
+        bank = "fx_ice_crackleandpop",
+        build = "fx_ice_crackleandpop",
+        anim = "crackle",
+        fn = function(inst)
+            inst.entity:AddSoundEmitter()
+            inst.SoundEmitter:PlaySoundWithParams("dontstarve_DLC001/common/iceboulder_hit")
+            inst:DoTaskInTime(2*FRAMES, function(i)
+                i.SoundEmitter:PlaySoundWithParams("dontstarve_DLC001/common/iceboulder_hit", {intensity=0.1})
+            end)
+            inst:DoTaskInTime(14*FRAMES, function(i)
+                i.SoundEmitter:PlaySoundWithParams("dontstarve_DLC001/common/iceboulder_hit", {intensity=0.1})
+            end)
+            inst:DoTaskInTime(25*FRAMES, function(i)
+                i.SoundEmitter:PlaySoundWithParams("dontstarve_DLC001/common/iceboulder_hit", {intensity=0.1})
+            end)
+            inst:DoTaskInTime(29*FRAMES, function(i)
+                i.SoundEmitter:PlaySound("dontstarve_DLC001/common/iceboulder_hit")
+            end)
+            inst:DoTaskInTime(33*FRAMES, function(i)
+                i.SoundEmitter:PlaySoundWithParams("dontstarve_DLC001/common/iceboulder_hit", {intensity=0.2})
+            end)
+            inst:DoTaskInTime(45*FRAMES, function(i)
+                i.SoundEmitter:PlaySoundWithParams("dontstarve_DLC001/common/iceboulder_hit", {intensity=0.2})
+            end)
+            inst:DoTaskInTime(52*FRAMES, function(i)
+                i.SoundEmitter:PlaySoundWithParams("dontstarve_DLC001/common/iceboulder_hit", {intensity=0.3})
+            end)
+        end,
+    },    
 }
 
 for cratersteamindex = 1, 4 do

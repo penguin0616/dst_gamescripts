@@ -347,7 +347,9 @@ local function chop_down_tree(inst, chopper)
     inst:DoTaskInTime(.5, function() ShakeAllCameras(CAMERASHAKE.FULL, 0.25, 0.03, 0.6, inst, 6) end)
 end
 
-local OCEANVINES_MUST = {"oceanvine"}
+local OCEANVINES_MUST_TAGS = {"oceanvine"}
+local SHADECANOPY_ONEOF_TAGS = { "shadecanopy", "shadecanopysmall" }
+
 local function OnRemoveEntity(inst)
     if inst.roots then
         inst.roots:Remove()
@@ -364,11 +366,46 @@ local function OnRemoveEntity(inst)
             end
         end
     end
-    local point = inst:GetPosition()
-    local oceanvines = TheSim:FindEntities(point.x, point.y, point.z, MAX+1, OCEANVINES_MUST)
-    if #oceanvines > 0 then
-        for i, ent in ipairs(oceanvines) do
-            ent.fall(ent)
+
+    local x, y, z = inst.Transform:GetWorldPosition()
+    local oceanvines = TheSim:FindEntities(x, 0, z, MAX+1, OCEANVINES_MUST_TAGS)
+
+    local oceanvines_count = #oceanvines
+
+    if oceanvines_count <= 0 then
+        inst._hascanopy:set(false)
+        
+        return
+    end
+
+    -- First remove all vines that are not in range of other oceantree_pillars.
+
+    for i=oceanvines_count, 1, -1 do
+        local ent = oceanvines[i]
+
+        if ent ~= nil then
+            x, y, z = ent.Transform:GetWorldPosition()
+
+            local should_fall = TheSim:CountEntities(x, 0, z, MAX-5, nil, nil, SHADECANOPY_ONEOF_TAGS) <= 1 -- 1 because of us.
+            
+            if should_fall then
+                ent.fall(ent)
+                table.remove(oceanvines, i)
+            end
+        end
+    end
+
+    -- Then check if we've removed at least 3, if not, remove them.
+
+    local num_to_remove = 3 - (oceanvines_count - #oceanvines)
+
+    if num_to_remove > 0 then
+        for i=num_to_remove, 1, -1 do
+            local ent = oceanvines[i]
+
+            if ent ~= nil then
+                ent.fall(ent)
+            end
         end
     end
 

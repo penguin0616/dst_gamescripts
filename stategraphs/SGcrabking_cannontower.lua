@@ -10,19 +10,27 @@ local actionhandlers =
 local events =
 {
     EventHandler("ck_loadcannon", function(inst, data)
-        inst.sg:GoToState("load")
+        if not inst.components.health:IsDead() then
+            inst.sg:GoToState("load")
+        end
     end),
 
     EventHandler("ck_shootcannon", function(inst, data)
-        inst.sg:GoToState("shoot")
+        if not inst.components.health:IsDead() then
+            inst.sg:GoToState("shoot")
+        end
     end),
 
     EventHandler("ck_spawn", function(inst, data)
-        inst.sg:GoToState("spawn")
+        if not inst.components.health:IsDead() then
+            inst.sg:GoToState("spawn")
+        end
     end),
 
     EventHandler("ck_breach", function(inst, data)
-        inst.sg:GoToState("breach_pre")
+        if not inst.components.health:IsDead() then
+            inst.sg:GoToState("breach_pre")
+        end
     end),
 
     EventHandler("attacked", function(inst)
@@ -115,6 +123,8 @@ local states =
         onenter = function(inst)
             inst.AnimState:PlayAnimation("loading_loop")
 
+            inst.SoundEmitter:PlaySound("meta4/mortars/loading")
+            
             inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
         end,
 
@@ -245,6 +255,10 @@ local states =
         ontimeout = function(inst)
             inst:Remove()
         end,
+
+        onexit = function(inst)
+            inst:Remove()
+        end,
     },
 
     State{
@@ -293,6 +307,10 @@ local states =
         end,
 
         ontimeout = function(inst)
+            inst:Remove()
+        end,
+
+        onexit = function(inst)
             inst:Remove()
         end,
     },

@@ -14,6 +14,8 @@ local assets =
     Asset("ANIM", "anim/ds_pig_elite.zip"),
 
     Asset("ANIM", "anim/merm_lunar_eye_build.zip"),
+    Asset("ANIM", "anim/merm_guard_lunar_eye_build.zip"),
+    Asset("ANIM", "anim/merm_guard_small_lunar_eye_build.zip"),
 
     Asset("ANIM", "anim/merm_lunar_build.zip"),
     Asset("ANIM", "anim/merm_guard_lunar_build.zip"),
@@ -26,11 +28,6 @@ local assets =
     Asset("ANIM", "anim/merm_actions_skills.zip"),
 
     Asset("SOUND", "sound/merm.fsb"),
-}
-
-local assetsfx =
-{
-    Asset("ANIM", "anim/merm_lunar_spike_fx.zip"),
 }
 
 local prefabs =
@@ -103,10 +100,11 @@ local LOW_HEALTH_PERCENT = 0.2
 local function MermDamageCalculator(inst)
     local hasking = TheWorld.components.mermkingmanager ~= nil and TheWorld.components.mermkingmanager:HasKingAnywhere()
 
-    local damage = hasking and TUNING.MERM_DAMAGE_KINGBONUS or TUNING.MERM_DAMAGE
-
+    local damage
     if inst:HasTag("guard") then
-        damage = hasking and TUNING.MERM_GUARD_DAMAGE or TUNING.PUNY_MERM_DAMAGE
+        damage = (hasking and TUNING.MERM_GUARD_DAMAGE) or TUNING.PUNY_MERM_DAMAGE
+    else
+        damage = (hasking and TUNING.MERM_DAMAGE_KINGBONUS) or TUNING.MERM_DAMAGE
     end
 
     if inst.components.planardamage ~= nil then
@@ -227,8 +225,8 @@ local function OnAttackDodged(inst, attacker)
     end
 end
 
-local MERM_TAGS = { "merm" }
-local MERM_IGNORE_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO", "player" }
+local MERM_TAGS = { "_health", "merm" }
+local MERM_IGNORE_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO", "player", "shadowminion" }
 local function MermSort(a, b) -- Better than bubble!
     local ap = a.components.follower:GetLoyaltyPercent()
     local bp = b.components.follower:GetLoyaltyPercent()
@@ -240,12 +238,12 @@ local function MermSort(a, b) -- Better than bubble!
 end
 local function GetOtherMerms(inst, radius, maxcount)
     local x, y, z = inst.Transform:GetWorldPosition()
-    local merms = TheSim:FindEntities(x, y, z, radius, nil, MERM_IGNORE_TAGS, MERM_TAGS)
+    local merms = TheSim:FindEntities(x, y, z, radius, MERM_TAGS, MERM_IGNORE_TAGS)
     local merms_highpriority = {}
     local merms_lowpriority = {}
 
     for _, merm in ipairs(merms) do
-        if merm ~= inst and merm:IsValid() and not merm.components.health:IsDead() then
+        if merm ~= inst and not merm.components.health:IsDead() then
             local follower = merm.components.follower
             if follower then
                 -- No leader or about to lose loyalty is high priority.
@@ -282,6 +280,74 @@ local function GetOtherMerms(inst, radius, maxcount)
 
     return merms_valid
 end
+
+local function dohiremerms(inst, giver, item)
+    local mermkingmanager = TheWorld.components.mermkingmanager
+    local isguard = inst:HasTag("mermguard")
+    local loyalty_max = (isguard and TUNING.MERM_GUARD_LOYALTY_MAXTIME) or TUNING.MERM_LOYALTY_MAXTIME      
+    local loyalty_radius = (isguard and TUNING.MERM_GUARD_FOLLOWER_RADIUS) or TUNING.MERM_FOLLOWER_RADIUS
+    local loyalty_count = (isguard and TUNING.MERM_GUARD_FOLLOWER_COUNT) or TUNING.MERM_FOLLOWER_COUNT
+    local loyalty_per_hunger = (isguard and TUNING.MERM_GUARD_LOYALTY_PER_HUNGER) or TUNING.MERM_LOYALTY_PER_HUNGER
+
+    local loyalty_time = item.components.edible:GetHunger() * loyalty_per_hunger
+
+
+-- King makes everything better! Keep it up!
+    local hasking = (mermkingmanager and mermkingmanager:HasKingAnywhere()) or false
+    if hasking then
+        loyalty_max = loyalty_max + TUNING.MERM_LOYALTY_MAXTIME_KINGBONUS
+        loyalty_per_hunger = loyalty_per_hunger + TUNING.MERM_LOYALTY_PER_HUNGER_KINGBONUS
+    end
+
+    local loyalty_time = item.components.edible:GetHunger() * loyalty_per_hunger
+
+    local hiremoremerms = false
+    if inst.components.combat:TargetIs(giver) then
+        inst.components.combat:SetTarget(nil)
+    elseif giver.components.leader ~= nil and inst.components.follower ~= nil and
+            not (mermkingmanager and mermkingmanager:IsCandidate(inst)) then
+        giver:PushEvent("makefriend")
+        giver.components.leader:AddFollower(inst)
+
+        inst.components.follower.maxfollowtime = loyalty_max
+        inst.components.follower:AddLoyaltyTime(loyalty_time)
+
+        if item:HasTag("fish") then
+            DoCheer(inst)
+        end
+
+        hiremoremerms = true
+    end
+
+    if hiremoremerms then
+        local othermerms = GetOtherMerms(inst, loyalty_radius, loyalty_count) -- Only other merms, capped by count, and prioritized by necessity.
+        for _, othermerm in ipairs(othermerms) do
+            local effectdone = true
+
+            if othermerm.components.combat.target == giver then
+                othermerm.components.combat:SetTarget(nil)
+            elseif giver.components.leader ~= nil and othermerm.components.follower ~= nil and
+                    not (mermkingmanager and mermkingmanager:IsCandidate(inst)) then
+                -- "makefriend" event fires above no matter what do not play it again here.
+                giver.components.leader:AddFollower(othermerm)
+
+                -- Intentional use of cached variables here to make feeding guards better than regulars.
+                othermerm.components.follower.maxfollowtime = loyalty_max
+                othermerm.components.follower:AddLoyaltyTime(loyalty_time)
+            else
+                effectdone = false
+            end
+
+            if effectdone then
+                if othermerm.components.sleeper and othermerm.components.sleeper:IsAsleep() then
+                    othermerm.components.sleeper:WakeUp()
+                elseif othermerm.DoCheer then
+                    othermerm:DoCheer()
+                end
+            end
+        end
+    end
+end    
 
 local function IsAbleToAccept(inst, item, giver)
     if inst.components.health ~= nil and inst.components.health:IsDead() then
@@ -342,70 +408,7 @@ local function OnGetItemFromPlayer(inst, giver, item)
     local mermkingmanager = TheWorld.components.mermkingmanager
 
     if item.components.edible ~= nil then
-        -- It is better to feed guards than regulars to maintain loyalty!
-        -- This will increase loyalty time and bonuses per hunger when feeding a guard.
-        local isguard = inst:HasTag("mermguard")
-        local loyalty_max = (isguard and TUNING.MERM_GUARD_LOYALTY_MAXTIME) or TUNING.MERM_LOYALTY_MAXTIME
-        local loyalty_per_hunger = (isguard and TUNING.MERM_GUARD_LOYALTY_PER_HUNGER) or TUNING.MERM_LOYALTY_PER_HUNGER
-
-        local loyalty_radius = (isguard and TUNING.MERM_GUARD_FOLLOWER_RADIUS) or TUNING.MERM_FOLLOWER_RADIUS
-        local loyalty_count = (isguard and TUNING.MERM_GUARD_FOLLOWER_COUNT) or TUNING.MERM_FOLLOWER_COUNT
-
-        -- King makes everything better! Keep it up!
-        local hasking = (mermkingmanager and mermkingmanager:HasKingAnywhere()) or false
-        if hasking then
-            loyalty_max = loyalty_max + TUNING.MERM_LOYALTY_MAXTIME_KINGBONUS
-            loyalty_per_hunger = loyalty_per_hunger + TUNING.MERM_LOYALTY_PER_HUNGER_KINGBONUS
-        end
-
-        local loyalty_time = item.components.edible:GetHunger() * loyalty_per_hunger
-
-        local hiremoremerms = false
-        if inst.components.combat:TargetIs(giver) then
-            inst.components.combat:SetTarget(nil)
-        elseif giver.components.leader ~= nil and inst.components.follower ~= nil and
-                not (mermkingmanager and mermkingmanager:IsCandidate(inst)) then
-            giver:PushEvent("makefriend")
-            giver.components.leader:AddFollower(inst)
-
-            inst.components.follower.maxfollowtime = loyalty_max
-            inst.components.follower:AddLoyaltyTime(loyalty_time)
-
-            if item:HasTag("fish") then
-                DoCheer(inst)
-            end
-
-            hiremoremerms = true
-        end
-
-        if hiremoremerms then
-            local othermerms = GetOtherMerms(inst, loyalty_radius, loyalty_count) -- Only other merms, capped by count, and prioritized by necessity.
-            for _, othermerm in ipairs(othermerms) do
-                local effectdone = true
-
-                if othermerm.components.combat.target == giver then
-                    othermerm.components.combat:SetTarget(nil)
-                elseif giver.components.leader ~= nil and othermerm.components.follower ~= nil and
-                        not (mermkingmanager and mermkingmanager:IsCandidate(inst)) then
-                    -- "makefriend" event fires above no matter what do not play it again here.
-                    giver.components.leader:AddFollower(othermerm)
-
-                    -- Intentional use of cached variables here to make feeding guards better than regulars.
-                    othermerm.components.follower.maxfollowtime = loyalty_max
-                    othermerm.components.follower:AddLoyaltyTime(loyalty_time)
-                else
-                    effectdone = false
-                end
-
-                if effectdone then
-                    if othermerm.components.sleeper and othermerm.components.sleeper:IsAsleep() then
-                        othermerm.components.sleeper:WakeUp()
-                    elseif othermerm.DoCheer then
-                        othermerm:DoCheer()
-                    end
-                end
-            end
-        end
+         dohiremerms(inst, giver, item)
     end
 
 
@@ -443,6 +446,9 @@ local function RoyalUpgrade(inst)
     inst.components.health:SetMaxHealth(TUNING.MERM_HEALTH_KINGBONUS)
     inst.components.combat:SetDefaultDamage(inst:MermDamageCalculator())
     inst.Transform:SetScale(1.05, 1.05, 1.05)
+    if inst.updateeyebuild then
+        inst:updateeyebuild()
+    end
 end
 
 local function RoyalDowngrade(inst)
@@ -453,6 +459,10 @@ local function RoyalDowngrade(inst)
     inst.components.health:SetMaxHealth(TUNING.MERM_HEALTH)
     inst.components.combat:SetDefaultDamage(inst:MermDamageCalculator())
     inst.Transform:SetScale(1, 1, 1)
+
+    if inst.updateeyebuild then
+        inst:updateeyebuild()
+    end    
 end
 
 local function RoyalGuardUpgrade(inst)
@@ -470,6 +480,10 @@ local function RoyalGuardUpgrade(inst)
 
     inst.AnimState:SetBuild(build)
     inst.Transform:SetScale(1, 1, 1)
+
+    if inst.updateeyebuild then
+        inst:updateeyebuild()
+    end      
 end
 
 local function RoyalGuardDowngrade(inst)
@@ -487,6 +501,10 @@ local function RoyalGuardDowngrade(inst)
 
     inst.AnimState:SetBuild(build)
     inst.Transform:SetScale(0.9, 0.9, 0.9)
+
+    if inst.updateeyebuild then
+        inst:updateeyebuild()
+    end      
 end
 
 local function ResolveMermChatter(inst, strid, strtbl)
@@ -786,6 +804,25 @@ local function CreateFlameFx(parent)
     return inst
 end
 
+local function updateeyebuild(inst)
+    if inst:HasDebuff("wurt_merm_planar") then
+        if inst:HasTag("mermguard") then
+            local hasking = TheWorld.components.mermkingmanager ~= nil and TheWorld.components.mermkingmanager:HasKingAnywhere()
+            if hasking then
+                inst.AnimState:AddOverrideBuild("merm_guard_lunar_eye_build")
+            else
+                inst.AnimState:AddOverrideBuild("merm_guard_small_lunar_eye_build")
+            end
+        else
+            inst.AnimState:AddOverrideBuild("merm_lunar_eye_build")
+        end
+    else
+        inst.AnimState:ClearOverrideBuild("merm_guard_lunar_eye_build")
+        inst.AnimState:ClearOverrideBuild("merm_guard_small_lunar_eye_build")
+        inst.AnimState:ClearOverrideBuild("merm_lunar_eye_build")
+    end
+end
+
 local function MakeMerm(name, assets, prefabs, common_postinit, master_postinit,data)
     local function fn()
         local inst = CreateEntity()
@@ -812,6 +849,7 @@ local function MakeMerm(name, assets, prefabs, common_postinit, master_postinit,
         inst:AddTag("character")
         inst:AddTag("merm")
         inst:AddTag("wet")
+        inst:AddTag("merm_npc")
 
         local talker = inst:AddComponent("talker")
         talker.fontsize = 35
@@ -901,6 +939,7 @@ local function MakeMerm(name, assets, prefabs, common_postinit, master_postinit,
         inst.MermDamageCalculator = MermDamageCalculator
         inst.TestForShadowDeath = TestForShadowDeath
         inst.DoThorns = DoThorns
+        inst.dohiremerms = dohiremerms
 
         if not data or not data.unliving then
             living_merm_common_master(inst) 
@@ -1148,6 +1187,13 @@ local function planarbuffed_changed(inst)
     end
 end
 
+local function ShadowMerm_OnLoseLoyalty(inst, data)
+    local leader = data.leader
+    if not inst.components.health:IsDead() then
+        inst.sg:GoToState("shadow_loyaltyover")
+    end
+end
+
 local function CLIENT_ShadowMerm_OnEquipsChanged(inst)
     if inst.highlightchildren ~= nil then
         for _, child in ipairs(inst.highlightchildren) do
@@ -1192,16 +1238,20 @@ local function shadow_merm_master(inst)
 
     inst:RemoveComponent("sleeper")
 
-    inst.components.locomotor:SetTriggersCreep(false)
-    inst.components.locomotor.pathcaps = { ignorecreep = true }
-   
-    inst.components.combat:SetAttackPeriod(TUNING.MERM_ATTACK_PERIOD)
-    inst.components.combat:SetRetargetFunction(1, RetargetFn)
-    inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
+    --
+    local locomotor = inst.components.locomotor
+    locomotor:SetTriggersCreep(false)
+    locomotor.pathcaps = { ignorecreep = true }
+
+    --
+    local combat = inst.components.combat
+    combat:SetAttackPeriod(TUNING.MERM_ATTACK_PERIOD)
+    combat:SetRetargetFunction(1, RetargetFn)
+    combat:SetKeepTargetFunction(KeepTargetFn)
 
     inst.components.health:SetMaxHealth(TUNING.MERM_HEALTH)
-    inst.components.combat:SetDefaultDamage(inst:MermDamageCalculator())
-    inst.components.combat:SetAttackPeriod(TUNING.MERM_ATTACK_PERIOD)
+    combat:SetDefaultDamage(inst:MermDamageCalculator())
+    combat:SetAttackPeriod(TUNING.MERM_ATTACK_PERIOD)
 
     inst:AddComponent("planardamage")
     inst.components.planardamage:SetBaseDamage(0)
@@ -1210,8 +1260,10 @@ local function shadow_merm_master(inst)
 
     inst.components.lootdropper:SetLoot(merm_shadow_loot)
 
-    inst.components.follower.maxfollowtime = TUNING.MERM_LOYALTY_MAXTIME
+    local follower = inst.components.follower
+    follower.maxfollowtime = TUNING.MERM_LOYALTY_MAXTIME
 
+    inst:ListenForEvent("loseloyalty", ShadowMerm_OnLoseLoyalty) -- NOTE: This shouldn't happen, and is a failsafe.
     inst:ListenForEvent("equip", ShadowMerm_OnItemEquipped)
 end
 
@@ -1265,6 +1317,7 @@ local function shadow_mermguard_master(inst)
 
     inst.components.follower.maxfollowtime = TUNING.MERM_LOYALTY_MAXTIME
 
+    inst:ListenForEvent("loseloyalty", ShadowMerm_OnLoseLoyalty) -- NOTE: This shouldn't happen, and is a failsafe.
     inst:ListenForEvent("equip", ShadowMerm_OnItemEquipped)
 end
 
@@ -1304,6 +1357,8 @@ local function lunar_merm_master(inst)
     
     inst.components.lootdropper:SetChanceLootTable('merm_lunar_loot')
 
+    inst.updateeyebuild = updateeyebuild
+
     inst.components.follower.maxfollowtime = TUNING.MERM_LOYALTY_MAXTIME
 end
 
@@ -1340,154 +1395,14 @@ local function lunar_mermguard_master(inst)
     
     inst.components.lootdropper:SetChanceLootTable('merm_lunar_loot')
 
+    inst.updateeyebuild = updateeyebuild
+
     inst.components.follower.maxfollowtime = TUNING.MERM_LOYALTY_MAXTIME
 end
 
------------------------------------------------------------------------------
-
-local MAXRANGE = 3
-local NO_TAGS_NO_PLAYERS =  { "merm", "INLIMBO", "notarget", "noattack", "flight", "invisible", "wall", "player", "companion" }
-local NO_TAGS            =  { "merm", "INLIMBO", "notarget", "noattack", "flight", "invisible", "wall", "playerghost" }
-local COMBAT_TARGET_TAGS =  { "_combat" }
-
-local function OnUpdateThorns(inst)
-    inst.range = inst.range + .75
-
-    local x, y, z = inst.Transform:GetWorldPosition()
-    for i, v in ipairs(TheSim:FindEntities(x, y, z, inst.range + 3, COMBAT_TARGET_TAGS, inst.canhitplayers and NO_TAGS or NO_TAGS_NO_PLAYERS)) do
-        if not inst.ignore[v] and
-            v:IsValid() and
-            v.entity:IsVisible() and
-            v.components.combat ~= nil and
-            not v:HasTag("merm")
-        then
-            local range = inst.range + v:GetPhysicsRadius(0)
-
-            if v:GetDistanceSqToPoint(x, y, z) < range * range then
-                if inst.owner ~= nil and not inst.owner:IsValid() then
-                    inst.owner = nil
-                end
-                if inst.owner ~= nil then
-                    local leader = inst.owner.components.follower and inst.owner.components.follower.leader
-                    if inst.owner.components.combat ~= nil and
-                        inst.owner.components.combat:CanTarget(v) and
-                        not inst.owner.components.combat:IsAlly(v) and
-                        (not leader or not leader.components.combat:IsAlly(v))
-                    then
-                        inst.ignore[v] = true
-                        v.components.combat:GetAttacked(v.components.follower and v.components.follower:GetLeader() == inst.owner and inst or inst.owner, inst.damage, nil, nil, inst.spdmg)
-                        --V2C: wisecracks make more sense for being pricked by picking
-                        --v:PushEvent("thorns")
-                    end
-                elseif v.components.combat:CanBeAttacked() then
-                    -- NOTES(JBK): inst.owner is nil here so this is for non worn things like the bramble trap.
-                    local isally = false
-                    if not inst.canhitplayers then
-                        --non-pvp, so don't hit any player followers (unless they are targeting a player!)
-                        local leader = v.components.follower ~= nil and v.components.follower:GetLeader() or nil
-                        isally = leader ~= nil and leader:HasTag("player") and
-                            not (v.components.combat ~= nil and
-                                v.components.combat.target ~= nil and
-                                v.components.combat.target:HasTag("player"))
-                    end
-                    if not isally then
-                        inst.ignore[v] = true
-                        v.components.combat:GetAttacked(inst, inst.damage, nil, nil, inst.spdmg)
-                        --v:PushEvent("thorns")
-                    end
-                end
-            end
-        end
-    end
-
-    if inst.range >= MAXRANGE then
-        inst.components.updatelooper:RemoveOnUpdateFn(OnUpdateThorns)
-    end
-end
-
-local function SetFXOwner(inst, owner)
-    inst.Transform:SetPosition(owner.Transform:GetWorldPosition())
-    inst.owner = owner
-    inst.canhitplayers = not owner:HasTag("player") or TheNet:GetPVPEnabled()
-    inst.ignore[owner] = true
-
-    if owner:HasDebuff("wurt_merm_planar") then
-        inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
-    end
-end
-
-local function MakeLunarMermThornsFx(name, anim, damage)
-    local function fxfn()
-        local inst = CreateEntity()
-
-        inst.entity:AddTransform()
-        inst.entity:AddAnimState()
-        inst.entity:AddNetwork()
-
-        inst:AddTag("FX")
-        inst:AddTag("thorny")
-
-        inst.Transform:SetFourFaced()
-
-        inst.AnimState:SetBank("merm_lunar_spike_fx")
-        inst.AnimState:SetBuild("merm_lunar_spike_fx")
-        inst.AnimState:PlayAnimation(anim)
-
-        inst.AnimState:SetFinalOffset(-1)
-
-        inst:SetPrefabNameOverride("bramblefx") -- Nice string for death announcement.
-
-        inst.entity:SetPristine()
-
-        if not TheWorld.ismastersim then
-            return inst
-        end
-
-        inst:AddComponent("updatelooper")
-        inst.components.updatelooper:AddOnUpdateFn(OnUpdateThorns)
-
-        inst:ListenForEvent("animover", inst.Remove)
-        inst.persists = false
-        inst.damage = TUNING[damage]
-        inst.range = .75
-        inst.ignore = {}
-        inst.canhitplayers = true
-        --inst.owner = nil
-
-        inst.SetFXOwner = SetFXOwner
-
-        return inst
-    end
-
-    return Prefab(name, fxfn, assetsfx)
-end
-
-    local function soilmarkerfn()
-        local inst = CreateEntity()
-
-        inst.entity:AddTransform()
-        inst.entity:AddNetwork()
-
-        inst:AddTag("NOBLOCK")
-        inst:AddTag("merm_soil_blocker")
-        
-        inst.entity:SetPristine()
-
-        if not TheWorld.ismastersim then
-            return inst
-        end
-
-        inst.persists = false
-        
-        inst:DoTaskInTime(5,function() inst:Remove() end)
-
-        return inst
-    end
 return MakeMerm("merm", assets, prefabs, common_common, common_master),
        MakeMerm("mermguard", assets, prefabs, guard_common, guard_master),
        MakeMerm("merm_shadow", assets, prefabs, shadow_merm_common, shadow_merm_master,{unliving=true}),
        MakeMerm("mermguard_shadow", assets, prefabs, shadow_mermguard_common, shadow_mermguard_master,{unliving=true}),
        MakeMerm("merm_lunar", assets, prefabs, lunar_merm_common, lunar_merm_master),
-       MakeMerm("mermguard_lunar", assets, prefabs, lunar_mermguard_common, lunar_mermguard_master),
-       MakeLunarMermThornsFx("lunarmerm_thorns_fx", "idle", "MERM_LUNAR_THORN_DAMAGE"),
-       Prefab("merm_soil_marker", soilmarkerfn)
+       MakeMerm("mermguard_lunar", assets, prefabs, lunar_mermguard_common, lunar_mermguard_master)

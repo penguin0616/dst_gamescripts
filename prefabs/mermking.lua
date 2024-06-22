@@ -275,11 +275,21 @@ local function HealthDelta(inst, data)
     end
 end
 
+local INVENTORYITEM_MUST_TAGS = {"_inventoryitem"}
+local INVENTORYITEM_NONE_TAGS = { "DECOR", "FX", "INLIMBO", "NOCLICK", "locomotor", }
+local INVENTORYITEM_RANGE = 1.5
 local function OnCreated(inst)
     inst.components.hunger:SetPercent(0.25)
     inst.lastpercent_hunger = 0.25
     inst.guards_available = 4
     inst.guards = {}
+
+    local ix, iy, iz = inst.Transform:GetWorldPosition()
+    local nearby_inventoryitems = TheSim:FindEntities(ix, 0, iz, INVENTORYITEM_RANGE, INVENTORYITEM_MUST_TAGS, INVENTORYITEM_NONE_TAGS)
+    for _, nearby_item in pairs(nearby_inventoryitems) do
+        Launch(nearby_item, inst, 1)
+        nearby_item.components.inventoryitem:SetLanded(false, true)
+    end
 end
 
 local function KeepTarget(inst, target)

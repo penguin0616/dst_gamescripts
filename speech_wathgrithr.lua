@@ -5315,8 +5315,8 @@ return{
         MERM_ARMORY_UPGRADED = "The armory of the fish beast warriors.",
         MERM_TOOLSHED = "'Tis a place for workers, not warriors.",
         MERM_TOOLSHED_UPGRADED = "'Tis a place for workers, not warriors.",
-        MERMARMORHAT = "A rough-hewn helm, but a helm nonetheless.",
-        MERMARMORUPGRADEDHAT = "A rough-hewn helm, but a helm nonetheless.",
+        MERMARMORHAT = "’Tis not for me",
+        MERMARMORUPGRADEDHAT = "’Tis not for me",
         MERM_TOOL = "I suppose 'tis better than using one's hands.",
         MERM_TOOL_UPGRADED = "I suppose 'tis better than using one's hands.",
 

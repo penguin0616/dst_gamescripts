@@ -603,6 +603,7 @@ STRINGS =
             EQUIPMENTSWAP = "Swap Clothes",
             SPIN = "Spin",
             CALM = "Calm",
+            GATHER_MERM = "Gather Merm",
         },
 
 		OPEN_CRAFTING =
@@ -12654,6 +12655,9 @@ STRINGS.UI =
             [9] = "Unknown",
             [10] = "Switch Controller",
             [11] = "Steam Deck",
+            [12] = "DualSense",
+            [13] = "Switch Controller (left)",
+            [14] = "Switch Controller (right)",
         },
 
         INPUTS =
@@ -13110,7 +13114,7 @@ STRINGS.UI =
                 -- Digital
                 "\238\136\134",-- 2 "L3",
                 "\238\136\137",-- 3 "R3",
-                "\238\136\132",-- 4 "Options (Start)",
+                "\238\135\190",-- 4 "Options (Start)",
                 "\238\136\143",-- 5 "DPad Up",
                 "\238\136\142",-- 6 "DPad Right"
                 "\238\136\140",-- 7 "DPad Down",
@@ -13127,7 +13131,7 @@ STRINGS.UI =
                 "",
                 "",
                 "",
-                "\238\136\133",--21 "Touchpad",
+                "\238\135\191",--21 "Touchpad",
 
                 -- Analog
                 "\238\136\146",--22 "Left Thumb Left",
@@ -13149,36 +13153,36 @@ STRINGS.UI =
                 [0] = "Unknown",
                 -- Digital
 				
-                "\238\128\136",--"Left Trigger",
-                "\238\128\139",--"Right Trigger",
-                "\238\128\132",--"Start",
-                "\238\128\133",--"Back",
-                "\238\128\128",--"Button A",
-                "\238\128\129",--"Button B",
-                "\238\128\130",--"Button X",
-                "\238\128\131",--"Button Y",
-                "\238\128\143",--"DPad Up"
-                "\238\128\140",--"DPad Down"
-                "\238\128\141",--"DPad Left",
-                "\238\128\142",--"DPad Right"
-                "\238\128\135",--"Left Bumper",
-                "\238\128\138",--"Right Bumper"
-                "\238\128\134",--"Left Stick"
-                "\238\128\137",--"Right Stick"
+                "\238\129\136",--"Left Trigger",
+                "\238\129\139",--"Right Trigger",
+                "\238\129\132",--"Start",
+                "\238\129\133",--"Back",
+                "\238\129\128",--"Button A",
+                "\238\129\129",--"Button B",
+                "\238\129\130",--"Button X",
+                "\238\129\131",--"Button Y",
+                "\238\129\143",--"DPad Up"
+                "\238\129\140",--"DPad Down"
+                "\238\129\141",--"DPad Left",
+                "\238\129\142",--"DPad Right"
+                "\238\129\135",--"Left Bumper",
+                "\238\129\138",--"Right Bumper"
+                "\238\129\134",--"Left Stick"
+                "\238\129\137",--"Right Stick"
 
                 -- Analog
-                "\238\128\146",--"Left Thumb Left",
-                "\238\128\147",--"Left Thumb Right",
-                "\238\128\145",--"Left Thumb Down",
-                "\238\128\144",--"Left Thumb Up",
-                "\238\128\150",--"Right Thumb Left",
-                "\238\128\151",--"Right Thumb Right",
-                "\238\128\149",--"Right Thumb Down",
-                "\238\128\148",--"Right Thumb Up",
-                "\238\128\136",--"Left Trigger",
-                "\238\128\136",--"Left Trigger",
-                "\238\128\139",--"Right Trigger",
-                "\238\128\139",--"Right Trigger",
+                "\238\129\146",--"Left Thumb Left",
+                "\238\129\147",--"Left Thumb Right",
+                "\238\129\145",--"Left Thumb Down",
+                "\238\129\144",--"Left Thumb Up",
+                "\238\129\150",--"Right Thumb Left",
+                "\238\129\151",--"Right Thumb Right",
+                "\238\129\149",--"Right Thumb Down",
+                "\238\129\148",--"Right Thumb Up",
+                "\238\129\136",--"Left Trigger",
+                "\238\129\136",--"Left Trigger",
+                "\238\129\139",--"Right Trigger",
+                "\238\129\139",--"Right Trigger",
             },
 			--DualSense on PS5 (PC is above in index 8, this one has the same icons but they've been reordered)
 			[14] =
@@ -15945,8 +15949,8 @@ STRINGS.SKILLTREE = {
         WURT_MOSQUITO_CRAFT_2_DESC = "Learn to craft Mosquito based items: Skeeter Bomb, Fertilizzzer and Blood Shot",
         WURT_MOSQUITO_CRAFT_3_DESC = "Master the use of the Mosquito based items.\n\nWith the help of Lil' Itchy, catch mosquitos right from the air.",
 
-        WURT_CIV_1_DESC = "Learn to craft the Communal Kelp Dish to entice faster Merm growth.",
-        WURT_CIV_1_2_DESC = "Learn to craft the Superior Communal Kelp Dish, it holds more kelp for even faster Merm growth.",
+        WURT_CIV_1_DESC = "Learn to craft the Communal Kelp Dish to entice faster Merm growth and to call in Merm for action.",
+        WURT_CIV_1_2_DESC = "Learn to craft the Superior Communal Kelp Dish, it holds more kelp for even faster Merm growth and calling in Merm for action.",
         WURT_CIV_2_DESC = "Learn to craft the Shoddy Tool Shed to equip your Merm workers with Shoddy Tools.",
         WURT_CIV_2_2_DESC = "Learn to craft the Slightly Less Shoddy Tool shed, it provides Slightly Less Shoddy Tools.",
         WURT_CIV_3_DESC = "Learn to craft the Armermry to equip your Loyal Merm Guards with Swamp Brawler Helmets.",
@@ -16567,10 +16571,14 @@ STRINGS.SCRAPBOOK = {
         MOSQUITOMUSK = "Containing \"essence de moustique\" making any holder seem friendly to wild mosquitos.",
         MOSQUITOBOMB = "Packed so tight with wriggling friends that the explosive release of bugs inflicts damage to targets nearby.",
         MOSQUITOMERMSALVE = "A useful healing device but only for merm, after all, the Mosquitos are mostly full of Merm blood to begin with.",
+
         MERM_ARMORY = "While stocked with Cut Grass and Logs, Guard Merm will grab a Swamp Brawler Helmet from it, reducing its stores.\n\nSwamp Brawler Helmets are a cheap way for a merm to get 50% protection from damage for a short while.",
         MERM_ARMORY_UPGRADED = "While stocked with Cut Grass and Logs, Guard Merm will grab a Swamp Warrior Helmet from it, reducing its stores.\n\nSwamp Warrior Helmets are a better design over their Brawler cousin, providing 70% resistance from damage for a longer period of time.",
         MERM_TOOLSHED = "While stocked with twigs and rocks, regular Merm will grab a Shoddy Tool from it, reducing its stores.\n\nShoddy tools will increase the amount of work a merm does for a short time.\n\nWith a shoddy tool, follower Merm will help chop trees, mine rocks, dig in a garden and Till soil.",
         MERM_TOOLSHED_UPGRADED = "While stocked with twigs and rocks, regular Merm will grab a Slightly Less Shoddy Tool from it, reducing its stores.\n\nSlightly Less Shoddy tools increase the amount of work a merm does a little more than their lesser sibling, the Shoddy Tool.\n\nWith a shoddy tool, follower Merm will help chop trees, mine rocks, dig in a garden and Till soil.",
+
+        OFFERING_POT = "Speeds up the respawning of Merm in Craftsmerm Houses, Merm Flort-ifications and Leaky Shacks.\n\nCan be used to call nearby merm to come eat the kelp and follow the Merm who summoned them.",        
+        OFFERING_POT_UPGRADED = "Speeds up the respawning of Merm in Craftsmerm Houses, Merm Flort-ifications and Leaky Shacks.\n\nCan be used to call nearby merm to come eat the kelp and follow the Merm who summoned them.",        
     },
 
     -- Full name: "{name} Scrapbook Page"

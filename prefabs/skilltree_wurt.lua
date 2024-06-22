@@ -178,6 +178,7 @@ local function BuildSkillsData(SkillTreeFns)
             connects = {
                 "wurt_mosquito_craft_2",
             },
+            defaultfocus = true,
         },
 
         -- Description.

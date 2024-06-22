@@ -48,7 +48,7 @@ local prefabs2 =
 	"winona_holotelebrella",
 }
 
-local function GetBiasedLoot(lootdropper, lookup)
+local function GetBiasedLoot(lootdropper, lookup, fallbacktorandomloot)
     local inst = lootdropper.inst
     local item = nil
     local owner = inst._inspectaclesowner
@@ -63,6 +63,8 @@ local function GetBiasedLoot(lootdropper, lookup)
             end
             if biasedloot[1] then
                 item = biasedloot[math.random(#biasedloot)]
+            elseif fallbacktorandomloot then
+                item = lootdropper:PickRandomLoot()
             elseif lookup[1] then
                 item = lookup[math.random(#lookup)].lootname
             end
@@ -78,7 +80,7 @@ end
 local BiasedLoot = {
 }
 local function OnLootSetup(lootdropper)
-    lootdropper.loot = GetBiasedLoot(lootdropper, BiasedLoot)
+    lootdropper.loot = GetBiasedLoot(lootdropper, BiasedLoot, false)
 end
 
 local BiasedLoot2 = {
@@ -86,7 +88,7 @@ local BiasedLoot2 = {
     {recipename = "winona_telebrella", lootname = "winona_holotelebrella",},
 }
 local function OnLootSetup2(lootdropper)
-    lootdropper.loot = GetBiasedLoot(lootdropper, BiasedLoot2)
+    lootdropper.loot = GetBiasedLoot(lootdropper, BiasedLoot2, true)
 end
 
 local LOOT_VERTICAL_OFFSET = 1.5 -- Vertical offset to make it appear out of the top better.
@@ -126,7 +128,7 @@ local function CreateAnim(build)
 	projectedeffects:SetIntensity(-1.0)
 	projectedeffects:SetOnDecayCallback(inst.Remove)
     
-    inst.SoundEmitter:PlaySound("meta4/hologram_device/hologram_lp", "hololoop")
+    inst.SoundEmitter:PlaySound("meta4/wires_minigame/hologram_idle_lp", "hololoop")
 
 	return inst
 end
@@ -143,7 +145,6 @@ end
 local function KillClientAnim(inst)
 	if inst._anim then
         inst._anim.SoundEmitter:KillSound("hololoop")
-        inst._anim.SoundEmitter:PlaySound("meta4/hologram_device/hologram_pst")
 		inst._anim:AddTag("FX")
 		inst._anim:AddTag("NOCLICK")
 		inst._anim.entity:SetCanSleep(false)
@@ -166,6 +167,10 @@ local function OnAnimState_Client(inst)
 			--spawned in repaired
 			inst._anim.AnimState:PlayAnimation("idle_fixed_loop", true)
 			inst._anim.components.projectedeffects:Construct()
+            if not inst._anim._fixed then
+                inst._anim._fixed = true
+                inst._anim.SoundEmitter:PlaySound("meta4/wires_minigame/machine_fixed_idle_LP", "fixed")
+            end
 		elseif inst._animstate:value() == ANIM_STATE["repair"] then
 			--users repaired (will auto open for loot fling after)
 			inst._anim.AnimState:PlayAnimation("repair")
@@ -177,6 +182,10 @@ local function OnAnimState_Client(inst)
 			inst._anim.AnimState:PushAnimation("open_loop")
 			inst._anim.components.projectedeffects:MakeOpaque()
 			inst._anim.components.projectedeffects:LockDecay(true)
+            if not inst._anim._fixed then
+                inst._anim._fixed = true
+                inst._anim.SoundEmitter:PlaySound("meta4/wires_minigame/machine_fixed_idle_LP", "fixed")
+            end
             if not inst._anim._chuffing then
                 inst._anim._chuffing = true
                 inst._anim.SoundEmitter:PlaySound("meta4/wires_minigame/item_dispense_lp", "chuffing")
@@ -186,6 +195,10 @@ local function OnAnimState_Client(inst)
 			inst._anim.AnimState:PlayAnimation("open_loop", true)
 			inst._anim.components.projectedeffects:MakeOpaque()
 			inst._anim.components.projectedeffects:LockDecay(true)
+            if not inst._anim._fixed then
+                inst._anim._fixed = true
+                inst._anim.SoundEmitter:PlaySound("meta4/wires_minigame/machine_fixed_idle_LP", "fixed")
+            end
             if not inst._anim._chuffing then
                 inst._anim._chuffing = true
                 inst._anim.SoundEmitter:PlaySound("meta4/wires_minigame/item_dispense_lp", "chuffing")
@@ -197,6 +210,10 @@ local function OnAnimState_Client(inst)
 			inst._anim.components.projectedeffects:MakeOpaque()
 			inst._anim.components.projectedeffects:SetDecayTime(1.5)
 			inst._anim.components.projectedeffects:LockDecay(false)
+            if inst._anim._fixed then
+                inst._anim._fixed = nil
+                inst._anim.SoundEmitter:KillSound("fixed")
+            end
             if inst._anim._chuffing then
                 inst._anim._chuffing = nil
                 inst._anim.SoundEmitter:KillSound("chuffing")
@@ -208,6 +225,10 @@ local function OnAnimState_Client(inst)
 			inst._anim.components.projectedeffects:MakeOpaque()
 			inst._anim.components.projectedeffects:SetDecayTime(0.5)
 			inst._anim.components.projectedeffects:LockDecay(false)
+            if inst._anim._fixed then
+                inst._anim._fixed = nil
+                inst._anim.SoundEmitter:KillSound("fixed")
+            end
             if inst._anim._chuffing then
                 inst._anim._chuffing = nil
                 inst._anim.SoundEmitter:KillSound("chuffing")

@@ -1,5 +1,7 @@
 require("stategraphs/commonstates")
 
+local WAVE_ATTACK_TIMEOUT_TIME = 8
+
 local function heal(inst)
     inst.components.health:DoDelta(TUNING.CRABKING_REGEN + math.floor(inst.gemcount.orange/2) * TUNING.CRABKING_REGEN_BUFF )
 end
@@ -16,7 +18,7 @@ end
 local function gemshine(inst, color)
     if not inst.components.timer:TimerExists("gem_shine") then
         inst:ShineSocketOfColor(color)
-        inst.components.timer:StartTimer("gem_shine",1.5)
+        inst.components.timer:StartTimer("gem_shine", 1.5)
     end
 end
 
@@ -39,10 +41,6 @@ local BOAT_MUST_TAGS = { "boat" }
 local function throwchunk(inst, prefab)
     local chunk = inst:SpawnChunk(prefab, inst:GetPosition())
     chunk.Physics:SetMotorVel(math.random(12,25), math.random(0,10), 0)
-end
-
-local function spawnwave(inst, time)
-    spawnwaves(inst, 12, 360, 3, nil, 0, 0, nil, true)  --2 1
 end
 
 local function GetTransitionState(inst)
@@ -71,7 +69,7 @@ local events =
     end),
     EventHandler("activate", function(inst, data)
         inst.sg:GoToState(data.isload and "idle" or "inert_pst")
-        
+
         if not data.isload then
             inst.components.timer:StartTimer("freeze_cooldown", 30)
             inst:SpawnCannons()
@@ -139,17 +137,19 @@ local states =
 
     State{
         name = "taunt",
-        tags = { "canrotate" },
+        tags = { "busy", "canrotate" },
 
         onenter = function(inst, pushanim)
             inst.AnimState:PlayAnimation("taunt_pre")
         end,
 
+        timeline=
+        {
+            TimeEvent(1*FRAMES, function(inst) inst.SoundEmitter:PlaySound("meta4/crabking/water_move") end),
+        },
+
         events =
         {
-            EventHandler("attacked", function(inst)
-                inst.sg:GoToState("hit_light")
-            end),            
             EventHandler("animover", function(inst)
                 inst.sg:GoToState("taunt_loop")
             end),
@@ -166,9 +166,7 @@ local states =
 
         timeline=
         {
-            TimeEvent(9*FRAMES, function(inst) inst.SoundEmitter:PlaySound("meta4/crabking/clack") end),
-            TimeEvent(11*FRAMES, function(inst) inst.SoundEmitter:PlaySound("meta4/crabking/clack") end),
-
+            TimeEvent(5*FRAMES, function(inst) inst.SoundEmitter:PlaySound("meta4/crabking/taunt") end),
         },
 
         onupdate = function(inst)
@@ -181,8 +179,9 @@ local states =
         {
             EventHandler("attacked", function(inst)
                 inst.components.timer:StopTimer("taunt")
-                inst.sg:GoToState("hit_light")
-            end),            
+                inst.sg:GoToState("taunt_pst")
+            end),
+
             EventHandler("animover", function(inst)
                 inst.sg:GoToState("taunt_loop")
             end),
@@ -191,11 +190,16 @@ local states =
 
     State{
         name = "taunt_pst",
-        tags = { "canrotate" },
+        tags = { "busy", "canrotate" },
 
         onenter = function(inst, pushanim)
             inst.AnimState:PlayAnimation("taunt_pst")
         end,
+
+        timeline=
+        {
+            TimeEvent(8*FRAMES, function(inst) inst.SoundEmitter:PlaySound("meta4/crabking/water_move") end),
+        },
 
         events =
         {
@@ -412,7 +416,9 @@ local states =
             inst.sg.statemem.elapsedtime = 0
             inst.sg.statemem.wavetime = wavetime
 
-            inst.components.timer:StartTimer("do_wave_push",4)
+            if not inst.components.timer:TimerExists("do_wave_push") then
+                inst.components.timer:StartTimer("do_wave_push", WAVE_ATTACK_TIMEOUT_TIME)
+            end
         end,
 
         onupdate = function(inst, dt)
@@ -420,7 +426,7 @@ local states =
             inst.sg.statemem.elapsedtime = inst.sg.statemem.elapsedtime +dt
 
             if not inst.sg.statemem.wavetime then
-                SpawnAttackWaves(inst:GetPosition(), nil, 2.2, 8, nil, 2, nil, 2, true)
+                SpawnAttackWaves(inst:GetPosition(), nil, 2.2, 8, nil, 2.25, nil, 2, true)
                 inst.sg.statemem.wavetime = 1
             else
                 inst.sg.statemem.wavetime = inst.sg.statemem.wavetime - dt
@@ -461,6 +467,7 @@ local states =
 
             if not inst.sg.statemem.keepcast then
                 inst.SoundEmitter:KillSound("crabmagic")
+                inst.components.timer:StopTimer("do_wave_push")
             end
         end,
 
@@ -622,7 +629,7 @@ local states =
         end,
 
         timeline=
-        {        
+        {
             TimeEvent(12*FRAMES, function(inst)
                 if inst.sg.statemem.rightarm then
                     inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/repair")
@@ -632,7 +639,7 @@ local states =
                 if not inst.sg.statemem.rightarm then
                     inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/repair")
                     end
-             end),         
+             end),
             TimeEvent(29*FRAMES, function(inst)
                 inst.sg:RemoveStateTag("loserock_window")
                 inst:ShineSocketOfColor("orange")
@@ -796,7 +803,7 @@ CommonStates.AddCombatStates(states,{
                 throwchunk(inst,"crabking_chip_low")
                 throwchunk(inst,"crabking_chip_low")
             end),
-        TimeEvent(75 * FRAMES, function(inst) spawnwave(inst) end),
+        TimeEvent(75 * FRAMES, function(inst) spawnwaves(inst, 8, 360, 3, nil, (inst.Physics and inst.Physics:GetRadius() - 1.5) or nil, 0, nil, true) end),
 
     },
     hittimeline ={

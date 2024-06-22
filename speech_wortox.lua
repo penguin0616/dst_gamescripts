@@ -5321,8 +5321,8 @@ return{
         MERM_ARMORY_UPGRADED = "A Merm millinery.",
         MERM_TOOLSHED = "Does appear we're not welcome here.",
         MERM_TOOLSHED_UPGRADED = "Does appear we're not welcome here.",
-        MERMARMORHAT = "I confirm that is a Merm hat.",
-        MERMARMORUPGRADEDHAT = "Made-to-measure for militant Merms.",
+        MERMARMORHAT = "It will find its home on a merm’s fishy dome.",
+        MERMARMORUPGRADEDHAT = "It will find its home on a merm’s fishy dome.",
         MERM_TOOL = "A Merm's multi-tool.",
         MERM_TOOL_UPGRADED = "Meticulously manufactured for Merms.",
 

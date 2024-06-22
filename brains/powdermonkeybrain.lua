@@ -530,8 +530,8 @@ local function hastargetboat(inst, arc)
         if #targetboats > 0 then
             for _, boat in ipairs(targetboats) do
                 if not inst.components.crewmember or boat ~= inst.components.crewmember.boat then
-                    for _, cannon in ipairs(cannons)do
-                        if not cannon.components.timer:TimerExists("monkey_biz") and cannon:GetDistanceSqToInst(boat) < 25*25 then
+                    for _, cannon in ipairs(cannons) do
+                        if cannon:IsValid() and not cannon.components.timer:TimerExists("monkey_biz") and cannon:GetDistanceSqToInst(boat) < 25*25 then
                             return {cannon=cannon,boat=boat}
                         end
                     end

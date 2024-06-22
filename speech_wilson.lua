@@ -79,6 +79,7 @@ return {
             MANNEQUIN_EQUIPSWAPFAILED = "I don't think he can wear this.",
             PILLOWFIGHT_NO_HANDPILLOW = "I need a pillow to fight with!",
             NOTMYBERNIE = "My stuffed toy isn't so scary.",
+            NOKELP = "It's empty.", --[[TODO]]
 		},
 		OPEN_CRAFTING =
 		{
@@ -998,6 +999,8 @@ return {
 
     ANNOUNCE_OTTERBOAT_OUTOFSHALLOWS = "I've got a sinking feeling this should've stayed in the shallows.",
     ANNOUNCE_OTTERBOAT_DENBROKEN = "Getting rid of that den might have started a chain reaction...",
+
+    ANNOUNCE_GATHER_MERM = "Must be a Merm thing.", --[[TODO]]
 
 	BATTLECRY =
 	{
@@ -5325,8 +5328,8 @@ return {
         MERM_ARMORY_UPGRADED = "It says \"Mermfolk Ownlee.\"",
         MERM_TOOLSHED = "I don't think I'll find anything scientific in there.",
         MERM_TOOLSHED_UPGRADED = "I don't think I'll find anything scientific in there.",
-        MERMARMORHAT = "It looks merm-made.",
-        MERMARMORUPGRADEDHAT = "It still looks merm-made.",
+        MERMARMORHAT = "It won’t fit me. It’s a merm helmet.",
+        MERMARMORUPGRADEDHAT = "It won’t fit me. It’s a merm helmet.",
         MERM_TOOL = "It does so much, badly.",
         MERM_TOOL_UPGRADED = "This tool looks a little fishy.",
 

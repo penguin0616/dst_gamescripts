@@ -710,7 +710,7 @@ local function OnAttached(inst, target)
             local fx = SpawnPrefab("wurt_lunar_merm_planar_fx")
             inst.bufffx = fx
             fx.entity:SetParent(target.entity)
-            target.AnimState:AddOverrideBuild("merm_lunar_eye_build")
+            target:updateeyebuild()
             target.planarbuffed:set(true)
             target.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
         end
@@ -734,7 +734,7 @@ local function OnDetached(inst, target)
         target.planarbuffed:set(false)
 
     elseif target:HasTag("lunarminion") then
-        target.AnimState:ClearOverrideBuild("merm_lunar_eye_build")
+        target:updateeyebuild()
         target.planarbuffed:set(false)
         target.AnimState:ClearBloomEffectHandle()
 

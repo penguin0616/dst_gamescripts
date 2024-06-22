@@ -5316,8 +5316,8 @@ return{
         MERM_ARMORY_UPGRADED = "We're not welcome here, Luce.",
         MERM_TOOLSHED = "Looks like where the scaly folks keep their tools.",
         MERM_TOOLSHED_UPGRADED = "Looks like where the scaly folks keep their tools.",
-        MERMARMORHAT = "That's a swampy hat.",
-        MERMARMORUPGRADEDHAT = "Pretty good, but still swampy.",
+        MERMARMORHAT = "Merm noggins only, eh?",
+        MERMARMORUPGRADEDHAT = "Merm noggins only, eh?",
         MERM_TOOL = "Now now, Luce. Be nice.",
         MERM_TOOL_UPGRADED = "Better, but why is it all slimy?",
 

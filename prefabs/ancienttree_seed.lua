@@ -115,6 +115,7 @@ local function fn()
     inst:AddComponent("inventoryitem")
 
     inst:AddComponent("deployable")
+    inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.PLACER_DEFAULT)
     inst.components.deployable.ondeploy = OnDeploy
 
     inst.OnSave = OnSave

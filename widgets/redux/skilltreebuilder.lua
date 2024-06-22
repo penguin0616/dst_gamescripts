@@ -106,6 +106,11 @@ function SkillTreeBuilder:countcols(cols, data)
 end
 
 function SkillTreeBuilder:GetDefaultFocus()	
+    for _, data in ipairs(self.buttongrid) do
+        if data.defaultfocus then
+            return data.button
+        end
+    end
 	-- find the lowest x and y
 	local current = math.huge
 	local list = {}
@@ -135,12 +140,17 @@ function SkillTreeBuilder:GetDefaultFocus()
 	end
 end
 
-local function GetFocusChangeButton(self, current, fn, boost_dir)
+local function GetFocusChangeButton(self, current, fn, boost_dir, dir)
 	local list = {}
 
+    local forced_focus = current.forced_focus and current.forced_focus[dir] or nil
 	for i, data in ipairs(self.buttongrid) do
-		if current ~= data and fn(current,data) then
-			table.insert(list, data)
+		if current ~= data then
+            if forced_focus == data.skill then
+                return data.button
+            elseif fn(current,data) then
+                table.insert(list, data)
+            end
 		end
 	end
 
@@ -171,22 +181,22 @@ function SkillTreeBuilder:SetFocusChangeDirs()
 	end
 
 	for i, data in ipairs(self.buttongrid) do
-		local up = GetFocusChangeButton(self, data, function(a,b) return b.y > a.y and math.abs(b.x - a.x) <= TILEUNIT/0.5 end, "Y")
+		local up = GetFocusChangeButton(self, data, function(a,b) return b.y > a.y and math.abs(b.x - a.x) <= TILEUNIT/0.5 end, "Y", "up")
 		if up ~= nil then
 			data.button:SetFocusChangeDir(MOVE_UP, up)
 		end
 		
-		local down = GetFocusChangeButton(self, data, function(a,b) return b.y < a.y and math.abs(b.x - a.x) <= TILEUNIT/0.5 end, "Y")
+		local down = GetFocusChangeButton(self, data, function(a,b) return b.y < a.y and math.abs(b.x - a.x) <= TILEUNIT/0.5 end, "Y", "down")
 		if down ~= nil then
 			data.button:SetFocusChangeDir(MOVE_DOWN, down)
 		end
 
-		local left = GetFocusChangeButton(self, data, function(a,b) return b.x < a.x and math.abs(b.y - a.y) <= TILEUNIT/0.5 end, "X")
+		local left = GetFocusChangeButton(self, data, function(a,b) return b.x < a.x and math.abs(b.y - a.y) <= TILEUNIT/0.5 end, "X", "left")
 		if left ~= nil then
 			data.button:SetFocusChangeDir(MOVE_LEFT, left)
 		end
 
-		local right = GetFocusChangeButton(self, data, function(a,b) return b.x > a.x and math.abs(b.y - a.y) <= TILEUNIT/0.5 end, "X")
+		local right = GetFocusChangeButton(self, data, function(a,b) return b.x > a.x and math.abs(b.y - a.y) <= TILEUNIT/0.5 end, "X", "right")
 		if right ~= nil then
 			data.button:SetFocusChangeDir(MOVE_RIGHT, right)
 		end
@@ -262,7 +272,7 @@ function SkillTreeBuilder:buildbuttons(panel, pos, data, offset, root)
                 subdata.button_decorations.init(skillbutton, root, self.fromfrontend)
             end
         end
-		table.insert(self.buttongrid,{button=skillbutton,x=newpos.x,y=newpos.y})
+		table.insert(self.buttongrid,{button=skillbutton,x=newpos.x,y=newpos.y,skill=skill,forced_focus=subdata.forced_focus,defaultfocus=subdata.defaultfocus,})
 	end	
 end
 

@@ -4269,11 +4269,25 @@ local function MakeHat(name)
         local level = inst.signallevel:value()
         if owner == ThePlayer then
             inst:PushEvent("inventoryitem_updatetooltip")
-            for i = 0, 3 do
-                inst:SetClientSideInventoryImageOverrideFlag("signallevel" .. i, i == level)
-            end
         end
     end
+
+	fns.inspectacles_refreshicon = function(inst)
+		local owner = inst.components.inventoryitem.owner
+		inst.components.inventoryitem:ChangeImageName(
+			owner and
+			owner.components.inspectaclesparticipant and
+			owner.components.inspectaclesparticipant:CanCreateGameInWorld() and
+			owner.components.skilltreeupdater and
+			owner.components.skilltreeupdater:IsActivated("winona_wagstaff_1") and
+			inst.signallevel:value() ~= 1 and
+			(	inst.fx and inst.fx.ledstate:value() >= 2 and
+				"inspectacleshat_equip_signal" or
+				"inspectacleshat_signal"
+			) or
+			nil
+		)
+	end
 
     fns.inspectacles_custom_init = function(inst)
         inst:AddTag("inspectaclesvision")
@@ -4285,11 +4299,6 @@ local function MakeHat(name)
             inst:ListenForEvent("inspectacles.signalpulse", fns.inspectacles_signalpulsedirty)
             inst:ListenForEvent("signalleveldirty", fns.inspectacles_signalleveldirty)
         end
-
-        inst:SetClientSideInventoryImageOverride("signallevel0", "inspectacleshat.tex", "inspectacleshat.tex") -- No game set, no cooldown. -- FIXME(JBK): Real signal icons.
-        inst:SetClientSideInventoryImageOverride("signallevel1", "inspectacleshat.tex", "inspectacleshat_cooldown.tex") -- Cooldown.
-        inst:SetClientSideInventoryImageOverride("signallevel2", "inspectacleshat.tex", "inspectacleshat_signal.tex") -- Game set, far away or not wearing.
-        inst:SetClientSideInventoryImageOverride("signallevel3", "inspectacleshat.tex", "inspectacleshat_close.tex") -- Game set, close enough.
     end
 
     fns.inspectacles_stopusingitem = function(inst, data)
@@ -4329,6 +4338,55 @@ local function MakeHat(name)
         return level, inspectaclesparticipant
     end
 
+	fns.inspectacles_onactivate_fx = function(fx, inst, activate)
+		if activate then
+			fx.activatetask = nil
+		else
+			fx.deactivatetask = nil
+		end
+		fx.ledstate:set(
+			(not activate and 1) or
+			(inst.signallevel:value() >= 3 and 3) or
+			2
+		)
+		fns.inspectacles_refreshicon(inst)
+	end
+
+	fns.inspectacles_activate_fx = function(inst)
+		if inst.fx then
+			if inst.fx.deactivatetask then
+				inst.fx.deactivatetask:Cancel()
+				inst.fx.deactivatetask = nil
+			elseif inst.fx.ledstate:value() < 2 and inst.fx.activatetask == nil then
+				inst.fx.activatetask = inst.fx:DoTaskInTime(0.2, fns.inspectacles_onactivate_fx, inst, true)
+			end
+		end
+	end
+
+	fns.inspectacles_deactivate_fx = function(inst)
+		if inst.fx then
+			if inst.fx.activatetask then
+				inst.fx.activatetask:Cancel()
+				inst.fx.activatetask = nil
+			elseif inst.fx.ledstate:value() >= 2 and inst.fx.deactivatetask == nil then
+				inst.fx.deactivatetask = inst.fx:DoTaskInTime(1, fns.inspectacles_onactivate_fx, inst, false)
+			end
+		end
+	end
+
+	fns.inspectacles_setsignallevel = function(inst, level)
+		inst.signallevel:set(level)
+		if level >= 2 then
+			fns.inspectacles_activate_fx(inst)
+			if inst.fx and inst.fx.ledstate:value() >= 2 then
+				inst.fx.ledstate:set(level >= 3 and 3 or 2)
+			end
+		else
+			fns.inspectacles_deactivate_fx(inst)
+		end
+		fns.inspectacles_refreshicon(inst)
+	end
+
     fns.inspectacles_tick = function(inst)
         inst.signalpulse:push()
         local level, inspectaclesparticipant = fns.inspectacles_tick_getlevel(inst)
@@ -4342,31 +4400,34 @@ local function MakeHat(name)
                 inst.fasterupdatetask = nil
             end
         end
-        inst.signallevel:set(level)
+		fns.inspectacles_setsignallevel(inst, level)
     end
 
     fns.inspectacles_updateinspectacles = function(inst)
         local level = fns.inspectacles_tick_getlevel(inst)
-        inst.signallevel:set(level)
+		fns.inspectacles_setsignallevel(inst, level)
     end
 
-    fns.inspectacles_findgame = function(inst, owner)
-        if not owner:IsValid() then
-            return
-        end
+	fns.inspectacles_onfindgametask = function(inst, owner)
+		inst.inspectacles_findgametask = nil
 
         local inspectaclesparticipant = owner.components.inspectaclesparticipant
         if inspectaclesparticipant == nil then
             return
         end
 
+		if inst.fx and
+			inst.fx.ledstate:value() == 0 and
+			inspectaclesparticipant:CanCreateGameInWorld() and
+			owner.components.skilltreeupdater and
+			owner.components.skilltreeupdater:IsActivated("winona_wagstaff_1")
+		then
+			inst.fx.ledstate:set(1)
+		end
+
         if not inspectaclesparticipant:CreateNewAndOrShowCurrentGame() then
             -- Reschedule a find.
-            if inst.inspectacles_findgametask ~= nil then
-                inst.inspectacles_findgametask:Cancel()
-                inst.inspectacles_findgametask = nil
-            end
-            inst.inspectacles_findgametask = inst:DoTaskInTime(3, fns.inspectacles_findgame, owner)
+			inst.inspectacles_findgametask = inst:DoTaskInTime(3, fns.inspectacles_onfindgametask, owner)
             return
         end
 
@@ -4376,39 +4437,33 @@ local function MakeHat(name)
         local sync_delay = math.ceil(current_time / tick_time) * tick_time - current_time
         if inst.inspectacles_ticktask ~= nil then
             inst.inspectacles_ticktask:Cancel()
-            inst.inspectacles_ticktask = nil
         end
         inst.inspectacles_ticktask = inst:DoPeriodicTask(tick_time, fns.inspectacles_tick, sync_delay)
     end
 
-	fns.inspecatles_fx_activate = function(fx)
-		fx.task = nil
-		fx.activate:set(true)
-	end
-
     fns.inspectacles_onequip = function(inst, owner)
-        fns.opentop_onequip(inst, owner)
+		_onequip(inst, owner)
 
 		if inst.fx then
 			inst.fx:Remove()
 		end
 		inst.fx = SpawnPrefab("inspectacleshat_fx")
 		inst.fx:AttachToOwner(owner)
-		inst.fx.task = inst.fx:DoTaskInTime(0.2, fns.inspecatles_fx_activate)
+		if inst.signallevel:value() > 1 then
+			fns.inspectacles_activate_fx(inst)
+			inst.fx.ledstate:set(1)
+		elseif inst.signallevel:value() == 1 then
+			inst.fx.ledstate:set(1)
+		end
 
         inst:ListenForEvent("newstate", fns.inspectacles_stopusingitem, owner)
 
-        inst:DoTaskInTime(0, function() if owner:IsValid() then fns.inspectacles_findgame(inst, owner) end end) -- Delay a frame for unsafe load order.
-    end
-
-	fns.inspectacles_onequiptomodel = function(inst, owner, from_ground)
-		fns.simple_onequiptomodel(inst, owner, from_ground)
-
-		if inst.fx and inst.fx.task then
-			inst.fx.task:Cancel()
-			inst.fx.task = nil
+		-- Delay a frame for unsafe load order.
+		if inst.inspectacles_findgametask then
+			inst.inspectacles_findgametask:Cancel()
 		end
-	end
+		inst.inspectacles_findgametask = inst:DoTaskInTime(0, fns.inspectacles_onfindgametask, owner)
+    end
 
     fns.inspectacles_onunequip = function(inst, owner)
         _onunequip(inst, owner)
@@ -4416,6 +4471,7 @@ local function MakeHat(name)
 		if inst.fx then
 			inst.fx:Remove()
 			inst.fx = nil
+			fns.inspectacles_refreshicon(inst)
 		end
 
         inst:RemoveEventCallback("newstate", fns.inspectacles_stopusingitem, owner)
@@ -4443,6 +4499,10 @@ local function MakeHat(name)
 
         inspectaclesparticipant:HideCurrentGame()
     end
+
+	fns.inspectacles_toground = function(inst)
+		fns.inspectacles_setsignallevel(inst, 0)
+	end
 
     fns.inspectacles_onuse = function(inst)
         local owner = inst.components.inventoryitem.owner
@@ -4496,10 +4556,12 @@ local function MakeHat(name)
 
         inst.UpdateInspectacles = fns.inspectacles_updateinspectacles
 
+		inst.components.inventoryitem:SetOnPutInInventoryFn(fns.inspectacles_updateinspectacles)
+		inst.components.inventoryitem:SetOnDroppedFn(fns.inspectacles_toground)
+
         inst.components.equippable.restrictedtag = "wagstafft1maker"
         inst.components.equippable:SetOnEquip(fns.inspectacles_onequip)
         inst.components.equippable:SetOnUnequip(fns.inspectacles_onunequip)
-		inst.components.equippable:SetOnEquipToModel(fns.inspectacles_onequiptomodel)
 
         inst:AddComponent("useableitem")
         inst.components.useableitem:SetOnUseFn(fns.inspectacles_onuse)
@@ -4595,11 +4657,6 @@ local function MakeHat(name)
 	end
 
     -----------------------------------------------------------------------------
-
-    fns.ondroppedmermhat = function(inst)
-        inst:Remove()
-    end
-
     fns.mermarmor_custom_init = function(inst)
         inst:AddTag("mermarmorhat")
     end
@@ -4628,8 +4685,7 @@ local function MakeHat(name)
 
         inst.components.equippable:SetOnEquip(fns.mermarmor_onequip)
         inst.components.equippable:SetOnUnequip(fns.mermarmor_onunequip)
-
-        inst:ListenForEvent("ondropped", fns.ondroppedmermhat)
+        inst.components.equippable.restrictedtag = "merm_npc"       
 
         return inst
     end
@@ -4664,8 +4720,7 @@ local function MakeHat(name)
 
         inst.components.equippable:SetOnEquip(fns.mermarmorupgraded_onequip)
         inst.components.equippable:SetOnUnequip(fns.mermarmorupgraded_onunequip)
-
-        inst:ListenForEvent("ondropped", fns.ondroppedmermhat)
+        inst.components.equippable.restrictedtag = "merm_npc"
 
         return inst
     end
@@ -4844,9 +4899,8 @@ local function MakeHat(name)
     elseif name == "inspectacles" then
 		prefabs = { "inspectacleshat_fx" }
         fn = fns.inspectacles
-        table.insert(assets, Asset("INV_IMAGE", "inspectacleshat_cooldown"))
         table.insert(assets, Asset("INV_IMAGE", "inspectacleshat_signal"))
-        table.insert(assets, Asset("INV_IMAGE", "inspectacleshat_close"))
+		table.insert(assets, Asset("INV_IMAGE", "inspectacleshat_equip_signal"))
 	elseif name == "roseglasses" then
 		fn = fns.roseglasses
     end
@@ -5048,10 +5102,10 @@ local function inspectacleshat_CreateFxFollowFrame(i)
 
 	inst.AnimState:SetBank("inspectacleshat")
 	inst.AnimState:SetBuild("hat_inspectacles")
-	inst.anim = "activate"..tostring(i)
-	inst.AnimState:SetPercent(inst.anim, 0)
-	inst.AnimState:SetSymbolLightOverride("light_overlay", 0.5)
-	inst.AnimState:SetLightOverride(0.05)
+	inst.animidx = tostring(i)
+	inst.AnimState:PlayAnimation("off"..inst.animidx)
+	inst.AnimState:SetSymbolLightOverride("led_on", 0.5)
+	inst.AnimState:SetSymbolBloom("led_on")
 
 	inst:AddComponent("highlightchild")
 
@@ -5060,24 +5114,84 @@ local function inspectacleshat_CreateFxFollowFrame(i)
 	return inst
 end
 
-local function inspectacleshat_fx_activatedirty(inst)
-	if inst.fx then
-		if inst.activate:value() then
-			for i, v in ipairs(inst.fx) do
-				v.AnimState:PlayAnimation(v.anim)
-			end
-		else
-			for i, v in ipairs(inst.fx) do
-				v.AnimState:SetPercent(v.anim, 0)
-			end
-		end
+local function inspectacleshat_fx_SetLedEnabled(inst, enabled)
+	if enabled then
+		inst.AnimState:OverrideSymbol("led_off", "hat_inspectacles", "led_on")
+		inst.AnimState:SetSymbolBloom("led_off")
+		inst.AnimState:SetSymbolLightOverride("led_off", 0.5)
+		inst.AnimState:SetSymbolLightOverride("inspectacles_toppart", 0.2)
+		inst.AnimState:SetSymbolLightOverride("inspectacles_dishpart", 0.1)
+		inst.AnimState:SetLightOverride(0.03)
+	else
+		inst.AnimState:ClearOverrideSymbol("led_off")
+		inst.AnimState:ClearSymbolBloom("led_off")
+		inst.AnimState:SetSymbolLightOverride("led_off", 0)
+		inst.AnimState:SetSymbolLightOverride("inspectacles_toppart", 0)
+		inst.AnimState:SetSymbolLightOverride("inspectacles_dishpart", 0)
+		inst.AnimState:SetLightOverride(0)
 	end
 end
 
+local function inspectacleshat_fx_doblink(inst, ison)
+	for i, v in ipairs(inst.fx) do
+		inspectacleshat_fx_SetLedEnabled(v, ison)
+	end
+	local delay =
+		inst.ledstate:value() == 1 and
+		(ison and 0.75 or 1.5) or
+		(ison and 0.1 or 0)
+	inst.blinktask = inst:DoTaskInTime(delay, inspectacleshat_fx_doblink, not ison)
+end
+
+local function inspectacleshat_fx_ledstatedirty(inst)
+	if inst.fx then
+		if inst.ledstate:value() >= 2 then
+			for i, v in ipairs(inst.fx) do
+				local anim = "activate"..v.animidx
+				if not v.AnimState:IsCurrentAnimation(anim) then
+					v.AnimState:PlayAnimation(anim)
+				end
+				inspectacleshat_fx_SetLedEnabled(v, true)
+			end
+			if inst.ledstate:value() == 2 then
+				if inst.blinktask then
+					inst.blinktask:Cancel()
+					inst.blinktask = nil
+				end
+			elseif inst.blinktask == nil then
+				inspectacleshat_fx_doblink(inst, inst.initledstate or false)
+			end
+		else
+			for i, v in ipairs(inst.fx) do
+				--deactivated could be "off" or "deactivate", so easier to check that it's not "activate"
+				if v.AnimState:IsCurrentAnimation("activate"..v.animidx) then
+					v.AnimState:PlayAnimation("deactivate"..v.animidx)
+				end
+			end
+			if inst.ledstate:value() == 0 then
+				if inst.blinktask then
+					inst.blinktask:Cancel()
+					inst.blinktask = nil
+				end
+				for i, v in ipairs(inst.fx) do
+					inspectacleshat_fx_SetLedEnabled(v, false)
+				end
+			elseif inst.blinktask == nil then
+				inspectacleshat_fx_doblink(inst, inst.initledstate or false)
+			end
+		end
+	end
+	inst.initledstate = nil
+end
+
 local function inspectacleshat_fx_common_postinit(inst)
-	inst.activate = net_bool(inst.GUID, "inspectacleshat_fx.activate", "activatedirty")
+	inst.ledstate = net_tinybyte(inst.GUID, "inspectacleshat_fx.ledstate", "ledstatedirty")
+	--0: off
+	--1: cooldown; dish down; blink
+	--2: on; dish up
 	if not TheNet:IsDedicated() then
-		inst:ListenForEvent("activatedirty", inspectacleshat_fx_activatedirty)
+		inst.initledstate = true
+		inst:ListenForEvent("ledstatedirty", inspectacleshat_fx_ledstatedirty)
 	end
 end
 

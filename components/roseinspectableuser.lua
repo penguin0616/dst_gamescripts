@@ -94,7 +94,6 @@ function RoseInspectableUser:SpawnResidue()
         self.residue = nil
     end
     self.inst:ListenForEvent("onremove", self.residue._onresidueremoved, self.residue)
-    self.residue:SetFXOwner(self.inst) -- Handles the self.inst's onremove event.
     local x, y, z
     local theta = math.random() * PI2
     if self.target then
@@ -104,6 +103,7 @@ function RoseInspectableUser:SpawnResidue()
         x, y, z = self.point:Get()
     end
     self.residue.Transform:SetPosition(x, y, z)
+    self.residue:SetFXOwner(self.inst) -- Handles the self.inst's onremove event.
 end
 
 --------------------------------------------------
@@ -140,16 +140,19 @@ end
 function RoseInspectableUser:DoQuip(reason, failed)
     if failed then
         if self.inst.components.talker then
-            self.inst.components.talker:Say(GetActionFailString(self.inst, "LOOKAT", reason))
+			local sgparam = { closeinspect = true }
+			self.inst.components.talker:Say(GetActionFailString(self.inst, "LOOKAT", reason), nil, nil, nil, nil, nil, nil, nil, nil, sgparam)
         end
         return
     end
     if self.quipcooldowntime ~= nil and self.quipcooldowntime > GetTime() then
+		self.inst:PushEvent("silentcloseinspect")
         return
     end
     if self.inst.components.talker then
         self.quipcooldowntime = GetTime() + 4 + math.random()
-        self.inst.components.talker:Say(GetString(self.inst, reason))
+		local sgparam = { closeinspect = true }
+		self.inst.components.talker:Say(GetString(self.inst, reason), nil, nil, nil, nil, nil, nil, nil, nil, sgparam)
     end
 end
 

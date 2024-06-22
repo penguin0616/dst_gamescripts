@@ -39,10 +39,6 @@ end
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
-local function ondropped(inst)
-    inst:Remove()
-end
-
 local function CreateMermTool(data)
     local function fn()
         local tuning = TUNING[data.tuning]
@@ -105,8 +101,6 @@ local function CreateMermTool(data)
         inst.components.finiteuses:SetConsumption(ACTIONS.DIG,  tuning.CONSUMPTION.DIG )
         inst.components.finiteuses:SetConsumption(ACTIONS.TILL, tuning.CONSUMPTION.TILL )
         inst.components.finiteuses:SetOnFinished(inst.Remove)
-
-        inst:ListenForEvent("ondropped", ondropped)
 
         MakeHauntableLaunch(inst)
 
