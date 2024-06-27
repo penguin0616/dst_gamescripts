@@ -2354,33 +2354,34 @@ local SKIP_SPECIALINFO_CHECK =
 local REPAIR_MATERIAL_DATA =
 {
     -- Repairers
-    stone = { "cutstone", "wall_stone_item", "rocks" },
-    fossil = { "fossil_piece" },
-    salt = { "saltrock" },
-    gears = { "wall_scrap_item", "wagpunk_bits", "gears" },
-    shell = { "slurtle_shellpieces" },
-    ice = { "ice" },
-    hay = { "cutgrass", "wall_hay_item" },
-    moonrock = { "moonrockcrater", "wall_moonrock_item", "moonrocknugget" },
-    wood = { "boatpatch", "treegrowthsolution", "wall_wood_item", "driftwood_log", "livinglog", "twigs", "log", "boards" },
-    kelp = { "boatpatch_kelp", "kelp" },
-    gem = { "opalpreciousgem", "yellowgem", "redgem", "greengem", "bluegem", "purplegem", "orangegem" },
-    thulecite = { "thulecite_pieces", "thulecite", "wall_ruins_item" },
-    sculpture = { "sculpture_bishophead", "sculpture_rooknose", "sculpture_knighthead" },
-    moon_altar = { "moon_altar_icon", "moon_altar_crown", "moon_altar_seed", "moon_altar_glass", "moon_altar_idol", "moon_altar_ward" },
-    nightmare = { "nightmarefuel", "horrorfuel" },
     dreadstone = { "wall_dreadstone_item", "dreadstone" },
+    fossil = { "fossil_piece" },
+    gears = { "wall_scrap_item", "wagpunk_bits", "gears" },
+    gem = { "opalpreciousgem", "yellowgem", "redgem", "greengem", "bluegem", "purplegem", "orangegem" },
+    hay = { "cutgrass", "wall_hay_item" },
+    ice = { "ice" },
+    kelp = { "boatpatch_kelp", "kelp" },
+    moon_altar = { "moon_altar_icon", "moon_altar_crown", "moon_altar_seed", "moon_altar_glass", "moon_altar_idol", "moon_altar_ward" },
+    moonrock = { "moonrockcrater", "wall_moonrock_item", "moonrocknugget" },
+    nightmare = { "nightmarefuel", "horrorfuel" },
+    salt = { "saltrock" },
+    sculpture = { "sculpture_bishophead", "sculpture_rooknose", "sculpture_knighthead" },
+    shell = { "slurtle_shellpieces" },
+    stone = { "cutstone", "wall_stone_item", "rocks" },
+    thulecite = { "thulecite_pieces", "thulecite", "wall_ruins_item" },
+    vitae = { "mosquitosack" },
+    wood = { "boatpatch", "treegrowthsolution", "wall_wood_item", "driftwood_log", "livinglog", "twigs", "log", "boards" },
 
     -- Repair Kits
+    lunarplant = { "lunarplant_kit" },
     voidcloth = { "voidcloth_kit" },
     wagpunk_bits = { "wagpunkbits_kit" },
-    lunarplant = { "lunarplant_kit" },
 
     -- Upgraders
     chest = { "chestupgrade_stacksize" },
+    mast = { "mastupgrade_lamp_item", "mastupgrade_lightningrod_item" },
     spear_lightning = { "moonstorm_static_item" },
     spider = { "silk" },
-    mast = { "mastupgrade_lamp_item", "mastupgrade_lightningrod_item" },
     waterplant = { "waterplant_planter" },
 }
 
@@ -2422,17 +2423,17 @@ function d_printscrapbookrepairmaterialsdata()
     local str = {}
 
     table.insert(str, "\n    -- Repairers")
-    for material, prefabs in pairs(repair_data) do
+    for _, material, prefabs in sorted_pairs(repair_data) do
         table.insert(str, string.format('    %s = { "%s" },', material, table.concat(prefabs, '", "')))
     end
-    
+
     table.insert(str, "\n    -- Repair Kits")
-    for material, prefabs in pairs(forgerepair_data) do
+    for _, material, prefabs in sorted_pairs(forgerepair_data) do
         table.insert(str, string.format('    %s = { "%s" },', material, table.concat(prefabs, '", "')))
     end
-    
+
     table.insert(str, "\n    -- Upgraders")
-    for type, prefabs in pairs(upgrader_data) do
+    for _, type, prefabs in sorted_pairs(upgrader_data) do
         table.insert(str, string.format('    %s = { "%s" },', type, table.concat(prefabs, '", "')))
     end
 

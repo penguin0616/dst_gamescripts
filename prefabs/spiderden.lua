@@ -694,7 +694,9 @@ local function MakeSpiderDenFn(den_level)
         inst.entity:AddMiniMapEntity()
         inst.entity:AddNetwork()
 
-        MakeObstaclePhysics(inst, .5)
+		inst:SetDeploySmartRadius(DEPLOYSPACING_RADIUS[DEPLOYSPACING.DEFAULT] / 2) --spidereggsack deployspacing/2
+		inst:SetPhysicsRadiusOverride(0.5)
+		MakeObstaclePhysics(inst, inst.physicsradiusoverride)
 
         inst.MiniMapEntity:SetIcon("spiderden_" .. tostring(den_level) .. ".png")
 

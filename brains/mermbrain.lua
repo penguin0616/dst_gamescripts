@@ -514,41 +514,39 @@ local function dig_stump_finder(inst, leaderdist, finddist)
     end
 end
 
-local POT_MUST = {"offering_pot"}
+local OFFERINGPOT_MUST_TAGS = { "offering_pot" }
+
 local function shouldanswercall(inst)
-    
-    if inst:HasTag("lunarminion") or inst:HasTag("shadowminion") or inst.components.follower.leader then
-        return nil
+    if inst:HasTag("lunarminion") or inst:HasTag("shadowminion") or inst.components.follower.leader ~= nil then
+        return false
     end
 
-    local x,y,z = inst.Transform:GetWorldPosition()
-    local pots = TheSim:FindEntities(x,y,z, 30, POT_MUST)
-    if #pots > 0 then
-        for i=#pots, 1,-1 do
-            local pot = pots[i]
+    local x, y, z = inst.Transform:GetWorldPosition()
+    local pots = TheSim:FindEntities(x, 0, z, 30, OFFERINGPOT_MUST_TAGS)
 
-            if not pot.merm_caller or #pot.components.container:FindItems(function() return true end) < 1 then
-                table.remove(pots,i)
-            end
+    if #pots <= 0 then
+        return false
+    end
+
+    for _, pot in ipairs(pots) do
+        if pot.merm_caller ~= nil and pot.merm_caller:IsValid() and pot.components.container ~= nil and not pot.components.container:IsEmpty() then
+            inst.answerpotcall = pot
+
+            return true
         end
-        if #pots > 0 then
-            inst.answerpotcall = pots[1]
-        else
-            inst.answerpotcall = nil
-        end        
-    end
-
-    if inst.answerpotcall then
-        return true
     end
 end
 
 local function Getcalledofferingpot(inst)
-    return inst.answerpotcall and inst.answerpotcall:GetPosition() or nil
+    if inst.answerpotcall ~= nil and inst.answerpotcall:IsValid() and inst.answerpotcall.merm_caller ~= nil then
+        local distance = inst.answerpotcall:GetPhysicsRadius(0)
+
+        return inst:GetPositionAdjacentTo(inst.answerpotcall, distance)
+    end
 end
 
 local function answercall(inst)
-    if inst.answerpotcall then
+    if inst.answerpotcall ~= nil and inst.answerpotcall:IsValid() then
         inst.answerpotcall:AnswerCall(inst)
     end
 end

@@ -74,7 +74,7 @@ local function fn()
     inst.MiniMapEntity:SetCanUseCache(false)
     inst.MiniMapEntity:SetDrawOverFogOfWar(true)
 
-	inst:SetDeploySmartRadius(0.75) --recipe min_spacing/2
+	inst:SetDeploySmartRadius(0.6) --recipe min_spacing/2
 
     MakeObstaclePhysics(inst, .1)
 

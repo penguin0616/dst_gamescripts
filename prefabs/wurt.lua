@@ -189,7 +189,9 @@ local function TryRoyalUpgradeTrident(inst, silent)
 
     if inst.components.leader then
         for follower in pairs(inst.components.leader.followers) do
-            follower:AddDebuff(TRIDENT_BUFF_NAME, TRIDENT_BUFF_PREFAB)
+            if follower.ismerm then
+                follower:AddDebuff(TRIDENT_BUFF_NAME, TRIDENT_BUFF_PREFAB)
+            end
         end
     end
 end
@@ -214,7 +216,9 @@ local function TryRoyalUpgradeCrown(inst, silent)
 
     if inst.components.leader then
         for follower in pairs(inst.components.leader.followers) do
-            follower:AddDebuff(CROWN_BUFF_NAME, CROWN_BUFF_PREFAB)
+            if follower.ismerm then
+                follower:AddDebuff(CROWN_BUFF_NAME, CROWN_BUFF_PREFAB)
+            end
         end
     end
 end
@@ -239,7 +243,9 @@ local function TryRoyalUpgradePauldron(inst, silent)
 
     if inst.components.leader then
         for follower in pairs(inst.components.leader.followers) do
-            follower:AddDebuff(PAULDRON_BUFF_NAME, PAULDRON_BUFF_PREFAB)
+            if follower.ismerm then
+                follower:AddDebuff(PAULDRON_BUFF_NAME, PAULDRON_BUFF_PREFAB)
+            end
         end
     end
 end
@@ -254,7 +260,6 @@ local function TryRoyalDowngradePauldron(inst, silent)
 end
 
 local function additional_OnFollowerRemoved(inst, follower)
-
     if follower.ismerm then
         -- RemoveDebuff has checks built in if the buff isn't there!
         follower:RemoveDebuff(TRIDENT_BUFF_NAME)
@@ -262,24 +267,28 @@ local function additional_OnFollowerRemoved(inst, follower)
         follower:RemoveDebuff(PAULDRON_BUFF_NAME)
     end
 
-    if inst.components.skilltreeupdater and inst.components.skilltreeupdater:IsActivated("wurt_shadow_allegiance_1") then
-        follower.shadow_spawn_old_leader = inst
+    if follower.ismerm and inst.components.skilltreeupdater ~= nil and inst.components.skilltreeupdater:IsActivated("wurt_shadow_allegiance_1") then
+        follower.old_leader = inst
+
+        follower:ListenForEvent("onremove", function() follower.old_leader = nil end, inst)
     end
 end
 
 local function additional_OnFollowerAdded(inst, follower)
-    local mermkingmanager = TheWorld.components.mermkingmanager
-    if not mermkingmanager then return end
+    if follower.ismerm then
+        local mermkingmanager = TheWorld.components.mermkingmanager
+        if not mermkingmanager then return end
 
-    local skilltreeupdater = inst.components.skilltreeupdater
-    if skilltreeupdater:IsActivated("wurt_mermkingtrident") and mermkingmanager:HasTridentAnywhere() then
-        follower:AddDebuff(TRIDENT_BUFF_NAME, TRIDENT_BUFF_PREFAB)
-    end
-    if skilltreeupdater:IsActivated("wurt_mermkingcrown") and mermkingmanager:HasCrownAnywhere() then
-        follower:AddDebuff(CROWN_BUFF_NAME, CROWN_BUFF_PREFAB)
-    end
-    if skilltreeupdater:IsActivated("wurt_mermkingshoulders") and mermkingmanager:HasPauldronAnywhere() then
-        follower:AddDebuff(PAULDRON_BUFF_NAME, PAULDRON_BUFF_PREFAB)
+        local skilltreeupdater = inst.components.skilltreeupdater
+        if skilltreeupdater:IsActivated("wurt_mermkingtrident") and mermkingmanager:HasTridentAnywhere() then
+            follower:AddDebuff(TRIDENT_BUFF_NAME, TRIDENT_BUFF_PREFAB)
+        end
+        if skilltreeupdater:IsActivated("wurt_mermkingcrown") and mermkingmanager:HasCrownAnywhere() then
+            follower:AddDebuff(CROWN_BUFF_NAME, CROWN_BUFF_PREFAB)
+        end
+        if skilltreeupdater:IsActivated("wurt_mermkingshoulders") and mermkingmanager:HasPauldronAnywhere() then
+            follower:AddDebuff(PAULDRON_BUFF_NAME, PAULDRON_BUFF_PREFAB)
+        end
     end
 end
 
@@ -704,7 +713,7 @@ local function OnAttached(inst, target)
             fx.AnimState:PlayAnimation("buff_pre")
             fx.AnimState:PushAnimation("buff_idle")
             fx.entity:SetParent(target.entity)
-            --target.planarbuffed:set(true) --FIXME(DiogoW): Uncomment this when art is changed.
+            target.planarbuffed:set(true)
 
         elseif target:HasTag("lunarminion") then
             local fx = SpawnPrefab("wurt_lunar_merm_planar_fx")

@@ -86,10 +86,12 @@ local function DoPrefabRenew(x, z, ents, renewable_set, max)
             local radius = math.random() * RENEW_RADIUS
             local x1 = x + radius * math.cos(theta)
             local z1 = z - radius * math.sin(theta)
+            local pt = Vector3(x1, 0, z1)
             if inst.Map:CanPlantAtPoint(x1, 0, z1) and
+                inst.Map:IsDeployPointClear(pt, nil, DEPLOYSPACING_RADIUS[DEPLOYSPACING.DEFAULT]) and
                 not (RoadManager ~= nil and RoadManager:IsOnRoad(x1, 0, z1)) then
                 local prefab = renewable_set.spawns[math.random(#renewable_set.spawns)]
-                if inst.Map:CanPlacePrefabFilteredAtPoint(x1, 0, z1) then
+                if inst.Map:CanPlacePrefabFilteredAtPoint(x1, 0, z1, prefab) then
                     SpawnPrefab(prefab).Transform:SetPosition(x1, 0, z1)
                 end
             end

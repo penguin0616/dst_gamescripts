@@ -15,7 +15,29 @@ local events =
 			inst.sg:GoToState("poweroff")
 		end
 	end),
+	EventHandler("sleepmode", function(inst)
+		if not inst.sg:HasStateTag("busy") then
+			inst.sg.statemem.keepnofaced = true
+			inst.sg:GoToState("poweroff")
+		else
+			inst.sg.mem.wantstosleep = true
+		end
+	end),
 }
+
+local function SetSoundLoop(inst, name)
+	if name ~= "idle_lp" then
+		inst.SoundEmitter:KillSound("idle_lp")
+	elseif not inst.SoundEmitter:PlayingSound("idle_lp") then
+		inst.SoundEmitter:PlaySound("meta4/winbot/idle_lp", "idle_lp")
+	end
+
+	if name ~= "run_lp" then
+		inst.SoundEmitter:KillSound("run_lp")
+	else--if not inst.SoundEmitter:PlayingSound("run_lp") then
+		inst.SoundEmitter:PlaySound("meta4/winbot/run_lp", "run_lp")
+	end
+end
 
 local states =
 {
@@ -24,7 +46,7 @@ local states =
 		tags = { "idle", "canrotate" },
 
 		onenter = function(inst, pushanim)
-			if inst.components.fueled:IsEmpty() then
+			if inst.components.fueled:IsEmpty() or inst.sg.mem.wantstosleep then
 				inst.sg.statemem.keepnofaced = true
 				inst.sg:GoToState("poweroff")
 				return
@@ -37,15 +59,13 @@ local states =
 				inst.AnimState:PlayAnimation("idle", true)
 			end
 
-			inst.SoundEmitter:PlaySound("meta4/winbot/idle_lp", "idle_lp")
+			SetSoundLoop(inst, "idle_lp")
 		end,
 
 		onexit = function(inst)
 			if not inst.sg.statemem.keepnofaced then
 				inst.Transform:SetFourFaced()
 			end
-
-			inst.SoundEmitter:KillSound("idle_lp")
 		end,
 	},
 
@@ -58,6 +78,7 @@ local states =
 			inst.Transform:SetNoFaced()
 			inst.AnimState:PlayAnimation("poweron")
 
+			SetSoundLoop(inst, nil)
 			inst.SoundEmitter:PlaySound("meta4/winbot/poweron")
 		end,
 
@@ -85,6 +106,7 @@ local states =
 			inst.Transform:SetNoFaced()
 			inst.AnimState:PlayAnimation("poweroff")
 
+			SetSoundLoop(inst, nil)
 			inst.SoundEmitter:PlaySound("meta4/winbot/poweroff")
 		end,
 
@@ -112,6 +134,7 @@ local states =
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("pickup")
 
+			SetSoundLoop(inst, nil)
 			inst.SoundEmitter:PlaySound("meta4/winbot/pickup")
 		end,
 
@@ -145,6 +168,9 @@ local states =
 					inst:ClearBufferedAction()
 				end
 			end),
+			FrameEvent(16, function(inst)
+				SetSoundLoop(inst, "idle_lp")
+			end),
 		},
 
 		events =
@@ -172,6 +198,7 @@ local states =
 			inst.AnimState:PlayAnimation("dropoff")
 			inst.Physics:SetMass(0)
 
+			SetSoundLoop(inst, nil)
 			inst.SoundEmitter:PlaySound("meta4/winbot/dropoff")
 		end,
 
@@ -183,6 +210,9 @@ local states =
 			end),
 			FrameEvent(35, function(inst)
 				inst.components.inventory:CloseAllChestContainers()
+			end),
+			FrameEvent(42, function(inst)
+				SetSoundLoop(inst, "idle_lp")
 			end),
 		},
 
@@ -207,10 +237,10 @@ local states =
 
 CommonStates.AddRunStates(states, nil, nil, nil, nil, {
 	startonenter = function(inst)
-		inst.SoundEmitter:PlaySound("meta4/winbot/run_lp", "run_lp")
+		SetSoundLoop(inst, "run_lp")
 	end,
 	endonenter = function(inst)
-		inst.SoundEmitter:KillSound("run_lp")
+		SetSoundLoop(inst, "idle_lp")
 	end,
 })
 

@@ -6,9 +6,48 @@ local assets =
 local prefabs =
 {
 	"winona_battery_sparks",
+	"winona_telebrella_swap_fx",
 }
 
 local PHYSICS_RADIUS = 0.5
+
+local function RefreshAttunedSkills(inst, owner)
+	local enabled = owner.components.skilltreeupdater ~= nil and owner.components.skilltreeupdater:IsActivated("winona_wagstaff_2")
+	inst.swapfx:SetLedEnabled(enabled)
+	inst.swapfx2:SetLedEnabled(enabled)
+end
+
+local function SetFxOwner(inst, owner)
+	if inst.swapfx then
+		inst.swapfx:Remove()
+		inst.swapfx2:Remove()
+		inst.swapfx = nil
+		inst.swapfx2 = nil
+	end
+	if owner then
+		inst.swapfx = SpawnPrefab("winona_telebrella_swap_fx")
+		inst.swapfx.entity:SetParent(owner.entity)
+		inst.swapfx.Follower:FollowSymbol(owner.GUID, "swap_object", nil, nil, nil, true, nil, 0, 19)
+		inst.swapfx.components.highlightchild:SetOwner(owner)
+
+		inst.swapfx2 = SpawnPrefab("winona_telebrella_swap_fx")
+		inst.swapfx2.entity:SetParent(owner.entity)
+		inst.swapfx2.Follower:FollowSymbol(owner.GUID, "swap_object", nil, nil, nil, true, nil, 19)
+		inst.swapfx2.components.highlightchild:SetOwner(owner)
+		inst.swapfx2.AnimState:PlayAnimation("swap20")
+
+		if owner.components.colouradder then
+			owner.components.colouradder:AttachChild(inst.swapfx)
+			owner.components.colouradder:AttachChild(inst.swapfx2)
+		end
+		if not (owner.components.skilltreeupdater and owner.components.skilltreeupdater:IsActivated("winona_wagstaff_2")) then
+			inst.swapfx:SetLedEnabled(false)
+			inst.swapfx2:SetLedEnabled(false)
+		end
+		inst.swapfx:ListenForEvent("onactivateskill_server", inst._onskillrefresh, owner)
+		inst.swapfx:ListenForEvent("ondeactivateskill_server", inst._onskillrefresh, owner)
+	end
+end
 
 local function OnEquip(inst, owner)
 	owner.AnimState:OverrideSymbol("swap_object", "winona_telebrella", "swap_winona_telebrella")
@@ -16,6 +55,7 @@ local function OnEquip(inst, owner)
 	owner.AnimState:Hide("ARM_normal")
 
 	owner.DynamicShadow:SetSize(2.2, 1.4)
+	SetFxOwner(inst, owner)
 
 	inst.components.fueled:StartConsuming()
 end
@@ -25,6 +65,7 @@ local function OnUnequip(inst, owner)
 	owner.AnimState:Show("ARM_normal")
 
 	owner.DynamicShadow:SetSize(1.3, 0.6)
+	SetFxOwner(inst, nil)
 
 	inst.components.fueled:StopConsuming()
 end
@@ -70,6 +111,22 @@ local function OnSectionChanged(newsection, oldsection, inst)
 	end
 end
 
+local function SetLedEnabled(inst, enabled)
+	if enabled then
+		inst.AnimState:OverrideSymbol("led_off", "winona_telebrella", "led_on")
+		inst.AnimState:SetSymbolBloom("led_off")
+		inst.AnimState:SetSymbolLightOverride("led_off", 0.5)
+		inst.AnimState:SetSymbolLightOverride("antenna", 0.3)
+		inst.AnimState:SetSymbolLightOverride("canopy_closed", 0.06)
+	else
+		inst.AnimState:ClearOverrideSymbol("led_off")
+		inst.AnimState:ClearSymbolBloom("led_off")
+		inst.AnimState:SetSymbolLightOverride("led_off", 0)
+		inst.AnimState:SetSymbolLightOverride("antenna", 0)
+		inst.AnimState:SetSymbolLightOverride("canopy_closed", 0)
+	end
+end
+
 local function OnUpdateChargingFuel(inst)
 	if inst.components.fueled:IsFull() then
 		inst.components.fueled:StopConsuming()
@@ -85,7 +142,7 @@ local function SetCharging(inst, powered, duration)
 			inst.components.fueled.rate = 1
 			inst.components.fueled:SetUpdateFn(nil)
 			inst.components.powerload:SetLoad(0)
-			--RefreshLedStatus(inst)
+			SetLedEnabled(inst, false)
 		end
 	else
 		local waspowered = inst._powertask ~= nil
@@ -100,7 +157,7 @@ local function SetCharging(inst, powered, duration)
 				inst.components.fueled:SetUpdateFn(OnUpdateChargingFuel)
 				inst.components.fueled:StartConsuming()
 				inst.components.powerload:SetLoad(TUNING.WINONA_TELEBRELLA_POWER_LOAD_CHARGING)
-				--RefreshLedStatus(inst)
+				SetLedEnabled(inst, true)
 			end
 		end
 	end
@@ -115,7 +172,6 @@ local function OnPutInInventory(inst, owner)
 	inst._owner = owner
 	inst._quickcharge = false
 	inst.components.circuitnode:Disconnect()
-	--RefreshLedStatus(inst)
 end
 
 local function OnDropped(inst)
@@ -141,7 +197,6 @@ local function OnDropped(inst)
 	else
 		inst.components.circuitnode:Disconnect()
 	end
-	--RefreshLedStatus(inst)
 end
 
 local function OnNoLongerLanded(inst)
@@ -225,11 +280,20 @@ end
 
 --------------------------------------------------------------------------
 
-local function GetStatus(inst)
-	return (inst._powertask and "CHARGING")
+local function GetStatus(inst, viewer)
+	local status = (inst._powertask and "CHARGING")
 		or (inst.components.circuitnode:IsConnected() and inst.components.fueled:IsFull() and "CHARGED")
 		or (inst.components.fueled:IsEmpty() and "OFF")
 		or nil
+
+    if status == nil and viewer ~= nil and viewer:HasTag("handyperson") then
+        local skilltreeupdater = viewer.components.skilltreeupdater
+        if skilltreeupdater == nil or not skilltreeupdater:IsActivated("winona_wagstaff_2") then
+            return "MISSINGSKILL"
+        end
+    end
+
+    return status
 end
 
 local function AddBatteryPower(inst, power)
@@ -328,6 +392,9 @@ local function fn()
 		return inst
 	end
 
+	inst.components.floater:SetScale({ .75, 0.6, -0.5 })
+	inst.components.floater:SetBankSwapOnFloat(true, -23, { sym_name = "swap_winona_telebrella_float", sym_build = "winona_telebrella" })
+
 	inst:AddComponent("updatelooper")
 	inst:AddComponent("colouradder")
 
@@ -384,6 +451,7 @@ local function fn()
 
 	--skilltree
 	inst._quickcharge = false
+	inst._onskillrefresh = function(owner) RefreshAttunedSkills(inst, owner) end
 
 	inst._wired = nil
 	inst._inittask = inst:DoTaskInTime(0, OnInit)
@@ -391,4 +459,56 @@ local function fn()
 	return inst
 end
 
-return Prefab("winona_telebrella", fn, assets, prefabs)
+local function FX_SetLedEnabled(inst, enabled)
+	if enabled then
+		inst.AnimState:ClearOverrideSymbol("led_on")
+		inst.AnimState:SetSymbolBloom("led_on")
+		inst.AnimState:SetSymbolLightOverride("led_on", 0.5)
+		inst.AnimState:SetSymbolLightOverride("antenna", 0.3)
+		inst.AnimState:SetSymbolLightOverride("canopy_open_front", 0.08)
+	else
+		inst.AnimState:OverrideSymbol("led_on", "winona_telebrella", "led_off")
+		inst.AnimState:ClearSymbolBloom("led_on")
+		inst.AnimState:SetSymbolLightOverride("led_on", 0)
+		inst.AnimState:SetSymbolLightOverride("antenna", 0)
+		inst.AnimState:SetSymbolLightOverride("canopy_open_front", 0)
+	end
+end
+
+local function fxfn()
+	local inst = CreateEntity()
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+	inst.entity:AddNetwork()
+
+	inst:AddTag("FX")
+
+	inst.AnimState:SetBank("winona_telebrella")
+	inst.AnimState:SetBuild("winona_telebrella")
+	inst.AnimState:PlayAnimation("swap1")
+	inst.AnimState:SetSymbolBloom("led_on")
+	inst.AnimState:SetSymbolLightOverride("led_on", 0.5)
+	inst.AnimState:SetSymbolLightOverride("antenna", 0.3)
+	inst.AnimState:SetSymbolLightOverride("canopy_open_front", 0.08)
+
+	inst:AddComponent("highlightchild")
+
+	inst.entity:SetPristine()
+
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	inst:AddComponent("colouradder")
+
+	inst.SetLedEnabled = FX_SetLedEnabled
+
+	inst.persists = false
+
+	return inst
+end
+
+return Prefab("winona_telebrella", fn, assets, prefabs),
+	Prefab("winona_telebrella_swap_fx", fxfn, assets)

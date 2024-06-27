@@ -1311,6 +1311,7 @@ PREFABFILES = {
   "wortox_soul_spawn",
   "writeable_classified",
   "wurt",
+  "wurt_casting_fx",
   "wurt_swamp_terraformer",
   "wurt_tentacle_warning",
   "wurt_terraform_item",

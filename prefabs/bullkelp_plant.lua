@@ -72,6 +72,7 @@ local function fn()
     inst.MiniMapEntity:SetIcon("bullkelp_plant.png")
 
     MakeInventoryPhysics(inst, nil, 0.7)
+	inst:SetDeploySmartRadius(DEPLOYSPACING_RADIUS[DEPLOYSPACING.MEDIUM] / 2) --bullkelp_root deployspacing/2
 
     inst.AnimState:SetBank("bullkelp")
     inst.AnimState:SetBuild("bullkelp")

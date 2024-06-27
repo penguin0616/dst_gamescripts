@@ -424,6 +424,20 @@ end]]
 
 --------------------------------------------------------------------------
 
+local function SetLedEnabled(inst, enabled)
+	if enabled then
+		inst.AnimState:OverrideSymbol("led_off", "winona_remote", "led_on")
+		inst.AnimState:SetSymbolBloom("led_off")
+		inst.AnimState:SetSymbolLightOverride("led_off", 0.5)
+		inst.AnimState:SetSymbolLightOverride("winona_remote_parts", 0.14)
+	else
+		inst.AnimState:ClearOverrideSymbol("led_off")
+		inst.AnimState:ClearSymbolBloom("led_off")
+		inst.AnimState:SetSymbolLightOverride("led_off", 0)
+		inst.AnimState:SetSymbolLightOverride("winona_remote_parts", 0)
+	end
+end
+
 local function OnUpdateChargingFuel(inst)
 	if inst.components.fueled:IsFull() then
 		inst.components.fueled:StopConsuming()
@@ -439,7 +453,7 @@ local function SetCharging(inst, powered, duration)
 			inst.components.fueled.rate = 0
 			inst.components.fueled:SetUpdateFn(nil)
 			inst.components.powerload:SetLoad(0)
-			--RefreshLedStatus(inst)
+			SetLedEnabled(inst, false)
 		end
 	else
 		local waspowered = inst._powertask ~= nil
@@ -454,7 +468,7 @@ local function SetCharging(inst, powered, duration)
 				inst.components.fueled:SetUpdateFn(OnUpdateChargingFuel)
 				inst.components.fueled:StartConsuming()
 				inst.components.powerload:SetLoad(TUNING.WINONA_REMOTE_POWER_LOAD_CHARGING)
-				--RefreshLedStatus(inst)
+				SetLedEnabled(inst, true)
 			end
 		end
 	end
@@ -469,7 +483,6 @@ local function OnPutInInventory(inst, owner)
 	inst._owner = owner
 	inst._quickcharge = false
 	inst.components.circuitnode:Disconnect()
-	--RefreshLedStatus(inst)
 end
 
 local function OnDropped(inst)
@@ -495,7 +508,6 @@ local function OnDropped(inst)
 	else
 		inst.components.circuitnode:Disconnect()
 	end
-	--RefreshLedStatus(inst)
 end
 
 local function OnNoLongerLanded(inst)
@@ -636,7 +648,7 @@ local function fn()
 	inst:AddTag("engineering")
 	inst:AddTag("engineeringbatterypowered")
 
-	MakeInventoryFloatable(inst, "small", 0.15, 0.9)
+	MakeInventoryFloatable(inst, "small", 0.14, { 1.1, 1.15, 1 })
 
 	inst:AddComponent("spellbook")
 	inst.components.spellbook:SetRequiredTag("portableengineer")
@@ -700,8 +712,8 @@ local function fn()
 
 	inst:AddComponent("aoespell")
 
-	MakeSmallBurnable(inst, TUNING.MED_BURNTIME)
-	MakeSmallPropagator(inst)
+	--MakeSmallBurnable(inst, TUNING.MED_BURNTIME)
+	--MakeSmallPropagator(inst)
 
 	MakeHauntableLaunch(inst)
 

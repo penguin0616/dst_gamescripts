@@ -69,6 +69,9 @@ return{
             MANNEQUIN_EQUIPSWAPFAILED = "Just kiddin'!",
             PILLOWFIGHT_NO_HANDPILLOW = "Err, I think I'm missin' something.",
             NOTMYBERNIE = "Whoa. Take it easy, big fella.",
+            NOTMERM = "Fine. Y'all wait around for Wurt then.",
+            NOKELP = "only_used_by_wurt",
+--fallback to speech_wilson.lua             HASMERMLEADER = "only_used_by_wurt",
 		},
 		OPEN_CRAFTING =
 		{
@@ -994,6 +997,8 @@ return{
 
     ANNOUNCE_OTTERBOAT_OUTOFSHALLOWS = "This rickety thing wasn't built for deep water!",
     ANNOUNCE_OTTERBOAT_DENBROKEN = "Looks like the den was the main structural support...",
+
+    ANNOUNCE_GATHER_MERM = "only_used_by_wurt",
 
 	BATTLECRY =
 	{
@@ -3551,6 +3556,7 @@ return{
 		WINONA_TELEBRELLA =
 		{
 			GENERIC = "I made a few adjustments to the bossman's design.",
+            MISSINGSKILL = "Interesting design, but above my pay grade...",
 			OFF = "Gotta hook it up to the generator.",
 			CHARGING = "Needs some more time to charge.",
 			CHARGED = "Charged and ready to go.",
@@ -3558,6 +3564,7 @@ return{
 		WINONA_TELEPORT_PAD_ITEM =
 		{
 			GENERIC = "Sure beats luggin' stuff around!",
+            MISSINGSKILL = "Interesting design, but above my pay grade...",
 			OFF = "I'd better hook it up to some power.",
 			BURNING = "Quick! Put it out!",
 			BURNT = "Aw, nuts and bolts!",
@@ -3572,8 +3579,16 @@ return{
 		},
 		INSPECTACLESBOX = "Sure hope the bossman doesn't mind me borrowing a few things.",
 		INSPECTACLESBOX2 = "Jackpot!",
-		INSPECTACLESHAT = "Now I can track down the bossman's loot!",
-		ROSEGLASSESHAT = "Alright, Charlie. Show me the way.",
+		INSPECTACLESHAT = 
+        {
+            GENERIC = "Now I can track down the bossman's loot!",
+            MISSINGSKILL = "I'd love to know the specs for those specs! Ha!",
+        },
+		ROSEGLASSESHAT =
+        {
+            GENERIC = "Alright, Charlie. Show me the way.",
+            MISSINGSKILL = "Something about 'em makes me really miss Charlie.",
+        },
 		CHARLIERESIDUE = "I must've just missed her... but she left somethin' behind.",
 		CHARLIEROSE = "Oh, Charlie. What are you gettin' me into now?",
         WINONA_MACHINEPARTS_1 = "You just can't get quality manufactured parts like this out here!",

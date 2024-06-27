@@ -481,7 +481,7 @@ local function OnWorked(inst, worker, workleft, numworks)
 	end
 	inst.SoundEmitter:KillSound("vibrate_loop")
 	inst.SoundEmitter:KillSound("chain_vibrate_loop")
-	if workleft <= 1 and not changed and worker ~= nil and worker:HasTag("player") then
+	if workleft <= 1 and not changed and worker ~= nil and worker:HasAnyTag("player", "toughworker") then
 		inst.SoundEmitter:PlaySound("daywalker/pillar/pickaxe_hit_unbreakable")
 		local trigger_vibrate = worker:HasTag("toughworker")
 		if not trigger_vibrate then

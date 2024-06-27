@@ -69,6 +69,9 @@ return{
             MANNEQUIN_EQUIPSWAPFAILED = "Actually, maybe we'll just keep it instead.",
             PILLOWFIGHT_NO_HANDPILLOW = "We need a pillow first!",
             NOTMYBERNIE = "Bernie still wants to play!",
+            NOTMERM = "They don't listen to us!",
+            NOKELP = "only_used_by_wurt",
+--fallback to speech_wilson.lua             HASMERMLEADER = "only_used_by_wurt",
 		},
 		OPEN_CRAFTING =
 		{
@@ -988,6 +991,8 @@ return{
 
     ANNOUNCE_OTTERBOAT_OUTOFSHALLOWS = "Uh-oh... maybe we shouldn't have rowed out so far.",
     ANNOUNCE_OTTERBOAT_DENBROKEN = "We really shouldn't have broken that den!",
+
+    ANNOUNCE_GATHER_MERM = "only_used_by_wurt",
 
 	BATTLECRY =
 	{
@@ -3545,6 +3550,7 @@ return{
 		WINONA_TELEBRELLA =
 		{
 			GENERIC = "We don't think it would work very well in the rain.",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "Hey Winona! How do we fix it?",
 			CHARGING = "We don't think it would work very well in the rain.",
 			CHARGED = "We don't think it would work very well in the rain.",
@@ -3552,6 +3558,7 @@ return{
 		WINONA_TELEPORT_PAD_ITEM =
 		{
 			GENERIC = "Aww, it won't work on us.",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "How come it's not on?",
 			BURNING = "Oh, oh!",
 			BURNT = "Oh no! It got burnt!",
@@ -3566,8 +3573,16 @@ return{
 		},
 		INSPECTACLESBOX = "only_used_by_winona",
 		INSPECTACLESBOX2 = "only_used_by_winona",
-		INSPECTACLESHAT = "Winona's been using those funny glasses a lot lately.",
-		ROSEGLASSESHAT = "Winona wouldn't let us play with them. We've never seen her so stern...",
+		INSPECTACLESHAT = 
+        {
+            GENERIC = "Winona's been using those funny glasses a lot lately.",
+            MISSINGSKILL = "only_used_by_winona",
+        },
+		ROSEGLASSESHAT =
+        {
+            GENERIC = "Winona wouldn't let us play with them. We've never seen her so stern...",
+            MISSINGSKILL = "only_used_by_winona",
+        },
 		CHARLIERESIDUE = "only_used_by_winona",
 		CHARLIEROSE = "only_used_by_winona",
         WINONA_MACHINEPARTS_1 = "only_used_by_winona",

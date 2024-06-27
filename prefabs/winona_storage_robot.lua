@@ -20,6 +20,8 @@ local PHYSICS_RADIUS = 0.5
 local LED_BLINK_DELAY = 1.5
 local LED_BLINK_TIME = 0.75
 
+local OFFSCREEN_DEACTIVATE_DELAY = 2
+
 local function SetLedEnabled(inst, enabled)
 	if enabled then
 		inst.AnimState:Show("BALL_OVERLAY")
@@ -46,8 +48,6 @@ local function CancelLedBlink(inst)
 	else
 		inst._ledblinktasktime = nil
 	end
-	inst.OnEntitySleep = nil
-	inst.OnEntityWake = nil
 end
 
 local function SetLedStatusOn(inst)
@@ -66,25 +66,8 @@ local function OnLedBlink(inst)
 	SetLedEnabled(inst, inst._ledblinkon)
 end
 
-local function OnEntitySleep(inst)
-	if inst._ledblinktask then
-		inst._ledblinktasktime = GetTaskRemaining(inst._ledblinktask)
-		inst._ledblinktask:Cancel()
-		inst._ledblinktask = nil
-	end
-end
-
-local function OnEntityWake(inst)
-	if inst._ledblinktasktime then
-		inst._ledblinktask = inst:DoTaskInTime(inst._ledblinktasktime, OnLedBlink)
-		inst._ledblinktasktime = nil
-	end
-end
-
 local function SetLedStatusBlink(inst, initialon)
 	if not (inst._ledblinktask or inst._ledblinktasktime) then
-		inst.OnEntitySleep = OnEntitySleep
-		inst.OnEntityWake = OnEntityWake
 		SetLedEnabled(inst, initialon)
 		inst._ledblinkon = initialon
 		local delay = initialon and LED_BLINK_TIME or LED_BLINK_DELAY
@@ -148,30 +131,23 @@ local function OnTeleported(inst)
 	StorageRobotCommon.UpdateSpawnPoint(inst)
 end
 
-local function OnDeactivateRobot(inst)
-	if inst.sg then
-		inst:SetBrain(nil)
-		inst:ClearStateGraph()
-		inst:ClearBufferedAction()
-		inst:RemoveEventCallback("teleported", OnTeleported)
-		inst:RemoveComponent("locomotor")
-		inst.Physics:ClearMotorVelOverride()
-		inst.Physics:Stop()
-		inst.components.inventory:CloseAllChestContainers()
-		inst.components.fueled:StopConsuming()
-		inst.Transform:SetNoFaced()
-		inst.AnimState:PlayAnimation("idle_off")
-		inst.SoundEmitter:KillAllSounds()
-		ChangeToInventoryItemPhysics(inst, 1, PHYSICS_RADIUS)
-		StorageRobotCommon.ClearSpawnPoint(inst)
-		inst._isactive:set(false)
-		if not inst.components.inventoryitem:IsHeld() then
-			inst.components.circuitnode:ConnectTo("engineeringbattery")
-		end
+local function StopWatchForReactivate(inst)
+	if inst._reactivatetask then
+		inst._reactivatetask:Cancel()
+		inst._reactivatetask = nil
+	end
+end
+
+local function SetWasDeployed(inst, deployed)
+	inst._deployed = deployed
+	if not deployed then
+		inst._waitforminbattery = false
+		StopWatchForReactivate(inst)
 	end
 end
 
 local function OnDeploy(inst, pt)--, deployer)
+	StopWatchForReactivate(inst)
 	ChangeToCharacterPhysics(inst, 50, PHYSICS_RADIUS)
 	if pt then --loading doesn't pass pt
 		inst.Physics:Teleport(pt.x, 0, pt.z)
@@ -193,10 +169,75 @@ local function OnDeploy(inst, pt)--, deployer)
 	end
 	if not inst:IsAsleep() then
 		inst:RestartBrain()
+	elseif inst._offscreendeactivatetask == nil then
+		inst._offscreendeactivatetask = inst:DoTaskInTime(OFFSCREEN_DEACTIVATE_DELAY, inst.OnDeactivateRobot)
 	end
 	inst:ListenForEvent("teleported", OnTeleported)
 
+	SetWasDeployed(inst, true)
 	inst._isactive:set(true)
+end
+
+local function TryReactivate(inst)
+	local item = inst.components.inventory:GetFirstItemInAnySlot()
+	if (	--check if we would have a pickup action
+			not (item and (item.components.stackable == nil or item.components.stackable:IsFull())) and
+			StorageRobotCommon.FindItemToPickupAndStore(inst, item)
+		) or
+		(	--check if we would have a store item action
+			item and
+			StorageRobotCommon.FindContainerWithItem(inst, item)
+		)
+	then
+		OnDeploy(inst)
+	end
+end
+
+local function TryWatchForReactivate(inst)
+	if inst._deployed and
+		inst.sg == nil and
+		not inst.components.inventoryitem:IsHeld() and
+		not inst.components.fueled:IsEmpty() and
+		not (inst._waitforminbattery and inst.components.fueled:GetCurrentSection() < 3) and
+		inst._reactivatetask == nil
+	then
+		inst._waitforminbattery = false
+		inst._reactivatetask = inst:DoPeriodicTask(3, TryReactivate)
+	end
+end
+
+local function OnDeactivateRobot(inst)
+	if inst._offscreendeactivatetask then
+		inst._offscreendeactivatetask:Cancel()
+		inst._offscreendeactivatetask = nil
+	end
+	if inst.sg then
+		inst:SetBrain(nil)
+		inst:ClearStateGraph()
+		inst:ClearBufferedAction()
+		inst:RemoveEventCallback("teleported", OnTeleported)
+		inst:RemoveComponent("locomotor")
+		inst.Physics:ClearMotorVelOverride()
+		inst.Physics:Stop()
+		inst.components.inventory:CloseAllChestContainers()
+		inst.components.fueled:StopConsuming()
+		inst.Transform:SetNoFaced()
+		inst.AnimState:PlayAnimation("idle_off")
+		inst.SoundEmitter:KillAllSounds()
+		ChangeToInventoryItemPhysics(inst, 1, PHYSICS_RADIUS)
+		StorageRobotCommon.ClearSpawnPoint(inst)
+		inst._isactive:set(false)
+		if not inst.components.inventoryitem:IsHeld() then
+			inst.components.circuitnode:ConnectTo("engineeringbattery")
+		end
+		RefreshLedStatus(inst)
+		if inst._deployed then
+			if inst.components.fueled:GetPercent() < TUNING.WINONA_STORAGE_ROBOT_LOW_FUEL_PCT then
+				inst._waitforminbattery = true
+			end
+			TryWatchForReactivate(inst)
+		end
+	end
 end
 
 local function OnPutInInventory(inst, owner)
@@ -207,6 +248,7 @@ local function OnPutInInventory(inst, owner)
 	inst._landed_owner = nil
 	inst._owner = owner
 	inst._quickcharge = false
+	SetWasDeployed(inst, false)
 	OnDeactivateRobot(inst)
 	inst.components.circuitnode:Disconnect()
 	RefreshLedStatus(inst)
@@ -224,6 +266,8 @@ local function OnDropped(inst)
 		inst._owner = nil
 	end
 
+	SetWasDeployed(inst, false)
+
 	if inst.components.inventoryitem.is_landed then
 		inst.components.circuitnode:ConnectTo("engineeringbattery")
 		if inst._landed_owner then
@@ -236,6 +280,12 @@ local function OnDropped(inst)
 		inst.components.circuitnode:Disconnect()
 	end
 	RefreshLedStatus(inst)
+end
+
+local function OnPickup(inst, pickupguy, src_pos)
+    if inst.brain ~= nil then
+        inst.brain:UnignoreItem()
+    end
 end
 
 local function OnNoLongerLanded(inst)
@@ -254,6 +304,11 @@ local function OnLanded(inst)
 	inst._landed_owner = nil
 end
 
+local function OnStartFloating(inst)
+	SetWasDeployed(inst, false)
+	OnDeactivateRobot(inst)
+end
+
 local function OnSectionChanged(newsection, oldsection, inst)--, doer)
 	if oldsection == 0 then
 		inst:AddComponent("deployable")
@@ -264,11 +319,49 @@ local function OnSectionChanged(newsection, oldsection, inst)--, doer)
 	elseif newsection == 0 then
 		inst:RemoveComponent("deployable")
 		RefreshLedStatus(inst)
+		StopWatchForReactivate(inst)
+		if inst._deployed then
+			inst._waitforminbattery = true
+		end
 	end
+	if oldsection < 3 and newsection >= 3 then
+		TryWatchForReactivate(inst)
+	end
+end
+
+local function OnEntitySleep(inst)
+	if inst._ledblinktask then
+		inst._ledblinktasktime = GetTaskRemaining(inst._ledblinktask)
+		inst._ledblinktask:Cancel()
+		inst._ledblinktask = nil
+	end
+	if inst.brain then
+		inst.brain:UnignoreItem()
+	end
+	StopWatchForReactivate(inst)
+	if inst.sg and inst._offscreendeactivatetask == nil then
+		inst._offscreendeactivatetask = inst:DoTaskInTime(OFFSCREEN_DEACTIVATE_DELAY, inst.OnDeactivateRobot)
+	end
+end
+
+local function OnEntityWake(inst)
+	if inst._ledblinktasktime then
+		inst._ledblinktask = inst:DoTaskInTime(inst._ledblinktasktime, OnLedBlink)
+		inst._ledblinktasktime = nil
+	end
+	if inst._offscreendeactivatetask then
+		inst._offscreendeactivatetask:Cancel()
+		inst._offscreendeactivatetask = nil
+	end
+	TryWatchForReactivate(inst)
 end
 
 local function OnSave(inst, data)
 	data.power = inst._powertask and math.ceil(GetTaskRemaining(inst._powertask) * 1000) or nil
+	if inst._deployed then
+		data.deployed = true
+		data.waitforminbattery = inst._waitforminbattery or nil
+	end
 
 	--skilltree
 	data.quickcharge = inst._quickcharge or nil
@@ -280,12 +373,21 @@ local function OnLoad(inst, data)--, newents)
 		inst._inittask = nil
 	end
 
-	--skilltree
-	inst._quickcharge = data and data.quickcharge or false
+	if data then
+		--skilltree
+		inst._quickcharge = data.quickcharge or false
+
+		if data.waitforminbattery then
+			inst._waitforminbattery = true
+			StopWatchForReactivate(inst)
+		end
+	end
 
 	if not inst.components.fueled:IsEmpty() and StorageRobotCommon.UpdateSpawnPointOnLoad(inst) then
 		OnDeploy(inst) --don't pass pt
 	else
+		SetWasDeployed(inst, data and data.deployed or false)
+
 		StorageRobotCommon.ClearSpawnPoint(inst)
 		if data and data.power then
 			inst:AddBatteryPower(math.max(2 * FRAMES, data.power / 1000))
@@ -294,6 +396,10 @@ local function OnLoad(inst, data)--, newents)
 		end
 		--Enable connections, but leave the initial connection to batteries' OnPostLoad
 		inst.components.circuitnode:ConnectTo(nil)
+
+		if not inst:IsAsleep() then
+			TryWatchForReactivate(inst)
+		end
 	end
 end
 
@@ -561,6 +667,8 @@ local function fn()
 	inst.AnimState:SetSymbolBloom("ball_overlay")
 	inst.AnimState:SetFinalOffset(1) --tends to overlap items during pickup
 
+	MakeInventoryFloatable(inst, "med", 0.47, { 0.93, 1.03, 1 })
+
 	--Dedicated server does not need deployhelper
 	if not TheNet:IsDedicated() then
 		inst:AddComponent("deployhelper")
@@ -580,6 +688,7 @@ local function fn()
 	inst.scrapbook_anim = "placer"
 
 	inst.PICKUP_ARRIVE_DIST = 1
+	inst.LOW_BATTERY_GOHOME = true --for brain
 
 	inst:AddComponent("knownlocations")
 
@@ -595,6 +704,7 @@ local function fn()
 	inst:AddComponent("inventoryitem")
 	inst.components.inventoryitem:SetOnPutInInventoryFn(OnPutInInventory)
 	inst.components.inventoryitem:SetOnDroppedFn(OnDropped)
+    inst.components.inventoryitem:SetOnPickupFn(OnPickup)
 
 	inst:AddComponent("circuitnode")
 	inst.components.circuitnode:SetRange(TUNING.WINONA_BATTERY_RANGE - TUNING.WINONA_STORAGE_ROBOT_FOOTPRINT + TUNING.WINONA_ENGINEERING_FOOTPRINT)
@@ -610,6 +720,7 @@ local function fn()
 	inst:ListenForEvent("engineeringcircuitchanged", OnCircuitChanged)
 	inst:ListenForEvent("on_no_longer_landed", OnNoLongerLanded)
 	inst:ListenForEvent("on_landed", OnLanded)
+	inst:ListenForEvent("floater_startfloating", OnStartFloating)
 
 	MakeHauntable(inst)
 
@@ -617,12 +728,14 @@ local function fn()
 	inst.AddBatteryPower = AddBatteryPower
 	inst.OnSave = OnSave
 	inst.OnLoad = OnLoad
-	--inst.OnEntitySleep = OnEntitySleep
-	--inst.OnEntityWake = OnEntityWake
+	inst.OnEntitySleep = OnEntitySleep
+	inst.OnEntityWake = OnEntityWake
 
 	--skilltree
 	inst._quickcharge = false
 
+	inst._deployed = false --was this deployed or just dropped on the ground? (remembers, even if we become deactivated from sleep or empty fuel)
+	inst._waitforminbattery = false --do we need to wait for 50% recharge before auto-reactivation
 	inst._wired = nil
 	inst._ledblinktask = nil
 	inst._ledblinktasktime = nil
@@ -632,6 +745,7 @@ local function fn()
 	inst:AddComponent("fueled")
 	inst.components.fueled.fueltype = FUELTYPE.MAGIC
 	inst.components.fueled.rate = 1
+	inst.components.fueled:SetSections(4)
 	inst.components.fueled:SetSectionCallback(OnSectionChanged)
 	inst.components.fueled:InitializeFuelLevel(TUNING.WINONA_STORAGE_ROBOT_FUEL) --last, since triggers section callback
 

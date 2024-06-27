@@ -162,6 +162,13 @@ local function DespawnTrap(inst)
 	end
 end
 
+local function StartSoundLoop(inst)
+	if not inst.sound then
+		inst.sound = true
+		inst.SoundEmitter:PlaySound("meta4/winona_catapult/shadow_projectile_rose_field_lp", "loop")
+	end
+end
+
 local function OnTimerDone(inst, data)
 	if data and data.name == "decay" then
 		inst:DespawnTrap()
@@ -181,6 +188,7 @@ end
 
 local function OnSave(inst, data)
 	data.varation = inst.variation ~= 1 and inst.variation or nil
+	data.sound = inst.sound or nil
 end
 
 local function OnLoad(inst, data)
@@ -197,6 +205,10 @@ local function OnLoad(inst, data)
 		inst.variation = data and data.variation or 1
 		inst.AnimState:PlayAnimation("idle"..tostring(inst.variation), true)
 		inst:Show()
+
+		if data and data.sound then
+			inst:StartSoundLoop()
+		end
 	end
 end
 
@@ -243,6 +255,7 @@ local function fn()
 	inst.variation = math.random(3)
 
 	inst.DespawnTrap = DespawnTrap
+	inst.StartSoundLoop = StartSoundLoop
 	inst.OnSave = OnSave
 	inst.OnLoad = OnLoad
 

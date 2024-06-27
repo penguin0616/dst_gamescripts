@@ -190,6 +190,17 @@ local function Sapling_CheckGrowConstraints(inst)
     end
 end
 
+local function Sapling_OnEntityWake(inst)
+    local growable = inst.components.growable
+
+    if growable ~= nil and growable.pausedremaining ~= nil and growable.pausedremaining <= 0 then
+        -- NOTES(DiogoW): It "grew" offscreen, but waited for Growable:OnEntityWake() to be called and then got paused because of the season change.
+        --                It might be worth fixing this in the component sometime.
+        growable:Resume(PAUSE_REASON.TILE)
+        growable:Resume(PAUSE_REASON.SEASON)
+    end
+end
+
 local function Sapling_DoMagicGrowthFn(inst, doer)
     inst.magic_growth_delay = nil
 
@@ -338,7 +349,24 @@ local function Full_OnMakeEmptyFn(inst)
     inst.AnimState:Hide("fruit")
 end
 
+local function _MakeEmpty(inst)
+    if inst.components.pickable ~= nil then
+        inst.components.pickable:MakeEmpty()
+    end
+end
+
 local function Full_OnRegenFn(inst)
+    local constraints = TREE_DEFS[inst.type].GROW_CONSTRAINT
+
+    local tile = TheWorld.Map:GetTileAtPoint(inst.Transform:GetWorldPosition())
+
+    -- NOTES(DiogoW): Won't grow fruit on wrong tile!
+    if tile ~= constraints.TILE then
+        inst:DoTaskInTime(0, _MakeEmpty) -- Needs to be delayed because Pickable:Regen would mess with things set by MakeEmpty.
+
+        return
+    end
+
     inst.AnimState:Show("fruit")
 
     if inst:IsAsleep() then
@@ -427,6 +455,7 @@ local function MakeAncientTree(name, data)
         end
 
         MakeObstaclePhysics(inst, data.physics_rad)
+		inst:SetDeploySmartRadius(DEPLOYSPACING_RADIUS[DEPLOYSPACING.PLACER_DEFAULT] / 2) --seed deployspacing/2
 
         inst.MiniMapEntity:SetIcon("ancienttree_"..name..".png")
         inst.MiniMapEntity:SetPriority(3)
@@ -522,6 +551,8 @@ local function MakeAncientTree(name, data)
         inst.entity:AddSoundEmitter()
         inst.entity:AddNetwork()
 
+		inst:SetDeploySmartRadius(DEPLOYSPACING_RADIUS[DEPLOYSPACING.PLACER_DEFAULT] / 2) --seed deployspacing/2
+
         inst.AnimState:SetBank("ancienttree_seed")
         inst.AnimState:SetBuild("ancienttree_seed")
         inst.AnimState:PlayAnimation("idle_planted", true)
@@ -579,6 +610,8 @@ local function MakeAncientTree(name, data)
 
         inst.OnSave = PlantData_OnSave
         inst.OnLoad = PlantData_OnLoad
+
+        inst.OnEntityWake  = Sapling_OnEntityWake
 
         MakeHauntableWork(inst)
 
@@ -655,6 +688,7 @@ local function MakeAncientTree(name, data)
             build    = data.build,
             animname = "sprout_item",
             floater  = {"large", 0.2, 0.55},
+            deployspacing = DEPLOYSPACING.PLCAER_DEFAULT,
             master_postinit = WaxedSaplingItem_MasterPostInit,
         })
 

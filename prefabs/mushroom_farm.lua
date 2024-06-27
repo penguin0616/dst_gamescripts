@@ -332,6 +332,7 @@ local function fn()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
+	inst:SetDeploySmartRadius(1) --recipe min_spacing/2
     MakeObstaclePhysics(inst, .5)
 
     inst.MiniMapEntity:SetIcon("mushroom_farm.png")

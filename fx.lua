@@ -33,28 +33,6 @@ local function OceanTreeLeafFxFallUpdate(inst)
     inst.Transform:SetPosition(x, y - inst.fall_speed * FRAMES, z)
 end
 
-local function CreateHorrorFuelCore(anim, mount)
-    local inst = CreateEntity()
-
-    inst:AddTag("FX")
-    --[[Non-networked entity]]
-    --inst.entity:SetCanSleep(false)
-    inst.persists = false
-
-    inst.entity:AddTransform()
-    inst.entity:AddAnimState()
-
-    inst.AnimState:SetBank("wurt_planar_casting_fx")
-    inst.AnimState:SetBuild("wurt_planar_casting_fx")
-    inst.AnimState:PlayAnimation(anim, false)
-
-    inst.AnimState:SetFinalOffset(2)
-    inst.AnimState:SetLightOverride(.1)
-    inst.AnimState:SetSymbolLightOverride("horror_fx", 0.5)
-
-    return inst
-end
-
 local fx =
 {
     {
@@ -3222,81 +3200,6 @@ local fx =
             )
         end
     },
-    {
-        name = "purebrilliance_castfx",
-        bank = "wurt_planar_casting_fx",
-        build = "wurt_planar_casting_fx",
-        anim = "purebrilliance_cast",
-        fn = function(inst)
-            inst.AnimState:SetFinalOffset(1)
-
-            inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
-            inst.AnimState:SetSymbolLightOverride("pb_energy_loop", .3)
-            inst.AnimState:SetSymbolLightOverride("pb_ray", .3)
-            inst.AnimState:SetSymbolLightOverride("SparkleBit", .3)
-            inst.AnimState:SetLightOverride(.1)
-        end,
-    },
-    {
-        name = "purebrilliance_castfx_mount",
-        bank = "wurt_planar_casting_fx",
-        build = "wurt_planar_casting_fx",
-        anim = "purebrillance_cast_mount",
-        sixfaced = true,
-        fn = function(inst)
-            inst.AnimState:SetFinalOffset(1)
-
-            inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
-            inst.AnimState:SetSymbolLightOverride("pb_energy_loop", .3)
-            inst.AnimState:SetSymbolLightOverride("pb_ray", .3)
-            inst.AnimState:SetSymbolLightOverride("SparkleBit", .3)
-            inst.AnimState:SetLightOverride(.1)
-        end,
-    },
-    {
-        name = "horrorfuel_castfx",
-        bank = "wurt_planar_casting_fx",
-        build = "wurt_planar_casting_fx",
-        anim = "horrorfuel_bottom_cast",
-        fn = function(inst, proxy)
-            inst.AnimState:SetFinalOffset(1)
-            inst.AnimState:SetMultColour(1, 1, 1, 0.5)
-            inst.AnimState:SetSymbolLightOverride("horror_fx", 0.5)
-            inst.AnimState:UsePointFiltering(true)
-            inst.AnimState:SetLightOverride(.1)
-
-            inst.core = CreateHorrorFuelCore("horrorfuel_top_cast")
-            inst.core.Transform:SetFromProxy(proxy.GUID)
-
-            local parent = proxy.entity:GetParent()
-            if parent ~= nil then
-                inst.core.entity:SetParent(parent.entity)
-            end
-        end,
-    },
-    {
-        name = "horrorfuel_castfx_mount",
-        bank = "wurt_planar_casting_fx",
-        build = "wurt_planar_casting_fx",
-        anim = "horrorfuel_bottom_cast_mount",
-        sixfaced = true,
-        fn = function(inst, proxy)
-            inst.AnimState:SetFinalOffset(1)
-            inst.AnimState:SetMultColour(1, 1, 1, 0.5)
-            inst.AnimState:SetSymbolLightOverride("horror_fx", 0.3)
-            inst.AnimState:UsePointFiltering(true)
-            inst.AnimState:SetLightOverride(.1)
-
-            inst.core = CreateHorrorFuelCore("horrorfuel_top_cast_mount")
-            inst.core.Transform:SetFromProxy(proxy.GUID)
-
-            local parent = proxy.entity:GetParent()
-            if parent ~= nil then
-                inst.core.entity:SetParent(parent.entity)
-            end
-        end,
-    },
-
     {
         name = "fx_ice_crackle",
         bank = "fx_ice_crackleandpop",

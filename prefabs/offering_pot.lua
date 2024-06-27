@@ -122,7 +122,7 @@ local function OnBuilt(inst)
     inst.AnimState:PlayAnimation("place")
     inst.AnimState:PushAnimation("idle", false)
 
-    inst.SoundEmitter:PlaySound("meta4/merm_alter/place")
+    inst.SoundEmitter:PlaySound("meta4/merm_alter/place"..(inst._upgraded and "_upgraded" or ""))
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -180,68 +180,105 @@ local function OnRemoved(inst)
     TheWorld:PushEvent("ms_updateofferingpotstate", { inst = inst, count = 0 })
 end
 
+local function OnBurnt(inst, ...)
+    DefaultBurntStructureFn(inst, ...)
+
+    inst:RemoveMermCaller()
+    inst:RemoveComponent("activatable")
+end
+
 --------------------------------------------------------------------------------------------------------------------------
-local function checkforcallerdist(inst)
-    local keep = true
-    if inst.merm_caller and inst.merm_caller:IsValid() then
-        if inst:GetDistanceSqToInst(inst.merm_caller) > 20*20 then
-            keep = false
-        end
-    else
-        keep = false
+
+local function RemoveMermCaller(inst)
+    inst.merm_caller = nil
+
+    if inst.components.activatable ~= nil then
+        inst.components.activatable.inactive = true
     end
 
-    if not keep then
-        if inst.caller_task then
-            inst.caller_task:Cancel()
-            inst.caller_task = nil
-        end
+    if inst.caller_task ~= nil then
+        inst.caller_task:Cancel()
+        inst.caller_task = nil
     end
 end
 
-local MERM_MUST = {"merm"}
-local function OnActivate(inst,doer)
-    doer.components.talker:Say(GetString(doer, "ANNOUNCE_GATHER_MERM"))
-    inst.components.activatable.inactive = true
-
-    if doer:HasTag("merm")then
-        inst.merm_caller = doer
-        inst.caller_task = inst:DoPeriodicTask(1,function() checkforcallerdist(inst) end)
+local function ValidateMermGathering(inst)
+    if inst.merm_caller == nil or
+        not inst.merm_caller:IsValid() or
+        inst:GetDistanceSqToInst(inst.merm_caller) > 20*20 or
+        inst.components.container == nil or
+        inst.components.container:IsEmpty()
+    then
+        inst:RemoveMermCaller()
     end
+end
+
+local function _IsKelp(item)
+    return item.prefab == "kelp"
+end
+
+local function AnswerCall(inst, merm)
+    if inst.components.container == nil then
+        return
+    end
+
+    local kelp = inst.components.container:FindItem(_IsKelp)
+
+    if kelp ~= nil and inst.merm_caller ~= nil then
+        merm.components.inventory:GiveItem(kelp)
+        merm:dohiremerms(inst.merm_caller, kelp)
+
+        merm:PushBufferedAction(BufferedAction(merm, kelp, ACTIONS.EAT))
+    end
+
+    if inst.components.container:IsEmpty() then
+        inst:RemoveMermCaller()
+    end
+end
+
+local function OnActivate(inst, doer)
+    if not doer:HasTag("merm_builder") then
+        return false
+    end
+
+    doer.components.talker:Say(GetString(doer, "ANNOUNCE_GATHER_MERM"))
+
+    inst.merm_caller = doer
+
+    if inst.caller_task == nil then
+        inst.caller_task = inst:DoPeriodicTask(1, inst.ValidateMermGathering)
+    end
+
     return true
 end
 
 local function CanActivateFn(inst,doer)
-    -- in use
-    if inst.merm_caller then
-        return false , "BUSY"
+    if inst:HasTag("burnt") or inst.components.container == nil then
+        return false
     end
 
-    -- no kelp
-    if not inst.components.container:FindItem(function(item) return true end) then
-        return false , "NOKELP"
-    end    
+    if not doer:HasTag("merm_builder") then
+        return false, "NOTMERM"
+    end
+
+    if inst.merm_caller and inst.merm_caller ~= doer then
+        return false, "HASMERMLEADER"
+    end
+
+    if inst.components.container:IsEmpty() then
+        return false, "NOKELP"
+    end
 
     return true
 end
+
+--------------------------------------------------------------------------------------------------------------------------
 
 local function GetVerb()
     return "GATHER_MERM"
 end
 
-local function AnswerCall(inst, merm)
-    local kelp = inst.components.container:FindItem(function(item) return true end)    
-    if kelp then
-        merm.components.inventory:GiveItem(kelp) 
-        merm:dohiremerms(inst.merm_caller, kelp)
-        merm:PushBufferedAction(BufferedAction(merm, kelp, ACTIONS.EAT))
-        
-    end
-    kelp = inst.components.container:FindItem(function(item) return true end)
-    if not kelp then
-        inst.merm_caller = nil
-    end
-end
+--------------------------------------------------------------------------------------------------------------------------
 
 local function MakeOfferingPot(name, build, large)
     local function fn()
@@ -287,7 +324,12 @@ local function MakeOfferingPot(name, build, large)
             return inst
         end
 
+        inst._upgraded = large
+
         inst.UpdateDecor = UpdateDecor
+        inst.RemoveMermCaller = RemoveMermCaller
+        inst.ValidateMermGathering = ValidateMermGathering
+        inst.AnswerCall = AnswerCall
 
         inst:AddComponent("lootdropper")
 
@@ -318,8 +360,6 @@ local function MakeOfferingPot(name, build, large)
         inst.OnSave = OnSave
         inst.OnLoad = OnLoad
 
-        inst.AnswerCall = AnswerCall
-
         if large then
             MakeLargeBurnable(inst, nil, nil, true)
             MakeLargePropagator(inst)
@@ -327,6 +367,8 @@ local function MakeOfferingPot(name, build, large)
             MakeMediumBurnable(inst, nil, nil, true)
             MakeMediumPropagator(inst)
         end
+
+        inst.components.burnable:SetOnBurntFn(OnBurnt)
 
         MakeHauntableWork(inst)
         MakeSnowCovered(inst)

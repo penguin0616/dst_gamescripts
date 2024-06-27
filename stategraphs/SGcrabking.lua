@@ -1,6 +1,7 @@
 require("stategraphs/commonstates")
 
-local WAVE_ATTACK_TIMEOUT_TIME = 8
+
+local BOAT_MUST_TAGS = { "boat" }
 
 local function heal(inst)
     inst.components.health:DoDelta(TUNING.CRABKING_REGEN + math.floor(inst.gemcount.orange/2) * TUNING.CRABKING_REGEN_BUFF )
@@ -36,7 +37,39 @@ local function spawnwaves(inst, numWaves, totalAngle, waveSpeed, wavePrefab, ini
     )
 end
 
-local BOAT_MUST_TAGS = { "boat" }
+local NEARBY_PLATFORM_MUST_TAGS = { "boat", "walkableplatform" }
+local NEARBY_PLATFORM_CANT_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO" }
+local NEARBY_PLATFORM_TEST_RADIUS = 3 + TUNING.MAX_WALKABLE_PLATFORM_RADIUS
+local function push_nearby_boats(inst)
+    local ix, iy, iz = inst.Transform:GetWorldPosition()
+    local radius = inst:GetPhysicsRadius(1)
+    local min_range_sq = math.max(0, radius - NEARBY_PLATFORM_TEST_RADIUS)
+    min_range_sq = min_range_sq * min_range_sq
+
+    local i0
+    local platform_ents = TheSim:FindEntities(ix, 0, iz, radius + NEARBY_PLATFORM_TEST_RADIUS, NEARBY_PLATFORM_MUST_TAGS, NEARBY_PLATFORM_CANT_TAGS)
+    for i, platform_entity in ipairs(platform_ents) do
+        if platform_entity:GetDistanceSqToPoint(ix, 0, iz) >= min_range_sq then
+            i0 = i
+            break
+        end
+    end
+    if i0 then
+        for i = i0, #platform_ents do
+            local platform_entity = platform_ents[i]
+            if platform_entity ~= inst
+                    and platform_entity.Transform
+                    and platform_entity.components.boatphysics then
+                local v2x, v2y, v2z = platform_entity.Transform:GetWorldPosition()
+                local mx, mz = v2x - ix, v2z - iz
+                if mx ~= 0 or mz ~= 0 then
+                    local normalx, normalz = VecUtil_Normalize(mx, mz)
+                    platform_entity.components.boatphysics:ApplyForce(normalx, normalz, 2)
+                end
+            end
+        end
+    end
+end
 
 local function throwchunk(inst, prefab)
     local chunk = inst:SpawnChunk(prefab, inst:GetPosition())
@@ -55,6 +88,18 @@ local function GetTransitionState(inst)
     end
 end
 
+local function go_to_idle(inst)
+    inst.sg:GoToState("idle")
+end
+
+local function go_to_inert(inst)
+    inst.sg:GoToState("inert")
+end
+
+local function play_quarter_light_sound(inst)
+    inst.SoundEmitter:PlaySound("dontstarve/common/together/electricity/light",nil,.25)
+end
+
 local actionhandlers =
 {
     ActionHandler(ACTIONS.HAMMER, "attack"),
@@ -65,8 +110,6 @@ local events =
     CommonHandlers.OnFreeze(),
     CommonHandlers.OnDeath(),
 
-    EventHandler("doattack", function(inst, data)
-    end),
     EventHandler("activate", function(inst, data)
         inst.sg:GoToState(data.isload and "idle" or "inert_pst")
 
@@ -125,9 +168,7 @@ local states =
             EventHandler("attacked", function(inst)
                 inst.sg:GoToState("hit_light")
             end),
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
+            EventHandler("animover", go_to_idle),
         },
     },
 
@@ -145,7 +186,7 @@ local states =
 
         timeline=
         {
-            TimeEvent(1*FRAMES, function(inst) inst.SoundEmitter:PlaySound("meta4/crabking/water_move") end),
+            SoundFrameEvent(1, "meta4/crabking/water_move"),
         },
 
         events =
@@ -166,7 +207,7 @@ local states =
 
         timeline=
         {
-            TimeEvent(5*FRAMES, function(inst) inst.SoundEmitter:PlaySound("meta4/crabking/taunt") end),
+            SoundFrameEvent(5, "meta4/crabking/taunt"),
         },
 
         onupdate = function(inst)
@@ -192,20 +233,18 @@ local states =
         name = "taunt_pst",
         tags = { "busy", "canrotate" },
 
-        onenter = function(inst, pushanim)
+        onenter = function(inst)
             inst.AnimState:PlayAnimation("taunt_pst")
         end,
 
         timeline=
         {
-            TimeEvent(8*FRAMES, function(inst) inst.SoundEmitter:PlaySound("meta4/crabking/water_move") end),
+            SoundFrameEvent(8, "meta4/crabking/water_move"),
         },
 
         events =
         {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
+            EventHandler("animover", go_to_idle),
         },
     },
 
@@ -223,22 +262,18 @@ local states =
 
         timeline=
         {
-            TimeEvent(16*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/bubble") end),
-            TimeEvent(21*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/bubble") end),
-            TimeEvent(32*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/bubble") end),
-            TimeEvent(34*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/bubble") end),
-            TimeEvent(41*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/bubble") end),
-            TimeEvent(51*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/bubble") end),
+            SoundFrameEvent(16, "hookline_2/creatures/boss/crabking/bubble"),
+            SoundFrameEvent(21, "hookline_2/creatures/boss/crabking/bubble"),
+            SoundFrameEvent(32, "hookline_2/creatures/boss/crabking/bubble"),
+            SoundFrameEvent(34, "hookline_2/creatures/boss/crabking/bubble"),
+            SoundFrameEvent(41, "hookline_2/creatures/boss/crabking/bubble"),
+            SoundFrameEvent(51, "hookline_2/creatures/boss/crabking/bubble"),
         },
 
         events =
         {
             EventHandler("animover", function(inst)
-                if math.random() < 0.90 then
-                    inst.sg:GoToState("inert")
-                else
-                    inst.sg:GoToState("inert_blink")
-                end
+                inst.sg:GoToState((math.random() < 0.9 and "inert") or "inert_blink")
             end),
         },
     },
@@ -247,23 +282,19 @@ local states =
         name = "reappear",
         tags = { "inert", "canrotate", "noattack", "busy", "canwxscan", },
 
-        onenter = function(inst, pushanim)
+        onenter = function(inst)
             inst.AnimState:PlayAnimation("reappear")
         end,
 
         timeline=
         {
-            TimeEvent(1*FRAMES, function(inst) inst.SoundEmitter:PlaySound("turnoftides/common/together/water/submerge/large") end),
+            SoundFrameEvent(1, "turnoftides/common/together/water/submerge/large"),
         },
 
         events =
         {
             EventHandler("animover", function(inst)
-                if math.random() < 0.90 then
-                    inst.sg:GoToState("inert")
-                else
-                    inst.sg:GoToState("inert_blink")
-                end
+                inst.sg:GoToState((math.random() < 0.9 and "inert") or "inert_blink")
             end),
         },
     },
@@ -278,18 +309,16 @@ local states =
 
         timeline=
         {
-            TimeEvent(5*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/inert_growl") end),
-            TimeEvent(7*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/idle") end),
-            TimeEvent(16*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/idle") end),
-            TimeEvent(26*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/bubble") end),
-            TimeEvent(40*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/bubble") end),
+            SoundFrameEvent(5, "hookline_2/creatures/boss/crabking/inert_growl"),
+            SoundFrameEvent(7, "hookline_2/creatures/boss/crabking/idle"),
+            SoundFrameEvent(16, "hookline_2/creatures/boss/crabking/idle"),
+            SoundFrameEvent(26, "hookline_2/creatures/boss/crabking/bubble"),
+            SoundFrameEvent(40, "hookline_2/creatures/boss/crabking/bubble"),
         },
 
         events =
         {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("inert")
-            end),
+            EventHandler("animover", go_to_inert),
         },
     },
 
@@ -297,27 +326,23 @@ local states =
         name = "inert_pst",
         tags = { "inert" },
 
-        onenter = function(inst, pushanim)
-         --   inst.AnimState:PlayAnimation("red_fx")
-          --  inst.AnimState:PushAnimation("inert_pst",false)
+        onenter = function(inst)
             inst.AnimState:PlayAnimation("inert_pst")
             inst:ShineSocketOfColor("red")
         end,
 
         timeline=
         {
-            TimeEvent((15)*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/inert_hide") end),
-            TimeEvent((25)*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/vocal") end),
-            TimeEvent((27)*FRAMES, function(inst) inst.SoundEmitter:PlaySound("turnoftides/common/together/water/submerge/large") end),
-            TimeEvent((28)*FRAMES, function(inst) inst.SoundEmitter:PlaySound("turnoftides/common/together/water/submerge/large") end),
+            SoundFrameEvent(15, "hookline_2/creatures/boss/crabking/inert_hide"),
+            SoundFrameEvent(25, "hookline_2/creatures/boss/crabking/vocal"),
+            SoundFrameEvent(27, "turnoftides/common/together/water/submerge/large"),
+            SoundFrameEvent(28, "turnoftides/common/together/water/submerge/large"),
         },
 
 
         events =
         {
-            EventHandler("animqueueover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
+            EventHandler("animqueueover", go_to_idle),
         },
     },
 
@@ -352,9 +377,7 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("inert")
-            end),
+            EventHandler("animover", go_to_inert),
         },
     },
 
@@ -368,9 +391,7 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("inert")
-            end),
+            EventHandler("animover", go_to_inert),
         },
     },
 
@@ -390,15 +411,30 @@ local states =
 
         timeline=
         {
-            TimeEvent(2*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/common/together/electricity/light") end),
-            TimeEvent(6*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/common/together/electricity/light") end),
-            TimeEvent(4*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/spell") end),
-            TimeEvent(17*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/cast_pre") end),
+            SoundFrameEvent(2, "dontstarve/common/together/electricity/light"),
+            SoundFrameEvent(6, "dontstarve/common/together/electricity/light"),
+            SoundFrameEvent(4, "hookline_2/creatures/boss/crabking/spell"),
+            SoundFrameEvent(17, "hookline_2/creatures/boss/crabking/cast_pre"),
         },
 
         events =
         {
             EventHandler("animover", function(inst)
+                if not inst.geysers then
+                    inst.geysers = {}
+                end
+
+                local x,y,z = inst.Transform:GetWorldPosition()
+                for i=1,6 do
+                    local radius = 8
+                    local theta = PI*2/8 *i
+                    local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
+                    local geyser = SpawnPrefab("crabking_geyserspawner")
+                    geyser.Transform:SetPosition(x+offset.x,0,z+offset.z)        
+
+                    table.insert(inst.geysers,geyser)                    
+                end
+
                 inst.sg:GoToState("cast_loop")
             end),
         },
@@ -416,13 +452,11 @@ local states =
             inst.sg.statemem.elapsedtime = 0
             inst.sg.statemem.wavetime = wavetime
 
-            if not inst.components.timer:TimerExists("do_wave_push") then
-                inst.components.timer:StartTimer("do_wave_push", WAVE_ATTACK_TIMEOUT_TIME)
-            end
+
+            push_nearby_boats(inst)
         end,
 
         onupdate = function(inst, dt)
-
             inst.sg.statemem.elapsedtime = inst.sg.statemem.elapsedtime +dt
 
             if not inst.sg.statemem.wavetime then
@@ -440,26 +474,40 @@ local states =
             inst.SoundEmitter:SetParameter("crabmagic", "intensity", intensity)
             gemshine(inst, "blue")
 
-            local x, y, z = inst.Transform:GetWorldPosition()
+            if not inst.components.timer:TimerExists("do_end_cast") then
+                local x, y, z = inst.Transform:GetWorldPosition()
 
-            -- Keep casting until there are no boats nearby. (also times out)
-            if TheSim:CountEntities(x, 0, z, 14, BOAT_MUST_TAGS) <= 0 then
-                inst.sg:GoToState("cast_pst")
+                -- Keep casting until there are no boats nearby. (also times out)   
+                if TheSim:CountEntities(x, 0, z, 14, BOAT_MUST_TAGS) <= 0 then            
+                    inst.components.timer:StartTimer("do_end_cast",2)
+                end
             end
         end,
 
         timeline=
         {
-            TimeEvent(2*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/common/together/electricity/light",nil,.25) end),
-            TimeEvent(5*FRAMES, function(inst) if math.random() < 0.5 then inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/cast_pre") end end),
-            TimeEvent(5*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/chatter")  end),
-            TimeEvent(6*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/common/together/electricity/light",nil,.25) end),
-            TimeEvent(18*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/common/together/electricity/light",nil,.25) end),
-            TimeEvent(19*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/common/together/electricity/light",nil,.25) end),
-            TimeEvent(22*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/common/together/electricity/light",nil,.25) end),
-            TimeEvent(23*FRAMES, function(inst) if math.random() < 0.5 then inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/cast_pre") end end),
-            TimeEvent(23*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/chatter")  end),
-            TimeEvent(25*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/common/together/electricity/light",nil,.25) end),
+            TimeEvent(2*FRAMES, play_quarter_light_sound),
+            TimeEvent(5*FRAMES, function(inst)
+                if math.random() < 0.5 then
+                    inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/cast_pre")
+                end
+            end),
+            TimeEvent(5*FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/chatter")
+            end),
+            TimeEvent(6*FRAMES, play_quarter_light_sound),
+            TimeEvent(18*FRAMES, play_quarter_light_sound),
+            TimeEvent(19*FRAMES, play_quarter_light_sound),
+            TimeEvent(22*FRAMES, play_quarter_light_sound),
+            TimeEvent(23*FRAMES, function(inst)
+                if math.random() < 0.5 then
+                    inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/cast_pre")
+                end
+            end),
+            TimeEvent(23*FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/chatter")
+            end),
+            TimeEvent(25*FRAMES, play_quarter_light_sound),
         },
 
         onexit = function(inst)
@@ -473,11 +521,13 @@ local states =
 
         events =
         {
+        
             EventHandler("timerdone", function(inst,data)
-                if data.name == "do_wave_push" then
+                if data.name == "do_end_cast" then
                     inst.sg:GoToState("cast_pst")
                 end
             end),
+       
             EventHandler("animover", function(inst)
                 inst.sg.statemem.keepcast = true
                 inst.sg:GoToState("cast_loop", inst.sg.statemem.wavetime)
@@ -490,25 +540,19 @@ local states =
         tags = { "busy", "canrotate"},
 
         onenter = function(inst, freezecast)
-            if freezecast then
-                inst.AnimState:PlayAnimation("cast_blue_pst")
-            else
-                inst.AnimState:PlayAnimation("cast_purple_pst")
-            end
+            inst.AnimState:PlayAnimation((freezecast and "cast_blue_pst") or "cast_purple_pst")
             inst:EndCastSpell()
         end,
 
         timeline=
         {
-            TimeEvent(5*FRAMES, function(inst) inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/medium") end),
-            TimeEvent(6*FRAMES, function(inst) inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/medium") end),
+            SoundFrameEvent(5, "turnoftides/common/together/water/splash/medium"),
+            SoundFrameEvent(6, "turnoftides/common/together/water/splash/medium"),
         },
 
         events =
         {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
+            EventHandler("animover", go_to_idle),
         },
     },
 
@@ -527,7 +571,7 @@ local states =
         end,
 
         timeline = {
-            TimeEvent(39*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/inert_hide") end),
+            SoundFrameEvent(39*FRAMES, "hookline_2/creatures/boss/crabking/inert_hide"),
             TimeEvent(65*FRAMES, function(inst)
                 inst:SpawnClawArms()
                 inst:ShineSocketOfColor("green")
@@ -560,15 +604,13 @@ local states =
         end,
 
         timeline = {
-            TimeEvent(39*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/inert_hide") end),
-            TimeEvent(65*FRAMES, function(inst) inst.spawnstacks(inst) end),
+            SoundFrameEvent(39, "hookline_2/creatures/boss/crabking/inert_hide"),
+            TimeEvent(65*FRAMES, function(inst) inst:spawnstacks() end),
         },
 
         events =
         {
-            EventHandler("animqueueover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
+            EventHandler("animqueueover", go_to_idle),
         },
     },
 
@@ -590,9 +632,7 @@ local states =
             TimeEvent(13*FRAMES, function(inst)
                 inst.sg:AddStateTag("loserock_window")
             end),
-            TimeEvent(27*FRAMES, function(inst)
-                inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/repair")
-            end),
+            SoundFrameEvent(27, "hookline_2/creatures/boss/crabking/repair"),
             TimeEvent(31*FRAMES, function(inst)
                 inst.sg:RemoveStateTag("loserock_window")
                 inst:ShineSocketOfColor("orange")
@@ -620,7 +660,7 @@ local states =
             if inst.lastfixloop then
                 table.remove(randomlist,inst.lastfixloop)
             end
-            local randomchoice = randomlist[math.random(1,#randomlist)]
+            local randomchoice = randomlist[math.random(#randomlist)]
             inst.lastfixloop = randomchoice
             local arm = rightarm and "right" or "left"
             inst.sg.statemem.rightarm = rightarm
@@ -633,12 +673,12 @@ local states =
             TimeEvent(12*FRAMES, function(inst)
                 if inst.sg.statemem.rightarm then
                     inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/repair")
-                    end
+                end
              end),
              TimeEvent(16*FRAMES, function(inst)
                 if not inst.sg.statemem.rightarm then
                     inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/repair")
-                    end
+                end
              end),
             TimeEvent(29*FRAMES, function(inst)
                 inst.sg:RemoveStateTag("loserock_window")
@@ -647,22 +687,14 @@ local states =
             end),
         },
 
-        onexit = function(inst)
-
-        end,
-
         events =
         {
             EventHandler("attacked", function(inst)
                 testforlostrock(inst, inst.sg.statemem.rightarm)
             end),
             EventHandler("animover", function(inst)
-                if inst.components.health:GetPercent() >= 1 or not inst:HasTag("icewall") then
-                    inst.sg:GoToState("fix_pst", not  inst.sg.statemem.rightarm)
-                else
-
-                    inst.sg:GoToState("fix_loop", not inst.sg.statemem.rightarm)
-                end
+                local done_healing = (inst.components.health:GetPercent() >= 1) or not inst:HasTag("icewall")
+                inst.sg:GoToState((done_healing and "fix_pst") or "fix_loop", not inst.sg.statemem.rightarm)
             end),
         },
     },
@@ -683,18 +715,19 @@ local states =
 
         timeline=
         {
-            TimeEvent(0*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/rock_hit") end),
-            TimeEvent(2*FRAMES, function(inst) if math.random() < 0.5 then inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/hit") end end),
+            SoundTimeEvent(0, "hookline_2/creatures/boss/crabking/rock_hit"),
+            TimeEvent(2*FRAMES, function(inst)
+                if math.random() < 0.5 then
+                    inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/hit")
+                end
+            end),
         },
 
         events =
         {
             EventHandler("animover", function(inst)
-                if inst.components.health:GetPercent() >= 1 or not inst:HasTag("icewall") then
-                    inst.sg:GoToState("fix_pst", not  inst.sg.statemem.rightarm)
-                else
-                    inst.sg:GoToState("fix_loop", not inst.sg.statemem.rightarm)
-                end
+                local done_healing = (inst.components.health:GetPercent() >= 1) or not inst:HasTag("icewall")
+                inst.sg:GoToState((done_healing and "fix_pst") or "fix_loop", not inst.sg.statemem.rightarm)
             end),
         },
     },
@@ -704,7 +737,6 @@ local states =
         tags = { "canrotate"},
 
         onenter = function(inst, rightarm)
-
             local arm = "left"
             if rightarm then
                 arm = "right"
@@ -714,16 +746,9 @@ local states =
             inst.fixhits = 0
         end,
 
-        timeline=
-        {
-
-        },
-
         events =
         {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
+            EventHandler("animover", go_to_idle),
         },
     },
 
@@ -739,9 +764,9 @@ local states =
             inst.AnimState:PlayAnimation("hit_light")
         end,
 
-        timeline=
+        timeline =
         {
-            TimeEvent(0 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/hit") end),
+            SoundTimeEvent(0, "hookline_2/creatures/boss/crabking/hit"),
         },
 
         events =
@@ -758,9 +783,9 @@ local states =
 CommonStates.AddFrozenStates(states)
 CommonStates.AddCombatStates(states,{
     deathtimeline ={
-        TimeEvent(0 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/death2") end),
+        SoundTimeEvent(0, "hookline_2/creatures/boss/crabking/death2"),
         TimeEvent(0 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/hit",nil,.5) end),
-        TimeEvent(5 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/hit") end),
+        SoundFrameEvent(5, "hookline_2/creatures/boss/crabking/hit"),
         TimeEvent(26 * FRAMES, function(inst)
                 if inst.gemcount.pearl >= 1 then
                     local crown = SpawnPrefab("moon_altar_crown")
@@ -803,11 +828,13 @@ CommonStates.AddCombatStates(states,{
                 throwchunk(inst,"crabking_chip_low")
                 throwchunk(inst,"crabking_chip_low")
             end),
-        TimeEvent(75 * FRAMES, function(inst) spawnwaves(inst, 8, 360, 3, nil, (inst.Physics and inst.Physics:GetRadius() - 1.5) or nil, 0, nil, true) end),
+        TimeEvent(75 * FRAMES, function(inst)
+            spawnwaves(inst, 8, 360, 3, nil, (inst.Physics and inst.Physics:GetRadius() - 1.5) or nil, 0, nil, true)
+        end),
 
     },
     hittimeline ={
-        TimeEvent(0 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/hit") end),
+        SoundTimeEvent(0, "hookline_2/creatures/boss/crabking/hit"),
     },
 
 },{hit = "hit_light", death="death2"})

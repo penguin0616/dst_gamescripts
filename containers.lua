@@ -696,6 +696,8 @@ params.merm_toolshed =
         animbuild = "ui_chest_1x2",
         pos = Vector3(200, 0, 0),
         side_align_tip = 100,
+        opensound = "meta4/mermery/open",
+        closesound = "meta4/mermery/close",
     },
     usespecificslotsforitems = true,
     type = "chest",

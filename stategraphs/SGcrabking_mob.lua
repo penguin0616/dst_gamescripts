@@ -503,6 +503,16 @@ local states =
         {
             EventHandler("animover", function(inst) inst:Remove() end),
         },
+    },
+
+    -- NOTES(DiogoW): Used by boat hop states.
+    State{
+        name = "sink",
+        tags = { "busy", "nopredict", "nomorph", "drowning", "nointerrupt", "nowake" },
+
+        onenter = function(inst)
+            inst.sg:GoToState("dive_pst_water")
+        end,
     }
 }
 

@@ -391,24 +391,17 @@ local function OnGiveUpTarget(inst, data)
 end
 
 local function OnDroppedItem(inst, data)
-    local is_dead = (not inst:IsValid() or inst.components.health:IsDead())
     local item = data.item
     if item then
         if item.prefab == "trident" then
             TheWorld:PushEvent("onmermkingtridentremoved")
-            if is_dead then
-                inst.AnimState:ClearOverrideSymbol("trident")
-            end
+            inst.AnimState:ClearOverrideSymbol("trident")
         elseif item.prefab == "ruinshat" then
             TheWorld:PushEvent("onmermkingcrownremoved")
-            if is_dead then
-                inst.AnimState:ClearOverrideSymbol("crown")
-            end
+            inst.AnimState:ClearOverrideSymbol("crown")
         elseif item.prefab == "armormarble" then
             TheWorld:PushEvent("onmermkingpauldronremoved")
-            if is_dead then
-                inst.AnimState:ClearOverrideSymbol("shoulder_lilly")
-            end
+            inst.AnimState:ClearOverrideSymbol("shoulder_lilly")
         end
     end
 end
@@ -460,14 +453,17 @@ end
 local function OnLoad(inst, data, newents)
     if HasTrident(inst) then
         inst.AnimState:OverrideSymbol("trident", "mermkingswaps", "trident")
+        TheWorld:PushEvent("onmermkingtridentadded")
     end
 
     if HasCrown(inst) then
         inst.AnimState:OverrideSymbol("crown", "mermkingswaps", "crown")
+        TheWorld:PushEvent("onmermkingcrownadded")
     end
 
     if HasPauldron(inst) then
         inst.AnimState:OverrideSymbol("shoulder_lilly", "mermkingswaps", "shoulder_lilly")
+        TheWorld:PushEvent("onmermkingpauldronadded")
     end
 end
 

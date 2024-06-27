@@ -102,7 +102,12 @@ local function DoAOEAttack(inst, x, z, attacker, caster, element, mega)
 	inst.components.combat.ignorehitrange = false
 	--ResetDamage(inst, inst) -- don't need, we're gonna be deleted
 
-	inst.SoundEmitter:PlaySound("dontstarve/common/together/catapult/rock_hit", nil, hit and .5 or nil)
+	inst.SoundEmitter:PlaySound(
+		(element == "shadow" and (mega and "meta4/winona_catapult/shadow_projectile_explode" or "meta4/winona_catapult/shadow_projectile_hit")) or
+		(element == "lunar" and (mega and "meta4/winona_catapult/lunar_projectile_explode" or "meta4/winona_catapult/lunar_projectile_hit")) or
+		(element == "hybrid" and (mega and "meta4/winona_catapult/lunar_shadow_combo_explode" or "meta4/winona_catapult/lunar_shadow_combo_hit")) or
+		"dontstarve/common/together/catapult/rock_hit",
+		nil, hit and .5 or nil)
 end
 
 --------------------------------------------------------------------------
@@ -204,6 +209,11 @@ local function SpawnTrapRing(inst, x, z, attacker, caster, r, n, theta)
 			trap.Transform:SetPosition(pt:Get())
 			trap.attacker = attacker
 			trap.caster = caster
+
+			if not inst._vinesfxstarted then
+				inst._vinesfxstarted = true
+				trap:StartSoundLoop()
+			end
 		end
 		theta = theta + delta
 	end
@@ -315,6 +325,8 @@ local function OnHit(inst, attacker, target)
     end
 
 	if inst.mega and (element == "lunar" or element == "hybrid") then
+		inst:AddTag("toughworker")
+		ShakeAllCameras(CAMERASHAKE.FULL, 0.7, 0.02, 0.4, inst, 15 + inst.AOE_RADIUS)
 		DoAOEWork(inst, x, z)
 	end
 	--if not (inst.mega and element == "shadow") then

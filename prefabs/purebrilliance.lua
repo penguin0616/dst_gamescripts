@@ -90,7 +90,7 @@ local function fn()
 
     inst.lightcolour = {53/255, 132/255, 148/255}
     inst.fxprefab = "purebrilliance_castfx"
-    inst.castsound = "rifts3/mutated_deerclops/stunned_pst_f0" -- TODO(DiogoW)
+    inst.castsound = "meta4/casting/lunar"
 
     --
     MakeHauntableLaunch(inst)

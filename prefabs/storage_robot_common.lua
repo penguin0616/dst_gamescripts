@@ -1,3 +1,4 @@
+local fns -- NOTES(JBK): Predeclare this for use with the return table so that way mods can change internal logic.
 local SPAWNPOINT_NAME = "spawnpoint"
 local SPAWNPOINT_LOCAL_NAME = "spawnpoint_local"
 
@@ -15,6 +16,9 @@ end
 local function UpdateSpawnPoint(inst, dont_overwrite)
     if dont_overwrite and (inst.components.knownlocations == nil or inst.components.knownlocations:GetLocation(SPAWNPOINT_NAME) ~= nil) then
         return
+    end
+    if inst.brain ~= nil then
+        inst.brain:UnignoreItem()
     end
 
     if inst:IsOnPassablePoint() then
@@ -75,12 +79,13 @@ local ALLOWED_CONTAINER_TYPES = { "chest", "pack" }
 
 local function FindContainerWithItem(inst, item, count)
     count = count or 0
-    local x, y, z = GetSpawnPoint(inst):Get()
+    local x, y, z = fns.GetSpawnPoint(inst):Get()
 
     local stack_maxsize = item.components.stackable ~= nil and item.components.stackable.maxsize or 1
 
     local ents = TheSim:FindEntities(x, y, z, TUNING.STORAGE_ROBOT_WORK_RADIUS, CONTAINER_MUST_TAGS, CONTAINER_CANT_TAGS)
 
+    local platform = inst:GetCurrentPlatform()
     local function SamePrefabAndSkin(ent)
         return ent.prefab == item.prefab and ent.skinname == item.skinname
     end
@@ -88,11 +93,11 @@ local function FindContainerWithItem(inst, item, count)
     for i, ent in ipairs(ents) do
         if ent.components.container ~= nil and
             table.contains(ALLOWED_CONTAINER_TYPES, ent.components.container.type) and
-            ent.components.container.canbeopened and
+            (ent.components.container.canbeopened or ent.components.container.canacceptgivenitems) and -- NOTES(JBK): canacceptgivenitems is a mod flag for now.
             ent.components.container:HasItemThatMatches(SamePrefabAndSkin, 1) and
             ent.components.container:CanAcceptCount(item, stack_maxsize) > count and
             ent:IsOnPassablePoint() and
-            ent:GetCurrentPlatform() == inst:GetCurrentPlatform()
+            ent:GetCurrentPlatform() == platform
         then
             return ent
         end
@@ -139,7 +144,7 @@ local function FindItemToPickupAndStore_filter(inst, item, match_item)
     end
     local _, count = inst.components.inventory:HasItemThatMatches(SamePrefabAndSkin, 1)
 
-    local container = FindContainerWithItem(inst, item, count)
+    local container = fns.FindContainerWithItem(inst, item, count)
 
     if not container then
         return
@@ -162,13 +167,13 @@ local PICKUP_CANT_TAGS =
 
 local function FindItemToPickupAndStore(inst, match_item)
     local x, y, z    = inst.Transform:GetWorldPosition()
-    local sx, xy, sz = GetSpawnPoint(inst):Get()
+    local sx, xy, sz = fns.GetSpawnPoint(inst):Get()
 
     local ents = TheSim:FindEntities(x, y, z, TUNING.STORAGE_ROBOT_WORK_RADIUS, PICKUP_MUST_TAGS, PICKUP_CANT_TAGS)
 
     for i, ent in ipairs(ents) do
         if ent:GetDistanceSqToPoint(sx, xy, sz) <= TUNING.STORAGE_ROBOT_WORK_RADIUS * TUNING.STORAGE_ROBOT_WORK_RADIUS then
-            local item, container = FindItemToPickupAndStore_filter(inst, ent, match_item)
+            local item, container = fns.FindItemToPickupAndStore_filter(inst, ent, match_item)
 
             if item ~= nil then
                 return item, container
@@ -179,7 +184,7 @@ end
 
 ---------------------------------------------------------------------------------------------------
 
-return
+fns = 
 {
     GetSpawnPoint = GetSpawnPoint,
     UpdateSpawnPoint = UpdateSpawnPoint,
@@ -187,4 +192,14 @@ return
     ClearSpawnPoint = ClearSpawnPoint,
     FindContainerWithItem = FindContainerWithItem,
     FindItemToPickupAndStore = FindItemToPickupAndStore,
+
+    -- Mod accessibility. Variables are not guaranteed to exist below here but are here in case they stay around.
+    -- If these are used outside of this common file move them up and guarantee they exist.
+    FindItemToPickupAndStore_filter = FindItemToPickupAndStore_filter,
+    CONTAINER_MUST_TAGS = CONTAINER_MUST_TAGS,
+    CONTAINER_CANT_TAGS = CONTAINER_CANT_TAGS,
+    ALLOWED_CONTAINER_TYPES = ALLOWED_CONTAINER_TYPES,
+    PICKUP_MUST_TAGS = PICKUP_MUST_TAGS,
+    PICKUP_CANT_TAGS = PICKUP_CANT_TAGS,
 }
+return fns

@@ -69,6 +69,9 @@ return{
             MANNEQUIN_EQUIPSWAPFAILED = "Not supposed to put that there.",
             PILLOWFIGHT_NO_HANDPILLOW = "WAIT!! Forgot pillow!",
             NOTMYBERNIE = "Where fire lady? Big bear not listen!",
+            NOTMERM = "Florp?",
+            NOKELP = "Needs more snacks.",
+            HASMERMLEADER = "Glurgh. Gotta wait, other Mermfolk using it.",
 		},
 		OPEN_CRAFTING =
 		{
@@ -3547,6 +3550,7 @@ return{
 		WINONA_TELEBRELLA =
 		{
 			GENERIC = "Wonder where it make the stuff go?",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "It supposed to be doing something?",
 			CHARGING = "Wonder where it make the stuff go?",
 			CHARGED = "Wonder where it make the stuff go?",
@@ -3554,6 +3558,7 @@ return{
 		WINONA_TELEPORT_PAD_ITEM =
 		{
 			GENERIC = "Sometimes free stuff appear!",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "Not working, florp.",
 			BURNING = "Don't think that how it supposed to look, florp.",
 			BURNT = "Oh well. Gone now.",
@@ -3568,8 +3573,16 @@ return{
 		},
 		INSPECTACLESBOX = "only_used_by_winona",
 		INSPECTACLESBOX2 = "only_used_by_winona",
-		INSPECTACLESHAT = "Weenowna-lady Ironfolk eyes!",
-		ROSEGLASSESHAT = "It Weenonwna-lady's plant eyes!",
+		INSPECTACLESHAT = 
+        {
+            GENERIC = "Weenowna-lady Ironfolk eyes!",
+            MISSINGSKILL = "only_used_by_winona",
+        },
+		ROSEGLASSESHAT =
+        {
+            GENERIC = "It Weenonwna-lady's plant eyes!",
+            MISSINGSKILL = "only_used_by_winona",
+        },
 		CHARLIERESIDUE = "only_used_by_winona",
 		CHARLIEROSE = "only_used_by_winona",
         WINONA_MACHINEPARTS_1 = "only_used_by_winona",

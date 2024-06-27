@@ -94,9 +94,9 @@ function CrabkingBrain:OnStart()
         IfNode(function() return not self.inst.sg:HasStateTag("inert") and not self.inst.sg:HasStateTag("casting")  and not self.inst.sg:HasStateTag("fixing") and not self.inst.sg:HasStateTag("spawning") end, "doing",
             PriorityNode({
 
-                DoAction(self.inst, ShouldHeal, "heal"),
-                DoAction(self.inst, ShouldHaveClaws, "claws?"),
+                DoAction(self.inst, ShouldHeal, "heal"),                
                 DoAction(self.inst, ShouldFreeze, "freeze"),
+                DoAction(self.inst, ShouldHaveClaws, "claws?"),
 
             }, 1)),
     }, 1)

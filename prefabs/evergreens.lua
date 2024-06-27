@@ -807,6 +807,8 @@ local function tree(name, build, stage, data)
 
         MakeObstaclePhysics(inst, .25)
 
+		inst:SetDeploySmartRadius(DEPLOYSPACING_RADIUS[DEPLOYSPACING.DEFAULT] / 2) --seed/planted_tree deployspacing/2
+
         if build == "twiggy" then
 
             inst:AddTag("renewable")

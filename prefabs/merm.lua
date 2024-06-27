@@ -25,6 +25,8 @@ local assets =
     Asset("ANIM", "anim/merm_guard_shadow_build.zip"),
     Asset("ANIM", "anim/merm_guard_small_shadow_build.zip"),
 
+    Asset("ANIM", "anim/merm_guard_transformation.zip"),    
+
     Asset("ANIM", "anim/merm_actions_skills.zip"),
 
     Asset("SOUND", "sound/merm.fsb"),
@@ -67,11 +69,9 @@ local merm_shadow_loot =
     "nightmarefuel",
 }
 
-SetSharedLootTable( 'merm_lunar_loot',
-{
-    {"froglegs",          1.00},
-    {"pondfish",          1.00},
-    {"tentaclespots",     0.25},
+SetSharedLootTable("merm_lunar_loot", {
+    -- NOTES(JBK): This is added onto whatever the base merm loot was.
+    {"tentaclespots", 0.25},
 })
 
 local sounds = {
@@ -313,7 +313,7 @@ local function dohiremerms(inst, giver, item)
         inst.components.follower:AddLoyaltyTime(loyalty_time)
 
         if item:HasTag("fish") then
-            DoCheer(inst)
+            inst:DoCheer()
         end
 
         hiremoremerms = true
@@ -625,11 +625,11 @@ local function spawn_shadow_merm(inst)
     shadowmerm.Transform:SetPosition(inst.Transform:GetWorldPosition())
     shadowmerm.Transform:SetRotation(inst.Transform:GetRotation())
 
-    if inst.shadow_spawn_old_leader ~= nil and
-        inst.shadow_spawn_old_leader:IsValid() and
-        inst.shadow_spawn_old_leader.components.leader ~= nil
+    if inst.old_leader ~= nil and
+        inst.old_leader:IsValid() and
+        inst.old_leader.components.leader ~= nil
     then
-        inst.shadow_spawn_old_leader.components.leader:AddFollower(shadowmerm)
+        inst.old_leader.components.leader:AddFollower(shadowmerm)
     end
 
     local home = inst.components.homeseeker ~= nil and inst.components.homeseeker:GetHome() or nil
@@ -652,7 +652,12 @@ local function OnLoad(inst, data)
 end
 
 local function TestForShadowDeath(inst)
-    if not inst:HasTag("shadowminion") and inst.shadow_spawn_old_leader then
+    if not inst:HasTag("shadowminion") and
+        inst.old_leader ~= nil and
+        inst.old_leader:IsValid() and
+        inst.old_leader.components.skilltreeupdater ~= nil and
+        inst.old_leader.components.skilltreeupdater:IsActivated("wurt_shadow_allegiance_1")
+    then
         spawn_shadow_merm(inst)
     end
 end
@@ -739,13 +744,43 @@ local function DoLunarMutation(inst)
     end
 
     lunarmerm.components.combat:SetTarget(inst.components.combat.target)
-
-    lunarmerm:PushEvent("mutated")
-    lunarmerm.SoundEmitter:PlaySound("meta4/lunar_merm/transform")
+    lunarmerm:PushEvent("mutated", {oldbuild=inst.AnimState:GetBuild()})
 
     inst:Remove()
 
     return lunarmerm
+end
+
+local function DoLunarRevert(inst)
+    local prefab = inst:HasTag("guard") and "mermguard" or "merm"
+
+    local merm = SpawnPrefab(prefab)
+    merm.Transform:SetPosition(inst.Transform:GetWorldPosition())
+    merm.Transform:SetRotation(inst.Transform:GetRotation())
+
+    inst.components.health:TransferComponent(merm)
+    inst.components.inventory:TransferComponent(merm)
+
+    local leader = inst.components.follower ~= nil and inst.components.follower:GetLeader() or nil
+
+    if leader ~= nil then
+        leader.components.leader:AddFollower(merm)
+    end
+
+    local home = inst.components.homeseeker ~= nil and inst.components.homeseeker:GetHome() or nil
+
+    inst:PushEvent("detachchild")
+
+    if home ~= nil and home.components.childspawner ~= nil then
+        home.components.childspawner:TakeOwnership(merm)
+    end
+
+    merm.components.combat:SetTarget(inst.components.combat.target)
+    merm:PushEvent("demutated", {oldbuild=inst.AnimState:GetBuild()})
+
+    inst:Remove()
+
+    return merm
 end
 
 local function TestForLunarMutation(inst,item)
@@ -804,6 +839,23 @@ local function CreateFlameFx(parent)
     return inst
 end
 
+local function onunequip(inst,data)
+    if data.item then
+        if data.item.components.equippable and data.item.components.equippable.equipslot == EQUIPSLOTS.HANDS then
+            inst.AnimState:Hide("ARM_carry_up")
+        end
+    end
+end
+
+local function equip(inst,data)
+    if data.item then
+        if data.item.components.equippable and data.item.components.equippable.equipslot == EQUIPSLOTS.HANDS then
+            inst.AnimState:Show("ARM_carry_up")
+            inst.AnimState:Hide("ARM_carry")
+        end
+    end
+end
+
 local function updateeyebuild(inst)
     if inst:HasDebuff("wurt_merm_planar") then
         if inst:HasTag("mermguard") then
@@ -841,6 +893,8 @@ local function MakeMerm(name, assets, prefabs, common_postinit, master_postinit,
 
         inst.AnimState:SetBank("pigman")
         inst.AnimState:Hide("hat")
+        inst.AnimState:Hide("ARM_carry_up")
+        inst.AnimState:Hide("ARM_carry")
 
         if IsSpecialEventActive(SPECIAL_EVENTS.YOTB) then
             inst.AnimState:AddOverrideBuild("pigman_yotb")
@@ -849,6 +903,7 @@ local function MakeMerm(name, assets, prefabs, common_postinit, master_postinit,
         inst:AddTag("character")
         inst:AddTag("merm")
         inst:AddTag("wet")
+        
         inst:AddTag("merm_npc")
 
         local talker = inst:AddComponent("talker")
@@ -933,6 +988,9 @@ local function MakeMerm(name, assets, prefabs, common_postinit, master_postinit,
         inst:ListenForEvent("droppedtarget", droppedtarget)
         inst:ListenForEvent("newcombattarget", newcombattarget)
         inst:ListenForEvent("itemget", itemget)
+        inst:ListenForEvent("unequip", onunequip)
+        inst:ListenForEvent("equip", equip)
+
 
         inst.TestForLunarMutation = TestForLunarMutation
         inst.DoLunarMutation = DoLunarMutation
@@ -963,6 +1021,39 @@ local function OnEat(inst, data)
     if data.food and data.food.components.edible then
         if TheWorld.components.mermkingmanager and TheWorld.components.mermkingmanager:IsCandidate(inst) then
             inst.components.mermcandidate:AddCalories(data.food)
+        end
+    end
+end
+
+local function no_holes(pt)
+    return not TheWorld.Map:IsPointNearHole(pt)
+end
+
+local function OnAttackOther(inst, data)
+    local victim = data.target
+    if not victim then return end
+
+    local leader = (inst.components.follower and inst.components.follower.leader) or nil
+    if not leader then return end
+
+    local leader_has_shadow_terrain_skill = (leader.components.skilltreeupdater
+        and leader.components.skilltreeupdater:IsActivated("wurt_shadow_allegiance_2")
+    ) or false
+    if leader_has_shadow_terrain_skill and math.random() > TUNING.WURT_TERRAFORMING_SHADOW_PROCCHANCE then
+        local tile_type = inst:GetCurrentTileType()
+        if tile_type == WORLD_TILES.SHADOW_MARSH then
+            local pt = victim:GetPosition()
+            local offset = FindWalkableOffset(pt, math.random() * TWOPI, 2, 3, false, true, no_holes, false, true)
+            if offset ~= nil then
+                inst.SoundEmitter:PlaySound("dontstarve/common/shadowTentacleAttack_1")
+                inst.SoundEmitter:PlaySound("dontstarve/common/shadowTentacleAttack_2")
+                local tentacle = SpawnPrefab("shadowtentacle")
+                if tentacle ~= nil then
+                    tentacle.owner = inst
+                    tentacle.Transform:SetPosition(pt.x + offset.x, 0, pt.z + offset.z)
+                    tentacle.components.combat:SetTarget(victim)
+                end
+            end
         end
     end
 end
@@ -1018,6 +1109,35 @@ local function Guard_CanTripleAttack(inst)
         and math.random() < TUNING.MERMKING_TRIDENTBUFF_TRIPLEHIT_CHANCE
 end
 
+local function OnAttackOther(inst, data)
+    local victim = data.target
+    if not victim then return end
+
+    local leader = (inst.components.follower and inst.components.follower.leader) or nil
+    if not leader then return end
+
+    local leader_has_shadow_terrain_skill = (leader.components.skilltreeupdater
+        and leader.components.skilltreeupdater:IsActivated("wurt_shadow_allegiance_2")
+    ) or false
+    if leader_has_shadow_terrain_skill and math.random() > TUNING.WURT_TERRAFORMING_SHADOW_PROCCHANCE then
+        local tile_type = inst:GetCurrentTileType()
+        if tile_type == WORLD_TILES.SHADOW_MARSH then
+            local pt = victim:GetPosition()
+            local offset = FindWalkableOffset(pt, math.random() * TWOPI, 2, 3, false, true, no_holes, false, true)
+            if offset ~= nil then
+                inst.SoundEmitter:PlaySound("dontstarve/common/shadowTentacleAttack_1")
+                inst.SoundEmitter:PlaySound("dontstarve/common/shadowTentacleAttack_2")
+                local tentacle = SpawnPrefab("shadowtentacle")
+                if tentacle ~= nil then
+                    tentacle.owner = inst
+                    tentacle.Transform:SetPosition(pt.x + offset.x, 0, pt.z + offset.z)
+                    tentacle.components.combat:SetTarget(victim)
+                end
+            end
+        end
+    end
+end
+
 local function guard_master(inst)
     -- Let the lootdropper take care of adding these dependencies correctly.
     inst.scrapbook_deps = { "mermguard_lunar", "mermguard_shadow", "mermking" }
@@ -1052,6 +1172,7 @@ local function guard_master(inst)
 
     inst:ListenForEvent("onmermkingcreated_anywhere", function() guard_on_mermking_created_anywhere(inst) end, TheWorld)
     inst:ListenForEvent("onmermkingdestroyed_anywhere", function() guard_on_mermking_destroyed_anywhere(inst) end, TheWorld)
+    inst:ListenForEvent("onattackother", OnAttackOther)
 
     inst:DoTaskInTime(0, on_guard_initialize)
 end
@@ -1089,34 +1210,6 @@ local function no_holes(pt)
     return not TheWorld.Map:IsPointNearHole(pt)
 end
 
-local function OnAttackOther(inst, data)
-    local victim = data.target
-    if not victim then return end
-
-    local leader = (inst.components.follower and inst.components.follower.leader) or nil
-    if not leader then return end
-
-    local leader_has_shadow_terrain_skill = (leader.components.skilltreeupdater
-        and leader.components.skilltreeupdater:IsActivated("wurt_shadow_allegiance_2")
-    ) or false
-    if leader_has_shadow_terrain_skill and math.random() > TUNING.WURT_TERRAFORMING_SHADOW_PROCCHANCE then
-        local tile_type = inst:GetCurrentTileType()
-        if tile_type == WORLD_TILES.SHADOW_MARSH then
-            local pt = victim:GetPosition()
-            local offset = FindWalkableOffset(pt, math.random() * TWOPI, 2, 3, false, true, no_holes, false, true)
-            if offset ~= nil then
-                inst.SoundEmitter:PlaySound("dontstarve/common/shadowTentacleAttack_1")
-                inst.SoundEmitter:PlaySound("dontstarve/common/shadowTentacleAttack_2")
-                local tentacle = SpawnPrefab("shadowtentacle")
-                if tentacle ~= nil then
-                    tentacle.owner = inst
-                    tentacle.Transform:SetPosition(pt.x + offset.x, 0, pt.z + offset.z)
-                    tentacle.components.combat:SetTarget(victim)
-                end
-            end
-        end
-    end
-end
 
 local function common_master(inst)
     -- Let the lootdropper take care of adding these dependencies correctly.
@@ -1145,7 +1238,7 @@ local function common_master(inst)
 
     inst:ListenForEvent("onmermkingcreated_anywhere", function() on_mermking_created_anywhere(inst) end, TheWorld)
     inst:ListenForEvent("onmermkingdestroyed_anywhere", function() on_mermking_destroyed_anywhere(inst) end, TheWorld)
-    inst:ListenForEvent("onattackother", OnAttackOther) -- TODO @stevenm this could maybe be a (de)buff instead.
+    inst:ListenForEvent("onattackother", OnAttackOther)
     inst:ListenForEvent("oneat", OnEat)
 
 
@@ -1231,6 +1324,12 @@ local function shadow_merm_common(inst)
     end
 end
 
+local function OnChangedLeaderShadow(inst, new_leader)
+    if new_leader == nil then
+        inst.sg:GoToState("hit_shadow")        
+    end
+end
+
 local function shadow_merm_master(inst)
     common_master(inst)
 
@@ -1261,7 +1360,9 @@ local function shadow_merm_master(inst)
     inst.components.lootdropper:SetLoot(merm_shadow_loot)
 
     local follower = inst.components.follower
-    follower.maxfollowtime = TUNING.MERM_LOYALTY_MAXTIME
+
+    follower.neverexpire = true
+    follower.OnChangedLeader = OnChangedLeaderShadow
 
     inst:ListenForEvent("loseloyalty", ShadowMerm_OnLoseLoyalty) -- NOTE: This shouldn't happen, and is a failsafe.
     inst:ListenForEvent("equip", ShadowMerm_OnItemEquipped)
@@ -1315,7 +1416,8 @@ local function shadow_mermguard_master(inst)
 
     inst.components.lootdropper:SetLoot(merm_shadow_loot)
 
-    inst.components.follower.maxfollowtime = TUNING.MERM_LOYALTY_MAXTIME
+    inst.components.follower.neverexpire = true
+    inst.components.follower.OnChangedLeader = OnChangedLeaderShadow
 
     inst:ListenForEvent("loseloyalty", ShadowMerm_OnLoseLoyalty) -- NOTE: This shouldn't happen, and is a failsafe.
     inst:ListenForEvent("equip", ShadowMerm_OnItemEquipped)
@@ -1323,6 +1425,12 @@ end
 
 -------------------------------------------------------------------------------
 -- LUNAR MERM DEFS
+
+local function OnChangedLeaderLunar(inst, new_leader)
+    if new_leader == nil then
+        DoLunarRevert(inst)
+    end
+end
 
 local function lunar_merm_common(inst)
     common_common(inst)
@@ -1359,7 +1467,8 @@ local function lunar_merm_master(inst)
 
     inst.updateeyebuild = updateeyebuild
 
-    inst.components.follower.maxfollowtime = TUNING.MERM_LOYALTY_MAXTIME
+    inst.components.follower.neverexpire = true
+    inst.components.follower.OnChangedLeader = OnChangedLeaderLunar
 end
 
 local function lunar_mermguard_common(inst)
@@ -1397,7 +1506,8 @@ local function lunar_mermguard_master(inst)
 
     inst.updateeyebuild = updateeyebuild
 
-    inst.components.follower.maxfollowtime = TUNING.MERM_LOYALTY_MAXTIME
+    inst.components.follower.neverexpire = true
+    inst.components.follower.OnChangedLeader = OnChangedLeaderLunar
 end
 
 return MakeMerm("merm", assets, prefabs, common_common, common_master),

@@ -69,6 +69,9 @@ return{
             MANNEQUIN_EQUIPSWAPFAILED = "THE CLOTHSACK CANNOT BE TRUSTED WITH SOMETHING LIKE THIS",
             PILLOWFIGHT_NO_HANDPILLOW = "ERROR: PILLOW REQUIRED FOR COMBAT",
             NOTMYBERNIE = "OBEY ME, BEAR!",
+            NOTMERM = "INSUBORDINATE FISHBEASTS",
+            NOKELP = "only_used_by_wurt",
+--fallback to speech_wilson.lua             HASMERMLEADER = "only_used_by_wurt",
 		},
 		OPEN_CRAFTING =
 		{
@@ -988,6 +991,8 @@ return{
 
     ANNOUNCE_OTTERBOAT_OUTOFSHALLOWS = "MAXIMUM OCEAN DEPTH EXCEEDED. PLATFORM DESTRUCTION IMMINENT",
     ANNOUNCE_OTTERBOAT_DENBROKEN = "STRUCTURAL INTEGRITY COMPROMISED. ABORT! ABORT!",
+
+    ANNOUNCE_GATHER_MERM = "only_used_by_wurt",
 
 	BATTLECRY =
 	{
@@ -3545,6 +3550,7 @@ return{
 		WINONA_TELEBRELLA =
 		{
 			GENERIC = "THIS DESIGN IS... FAMILIAR",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "IT'S JUST SLEEPING",
 			CHARGING = "THIS DESIGN IS... FAMILIAR",
 			CHARGED = "THIS DESIGN IS... FAMILIAR",
@@ -3552,6 +3558,7 @@ return{
 		WINONA_TELEPORT_PAD_ITEM =
 		{
 			GENERIC = "THIS DESIGN IS... FAMILIAR",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "IT'S JUST SLEEPING",
 			BURNING = "HURRY, SAVE IT",
 			BURNT = "IT WAS A GOOD MACHINE",
@@ -3566,8 +3573,16 @@ return{
 		},
 		INSPECTACLESBOX = "only_used_by_winona",
 		INSPECTACLESBOX2 = "only_used_by_winona",
-		INSPECTACLESHAT = "I WISH I COULD SEE THE OLD MAN'S FACE WHEN HE FINDS THOSE EMPTY CACHES",
-		ROSEGLASSESHAT = "UGH. IT REEKS OF SENTIMENTALITY",
+		INSPECTACLESHAT = 
+        {
+            GENERIC = "I WISH I COULD SEE THE OLD MAN'S FACE WHEN HE FINDS THOSE EMPTY CACHES",
+            MISSINGSKILL = "only_used_by_winona",
+        },
+		ROSEGLASSESHAT =
+        {
+            GENERIC = "UGH. IT REEKS OF SENTIMENTALITY",
+            MISSINGSKILL = "only_used_by_winona",
+        },
 		CHARLIERESIDUE = "only_used_by_winona",
 		CHARLIEROSE = "only_used_by_winona",
         WINONA_MACHINEPARTS_1 = "only_used_by_winona",

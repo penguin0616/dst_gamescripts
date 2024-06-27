@@ -69,6 +69,9 @@ return{
             MANNEQUIN_EQUIPSWAPFAILED = "Guess that won't work, eh?",
             PILLOWFIGHT_NO_HANDPILLOW = "I should grab a pillow first, eh?",
             NOTMYBERNIE = "Uh, Willow? Might wanna take control of your bear, eh?",
+            NOTMERM = "Must be a merm thing.",
+            NOKELP = "only_used_by_wurt",
+--fallback to speech_wilson.lua             HASMERMLEADER = "only_used_by_wurt",
 		},
 		OPEN_CRAFTING =
 		{
@@ -989,6 +992,8 @@ return{
 
     ANNOUNCE_OTTERBOAT_OUTOFSHALLOWS = "Looks like this thing isn't cut out for deep seafaring.",
     ANNOUNCE_OTTERBOAT_DENBROKEN = "Shoulda known breaking that den was a bad idea.",
+
+    ANNOUNCE_GATHER_MERM = "only_used_by_wurt",
 
 	BATTLECRY =
 	{
@@ -3546,6 +3551,7 @@ return{
 		WINONA_TELEBRELLA =
 		{
 			GENERIC = "Let me guess, it doesn't ship to Canada.",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "Does it look like it's working, Lucy?",
 			CHARGING = "Let me guess, it doesn't ship to Canada.",
 			CHARGED = "Let me guess, it doesn't ship to Canada.",
@@ -3553,6 +3559,7 @@ return{
 		WINONA_TELEPORT_PAD_ITEM =
 		{
 			GENERIC = "It's like havin' our own shipping depot.",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "Plum tuckered.",
 			BURNING = "Woah! Careful, Lucy!",
 			BURNT = "That's a right shame.",
@@ -3567,8 +3574,16 @@ return{
 		},
 		INSPECTACLESBOX = "only_used_by_winona",
 		INSPECTACLESBOX2 = "only_used_by_winona",
-		INSPECTACLESHAT = "Wonder what Winona sees in them.",
-		ROSEGLASSESHAT = "Honestly, they're kinda lovely.",
+		INSPECTACLESHAT = 
+        {
+            GENERIC = "Wonder what Winona sees in them.",
+            MISSINGSKILL = "only_used_by_winona",
+        },
+		ROSEGLASSESHAT =
+        {
+            GENERIC = "Honestly, they're kinda lovely.",
+            MISSINGSKILL = "only_used_by_winona",
+        },
 		CHARLIERESIDUE = "only_used_by_winona",
 		CHARLIEROSE = "only_used_by_winona",
         WINONA_MACHINEPARTS_1 = "only_used_by_winona",

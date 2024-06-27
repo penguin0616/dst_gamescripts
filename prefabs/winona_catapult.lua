@@ -1130,7 +1130,7 @@ local function fn()
 	inst:ListenForEvent("activewakeup", OnActiveWakeup)
 	inst:ListenForEvent("catapultspeedboost", OnCatapultSpeedBoost)
 	inst:ListenForEvent("winona_catapultskillchanged", function(world, user)
-		if user.userid == inst._engineerid then
+		if user.userid == inst._engineerid and not inst:HasTag("burnt") then
 			if ConfigureSkillTreeUpgrades(inst, user) then
 				ApplySkillBonuses(inst)
 			end

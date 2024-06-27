@@ -69,6 +69,9 @@ return{
             MANNEQUIN_EQUIPSWAPFAILED = "Sorry, I guess you can't wear that.",
             PILLOWFIGHT_NO_HANDPILLOW = "Wait, I'm not prepared yet!",
             NOTMYBERNIE = "I guess I can't tell a stuffed bear what to do either.",
+            NOTMERM = "I tried speaking in bog monster, but I think I just offended them.",
+            NOKELP = "only_used_by_wurt",
+--fallback to speech_wilson.lua             HASMERMLEADER = "only_used_by_wurt",
 		},
 		OPEN_CRAFTING =
 		{
@@ -988,6 +991,8 @@ return{
 
     ANNOUNCE_OTTERBOAT_OUTOFSHALLOWS = "Get ready to swim Woby, I don't think this was made for deep water!",
     ANNOUNCE_OTTERBOAT_DENBROKEN = "I knew we shouldn't have gotten rid of that den...",
+
+    ANNOUNCE_GATHER_MERM = "only_used_by_wurt",
 
 	BATTLECRY =
 	{
@@ -3545,6 +3550,7 @@ return{
 		WINONA_TELEBRELLA =
 		{
 			GENERIC = "It probably wouldn't be a good idea to use it in a thunderstorm.",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "It must be out of power.",
 			CHARGING = "It probably wouldn't be a good idea to use it in a thunderstorm.",
 			CHARGED = "It probably wouldn't be a good idea to use it in a thunderstorm.",
@@ -3552,6 +3558,7 @@ return{
 		WINONA_TELEPORT_PAD_ITEM =
 		{
 			GENERIC = "We can bring all sorts of stuff back to camp!",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "Did someone unplug it?",
 			BURNING = "Ah!! That's how forest fires start!",
 			BURNT = "Well... I guess Winona'll have to build a new one.",
@@ -3566,8 +3573,16 @@ return{
 		},
 		INSPECTACLESBOX = "only_used_by_winona",
 		INSPECTACLESBOX2 = "only_used_by_winona",
-		INSPECTACLESHAT = "Winona's been using them to find lots of neat stuff!",
-		ROSEGLASSESHAT = "Winona's been wearing those a lot lately.",
+		INSPECTACLESHAT = 
+        {
+            GENERIC = "Winona's been using them to find lots of neat stuff!",
+            MISSINGSKILL = "only_used_by_winona",
+        },
+		ROSEGLASSESHAT =
+        {
+            GENERIC = "Winona's been wearing those a lot lately.",
+            MISSINGSKILL = "only_used_by_winona",
+        },
 		CHARLIERESIDUE = "only_used_by_winona",
 		CHARLIEROSE = "only_used_by_winona",
         WINONA_MACHINEPARTS_1 = "only_used_by_winona",

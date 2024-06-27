@@ -247,6 +247,9 @@ Valid args:
 
     Optional:
         - physics (table) - physics fn, rad, height, restitution
+        - deploysmartradius - sets deploy smart radius
+        - deployspacing (enum) - DEPLOYSPACING enum used to set deploy smart radius
+        - mediumspacing (boolean) - use DEPLOYSPACING.MEDIUM to set deploy smart radius
         - minimapicon (string) - without .png
         - nameoverride (string)
         - inventoryitem (string or function) - overrides inst.dug_prefab.
@@ -282,6 +285,15 @@ local function CreateWaxedPlant(data)
 
             fn(inst, rad, height, restitution)
         end
+
+        inst:SetDeploySmartRadius(
+            data.deploysmartradius or
+            DEPLOYSPACING_RADIUS[
+                (data.mediumspacing and DEPLOYSPACING.MEDIUM) or
+                data.deployspacing or
+                DEPLOYSPACING.DEFAULT
+            ] / 2
+        )
 
         if data.minimapicon then
             inst.MiniMapEntity:SetIcon(data.minimapicon..".png")
@@ -414,6 +426,7 @@ Valid args:
         - build (string)
         - anim (string) - Anim to play. Default: "dropped"
         - floater (table) - MakeInventoryFloatable args.
+        - deployspacing (enum) - DEPLOYSPACING enum
         - mediumspacing (boolean) - calls deployable:SetDeploySpacing(DEPLOYSPACING.MEDIUM)
         - common_postinit (function)
         - master_postinit (function)
@@ -499,7 +512,9 @@ local function CreateDugWaxedPlant(data)
         inst.components.deployable.ondeploy = DugWaxedPlant_OnDeploy
         inst.components.deployable:SetDeployMode(DEPLOYMODE.PLANT)
 
-        if data.mediumspacing then
+        if data.deployspacing then
+            inst.components.deployable:SetDeploySpacing(data.deployspacing)
+        elseif data.mediumspacing then
             inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.MEDIUM)
         end
 

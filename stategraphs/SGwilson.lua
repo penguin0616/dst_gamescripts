@@ -7,6 +7,9 @@ local ATTACK_PROP_CANT_TAGS = { "flying", "shadow", "ghost", "FX", "NOCLICK", "D
 local MOOSE_AOE_MUST_TAGS = { "_combat" }
 local MOOSE_AOE_CANT_TAGS = { "INLIMBO", "wall", "companion", "flight", "invisible", "notarget", "noattack" }
 
+local FLOWERS_MUST_TAGS = {"flower"}
+local FLOWERS_CANT_TAGS = {"INLIMBO"}
+
 local function DoEquipmentFoleySounds(inst)
     for k, v in pairs(inst.components.inventory.equipslots) do
         if v.foleysound ~= nil then
@@ -2737,6 +2740,7 @@ local states =
 				if inst.charlie_vinesave then
 					inst.AnimState:AddOverrideBuild("winona_death")
 					inst.AnimState:PlayAnimation("death_vinesave")
+					inst.SoundEmitter:PlaySound("meta4/charlie_residue/resurrect_grab")
 					inst:SetCameraDistance(14)
 					inst.sg.statemem.dovinesave = true
 				elseif inst.components.revivablecorpse ~= nil then
@@ -2809,6 +2813,7 @@ local states =
 						if inst.charlie_vinesave then
 							inst.AnimState:AddOverrideBuild("winona_death")
 							inst.AnimState:PlayAnimation("death_vinesave")
+							inst.SoundEmitter:PlaySound("meta4/charlie_residue/resurrect_grab")
 							inst:SetCameraDistance(14)
 							inst.sg.statemem.dovinesave = true
 							inst.sg.statemem.dismount_vinesave = true
@@ -2906,6 +2911,18 @@ local states =
 			inst:SetCameraDistance(14)
 
 			local x, y, z = inst.Transform:GetWorldPosition()
+            local flowers = TheSim:FindEntities(x, y, z, DEPLOYSPACING_RADIUS[DEPLOYSPACING.LESS], FLOWERS_MUST_TAGS, FLOWERS_CANT_TAGS)
+            local _world = TheWorld
+            for _, flower in ipairs(flowers) do
+                if flower.components.pickable then
+                    local success, loot = flower.components.pickable:Pick(_world)
+                    if loot ~= nil then
+                        for _, item in ipairs(loot) do
+                            Launch(item, inst, 1.0)
+                        end
+                    end
+                end
+            end
 			local rose = SpawnPrefab("flower_rose")
 			rose.Transform:SetPosition(x, 0, z)
 			rose:DoRoseBounceAnim()
@@ -2973,20 +2990,11 @@ local states =
 				inst.components.playercontroller:Enable(false)
 			end
 			inst.AnimState:PlayAnimation("rebirth_vinesave")
+			inst.SoundEmitter:PlaySound("meta4/charlie_residue/resurrect_release")
 			inst.components.health:SetInvincible(true)
 			inst:ShowHUD(false)
 			inst:SetCameraDistance(14)
 		end,
-
-		timeline =
-		{
-			FrameEvent(17, function(inst)
-				inst.SoundEmitter:PlaySound("dontstarve/common/rebirth_amulet_raise")
-			end),
-			FrameEvent(77, function(inst)
-				inst.SoundEmitter:PlaySound("dontstarve/common/rebirth_amulet_poof")
-			end),
-		},
 
 		events =
 		{
@@ -13234,7 +13242,9 @@ local states =
                 inst.AnimState:PlayAnimation("atk_pre")
                 inst.AnimState:PushAnimation("atk", false)
             end
-            inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_weapon")
+
+            local staff = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+            inst.SoundEmitter:PlaySound((staff ~= nil and staff.castsound) or "dontstarve/wilson/attack_weapon")
         end,
 
         timeline =
@@ -13270,7 +13280,9 @@ local states =
                 inst.AnimState:PlayAnimation("atk_pre")
                 inst.AnimState:PushAnimation("atk", false)
             end
-            inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_weapon")
+
+            local staff = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+            inst.SoundEmitter:PlaySound((staff ~= nil and staff.castsound) or "dontstarve/wilson/attack_weapon")
         end,
 
         timeline =
@@ -13377,7 +13389,11 @@ local states =
 
             inst.sg.statemem.fxprefab    = item ~= nil and item.fxprefab    or "purebrilliance_castfx"
             inst.sg.statemem.lightcolour = item ~= nil and item.lightcolour or { 1, 1, 1 }
-            inst.sg.statemem.castsound   = item ~= nil and item.castsound   or nil
+
+            if item ~= nil and item.castsound then
+                inst.SoundEmitter:KillSound("mermcastspellsound")
+                inst.SoundEmitter:PlaySound(item ~= nil and item.castsound, "mermcastspellsound")
+            end
         end,
 
         timeline =
@@ -13394,14 +13410,7 @@ local states =
                 inst.sg.statemem.spelllight.Transform:SetPosition(inst.Transform:GetWorldPosition())
                 inst.sg.statemem.spelllight:SetUp(inst.sg.statemem.lightcolour, 1.2, .33)
             end),
-            TimeEvent(13 * FRAMES, function(inst)
-                if inst.sg.statemem.castsound then
-                    inst.SoundEmitter:PlaySound(inst.sg.statemem.castsound)
-                end
-            end),
-            TimeEvent(53 * FRAMES, function(inst)
-                inst.sg.statemem.spellfx = nil --Can't be cancelled anymore
-                inst.sg.statemem.spelllight = nil --Can't be cancelled anymore
+            TimeEvent(51 * FRAMES, function(inst)
                 inst:PerformBufferedAction()
             end),
 			TimeEvent(70 * FRAMES, function(inst)
@@ -13430,6 +13439,10 @@ local states =
             end
             if inst.sg.statemem.spelllight ~= nil and inst.sg.statemem.spelllight:IsValid() then
                 inst.sg.statemem.spelllight:Remove()
+            end
+
+            if inst.sg:HasStateTag("busy") then
+                inst.SoundEmitter:KillSound("mermcastspellsound")
             end
         end,
     },
@@ -13632,6 +13645,7 @@ local states =
 				inst.AnimState:SetSymbolLightOverride("remote_overlay", 0.5)
 				inst.AnimState:SetSymbolBloom("remote_overlay")
 				inst.AnimState:PlayAnimation("remotecast_trigger") --12 frames
+				inst.SoundEmitter:PlaySound("meta4/winona_remote/click")
 			else
 				--fail!!!
 				inst:ClearBufferedAction()
@@ -20119,6 +20133,18 @@ local states =
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("remote_teleport_out")
+			inst.AnimState:SetSymbolLightOverride("beam01", 1)
+			inst.AnimState:SetSymbolLightOverride("beam02", 1)
+			inst.AnimState:SetSymbolLightOverride("flash01", 1)
+			inst.AnimState:SetSymbolLightOverride("glow01", 1)
+			inst.AnimState:SetSymbolLightOverride("lightning_parts", 1)
+			inst.AnimState:SetSymbolBloom("beam01")
+			inst.AnimState:SetSymbolBloom("beam02")
+			inst.AnimState:SetSymbolBloom("flash01")
+			inst.AnimState:SetSymbolBloom("glow01")
+			inst.AnimState:SetSymbolBloom("lightning_parts")
+			inst.SoundEmitter:PlaySound("meta4/winona_teleumbrella/beep")
+			inst.SoundEmitter:PlaySound("meta4/winona_teleumbrella/telaumbrella_out")
 			if inst.components.playercontroller then
 				inst.components.playercontroller:RemotePausePrediction()
 				inst.components.playercontroller:Enable(false)
@@ -20176,6 +20202,16 @@ local states =
 				if inst.components.talker then
 					inst.components.talker:StopIgnoringAll("remote_teleporting")
 				end
+				inst.AnimState:SetSymbolLightOverride("beam01", 0)
+				inst.AnimState:SetSymbolLightOverride("beam02", 0)
+				inst.AnimState:SetSymbolLightOverride("flash01", 0)
+				inst.AnimState:SetSymbolLightOverride("glow01", 0)
+				inst.AnimState:SetSymbolLightOverride("lightning_parts", 0)
+				inst.AnimState:ClearSymbolBloom("beam01")
+				inst.AnimState:ClearSymbolBloom("beam02")
+				inst.AnimState:ClearSymbolBloom("flash01")
+				inst.AnimState:ClearSymbolBloom("glow01")
+				inst.AnimState:ClearSymbolBloom("lightning_parts")
 				inst.AnimState:ClearOverrideBuild("winona_teleport")
 				local item = inst.sg.statemem.item
 				if item and item:IsValid() and item.components.remoteteleporter then
@@ -20192,6 +20228,7 @@ local states =
 		onenter = function(inst, data)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("remote_teleport_in")
+			inst.SoundEmitter:PlaySound("meta4/winona_teleumbrella/telaumbrella_in")
 			inst.DynamicShadow:Enable(false)
 			inst.components.health:SetInvincible(true)
 			if inst.components.playercontroller then
@@ -20221,6 +20258,10 @@ local states =
 			FrameEvent(23, function(inst)
 				inst.sg:RemoveStateTag("noattack")
 				inst.components.health:SetInvincible(false)
+			end),
+			FrameEvent(25, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve/movement/bodyfall_dirt")
+				PlayFootstep(inst)
 			end),
 			FrameEvent(31, function(inst)
 				if inst.sg.statemem.faildata then
@@ -20252,6 +20293,16 @@ local states =
 			if inst.components.talker then
 				inst.components.talker:StopIgnoringAll("remote_teleporting")
 			end
+			inst.AnimState:SetSymbolLightOverride("beam01", 0)
+			inst.AnimState:SetSymbolLightOverride("beam02", 0)
+			inst.AnimState:SetSymbolLightOverride("flash01", 0)
+			inst.AnimState:SetSymbolLightOverride("glow01", 0)
+			inst.AnimState:SetSymbolLightOverride("lightning_parts", 0)
+			inst.AnimState:ClearSymbolBloom("beam01")
+			inst.AnimState:ClearSymbolBloom("beam02")
+			inst.AnimState:ClearSymbolBloom("flash01")
+			inst.AnimState:ClearSymbolBloom("glow01")
+			inst.AnimState:ClearSymbolBloom("lightning_parts")
 			inst.AnimState:ClearOverrideBuild("winona_teleport")
 			local item = inst.sg.statemem.item
 			if item and item:IsValid() and item.components.remoteteleporter then

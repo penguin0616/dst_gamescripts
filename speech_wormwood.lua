@@ -69,6 +69,9 @@ return{
             MANNEQUIN_EQUIPSWAPFAILED = "Doesn't go there",
             PILLOWFIGHT_NO_HANDPILLOW = "Oh. Need head planter",
             NOTMYBERNIE = "Big Squishy Friend only hear Willow",
+            NOTMERM = "Scaley friend, help!",
+            NOKELP = "only_used_by_wurt",
+--fallback to speech_wilson.lua             HASMERMLEADER = "only_used_by_wurt",
 		},
 		OPEN_CRAFTING =
 		{
@@ -992,6 +995,8 @@ return{
 
     ANNOUNCE_OTTERBOAT_OUTOFSHALLOWS = "Too deep! No good!",
     ANNOUNCE_OTTERBOAT_DENBROKEN = "Uh oh. Broke it",
+
+    ANNOUNCE_GATHER_MERM = "only_used_by_wurt",
 
 	BATTLECRY =
 	{
@@ -3549,6 +3554,7 @@ return{
 		WINONA_TELEBRELLA =
 		{
 			GENERIC = "Hmm. Not real Rain Taker",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "Not working",
 			CHARGING = "Hmm. Not real Rain Taker",
 			CHARGED = "Hmm. Not real Rain Taker",
@@ -3556,6 +3562,7 @@ return{
 		WINONA_TELEPORT_PAD_ITEM =
 		{
 			GENERIC = "Poof machine!",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "Oh. No poof",
 			BURNING = "Stop fire!",
 			BURNT = "Oh...",
@@ -3570,8 +3577,16 @@ return{
 		},
 		INSPECTACLESBOX = "only_used_by_winona",
 		INSPECTACLESBOX2 = "only_used_by_winona",
-		INSPECTACLESHAT = "Funny eye hat",
-		ROSEGLASSESHAT = "Friends show Fixer friend secret things",
+		INSPECTACLESHAT = 
+        {
+            GENERIC = "Funny eye hat",
+            MISSINGSKILL = "only_used_by_winona",
+        },
+		ROSEGLASSESHAT =
+        {
+            GENERIC = "Friends show Fixer friend secret things",
+            MISSINGSKILL = "only_used_by_winona",
+        },
 		CHARLIERESIDUE = "only_used_by_winona",
 		CHARLIEROSE = "only_used_by_winona",
         WINONA_MACHINEPARTS_1 = "only_used_by_winona",

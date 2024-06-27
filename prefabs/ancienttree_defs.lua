@@ -28,6 +28,8 @@ local function NightVision_StartPhaseTransitionTask(inst, fn)
 end
 
 local function NightVision_HideFruits(inst)
+    inst._phasetask = nil
+
     if inst.components.pickable.caninteractwith then
         inst.AnimState:PlayAnimation("retract_fruit_full")
         inst.AnimState:PushAnimation(math.random() < .5 and "sway1_loop" or "sway2_loop", true)
@@ -39,6 +41,8 @@ local function NightVision_HideFruits(inst)
 end
 
 local function NightVision_ShowFruits(inst)
+    inst._phasetask = nil
+
     inst.AnimState:Show("fruit")
     inst.AnimState:SetLightOverride(0.1)
 
@@ -130,7 +134,22 @@ local function NightVision_OnMakeEmptyFn(inst)
     end
 end
 
+local function _MakeEmpty(inst)
+    if inst.components.pickable ~= nil then
+        inst.components.pickable:MakeEmpty()
+    end
+end
+
 local function NightVision_OnRegenFn(inst)
+    local tile = TheWorld.Map:GetTileAtPoint(inst.Transform:GetWorldPosition())
+
+    -- NOTES(DiogoW): Won't grow fruit on wrong tile!
+    if tile ~= WORLD_TILES.MARSH then
+        inst:DoTaskInTime(0, _MakeEmpty) -- Needs to be delayed because Pickable:Regen would mess with things set by MakeEmpty.
+
+        return
+    end
+
     if not (TheWorld.state.isnight or TheWorld:HasTag("cave")) then
         inst.components.pickable.caninteractwith = false
 

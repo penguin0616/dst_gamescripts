@@ -292,8 +292,6 @@ function self:DestroyIceAtPoint(x, y, z, data)
     _marked_for_delete_grid:SetDataAtIndex(grid_index, nil)
     _ice_health_grid:SetDataAtIndex(grid_index, nil)
 
-    
-
     local tile_radius_plus_overhang = ((TILE_SCALE / 2) + 1.0) * 1.4142
     local is_ocean_tile = IsOceanTile(old_tile)
 
@@ -344,10 +342,10 @@ function self:DestroyIceAtPoint(x, y, z, data)
                     ent:PushEvent("onsink", {boat = nil, shore_pt = shore_point})
 
                     -- We're testing the overhang, so we need to verify that anything we find isn't
-                    -- still on some adjacent dock or land tile after we remove ourself.
+                    -- still on some adjacent dock or land tile or other platform after we remove ourself.
                     if ent:IsValid() and not has_drownable and not ent.entity:GetParent()
                         and not ent.components.amphibiouscreature
-                        and not _map:IsVisualGroundAtPoint(ent.Transform:GetWorldPosition()) then
+                        and not _map:IsVisualGroundAtPoint(ent.Transform:GetWorldPosition()) and not ent:GetCurrentPlatform() then
 
                         if ent.components.inventoryitem then
                             ent.components.inventoryitem:SetLanded(false, true)

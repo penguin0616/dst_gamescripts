@@ -271,6 +271,7 @@ local function fn()
     inst.entity:AddLight()
     inst.entity:AddNetwork()
 
+	inst:SetDeploySmartRadius(DEPLOYSPACING_RADIUS[DEPLOYSPACING.LESS] / 2) --match kit item
     MakeObstaclePhysics(inst, 0.25)
 
     inst.AnimState:SetBank("boat_cannon")

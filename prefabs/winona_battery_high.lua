@@ -193,6 +193,9 @@ local function SetBrillianceEnergyEnabled(inst, enable)
 			end
 			inst.AnimState:SetSymbolLightOverride(GetGemSymbol(i), 0.1 * count)
 		end
+		if inst.SoundEmitter:PlayingSound("loop") and not inst.SoundEmitter:PlayingSound("pb_loop") then
+			inst.SoundEmitter:PlaySound("meta4/winona_battery/purebrilliance_powered", "pb_loop")
+		end
 	else
 		inst.AnimState:Hide("PB_ENERGY")
 		inst.AnimState:SetSymbolLightOverride("rack", 0)
@@ -208,6 +211,7 @@ local function SetBrillianceEnergyEnabled(inst, enable)
 		for i = 1, 3 do
 			inst.AnimState:SetSymbolLightOverride("gem"..tostring(i), 0)
 		end
+		inst.SoundEmitter:KillSound("pb_loop")
 	end
 end
 
@@ -435,10 +439,14 @@ local function StartSoundLoop(inst)
         inst.SoundEmitter:PlaySound("dontstarve/common/together/battery/on_LP", "loop")
         UpdateSoundLoop(inst, inst.components.fueled:GetCurrentSection())
     end
+	if inst._brilliance_level > 0 and not inst.SoundEmitter:PlayingSound("pb_loop") then
+		inst.SoundEmitter:PlaySound("meta4/winona_battery/purebrilliance_powered", "pb_loop")
+	end
 end
 
 local function StopSoundLoop(inst)
     inst.SoundEmitter:KillSound("loop")
+	inst.SoundEmitter:KillSound("pb_loop")
 end
 
 local function OnEntitySleep(inst)
@@ -637,6 +645,9 @@ local function SetOverloaded(inst, overloaded)
 				if not inst:IsAsleep() then
 					StartSoundLoop(inst)
 				end
+			else
+				--might have reached here via setting a gem to insta cancel overload
+				BroadcastCircuitChanged(inst)
 			end
 			if not POPULATING then
 				PlayHitAnim(inst, "overload_pst")
@@ -841,6 +852,7 @@ local function OnLoad(inst, data, ents)
 					end
 					inst.AnimState:PlayAnimation("idle_charge", true)
 					if not inst:IsAsleep() then
+						StartSoundLoop(inst)
 						StartIdleChargeSounds(inst)
 					end
 				end
@@ -898,6 +910,7 @@ local function OnBuilt3(inst)
 				StartBattery(inst)
 			end
 			if not inst:IsAsleep() then
+				StartSoundLoop(inst)
 				StartIdleChargeSounds(inst)
 			end
 		end
@@ -1249,7 +1262,7 @@ local function fn()
     inst:ListenForEvent("engineeringcircuitchanged", OnCircuitChanged)
 	inst:ListenForEvent("timerdone", OnTimerDone)
 	inst:ListenForEvent("winona_batteryskillchanged", function(world, user)
-		if user.userid == inst._engineerid then
+		if user.userid == inst._engineerid and not inst:HasTag("burnt") then
 			if ConfigureSkillTreeUpgrades(inst, user) then
 				ApplyEfficiencyBonus(inst)
 				UpdateCircuitPower(inst)

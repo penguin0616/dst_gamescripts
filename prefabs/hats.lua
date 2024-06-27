@@ -4543,6 +4543,17 @@ local function MakeHat(name)
         owner:ShowPopUp(POPUPS.INSPECTACLES, false)
     end
 
+    fns.inspectacles_getstatus = function(inst, viewer)
+        if viewer ~= nil and viewer:HasTag("handyperson") then
+            local skilltreeupdater = viewer.components.skilltreeupdater
+            if skilltreeupdater == nil or not skilltreeupdater:IsActivated("winona_wagstaff_1") then
+                return "MISSINGSKILL"
+            end
+        end
+
+        return nil
+    end
+
     fns.inspectacles = function()
         local inst = simple(fns.inspectacles_custom_init)
 
@@ -4568,6 +4579,8 @@ local function MakeHat(name)
         inst.components.useableitem:SetOnStopUseFn(fns.inspectacles_onstopuse)
 
         MakeHauntableLaunch(inst)
+
+        inst.components.inspectable.getstatus = fns.inspectacles_getstatus
 
         return inst
     end
@@ -4635,6 +4648,17 @@ local function MakeHat(name)
 		inst:AddTag("open_top_hat")
 	end
 
+    fns.roseglasses_getstatus = function(inst, viewer)
+        if viewer ~= nil and viewer:HasTag("handyperson") then
+            local skilltreeupdater = viewer.components.skilltreeupdater
+            if skilltreeupdater == nil or not skilltreeupdater:IsActivated("winona_charlie_1") then
+                return "MISSINGSKILL"
+            end
+        end
+
+        return nil
+    end
+
 	fns.roseglasses = function()
 		local inst = simple(fns.roseglasses_custom_init)
 
@@ -4650,8 +4674,11 @@ local function MakeHat(name)
 		inst.components.equippable.dapperness = TUNING.DAPPERNESS_TINY
 		inst.components.equippable:SetOnEquip(fns.roseglasses_onequip)
 		inst.components.equippable:SetOnUnequip(fns.roseglasses_onunequip)
+        inst.components.equippable.restrictedtag = "handyperson"
 
 		MakeHauntableLaunch(inst)
+
+        inst.components.inspectable.getstatus = fns.roseglasses_getstatus
 
 		return inst
 	end

@@ -120,7 +120,7 @@ function StateGraphWrangler:Update(current_tick)
 
     TheSim:ProfilerPush("updaters")
     for k,v in pairs(updaters) do
-        if k.inst:IsValid() then
+        if not k.stopped and k.inst:IsValid() then -- NOTES(JBK): The k.stopped check is for the condition of iterating the loop causes the stategraph of another stategraph to go invalid.
             local prefab = k.inst.prefab
             if prefab ~= nil then
 			     TheSim:ProfilerPush(k.inst.prefab)

@@ -129,7 +129,7 @@ local function fn()
 	inst.entity:AddMiniMapEntity()
 	inst.entity:AddNetwork()
 
-	inst:SetDeploySmartRadius(0.5) --recipe min_spacing/2
+	inst:SetDeploySmartRadius(0.75) --recipe min_spacing/2
 
 	MakeObstaclePhysics(inst, .4)
 

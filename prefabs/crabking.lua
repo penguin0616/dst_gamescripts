@@ -39,7 +39,7 @@ local prefabs =
     "crabking_chip_med",
     "crabking_claw",
     --"crabking_feeze", -- Deprecated.
-    --"crabking_geyserspawner", -- Deprecated.
+    "crabking_geyserspawner",
     "crabking_icewall",
     "crabking_mob_knight",
     "crabking_mob",
@@ -261,9 +261,9 @@ local function SocketItem(inst, item, socketnum, load)
 
     inst:UpdateGemCount()
 
-    if #inst.socketed >= MAX_SOCKETS then
-        MakeLargeBurnableCharacter(inst, "body")
-        MakeHugeFreezableCharacter(inst, "body")
+    if #inst.socketed >= MAX_SOCKETS then        
+        MakeLargeBurnableCharacter(inst, "swap_fire", nil, 3)
+        MakeHugeFreezableCharacter(inst, "swap_fire")
 
         inst.components.freezable:SetResistance(3 + inst.gemcount.blue)
 
@@ -336,12 +336,25 @@ local function OnAttacked(inst, data)
         return
     end
 
+    local fx = SpawnPrefab("mining_fx")
+    local radius = inst:GetPhysicsRadius(0) - ( .2 + math.random() * .5 )
     local x, y, z = inst.Transform:GetWorldPosition()
+    local theta
+ 
     local x1, y1, z1 = data.attacker.Transform:GetWorldPosition()
-    local r = data.attacker:GetPhysicsRadius(.5)
-    r = r / (r + 1)
+    if x ~= x1 or z ~= z1 then
+        theta = math.atan2(z - z1, x1 - x) + math.random() * 1 - 0.5
+    end
 
-    SpawnPrefab("mining_fx").Transform:SetPosition(x1 + (x - x1) * r, 0, z1 + (z - z1) * r)
+    if theta == nil then
+        theta = math.random() * TWOPI
+    end
+    fx.Transform:SetPosition(
+        x + radius * math.cos(theta),
+        math.random(),
+        z - radius * math.sin(theta)
+    )
+
 end
 
 local function OnRemove(inst)
@@ -424,17 +437,6 @@ local function OnCannonTowerRemoved(inst, tower)
             end
         end
     end
-
-    -- This auto sets the crabking into doing the ice afte X time.
-    --[[
-    if inst.tasks.cannondead_triggerice_task == nil then
-        inst.tasks.cannondead_triggerice_task = inst:DoTaskInTime(12, function()
-            inst.tasks.cannondead_triggerice_task = nil
-
-            inst.damagetotal = (inst.damagetotal or 0) - TUNING.CRABKING_FREEZE_THRESHOLD
-        end)
-    end
-    ]]
 end
 
 local function CleanUpArena(inst, remove)
@@ -481,6 +483,15 @@ local function CleanUpArena(inst, remove)
         end
 
         inst.cannontowers = nil
+    end
+
+    -- clean geysers
+    if inst.geysers and #inst.geysers > 0 then
+        for i=#inst.geysers,1,-1 do
+            local geyser = inst.geysers[i]
+            geyser:Remove()
+            inst.geysers[i] = nil
+        end
     end
 
     -- Clear tasks.
@@ -916,6 +927,14 @@ local function EndCastSpell(inst, lastwasfreeze)
     inst.wantstoheal = nil
     inst.wantstofreeze = nil
 
+    if inst.geysers and #inst.geysers > 0 then
+        for i=#inst.geysers,1,-1 do
+            local geyser = inst.geysers[i]
+            geyser:Remove()
+            inst.geysers[i] = nil
+        end
+    end
+
     SpawnPrefab("crabking_ring_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
     inst:PushEvent("ck_taunt")
     for radius=1, MAXRANGE do
@@ -1079,6 +1098,7 @@ local function SpawnCannons(inst)
         end
     end
 
+    inst:ShineSocketOfColor("red")
     inst:ShineSocketOfColor("yellow")
 end
 
@@ -1455,7 +1475,7 @@ local function GetWintersFeastOrnaments(inst)
 end
 
 local function PushMusic(inst)
-    if ThePlayer == nil or (inst.sg and inst.sg:HasStateTag("inert")) then
+    if ThePlayer == nil or not inst:HasTag("epic") then
         inst._playingmusic = false
 
     elseif ThePlayer:IsNear(inst, inst._playingmusic and 40 or 20) then
@@ -1697,7 +1717,7 @@ local function dogeyserburbletask(inst)
         inst.burbletask:Cancel()
         inst.burbletask = nil
     end
-    local totalcasttime = TUNING.CRABKING_CAST_TIME - (inst.crab and inst.crab:IsValid() and math.floor(inst.crab.gemcount.yellow/2 or 0))
+    local totalcasttime = TUNING.CRABKING_WAVE_ATTACK_TIMEOUT_TIME
     local time = Remap(inst.components.age:GetAge(),0,totalcasttime,0.2,0.01)
     inst.burbletask = inst:DoTaskInTime(time,function() inst.burble(inst) end) -- 0.01+ math.random()*0.1
 end
@@ -1722,6 +1742,143 @@ local function burble(inst)
 
     dogeyserburbletask(inst)
 end
+
+
+local function endgeyser(inst)
+    inst:DoTaskInTime(2.4,function()
+        if inst.burbletask then
+            inst.burbletask:Cancel()
+            inst.burbletask = nil
+        end
+    end)
+
+    for i=1,TUNING.CRABKING_DEADLY_GEYSERS do
+        inst:DoTaskInTime(math.random()*0.4,function()
+            local MAXRADIUS = 4.5
+            local x,y,z = inst.Transform:GetWorldPosition()
+            local theta = math.random()*TWOPI
+            local radius = math.pow(math.random(),0.8)* MAXRADIUS
+            local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
+            local prefab = "crab_king_waterspout"
+            if TheWorld.Map:IsOceanAtPoint(x+offset.x, 0, z+offset.z) then
+                local fx = SpawnPrefab(prefab)
+                fx.Transform:SetPosition(x+offset.x,y+offset.y,z+offset.z)
+
+                local INITIAL_LAUNCH_HEIGHT = 0.1
+                local SPEED = 8
+                local CANT_HAVE_TAGS = {"INLIMBO", "outofreach", "DECOR"}
+                local function launch_away(inst, position)
+                    local ix, iy, iz = inst.Transform:GetWorldPosition()
+                    inst.Physics:Teleport(ix, iy + INITIAL_LAUNCH_HEIGHT, iz)
+
+                    local px, py, pz = position:Get()
+                    local angle = (180 - inst:GetAngleToPoint(px, py, pz)) * DEGREES
+                    local sina, cosa = math.sin(angle), math.cos(angle)
+                    inst.Physics:SetVel(SPEED * cosa, 4 + SPEED, SPEED * sina)
+                end
+                local affected_entities = TheSim:FindEntities(x+offset.x,y+offset.y,z+offset.z, 2, nil, CANT_HAVE_TAGS)
+                for _, v in ipairs(affected_entities) do
+                    if v.components.oceanfishable ~= nil then
+                        -- Launch fishable things because why not.
+
+                        local projectile = v.components.oceanfishable:MakeProjectile()
+                        if projectile.components.weighable ~= nil then
+                            projectile.components.weighable.prefab_override_owner = inst.fisher_prefab
+                        end
+                        local position = Vector3(x+offset.x,y+offset.y,z+offset.z)
+                        if projectile.components.complexprojectile then
+                            projectile.components.complexprojectile:SetHorizontalSpeed(16)
+                            projectile.components.complexprojectile:SetGravity(-30)
+                            projectile.components.complexprojectile:SetLaunchOffset(Vector3(0, 0.5, 0))
+                            projectile.components.complexprojectile:SetTargetOffset(Vector3(0, 0.5, 0))
+
+                            local v_position = v:GetPosition()
+                            local launch_position = v_position + (v_position - position):Normalize() * SPEED
+                            projectile.components.complexprojectile:Launch(launch_position, projectile)
+                        else
+                            launch_away(projectile, position)
+                        end
+                    end
+                end
+
+
+            else
+                local boat = TheWorld.Map:GetPlatformAtPoint(x+offset.x, z+offset.z)
+                if boat then
+                    local pt = Vector3(x+offset.x,0,z+offset.z)
+                    boat.components.health:DoDelta(-TUNING.CRABKING_GEYSER_BOATDAMAGE)
+
+                    -- look for patches
+                    local nearpatch = TheSim:FindEntities(pt.x, 0, pt.z, 2, REPAIRED_PATCH_MUST_TAGS)
+                    for i,patch in pairs(nearpatch)do
+                        pt = Vector3(patch.Transform:GetWorldPosition())
+                        patch:Remove()
+                        break
+                    end
+
+                    boat:PushEvent("spawnnewboatleak", {pt = pt, leak_size = "small_leak", playsoundfx = true})
+                end
+            end
+        end)
+    end
+
+    inst:DoTaskInTime(2, endgeyser)
+end
+
+local function geyserfn()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddSoundEmitter()
+    inst.entity:AddNetwork()
+
+    inst:AddTag("NOCLICK")
+    inst:AddTag("fx")
+    inst:AddTag("crabking_spellgenerator")
+
+    inst.entity:SetPristine()
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst:AddComponent("age")
+
+    inst.persists = false
+
+    inst.burble = burble
+    inst.dogeyserburbletask = dogeyserburbletask
+
+    inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/bubble_LP","burble")
+    inst.SoundEmitter:SetParameter("burble", "intensity", 0)
+    inst.burblestarttime = GetTime()
+    inst.burbleintensity = inst:DoPeriodicTask(1,function()
+            local totalcasttime = TUNING.CRABKING_WAVE_ATTACK_TIMEOUT_TIME
+            local intensity = math.min(1,( GetTime() - inst.burblestarttime ) / totalcasttime)
+
+            inst.SoundEmitter:SetParameter("burble", "intensity", intensity)
+      end)
+    inst:ListenForEvent("onremove", function()
+        if inst.burbletask then
+            inst.burbletask:Cancel()
+            inst.burbletask = nil
+        end
+        if inst.burbleintensity then
+            inst.burbleintensity:Cancel()
+            inst.burbleintensity = nil
+        end
+        inst.SoundEmitter:KillSound("burble")
+    end)
+
+    inst:DoTaskInTime(TUNING.CRABKING_WAVE_ATTACK_TIMEOUT_TIME,function()
+        endgeyser(inst)
+    end)
+
+    dogeyserburbletask(inst)
+
+    return inst
+end
+
+
 
 -- FREEZE FX
 
@@ -1947,6 +2104,7 @@ local function chipfn(type)
 end
 
 return Prefab("crabking", fn, assets, prefabs),
+       Prefab("crabking_geyserspawner", geyserfn, nil, geyserprefabs),
        --Prefab("crabking_feeze", freezefn, nil, freezeprefabs),
        Prefab("crabking_chip_high", function() return chipfn("high") end, chipassets),
        Prefab("crabking_chip_med",  function() return chipfn("mid") end, chipassets),

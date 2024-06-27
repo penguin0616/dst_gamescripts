@@ -185,6 +185,23 @@ if _ismastershard then
         (data.pickedup and self.AddPauldronSource or self.RemovePauldronSource)(self, data.shardid)
     end
     inst:ListenForEvent("master_shardmermkingpauldron", self.OnMermKingPauldronsChanged, _world)
+
+    function self:ResyncNetVars()
+        -- NOTES(JBK): Not the most efficient but if a shard connects late we need to send the variable off to it so we broadcast it off to all connected shards.
+        local val
+        val = self.hasmermking:value()
+        self.hasmermking:set_local(false)
+        self.hasmermking:set(val)
+        val = self.hastrident:value()
+        self.hastrident:set_local(false)
+        self.hastrident:set(val)
+        val = self.hascrown:value()
+        self.hascrown:set_local(false)
+        self.hascrown:set(val)
+        val = self.haspauldron:value()
+        self.haspauldron:set_local(false)
+        self.haspauldron:set(val)
+    end
 else
     -- NOTES(JBK): Shards need to update their world state as if they have a Merm King.
     self.OnHasMermKingDirty = function()

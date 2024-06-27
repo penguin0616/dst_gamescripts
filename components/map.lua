@@ -117,20 +117,18 @@ function Map:CanTerraformAtPoint(x, y, z)
     return true
 end
 
-function Map:CanTerraformAtTile(x, y)
-    local tile = self:GetTile(x, y)
-    if TERRAFORM_IMMUNE[tile] or not TileGroupManager:IsLandTile(tile) then
-        return false
-    elseif TERRAFORM_EXTRA_SPACING > 0 then
-        local cx, _, cz = self:GetTileCenterPoint(x, y)
-        for _, blocker in ipairs(TheSim:FindEntities(cx, 0, cz, TERRAFORM_EXTRA_SPACING, TERRAFORMBLOCKER_TAGS, TERRAFORMBLOCKER_IGNORE_TAGS)) do
-            if blocker.entity:IsVisible() and
-                    blocker:GetDistanceSqToPoint(cx, 0, cz) < blocker.terraform_extra_spacing * blocker.terraform_extra_spacing then
-                return false
-            end
+function Map:IsTerraformingBlockedByAnObject(tile_x, tile_y)
+    if TERRAFORM_EXTRA_SPACING <= 0 then return false end
+
+    local cx, _, cz = self:GetTileCenterPoint(tile_x, tile_y)
+    for _, blocker in ipairs(TheSim:FindEntities(cx, 0, cz, TERRAFORM_EXTRA_SPACING, TERRAFORMBLOCKER_TAGS, TERRAFORMBLOCKER_IGNORE_TAGS)) do
+        if blocker.entity:IsVisible() and
+                blocker:GetDistanceSqToPoint(cx, 0, cz) < blocker.terraform_extra_spacing * blocker.terraform_extra_spacing then
+            return true
         end
     end
-    return true
+
+    return false
 end
 
 function Map:CanPlowAtPoint(x, y, z)

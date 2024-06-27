@@ -69,6 +69,9 @@ return{
             MANNEQUIN_EQUIPSWAPFAILED = "Oh what a shame, I thought it would suit you.",
             PILLOWFIGHT_NO_HANDPILLOW = "A pillow must be promptly procured.",
             NOTMYBERNIE = "Willow! What are you doin' while your bruin causes such ruin?",
+            NOTMERM = "I can't help, even with kelp.",
+            NOKELP = "only_used_by_wurt",
+--fallback to speech_wilson.lua             HASMERMLEADER = "only_used_by_wurt",
 		},
 		OPEN_CRAFTING =
 		{
@@ -993,6 +996,8 @@ return{
 
     ANNOUNCE_OTTERBOAT_OUTOFSHALLOWS = "I knew I otter keep to the shallows, hyuyu!",
     ANNOUNCE_OTTERBOAT_DENBROKEN = "I shouldn't have shattered the den, then?",
+
+    ANNOUNCE_GATHER_MERM = "only_used_by_wurt",
 
 	BATTLECRY =
 	{
@@ -3551,6 +3556,7 @@ return{
 		WINONA_TELEBRELLA =
 		{
 			GENERIC = "I'm not a fella who needs a metal umbrella.",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "Doesn't look too lively!",
 			CHARGING = "I'm not a fella who needs a metal umbrella.",
 			CHARGED = "I'm not a fella who needs a metal umbrella.",
@@ -3558,6 +3564,7 @@ return{
 		WINONA_TELEPORT_PAD_ITEM =
 		{
 			GENERIC = "Imitation in the sincerest form of flattery, hyuyu!",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "Playtime's over!",
 			BURNING = "Hoohoohoo!",
 			BURNT = "How hilarious!",
@@ -3572,8 +3579,16 @@ return{
 		},
 		INSPECTACLESBOX = "only_used_by_winona",
 		INSPECTACLESBOX2 = "only_used_by_winona",
-		INSPECTACLESHAT = "She's made the decision to follow his vision?",
-		ROSEGLASSESHAT = "What have we here? A dark magic seer?",
+		INSPECTACLESHAT = 
+        {
+            GENERIC = "She's made the decision to follow his vision?",
+            MISSINGSKILL = "only_used_by_winona",
+        },
+		ROSEGLASSESHAT =
+        {
+            GENERIC = "What have we here? A dark magic seer?",
+            MISSINGSKILL = "only_used_by_winona",
+        },
 		CHARLIERESIDUE = "only_used_by_winona",
 		CHARLIEROSE = "only_used_by_winona",
         WINONA_MACHINEPARTS_1 = "only_used_by_winona",

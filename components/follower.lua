@@ -290,6 +290,10 @@ local function stopfollow(inst, self)
 end
 
 function Follower:AddLoyaltyTime(time)
+    if self.neverexpire then
+        return
+    end
+
     local leader = self.leader and self.leader.components.leader
     if leader and leader.loyaltyeffectiveness then
 		time = time * leader.loyaltyeffectiveness
@@ -320,6 +324,11 @@ function Follower:CancelLoyaltyTask()
 end
 
 function Follower:StopFollowing()
+    
+    if self.neverexpire then
+        return
+    end
+
     if self.inst:IsValid() then
         self.targettime = nil
         self.inst:PushEvent("loseloyalty", { leader = self.leader })

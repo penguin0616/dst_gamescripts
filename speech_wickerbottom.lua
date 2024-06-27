@@ -69,6 +69,9 @@ return{
             MANNEQUIN_EQUIPSWAPFAILED = "That does not belong on a mannequin.",
             PILLOWFIGHT_NO_HANDPILLOW = "I will require a pillow to participate.",
             NOTMYBERNIE = "This monstrous animated teddy bear is loyal only to our dear Willow.",
+            NOTMERM = "It seems that piscean bipeds only heed the call of their own kind.",
+            NOKELP = "only_used_by_wurt",
+--fallback to speech_wilson.lua             HASMERMLEADER = "only_used_by_wurt",
 		},
 		OPEN_CRAFTING =
 		{
@@ -988,6 +991,8 @@ return{
 
     ANNOUNCE_OTTERBOAT_OUTOFSHALLOWS = "This platform's construction will not withstand deeper waters.",
     ANNOUNCE_OTTERBOAT_DENBROKEN = "It seems the den was more crucial to this platform's structural integrity than I surmised.",
+
+    ANNOUNCE_GATHER_MERM = "only_used_by_wurt",
 
 	BATTLECRY =
 	{
@@ -3545,6 +3550,7 @@ return{
 		WINONA_TELEBRELLA =
 		{
 			GENERIC = "What a whimsical appearance for a teleportation device.",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "It requires a power source.",
 			CHARGING = "What a whimsical appearance for a teleportation device.",
 			CHARGED = "What a whimsical appearance for a teleportation device.",
@@ -3552,6 +3558,7 @@ return{
 		WINONA_TELEPORT_PAD_ITEM =
 		{
 			GENERIC = "This is rather convenient.",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "It requires a power source.",
 			BURNING = "Oh dear, who did this?",
 			BURNT = "I do hope she'll build another.",
@@ -3566,8 +3573,16 @@ return{
 		},
 		INSPECTACLESBOX = "only_used_by_winona",
 		INSPECTACLESBOX2 = "only_used_by_winona",
-		INSPECTACLESHAT = "It seems to utilize radio waves to pinpoint the location of anomalous objects.",
-		ROSEGLASSESHAT = "Winona has been rather tight-lipped about their function.",
+		INSPECTACLESHAT = 
+        {
+            GENERIC = "It seems to utilize radio waves to pinpoint the location of anomalous objects.",
+            MISSINGSKILL = "only_used_by_winona",
+        },
+		ROSEGLASSESHAT =
+        {
+            GENERIC = "Winona has been rather tight-lipped about their function.",
+            MISSINGSKILL = "only_used_by_winona",
+        },
 		CHARLIERESIDUE = "only_used_by_winona",
 		CHARLIEROSE = "only_used_by_winona",
         WINONA_MACHINEPARTS_1 = "only_used_by_winona",

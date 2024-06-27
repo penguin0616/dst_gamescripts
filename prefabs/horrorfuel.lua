@@ -208,7 +208,7 @@ local function fn()
 
     inst.lightcolour = {102/255, 16/255, 16/255}
     inst.fxprefab = "horrorfuel_castfx"
-    inst.castsound = "rifts2/thrall_generic/vocalization_big" -- TODO(DiogoW)
+    inst.castsound = "meta4/casting/shadow"
 
     return inst
 end

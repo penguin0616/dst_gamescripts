@@ -50,6 +50,7 @@ local function CastTerraformingSpell(inst, target, position)
     terraform_bomb.Transform:SetPosition(position:Get())
     terraform_bomb._terraform_tile_type = inst._terraform_tile_type
     terraform_bomb._extra_onhit_fn = inst._extra_onhit_fn
+    terraform_bomb._landed_sound = inst._landed_sound
 
     terraform_bomb.components.complexprojectile:Launch(position + MINOR_VERTICAL_OFFSET, inst, inst)
 
@@ -85,7 +86,7 @@ end
 
 -- Rechargeable
 local function add_charged_fx(inst, owner)
-    if not inst._charged_vfx then
+    if not inst._charged_vfx and inst.components.equippable:IsEquipped() then
         local charged_vfx = SpawnPrefab(inst._fx_type or "wurt_swampitem_shadow_chargedfx")
         charged_vfx.entity:AddFollower()
         charged_vfx.entity:SetParent(owner.entity)
@@ -116,16 +117,24 @@ local function OnCharged(inst)
 end
 
 -- Equippable
+local function OnEquip_CheckForChargedFX(inst)
+    local owner = inst.components.inventoryitem:GetGrandOwner()
+    if owner then
+        local owner_debuffable = owner.components.debuffable
+        local cant_terraform_debuff = (owner_debuffable and owner_debuffable:GetDebuff("wurt_terraform_cast_debuff"))
+        if not cant_terraform_debuff then
+            add_charged_fx(inst, owner)
+        end
+    end
+end
 local function onequip(inst, owner)
     owner.AnimState:OverrideSymbol("swap_object", inst.swap_file, inst.swap_symbol)
     owner.AnimState:Show("ARM_carry")
     owner.AnimState:Hide("ARM_normal")
 
-    local owner_debuffable = owner.components.debuffable
-    local cant_terraform_debuff = (owner_debuffable and owner_debuffable:GetDebuff("wurt_terraform_cast_debuff"))
-    if not cant_terraform_debuff then
-        add_charged_fx(inst, owner)
-    end
+    -- On Save/Load, we can't guarantee debuffable vs inventory/equippable loading, so frame delay our check
+    -- to help make sure that the debuff has applied before we check for its existence.
+    inst:DoTaskInTime(FRAMES, OnEquip_CheckForChargedFX)
 end
 local function unequip(inst, owner)
     owner.AnimState:ClearOverrideSymbol("swap_object")
@@ -231,11 +240,15 @@ local function wurt_swampbomb_shadow()
         return inst
     end
 
+    -- NOTE: This is done in SGwilson
+    inst.castsound = "meta4/marshify/shadow_cast_throw"
+
     inst.swap_file = "swap_wurt_swampbomb"
     inst.swap_symbol = "swap_shadow"
 
     inst._terraform_tile_type = "SHADOW"
     inst._fx_type = "wurt_swampitem_shadow_chargedfx"
+    inst._landed_sound = "meta4/marshify/shadow_cast_land"
 
     inst.components.spellcaster:SetSpellType(SPELLTYPES.SHADOW_SWAMP_BOMB)
 
@@ -281,12 +294,16 @@ local function wurt_swampbomb_lunar()
         return inst
     end
 
+    -- NOTE: This is done in SGwilson
+    inst.castsound = "meta4/marshify/lunar_cast_throw"
+
     inst.swap_file = "swap_wurt_swampbomb"
     inst.swap_symbol = "swap_lunar"
 
     inst._terraform_tile_type = "LUNAR"
     inst._extra_onhit_fn = OnHit_Lunar
     inst._fx_type = "wurt_swampitem_lunar_chargedfx"
+    inst._landed_sound = "meta4/marshify/lunar_cast_land"
 
     inst.components.spellcaster:SetSpellType(SPELLTYPES.LUNAR_SWAMP_BOMB)
 
@@ -299,6 +316,10 @@ local function OnHitTerraformer(inst, attacker, target)
     terraformer.Transform:SetPosition(inst.Transform:GetWorldPosition())
     terraformer:SetType(inst._terraform_tile_type or "SHADOW")
     terraformer:DoTerraform()
+
+    if inst._landed_sound then
+        terraformer.SoundEmitter:PlaySound(inst._landed_sound)
+    end
 
     if inst._extra_onhit_fn then
         inst._extra_onhit_fn(inst, attacker, target)

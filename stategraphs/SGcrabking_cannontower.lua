@@ -154,10 +154,9 @@ local states =
 
         onenter = function(inst, pushanim)
             local platform = inst:GetBoatIntersectingPhysics()
-            local radius = platform ~= nil and platform:GetSafePhysicsRadius() or nil
 
-            if radius ~= nil then
-                ShakeAllCameras(CAMERASHAKE.VERTICAL, .5, .03, 1, platform, radius)
+            if platform ~= nil then
+                ShakeAllCamerasOnPlatform(CAMERASHAKE.VERTICAL, .5, .03, 1, platform)
             end
 
             inst.AnimState:PlayAnimation("breach_pre")
@@ -220,6 +219,8 @@ local states =
                     SpawnPrefab("fx_dock_crackle").Transform:SetPosition(inst.Transform:GetWorldPosition())
 
                     platform.components.health:DoDelta(-TUNING.CRABKING_CANNONTOWER_HULL_SMASH_DAMAGE)
+
+                    ShakeAllCamerasOnPlatform(CAMERASHAKE.SIDE, .5, .03, .75, platform)
                 end
             end),
         },

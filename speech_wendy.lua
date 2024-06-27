@@ -69,6 +69,9 @@ return{
             MANNEQUIN_EQUIPSWAPFAILED = "No. That would be silly.",
             PILLOWFIGHT_NO_HANDPILLOW = "I don't even have a pillow to fight with...",
             NOTMYBERNIE = "It's doing what it does best.",
+            NOTMERM = "They only answer to Wurt.",
+            NOKELP = "only_used_by_wurt",
+--fallback to speech_wilson.lua             HASMERMLEADER = "only_used_by_wurt",
 		},
 		OPEN_CRAFTING =
 		{
@@ -992,6 +995,8 @@ return{
 
     ANNOUNCE_OTTERBOAT_OUTOFSHALLOWS = "It won't survive these rough waters... perhaps I won't either.",
     ANNOUNCE_OTTERBOAT_DENBROKEN = "Everything is falling apart. Like usual.",
+
+    ANNOUNCE_GATHER_MERM = "only_used_by_wurt",
 
 	BATTLECRY =
 	{
@@ -3549,6 +3554,7 @@ return{
 		WINONA_TELEBRELLA =
 		{
 			GENERIC = "It takes things away. I cannot follow.",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "It's dead...",
 			CHARGING = "It takes things away. I cannot follow.",
 			CHARGED = "It takes things away. I cannot follow.",
@@ -3556,6 +3562,7 @@ return{
 		WINONA_TELEPORT_PAD_ITEM =
 		{
 			GENERIC = "Not everything can be brought back.",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "It's dead...",
 			BURNING = "Oh no...",
 			BURNT = "It all crumbles to ash, in the end.",
@@ -3570,8 +3577,16 @@ return{
 		},
 		INSPECTACLESBOX = "only_used_by_winona",
 		INSPECTACLESBOX2 = "only_used_by_winona",
-		INSPECTACLESHAT = "They can't show me what I'm looking for.",
-		ROSEGLASSESHAT = "I hope you find her.",
+		INSPECTACLESHAT = 
+        {
+            GENERIC = "They can't show me what I'm looking for.",
+            MISSINGSKILL = "only_used_by_winona",
+        },
+		ROSEGLASSESHAT =
+        {
+            GENERIC = "I hope you find her.",
+            MISSINGSKILL = "only_used_by_winona",
+        },
 		CHARLIERESIDUE = "only_used_by_winona",
 		CHARLIEROSE = "only_used_by_winona",
         WINONA_MACHINEPARTS_1 = "only_used_by_winona",

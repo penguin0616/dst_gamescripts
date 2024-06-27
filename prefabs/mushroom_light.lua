@@ -255,7 +255,7 @@ local function MakeMushroomLight(name, onlywhite, physics_rad)
         inst.entity:AddLight()
         inst.entity:AddNetwork()
 
-		inst:SetDeploySmartRadius(0.75) --recipe min_spacing/2
+		inst:SetDeploySmartRadius(0.5) --recipe min_spacing/2
 
         MakeObstaclePhysics(inst, physics_rad)
 

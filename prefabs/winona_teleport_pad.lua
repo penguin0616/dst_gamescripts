@@ -289,7 +289,7 @@ local function DoBuiltOrDeployed(inst, doer)
 
 	inst.AnimState:PlayAnimation("pad_deploy")
 	inst.AnimState:PushAnimation("pad_idle", false)
-	--inst.SoundEmitter:PlaySound(sound)
+	inst.SoundEmitter:PlaySound("meta4/winona_teleumbrella/telepad_deploy")
 	inst:DoTaskInTime(8 * FRAMES, OnBuilt2, doer)
 
 	PushSyncAnims(inst, "pad_deploy")
@@ -325,7 +325,7 @@ local function ChangeToItem(inst)
 	item._collapsetask = item:DoTaskInTime(6 * FRAMES, OnCollapse2) --anim actually has 8 frames, acting as a mini-lag anim for clients
 	item.components.inventoryitem:SetOnPutInInventoryFn(OnCollapse2)
 
-	--item.SoundEmitter:PlaySound("meta4/winona_spotlight/destroy")
+	item.SoundEmitter:PlaySound("meta4/winona_teleumbrella/telepad_collapse")
 
 	if inst._wired:value() then
 		item.SoundEmitter:PlaySound("dontstarve/common/together/spot_light/electricity", nil, .5)
@@ -336,7 +336,7 @@ end
 local function OnWorked(inst)
 	inst.AnimState:PlayAnimation("pad_hit")
 	inst.AnimState:PushAnimation("pad_idle", false)
-	--inst.SoundEmitter:PlaySound("dontstarve/common/together/catapult/hit")
+	inst.SoundEmitter:PlaySound("dontstarve/common/together/catapult/hit")
 
 	PushSyncAnims(inst, "pad_hit")
 end
@@ -437,11 +437,31 @@ end
 
 --------------------------------------------------------------------------
 
-local function GetStatus(inst)
-	return (inst:HasTag("burnt") and "BURNT")
+local function GetStatus(inst, viewer)
+	local status = (inst:HasTag("burnt") and "BURNT")
 		or (inst.components.burnable ~= nil and inst.components.burnable:IsBurning() and "BURNING")
 		or (not inst:IsPowered() and "OFF")
 		or nil
+
+    if status == nil and viewer ~= nil and viewer:HasTag("handyperson") then
+        local skilltreeupdater = viewer.components.skilltreeupdater
+        if skilltreeupdater == nil or not skilltreeupdater:IsActivated("winona_wagstaff_2") then
+            return "MISSINGSKILL"
+        end
+    end
+
+    return status
+end
+
+local function GetStatus_item(inst, viewer)
+    if viewer ~= nil and viewer:HasTag("handyperson") then
+        local skilltreeupdater = viewer.components.skilltreeupdater
+        if skilltreeupdater == nil or not skilltreeupdater:IsActivated("winona_wagstaff_2") then
+            return "MISSINGSKILL"
+        end
+    end
+
+    return nil
 end
 
 local function AddBatteryPower(inst, power)
@@ -848,7 +868,7 @@ local function itemfn()
 
 	inst:AddTag("portableitem")
 
-	MakeInventoryFloatable(inst, "large", 0.5, { 0.65, 1.05, 1 })
+	MakeInventoryFloatable(inst, "large", 0.37, { 0.56, 0.91, 1 })
 
 	inst.entity:SetPristine()
 
@@ -857,6 +877,7 @@ local function itemfn()
 	end
 
 	inst:AddComponent("inspectable")
+	inst.components.inspectable.getstatus = GetStatus_item
 	inst:AddComponent("inventoryitem")
 
 	inst:AddComponent("deployable")

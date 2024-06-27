@@ -351,6 +351,8 @@ local function fn_pre(inst)
     inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
     inst.entity:AddMiniMapEntity()
+
+	inst:SetDeploySmartRadius(DEPLOYSPACING_RADIUS[DEPLOYSPACING.LESS] / 2) --item deployspacing/2
     MakeObstaclePhysics(inst, .2)
 
     inst.Light:Enable(false)
@@ -361,7 +363,6 @@ local function fn_pre(inst)
 
     inst.Transform:SetEightFaced()
 
-    inst:AddTag("NOBLOCK")
     inst:AddTag("structure")
     inst:AddTag("mast")
 	inst:AddTag("rotatableobject")

@@ -9,6 +9,10 @@ ShardPortals = {}
 ShardList = {}
 local ShardConnected = {}
 
+function Shard_IsMaster()
+    return TheShard:IsMaster() or TheNet:GetIsMasterSimulation() and not TheShard:IsSecondary()
+end
+
 function Shard_IsWorldAvailable(world_id)
     return world_id ~= nil and (ShardConnected[world_id or SHARDID.MASTER] ~= nil or world_id == TheShard:GetShardId())
 end
@@ -36,7 +40,23 @@ function Shard_SyncWorldSettings(world_id, is_resync)
     end
 end
 
-    --Called from ShardManager whenever a shard is connected or
+function Shard_OnShardConnected(world_id, tags, world_data)
+    -- NOTES(JBK): Only should be called when the shard state is REMOTESHARDSTATE.READY.
+    if Shard_IsMaster() then
+        Shard_SyncWorldSettings(world_id)
+    else
+        SendRPCToShard(SHARD_RPC.ResyncWorldSettings, SHARDID.MASTER)
+    end
+    if Shard_IsMaster() then
+        if TheWorld then
+            local shard_mermkingwatcher = TheWorld.shard.components.shard_mermkingwatcher
+            if shard_mermkingwatcher then
+                shard_mermkingwatcher:ResyncNetVars()
+            end
+        end
+    end
+end
+--Called from ShardManager whenever a shard is connected or
 --disconnected, to automatically update known portal states
 --On master server, secondary tags and worldgen options are also passed through here
 --NOTE: should never be called with for our own world_id
@@ -67,12 +87,7 @@ function Shard_UpdateWorldState(world_id, state, tags, world_data)
         ShardConnected[world_id] = { ready = true, tags = tags, world = world_data }
         ShardList[world_id] = true
 
-        if TheShard:IsMaster() then
-            Shard_SyncWorldSettings(world_id)
-        else
-            print("[SyncWorldSettings] Sending ResyncWorldSettings.")
-            SendRPCToShard(SHARD_RPC.ResyncWorldSettings, SHARDID.MASTER)
-        end
+        Shard_OnShardConnected(world_id, tags, world_data)
     else
         ShardConnected[world_id] = nil
         ShardList[world_id] = nil
@@ -180,12 +195,6 @@ function Shard_OnDiceRollRequest(user_id)
 
     RecentDiceRolls[user_id] = curt + TUNING.DICE_ROLL_COOLDOWN
     return true
-end
-
----------------------------------------------
-
-function Shard_IsMaster()
-    return TheShard:IsMaster() or TheNet:GetIsMasterSimulation() and not TheShard:IsSecondary()
 end
 
 ---------------------------------------------

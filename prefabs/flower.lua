@@ -126,6 +126,9 @@ local function OnResidueActivated(inst, doer)
 	if inst._isrose:value() and doer and doer.components.inventory then
 		local rose = SpawnPrefab("charlierose")
 		doer.components.inventory:GiveItem(rose, nil, inst:GetPosition())
+		if doer.SoundEmitter then
+			doer.SoundEmitter:PlaySound("meta4/charlie_residue/rose_activate")
+		end
 		inst:Remove()
 	end
 end
@@ -143,6 +146,8 @@ local function commonfn(isplanted)
     inst.AnimState:SetBuild("flowers")
     inst.AnimState:SetRayTestOnBB(true)
     inst.scrapbook_anim = "f1"
+
+	inst:SetDeploySmartRadius(DEPLOYSPACING_RADIUS[DEPLOYSPACING.LESS] / 2) --butterfly deployspacing/2
 
     inst:AddTag("flower")
     inst:AddTag("cattoy")

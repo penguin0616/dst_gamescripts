@@ -69,6 +69,9 @@ return{
             MANNEQUIN_EQUIPSWAPFAILED = "Is not for cloth man. Wolfgang will keep.",
             PILLOWFIGHT_NO_HANDPILLOW = "Wolfgang needs pillow for fighting!",
             NOTMYBERNIE = "Giant murder bear only follow to tiny torchlady.",
+            NOTMERM = "Fish men only trust Wurt.",
+            NOKELP = "only_used_by_wurt",
+--fallback to speech_wilson.lua             HASMERMLEADER = "only_used_by_wurt",
 		},
 		OPEN_CRAFTING =
 		{
@@ -989,6 +992,8 @@ return{
 
     ANNOUNCE_OTTERBOAT_OUTOFSHALLOWS = "Little boat doesn't like deep water, is falling apart!",
     ANNOUNCE_OTTERBOAT_DENBROKEN = "Was little den holding whole boat together?",
+
+    ANNOUNCE_GATHER_MERM = "only_used_by_wurt",
 
 	BATTLECRY =
 	{
@@ -3546,6 +3551,7 @@ return{
 		WINONA_TELEBRELLA =
 		{
 			GENERIC = "Is very funny umbrella.",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "Is not working.",
 			CHARGING = "Is very funny umbrella.",
 			CHARGED = "Is very funny umbrella.",
@@ -3553,6 +3559,7 @@ return{
 		WINONA_TELEPORT_PAD_ITEM =
 		{
 			GENERIC = "Fixing lady doesn't need machine, Wolfgang can help carry!",
+--fallback to speech_wilson.lua             MISSINGSKILL = "only_used_by_winona",
 			OFF = "Is not working.",
 			BURNING = "Is burning!",
 			BURNT = "Is all burned up.",
@@ -3567,8 +3574,16 @@ return{
 		},
 		INSPECTACLESBOX = "only_used_by_winona",
 		INSPECTACLESBOX2 = "only_used_by_winona",
-		INSPECTACLESHAT = "Little fixing lady's funny glasses.",
-		ROSEGLASSESHAT = "Only for little fixing lady? Really bring out Wolfgang eyes.",
+		INSPECTACLESHAT = 
+        {
+            GENERIC = "Little fixing lady's funny glasses.",
+            MISSINGSKILL = "only_used_by_winona",
+        },
+		ROSEGLASSESHAT =
+        {
+            GENERIC = "Only for little fixing lady? Really bring out Wolfgang eyes.",
+            MISSINGSKILL = "only_used_by_winona",
+        },
 		CHARLIERESIDUE = "only_used_by_winona",
 		CHARLIEROSE = "only_used_by_winona",
         WINONA_MACHINEPARTS_1 = "only_used_by_winona",

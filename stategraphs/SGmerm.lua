@@ -24,10 +24,16 @@ local function GetIdleAnim(inst)
     return "idle_loop"
 end
 
-local function tool_or_chop(inst)
+local function tool_or_chop(inst)    
     local hand_item = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
     return (hand_item ~= nil and hand_item.components.tool ~= nil and "use_tool")
         or "chop"
+end
+
+local function tool_or_mine(inst)
+    local hand_item = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+    return (hand_item ~= nil and hand_item.components.tool ~= nil and "use_tool")
+        or "mine"   
 end
 
 local actionhandlers =
@@ -35,12 +41,12 @@ local actionhandlers =
     ActionHandler(ACTIONS.GOHOME, "gohome"),
     ActionHandler(ACTIONS.EAT, "eat"),
     ActionHandler(ACTIONS.CHOP, tool_or_chop),
-    ActionHandler(ACTIONS.MINE, tool_or_chop),
+    ActionHandler(ACTIONS.MINE, tool_or_mine),
     ActionHandler(ACTIONS.DIG, tool_or_chop),
     ActionHandler(ACTIONS.HAMMER, "hammer"),
     ActionHandler(ACTIONS.MARK, "chop"),
     ActionHandler(ACTIONS.PICKUP, "pickup"),
-    ActionHandler(ACTIONS.TILL, tool_or_chop),
+    ActionHandler(ACTIONS.TILL, "use_tool"),
 }
 
 local events =
@@ -96,8 +102,11 @@ local events =
         inst.sg:GoToState("getup")
     end),
 
-    EventHandler("mutated", function(inst)
-        inst.sg:GoToState("buff")
+    EventHandler("mutated", function(inst,data)
+        inst.sg:GoToState("lunar_transform",data)
+    end),
+    EventHandler("demutated", function(inst,data)
+        inst.sg:GoToState("lunar_revert",data)
     end),    
 
     EventHandler("onmermkingcreated_anywhere", function(inst)
@@ -132,11 +141,6 @@ local events =
         inst.sg:GoToState("shadow_spawn", data)
     end),
 
---[[
-    EventHandler("lunar_transform", function(inst,data)
-        inst.sg:GoToState("lunar_transform", data)
-    end),
-]]
 }
 
 local function go_to_idle(inst)
@@ -153,7 +157,7 @@ local states =
             inst.Physics:Stop()
 
             -- NOTES(JBK): Making merms less expressive than other followers but keeping core information expressed.
-            if inst.components.follower and inst.components.follower:GetLeader() ~= nil and inst.components.follower:GetLoyaltyPercent() < TUNING.MERM_LOW_LOYALTY_WARNING_PERCENT then
+            if inst.components.follower and inst.components.follower:GetLeader() ~= nil and inst.components.follower:GetLoyaltyPercent() < TUNING.MERM_LOW_LOYALTY_WARNING_PERCENT and not inst.components.follower.neverexpire then
                 inst.AnimState:PlayAnimation("hungry")
                 inst.SoundEmitter:PlaySound("dontstarve/wilson/hungry")
             elseif inst:HasTag("guard") then
@@ -491,6 +495,18 @@ local states =
                 if target ~= nil and act.action == ACTIONS.MINE then
                     PlayMiningFX(inst, target)
                 end
+
+                if target ~= nil and  target:HasTag("farm_debris") and act.action == ACTIONS.DIG then
+                    inst.SoundEmitter:PlaySound("dontstarve/wilson/dig")
+                end
+
+                if act.action == ACTIONS.TILL then
+                    inst.SoundEmitter:PlaySound("dontstarve/wilson/dig")
+                end
+
+                if target ~= nil and target:HasTag("stump") and act.action == ACTIONS.DIG then
+                    inst.SoundEmitter:PlaySound("dontstarve/wilson/use_axe_tree")
+                end                
             
                 inst:PerformBufferedAction()
             end),
@@ -534,10 +550,15 @@ local states =
         tags = { "canrotate", "busy", "jumping" },
 
         onenter = function(inst, data)
+            local dir1 = math.random() > .5 and -1 or 1
+            local dir2 = math.random() > .5 and -1 or 1
+            local vel1 = math.random(6, 8)
+            local vel2 = math.random(6, 8)
+
             ToggleOffCharacterCollisions(inst)
             inst.components.locomotor:Stop()
             inst.components.locomotor:EnableGroundSpeedMultiplier(false)
-            inst.Physics:SetMotorVelOverride(-8, 0, 0)
+            inst.Physics:SetMotorVelOverride(vel1 * dir1, 0, vel2 * dir2)
             inst.AnimState:PlayAnimation("smacked")
 
             SpawnPrefab("shadow_merm_spawn_poof_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
@@ -729,34 +750,44 @@ local states =
         timeline =
         {
             FrameEvent(12, function(inst)
-                local x0, y0, z0 = inst.Transform:GetWorldPosition()
-                for k = 1, 4 --[[# of attempts]] do
-                    local x = x0 + math.random() * 20 - 10
-                    local z = z0 + math.random() * 20 - 10
-                    if TheWorld.Map:IsPassableAtPoint(x, 0, z) then
-                        inst.Physics:Teleport(x, 0, z)
-                        break
+                
+                if inst.components.follower.leader == nil then
+                    inst:Remove()
+                else
+                    local x0, y0, z0 = inst.Transform:GetWorldPosition()
+                    for k = 1, 4 --[[# of attempts]] do
+                        local x = x0 + math.random() * 20 - 10
+                        local z = z0 + math.random() * 20 - 10
+                        if TheWorld.Map:IsPassableAtPoint(x, 0, z) then
+                            inst.Physics:Teleport(x, 0, z)
+                            break
+                        end
                     end
-                end
 
-                inst.sg:GoToState("appear")
+                    inst.sg:GoToState("appear")
+                end
             end),
         },
 
         events =
         {
             EventHandler("animover", function(inst)
-                local x0, y0, z0 = inst.Transform:GetWorldPosition()
-                for k = 1, 4 --[[# of attempts]] do
-                    local x = x0 + math.random() * 20 - 10
-                    local z = z0 + math.random() * 20 - 10
-                    if TheWorld.Map:IsPassableAtPoint(x, 0, z) then
-                        inst.Physics:Teleport(x, 0, z)
-                        break
-                    end
-                end
 
-                inst.sg:GoToState("appear")
+                if inst.components.follower.leader == nil then
+                    inst:Remove()
+                else                
+                    local x0, y0, z0 = inst.Transform:GetWorldPosition()
+                    for k = 1, 4 --[[# of attempts]] do
+                        local x = x0 + math.random() * 20 - 10
+                        local z = z0 + math.random() * 20 - 10
+                        if TheWorld.Map:IsPassableAtPoint(x, 0, z) then
+                            inst.Physics:Teleport(x, 0, z)
+                            break
+                        end
+                    end
+
+                    inst.sg:GoToState("appear")
+                end
             end),
         },
     }, 
@@ -782,30 +813,83 @@ local states =
         },
     }, 
 
---[[
+
     State{
         name = "lunar_transform",
         tags = {"busy" },
 
-        onenter = function(inst)
-            inst.AnimState:PlayAnimation("tansform")
+        onenter = function(inst, data)
+            if data.oldbuild then
+                inst.sg.statemem.newbuild = inst.AnimState:GetBuild()
+                inst.sg.statemem.oldbuild = data.oldbuild
+                inst.AnimState:SetBuild(data.oldbuild)
+            end
+            inst.AnimState:PlayAnimation("transform_pre")
             inst.Physics:Stop()
-        
+
+            inst.SoundEmitter:PlaySound("meta4/lunar_merm/transform")
+
+            local fx = SpawnPrefab("merm_splash")            
+            inst.SoundEmitter:PlaySound("dontstarve/characters/wurt/merm/buff")
+            fx.Transform:SetPosition(inst.Transform:GetWorldPosition())            
         end,
 
         timeline =
         {
-            FrameEvent(12, function(inst)
-             
-            end),
+            FrameEvent(30, function(inst) inst.AnimState:SetBuild(inst.sg.statemem.newbuild) end),
+            FrameEvent(32, function(inst) inst.AnimState:SetBuild(inst.sg.statemem.oldbuild) end),
+            FrameEvent(35, function(inst) inst.AnimState:SetBuild(inst.sg.statemem.newbuild) end),
+            FrameEvent(40, function(inst) inst.AnimState:SetBuild(inst.sg.statemem.oldbuild) end),
+            FrameEvent(44, function(inst) inst.AnimState:SetBuild(inst.sg.statemem.newbuild) end),
         },
+
+        onexit = function(inst)
+            inst.AnimState:SetBuild(inst.sg.statemem.newbuild)
+        end,
 
         events =
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("idle") end)
         },
     },
-]]
+
+    State{
+        name = "lunar_revert",
+        tags = { "busy" },
+
+        onenter = function(inst, data)
+            if data.oldbuild then
+                inst.sg.statemem.newbuild = inst.AnimState:GetBuild()
+                inst.sg.statemem.oldbuild = data.oldbuild
+                inst.AnimState:SetBuild(data.oldbuild)
+            end
+            inst.AnimState:PlayAnimation("idle_scared")
+            inst.Physics:Stop()
+
+            inst.SoundEmitter:PlaySound("meta4/lunar_merm/transform")
+
+            local fx = SpawnPrefab("merm_splash")            
+            inst.SoundEmitter:PlaySound("dontstarve/characters/wurt/merm/buff")
+            fx.Transform:SetPosition(inst.Transform:GetWorldPosition())  
+        end,
+        timeline =
+        {
+            FrameEvent(15, function(inst) inst.AnimState:SetBuild(inst.sg.statemem.newbuild) end),
+            FrameEvent(17, function(inst) inst.AnimState:SetBuild(inst.sg.statemem.oldbuild) end),
+            FrameEvent(20, function(inst) inst.AnimState:SetBuild(inst.sg.statemem.newbuild) end),
+            FrameEvent(25, function(inst) inst.AnimState:SetBuild(inst.sg.statemem.oldbuild) end),
+            FrameEvent(29, function(inst) inst.AnimState:SetBuild(inst.sg.statemem.newbuild) end),
+        },
+        onexit = function(inst)
+            inst.AnimState:SetBuild(inst.sg.statemem.newbuild)
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst) inst.sg:GoToState("idle") end)
+        },
+    },
+
 }
 
 CommonStates.AddWalkStates(states,

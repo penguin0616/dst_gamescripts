@@ -301,6 +301,8 @@ local function fn()
     inst.AnimState:PlayAnimation("idle_loop", true)
     inst.Transform:SetScale(1.2,1.2,1.2)
 
+    inst.AnimState:Hide("ARM_carry_up")
+
     inst.AnimState:OverrideSymbol("fx_slidepuff01", "slide_puff", "fx_slidepuff01")
     inst.AnimState:OverrideSymbol("splash_water_rot", "splash_water_rot", "splash_water_rot")
     inst.AnimState:OverrideSymbol("fx_water_spot", "splash_water_rot", "fx_water_spot")

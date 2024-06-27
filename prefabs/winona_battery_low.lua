@@ -199,10 +199,14 @@ local function StartSoundLoop(inst)
         inst.SoundEmitter:PlaySound("dontstarve/common/together/battery/on_LP", "loop")
         UpdateSoundLoop(inst, inst.components.fueled:GetCurrentSection())
     end
+	if inst._horror_level > 0 and not inst.SoundEmitter:PlayingSound("nm_loop") then
+		inst.SoundEmitter:PlaySound("meta4/winona_battery/nightmarefuel_powered", "nm_loop")
+	end
 end
 
 local function StopSoundLoop(inst)
     inst.SoundEmitter:KillSound("loop")
+	inst.SoundEmitter:KillSound("nm_loop")
 end
 
 local function OnEntityWake(inst)
@@ -218,10 +222,14 @@ local function RefreshFuelTypeEffects(inst)
 		inst.AnimState:Hide("CHEMICAL")
 		inst.AnimState:Show("HORROR")
 		horror_sections = math.min(math.ceil(inst._horror_level / inst.components.fueled.maxfuel * NUM_LEVELS), section)
+		if inst.SoundEmitter:PlayingSound("loop") and not inst.SoundEmitter:PlayingSound("nm_loop") then
+			inst.SoundEmitter:PlaySound("meta4/winona_battery/nightmarefuel_powered", "nm_loop")
+		end
 	else
 		inst.AnimState:Hide("HORROR")
 		inst.AnimState:Show("CHEMICAL")
 		horror_sections = 0
+		inst.SoundEmitter:KillSound("nm_loop")
 	end
 	if inst._nightmare_level > 0 then
 		nightmare_sections = math.min(math.ceil(inst._nightmare_level / inst.components.fueled.maxfuel * NUM_LEVELS), section - horror_sections)
@@ -862,7 +870,7 @@ local function fn()
     inst:ListenForEvent("onbuilt", OnBuilt)
     inst:ListenForEvent("engineeringcircuitchanged", OnCircuitChanged)
 	inst:ListenForEvent("winona_batteryskillchanged", function(world, user)
-		if user.userid == inst._engineerid then
+		if user.userid == inst._engineerid and not inst:HasTag("burnt") then
 			if ConfigureSkillTreeUpgrades(inst, user) then
 				ApplyEfficiencyBonus(inst)
 				UpdateCircuitPower(inst)

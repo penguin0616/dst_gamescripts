@@ -117,12 +117,13 @@ local function DoTerraform(inst, pattern_fn, is_load)
         for i = 1, pattern_count do
             tile_x = middle_tile_x + x_pattern[i]
             tile_y = middle_tile_y + y_pattern[i]
-            if _map:CanTerraformAtTile(tile_x, tile_y) then
+            if not _map:IsTerraformingBlockedByAnObject(tile_x, tile_y) then
                 local current_tile = _map:GetTile(tile_x, tile_y)
 
                 -- Avoid swamping up impassable tiles (ocean, cave void)
                 -- and other temporary tiles (monkey docks, ocean ice, Charlie vines, etc)
-                if not TileGroupManager:IsOceanTile(current_tile)
+                if TileGroupManager:IsLandTile(current_tile)
+                        and not TileGroupManager:IsOceanTile(current_tile)
                         and not TileGroupManager:IsImpassableTile(current_tile)
                         and not TileGroupManager:IsTemporaryTile(current_tile) then
                     local pattern_percent = i/pattern_count

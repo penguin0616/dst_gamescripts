@@ -28,22 +28,47 @@ local toolshed_assets =
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
+local SOUNDS =
+{
+    merm_toolshed = {
+        place = "meta4/mermery/shoddy_place",
+        use   = "meta4/mermery/use",
+    },
+    merm_toolshed_upgraded = {
+        place = "meta4/mermery/lessshoddy_place",
+        use   = "meta4/mermery/use",
+    },
+    merm_armory = {
+        place = "meta4/mermery/armermry_place",
+        use   = "meta4/mermery/use",
+    },
+    merm_armory_upgraded = {
+        place = "meta4/mermery/superior_armermry_place",
+        use   = "meta4/mermery/use",
+    },
+}
+
+---------------------------------------------------------------------------------------------------------------------------------
+
 local NUM_INITIAL_RESOURCES = 5
 
--- NOTES(DiogoW):
--- Changing the amount is fine.
--- However, changing the resource requires changing the container widget definition.
+local CACHED_RECIPE_COST = {}
 
-local ARMOR_COST =
-{
-    log = 1,
-    cutgrass = 1,
-}
+local function CacheRecipeCost(inst, recname)
+    local recipe = AllRecipes[recname]
 
-local TOOL_COST = {
-    twigs = 1,
-    rocks = 1,
-}
+    if recipe ~= nil then
+        local ingredients = {}
+
+        for _, v in pairs(recipe.ingredients) do
+            if v.amount > 0 then
+                ingredients[v.type] = v.amount
+            end
+        end
+
+        return ingredients
+    end
+end
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -185,8 +210,6 @@ end
 
 local function OnHit(inst, worker, workleft)
     if workleft > 0 and not inst:HasTag("burnt") then
-        --inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/sisturn/hit") --TODO(DiogoW)
-
         local sufix = inst._closed and "" or "_empty"
 
         inst.AnimState:PlayAnimation("hit" ..sufix)
@@ -195,10 +218,14 @@ local function OnHit(inst, worker, workleft)
 end
 
 local function OnBuilt(inst)
-    --inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/sisturn/place") --TODO(DiogoW)
+    inst.SoundEmitter:PlaySound(inst.sounds.place)
 
     inst.AnimState:PlayAnimation("place")
     inst.AnimState:PushAnimation("idle")
+
+    if inst.supply_cost == nil then -- Just in case.
+        return
+    end
 
     for prefab, count in pairs(inst.supply_cost) do
         local item = SpawnPrefab(prefab)
@@ -244,6 +271,10 @@ local function CanSupply(inst)
         return false -- Burnt!
     end
 
+    if inst.supply_cost == nil then -- Just in case.
+        return false
+    end
+
     for prefab, count in pairs(inst.supply_cost) do
         if not inst.components.container:Has(prefab, count, false) then
             return false
@@ -268,10 +299,14 @@ local function OnSupply(inst, merm)
         inst.AnimState:PlayAnimation("use")
         inst.AnimState:PushAnimation("idle")
 
+        inst.SoundEmitter:PlaySound(inst.sounds.use)
+
         inst._closed = true
     else
-        inst.AnimState:PlayAnimation("idle_pre_empty")
-        inst.AnimState:PushAnimation("idle_empty")
+        if not inst:HasTag("burnt") then
+            inst.AnimState:PlayAnimation("idle_pre_empty")
+            inst.AnimState:PushAnimation("idle_empty")
+        end
 
         inst._closed = nil
     end
@@ -292,8 +327,10 @@ local function OnContainerStateChanged(inst)
         end
 
     elseif inst._closed then
-        inst.AnimState:PlayAnimation("idle_pre_empty")
-        inst.AnimState:PushAnimation("idle_empty")
+        if not inst:HasTag("burnt") then
+            inst.AnimState:PlayAnimation("idle_pre_empty")
+            inst.AnimState:PushAnimation("idle_empty")
+        end
 
 
         inst._closed = nil
@@ -352,12 +389,13 @@ local function CreateMermSupplyStructure(data)
         inst._closed = true
 
         inst.supply_prefab = data.supplyprefab
-        inst.supply_cost = data.supplycost
+        inst.sounds = SOUNDS[data.prefab]
 
         inst.OnSupply = OnSupply
         inst.CanSupply = CanSupply
         inst.OnContainerStateChanged = OnContainerStateChanged
         inst.PlayFunnyIdle  = PlayFunnyIdle
+        inst.CacheRecipeCost = CacheRecipeCost
 
         inst:AddComponent("inspectable")
         inst:AddComponent("lootdropper")
@@ -370,8 +408,6 @@ local function CreateMermSupplyStructure(data)
 
         inst:AddComponent("container")
         inst.components.container:WidgetSetup(data.prefab)
-        inst.components.container.skipclosesnd = true
-        inst.components.container.skipopensnd = true
 
         inst.OnBuilt = OnBuilt
 
@@ -392,6 +428,12 @@ local function CreateMermSupplyStructure(data)
         MakeSnowCovered(inst)
 
         inst.components.burnable:SetOnBurntFn(OnBurnt)
+
+        if CACHED_RECIPE_COST[data.supplyprefab] == nil then
+            CACHED_RECIPE_COST[data.supplyprefab] = inst:CacheRecipeCost(data.supplyprefab)
+        end
+
+        inst.supply_cost = CACHED_RECIPE_COST[data.supplyprefab]
 
         return inst
     end
@@ -416,7 +458,6 @@ return
         tag    = "merm_armory",
         hiddensymbol = "UPGRADED",
         supplyprefab = "mermarmorhat",
-        supplycost = ARMOR_COST,
         deployhelperfilter = "mermwatchtower",
         assets = armory_assets,
         prefabs = armnory_prefabs,
@@ -429,7 +470,6 @@ return
         tag    = "merm_armory_upgraded",
         hiddensymbol = "NOUPGRADED",
         supplyprefab = "mermarmorupgradedhat",
-        supplycost = ARMOR_COST,
         deployhelperfilter = "mermwatchtower",
         assets = armory_assets,
         prefabs = armnory_prefabs,
@@ -442,7 +482,6 @@ return
         tag    = "merm_toolshed",
         hiddensymbol = "UPGRADED",
         supplyprefab = "merm_tool",
-        supplycost = TOOL_COST,
         deployhelperfilter = "mermhouse_crafted",
         assets = toolshed_assets,
         prefabs = toolshed_prefabs,
@@ -455,7 +494,6 @@ return
         tag    = "merm_toolshed_upgraded",
         hiddensymbol = "NOUPGRADED",
         supplyprefab = "merm_tool_upgraded",
-        supplycost = TOOL_COST,
         deployhelperfilter = "mermhouse_crafted",
         assets = toolshed_assets,
         prefabs = toolshed_prefabs,

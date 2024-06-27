@@ -197,6 +197,7 @@ local function BeeMine(name, alignment, skin, spawnprefab, isinventory)
         inst.entity:AddNetwork()
 
         MakeInventoryPhysics(inst)
+		inst:SetDeploySmartRadius(DEPLOYSPACING_RADIUS[DEPLOYSPACING.LESS] / 2)
 
         inst.MiniMapEntity:SetIcon("beemine.png")
 

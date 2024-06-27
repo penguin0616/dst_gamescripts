@@ -95,6 +95,7 @@ local function CreateWaxedSapling(is_moon)
         animset=SAPLING_ANIMSET,
         getanim_fn=Plantable_GetAnimFn,
         assets=ASSETS,
+        mediumspacing = true,
     })
 end
 
@@ -181,6 +182,7 @@ local function CreateWaxedFarmPlant(plant_def)
         getanim_fn=FarmPlant_GetAnimFn,
         master_postinit=WaxedFarmPlant_MasterPostInit,
         assets=ASSETS,
+        deploysmartradius = 0.5,
     }) 
 end
 
@@ -220,6 +222,7 @@ local function CreateWaxedWeedPlant(plant_def)
         getanim_fn=WeedPlant_GetAnimFn,
         master_postinit=WaxedFarmPlant_MasterPostInit,
         assets=ASSETS,
+        deploysmartradius = 0.5,
     }) 
 end
 
@@ -273,7 +276,7 @@ local function TreeSapling_GetAnimFn(inst)
     return inst.prefab
 end
 
-local function CreateWaxedTreeSapling(name, _build, _anim)
+local function CreateWaxedTreeSapling(name, _build, _anim, deployspacing)
     local animset = { [name.."_sapling"] = { anim = _anim } }
 
     return WAXED_PLANTS.CreateWaxedPlant({
@@ -285,6 +288,7 @@ local function CreateWaxedTreeSapling(name, _build, _anim)
         animset=animset,
         getanim_fn=TreeSapling_GetAnimFn,
         assets=ASSETS,
+        deployspacing = deployspacing,
     })
 end
 
@@ -610,6 +614,7 @@ local function CreateWaxedAncientTree(type, data)
         multcolor=AncientTree_MultColour,
         common_postinit=common_post_init,
         assets=ASSETS,
+        deployspacing = DEPLOYSPACING.PLACER_DEFAULT,
     }) 
 end
 
@@ -667,6 +672,7 @@ local function CreateWaxedAncientTreeSapling(type, data)
         multcolor=AncientTree_MultColour,
         common_postinit=common_post_init,
         assets=ASSETS,
+        deployspacing = DEPLOYSPACING.PLACER_DEFAULT,
     }) 
 end
 
@@ -689,7 +695,7 @@ local ret = {
     CreateWaxedTreeSapling( "acorn",         "acorn",          "idle_planted"  ),
     CreateWaxedTreeSapling( "twiggy_nut",    "twiggy_nut",     "idle_planted"  ),
     CreateWaxedTreeSapling( "marblebean",    "marblebean",     "idle_planted"  ),
-    CreateWaxedTreeSapling( "moonbutterfly", "baby_moon_tree", "idle"          ),
+    CreateWaxedTreeSapling( "moonbutterfly", "baby_moon_tree", "idle",        DEPLOYSPACING.PLACER_DEFAULT ),
     CreateWaxedTreeSapling( "palmcone",      "palmcone_seed",  "idle_planted"  ),
 
     WAXED_PLANTS.CreateWaxedPlant({
@@ -703,6 +709,7 @@ local ret = {
         getanim_fn=Plantable_GetAnimFn,
         multcolor=Grass_MultColorFn,
         assets=ASSETS,
+        deployspacing = DEPLOYSPACING.MEDIUM,
     }),
 
     WAXED_PLANTS.CreateWaxedPlant({
@@ -717,6 +724,7 @@ local ret = {
         common_postinit=Tree_Minimap_CommonPostInit,
         multcolor=Tree_MultColorFn,
         assets=ASSETS,
+        deployspacing = DEPLOYSPACING.MEDIUM,
     }),
 
     WAXED_PLANTS.CreateWaxedPlant({
@@ -757,6 +765,7 @@ local ret = {
         getanim_fn=Plantable_GetAnimFn,
         multcolor=Grass_MultColorFn,
         assets=ASSETS,
+        deployspacing = DEPLOYSPACING.MEDIUM,
     }),
 
     WAXED_PLANTS.CreateWaxedPlant({
@@ -799,6 +808,7 @@ local ret = {
         common_postinit=Tree_Minimap_CommonPostInit,
         multcolor=MoonAndPalmconeTree_MultColour,
         assets=ASSETS,
+        deployspacing = DEPLOYSPACING.PLACER_DEFAULT,
     }),
 
     WAXED_PLANTS.CreateWaxedPlant({

@@ -106,7 +106,6 @@ local states=
         onenter = function(inst)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("give")
-
         end,
 
         timeline =
@@ -190,16 +189,19 @@ CommonStates.AddCombatStates(states,
 CommonStates.AddSimpleState(states, "get_trident", "give", {"busy"}, nil, {
     FrameEvent(23, function(inst)
         inst.AnimState:OverrideSymbol("trident", "mermkingswaps", "trident")
+        inst.SoundEmitter:PlaySound("dontstarve/characters/wurt/merm/king/warcry")
     end),
 })
 CommonStates.AddSimpleState(states, "get_crown", "give", {"busy"}, nil, {
     FrameEvent(23, function(inst)
         inst.AnimState:OverrideSymbol("crown", "mermkingswaps", "crown")
+        inst.SoundEmitter:PlaySound("dontstarve/characters/wurt/merm/king/warcry")
     end),
 })
 CommonStates.AddSimpleState(states, "get_pauldron", "give", {"busy"}, nil, {
     FrameEvent(23, function(inst)
         inst.AnimState:OverrideSymbol("shoulder_lilly", "mermkingswaps", "shoulder_lilly")
+        inst.SoundEmitter:PlaySound("dontstarve/characters/wurt/merm/king/warcry")
     end),
 })
 

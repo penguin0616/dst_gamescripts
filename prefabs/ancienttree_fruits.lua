@@ -8,7 +8,7 @@ local gem_assets =
 local nightvision_assets =
 {
     Asset("ANIM", "anim/ancienttree_nightvision_fruit.zip"),
-    Asset("IMAGE", "images/colour_cubes/misty_blue.tex"),
+    Asset("IMAGE", "images/colour_cubes/nightvision_fruit_cc.tex"),
 }
 
 local nightvision_prefabs =
@@ -310,10 +310,10 @@ end
 
 local ANCIENTFRUIT_NIGHTVISION_COLOURCUBES =
 {
-    day = "images/colour_cubes/misty_blue.tex",
-    dusk = "images/colour_cubes/misty_blue.tex",
-    night = "images/colour_cubes/misty_blue.tex",
-    full_moon = "images/colour_cubes/misty_blue.tex",
+    day = "images/colour_cubes/nightvision_fruit_cc.tex",
+    dusk = "images/colour_cubes/nightvision_fruit_cc.tex",
+    night = "images/colour_cubes/nightvision_fruit_cc.tex",
+    full_moon = "images/colour_cubes/nightvision_fruit_cc.tex",
 
     nightvision_fruit = true, -- NOTES(DiogoW): Here for convinience.
 }

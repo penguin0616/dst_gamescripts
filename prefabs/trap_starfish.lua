@@ -161,6 +161,8 @@ local function trap_starfish()
 
     inst.MiniMapEntity:SetIcon("star_trap.png")
 
+	inst:SetDeploySmartRadius(DEPLOYSPACING_RADIUS[DEPLOYSPACING.DEFAULT] / 2)
+
     inst.AnimState:SetBank("star_trap")
     inst.AnimState:SetBuild("star_trap")
     inst.AnimState:PlayAnimation("idle", true)

@@ -1139,7 +1139,7 @@ local function fn()
     inst:ListenForEvent("onbuilt", OnBuilt)
     inst:ListenForEvent("engineeringcircuitchanged", OnCircuitChanged)
 	inst:ListenForEvent("winona_spotlightskillchanged", function(world, user)
-		if user.userid == inst._engineerid then
+		if user.userid == inst._engineerid and not inst:HasTag("burnt") then
 			if ConfigureSkillTreeUpgrades(inst, user) then
 				ApplySkillBonuses(inst)
 			end

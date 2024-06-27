@@ -56,7 +56,10 @@ local function UpdateLightState(inst)
         local b = (item.prefab == MUSHTREE_SPORE_BLUE and 1) or 0
 
         inst.Light:SetColour(COLOUR_TINT[g+b + 1] + r/3, COLOUR_TINT[r+b + 1] + g/3, COLOUR_TINT[r+g + 1] + b/3)
-		inst.Light:Enable(true)
+
+        if not inst.components.inventoryitem:IsHeld() then
+            inst.Light:Enable(true)
+        end
 
         inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
         inst.AnimState:SetMultColour(MULT_TINT[g+b + 1], MULT_TINT[r+b + 1], MULT_TINT[r+g + 1], 1)

@@ -30,6 +30,11 @@ local function SkipPre(inst)
 		v.AnimState:PlayAnimation("extra_"..tostring(v.variation).."_idle", true)
 		v.AnimState:SetFrame(math.random(v.AnimState:GetCurrentAnimationNumFrames()) - 1)
 	end
+
+	if inst.soundtask then
+		inst.soundtask:Cancel()
+		inst.soundtask = nil
+	end
 end
 
 local function KillFX(inst)
@@ -42,6 +47,14 @@ local function KillFX(inst)
 			v:Cancel()
 		end
 	end
+
+	inst.SoundEmitter:KillSound("loop")
+	inst.SoundEmitter:PlaySound("meta4/charlie_residue/vine_bridge_pst")
+end
+
+local function StartSound(inst)
+	inst.soundtask = nil
+	inst.SoundEmitter:PlaySound("meta4/charlie_residue/vine_bridge_pre")
 end
 
 local function fn()
@@ -49,6 +62,7 @@ local function fn()
 
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
+	inst.entity:AddSoundEmitter()
 	inst.entity:AddNetwork()
 
 	inst:AddTag("FX")
@@ -59,6 +73,8 @@ local function fn()
 	inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
 	inst.AnimState:SetLayer(LAYER_BACKGROUND)
 	inst.AnimState:SetSortOrder(1)
+
+	inst.SoundEmitter:PlaySound("meta4/charlie_residue/vine_bridge_lp", "loop")
 
 	inst.entity:SetPristine()
 
@@ -79,6 +95,8 @@ local function fn()
 	for i = 1, math.random(4, 6) do
 		table.insert(inst.decor, inst:DoTaskInTime(0.9 + math.random() * 0.2, SpawnDecor, i))
 	end
+
+	inst.soundtask = inst:DoTaskInTime(0, StartSound)
 
 	inst.SkipPre = SkipPre
 	inst.KillFX = KillFX

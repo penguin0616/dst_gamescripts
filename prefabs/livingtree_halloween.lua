@@ -306,7 +306,7 @@ local function fn()
     inst.AnimState:SetBuild("evergreen_living_wood_growable")
     inst.AnimState:PlayAnimation("idle_old", true)
 
-	inst:SetDeploySmartRadius(1.5) --match livingtree_root_planted.lua
+	inst:SetDeploySmartRadius(DEPLOYSPACING_RADIUS[DEPLOYSPACING.DEFAULT] / 2) --livingtree_root deployspacing/2
 
     MakeSnowCoveredPristine(inst)
 
