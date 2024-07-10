@@ -2924,13 +2924,16 @@ local states =
                 end
             end
 			local rose = SpawnPrefab("flower_rose")
+            rose.planted = true
 			rose.Transform:SetPosition(x, 0, z)
 			rose:DoRoseBounceAnim()
 			rose:AddTag("NOCLICK")
 			rose.persists = false
 			inst.sg.statemem.rose = rose
 
-			SpawnPrefab("rose_petals_fx").Transform:SetPosition(x, 0, z)
+			local fx = SpawnPrefab("rose_petals_fx")
+			fx.Transform:SetPosition(x, 0, z)
+			fx.SoundEmitter:PlaySound("dontstarve/common/deathpoof")
 
 			--death_vinesave_pst is quite short, about 10 frames
 			--screen fade 2 seconds
@@ -12863,7 +12866,8 @@ local states =
                         local teleporterexit = inst.sg.statemem.teleporterexit
                         if teleporterexit then
                             if not teleporterexit:IsValid() then
-                                teleporterexit = nil
+								teleporterexit = teleporterexit.overtakenhole
+								--this is just for an overtaken tentacle_pillar, otherwise nil
                             end
                             if inst.sg.statemem.target.components.teleporter:UseTemporaryExit(inst, teleporterexit) then
                                 should_teleport = true

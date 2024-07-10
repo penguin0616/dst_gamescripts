@@ -752,17 +752,26 @@ local function LaunchCrabMob(inst, prefab)
             mob.components.sleeper:SetSleepTest(nil)
             mob.components.sleeper:SetWakeTest(nil)
 
-            local resistance = 2 + (math.floor(inst.gemcount.purple/4) * 10)
+            local resistance = 2
 
-            if mob:HasTag("crab_mob_knight") then
-                resistance = resistance + 10
-            end
+            if inst.gemcount.purple > 4 then resistance = resistance + 10 end
+            if inst.gemcount.purple > 7 then resistance = resistance + 10 end
+
+            if mob:HasTag("crab_mob_knight") then resistance = resistance + 10 end
 
             mob.components.sleeper:SetResistance(resistance)
 
-            mob.components.health:SetMaxHealth(mob.components.health.currenthealth + (math.floor((inst.gemcount.purple+1)/2) * TUNING.CRABKING_MOB_HEALTH_BONUS) )
-            mob.components.health:SetPercent(1) -- For pushing events?
+            local health = mob.components.health.currenthealth
+            local increment = 20
+            if inst.gemcount.purple > 4 then increment = 30 end
+            if inst.gemcount.purple > 7 then increment = 40 end
+            health = health + inst.gemcount.purple * increment
+            if inst.gemcount.purple >= 11 then
+               health = health + TUNING.CRABKING_MOB_HEALTH_BONUS_MAXGEM
+            end
 
+            mob.components.health:SetMaxHealth(health)
+            mob.components.health:SetPercent(1) -- For pushing events?
             break
         end
     end
@@ -893,8 +902,13 @@ local function DoSpawnIceWall(inst)
     local x, y, z = inst.Transform:GetWorldPosition()
 
     for i, coord in ipairs(KEYSTONE_POSITIONS) do
+
         local icewall  = SpawnPrefab("crabking_icewall")
-        icewall.components.health:SetMaxHealth(TUNING.CRABKING_ICEWALL_HEALTH + math.floor(inst.gemcount.blue/4) * TUNING.CRABKING_ICEWALL_HEALTH_BONUS)
+        local health = TUNING.CRABKING_ICEWALL_HEALTH
+        if inst.gemcount.blue > 4 then health = health + TUNING.CRABKING_ICEWALL_HEALTH_BONUS end
+        if inst.gemcount.blue > 7 then health = health + TUNING.CRABKING_ICEWALL_HEALTH_BONUS end
+        if inst.gemcount.blue >= 11 then health = health + TUNING.CRABKING_ICEWALL_HEALTH_BONUS_MAXGEM end
+        icewall.components.health:SetMaxHealth(health)
 
         local angle = inst:GetAngleToPoint(x+coord[1], 0, z+coord[2])
 
@@ -982,9 +996,19 @@ local function SpawnCannonTower(inst, i, pt, numcannons)
     local tower = SpawnPrefab("crabking_cannontower")
 
     tower.Transform:SetPosition(pt.x, 0, pt.z)
-    tower.components.health:SetMaxHealth((math.floor(inst.gemcount.yellow/4)+1) * TUNING.CRABKING_CANNONTOWER_HEALTH )
+
+    local health = TUNING.CRABKING_CANNONTOWER_HEALTH
+    if inst.gemcount.yellow > 4 then health = health + TUNING.CRABKING_CANNONTOWER_HEALTH end
+    if inst.gemcount.yellow > 7 then health = health + TUNING.CRABKING_CANNONTOWER_HEALTH end
+
+    if inst.gemcount.yellow >= 11 then
+       health = health + TUNING.CRABKING_CANNONTOWER_HEALTH
+    end
+
+    tower.components.health:SetMaxHealth(health)
     tower.components.health:SetPercent(1) -- For pushing events?
     tower.redgemcount = inst.gemcount.red -- Saved in prefab.
+    tower.yellowgemcount = inst.gemcount.yellow -- Saved in prefab.
 
     inst:ListenForEvent("onremove", inst.oncannontowerremoved, tower)
 
@@ -1238,7 +1262,12 @@ local function TrySpawningArm(inst, armpos, numclaws)
 
         inst.arms[armpos] = arm
 
-        arm.components.health:SetMaxHealth(TUNING.CRABKING_CLAW_HEALTH + (math.floor(inst.gemcount.green/4) * TUNING.CRABKING_CLAW_HEALTH_BOOST))
+        local health = TUNING.CRABKING_CLAW_HEALTH
+        if inst.gemcount.green > 4 then health = health + TUNING.CRABKING_CLAW_HEALTH_BOOST end
+        if inst.gemcount.green > 7 then health = health + TUNING.CRABKING_CLAW_HEALTH_BOOST end
+        if inst.gemcount.green >= 11 then health = health + TUNING.CRABKING_CLAW_HEALTH_BOOST_MAXGEM end
+
+        arm.components.health:SetMaxHealth(health)
         arm.components.combat:SetDefaultDamage(TUNING.CRABKING_CLAW_PLAYER_DAMAGE + (math.floor(inst.gemcount.green/2) * TUNING.CRABKING_CLAW_DAMAGE_BOOST))
         
         arm.armpos = armpos
@@ -1577,6 +1606,7 @@ local function fn()
     inst:AddTag("largecreature")
     inst:AddTag("crabking_ally")
     inst:AddTag("lunar_aligned")
+    inst:AddTag("whip_crack_imune")
 
     inst.entity:SetPristine()
 
