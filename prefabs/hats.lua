@@ -4684,6 +4684,45 @@ local function MakeHat(name)
 	end
 
     -----------------------------------------------------------------------------
+
+    fns.rabbit_equip = function(inst, owner)
+        _onequip(inst, owner)
+        owner:AddTag("rabbitdisguise")
+    end
+    fns.rabbit_unequip = function(inst, owner)
+        _onunequip(inst, owner)
+        owner:RemoveTag("rabbitdisguise")
+    end
+    fns.rabbit_loot = {"smallmeat"}
+
+    fns.rabbit = function()
+        local inst = simple()
+
+        inst.components.floater:SetSize("med")
+        inst.components.floater:SetScale(0.68)
+
+        MakeFeedableSmallLivestockPristine(inst)
+
+        if not TheWorld.ismastersim then
+            return inst
+        end
+
+        inst.components.equippable.dapperness = TUNING.DAPPERNESS_TINY
+        inst.components.equippable:SetOnEquip(fns.rabbit_equip)
+        inst.components.equippable:SetOnUnequip(fns.rabbit_unequip)
+        -- NOTES(JBK): Intentionally keeping equip tag for model.
+
+        MakeHauntableLaunchAndPerish(inst)
+
+        inst:AddComponent("lootdropper")
+        inst.components.lootdropper:SetLoot(fns.rabbit_loot)
+
+        MakeSmallPerishableCreatureAlwaysPerishing(inst, TUNING.RABBIT_PERISH_TIME)
+
+        return inst
+    end
+
+    -----------------------------------------------------------------------------
     fns.mermarmor_custom_init = function(inst)
         inst:AddTag("mermarmorhat")
     end
@@ -4936,6 +4975,9 @@ local function MakeHat(name)
 		table.insert(assets, Asset("INV_IMAGE", "inspectacleshat_equip_signal"))
 	elseif name == "roseglasses" then
 		fn = fns.roseglasses
+    elseif name == "rabbit" then
+        fn = fns.rabbit
+        prefabs = {"smallmeat"}
     end
 
     table.insert(ALL_HAT_PREFAB_NAMES, prefabname)
@@ -5424,6 +5466,8 @@ return  MakeHat("straw"),
 
         MakeHat("inspectacles"),
 		MakeHat("roseglasses"),
+
+        MakeHat("rabbit"),
 
 		MakeFollowFx("lunarplanthat_fx", {
 			createfn = lunarplanthat_CreateFxFollowFrame,

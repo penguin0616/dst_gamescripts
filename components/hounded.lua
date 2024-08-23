@@ -76,6 +76,19 @@ local _spawndata =
 			{time = 90, sound =  "LVL2"},
 			{time = 500, sound = "LVL1"},
 		},
+
+		ShouldUpgrade= function(amount)
+			if amount >= 8 then
+				return math.random() < 0.7
+			elseif amount == 7 then
+				return math.random() < 0.3
+			elseif amount == 6 then
+				return math.random() < 0.15
+			elseif amount == 5 then
+				return math.random() < 0.05
+			end
+			return false, 5
+		end,
 	}
 
 local _attackdelayfn = _spawndata.attack_delays.med
@@ -377,7 +390,11 @@ local function SummonSpawn(pt, upgrade, radius_override)
     if spawn_pt ~= nil then
         local spawn = SpawnPrefab(GetSpawnPrefab(upgrade))
         if spawn ~= nil then
-            spawn.Physics:Teleport(spawn_pt:Get())
+        	if spawn.Physics then
+            	spawn.Physics:Teleport(spawn_pt:Get())
+        	else
+        		spawn.Transform:SetPosition(spawn_pt:Get())
+        	end
             spawn:FacePoint(pt)
             if spawn.components.spawnfader ~= nil then
                 spawn.components.spawnfader:FadeIn()
@@ -741,19 +758,6 @@ function self:DoDelayedWarningSound(player, data)
     end
 end
 
-local function ShouldUpgrade(amount)
-	if amount >= 8 then
-		return math.random() < 0.7
-	elseif amount == 7 then
-		return math.random() < 0.3
-	elseif amount == 6 then
-		return math.random() < 0.15
-	elseif amount == 5 then
-		return math.random() < 0.05
-	end
-	return false
-end
-
 local function HandleSpawnInfoRec(dt, i, spawninforec, groupsdone)
 	spawninforec.timetonext = spawninforec.timetonext - dt
 	if next(spawninforec.players) ~= nil and spawninforec.timetonext < 0 then
@@ -767,11 +771,15 @@ local function HandleSpawnInfoRec(dt, i, spawninforec, groupsdone)
 			return
 		end
 
-		-- TEST IF GROUPS IF HOUNDS SHOULD BE TURNED INTO A VARG (or other)
-		local upgrade = _spawndata.upgrade_spawn and ShouldUpgrade(spawninforec.players[target])
+		-- TEST IF GROUPS IF HOUNDS SHOULD BE TURNED INTO A VARG (or other)		
+		local upgrade, houndcount = nil, nil
+
+		if _spawndata.upgrade_spawn and _spawndata.ShouldUpgrade then
+		 	upgrade, houndcount =  _spawndata.ShouldUpgrade(spawninforec.players[target])
+		end
 
 		if upgrade then
-			spawninforec.players[target] = spawninforec.players[target] - 5
+			spawninforec.players[target] = spawninforec.players[target] - houndcount
 		else
 			spawninforec.players[target] = spawninforec.players[target] - 1
 		end

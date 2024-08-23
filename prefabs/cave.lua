@@ -141,9 +141,20 @@ local prefabs =
 	"shadowthrall_hands",
 	"shadowthrall_horns",
 	"shadowthrall_wings",
+	"shadowthrall_mouth",
 	"ruins_shadeling",
 
     "acidsmoke_fx",
+
+    -- ropebridgemanager
+	"rope_bridge_fx",
+
+    -- rabbitkingmanager
+    "rabbitking_passive",
+    "rabbitking_aggressive",
+    "rabbitking_lucky",
+
+    "itemmimic_revealed",
 }
 
 local monsters =
@@ -172,6 +183,9 @@ local assets =
 
     Asset("IMAGE", "images/colour_cubes/fungus_cc.tex"),
     Asset("IMAGE", "images/colour_cubes/sinkhole_cc.tex"),
+
+    -- rabbitkingmanager
+    Asset("SOUND", "sound/rabbit.fsb"),
 }
 
 local wormspawn =
@@ -179,6 +193,7 @@ local wormspawn =
     base_prefab = "worm",
     winter_prefab = "worm",
     summer_prefab = "worm",
+    upgrade_spawn = "worm_boss",
 
     attack_levels =
     {
@@ -208,6 +223,21 @@ local wormspawn =
         { time = 90, sound = "LVL2_WORM" },
         { time = 500, sound = "LVL1_WORM" },
     },
+
+    ShouldUpgrade= function(amount)
+        --[[
+        if amount >= 8 then
+            return math.random() < 0.7
+        elseif amount == 7 then
+            return math.random() < 0.3
+        elseif amount == 6 then
+            return math.random() < 0.15
+        elseif amount == 5 then
+            return math.random() < 0.05
+        end
+        ]]
+        return true, amount
+    end,    
 }
 
 local function tile_physics_init(inst)
@@ -249,6 +279,7 @@ local function master_postinit(inst)
     inst:AddComponent("toadstoolspawner")
     inst:AddComponent("grottowarmanager")
     inst:AddComponent("acidbatwavemanager")
+    inst:AddComponent("rabbitkingmanager")
 
     --gameplay
     inst:AddComponent("caveins")
@@ -276,6 +307,7 @@ local function master_postinit(inst)
     inst:AddComponent("hounded")
     inst.components.hounded:SetSpawnData(wormspawn)
 	inst.components.hounded.max_thieved_spawn_per_thief = 1
+    inst:AddComponent("ropebridgemanager")
 
     --anr update retrofitting
     inst:AddComponent("retrofitcavemap_anr")
@@ -288,8 +320,12 @@ local function master_postinit(inst)
     inst:AddComponent("miasmamanager")
     inst:AddComponent("shadowthrallmanager")
 	inst:AddComponent("ruinsshadelingspawner")
+    inst:AddComponent("shadowthrall_mimics")
 
     return inst
 end
 
-return MakeWorld("cave", prefabs, assets, common_postinit, master_postinit, { "cave" }, {tile_physics_init = tile_physics_init})
+return MakeWorld("cave", prefabs, assets, common_postinit, master_postinit, { "cave" }, {
+    tile_physics_init = tile_physics_init,
+    cancrossbarriers_flying = true,
+})

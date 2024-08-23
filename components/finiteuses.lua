@@ -85,6 +85,10 @@ function FiniteUses:SetIgnoreCombatDurabilityLoss(value)
     self.ignorecombatdurabilityloss = value
 end
 
+function FiniteUses:SetModifyUseConsumption(fn)
+    self.modifyuseconsumption = fn
+end
+
 function FiniteUses:OnUsedAsItem(action, doer, target)
     local uses = self.consumption[action]
     if uses ~= nil then

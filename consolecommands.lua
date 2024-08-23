@@ -1007,9 +1007,7 @@ function c_selectnear(prefab, rad)
             end
         end
     end
-    if closest then
-        c_select(closest)
-    end
+    return (closest and c_select(closest)) or nil
 end
 
 

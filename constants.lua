@@ -1180,6 +1180,8 @@ TECH =
 	HERMITCRABSHOP_FIVE = { HERMITCRABSHOP = 5 },
     HERMITCRABSHOP_SEVEN = { HERMITCRABSHOP = 7 },
 
+    RABBITKINGSHOP_TWO = { RABBITKINGSHOP = 2 },
+
     TURFCRAFTING_ONE = { TURFCRAFTING = 1 },
     TURFCRAFTING_TWO = { TURFCRAFTING = 2 },
 	MASHTURFCRAFTING_TWO = { MASHTURFCRAFTING = 2},
@@ -1426,6 +1428,7 @@ RECIPETABS =
 	FISHING =				{ str = "FISHING",				sort = 100, icon = "tab_fishing.tex",			crafting_station = true },
 	WINTERSFEASTCOOKING =	{ str = "WINTERSFEASTCOOKING",	sort = 100, icon = "tab_feast_oven.tex",		crafting_station = true },
     HERMITCRABSHOP =		{ str = "HERMITCRABSHOP",		sort = 100, icon = "tab_hermitcrab_shop.tex",	crafting_station = true, shop = true},
+    RABBITKINGSHOP =		{ str = "RABBITKINGSHOP",		sort = 100, icon = "tab_rabbitking.tex",		crafting_station = true, shop = true, icon_atlas = "images/hud2.xml"},
     TURFCRAFTING =		    { str = "TURFCRAFTING", 		sort = 100, icon = "tab_turfcrafting.tex",      crafting_station = true, icon_atlas = "images/hud2.xml" },
 }
 
@@ -2040,6 +2043,12 @@ TOOLACTIONS =
 	SCYTHE = true,
 }
 
+FALLINGREASON =
+{
+    OCEAN = "ocean",
+    VOID = "void",
+}
+
 EQUIPMENTSETNAMES =
 {
     DREADSTONE = "dreadstone",
@@ -2618,6 +2627,16 @@ HUNT_ACTIONS = {
     SUCCESS = 0,
     PROP = 1,
     SLEEP = 2,
+}
+
+THRALL_TYPES = {
+    SHADOW = {
+        TRIO = "trio",
+        MIMIC = "mimic",
+    },
+    LUNAR = {
+        PLANT = "plant",
+    },
 }
 
 LOADING_SCREEN_TIP_OPTIONS =

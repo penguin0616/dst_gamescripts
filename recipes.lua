@@ -28,6 +28,7 @@ PROTOTYPER_DEFS =
 	lunar_forge					= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_lunar_forge.tex",		is_crafting_station = true,		action_str = "FORGE",		filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.LUNARFORGING},
 	shadow_forge				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_shadow_forge.tex",		is_crafting_station = true,		action_str = "FORGE",		filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.SHADOWFORGING},
 	hermitcrab					= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_hermitcrab_shop.tex",	is_crafting_station = true,		action_str = "TRADE",		filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.HERMITCRABSHOP},
+	rabbitking_passive			= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_rabbitking.tex",		is_crafting_station = true,		action_str = "TRADE",		filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.RABBITKINGSHOP},
 
 	waxwelljournal				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_shadow.tex",			is_crafting_station = true,		action_str = "READ",		filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.SHADOW},
 	portableblender				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_foodprocessing.tex",	is_crafting_station = true,		action_str = "USE",			filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.FOODPROCESSING},
@@ -509,6 +510,8 @@ Recipe2("wall_scrap_item",					{Ingredient("wagpunk_bits", 4)},																	
 
 Recipe2("fence_rotator",					{Ingredient("spear", 1), Ingredient("flint", 2) },														TECH.SCIENCE_TWO)
 
+Recipe2("rope_bridge_kit",					{Ingredient("rope", 8), Ingredient("boards", 4) },														TECH.SCIENCE_TWO)
+
 Recipe2("boat_item", 						{Ingredient("boards", 4)},																				TECH.SEAFARING_ONE)
 Recipe2("boat_grass_item", 					{Ingredient("cutgrass", 8),Ingredient("twigs", 2)},														TECH.NONE)
 Recipe2("boatpatch_kelp", 					{Ingredient("kelp", 3)}, 																				TECH.NONE)
@@ -728,12 +731,16 @@ Recipe2("armorwagpunk",						{Ingredient("wagpunk_bits", 8), Ingredient("transis
 Recipe2("wagpunkbits_kit",					{Ingredient("wagpunk_bits", 1), Ingredient("transistor", 1), },											TECH.LOST)
 
 ----SHADOW_FORGE----
-Recipe2("armor_voidcloth",					{Ingredient("horrorfuel", 4), Ingredient("voidcloth", 4)},												TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
-Recipe2("voidclothhat",						{Ingredient("horrorfuel", 4), Ingredient("voidcloth", 2)},												TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
-Recipe2("voidcloth_umbrella",				{Ingredient("horrorfuel", 5), Ingredient("voidcloth", 1)},												TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
-Recipe2("voidcloth_scythe",					{Ingredient("horrorfuel", 3), Ingredient("voidcloth", 1)},												TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
-Recipe2("voidcloth_kit",					{Ingredient("horrorfuel", 1), Ingredient("voidcloth", 1)},												TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
-Recipe2("beeswax_spray",					{Ingredient("beeswax",    3), Ingredient("horrorfuel", 5), Ingredient("mosquitosack", 2)},				TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
+Recipe2("armor_voidcloth",					{Ingredient("horrorfuel", 4), Ingredient("voidcloth", 4)},																	TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
+Recipe2("voidclothhat",						{Ingredient("horrorfuel", 4), Ingredient("voidcloth", 2)},																	TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
+Recipe2("voidcloth_umbrella",				{Ingredient("horrorfuel", 5), Ingredient("voidcloth", 1)},																	TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
+Recipe2("voidcloth_scythe",					{Ingredient("horrorfuel", 3), Ingredient("voidcloth", 1)},																	TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
+Recipe2("voidcloth_boomerang",				{Ingredient("horrorfuel", 4), Ingredient("voidcloth", 2)},																	TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
+Recipe2("voidcloth_kit",					{Ingredient("horrorfuel", 1), Ingredient("voidcloth", 1)},																	TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
+Recipe2("beeswax_spray",					{Ingredient("horrorfuel", 5), Ingredient("beeswax", 3), Ingredient("mosquitosack", 2)},										TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
+Recipe2("shadow_beef_bell",					{Ingredient("shadowheart", 1), Ingredient("horrorfuel", 5), Ingredient("dreadstone", 4), Ingredient("voidcloth", 2)},		TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
+Recipe2("saddle_shadow",					{Ingredient("shadowheart", 1), Ingredient("horrorfuel", 8), Ingredient("dreadstone", 8), Ingredient("voidcloth", 5)},		TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
+Recipe2("shadow_battleaxe",					{Ingredient("shadowheart", 1), Ingredient("horrorfuel", 5), Ingredient("dreadstone", 3), Ingredient("voidcloth", 2)},		TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge", image="shadow_battleaxe_l1.tex"})
 
 ----SCULPTING----
 Recipe2("chesspiece_hornucopia_builder",	{Ingredient(TECH_INGREDIENT.SCULPTING, 2), Ingredient("rocks", 2)},										TECH.SCULPTING_ONE,			{nounlock = true, actionstr="SCULPTING", image="chesspiece_hornucopia.tex"})
@@ -796,6 +803,11 @@ Recipe2("hermitshop_chum_blueprint",					{Ingredient("messagebottleempty", 5)},	
 Recipe2("hermitshop_supertacklecontainer",				{Ingredient("messagebottleempty", 6)},														TECH.LOST,					{nounlock = true, sg_state="give", product="supertacklecontainer"})
 Recipe2("hermitshop_winter_ornament_boss_hermithouse",	{Ingredient("messagebottleempty", 4)},														TECH.LOST,					{nounlock = true, sg_state="give", product="winter_ornament_boss_hermithouse"})
 Recipe2("hermitshop_winter_ornament_boss_pearl",		{Ingredient("messagebottleempty", 8)}, 														TECH.LOST,					{nounlock = true, sg_state="give", product="winter_ornament_boss_pearl"})
+
+-- Rabbit King
+Recipe2("rabbitkingshop_armor_carrotlure",				{Ingredient("carrot", 8), Ingredient("rope", 3)},											TECH.RABBITKINGSHOP_TWO,	{nounlock = true, sg_state="give", product="armor_carrotlure"})
+Recipe2("rabbitkingshop_rabbitkinghorn",				{Ingredient("carrot", 4), Ingredient("cutreeds", 1)},										TECH.RABBITKINGSHOP_TWO,	{nounlock = true, sg_state="give", product="rabbitkinghorn"})
+Recipe2("rabbitkingshop_hat_rabbit",					{Ingredient("rabbit", 1), Ingredient("cutgrass", 6)},										TECH.RABBITKINGSHOP_TWO,	{nounlock = true, sg_state="give", product="rabbithat"})
 
 -- Cult of the Lamb
 Recipe2("turf_cotl_gold",								{Ingredient("rocks", 1), Ingredient("goldnugget", 1)},										TECH.LOST,					{numtogive=4})

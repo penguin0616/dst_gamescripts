@@ -307,6 +307,59 @@ function d_teleportboat(x, y, z)
     end
 end
 
+function d_breakropebridges(delaytime)
+    delaytime = type(delaytime) == "number" and delaytime or nil
+    local ropebridgemanager = TheWorld.components.ropebridgemanager
+    if not ropebridgemanager then
+        return
+    end
+
+    local _map = TheWorld.Map
+    local breakdata
+    if delaytime then
+        breakdata = {
+            fxtime = delaytime,
+        }
+        breakdata.shaketime = breakdata.fxtime - 1
+        breakdata.destroytime = breakdata.fxtime + 70 * FRAMES
+    end
+    for i, _ in pairs(ropebridgemanager.duration_grid.grid) do
+        local tile_x, tile_y = ropebridgemanager.duration_grid:GetXYFromIndex(i)
+        local x, y, z = _map:GetTileCenterPoint(tile_x, tile_y)
+        if delaytime then
+            ropebridgemanager:QueueDestroyForRopeBridgeAtPoint(x, y, z, breakdata)
+        else
+            ropebridgemanager:DestroyRopeBridgeAtPoint(x, y, z)
+        end
+    end
+end
+
+function d_rabbitking(kind)
+    local player = ConsoleCommandPlayer()
+    if not (player and TheWorld.ismastersim) then
+        return
+    end
+    local rabbitkingmanager = TheWorld.components.rabbitkingmanager
+    if not rabbitkingmanager then
+        return
+    end
+    if kind then
+        if type(kind) == "string" then
+            kind = kind:gsub("rabbitking", ""):gsub("_", "")
+            if Prefabs["rabbitking_" .. kind] == nil then
+                c_announce("Rabbit King kind is invalid: " .. kind)
+                kind = nil
+            end
+        else
+            kind = nil
+        end
+    end
+    local success, reason = rabbitkingmanager:CreateRabbitKingForPlayer(player, nil, kind)
+    if not success then
+        c_announce("Failed to create Rabbit King: " .. tostring(reason))
+    end
+end
+
 function d_resetskilltree()
     local player = ConsoleCommandPlayer()
 
@@ -1568,7 +1621,7 @@ function d_spawnfilelist(filename, spacing)
 end
 
 function d_spawnallhats()
-	d_spawnlist(ALL_HAT_PREFAB_NAMES)
+	return d_spawnlist(ALL_HAT_PREFAB_NAMES)
 end
 
 local function spawn_mannequin_and_equip_item(item)
@@ -1634,7 +1687,7 @@ function d_spawnallarmor_onstands()
 		"trunkvest_winter",
 	}
 
-	d_spawnlist(all_armor, 3.5, spawn_mannequin_and_equip_item)
+	return d_spawnlist(all_armor, 3.5, spawn_mannequin_and_equip_item)
 end
 
 function d_spawnallhandequipment_onstands()
@@ -1726,7 +1779,7 @@ function d_spawnallhandequipment_onstands()
         "whip",
     }
 
-	d_spawnlist(all_hand_equipment, 3.5, spawn_mannequin_and_equip_item)
+	return d_spawnlist(all_hand_equipment, 3.5, spawn_mannequin_and_equip_item)
 end
 
 function d_allpillows()
@@ -2041,6 +2094,8 @@ local function Scrapbook_DefineSubCategory(t)
         subcat = "costume"
     elseif t.scrapbook_specialinfo == "WINTERSFEASTCOOKEDFOODS" then
         subcat = "wintersfeastfood"
+    elseif t:HasTag("smallepic") then
+        subcat = "smallepic"
     elseif t:HasTag("haunted") then
         subcat = "hauntedtoy"
     elseif t:HasTag("singingshell") then
@@ -3673,4 +3728,12 @@ function d_spell(spellnum, item)
 	item = item or c_sel()
 	item.components.spellbook:SelectSpell(spellnum)
 	item.components.spellbook.items[spellnum].execute(item)
+end
+
+function d_itemwithshadowmimic(item_prefab)
+    local mimic_worldcomponent = TheWorld.components.shadowthrall_mimics
+    if not mimic_worldcomponent then return end
+
+    local item = c_spawn(item_prefab)
+    item:AddComponent("itemmimic")
 end

@@ -1809,6 +1809,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_jump.zip"),
         Asset("ANIM", "anim/player_amulet_resurrect.zip"),
         Asset("ANIM", "anim/player_teleport.zip"),
+		Asset("ANIM", "anim/player_abyss_fall.zip"),
         Asset("ANIM", "anim/wilson_fx.zip"),
         Asset("ANIM", "anim/player_one_man_band.zip"),
 		Asset("ANIM", "anim/player_sit.zip"),
@@ -1855,6 +1856,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_wrap_bundle.zip"),
         Asset("ANIM", "anim/player_hideseek.zip"),
 		Asset("ANIM", "anim/player_slip.zip"),
+		Asset("ANIM", "anim/player_suspended.zip"),
 
         Asset("ANIM", "anim/player_wardrobe.zip"),
         Asset("ANIM", "anim/player_skin_change.zip"),
@@ -2559,9 +2561,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
             inst:AddComponent("giftreceiver")
         end
 
-		if TheWorld.has_ocean then
-	        inst:AddComponent("drownable")
-		end
+		inst:AddComponent("drownable") -- NOTES(JBK): Now for caves too because void is a drown state.
 
         inst:AddComponent("steeringwheeluser")
 		inst:AddComponent("walkingplankuser")

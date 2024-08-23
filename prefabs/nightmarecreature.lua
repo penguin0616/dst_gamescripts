@@ -1,6 +1,7 @@
 local prefabs =
 {
     "nightmarefuel",
+    "ruinsnightmare_horn_attack",
 }
 
 local brain = require( "brains/nightmarecreaturebrain")
@@ -129,6 +130,7 @@ local function MakeShadowCreature(data)
         inst.AnimState:SetBuild(build)
         inst.AnimState:PlayAnimation("idle_loop")
         inst.AnimState:SetMultColour(1, 1, 1, 0.5)
+        inst.AnimState:UsePointFiltering(true)
 
         inst:AddTag("nightmarecreature")
         inst:AddTag("gestaltnoloot")
@@ -155,7 +157,7 @@ local function MakeShadowCreature(data)
         inst.components.locomotor.walkspeed = data.speed
         inst.sounds = sounds
 
-        inst:SetStateGraph("SGshadowcreature")
+        inst:SetStateGraph(data.stategraph or "SGshadowcreature")
         inst:SetBrain(brain)
 
         inst:AddComponent("sanityaura")
@@ -210,6 +212,18 @@ local data =
         damage = TUNING.TERRORBEAK_DAMAGE,
         attackperiod = TUNING.TERRORBEAK_ATTACK_PERIOD,
         sanityreward = TUNING.SANITY_LARGE,
+    },
+    {
+        name = "ruinsnightmare",
+        build = "shadow_insanity3_basic",
+        bank = "shadowcreature3",
+        num = 3,
+        speed = TUNING.RUINSNIGHTMARE_SPEED,
+        health = TUNING.RUINSNIGHTMARE_HEALTH,
+        damage = TUNING.RUINSNIGHTMARE_DAMAGE,
+        attackperiod = TUNING.RUINSNIGHTMARE_ATTACK_PERIOD,
+        sanityreward = TUNING.SANITY_HUGE,
+        stategraph = "SGruinsnightmare",
     },
 }
 

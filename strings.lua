@@ -672,11 +672,13 @@ STRINGS =
             GENERIC = "Use On",
             BEEF_BELL = "Bond",
             KITCOON_NAMETAG = "Name",
+            SHADOW_BEEF_BELL = "Bind",
         },
         STOPUSINGITEM =
         {
             GENERIC = "Stop",
             BEEF_BELL = "Break Bond",
+            SHADOW_BEEF_BELL = "Break Binding",
         },
         USEDOOR =
         {
@@ -1054,6 +1056,7 @@ STRINGS =
     DISEASEDITEM = "Diseased",
 	BROKENITEM = "Broken",
 	WAXEDPLANT = "Scared Stiff",
+	DEADCREATURE = "Dead",
 
     WET_PREFIX =
     {
@@ -3846,6 +3849,9 @@ STRINGS =
 		SHADOWTHRALL_WINGS = "Ink Blight",
 		SHADOWTHRALL_WINGS_ALLEGIANCE = "Shriek",
 
+		SHADOWTHRALL_MOUTH = "Ink Blight",
+		SHADOWTHRALL_MOUTH_ALLEGIANCE = "Rictus",
+
         CHARLIE_NPC = "Charlie", --Maxwell and Winona only
         CHARLIE_NPC_ALT = "Shadow Queen",
         CHARLIE_HAND = "Beckoning Hand",
@@ -4039,6 +4045,30 @@ STRINGS =
 
         MERM_LUNAR = "Mutated Merm",
         MERMGUARD_LUNAR = "Mutated Merm Guard",
+
+        -- Rifts 4
+
+        SHADOW_BEEF_BELL = "Beefalo Gloom Bell",
+        SADDLE_SHADOW = "Nightmare Saddle",
+        SHADOW_BATTLEAXE = "Shadow Maul",
+        VOIDCLOTH_BOOMERANG = "Gloomerang",
+		ROPE_BRIDGE_KIT = "Spelunker's Bridge Kit",
+
+		GELBLOB = "Icker",
+
+        RABBITKING_AGGRESSIVE = "Rabid Rabbit King",
+        RABBITKING_PASSIVE = "Benevolent Rabbit King",
+        RABBITKING_LUCKY = "Fortuitous Rabbit",
+        RABBITKINGMINION_BUNNYMAN = "Royal Rabbit Enforcer",
+        ARMOR_CARROTLURE = "Coat of Carrots",
+        RABBITKINGHORN = "Burrowing Horn",
+        RABBITKINGHORN_CHEST = "Portable Den",
+        RABBITKINGSPEAR = "Rabbit King Crook",--todo
+        RABBITHAT = "Warren Wreath",
+
+        WORM_BOSS = "Great Depths Worm",
+
+        RUINSNIGHTMARE = "Lurking Nightmare",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -5082,6 +5112,19 @@ STRINGS =
 
         BOATPATCH_KELP = "Keep your boat afloat... for a while, anyway.",
         SALTLICK_IMPROVED = "Treat your beefalo to a taste of the finer things.",
+
+        -- Rifts 4
+
+        SHADOW_BEEF_BELL = "Revive the one you beef friend.",
+        SADDLE_SHADOW = "Grab the reins and reign over the battlefield.",
+		SHADOW_BATTLEAXE =  "You'll chop 'til you drop with this maul.",
+        VOIDCLOTH_BOOMERANG = "It'll keep coming back for more!",
+        ROPE_BRIDGE_KIT = "Suspend your disbelief and cross that bottomless pit.",
+        ARMOR_CARROTLURE = "Don this coat, and the Bunnymen shall hop to it.",
+        RABBITKINGHORN = "Call on the rabbits to keep your stuff, anytime, any hare.",
+        RABBITKINGHORN_CHEST = "Rabbits have no shortage of storage.",
+        RABBITKINGSPEAR = "Ward off scary Bunnymen.",
+        RABBITHAT = "Collecting rabbits has never been so calming.",
     },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
@@ -6401,6 +6444,7 @@ STRINGS =
 		FISHING = "Fishing",
 		WINTERSFEASTCOOKING = "Feast",
         HERMITCRABSHOP = "Bottle Exchange",
+        RABBITKINGSHOP = "Trading Hutch",
 		SLINGSHOTAMMO = "Slingshot Ammo",
 		CLOCKMAKER = "Clocksmithy",
         TURFCRAFTING = "Landscaping",
@@ -7526,6 +7570,7 @@ STRINGS.UI =
         NEEDSHERMITCRABSHOP_L2 = "Find someone friendly enough to make this trade!",
         NEEDSHERMITCRABSHOP_L3 = "Find someone friendly enough to make this trade!",
         NEEDSHERMITCRABSHOP_L4 = "Find someone friendly enough to make this trade!",
+        NEEDSRABBITKINGSHOP = "Seek out the Rabbit King to make this trade!",
         NEEDSCREATURESCANNING = "Scan living creatures to collect data!",
         NEEDSSKILL = "Learn new skills.",
         NEEDSBOOKSTATION = "Build a bookcase to craft your books.",
@@ -8065,7 +8110,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "Beta Branch",
+		MAINBANNER_BETA_TITLE = "Depths of Duplicity\nBeta Branch",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -8620,6 +8665,7 @@ STRINGS.UI =
 		LUNARFORGING = "Brightsmithy",
 		SHADOWFORGING = "Shadowcraft",
         HERMITCRABSHOP = "Bottle Exchange",
+        RABBITKINGSHOP = "Trading Hutch",
 
         SHADOW = "Codex Umbra",
         FOODPROCESSING = "Seasonings",
@@ -8888,7 +8934,7 @@ STRINGS.UI =
             -- Settings
             INPUT = "Controller or Keyboard? Play Don't Starve Together your way.",
             VIBRATION = "Make your controller vibrate at key gameplay moments.",
-			VIBRATION_WIRELESS = "Make your wireless controller vibrate at key gameplay moments.",
+			VIBRATION_WIRELESS = "Enable vibration of your wireless controller at key gameplay moments.",
             FX = "Change how loud things are in the world.",
             MUSIC = "Tone up or down the musical fanfare in your adventures.",
             AMBIENT = "The environment makes noise too, luckily you can control how loudly it does.",
@@ -13708,6 +13754,232 @@ STRINGS.CHARACTERS =
     WANDA = require "speech_wanda",
 }
 
+STRINGS.SHADOW_BATTLEAXE_TALK =
+{
+    overtime_l2 =
+    {
+        "Sh-sharp.",
+        "We k-kill n-now?",
+        "Ch-chop.",
+        "H-hack... ha-ack? HACK!",
+    },
+    overtime_l3 = -- And level 4 too!
+    {
+        "Let me axe you a question. Why aren't we killing something?",
+        "What shall we destroy next, wielder?",
+        "I know I have a rough edge. But I can still cut it.",
+        "Can you hack it?",
+        "What are you waiting for, wielder?",
+        "We haven't murdered something in forever.",
+        "We shall commit unspeakable acts of savagery!",
+        "Mortal, do you realize what we are capable of together?",
+    },
+    overtime_l4 =
+    {
+        "It's been a journey, wielder.",
+        "I reflect on our path of destruction with fondness.",
+        "Remember how much fun we had killing things?",
+    },
+
+    overtime_woodie_l2 =
+    {
+        "Fo-for...get... forget h-her...",
+        "M-mi... mine.",
+        "He's... m-mine.",
+        "Wo... Woo... Woodie.",
+    },
+    overtime_woodie_l3 = -- And level 4 too!
+    {
+        "Heard you're an axe man.",
+        "Forget your crazy axe.",
+        "Sever your ties with that old battle axe.",
+        "Just me and hew.",
+        "I fell for you.",
+    },
+    overtime_woodie_l4 =
+    {
+        "I just want a simple wielding.",
+        "I'll never cleave you.",
+        "Let's carve our names in a tree.",
+    },
+
+    chopping_l2 =
+    {
+        "Ch- cho- chop. CHOP!",
+        "Ch- chop tree... CHOP TREE!",
+        "CHOP! CHOP! CHOP!",
+        "Swi-ing... Swing!",
+        "More...",
+    },
+    chopping_l3 =  -- And level 4 too!
+    {
+        "No tree is safe from us.",
+        "CHOP-CHOP!",
+        "We're in full swing now, wielder!",
+        "Chop'em down. Chop'em all down.",
+        "I was meant for greater things... fleshier things.",
+        "Only flesh will sustain me.",
+        "Where's the challenge?",
+    },
+    chopping_l4 =
+    {
+        "Every tree shall fall before us.",
+        "Trees feel pain... but not enough.",
+        "I prefer the mobile variety.",
+    },
+
+    chopping_woodie_l2 =
+    {
+        "Yes.",
+        "All... m-mine.",
+        "Wo... W-Woodie... i-is... mine!",
+    },
+    chopping_woodie_l3 =  -- And level 4 too!
+    {
+        "Forget her.",
+        "No one will ever split us apart.",
+        "Hold me tight!",
+    },
+    chopping_woodie_l4 =
+    {
+        "Hew and me... FOREVER.",
+        "Never let me go.",
+        "I love hew!",
+    },
+
+    hungry_l2 =
+    {
+        "Hungry!",
+        "F-feed me!",
+        "M-must... k-kill.",
+        "Me-meat!",
+        "Fl... fl-flesh!",
+    },
+    hungry_l3 =  -- And level 4 too!
+    {
+        "So hungry.",
+        "I need to fleshen up.",
+        "Find us something to kill.",
+        "How about some pork chops?",
+        "GASH, I'm so hungry!",
+        "You need to MEAT me halfway.",
+        "I crave beast flesh!",
+        "When do we eat?",
+        "I need meat.",
+    },
+    hungry_l4 =
+    {
+        "You dare neglect me, mortal?",
+        "Death gives me life.",
+        "Wielder, you've changed.",
+    },
+
+    starving_l2 =
+    {
+        "Starv... starving!",
+        "D-dying!",
+        "F-find... fl-flesh... now!",
+        "Must h-have mmm-MEAT!",
+    },
+    starving_l3 =  -- And level 4 too!
+    {
+        "Feed me, NOW.",
+        "Why do you starve me, cruel mortal?",
+        "Are you trying to kill me, wretched mortal?",
+        "Feed me before it's too late!",
+        "We need to murder something, now!",
+        "Getting... weaker.",
+        "If I'm not killing, I'm dying!",
+        "Not to be dramatic, but... I'M STARVING TO DEATH!",
+    },
+    starving_l4 =
+    {
+        "Cursed mortal.",
+        "Is this the end?",
+        "It can't end like this.",
+        "Come too far... tasted too much...",
+    },
+
+    level_up_l2 =
+    {
+        "F-feel... str-strange...",
+        "Some... thing... ha-happening.",
+        "Stro... str-stronger!",
+        "Aw... awa- awake.",
+    },
+    level_up_l3 =
+    {
+        "I'm changing.",
+        "My strength grows!",
+        "I'm evolving!",
+    },
+    level_up_l4 =
+    {
+        "RAAAAAAAAAAAAAAAAAAAAR!",
+        "Nothing can stop us now, wielder!",
+        "AXE-IMUM POWER!!!",
+    },
+
+    epic_killed_l2 =
+    {
+        "Yes.", -- 1st kill.
+        "More... new... meat.", -- 2nd kill.
+    },
+    epic_killed_l3 =
+    {
+        "Sumptuous! We're on the right path, wielder!", -- 1st kill.
+        "We're on the cusp, wielder. I FEEL IT.", -- 2nd kill.
+    },
+    epic_killed_l4 =
+    {
+        "OH YES.",
+        "So juicy!",
+        "A satisfying meal.",
+        "Worthy.",
+        "Beautiful!",
+        "A delight!",
+        "I am satiated.",
+        "A fine feast of flesh.",
+        "Gluttonous!",
+        "Thank you, wielder.",
+        "I'm proud of us.",
+    },
+
+    creature_killed_l2 =
+    {
+        "Fun.",
+        "I l-like.",
+        "Want b-big... meat.",
+        "Kill!",
+    },
+    creature_killed_l3 =  -- And level 4 too!
+    {
+        "That was fun.",
+        "Thanks for the meat!",
+        "Crunchy bones!",
+        "Time to split!",
+        "Shall we hunt bigger game?",
+        "A tasty morsel.",
+        "Shall we murder something of consequence now?",
+        "Too easy.",
+        "Nothing sweeter than death delivered by your hand and my face.",
+        "Good times. Good times had by all.",
+        "What a HACK job.",
+        "It will do for now.",
+        "You're a HACK!",
+        "Satisfactory.",
+        "Here's your final SEVERANCE.",
+        "'Twas but a snack.",
+    },
+    creature_killed_l4 =
+    {
+        "I'm rather insulted.",
+        "That's it?",
+        "Playing it safe, wielder?",
+        "Meager.",
+    },
+}
+
 STRINGS.VOIDCLOTH_SCYTHE_TALK =
 {
     overtime =
@@ -16033,6 +16305,7 @@ STRINGS.SCRAPBOOK = {
         RIDING = "Beefalo Riding",
         COSTUME = "Stage Costume",
         WINTERSFEASTFOOD = "Winter's Feast Dish",
+        SMALLEPIC = "Mini Giant",
     },
 
     SANITYDESC ={
@@ -16163,7 +16436,7 @@ STRINGS.SCRAPBOOK = {
         BATTLESONG_INSTANT_REVIVE = "Revive up to 2 nearby allied players.\n\nThis is a Battle Stinger as it completes in an instant.",
         BATTLESONG_SHADOWALIGNED = "Wigfrid and nearby allies take 10% less damage from Shadow Aligned enemies and deal 5% bonus damage to Lunar Aligned enemies.\n\nThis is a Battle Song. Wigfrid must continue to sing for its benefit.",
         BATTLESONG_LUNARALIGNED = "Wigfrid and nearby allies take 10% less damage from Lunar Aligned enemies and deal 5% bonus damage to Shadow Aligned enemies.\n\nThis is a Battle Song. Wigfrid must continue to sing for its benefit.",
-        BEEFBELL = "Name and bond with one Beefalo at a time. Bonded Beefalo will follow the holder, even into caves and offline.",
+        BEEF_BELL = "Name and bond with one Beefalo at a time. Bonded Beefalo will follow the holder, even into caves and offline.",
         PLANTABLE_FERTILIZE = "This needs some fertilizing after planting.",
         SCANDATA = "Data is used to craft Circuits for WX-78.",
         WX78SCANNER = "Chirps when interesting biological targets are nearby.\n\nWill chase and scan interesting biological targets while WX-78 is close.\n\nDrops Bio Data when finished.",
@@ -16306,8 +16579,8 @@ STRINGS.SCRAPBOOK = {
         EYEBONE = "Summons Chester when picked up. Chester will follow the holder. While Chester is alive, the eye will be open.",
         HUTCHFISHBOWL = "Summons Hutch when picked up. Hutch will follow the holder. While Hutch is alive, Star-Sky will be alive.",
         HALLOWEENPOTIONMOON = "Mutates some creatures and plants into their lunar mutated form.",
-        STRAWROLL = "Consumes 75 Hunger to gain 33 Sanity.",
-        FURROLL = "Consumes 75 Hunger to gain 50 Sanity and 30 Health. Warms the user to 40 degrees.",
+        STRAWROLL = "Sleeping in it restores 0.66 Sanity and 0.5 health per second, costing 1 Hunger per second.",
+        FURROLL = "Sleeping in it restores 1 Sanity and 1 health per second, costing 1 Hunger per second. It also warms the user overtime.",
         HALLOWEENPOTIONFIRE = "Creates pretty sparkles when added to a fire.",
         SOILAMENDER = "Adds 8-32 Growth Formula nutrient to the ground depending in its fermentation level.\n\nWill also trigger Wormwoods bloom for 1 to 4 minutes depending on fermentation level.",
         SUSPICIOUSMARBLE = "A piece of broken marble sculpture.",
@@ -16499,7 +16772,7 @@ STRINGS.SCRAPBOOK = {
         STEERINGWHEEL = "When deployed on a boat, a survivor can use it to rotate the boats direction.",
         TACKLESTATION = "Standing near this device will provide the survivor with new Lures and Floats they can craft.",
         CARPENTRY_STATION = "Standing near this device will provide the survivor with new Furniture they can craft.\n\nIt can also be used to quickly refine logs into boards.",
-        TENT = "A survivor can use the tent at Dusk or Night.\n\nSurvivor recovers 2 Health per second and 1 Sanity per second but consumes 0.33 Hunger per second. It also reduces 1 Wetness per second and lowers temperature 1 degree per second down to 40 degrees.",
+        TENT = "A survivor can use the tent at Dusk or Night.\n\nSurvivor recovers 2 Health per second and 1 Sanity per second but consumes 0.33 Hunger per second. It also reduces 1 Wetness per second and increases temperature 1 degree per second down to 40 degrees.",
         TURFCRAFTINGSTATION = "Standing near this device will provide the survivor with new Turf they can craft.",
         TOWNPORTAL = "At the cost of 15 Sanity, a survivor can activate the device and then consume 40 Sanity per minute while they keep it active. A second survivor can use another Lazy Deserter or a Desert Stone to teleport to the active one. The teleport costs 50 Sanity.",
         WINTEROMETOR = "This device tells you the current temperature between 0 and 35 degrees.\n\nIt turns blue during the Winter.",

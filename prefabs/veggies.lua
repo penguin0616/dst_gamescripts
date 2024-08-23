@@ -159,7 +159,6 @@ local prefabs_seeds =
 {
     "plant_normal_ground",
     "seeds_placer",
-	"carrot_spinner",
 }
 
 local function can_plant_seed(inst, pt, mouseover, deployer)
@@ -337,6 +336,9 @@ local function MakeVeggie(name, has_seeds)
         name .."_cooked",
         "spoiled_food",
     }
+    if name == "carrot" then
+        table.insert(prefabs, "carrot_spinner")
+    end
 	local dryable = VEGGIES[name].dryable
 
     if has_seeds then

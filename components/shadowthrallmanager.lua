@@ -157,6 +157,14 @@ local function StartOrStopFindingGoodFissures()
     end
 end
 
+local function OnRiftAddedToPool(inst, data)
+    if data and data.rift ~= nil
+            and data.rift.components.riftthralltype ~= nil
+            and data.rift.components.riftthralltype:IsThrallType(THRALL_TYPES.SHADOW.TRIO) then
+        StartOrStopFindingGoodFissures()
+    end
+end
+
 function self:RegisterFissure(inst)
     _potential_fissures[inst] = true
 
@@ -289,7 +297,7 @@ end
 --Register events
 inst:WatchWorldState("isnightmarewild", OnIsNightmareWild)
 OnIsNightmareWild(inst, _world.state.isnightmarewild)
-inst:ListenForEvent("ms_riftaddedtopool", StartOrStopFindingGoodFissures, _world)
+inst:ListenForEvent("ms_riftaddedtopool", OnRiftAddedToPool, _world)
 inst:ListenForEvent("ms_riftremovedfrompool", StartOrStopFindingGoodFissures, _world)
 
 function self:CheckForNoThralls()
@@ -355,7 +363,7 @@ function self:ReleaseFissure(cooldown)
         fissure:OnReleasedFromControl()
 
         if _miasmas then
-            for miasma, _ in pairs(_miasmas) do
+            for miasma in pairs(_miasmas) do
                 miasma:Remove()
             end
             _miasmas = nil

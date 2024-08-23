@@ -44,6 +44,7 @@ local events=
 	CommonHandlers.OnAttacked(),
 	CommonHandlers.OnDeath(),
     CommonHandlers.OnSink(),
+    CommonHandlers.OnFallInVoid(),
 
 	EventHandler("flyaway", function(inst)
 		if not inst.components.health:IsDead() and not inst.sg:HasStateTag("busy") then
@@ -534,5 +535,6 @@ CommonStates.AddSleepStates(states,
 	},
 })
 CommonStates.AddSinkAndWashAshoreStates(states)
+CommonStates.AddVoidFallStates(states)
 
 return StateGraph("moose", states, events, "idle", actionhandlers)

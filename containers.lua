@@ -123,6 +123,14 @@ function params.shadow_container.itemtestfn(container, item, slot)
 end
 
 --------------------------------------------------------------------------
+--[[ rabbitkinghorn ]]
+--------------------------------------------------------------------------
+params.rabbitkinghorn_container = deepcopy(params.shadow_container)
+params.rabbitkinghorn_container.widget.animbank = "ui_portal_rabbitkinghorn_3x4"
+params.rabbitkinghorn_container.widget.animbuild = "ui_portal_rabbitkinghorn_3x4"
+params.rabbitkinghorn_container.widget.animloop = nil
+
+--------------------------------------------------------------------------
 --[[ hutch ]]
 --------------------------------------------------------------------------
 

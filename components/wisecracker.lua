@@ -206,6 +206,10 @@ local Wisecracker = Class(function(self, inst)
         inst.components.talker:Say(GetString(inst, "ANNOUNCE_BOAT_SINK"))
     end)
 
+    inst:ListenForEvent("onprefallinvoid", function(inst)
+        inst.components.talker:Say(GetString(inst, "ANNOUNCE_PREFALLINVOID"))
+    end)
+
     inst:ListenForEvent("on_standing_on_new_leak", function(inst)
         inst.components.talker:Say(GetString(inst, "ANNOUNCE_BOAT_LEAK"))
     end)

@@ -109,6 +109,36 @@ function FindClosestPlayerToInstOnLand(inst, range, isalive)
     return FindClosestPlayerOnLandInRangeSq(x, y, z, range * range, isalive)
 end
 
+local function SortByDistanceSq(a, b)
+    return a.distsq < b.distsq
+end
+function FindPlayersInRangeSqSortedByDistance(x, y, z, rangesq, isalive)
+    local players = {}
+    for _, player in ipairs(AllPlayers) do
+        if (isalive == nil or isalive ~= IsEntityDeadOrGhost(player)) and player.entity:IsVisible() then
+            local distsq = player:GetDistanceSqToPoint(x, y, z)
+            if distsq < rangesq then
+                table.insert(players, {
+                    player = player,
+                    distsq = distsq,
+                })
+            end
+        end
+    end
+    if players[1] then
+        if players[2] then
+            table.sort(players, SortByDistanceSq)
+        end
+        for i = 1, #players do
+            players[i] = players[i].player
+        end
+    end
+    return players
+end
+function FindPlayersInRangeSortedByDistance(x, y, z, range, isalive)
+    return FindPlayersInRangeSqSortedByDistance(x, y, z, range * range, isalive)
+end
+
 function FindPlayersInRangeSq(x, y, z, rangesq, isalive)
     local players = {}
     for i, v in ipairs(AllPlayers) do

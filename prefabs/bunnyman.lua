@@ -231,6 +231,7 @@ local function NormalRetargetFn(inst)
                 TUNING.PIG_TARGET_DIST,
                 function(guy)
                     return inst.components.combat:CanTarget(guy)
+                        and (guy.components.inventory == nil or not guy.components.inventory:EquipHasTag("manrabbitscarer"))
                         and (guy:HasTag("monster")
                             or guy:HasTag("wonkey")
                             or guy:HasTag("pirate")
@@ -288,6 +289,46 @@ local function OnLoad(inst)
 	if IsForcedNightmare(inst) then
 		SetForcedBeardLord(inst, nil)
 	end
+end
+
+local function SwitchLeaderToRabbitKing(inst, rabbitking)
+    local follower = inst.components.follower
+    if follower then
+        follower:SetLeader(rabbitking)
+        follower:AddLoyaltyTime(TUNING.RABBITKING_STOLEN_MANRABBIT_LOYALTY_TIME)
+        local target = rabbitking.components.combat.target
+        if target then
+            inst.components.combat:SuggestTarget(target)
+        end
+    end
+end
+local function TryToSwitchLeader(inst, target)
+    if target.components.follower == nil then
+        return
+    end
+
+    local leader = target.components.follower:GetLeader()
+    if leader == nil then
+        return
+    end
+
+    if leader:HasTag("rabbitking") then
+        SwitchLeaderToRabbitKing(inst, leader)
+    else
+        TryToSwitchLeader(inst, leader)
+    end
+end
+local function ShouldAggro(inst, target)
+    if target:HasTag("rabbitking_manrabbit") then
+        TryToSwitchLeader(inst, target)
+        return false
+    end
+    if target:HasAnyTag("rabbitking") then
+        SwitchLeaderToRabbitKing(inst, target)
+        return false
+    end
+
+    return true
 end
 
 local SCRAPBOOK_HIDE_SYMBOLS = { "hat", "ARM_carry", "HAIR_HAT" }
@@ -371,6 +412,7 @@ local function fn()
 
     inst.components.combat.GetBattleCryString = battlecry
     inst.components.combat.GetGiveUpString = giveupstring
+    inst.components.combat:SetShouldAggroFn(ShouldAggro)
 
     MakeMediumBurnableCharacter(inst, "manrabbit_torso")
 

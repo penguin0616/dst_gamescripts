@@ -387,8 +387,13 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"voidclothhat",
 	"voidcloth_umbrella",
 	"voidcloth_scythe",
+	"voidcloth_boomerang",
 	"voidcloth_kit",
 	"beeswax_spray",
+
+	"shadow_battleaxe",
+	"shadow_beef_bell",
+	"saddle_shadow",
 
 	-- Hermit Crab
 	"hermitshop_hermit_bundle_shells",
@@ -410,6 +415,11 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"hermitshop_supertacklecontainer",
 	"hermitshop_winter_ornament_boss_hermithouse",
 	"hermitshop_winter_ornament_boss_pearl",
+
+    -- Rabbit King
+    "rabbitkingshop_armor_carrotlure",
+    "rabbitkingshop_rabbitkinghorn",
+    "rabbitkingshop_hat_rabbit",
 
 	-- waxwelljournal
 	"shadowlumber_builder",
@@ -1133,6 +1143,8 @@ CRAFTING_FILTERS.STRUCTURES.recipes =
 	"homesign",
 	"arrowsign_post",
 	"minisign_item",
+
+	"rope_bridge_kit",
 
 	"support_pillar_scaffold",
 	"support_pillar_dreadstone_scaffold",

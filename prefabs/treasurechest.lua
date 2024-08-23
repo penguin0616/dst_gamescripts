@@ -421,6 +421,7 @@ local function pandora_master_postinit(inst)
     inst.scrapbook_adddeps = pandora_scrapbook_adddeps
 
     inst:ListenForEvent("resetruins", function()
+        local is_asleep = inst:IsAsleep()
         local was_open = inst.components.container:IsOpen()
 
         if inst.components.scenariorunner == nil then
@@ -433,7 +434,7 @@ local function pandora_master_postinit(inst)
             inst.components.scenariorunner:Run()
         end
 
-        if not inst:IsAsleep() then
+        if not is_asleep then
             if not was_open then
                 inst.AnimState:PlayAnimation("hit")
                 inst.AnimState:PushAnimation("closed", false)

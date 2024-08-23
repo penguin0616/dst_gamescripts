@@ -19,10 +19,7 @@ local prefabs =
     "shadowrift_portal_fx",
     "fused_shadeling",
     "miasma_cloud",
-
-    "shadowthrall_hands",
-    "shadowthrall_wings",
-    "shadowthrall_horns",
+	"gelblob",
 }
 
 ------ Constants ---------------------------------------------------------------
@@ -38,8 +35,6 @@ local SHAKE_PARAMS_BY_STAGE = {
     {1.0, .03, .2, 100},
     {1.5, .06, .3, 200},
 }
-
-local SHADELINGS_BY_STAGE = {1, 2, 3}
 
 --------------------------------------------------------------------------------
 
@@ -357,6 +352,43 @@ end
 
 
 --------------------------------------------------------------------------------
+--V2C: #TODO #TEMP
+
+local function TrySpawnGelBlob(inst)
+	if inst._stage < TUNING.RIFT_SHADOW1_MAXSTAGE or inst._numgelblobs >= 10 then
+		return
+	end
+	local t = GetTime()
+	if inst._lastgelblobspawntime + 10 > t then
+		return
+	end
+	local _map = TheWorld.Map
+	local x, y, z = inst.Transform:GetWorldPosition()
+	local targets = FindPlayersInRange(x, y, z, 30, true)
+	while #targets > 0 do
+		local target = table.remove(targets, math.random(#targets))
+		local pt = target:GetPosition()
+		if _map:IsPassableAtPoint(pt:Get()) and _map:IsDeployPointClear(pt, nil, 2) then
+			local gelblob = SpawnPrefab("gelblob")
+			gelblob.Transform:SetPosition(pt.x, 0, pt.z)
+			gelblob.sg:GoToState("spawn")
+			inst._numgelblobs = inst._numgelblobs + 1
+			inst._lastgelblobspawntime = t
+			inst:ListenForEvent("onremove", function()
+				inst._numgelblobs = inst._numgelblobs - 1
+			end, gelblob)
+			gelblob:ListenForEvent("onremove", function()
+				if not gelblob.components.health:IsDead() then
+					gelblob.components.lootdropper:SetChanceLootTable(nil)
+					gelblob.components.health:Kill()
+				end
+			end, inst)
+			break
+		end
+	end
+end
+
+--------------------------------------------------------------------------------
 
 local function portalfn()
     local inst = CreateEntity()
@@ -438,6 +470,15 @@ local function portalfn()
     childspawner.childname = "fused_shadeling"
     childspawner:SetSpawnedFn(OnChildSpawned)
 
+	----------------------------------------------------------
+	--V2C: #TODO #TEMP
+	inst._numgelblobs = 0
+	inst._lastgelblobspawntime = 0
+	inst:DoPeriodicTask(5, TrySpawnGelBlob)
+
+    ----------------------------------------------------------
+    inst:AddComponent("riftthralltype")
+
     --
     inst:ListenForEvent("timerdone", OnTimerDone)
     inst:ListenForEvent("onremove",  OnPortalRemoved)
@@ -511,6 +552,7 @@ RIFTPORTAL_FNS.CreateRiftPortalDefinition("shadowrift_portal", {
         return r
     end,
     Affinity = RIFTPORTAL_CONST.AFFINITY.SHADOW,
+    ThrallTypes = THRALL_TYPES.SHADOW,
 })
 
 --------------------------------------------------------------------------------

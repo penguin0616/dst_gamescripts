@@ -175,7 +175,7 @@ local function fn()
     inst:AddTag("prey")
     inst:AddTag("mole")
     inst:AddTag("smallcreature")
-    inst:AddTag("canbetrapped")
+    inst:AddTag("canbetrapped") -- Triggers traps but not trappable with trappable = false below.
     inst:AddTag("baitstealer")
     inst:AddTag("cattoy")
     inst:AddTag("catfood")
