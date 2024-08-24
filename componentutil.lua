@@ -666,3 +666,19 @@ CLOSEINSPECTORUTIL.CanCloseInspect = function(doer, targetorpos)
 end
 
 --------------------------------------------------------------------------
+-- rabbitkingmanager and rabbit prefabs
+function HasMeatInInventoryFor_Checker(item)
+    return item.components.edible ~= nil and item.components.edible.foodtype == FOODTYPE.MEAT and not item:HasTag("smallcreature")
+end
+function HasMeatInInventoryFor(inst)
+    local inventory = inst.components.inventory
+    if inventory == nil then
+        return false
+    end
+    if inventory:EquipHasTag("hidesmeats") then
+        return false
+    end
+    return inventory:FindItem(HasMeatInInventoryFor_Checker) ~= nil
+end
+
+--------------------------------------------------------------------------

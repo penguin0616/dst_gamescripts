@@ -186,7 +186,7 @@ local function FindMinionSpawnPos_Aggressive(inst, pt)
 end
 local function SummonMinions_Aggressive_Visualize(minion, target)
     minion:ReturnToScene()
-    if target:IsValid() then
+    if target and target:IsValid() then
         minion.components.combat:SuggestTarget(target)
     end
     minion:PushEvent("burrowarrive")
@@ -304,14 +304,11 @@ local function giveupstring()
     return "RABBIT_GIVEUP", math.random(#STRINGS["RABBIT_GIVEUP"])
 end
 
-local function is_meat(item)
-    return item.components.edible ~= nil and item.components.edible.foodtype == FOODTYPE.MEAT and not item:HasTag("smallcreature")
-end
 local function battlecry(combatcmp, target)
     local strtbl =
         target ~= nil and
         target.components.inventory ~= nil and
-        target.components.inventory:FindItem(is_meat) ~= nil and
+        HasMeatInInventoryFor(target) and
         "RABBIT_MEAT_BATTLECRY" or
         "RABBIT_BATTLECRY"
     return strtbl, math.random(#STRINGS[strtbl])

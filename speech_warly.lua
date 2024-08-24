@@ -986,11 +986,12 @@ return{
 
     -- rifts 4
     ANNOUNCE_EXIT_GELBLOB = "I thought I was going to expire in there.",
-	ANNOUNCE_SHADOWTHRALL_STEALTH = "Non non, I will not be a delicious morsel!", -- TODO
-    ANNOUNCE_RABBITKING_AGGRESSIVE = "TODO",
-    ANNOUNCE_RABBITKING_PASSIVE = "TODO",
-    ANNOUNCE_RABBITKING_LUCKY = "TODO",
-    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "TODO",
+	ANNOUNCE_SHADOWTHRALL_STEALTH = "Non non, I refuse to be a delicious morsel!",
+    ANNOUNCE_RABBITKING_AGGRESSIVE = "Something unpleasant brewing below.",
+    ANNOUNCE_RABBITKING_PASSIVE = "I hear a gentle rustling beneath our feet.",
+    ANNOUNCE_RABBITKING_LUCKY = "That is a rare rabbit, indeed!",
+    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "Voilà! Got you!",
+    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "Perhaps the accoustics are not ideal here.",
 
 	BATTLECRY =
 	{
@@ -2372,7 +2373,7 @@ return{
             DRYINGINRAIN = "Now it is more like a rehydrating rack...",
             GENERIC = "Just like the chefs of the stone age!",
             BURNT = "Too dry! Too dry!",
-            DONE_NOTMEAT = "Et voila! It is done!",
+            DONE_NOTMEAT = "Et voilà! It is done!",
             DRYING_NOTMEAT = "Not quite ready yet.",
             DRYINGINRAIN_NOTMEAT = "Now we're just watering it.",
         },
@@ -3156,7 +3157,7 @@ return{
 			GENERIC = "Finally, a proper oven!",
 			COOKING = "Cooking should never be rushed.",
 			ALMOST_DONE_COOKING = "Ah, that delicious aroma tells me it's almost done!",
-			DISH_READY = "Et voila! Food is served.",
+			DISH_READY = "Et voilà! Food is served.",
 		},
 		BERRYSAUCE = "Made from only the most festive berries.",
 		BIBINGKA = "A tasty holiday treat from the Philippines.",
@@ -4121,7 +4122,7 @@ return{
             DRYINGINRAIN = "Now it is more like a rehydrating rack...",
             GENERIC = "It looks so bare... perhaps I could put some meat on it.",
             BURNT = "Too dry! Too dry!",
-            DONE_NOTMEAT = "Et voila! It is done!",
+            DONE_NOTMEAT = "Et voilà! It is done!",
             DRYING_NOTMEAT = "Not quite ready yet.",
             DRYINGINRAIN_NOTMEAT = "Now we're just watering it.",
         },
@@ -4902,7 +4903,7 @@ return{
         PIRATE_FLAG_POLE = "Mon dieu! Pirates!",
 
         BLACKFLAG = "I don't know how comfortable I feel sailing under a pirate flag...",
-        PIRATE_STASH = "Et voila, the treasure!",
+        PIRATE_STASH = "Et voilà, the treasure!",
         STASH_MAP = "Ah, it looks like this will lead me to some treasure!",
 
         BANANAJUICE = "I would have added a pinch of cinnamon.",
@@ -5027,7 +5028,7 @@ return{
         SHADOWRIFT_PORTAL = "The ground is crumbling!",
 
 		SHADOW_FORGE = "A place for dark concoctions.",
-		SHADOW_FORGE_KIT = "I'll just put these pieces together, and voila!",
+		SHADOW_FORGE_KIT = "I'll just put these pieces together, and voilà!",
 
         FUSED_SHADELING = "It does not look friendly!",
         FUSED_SHADELING_BOMB = "It's about to pop!",
@@ -5218,7 +5219,7 @@ return{
         },
 
         DRAGONBOAT_KIT = "Just like a gravy boat, minus the gravy.",
-        DRAGONBOAT_PACK = "Just add water, and voila!",
+        DRAGONBOAT_PACK = "Just add water, and voilà!",
 
         BOATRACE_CHECKPOINT = "Almost there!",
         BOATRACE_CHECKPOINT_THROWABLE_DEPLOYKIT = "Let us throw it in the soup.",
@@ -5358,15 +5359,15 @@ return{
 			HAS_ITEM = "There is something floating in the gelatin.",
 			HAS_CHARACTER = "There is someone floating in the gelatin.",
 		},
-        RABBITKING_AGGRESSIVE = "TODO",
-        RABBITKING_PASSIVE = "TODO",
-        RABBITKING_LUCKY = "TODO",
-        RABBITKINGMINION_BUNNYMAN = "TODO",
-        ARMOR_CARROTLURE = "TODO",
-        RABBITKINGHORN = "TODO",
-        RABBITKINGHORN_CHEST = "TODO",
-        RABBITKINGSPEAR = "TODO",
-        RABBITHAT = "TODO",
+        RABBITKING_AGGRESSIVE = "It is tough, even for stew.",
+        RABBITKING_PASSIVE = "A gentle creature. Hopefully.",
+        RABBITKING_LUCKY = "I promise not to cook you!",
+        RABBITKINGMINION_BUNNYMAN = "They are not trying to cuddle.",
+        ARMOR_CARROTLURE = "Fresh style, non?",
+        RABBITKINGHORN = "Do rabbits have a taste for music?",
+        RABBITKINGHORN_CHEST = "A cellar!",
+        RABBITKINGSPEAR = "Made from real rabbit antler.",
+        RABBITHAT = "Cute topper.",
         WORM_BOSS = "That worm looks hungry!",
     },
 

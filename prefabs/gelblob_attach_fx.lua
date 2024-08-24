@@ -192,7 +192,7 @@ end
 --V2C: debuff amount should not stack when stepping into multiple blobs
 local ALLTARGETS = {}
 
-local function RegisterTarget(inst, target)
+local function RegisterTargetLocomotorDebuff(inst, target)
 	local tbl = ALLTARGETS[target]
 	if tbl then
 		tbl[inst] = true
@@ -203,7 +203,7 @@ local function RegisterTarget(inst, target)
 	inst._target = target
 end
 
-local function UnregisterTarget(inst)
+local function UnregisterTargetLocomotorDebuff(inst)
 	local tbl = ALLTARGETS[inst._target]
 	if tbl then
 		tbl[inst] = nil
@@ -217,34 +217,44 @@ local function UnregisterTarget(inst)
 	inst._target = nil
 end
 
-local function OnUpdateTargetSpeed(inst, target)
+local function OnUpdateTargetUnevenGroundDebuff(inst, target)
 	target:PushEvent("unevengrounddetected", { inst = inst, radius = 0.5, period = 0.1 })
+end
+
+local function RegisterTargetUnevenGroundDebuff(inst, target)
+	if inst.unevengroundtask == nil then
+		inst.unevengroundtask = inst:DoPeriodicTask(0.1, OnUpdateTargetUnevenGroundDebuff, 0, target)
+	end
+end
+
+local function UnregisterTargetUnevenGroundDebuff(inst)
+	if inst.unevengroundtask then
+		inst.unevengroundtask:Cancel()
+		inst.unevengroundtask = nil
+	end
+end
+
+local function RefreshPlayerDebuff(inst, target)
+	if target.components.rider and target.components.rider:IsRiding() or target:HasTag("wereplayer") then
+		UnregisterTargetUnevenGroundDebuff(inst)
+		RegisterTargetLocomotorDebuff(inst, target)
+	else
+		UnregisterTargetLocomotorDebuff(inst)
+		RegisterTargetUnevenGroundDebuff(inst, target)
+	end
 end
 
 local function SetupBlob(inst, mainblob, target)
 	inst.entity:SetParent(target.entity)
 	if target.isplayer then
-		local task
-		inst:ListenForEvent("mounted", function(target)
-			if task then
-				task:Cancel()
-				task = nil
-			end
-			RegisterTarget(inst, target)
-		end, target)
-		inst:ListenForEvent("dismounted", function(target)
-			UnregisterTarget(inst)
-			if task == nil then
-				task = inst:DoPeriodicTask(0.1, OnUpdateTargetSpeed, 0, target)
-			end
-		end, target)
-		if target.components.rider and target.components.rider:IsRiding() then
-			RegisterTarget(inst, target)
-		else
-			task = inst:DoPeriodicTask(0.1, OnUpdateTargetSpeed, 0, target)
-		end
+		local function _refreshdebuff(target) RefreshPlayerDebuff(inst, target) end
+		inst:ListenForEvent("mounted", _refreshdebuff, target)
+		inst:ListenForEvent("dismounted", _refreshdebuff, target)
+		inst:ListenForEvent("startwereplayer", _refreshdebuff, target)
+		inst:ListenForEvent("stopwereplayer", _refreshdebuff, target)
+		RefreshPlayerDebuff(inst, target)
 	elseif target.components.locomotor then
-		RegisterTarget(inst, target)
+		RegisterTargetLocomotorDebuff(inst, target)
 	end
 
 	inst.mainblob:set(mainblob)
@@ -285,7 +295,7 @@ local function OnRemoveEntity_Server(inst)
 		inst.connector2:Remove()
 		inst.connector2 = nil
 	end
-	UnregisterTarget(inst)
+	UnregisterTargetLocomotorDebuff(inst)
 end
 
 local function fn()

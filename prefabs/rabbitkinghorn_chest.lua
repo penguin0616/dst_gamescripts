@@ -1,10 +1,43 @@
 local assets = {
     Asset("ANIM", "anim/rabbitkinghorn_chest.zip"),
+    Asset("SOUND", "sound/mole.fsb"),
 }
+
+local function DoQuietDown(inst, shouldemerge)
+    inst.rabbitkinghorn_quietdowntask = nil
+    inst.SoundEmitter:KillSound("move")
+end
+local function QuietDown(inst, timeline)
+    if inst.rabbitkinghorn_quietdowntask ~= nil then
+        inst.rabbitkinghorn_quietdowntask:Cancel()
+        inst.rabbitkinghorn_quietdowntask = nil
+    end
+    inst.rabbitkinghorn_quietdowntask = inst:DoTaskInTime(timeline, DoQuietDown)
+end
+
+local function DoPlayEmerge(inst)
+    inst.rabbitkinghorn_emergetask = nil
+    inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/mole/emerge")
+end
+local function StopEmerge(inst)
+    if inst.rabbitkinghorn_emergetask ~= nil then
+        inst.rabbitkinghorn_emergetask:Cancel()
+        inst.rabbitkinghorn_emergetask = nil
+    end
+end
+local function PlayEmerge(inst, timeline)
+    StopEmerge(inst)
+    inst.rabbitkinghorn_emergetask = inst:DoTaskInTime(timeline, DoPlayEmerge)
+end
 
 local function OnOpen(inst)
     inst.AnimState:PlayAnimation("open")
     inst.AnimState:PushAnimation("open_idle", false)
+    if not inst.SoundEmitter:PlayingSound("move") then
+        inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/mole/move", "move")
+    end
+    QuietDown(inst, 23 * FRAMES)
+    PlayEmerge(inst, 14 * FRAMES)
     if inst.components.timer and inst.components.timer:TimerExists("despawn") then
         inst.components.timer:PauseTimer("despawn")
     end
@@ -13,6 +46,11 @@ end
 local function OnClose(inst)
     inst.AnimState:PlayAnimation("close")
     inst.AnimState:PushAnimation("close_idle", false)
+    if not inst.SoundEmitter:PlayingSound("move") then
+        inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/mole/move", "move")
+    end
+    QuietDown(inst, 11 * FRAMES)
+    StopEmerge(inst)
     if inst.components.timer and inst.components.timer:TimerExists("despawn") then
         inst.components.timer:ResumeTimer("despawn")
     end

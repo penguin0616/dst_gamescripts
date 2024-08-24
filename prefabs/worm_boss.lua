@@ -106,7 +106,7 @@ local function OnUpdate(inst, dt)
     for _, chunk in ipairs(inst.chunks) do
         WORMBOSS_UTILS.UpdateChunk(inst, chunk, dt)
     end
-            end
+end
 
 -----------------------------------------------------------------------------------------------------------------------
 
@@ -897,7 +897,7 @@ end
 
 local function Dirt_DamageRedirectFn(inst, attacker, damage, weapon, stimuli)
     -- If attacker is close, and chunk is moving, do thorn damage.
-    if (inst.worm.head == nil or inst.chunk.head ~= inst.worm.head) and (inst.worm.tail == nil or inst.chunk.tail ~= inst.worm.tail) and inst.chunk and inst.chunk.ease > 0.3 then
+    if inst.worm ~= nil and (inst.worm.head == nil or inst.chunk.head ~= inst.worm.head) and (inst.worm.tail == nil or inst.chunk.tail ~= inst.worm.tail) and inst.chunk and inst.chunk.ease > 0.3 then
         local x, y, z = inst.Transform:GetWorldPosition()
 
         if attacker:IsValid() and not attacker:IsInLimbo() and not (attacker.components.health ~= nil and attacker.components.health:IsDead()) and attacker.components.combat then
@@ -916,7 +916,7 @@ local function Dirt_DamageRedirectFn(inst, attacker, damage, weapon, stimuli)
         inst.chunk.head:PushEvent("attacked")
     end
 
-    return inst.worm
+    return inst.worm ~= nil and inst.worm:IsValid() and inst.worm or nil
 end
 
 local function dirtfn()
@@ -953,9 +953,11 @@ local function dirtfn()
         return inst
     end
 
-    inst:AddComponent("health")
     inst:AddComponent("inspectable")
     inst:AddComponent("colouradder")
+
+    inst:AddComponent("health")
+    inst.components.health:SetInvincible(true)
 
     inst:AddComponent("combat")
     inst.components.combat:SetDefaultDamage(TUNING.WORM_BOSS_DAMAGE)

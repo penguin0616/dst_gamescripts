@@ -1595,7 +1595,15 @@ local events =
     EventHandler("onfallinvoid", function(inst, data)
         if not inst.components.health:IsDead() and not inst.sg:HasStateTag("falling") and
                 (inst.components.drownable ~= nil and inst.components.drownable:ShouldFallInVoid()) then
-            inst.sg:GoToState("abyss_fall", data and data.teleport_pt or nil)
+			if inst:HasTag("weregoose") then
+				local pt = data and data.teleport_pt or nil
+				if pt == nil then
+					pt = Vector3(FindRandomPointOnShoreFromOcean(inst.Transform:GetWorldPosition()))
+				end
+				inst.sg:GoToState("weregoose_takeoff", pt)
+			else
+				inst.sg:GoToState("abyss_fall", data and data.teleport_pt or nil)
+			end
         end
     end),
 
@@ -6474,6 +6482,11 @@ local states =
             inst:PerformBufferedAction()
 
             local dumbbell = inst.components.dumbbelllifter.dumbbell
+            if not dumbbell or not dumbbell:IsValid() then
+                inst.sg:GoToState("idle")
+                return
+            end
+
             inst.AnimState:OverrideSymbol("swap_dumbbell", dumbbell.swap_dumbbell, dumbbell.swap_dumbbell)
 
             if inst.components.mightiness then
@@ -12450,6 +12463,17 @@ local states =
 
 		events =
 		{
+			EventHandler("attacked", function(inst)
+				inst.AnimState:PlayAnimation("suspended_hit")
+				inst.AnimState:PushAnimation("suspended")
+				DoHurtSound(inst)
+				return true
+			end),
+			EventHandler("abouttospit", function(inst)
+				inst.AnimState:PlayAnimation("suspended_spit")
+				inst.AnimState:PushAnimation("suspended")
+				DoHurtSound(inst)
+			end),
 			EventHandler("spitout", function(inst, data)
 				local attacker = data ~= nil and data.spitter or inst.sg.statemem.attacker
 				if attacker and attacker:IsValid() then
@@ -18323,7 +18347,7 @@ local states =
         name = "weregoose_takeoff",
 		tags = { "busy", "flying", "pausepredict", "nomorph", "noattack", "nointerrupt" },
 
-        onenter = function(inst)
+		onenter = function(inst, teleport_pt)
             inst.components.locomotor:Stop()
             inst.components.health:SetInvincible(true)
 
@@ -18339,6 +18363,7 @@ local states =
             inst.sg.statemem.feather_fx = 7*FRAMES
             inst.sg.statemem.pos = inst:GetPosition()
 			inst.sg.statemem.pos.y = 0
+			inst.sg.statemem.teleport_pt = teleport_pt
 
             inst.SoundEmitter:PlaySound("meta2/woodie/weregoose_takeoff")
 
@@ -18365,7 +18390,11 @@ local states =
             end),
             FrameEvent(60, function(inst)
                 inst:Hide()
-                inst:PerformBufferedAction()
+				if inst.sg.statemem.teleport_pt then
+					inst.Physics:Teleport(inst.sg.statemem.teleport_pt.x, 0, inst.sg.statemem.teleport_pt.z)
+				else
+					inst:PerformBufferedAction()
+				end
             end),
             FrameEvent(100, function(inst)
 				inst.sg.statemem.landing = true

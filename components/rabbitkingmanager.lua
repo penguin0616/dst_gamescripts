@@ -39,9 +39,6 @@ self:ResetCounters()
 self.NoHoles = function(pt)
     return not _world.Map:IsPointNearHole(pt)
 end
-self.IsItemMeat = function(item)
-    return item.components.edible ~= nil and item.components.edible.foodtype == FOODTYPE.MEAT and not item:HasTag("smallcreature")
-end
 function self:OnRemove_RabbitKing(rabbitking, data)
     self:UnTrackRabbitKing()
 end
@@ -52,10 +49,12 @@ local function OnRemove_Player_Bridge(player, data)
     local rabbitking = self.rabbitkingdata.rabbitking
     local closestdsq, closestplayer
     for player, _ in pairs(self.rabbitkingdata.old_players) do
-        local dsq = rabbitking:GetDistanceSqToInst(player)
-        if closestdsq == nil or dsq < closestdsq then
-            closestdsq = dsq
-            closestplayer = player
+        if player:IsValid() then
+            local dsq = rabbitking:GetDistanceSqToInst(player)
+            if closestdsq == nil or dsq < closestdsq then
+                closestdsq = dsq
+                closestplayer = player
+            end
         end
     end
     if closestplayer then
@@ -147,7 +146,7 @@ function self:TryToBecomeAggressive(rabbitking, player)
     local x, y, z = rabbitking.Transform:GetWorldPosition()
     local players = FindPlayersInRangeSqSortedByDistance(x, y, z, TUNING.RABBITKING_MEATCHECK_DISTANCE_SQ, true)
     for _, testplayer in ipairs(players) do
-        if testplayer.components.inventory and testplayer.components.inventory:FindItem(self.IsItemMeat) ~= nil then
+        if HasMeatInInventoryFor(testplayer) then
             return self:BecomeAggressive(rabbitking, player)
         end
     end
@@ -384,27 +383,8 @@ function self:DoWarningSpeechFor(player, rabbitking_kind)
 end
 
 -- Item counting.
-function self:CountItemsForPlayer(player)
-    if player.components.inventory == nil then
-        return 0, 0
-    end
-
-    local carrots = 0
-    local meats = 0
-    local function CheckItem(item)
-        if item.prefab == "carrot" then
-            carrots = carrots + (item.components.stackable and item.components.stackable:StackSize() or 1)
-        elseif item.components.edible and item.components.edible.foodtype == FOODTYPE.MEAT then
-            meats = meats + (item.components.stackable and item.components.stackable:StackSize() or 1)
-        end
-    end
-    player.components.inventory:ForEachItem(CheckItem)
-
-    return carrots, meats
-end
-
 function self:GetStateByItemCountsForPlayer(player)
-    if player.components.inventory and player.components.inventory:FindItem(self.IsItemMeat) ~= nil then
+    if HasMeatInInventoryFor(player) then
         return self.STATES.AGGRESSIVE
     end
 

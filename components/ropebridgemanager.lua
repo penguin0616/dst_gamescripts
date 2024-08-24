@@ -36,12 +36,15 @@ local function initialize_grids()
 end
 self.inst:ListenForEvent("worldmapsetsize", initialize_grids, _world)
 
+local QUAKE_BLOCKER_MUST_TAGS = {"quake_blocker"}
 function self:OnQuaked()
     local damage = TUNING.ROPEBRIDGE_EARTHQUAKE_DAMAGE_TAKEN
     for i, _ in pairs(self.duration_grid.grid) do
         local tile_x, tile_y = self.duration_grid:GetXYFromIndex(i)
         local x, y, z = _map:GetTileCenterPoint(tile_x, tile_y)
-        self:DamageRopeBridgeAtPoint(x, y, z, damage)
+        if TheSim:CountEntities(x, y, z, TUNING.QUAKE_BLOCKER_RANGE, QUAKE_BLOCKER_MUST_TAGS) == 0 then
+            self:DamageRopeBridgeAtPoint(x, y, z, damage)
+        end
     end
 end
 function self:OnStartQuake(data)

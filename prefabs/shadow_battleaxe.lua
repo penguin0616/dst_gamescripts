@@ -906,6 +906,8 @@ local function FollowSymbolFxFn()
 
     if not TheWorld.ismastersim then
         inst:ListenForEvent("equiptoggledirty", FxOnEquipToggle)
+        inst:ListenForEvent("leveldirty", inst.OnLevelDirty)
+
         return inst
     end
 

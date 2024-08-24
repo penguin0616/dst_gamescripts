@@ -1001,6 +1001,7 @@ return {
     ANNOUNCE_RABBITKING_PASSIVE = "Something is softly scuffling underground.",
     ANNOUNCE_RABBITKING_LUCKY = "What a strange rabbit!",
     ANNOUNCE_RABBITKING_LUCKYCAUGHT = "Got you!",
+    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "Maybe the rabbits don't dig this spot.",
 
 	BATTLECRY =
 	{

@@ -31,25 +31,59 @@ local function ChestReturnPresentation(rabbitkinghorn_chest)
     rabbitkinghorn_chest:ReturnToScene()
 end
 local function OnPlayed(inst, musician)
-    local x, y, z = musician.Transform:GetWorldPosition()
-    local minradius = musician:GetPhysicsRadius(0) + 2
-    for r = 4, 1, -1 do
-        local offset = FindWalkableOffset(Vector3(x, y, z), math.random() * TWOPI, r + minradius + math.random(), 8, false, false, NoEnts, false, false)
-        if offset then
-            x, z = offset.x + x, offset.z + z
-            break
+    inst.rabbitkinghorn_shouldfiniteuses_use = true
+    if musician:IsOnValidGround() then
+        local x, y, z = musician.Transform:GetWorldPosition()
+        local minradius = musician:GetPhysicsRadius(0) + 2
+        for r = 4, 1, -1 do
+            local offset = FindWalkableOffset(Vector3(x, y, z), math.random() * TWOPI, r + minradius + math.random(), 8, false, false, NoEnts, false, false)
+            if offset then
+                x, z = offset.x + x, offset.z + z
+                break
+            end
         end
+        local rabbitkinghorn_chest = SpawnPrefab("rabbitkinghorn_chest")
+        rabbitkinghorn_chest.Transform:SetPosition(x, y, z)
+        rabbitkinghorn_chest:RemoveFromScene()
+        rabbitkinghorn_chest:DoTaskInTime(1.3, ChestReturnPresentation)
+    else
+        inst.rabbitkinghorn_shouldfiniteuses_use = false
+        inst.rabbitkinghorn_badspawnpoint = true
     end
-    local rabbitkinghorn_chest = SpawnPrefab("rabbitkinghorn_chest")
-    rabbitkinghorn_chest.Transform:SetPosition(x, y, z)
-    rabbitkinghorn_chest:RemoveFromScene()
-    rabbitkinghorn_chest:DoTaskInTime(1.3, ChestReturnPresentation)
 end
 
 local function OnHeard(inst, musician, instrument)
     if inst.components.farmplanttendable ~= nil then
         inst.components.farmplanttendable:TendTo(musician)
+        inst.rabbitkinghorn_shouldfiniteuses_use = true
     end
+end
+
+local function UtterFailToSpawn(doer)
+    doer.rabbitkinghorn_failtask = nil
+    if doer.components.talker then
+        doer.components.talker:Say(GetString(doer, "ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT"))
+    end
+end
+
+local function UseModifier(uses, action, doer, target, item)
+    if item then
+        if item.rabbitkinghorn_badspawnpoint then
+            item.rabbitkinghorn_badspawnpoint = nil
+            if doer.components.talker and doer:HasTag("player") then
+                if doer.rabbitkinghorn_failtask ~= nil then
+                    doer.rabbitkinghorn_failtask:Cancel()
+                    doer.rabbitkinghorn_failtask = nil
+                end
+                doer.rabbitkinghorn_failtask = doer:DoTaskInTime(2 + math.random() * 0.25, UtterFailToSpawn)
+            end
+        end
+        if item.rabbitkinghorn_shouldfiniteuses_use then
+            item.rabbitkinghorn_shouldfiniteuses_use = nil
+            return 1
+        end
+    end
+    return 0
 end
 
 local function fn()
@@ -88,11 +122,12 @@ local function fn()
     inst:AddComponent("tool")
     inst.components.tool:SetAction(ACTIONS.PLAY)
 
-    inst:AddComponent("finiteuses")
-    inst.components.finiteuses:SetMaxUses(TUNING.RABBITKINGHORN_USES)
-    inst.components.finiteuses:SetUses(TUNING.RABBITKINGHORN_USES)
-    inst.components.finiteuses:SetOnFinished(inst.Remove)
-    inst.components.finiteuses:SetConsumption(ACTIONS.PLAY, 1)
+    local finiteuses = inst:AddComponent("finiteuses")
+    finiteuses:SetMaxUses(TUNING.RABBITKINGHORN_USES)
+    finiteuses:SetUses(TUNING.RABBITKINGHORN_USES)
+    finiteuses:SetOnFinished(inst.Remove)
+    finiteuses:SetConsumption(ACTIONS.PLAY, 1)
+    finiteuses:SetModifyUseConsumption(UseModifier)
 
     inst:AddComponent("inventoryitem")
 

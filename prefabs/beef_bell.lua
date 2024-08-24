@@ -15,7 +15,7 @@ local shadow_assets =
 local shadow_prefabs =
 {
     "shadow_beef_bell_curse",
-    "beefalo_reviving_lightning_fx", -- FIXME(DiogoW): # Workaround for bright lightning with full black beefalo.
+    "beefalo_reviving_lightning_fx",
 }
 
 -----------------------------------------------------------------------------------------------------------------------------------------

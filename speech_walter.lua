@@ -986,11 +986,12 @@ return{
 
     -- rifts 4
     ANNOUNCE_EXIT_GELBLOB = "That was not fun.",
-	ANNOUNCE_SHADOWTHRALL_STEALTH = "Yikes! What bit me, Woby?", -- TODO
-    ANNOUNCE_RABBITKING_AGGRESSIVE = "TODO",
-    ANNOUNCE_RABBITKING_PASSIVE = "TODO",
-    ANNOUNCE_RABBITKING_LUCKY = "TODO",
-    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "TODO",
+	ANNOUNCE_SHADOWTHRALL_STEALTH = "Yikes! What bit me, Woby?",
+    ANNOUNCE_RABBITKING_AGGRESSIVE = "Woby, do you hear digging? Sounds angry!",
+    ANNOUNCE_RABBITKING_PASSIVE = "Something's digging underground!",
+    ANNOUNCE_RABBITKING_LUCKY = "Look at that rabbit, Woby!",
+    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "Gotcha!",
+    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "Why won't it work here?",
 
 	BATTLECRY =
 	{
@@ -5358,15 +5359,15 @@ return{
 			HAS_ITEM = "Do you see what's inside, Woby?",
 			HAS_CHARACTER = "Are you in need of assistance?",
 		},
-        RABBITKING_AGGRESSIVE = "TODO",
-        RABBITKING_PASSIVE = "TODO",
-        RABBITKING_LUCKY = "TODO",
-        RABBITKINGMINION_BUNNYMAN = "TODO",
-        ARMOR_CARROTLURE = "TODO",
-        RABBITKINGHORN = "TODO",
-        RABBITKINGHORN_CHEST = "TODO",
-        RABBITKINGSPEAR = "TODO",
-        RABBITHAT = "TODO",
+        RABBITKING_AGGRESSIVE = "Someone's in a bad mood!",
+        RABBITKING_PASSIVE = "It looks friendly!",
+        RABBITKING_LUCKY = "Let's catch it, Woby!",
+        RABBITKINGMINION_BUNNYMAN = "Who's a cranky pants?",
+        ARMOR_CARROTLURE = "Nice VESTable! Get it, Woby?",
+        RABBITKINGHORN = "I can't carrot a tune! Heh. Nice, Walter.",
+        RABBITKINGHORN_CHEST = "Woby, now you don't have to carry everything!",
+        RABBITKINGSPEAR = "The most striking part of the rabbit. Heh.",
+        RABBITHAT = "It just sits there on your head?",
         WORM_BOSS = "A monster worm!",
     },
 

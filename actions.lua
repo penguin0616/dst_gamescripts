@@ -5003,16 +5003,14 @@ ACTIONS.STOP_LIFT_DUMBBELL.fn = function(act)
 end
 
 ACTIONS.LIFT_DUMBBELL.fn = function(act)
-    if act.doer ~= nil and act.invobject ~= nil then
+    local dumbbell = act.invobject
+    if act.doer ~= nil and dumbbell ~= nil then
+        if dumbbell.components.itemmimic and dumbbell.components.itemmimic.fail_as_invobject then
+            return false, "ITEMMIMIC"
+        end
 
-        local dumbbell = act.invobject
         local lifter = act.doer.components.dumbbelllifter
-
-        if lifter~= nil and dumbbell ~= nil then
-            if act.invobject.components.itemmimic and act.invobject.components.itemmimic.fail_as_invobject then
-                return false, "ITEMMIMIC"
-            end
-
+        if lifter ~= nil then
             local can_lift, reason = lifter:CanLift(dumbbell)
             if not can_lift then
                 return false, reason

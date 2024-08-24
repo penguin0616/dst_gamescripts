@@ -280,7 +280,7 @@ local function kitfn()
 	inst.AnimState:SetBuild("rope_bridge")
 	inst.AnimState:PlayAnimation("rope_bridge_kit")
 
-	--MakeInventoryFloatable(inst, floatable_data.size, floatable_data.y_offset, floatable_data.scale)
+	MakeInventoryFloatable(inst, "med", nil, { 1.2, 1, 1 })
 
 	inst:AddTag("deploykititem")
 	inst:AddTag("usedeployspacingasoffset")

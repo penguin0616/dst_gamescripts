@@ -91,6 +91,7 @@ local function fn()
     inst.AnimState:PlayAnimation("anim")
 
     inst:AddTag("show_spoilage")
+    inst:AddTag("hidesmeats")
     inst.foleysound = "dontstarve/movement/foley/cactus_armor"
 
     inst.entity:SetPristine()

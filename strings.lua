@@ -4063,7 +4063,7 @@ STRINGS =
         ARMOR_CARROTLURE = "Coat of Carrots",
         RABBITKINGHORN = "Burrowing Horn",
         RABBITKINGHORN_CHEST = "Portable Den",
-        RABBITKINGSPEAR = "Rabbit King Crook",--todo
+        RABBITKINGSPEAR = "Rabbit King Sabre",--todo
         RABBITHAT = "Warren Wreath",
 
         WORM_BOSS = "Great Depths Worm",

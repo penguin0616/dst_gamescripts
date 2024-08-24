@@ -135,7 +135,9 @@ local function DoChew(inst, target, useimpactsound)
         local dmg, spdmg = inst.components.combat:CalcDamage(target)
         local noimpactsound = target.components.combat.noimpactsound
 
-        target:ShakeCamera(CAMERASHAKE.VERTICAL, .2, .015, 0.5, inst, SHAKE_DIST)
+        if target:HasTag("player") then
+            target:ShakeCamera(CAMERASHAKE.VERTICAL, .2, .015, 0.5, inst, SHAKE_DIST)
+        end
 
         target.components.combat.noimpactsound = not useimpactsound
         target.components.combat:GetAttacked(inst, dmg, nil, nil, spdmg)
@@ -269,6 +271,33 @@ local function ShouldMove(inst)
     return true
 end
 
+local function TransferCreatureInventory(inst, target)
+    local inst_inv   = inst.components.inventory
+    local target_inv = target.components.inventory
+
+    for k in pairs(target_inv.itemslots) do
+        local item = target_inv:RemoveItemBySlot(k)
+
+        if item ~= nil and item.persists then
+            inst_inv:GiveItem(item)
+        end
+    end
+
+    for k in pairs(target_inv.equipslots) do
+        local equip = target_inv:Unequip(k)
+
+        if equip ~= nil and equip.persists then
+            inst_inv:GiveItem(equip)
+        end
+    end
+
+    local activeitem = target_inv:GetActiveItem()
+
+    if activeitem ~= nil and activeitem.persists then
+        inst_inv:GiveItem(activeitem)
+    end
+end
+
 local FOOD_CANT_TAGS = { "INLIMBO", "NOCLICK", "FX", "DECOR", "largecreature", "worm_boss_piece", "noattack", "notarget", "playerghost" }
 local FOOD_ONEOF_TAGS = { "_inventoryitem", "character", "smallcreature"}
 
@@ -311,9 +340,7 @@ local function CollectThingsToEat(inst, source)
                             table.insert(inst.devoured, ent)
 
                         elseif not ent:HasTag("irreplaceable") then
-                            if ent.components.inventory ~= nil then
-                                ent.components.inventory:TransferInventory(inst)
-                            end
+                            TransferCreatureInventory(inst, ent)
 
                             ent:Remove()
 
@@ -522,7 +549,7 @@ local function FindNewEndPoint(inst, chunk)
 
     local angle = math.random()*TWOPI
 
-    if inst.components.combat.target ~= nil then
+    if inst.components.combat.target ~= nil and inst.components.combat.target:IsValid() and chunk.dirt_start:IsValid() then
         angle = chunk.dirt_start:GetAngleToPoint(inst.components.combat.target.Transform:GetWorldPosition()) * DEGREES
     end
 
@@ -533,7 +560,7 @@ local function FindNewEndPoint(inst, chunk)
     local half_PI = PI/2
 
     if angle == half_PI or angle == 3*half_PI or angle == 5*half_PI or angle == 7*half_PI then
-        angle = math.radom() < 0.5 and angle + PI/32 or angle - PI/32
+        angle = math.random() < 0.5 and angle + PI/32 or angle - PI/32
     end
 
     while range <= 15 do

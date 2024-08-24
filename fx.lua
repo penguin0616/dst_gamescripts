@@ -3294,7 +3294,7 @@ local fx =
         tintalpha = .5,
         fn = FinalOffset1,
     },
-    { -- FIXME(DiogoW): # Workaround for bright lightning with full black beefalo.
+    {
         name = "beefalo_reviving_lightning_fx",
         bank = "beefalo",
         build ="beefalo_revive",

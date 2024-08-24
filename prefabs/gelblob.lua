@@ -65,6 +65,7 @@ local function OnUpdateProximity(inst, fast)
 			v.isplayer and
 			v.sg and not v.sg:HasStateTag("suspended") and
 			not (v.components.rider and v.components.rider:IsRiding()) and
+			not v:HasTag("wereplayer") and
 			dsq < inst._suspend_radius * inst._suspend_radius
 		then
 			v:PushEvent("suspended", inst)
@@ -156,19 +157,9 @@ local function DoDigest(inst, target, useimpactsound)
 	end
 end
 
-local function OnUpdateSuspended3(inst)
+local function OnUpdateSuspended2(inst)
 	DoDigest(inst, inst._suspendedplayer, true)
 	ReleaseSuspended(inst, true)
-end
-
-local function OnUpdateSuspended2(inst)
-	inst.sg:GoToState("jiggle")
-	if inst._digestcount < 5 then
-		inst._digestcount = inst._digestcount + 1
-	else
-		inst._suspendedtask:Cancel()
-		inst._suspendedtask = inst:DoTaskInTime(7 * FRAMES, OnUpdateSuspended3)
-	end
 end
 
 local function OnUpdateSuspended(inst)
@@ -177,9 +168,10 @@ local function OnUpdateSuspended(inst)
 		DoDigest(inst, inst._suspendedplayer)
 		inst.sg:HandleEvent("jiggle")
 	else
+		inst._suspendedplayer:PushEvent("abouttospit")
+		inst.sg:GoToState("spit")
 		inst._suspendedtask:Cancel()
-		inst._suspendedtask = inst:DoPeriodicTask(5 * FRAMES, OnUpdateSuspended2)
-		OnUpdateSuspended2(inst)
+		inst._suspendedtask = inst:DoTaskInTime(38 * FRAMES, OnUpdateSuspended2)
 	end
 end
 

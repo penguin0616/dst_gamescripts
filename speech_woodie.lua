@@ -987,11 +987,12 @@ return{
 
     -- rifts 4
     ANNOUNCE_EXIT_GELBLOB = "I think some got in my mouth!",
-	ANNOUNCE_SHADOWTHRALL_STEALTH = "What the heck? Luce, you see what bit me?", -- TODO
+	ANNOUNCE_SHADOWTHRALL_STEALTH = "What the heck? Luce, you see what bit me?",
     ANNOUNCE_RABBITKING_AGGRESSIVE = "TODO",
     ANNOUNCE_RABBITKING_PASSIVE = "TODO",
     ANNOUNCE_RABBITKING_LUCKY = "TODO",
     ANNOUNCE_RABBITKING_LUCKYCAUGHT = "TODO",
+    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "TODO",
 
 	BATTLECRY =
 	{

@@ -510,7 +510,7 @@ Recipe2("wall_scrap_item",					{Ingredient("wagpunk_bits", 4)},																	
 
 Recipe2("fence_rotator",					{Ingredient("spear", 1), Ingredient("flint", 2) },														TECH.SCIENCE_TWO)
 
-Recipe2("rope_bridge_kit",					{Ingredient("rope", 8), Ingredient("boards", 4) },														TECH.SCIENCE_TWO)
+Recipe2("rope_bridge_kit",					{Ingredient("rope", 2), Ingredient("boards", 4) },														TECH.SCIENCE_TWO)
 
 Recipe2("boat_item", 						{Ingredient("boards", 4)},																				TECH.SEAFARING_ONE)
 Recipe2("boat_grass_item", 					{Ingredient("cutgrass", 8),Ingredient("twigs", 2)},														TECH.NONE)

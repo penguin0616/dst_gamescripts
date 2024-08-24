@@ -54,7 +54,7 @@ local function onfiniteusesfinished(inst)
     inst:Remove()
 end
 
-local function UseModifier(uses, action, doer, target)
+local function UseModifier(uses, action, doer, target, item)
     if (action == ACTIONS.ROW or action == ACTIONS.ROW_FAIL or action == ACTIONS.ROW_CONTROLLER)
             and doer:HasTag("master_crewman") then
         uses = uses * TUNING.MASTER_CREWMAN_MULT.OAR_CONSUMPTION

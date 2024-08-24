@@ -218,10 +218,6 @@ local function OnNewTarget(inst, data)
     inst.components.combat:ShareTarget(data.target, SHARE_TARGET_DIST, function(dude) return dude.prefab == inst.prefab end, MAX_TARGET_SHARES)
 end
 
-local function is_meat(item)
-    return item.components.edible ~= nil and item.components.edible.foodtype == FOODTYPE.MEAT and not item:HasTag("smallcreature")
-end
-
 local RETARGET_MUST_TAGS = { "_combat", "_health" }
 local RETARGET_ONEOF_TAGS = { "monster", "player", "pirate"}
 local function NormalRetargetFn(inst)
@@ -237,7 +233,7 @@ local function NormalRetargetFn(inst)
                             or guy:HasTag("pirate")
                             or (guy.components.inventory ~= nil and
                                 guy:IsNear(inst, TUNING.BUNNYMAN_SEE_MEAT_DIST) and
-                                guy.components.inventory:FindItem(is_meat) ~= nil))
+                                HasMeatInInventoryFor(guy)))
                 end,
                 RETARGET_MUST_TAGS, -- see entityreplica.lua
                 nil,

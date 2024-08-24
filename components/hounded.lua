@@ -87,7 +87,7 @@ local _spawndata =
 			elseif amount == 5 then
 				return math.random() < 0.05
 			end
-			return false, 5
+			return false
 		end,
 	}
 
@@ -775,11 +775,11 @@ local function HandleSpawnInfoRec(dt, i, spawninforec, groupsdone)
 		local upgrade, houndcount = nil, nil
 
 		if _spawndata.upgrade_spawn and _spawndata.ShouldUpgrade then
-		 	upgrade, houndcount =  _spawndata.ShouldUpgrade(spawninforec.players[target])
+		 	upgrade, houndcount = _spawndata.ShouldUpgrade(spawninforec.players[target])
 		end
 
 		if upgrade then
-			spawninforec.players[target] = spawninforec.players[target] - houndcount
+			spawninforec.players[target] = spawninforec.players[target] - (houndcount or 5)
 		else
 			spawninforec.players[target] = spawninforec.players[target] - 1
 		end

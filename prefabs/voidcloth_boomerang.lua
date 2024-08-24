@@ -431,17 +431,14 @@ local function Projectile_OnUpdateFn(inst, dt)
         inst.AnimState:SetScale(inst.scale, inst.scale)
 
         local damage_scale = Remap(inst.scale, PROJECTILE_MIN_SIZE, PROJECTILE_MAX_SIZE, 0, 1)
+        local bonus_mult = boomerang ~= nil and boomerang._bonusenabled and TUNING.WEAPONS_VOIDCLOTH_SETBONUS_DAMAGE_MULT or 1
 
-        if boomerang ~= nil and boomerang._bonusenabled then
-            damage_scale = damage_scale * TUNING.WEAPONS_VOIDCLOTH_SETBONUS_DAMAGE_MULT
-        end
-
-        inst.components.weapon:SetDamage(Lerp(TUNING.VOIDCLOTH_BOOMERANG_DAMAGE.min, TUNING.VOIDCLOTH_BOOMERANG_DAMAGE.max, damage_scale))
+        inst.components.weapon:SetDamage(bonus_mult * Lerp(TUNING.VOIDCLOTH_BOOMERANG_DAMAGE.min, TUNING.VOIDCLOTH_BOOMERANG_DAMAGE.max, damage_scale))
         inst.components.planardamage:SetBaseDamage(Lerp(TUNING.VOIDCLOTH_BOOMERANG_PLANAR_DAMAGE.min, TUNING.VOIDCLOTH_BOOMERANG_PLANAR_DAMAGE.max, damage_scale))
     end
 
-    if boomerang then
-        if inst._boomerang._bonusenabled then
+    if boomerang ~= nil then
+        if boomerang._bonusenabled then
             inst.components.planardamage:AddBonus(inst, TUNING.WEAPONS_VOIDCLOTH_SETBONUS_PLANAR_DAMAGE, "setbonus")
         else
             inst.components.planardamage:RemoveBonus(inst, "setbonus")
@@ -471,6 +468,11 @@ local function Projectile_OnThrown(inst, owner, target, attacker)
         fx.Transform:SetPosition(pos:Get())
         fx.Transform:SetRotation(fx:GetAngleToPoint(target.Transform:GetWorldPosition()) - 90)
     end
+end
+
+local function OnEntitySleep(inst)
+    inst.components.projectile:Stop()
+    inst:Remove()
 end
 
 ----------------------------------------------------------------------------------------------------------------
@@ -505,6 +507,7 @@ local function ProjectileFn()
 
     inst:AddTag("NOCLICK")
     inst:AddTag("NOBLOCK")
+    inst:AddTag("shadow_item")
 
     inst.entity:SetPristine()
 
@@ -544,7 +547,7 @@ local function ProjectileFn()
     inst.components.projectile.has_damage_set = true
 
     inst.OnRemoveEntity = Projectile_OnRemoved
-    inst.OnEntitySleep = inst.Remove
+    inst.OnEntitySleep = OnEntitySleep
 
     return inst
 end

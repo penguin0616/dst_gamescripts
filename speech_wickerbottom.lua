@@ -986,11 +986,12 @@ return{
 
     -- rifts 4
     ANNOUNCE_EXIT_GELBLOB = "I do not wish to experience that again.",
-	ANNOUNCE_SHADOWTHRALL_STEALTH = "I've been bitten by a camouflaged creature!", -- TODO
+	ANNOUNCE_SHADOWTHRALL_STEALTH = "I've been bitten by a camouflaged creature!",
     ANNOUNCE_RABBITKING_AGGRESSIVE = "TODO",
     ANNOUNCE_RABBITKING_PASSIVE = "TODO",
     ANNOUNCE_RABBITKING_LUCKY = "TODO",
     ANNOUNCE_RABBITKING_LUCKYCAUGHT = "TODO",
+    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "TODO",
 
 	BATTLECRY =
 	{

@@ -992,11 +992,12 @@ return{
 
     -- rifts 4
     ANNOUNCE_EXIT_GELBLOB = "Let's not speak of this again.",
-	ANNOUNCE_SHADOWTHRALL_STEALTH = "Ow! Quit your skulkin' and fight me fair!", -- TODO
+	ANNOUNCE_SHADOWTHRALL_STEALTH = "Ow! Quit your skulkin' and fight me fair!",
     ANNOUNCE_RABBITKING_AGGRESSIVE = "TODO",
     ANNOUNCE_RABBITKING_PASSIVE = "TODO",
     ANNOUNCE_RABBITKING_LUCKY = "TODO",
     ANNOUNCE_RABBITKING_LUCKYCAUGHT = "TODO",
+    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "TODO",
 
 	BATTLECRY =
 	{

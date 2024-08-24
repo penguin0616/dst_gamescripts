@@ -649,7 +649,7 @@ local states=
             inst.SoundEmitter:PlaySound("rifts4/beefalo_revive/revive_effect")
 
             inst.AnimState:AddOverrideBuild("beefalo_revive")
-            inst.AnimState:Hide("lightning") -- FIXME(DiogoW): # Workaround for bright lightning with full black beefalo.
+            inst.AnimState:Hide("lightning")
 
             inst:SpawnChild("beefalo_reviving_lightning_fx")
 
@@ -666,16 +666,12 @@ local states=
         {
             FrameEvent(45, function(inst)
                 inst.AnimState:SetMultColour(0, 0, 0, 1)
-                -- inst.AnimState:SetSymbolAddColour("lightning", 1, 0, 0, 0) -- FIXME(DiogoW): # Workaround for bright lightning with full black beefalo.
-                -- inst.AnimState:SetSymbolLightOverride("lightning", .7) -- FIXME(DiogoW): # Workaround for bright lightning with full black beefalo.
 
                 inst.components.skinner_beefalo:ClearAllClothing()
             end),
 
             FrameEvent(133, function(inst)
                 inst.AnimState:SetMultColour(1, 1, 1, 1)
-                --inst.AnimState:SetSymbolAddColour("lightning", 0, 0, 0, 0) -- FIXME(DiogoW): # Workaround for bright lightning with full black beefalo.
-                --inst.AnimState:SetSymbolLightOverride("lightning", 0) -- FIXME(DiogoW): # Workaround for bright lightning with full black beefalo.
 
                 inst.components.health:SetInvincible(false)
                 inst:RemoveTag("deadcreature")
@@ -698,9 +694,6 @@ local states=
 
         onexit = function(inst)
             inst.AnimState:SetMultColour(1, 1, 1, 1)
-            --inst.AnimState:SetSymbolAddColour("lightning", 0, 0, 0, 0) -- FIXME(DiogoW): # Workaround for bright lightning with full black beefalo.
-            --inst.AnimState:SetSymbolLightOverride("lightning", 0) -- FIXME(DiogoW): # Workaround for bright lightning with full black beefalo.
-
             inst.AnimState:ClearOverrideBuild("beefalo_revive")
 
             inst.components.health:SetInvincible(false)

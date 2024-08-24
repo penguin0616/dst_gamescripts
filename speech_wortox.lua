@@ -991,11 +991,12 @@ return{
 
     -- rifts 4
     ANNOUNCE_EXIT_GELBLOB = "I could've died inside!",
-	ANNOUNCE_SHADOWTHRALL_STEALTH = "I felt a keen blow, dealt by an unseen foe!", -- TODO
+	ANNOUNCE_SHADOWTHRALL_STEALTH = "I felt a keen blow, dealt by an unseen foe!",
     ANNOUNCE_RABBITKING_AGGRESSIVE = "TODO",
     ANNOUNCE_RABBITKING_PASSIVE = "TODO",
     ANNOUNCE_RABBITKING_LUCKY = "TODO",
     ANNOUNCE_RABBITKING_LUCKYCAUGHT = "TODO",
+    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "TODO",
 
 	BATTLECRY =
 	{

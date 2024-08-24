@@ -134,6 +134,24 @@ local states =
 	},
 
 	State{
+		name = "spit",
+		tags = { "busy" },
+
+		onenter = function(inst)
+			_PlayAnimation(inst, "spit")
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+	},
+
+	State{
 		name = "shrink_med",
 		tags = { "hit", "busy" },
 

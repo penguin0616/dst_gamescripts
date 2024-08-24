@@ -1,7 +1,7 @@
 require("stategraphs/commonstates")
 
 local DROPKICK_MUSTHAVE_TAGS = { "_health", "_combat" }
-local DROPKICK_CANT_TAGS = { "INLIMBO", "flight", "invisible", "notarget", "noattack" }
+local DROPKICK_CANT_TAGS = { "INLIMBO", "flight", "invisible", "notarget", "noattack", "playerghost", "shadowthrall", "shadow", "shadowcreature", "shadowchesspiece" }
 local DROPKICK_ONEOF_TAGS = { "animal", "character", "monster", "shadowminion" }
 
 local function DoKnockback(inst, target)
@@ -256,6 +256,9 @@ local states = {
         events = {
             EventHandler("animover", function(inst)
                 if inst.AnimState:AnimDone() then
+                    if not inst.components.timer:TimerExists("dropkick_cd") or inst.components.timer:GetTimeLeft("dropkick_cd") < TUNING.RABBITKING_ABILITY_DROPKICK_CD_POSTSTUN then
+                        inst.components.timer:StartTimer("dropkick_cd", TUNING.RABBITKING_ABILITY_DROPKICK_CD_POSTSTUN)
+                    end
                     inst.sg:GoToState("idle")
                 end
             end),
