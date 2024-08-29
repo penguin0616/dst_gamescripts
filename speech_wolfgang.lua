@@ -567,6 +567,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "Is maybe too much information.",
 	ANNOUNCE_HOUNDS = "I hear puppies!",
 	ANNOUNCE_WORMS = "Earth is tremble beneath Wolfgang's mighty feet!",
+    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
     ANNOUNCE_ACIDBATS = "Wolfgang not afraid. You are afraid.",
 	ANNOUNCE_HUNGRY = "My mighty belly is empty!",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "Animal is close!",

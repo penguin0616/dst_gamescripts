@@ -69,6 +69,7 @@ local _spawndata =
 		},
 
 		warning_speech = "ANNOUNCE_HOUNDS",
+
 		warning_sound_thresholds =
 		{	--Key = time, Value = sound prefab
 			{time = 30, sound =  "LVL4"},
@@ -77,7 +78,7 @@ local _spawndata =
 			{time = 500, sound = "LVL1"},
 		},
 
-		ShouldUpgrade= function(amount)
+		ShouldUpgrade= function(amount, wave_pre_upgraded)
 			if amount >= 8 then
 				return math.random() < 0.7
 			elseif amount == 7 then
@@ -95,6 +96,8 @@ local _attackdelayfn = _spawndata.attack_delays.med
 local _warndurationfn = _spawndata.attack_levels.light.warnduration
 local _spawnmode = "escalating"
 local _spawninfo = nil
+local _wave_pre_upgraded = nil  -- You can trigger a wave upgrade when the sounds are chosen. Used for the Worm Boss. 
+local _wave_override_chance = 0 -- used for special custom wave overide like worm_boss.
 --for players who leave during the warning when spawns are queued
 local _delayedplayerspawninfo = {}
 local _missingplayerspawninfo = {}
@@ -170,6 +173,7 @@ local function PlanNextAttack()
 		_timetoattack = timetoattackbase + timetoattackvariance
 		_warnduration = _warndurationfn()
 		_attackplanned = true
+		_wave_pre_upgraded = nil
 	else
 		_attackplanned = false
 	end
@@ -715,7 +719,15 @@ function self:ForceNextWave()
 end
 
 local function _DoWarningSpeech(player)
-    player.components.talker:Say(GetString(player, _spawndata.warning_speech))
+	local speech = ""
+
+	if type(_spawndata.warning_speech) == "function" then
+		speech, _wave_pre_upgraded = _spawndata.warning_speech(_wave_pre_upgraded)
+	else
+		speech = _spawndata.warning_speech
+	end
+	
+    player.components.talker:Say(GetString(player, speech))
 end
 
 function self:DoWarningSpeech()
@@ -727,8 +739,20 @@ function self:DoWarningSpeech()
     end
 end
 
+function self:GetWarningSoundList()
+	local warning_sound_thresholds = {}
+
+	if type(_spawndata.warning_sound_thresholds) == "function" then
+		warning_sound_thresholds, _wave_pre_upgraded = _spawndata.warning_sound_thresholds(_wave_pre_upgraded)
+	else
+		warning_sound_thresholds = _spawndata.warning_sound_thresholds
+	end
+
+	return warning_sound_thresholds
+end
+
 function self:DoWarningSound()
-    for k,v in pairs(_spawndata.warning_sound_thresholds) do
+    for k,v in pairs(self:GetWarningSoundList()) do
     	if _timetoattack <= v.time or _timetoattack == nil then
     		for GUID,data in pairs(_targetableplayers)do
     			local player = Ents[GUID]
@@ -748,7 +772,7 @@ function self:DoDelayedWarningSpeech(player, data)
 end
 
 function self:DoDelayedWarningSound(player, data)
-    for k,v in pairs(_spawndata.warning_sound_thresholds) do
+    for k,v in pairs(self:GetWarningSoundList()) do
     	if data._timetoattack <= v.time or data._timetoattack == nil then
 			if _targetableplayers[player.GUID] == "land" then
 				player:PushEvent("houndwarning",HOUNDWARNINGTYPE[v.sound])
@@ -771,11 +795,11 @@ local function HandleSpawnInfoRec(dt, i, spawninforec, groupsdone)
 			return
 		end
 
-		-- TEST IF GROUPS IF HOUNDS SHOULD BE TURNED INTO A VARG (or other)		
+		-- TEST IF GROUPS IF HOUNDS SHOULD BE TURNED INTO A VARG (or other)
 		local upgrade, houndcount = nil, nil
 
 		if _spawndata.upgrade_spawn and _spawndata.ShouldUpgrade then
-		 	upgrade, houndcount = _spawndata.ShouldUpgrade(spawninforec.players[target])
+		 	upgrade, houndcount = _spawndata.ShouldUpgrade(spawninforec.players[target], _wave_pre_upgraded )
 		end
 
 		if upgrade then
@@ -878,6 +902,11 @@ function self:OnUpdate(dt)
     end
 
     if _timetoattack < 0 then
+
+    	if _spawndata.specialupgradecheck then
+    		_wave_pre_upgraded, _wave_override_chance = _spawndata.specialupgradecheck(_wave_pre_upgraded, _wave_override_chance)
+    	end
+
         _warning = false
 
 		-- Okay, it's hound-day, get number of dogs for each player
@@ -946,6 +975,7 @@ function self:OnSave()
 		warnduration = _warnduration,
 		attackplanned = _attackplanned,
 		missingplayerspawninfo = missingspawninfo,
+		wave_override_chance = _wave_override_chance,
 	}
 end
 
@@ -955,6 +985,7 @@ function self:OnLoad(data)
 	_timetoattack = data.timetoattack or 0
 	_attackplanned = data.attackplanned  or false
 	_missingplayerspawninfo = data.missingplayerspawninfo or {}
+	_wave_override_chance = data.wave_override_chance or 0
 
 	if _timetoattack > _warnduration then
 		-- in case everything went out of sync

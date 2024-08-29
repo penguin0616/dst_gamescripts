@@ -162,12 +162,20 @@ local function KeepTargetFunction_Aggressive(inst, target)
     return RetargetFunction_Aggressive(inst) == target
 end
 
+local function OnLostFollower_Aggressive(inst, follower)
+    if inst.components.leader:CountFollowers("rabbitking_manrabbit") == 0 then
+        local delay = math.min(inst.components.timer:GetTimeLeft("dropkick_cd") or 1, 1)
+        inst.components.timer:StopTimer("dropkick_cd")
+        inst.components.timer:StartTimer("dropkick_cd", TUNING.RABBITKING_ABILITY_CD_POSTSTUN) -- Not post stun but same timing window here for reactions.
+    end
+end
+
 local function CanSummonMinions_Aggressive(inst)
     if inst.components.timer:TimerExists("summon_cd") then
         return false
     end
 
-    return inst.components.leader:CountFollowers() == 0
+    return inst.components.leader:CountFollowers("rabbitking_manrabbit") < TUNING.RABBITKING_ABILITY_SUMMON_COUNT
 end
 local function NoHoles(pt)
     return not TheWorld.Map:IsPointNearHole(pt)
@@ -199,7 +207,8 @@ local function SummonMinions_Aggressive(inst)
     inst.components.timer:StartTimer("summon_cd", TUNING.RABBITKING_ABILITY_SUMMON_CD)
     local pt = inst:GetPosition()
     local target = RetargetFunction_Aggressive(inst)
-    for i = 1, TUNING.RABBITKING_ABILITY_SUMMON_COUNT do
+    local summoncount = TUNING.RABBITKING_ABILITY_SUMMON_COUNT - inst.components.leader:CountFollowers("rabbitking_manrabbit")
+    for i = 1, summoncount do
         local minion = SpawnPrefab("rabbitkingminion_bunnyman")
         local spawnpos = inst:FindMinionSpawnPos(pt) or pt
         minion.Transform:SetPosition(spawnpos:Get())
@@ -242,7 +251,8 @@ local function fn_aggressive()
         return inst
     end
 
-    inst:AddComponent("leader")
+    local leader = inst:AddComponent("leader")
+    leader.onremovefollower = OnLostFollower_Aggressive
 
     local timer = inst:AddComponent("timer")
     timer:StartTimer("summon_cd", TUNING.RABBITKING_ABILITY_SUMMON_CD_START)
@@ -273,20 +283,16 @@ end
 local assets_bunnyman = {
     Asset("ANIM", "anim/manrabbit_attacks.zip"),
 
+    Asset("ANIM", "anim/manrabbit_enforcer_build.zip"),
     Asset("ANIM", "anim/manrabbit_beard_build.zip"),
-    Asset("ANIM", "anim/manrabbit_beard_basic.zip"),
-    Asset("ANIM", "anim/manrabbit_beard_actions.zip"),
     Asset("ANIM", "anim/manrabbit_actions.zip"),
     Asset("SOUND", "sound/bunnyman.fsb"),
 }
 local prefabs_bunnyman = {
     "beardhair",
     "monstermeat",
-}
-local loot_bunnyman = {
-    "beardhair",
-    "beardhair",
-    "monstermeat",
+    "meat",
+    "manrabbit_tail",
 }
 local bunnyman_brain = require("brains/rabbitking_bunnymanbrain")
 local function OnTalk_Bunnyman(inst)
@@ -340,6 +346,9 @@ local function OnLoad_bunnyman(inst, data)
         end
     end
 end
+
+local BUNNYMAN_SCRAPBOOK_HIDE = { "ARM_carry" }
+
 local function fn_bunnyman()
     local inst = CreateEntity()
 
@@ -349,7 +358,7 @@ local function fn_bunnyman()
     inst.entity:AddDynamicShadow()
     inst.entity:AddNetwork()
 
-    inst.AnimState:SetBuild("manrabbit_beard_build")
+    inst.AnimState:SetBuild("manrabbit_enforcer_build")
     inst.AnimState:AddOverrideBuild("manrabbit_actions")
     inst.AnimState:OverrideSymbol("armblur", "manrabbit_beard_build", "armblur")
 
@@ -362,8 +371,8 @@ local function fn_bunnyman()
     inst:AddTag("character")
     inst:AddTag("pig")
     inst:AddTag("manrabbit")
-    inst:AddTag("rabbitking_manrabbit")
     inst:AddTag("scarytoprey")
+    inst:AddTag("rabbitking_manrabbit")
 
     inst.AnimState:SetBank("manrabbit")
     inst.AnimState:PlayAnimation("idle_loop", true)
@@ -393,6 +402,8 @@ local function fn_bunnyman()
         return inst
     end
 
+    inst.scrapbook_hide = BUNNYMAN_SCRAPBOOK_HIDE
+
     --Remove these tags so that they can be added properly when replicating components below
     inst:RemoveTag("_named")
 
@@ -408,8 +419,8 @@ local function fn_bunnyman()
     inst:AddComponent("bloomer")
 
     local combat = inst:AddComponent("combat")
-    combat:SetDefaultDamage(TUNING.BUNNYMAN_DAMAGE)
-    combat:SetAttackPeriod(TUNING.BUNNYMAN_ATTACK_PERIOD)
+    combat:SetDefaultDamage(TUNING.RABBITKING_ABILITY_SUMMON_DAMAGE)
+    combat:SetAttackPeriod(TUNING.RABBITKING_ABILITY_SUMMON_ATTACK_PERIOD)
     combat:SetRetargetFunction(3, NormalLeaderRetargetFn)
     combat:SetKeepTargetFunction(NormalKeepTargetFn)
     combat.hiteffectsymbol = "manrabbit_torso"
@@ -427,10 +438,15 @@ local function fn_bunnyman()
 
     local health = inst:AddComponent("health")
     health:SetMaxHealth(TUNING.RABBITKING_ABILITY_SUMMON_HP)
-    health:StartRegen(TUNING.BUNNYMAN_HEALTH_REGEN_AMOUNT, TUNING.BUNNYMAN_HEALTH_REGEN_PERIOD)
+    -- No health regen on these they get resummoned as replacements.
 
     local lootdropper = inst:AddComponent("lootdropper")
-    lootdropper:SetLoot(loot_bunnyman)
+    lootdropper:AddRandomLoot("beardhair", 3)
+    lootdropper:AddRandomLoot("monstermeat", 3)
+    lootdropper:AddRandomLoot("carrot", 3)
+    lootdropper:AddRandomLoot("meat", 3)
+    lootdropper:AddRandomLoot("manrabbit_tail", 4) -- Maintain 25% odds.
+    lootdropper.numrandomloot = 1
 
     local sanityaura = inst:AddComponent("sanityaura")
     sanityaura.aura = -TUNING.SANITYAURA_MED

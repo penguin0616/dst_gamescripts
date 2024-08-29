@@ -253,8 +253,7 @@ end
 local function battlecry(combatcmp, target)
     local strtbl =
         target ~= nil and
-        target.components.inventory ~= nil and
-        target.components.inventory:FindItem(is_meat) ~= nil and
+        HasMeatInInventoryFor(target) and
         "RABBIT_MEAT_BATTLECRY" or
         "RABBIT_BATTLECRY"
     return strtbl, math.random(#STRINGS[strtbl])
@@ -351,6 +350,7 @@ local function fn()
     inst:AddTag("pig")
     inst:AddTag("manrabbit")
     inst:AddTag("scarytoprey")
+    inst:AddTag("regular_bunnyman")
 
     inst.AnimState:SetBank("manrabbit")
     inst.AnimState:PlayAnimation("idle_loop", true)

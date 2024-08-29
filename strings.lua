@@ -998,7 +998,7 @@ STRINGS =
         },
 		CLOSESPELLBOOK = {
             GENERIC = "Close",
-            PYROKINESIS = "Extinguish",  
+            PYROKINESIS = "Extinguish",
 			REMOTE = "Stop",
         },
 
@@ -3194,11 +3194,11 @@ STRINGS =
         MOSQUITOBOMB = "Skeeter Bomb",
         MOSQUITOFERTILIZER = "Fertilizzzer",
         MOSQUITOMERMSALVE = "Blood Shot",
-        OFFERING_POT = "Communal Kelp Dish",        
+        OFFERING_POT = "Communal Kelp Dish",
         OFFERING_POT_UPGRADED = "Superior Communal Kelp Dish",
         MERM_ARMORY = "Armermry",
         MERM_ARMORY_UPGRADED = "Superior Armermry",
-        MERMARMORHAT = "Swamp Brawler Helmet",   
+        MERMARMORHAT = "Swamp Brawler Helmet",
         MERMARMORUPGRADEDHAT = "Swamp Warrior Helmet",
 
         MERM_TOOLSHED = "Shoddy Tool Shed",
@@ -4063,12 +4063,14 @@ STRINGS =
         ARMOR_CARROTLURE = "Coat of Carrots",
         RABBITKINGHORN = "Burrowing Horn",
         RABBITKINGHORN_CHEST = "Portable Den",
-        RABBITKINGSPEAR = "Rabbit King Sabre",--todo
+        RABBITKINGSPEAR = "Rabbit King Cudgel",
         RABBITHAT = "Warren Wreath",
 
         WORM_BOSS = "Great Depths Worm",
 
         RUINSNIGHTMARE = "Lurking Nightmare",
+
+        ITEMMIMIC_REVEALED = "Mimicreep",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -5122,8 +5124,6 @@ STRINGS =
         ROPE_BRIDGE_KIT = "Suspend your disbelief and cross that bottomless pit.",
         ARMOR_CARROTLURE = "Don this coat, and the Bunnymen shall hop to it.",
         RABBITKINGHORN = "Call on the rabbits to keep your stuff, anytime, any hare.",
-        RABBITKINGHORN_CHEST = "Rabbits have no shortage of storage.",
-        RABBITKINGSPEAR = "Ward off scary Bunnymen.",
         RABBITHAT = "Collecting rabbits has never been so calming.",
     },
 
@@ -6843,7 +6843,7 @@ STRINGS =
         "For scientific accuracy, of course.",
         "You understand.",
     },
-    
+
     -- Script.
     WAGSTAFF_NPC_ALL_MUTATIONS_DEFEATED = {
         "Right. A third specimen. I did ask for another, didn't I?",
@@ -6889,7 +6889,7 @@ STRINGS =
 
     WAGSTAFF_JUNK_YARD_OCCUPIED = {
         "Too crowded here for my work. I'll come back later",
-    },    
+    },
 
     -- Terraria
     EYEOFTERROR_COMING = "You feel an evil presence watching you...",
@@ -7049,7 +7049,7 @@ STRINGS =
         STAGE1   = "W.A.R.B.I.S. UPGRADING!",
         STAGE2   = "W.A.R.B.I.S. AMPLIFYING!!",
         STAGE3   = "W.A.R.B.I.S. EXTREME FUNCTION!!!",
-        
+
         STOP     = "W.A.R.B.I.S. TRACKING LOST.",
         NEW      = "W.A.R.B.I.S. HAS NEW TARGET!",
         SYNCHING = "W.A.R.B.I.S. IS SYNCHING...",
@@ -8839,7 +8839,7 @@ STRINGS.UI =
         MINIMAPZOOMCURSOR = "Zoom Cursor Focus:",
         VIBRATION = "Vibration:",
         WATHGRITHRFONT = "Wigfrid's Umlauts:",
-        WALTERCAMERA = "Campfire Camera:",        
+        WALTERCAMERA = "Campfire Camera:",
         BOATCAMERA = "Seafaring Camera:",
 		PROMOTIONS = "Promotions:",
         BACKPACKMODE = "Backpack Layout:",
@@ -8912,7 +8912,7 @@ STRINGS.UI =
         XB1_CONTROLLER_LAYOUT = "Gamepad Layout:",
         CONTROLLER_CUSTOM = "Custom",
         RESET_LAYOUT = "Default All",
-        RESET_LAYOUT_BODY = "Do you want to reset all controls to their default values?\n\nYou will lose any changes you've made.\n",        
+        RESET_LAYOUT_BODY = "Do you want to reset all controls to their default values?\n\nYou will lose any changes you've made.\n",
         CHANGE_BINDING = "Change Binding",
         CURRENT_CONTROL_TEXT = "Current %s",
         DEFAULT_CONTROL_TEXT = "Default %s",
@@ -8996,7 +8996,7 @@ STRINGS.UI =
             -- controls
             CONTROLLER_LAYOUT = "Use the default controls or customize them to your liking.",
 
-            CONTROLS_EDITOR = 
+            CONTROLS_EDITOR =
             {
                 -- These are used in the Console version of the controls settings and thus only cover the controls available there
                 [57] = "Perform the default action on the current target.", --CONTROL_CONTROLLER_ACTION
@@ -12664,7 +12664,7 @@ STRINGS.UI =
             "Menu Start",
             "Menu L2",
             "Menu R2",
-            "Social Menu", 
+            "Social Menu",
             "Toggle Target locking",
             "Next Target",
         },
@@ -13087,7 +13087,7 @@ STRINGS.UI =
                 "\238\144\128",--"Button A",
                 "\238\144\129",--"Button B",
                 "\238\144\130",--"Button X",
-                "\238\144\131",--"Button Y",    
+                "\238\144\131",--"Button Y",
 
                 -- Analog
                 "\238\144\146",--"Left Thumb Left",
@@ -13155,7 +13155,7 @@ STRINGS.UI =
             -- DualShock 4 on PS4/PS5 (CharlesB: PC is above in index 4, this one has the same icons but they've been reordered)
             [12] =
             {
-                [0] = "Unknown",      
+                [0] = "Unknown",
                 "", -- unused but needed to get the index to 2
 
                 -- Digital
@@ -13169,7 +13169,7 @@ STRINGS.UI =
                 "\238\136\136",-- 9 "Left Trigger",
                 "\238\136\139",--10 "Right Trigger",
                 "\238\136\135",--11 "Left Bumper",
-                "\238\136\138",--12 "Right Bumper",                
+                "\238\136\138",--12 "Right Bumper",
                 "\238\136\131",--13 "Triangle",
                 "\238\136\129",--14 "Circle",
                 "\238\136\128",--15 "Cross",
@@ -13193,13 +13193,13 @@ STRINGS.UI =
                 "\238\136\136",--31 "Left Trigger",
                 "\238\136\139",--32 "Right Trigger",
                 "\238\136\139",--33 "Right Trigger",
-            },            
+            },
             -- Xbox on XboxOne/Xbox Series (CharlesB: PC is above in index 2, this one has the same icons but they've been reordered)
             [13] =
             {
                 [0] = "Unknown",
                 -- Digital
-				
+
                 "\238\129\136",--"Left Trigger",
                 "\238\129\139",--"Right Trigger",
                 "\238\129\132",--"Start",
@@ -15971,14 +15971,14 @@ STRINGS.SKILLTREE = {
         WILLOW_BERNIEAI_TITLE = "Hot-Headed",
         WILLOW_BERNIEAI_DESC = "Bernie will activate to fight hostile lunar and shadow aligned creatures regardless of Willow's sanity.",
 
-        
+
         WILLOW_BERNIEREGEN_1_TITLE = "Patch Up I",
         WILLOW_BERNIEREGEN_1_DESC = "Bernie's health regenerates slowly.",
         WILLOW_BERNIEREGEN_2_TITLE = "Patch Up II",
         WILLOW_BERNIEREGEN_2_DESC = "Bernie's health regenerates quicker.",
 
         WILLOW_BERNIE_LOCK_DESC = "Learn at least 4 Bernie skills to unlock.",
-        
+
         WILLOW_BERNIEHEALTH_1_TITLE = "Tough Stuffing I",
         WILLOW_BERNIEHEALTH_1_DESC = "Bernie's total health is a little higher.",
         WILLOW_BERNIEHEALTH_2_TITLE = "Tough Stuffing II",
@@ -15993,7 +15993,7 @@ STRINGS.SKILLTREE = {
         -- ALLIEGIANCE
         WILLOW_ALLEGIANCE_LOCK_1_DESC = "Find and defeat the Ancient Fuelweaver.\nHave no Lunar Allegiance Skills.",
         WILLOW_ALLEGIANCE_LOCK_2_DESC = "Learn 6 Bernie skills to unlock.",
-        WILLOW_ALLEGIANCE_LOCK_3_DESC = "Learn 7 Lighter skills to unlock.",        
+        WILLOW_ALLEGIANCE_LOCK_3_DESC = "Learn 7 Lighter skills to unlock.",
 
         WILLOW_ALLEGIANCE_SHADOW_1_TITLE = "Shadow Fire-Raiser",
         WILLOW_ALLEGIANCE_SHADOW_1_DESC = "The Queen will reward your loyalty with the power of shadow fire.\nSummon multiple tendrils of black flame to seek out hostile targets.",
@@ -16101,7 +16101,7 @@ STRINGS.SKILLTREE = {
 
         WATHGRITHR_ALLEGIANCE_LUNAR_TITLE = "Lunar Melodist",
         WATHGRITHR_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity with the ability to craft the Enlightened Lullaby.\nAllies take less damage from Lunar Aligned enemies and deal bonus damage to Shadow Aligned enemies.",
-        
+
         WATHGRITHR_ALLEGIANCE_SHADOW_TITLE = "Shadow Chanteuse",
         WATHGRITHR_ALLEGIANCE_SHADOW_DESC = "The Queen will reward your loyalty with the ability to craft the Dark Lament.\nAllies take less damage from Shadow Aligned enemies and deal bonus damage to Lunar Aligned enemies.",
     },
@@ -16145,7 +16145,7 @@ STRINGS.SKILLTREE = {
         WINONA_BATTERY_EFFICIENCY_2_DESC = "Boost the efficiency of Generators and G.E.M.erators by 50%.",
         WINONA_BATTERY_EFFICIENCY_3_TITLE = "Greater Generator III",
         WINONA_BATTERY_EFFICIENCY_3_DESC = "Boost the efficiency of Generators and G.E.M.erators by 100%.",
-    
+
         WINONA_MIDSHELF_LOCK_DESC = "Learn 6 total skills from the shelves below to unlock the skills on the shelf above.",
         -- Shadow.
         WINONA_SHADOW_1_TITLE = "Nightmare Generator",
@@ -16159,7 +16159,7 @@ STRINGS.SKILLTREE = {
 
         WINONA_CHARLIE_1_TITLE = "Shadow Seeker I",
         WINONA_CHARLIE_1_DESC = "The Queen imparts a design for enchanted glasses that reveal hidden traces of shadow magic.\nDoes she want you to find her?",
-        
+
         WINONA_CHARLIE_2_LOCK_DESC = "Requires the Shadow Seeker I skill, and to not have Founder's Keepers II to unlock.",
         WINONA_CHARLIE_2_TITLE = "Shadow Seeker II",
         WINONA_CHARLIE_2_DESC = "Become more adept at locating traces of shadow magic.\nThe Queen will watch over you.",
@@ -16205,7 +16205,7 @@ STRINGS.SKILLTREE = {
         WURT_MERM_KING_HUNGER_3_TITLE = "Sated Sovereign III",
         WURT_MERM_FLEE_TITLE = "Sensible Swamp Fighter",
         WURT_PATHFINDER_TITLE = "Swamp Pathfinder",
-        
+
         WURT_LUNAR_ALLEGIANCE_1_TITLE = "Lunar Mutated Merm",
         WURT_LUNAR_ALLEGIANCE_2_TITLE = "Terra Mutation",
         WURT_SHADOW_ALLEGIANCE_1_TITLE = "Shadow Resurrection Merm",
@@ -16381,8 +16381,8 @@ STRINGS.SCRAPBOOK = {
     DATA_PICKABLE = "CAN BE PICKED",
     DATA_STEWER = "CAN PREPARE FOOD",
     DATA_FISHABLE = "CAN BE FISHED",
-    DATA_HARVESTABLE = "CAN BE HARVESTED", 
-    DATA_BURNABLE = "CAN BE BURNED", 
+    DATA_HARVESTABLE = "CAN BE HARVESTED",
+    DATA_BURNABLE = "CAN BE BURNED",
     DATA_NON_PLAYER_FOOD = "NON-SURVIVOR FOOD",
     DATA_INSULATION = " INSULATION",
 
@@ -16509,9 +16509,9 @@ STRINGS.SCRAPBOOK = {
         MEGAFLARE = "Creates a flash in the sky that can be seen by all survivors on the minimap.\n\nThis large flash will also draw the attention of some hostile creatures.",
         FARMPLOW = "Digs up a tile and turns it into Farm Soil.",
         SADDLE_BASIC = "Can be put onto a Beefalo if it's willing.",
-        SADDLE_WAR = "Can be put onto a Beefalo if it's willing. Slower than a regular saddle, it also adds 16 damage to attacks made while riding.",
+        SADDLE_WAR = "Can be put onto a Beefalo if it's willing. Slower than a regular saddle.",
         SADDLE_RACE = "Can be put onto a Beefalo if it's willing. Increases speed over a regular saddle.",
-        SADDLE_WATHGRITHR = "Can be put onto a Beefalo if it's willing. Slower than a regular saddle, it also reduces the damage taken by 40%.",
+        SADDLE_WATHGRITHR = "Can be put onto a Beefalo if it's willing. Slower than a regular saddle.",
         PIGTOKEN = "Given to the Pig King to initiate a Wrestling Match.",
         WINTERSFEASTCOOKEDFOODS = "Captures the spirit of food when this is put on a Winter's Feast Table. The more, the merrier.",
         GUNPOWDER = "Will explode for 200 damage when lit.",
@@ -16524,7 +16524,7 @@ STRINGS.SCRAPBOOK = {
         POLLY_ROGERSHAT = "Polly Roger will fly down and follow the wearer, fetching nearby items.",
         MERMHAT = "Merm will treat the wearer like a merm.",
         DESERTHAT = "Improves vision in a storm.",
-        ALTERGUARDIANHAT = "When sanity is above 85%, Attacking will summon a minor Gestalt that also attacks the target for 42 damage, but costs 1 sanity each attack.\n\nIt is a source of light when worn. Spores stored in the hat can alter its light color.",                
+        ALTERGUARDIANHAT = "When sanity is above 85%, Attacking will summon a minor Gestalt that also attacks the target for 42 damage, but costs 1 sanity each attack.\n\nIt is a source of light when worn. Spores stored in the hat can alter its light color.",
         WATERMELONHAT = "Wearer's wetness will slowly rise up to 33%",
         FEATHERHAT = "Roughly doubles the number of birds that will land near the wearer.",
         MUSHHAT = "Reduces hunger by 25%. Periodically Spawns Mushroom Spores.",
@@ -16659,7 +16659,8 @@ STRINGS.SCRAPBOOK = {
         SPICE_CHILI = "Can be added to Crock Pot food using a Portable Seasoning Station.\n\nEating a dish spiced with Chili Flakes adds 20% damage to their attacks.\n\nDuration 4 minutes.\n\nAlso raises temperature 15 degrees for 15 seconds.",
         SPICE_SALT = "Can be added to Crock Pot food using a Portable Seasoning Station.\n\nEating a dish spiced with Seasoning Salt grants 25% more healing for healing effects.\n\nDuration 4 minutes.",
         BLUEPRINT = "It teaches you how to build a specific thing.",
-        WILLOWEMBER = "When a creature dies while on fire, they drop an etherial ember of some burnt essence of life.\n\nWhen Willow attunes with her lighter, eventually she can sense and collect Hot Embers with it.\n\nWillow can learn to use embers for a variety of Pyrokinetics.", 
+        WILLOWEMBER = "When a creature dies while on fire, they drop an etherial ember of some burnt essence of life.\n\nWhen Willow attunes with her lighter, eventually she can sense and collect Hot Embers with it.\n\nWillow can learn to use embers for a variety of Pyrokinetics.",
+        RABBITKINGSPEAR = "Wards off Bunnymen through fear. Trades your own mind for power against them in more ways than one.",
 
         -- things
         ATRIUMGATE = "A broken stone ring that has an empty socket at the base.",
@@ -16679,7 +16680,7 @@ STRINGS.SCRAPBOOK = {
 		STAFFCOLDLIGHT = "Cools survivors and gives light for 2 days.",
         COLDFIRE = "Works like a campfire, but makes things colder instead of heating them.",
         MOONSTORMSTATIC = "An experiment being worked on by a mysterious hologram that requires the survivors help.",
-        FARMPLOW = "Digs a tile of ground into farm soil that can be hoed to grow seeds into plants.",       
+        FARMPLOW = "Digs a tile of ground into farm soil that can be hoed to grow seeds into plants.",
         WATERTREEPILLAR = "This tree has a great canopy of leaves that shades the ground in an area bellow it and offers 35% protection from rain and cools survivor a small amount.",
         TREE = "Standing near a tree offers 35% protection from rain and cools survivor a small amount.",
         LOSTTOY = "Ghostly apparition of a spirit's lost toy.",
@@ -16800,7 +16801,7 @@ STRINGS.SCRAPBOOK = {
         BEARGERFUR_SACK = "A carriable container with 6 slots that can hold prepared food.\n\nThe food stored in it will be preserved for a long time.",
         DEERCLOPSEYEBALL_SENTRYWARD = "Makes the surrounding environment cool, if holding a Deerclops Eyeball.\n\nWildfires will not occur nearby, also preventing plant withering. It affects how quickly things dry out, including soil moisture, and how quickly they perish.\n\nCreates Mini Glaciers around itself over time.",
         ARCHIVESWITCH = "How many Survivors does it take to change a lightbulb?",
-        ORCHESTRINA = "Found deep in the long-forgotten archives of an ancient civilization, this noteworthy device is as melodious as it is mysterious. Solving its riddle might just be the key to unlocking a wellspring of ancient knowledge.",        
+        ORCHESTRINA = "Found deep in the long-forgotten archives of an ancient civilization, this noteworthy device is as melodious as it is mysterious. Solving its riddle might just be the key to unlocking a wellspring of ancient knowledge.",
         MOONALTARLINK = "It feels like there's a storm coming...",
         MOONBASE = "\"'Neath full moon's light, ye place the key;\nA rod whose call the stars doth heed.\nBut be ye warned, 'fore prize be claimed,\nSurvive the horde, lest ye be maimed.\"",
         CHARLIE_STAGE_POST = "A gift graciously bestowed to you by the Queen of the Constant, to enrich your sad, futile little lives. She was even kind enough to prepare costumes and a script!",
@@ -16835,7 +16836,7 @@ STRINGS.SCRAPBOOK = {
 
         JUNK_PILE_BIG = "A towering pile of junk. There might be something surprising hiding inside...",
 
-        -- Meta 4 / Ocean QoL 
+        -- Meta 4 / Ocean QoL
 
         ANCIENTFRUIT_GEM = "Even the heart of stone can be cracked by a little warmth... or perhaps a lot.",
         ANCIENTTREE_SEED = "An exotic seed that is very demanding on its growing conditions. There's a time and place for everything...",
@@ -16851,8 +16852,28 @@ STRINGS.SCRAPBOOK = {
         MERM_TOOLSHED = "While stocked with twigs and rocks, regular Merms will grab a Shoddy Tool from it, reducing its stores.\n\nShoddy Tools will increase the amount of work a Merm does for a short time.\n\nWith a Shoddy Tool, follower Merms will help chop trees, mine rocks, dig in a garden and till soil.",
         MERM_TOOLSHED_UPGRADED = "While stocked with twigs and rocks, regular Merms will grab a Slightly Less Shoddy Tool from it, reducing its stores.\n\nSlightly Less Shoddy tools increase the amount of work a Merm does a little more than their lesser sibling, the Shoddy Tool.\n\nWith a Slightly Less Shoddy Tool, follower Merms will help chop trees, mine rocks, dig in a garden and till soil.",
 
-        OFFERING_POT = "Speeds up the respawning of Merms in Craftsmerm Houses, Merm Flort-ifications and Leaky Shacks.\n\nCan be used to call nearby Merms to come eat the kelp and follow the Merm who summoned them.",        
-        OFFERING_POT_UPGRADED = "Speeds up the respawning of Merms in Craftsmerm Houses, Merm Flort-ifications and Leaky Shacks.\n\nCan be used to call nearby Merms to come eat the kelp and follow the Merm who summoned them.",        
+        OFFERING_POT = "Speeds up the respawning of Merms in Craftsmerm Houses, Merm Flort-ifications and Leaky Shacks.\n\nCan be used to call nearby Merms to come eat the kelp and follow the Merm who summoned them.",
+        OFFERING_POT_UPGRADED = "Speeds up the respawning of Merms in Craftsmerm Houses, Merm Flort-ifications and Leaky Shacks.\n\nCan be used to call nearby Merms to come eat the kelp and follow the Merm who summoned them.",
+
+        -- Rifts 4
+
+        -- ARMOR_CARROTLURE = "TODO",
+        -- GELBLOB = "TODO",
+        -- RABBITHAT = "TODO",
+        -- RABBITKING_AGGRESSIVE = "TODO",
+        -- RABBITKING_LUCKY = "TODO",
+        -- RABBITKING_PASSIVE = "TODO",
+        -- RABBITKINGHORN = "TODO",
+        -- RABBITKINGHORN_CHEST = "TODO",
+        -- RABBITKINGMINION_BUNNYMAN = "TODO",
+        -- RABBITKINGSPEAR = "TODO",
+        -- ROPE_BRIDGE_KIT = "TODO",
+        SADDLE_SHADOW = "Can be put onto a Beefalo if it's willing. Faster than a regular saddle.",
+        SHADOW_BATTLEAXE = "A weapon that is also a axe! It levels up by killing giants, increasing its stats, life steal and desire for death... It has 4 levels and it needs to kill 3 giants for each level.",
+        SHADOW_BEEF_BELL = "Name and bond with one Beefalo at a time. Bonded Beefalo will follow the holder, even into caves and offline.\n\nThis bell can also be given to a dead bonded Beefalo to revive it.",
+        -- SHADOWTHRALL_MOUTH = "TODO",
+        VOIDCLOTH_BOOMERANG = "A ranged weapon that has 3 projectiles and does damage based on the projectile size.\n\nIncreases movement speed by 10% when held.",
+        -- WORM_BOSS = "TODO",
     },
 
     -- Full name: "{name} Scrapbook Page"

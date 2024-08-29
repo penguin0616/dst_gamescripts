@@ -421,11 +421,16 @@ end
 
 local function OnResetBeard(inst)
     inst:RemoveTag("has_beard")
-    inst.sg:GoToState("shaved")
     inst.components.brushable:SetBrushable(false)
     inst.components.domesticatable:DeltaObedience(TUNING.BEEFALO_DOMESTICATION_SHAVED_OBEDIENCE)
 
     inst:UnSkin()
+
+    if inst.components.sleeper ~= nil and inst.components.sleeper:IsAsleep() then
+        inst.sg.statemem.continuesleeping = true
+    end
+
+    inst.sg:GoToState("shaved")
 end
 
 local function CanShaveTest(inst, shaver)

@@ -43,6 +43,10 @@ local THORN_EASE_THRESHOLD = 0.5
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+local function ShouldDoSpikeDamage(chunk)
+    return chunk.ease == nil or chunk.ease >= THORN_EASE_THRESHOLD
+end
+
 local function Knockback(source, target)
     if target == nil or (target.components.health ~= nil and target.components.health:IsDead()) or target:HasTag("noattack") then
         return
@@ -272,8 +276,15 @@ local function ShouldMove(inst)
 end
 
 local function TransferCreatureInventory(inst, target)
-    local inst_inv   = inst.components.inventory
+    local inst_inv = inst.components.inventory
+    if inst_inv == nil then
+        return
+    end
+
     local target_inv = target.components.inventory
+    if target_inv == nil then
+        return
+    end
 
     for k in pairs(target_inv.itemslots) do
         local item = target_inv:RemoveItemBySlot(k)
@@ -502,7 +513,10 @@ end
 local WORM_MOVEMENT_BLOCKING_TAGS = { "worm_boss_dirt" }
 
 local function IsPointValid(pt)
-    return TheSim:CountEntities(pt.x, 0, pt.z, 4, WORM_MOVEMENT_BLOCKING_TAGS) <= 0
+    local tile = TheWorld.Map:GetTileAtPoint(pt.x, 0, pt.z)
+
+    -- Bridges are not valid points.
+    return not GROUND_INVISIBLETILES[tile] and TheSim:CountEntities(pt.x, 0, pt.z, 4, WORM_MOVEMENT_BLOCKING_TAGS) <= 0
 end
 
 local function FindOffsetForNewChunk(inst, lastchunk)
@@ -650,7 +664,7 @@ local function MoveSegmentUnderGround(inst, chunk, test_segment, percent, instan
         end
     end
 
-    if not instant and test_segment.DoThornDamage and (not chunk.ease or chunk.ease < THORN_EASE_THRESHOLD) then
+    if not instant and test_segment.DoThornDamage and ShouldDoSpikeDamage(chunk) then
         test_segment:DoThornDamage()
     end
 
@@ -704,7 +718,7 @@ local function AddSegment(inst, chunk, tail, instant)
     segment.Transform:SetPosition(pf:Get())
     segment.Transform:SetRotation(segment:GetAngleToPoint(chunk.groundpoint_end:Get()))
 
-    if not chunk.ease or chunk.ease < THORN_EASE_THRESHOLD then
+    if ShouldDoSpikeDamage(chunk) then
         segment:DoThornDamage()
     end
 
@@ -1273,6 +1287,7 @@ return {
     Knockback = Knockback,
     MoveSegmentUnderGround = MoveSegmentUnderGround,
     SetCreateChunkTask = SetCreateChunkTask,
+    ShouldDoSpikeDamage = ShouldDoSpikeDamage,
     ShouldMove = ShouldMove,
     SpawnAboveGroundHeadCorpse = SpawnAboveGroundHeadCorpse,
     SpawnDirt = SpawnDirt,

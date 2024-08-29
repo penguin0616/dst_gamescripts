@@ -566,6 +566,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "I know everything now! Mostly everything, at least.",
 	ANNOUNCE_HOUNDS = "Woby? Do you hear something?",
 	ANNOUNCE_WORMS = "Something's moving...",
+    ANNOUNCE_WORMS_BOSS = "Something's coming. Something big.", --[[TODO]]
     ANNOUNCE_ACIDBATS = "Here they come!",
 	ANNOUNCE_HUNGRY = "Can we stop for a snack break?",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "I learned all about tracking in the Pioneers! It went thataway!",

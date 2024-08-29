@@ -37,6 +37,31 @@ local states =
 
 		onenter = function(inst)
 			_PlayAnimation(inst, "idle", true)
+			inst.SoundEmitter:PlaySound("rifts4/goop/idle"..inst.size, "loop")
+		end,
+
+		onexit = function(inst)
+			inst.SoundEmitter:KillSound("loop")
+		end,
+	},
+
+	State{
+		name = "spawndelay",
+		tags = { "spawning", "busy", "noattack", "temp_invincible", "invisible" },
+
+		onenter = function(inst, delay)
+			inst:Hide()
+			inst.DynamicShadow:Enable(false)
+			inst.sg:SetTimeout(delay or 1)
+		end,
+
+		ontimeout = function(inst)
+			inst.sg:GoToState("spawn")
+		end,
+
+		onexit = function(inst)
+			inst:Show()
+			inst.DynamicShadow:Enable(true)
 		end,
 	},
 
@@ -47,6 +72,7 @@ local states =
 		onenter = function(inst)
 			_PlayAnimation(inst, "spawn")
 			SetShadowScale(inst, 0.19)
+			inst.SoundEmitter:PlaySound("rifts4/goop/spawn")
 		end,
 
 		timeline =
@@ -89,6 +115,7 @@ local states =
 
 		onenter = function(inst)
 			_PlayAnimation(inst, "hit")
+			inst.SoundEmitter:PlaySound("rifts4/goop/hit"..inst.size)
 		end,
 
 		timeline =
@@ -114,6 +141,7 @@ local states =
 
 		onenter = function(inst)
 			_PlayAnimation(inst, "contact_jiggle")
+			inst.SoundEmitter:PlaySound("rifts4/goop/jiggle")
 		end,
 
 		timeline =
@@ -139,6 +167,7 @@ local states =
 
 		onenter = function(inst)
 			_PlayAnimation(inst, "spit")
+			inst.SoundEmitter:PlaySound("rifts4/goop/spit_pre")
 		end,
 
 		events =
@@ -158,6 +187,7 @@ local states =
 		onenter = function(inst)
 			inst.size = "_med"
 			_PlayAnimation(inst, "big_to")
+			inst.SoundEmitter:PlaySound("rifts4/goop/downgrade")
 		end,
 
 		timeline =
@@ -184,6 +214,7 @@ local states =
 		onenter = function(inst)
 			inst.size = "_small"
 			_PlayAnimation(inst, "med_to")
+			inst.SoundEmitter:PlaySound("rifts4/goop/downgrade")
 		end,
 
 		timeline =
@@ -210,6 +241,7 @@ local states =
 		onenter = function(inst)
 			inst.size = "_med"
 			_PlayAnimation(inst, "small_to")
+			inst.SoundEmitter:PlaySound("rifts4/goop/upgrade")
 		end,
 
 		timeline =
@@ -236,6 +268,7 @@ local states =
 		onenter = function(inst)
 			inst.size = "_big"
 			_PlayAnimation(inst, "med_to")
+			inst.SoundEmitter:PlaySound("rifts4/goop/upgrade")
 		end,
 
 		timeline =
@@ -262,12 +295,22 @@ local states =
 		onenter = function(inst)
 			inst.size = "_small"
 			_PlayAnimation(inst, "death")
+			inst.SoundEmitter:PlaySound("rifts4/goop/death")
 		end,
 
 		timeline =
 		{
 			FrameEvent(10, function(inst)
 				inst.DynamicShadow:Enable(false)
+			end),
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst:Remove()
+				end
 			end),
 		},
 

@@ -701,8 +701,11 @@ ACTIONS.PICKUP.fn = function(act)
     if act.doer.components.inventory ~= nil and
         act.target ~= nil and
         act.target.components.inventoryitem ~= nil and
-        (act.target.components.inventoryitem.canbepickedup or
-        (act.target.components.inventoryitem.canbepickedupalive and not act.doer:HasTag("player"))) and
+        (
+            act.target.components.inventoryitem.canbepickedup or
+            (act.target.components.inventoryitem.canbepickedupalive and not act.doer:HasTag("player")) or
+            act.target.components.inventoryitem.grabbableoverridetag ~= 0 and act.doer:HasTag(act.target.components.inventoryitem.grabbableoverridetag)
+        ) and
         not (act.target:IsInLimbo() or
 			(act.target.components.burnable ~= nil and act.target.components.burnable:IsBurning() and act.target.components.lighter == nil) or
             (act.target.components.projectile ~= nil and act.target.components.projectile:IsThrown())) then

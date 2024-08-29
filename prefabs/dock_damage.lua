@@ -53,6 +53,9 @@ local function fn()
 
     inst.entity:AddSoundEmitter()
 
+    inst:AddTag("NOBLOCK")
+    inst:AddTag("ignoremouseover")
+
     inst.AnimState:SetBank("dock_damage")
     inst.AnimState:SetBuild("dock_damage")
     inst.AnimState:PlayAnimation("idle1")

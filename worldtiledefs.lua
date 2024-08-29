@@ -81,6 +81,12 @@ end
 function PlayFootstep(inst, volume, ispredicted)
     local sound = inst.SoundEmitter
     if sound ~= nil then
+		--override sounds
+		if inst:HasTag("gelblobbed") then
+			sound:PlaySound("dontstarve/movement/walk_goop", nil, volume or 1, ispredicted)
+			return
+		end
+
         local my_x, my_y, my_z = inst.Transform:GetWorldPosition()
         local map = TheWorld.Map
         local my_platform = inst:GetCurrentPlatform()

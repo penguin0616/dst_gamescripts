@@ -353,6 +353,9 @@ function FindSwimmableOffset(position, start_angle, radius, attempts, check_los,
             end)
 end
 
+local function NoHoles(pt)
+    return not TheWorld.Map:IsPointNearHole(pt)
+end
 local NO_CHARLIE_TAGS = {"lunacyarea"}
 function FindCharlieRezSpotFor(inst)
     local x, y, z
@@ -361,24 +364,24 @@ function FindCharlieRezSpotFor(inst)
         local nightlights = nightlightmanager:GetNightLightsWithFilter(nightlightmanager.Filter_OnlyOutTags, NO_CHARLIE_TAGS)
         local nightlight = nightlightmanager:FindClosestNightLightFromListToInst(nightlights, inst)
         if nightlight ~= nil then
-            local theta = math.random() * PI2
             x, y, z = nightlight.Transform:GetWorldPosition()
-            local radius = nightlight:GetPhysicsRadius(0) + 1
-            local offset = FindWalkableOffset(Vector3(x, y, z), theta, radius, 8, false, false, nil, false, false)
-            if offset then
-                x, z = x + offset.x, z + offset.z
-            else
-                x, z = x + radius * math.cos(theta), z + radius * math.sin(theta)
-            end
         end
     end
     if x == nil then
-        if inst.components.drownable ~= nil then
-            x, y, z = inst.components.drownable:GetWashingAshoreTeleportSpot(true)
-        else
-            x, y, z = inst.Transform:GetWorldPosition() -- We tried.
+        if TheWorld.components.playerspawner ~= nil then
+            x, y, z = TheWorld.components.playerspawner:GetAnySpawnPoint()
         end
     end
+    if x == nil then
+        x, y, z = inst.Transform:GetWorldPosition() -- We tried.
+    end
+
+    local theta = math.random() * PI2
+    local offset = FindWalkableOffset(Vector3(x, y, z), theta, 2 + math.random() * 3, 8, false, false, NoHoles, false, false)
+    if offset then
+        x, z = x + offset.x, z + offset.z
+    end
+
     return x, y, z
 end
 

@@ -506,6 +506,10 @@ local function fn() -- FIXME(DiogoW): Can this one be a CLASSIFIED/non-networked
         return inst
     end
 
+    inst.scrapbook_bank  = "worm_boss"
+    inst.scrapbook_build = "worm_boss"
+    inst.scrapbook_anim  = "head_idle_loop"
+
     inst.child_scale = 1
     inst.chunks = {}
     inst.segment_pool = {}
@@ -836,6 +840,8 @@ local function segmentfn()
 
     inst.AnimState:SetFinalOffset(-3)
 
+    inst:SetPrefabNameOverride("worm_boss") -- For death announce.
+
     AddHighlightHandler(inst)
 
     inst.entity:SetPristine()
@@ -892,12 +898,19 @@ end
 local function Dirt_OnAttacked(inst)
     if inst.chunk ~= nil and inst.worm.state ~= WORMBOSS_UTILS.STATE.DEAD then
         inst.chunk.hit = 1
+        if inst.chunk.tail then
+            inst.chunk.tail:PushEvent("attacked")
+        end
     end
 end
 
 local function Dirt_DamageRedirectFn(inst, attacker, damage, weapon, stimuli)
     -- If attacker is close, and chunk is moving, do thorn damage.
-    if inst.worm ~= nil and (inst.worm.head == nil or inst.chunk.head ~= inst.worm.head) and (inst.worm.tail == nil or inst.chunk.tail ~= inst.worm.tail) and inst.chunk and inst.chunk.ease > 0.3 then
+    if inst.worm ~= nil and
+        (inst.worm.head == nil or inst.chunk.head ~= inst.worm.head) and
+        (inst.worm.tail == nil or inst.chunk.tail ~= inst.worm.tail) and
+        WORMBOSS_UTILS.ShouldDoSpikeDamage(inst.chunk)
+    then
         local x, y, z = inst.Transform:GetWorldPosition()
 
         if attacker:IsValid() and not attacker:IsInLimbo() and not (attacker.components.health ~= nil and attacker.components.health:IsDead()) and attacker.components.combat then
@@ -946,6 +959,8 @@ local function dirtfn()
     inst:SetPrefabNameOverride("worm_boss")
 
     inst:AddComponent("highlightchild")
+
+    inst.scrapbook_proxy = "worm_boss"
 
     inst.entity:SetPristine()
 

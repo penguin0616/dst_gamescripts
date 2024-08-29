@@ -566,6 +566,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "Smarter now",
 	ANNOUNCE_HOUNDS = "Woofers!",
 	ANNOUNCE_WORMS = "Wigglies are coming",
+    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
     ANNOUNCE_ACIDBATS = "Flying Claws?",
 	ANNOUNCE_HUNGRY = "Need stuff for belly",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "Prints!",

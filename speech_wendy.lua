@@ -566,6 +566,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "I have seen the void and it is deep and dark.",
 	ANNOUNCE_HOUNDS = "The hounds are baying.",
 	ANNOUNCE_WORMS = "Uh-oh. I think we should leave.",
+    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
     ANNOUNCE_ACIDBATS = "They've found us.",
 	ANNOUNCE_HUNGRY = "I am full of emptiness.",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "I sense the beast's presence nearby.",
@@ -989,13 +990,13 @@ return{
     ANNOUNCE_GATHER_MERM = "only_used_by_wurt",
 
     -- rifts 4
-    ANNOUNCE_EXIT_GELBLOB = "I saw my life flash before my eyes... yet here I am.",
-	ANNOUNCE_SHADOWTHRALL_STEALTH = "TODO",
-    ANNOUNCE_RABBITKING_AGGRESSIVE = "TODO",
-    ANNOUNCE_RABBITKING_PASSIVE = "TODO",
-    ANNOUNCE_RABBITKING_LUCKY = "TODO",
-    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "TODO",
-    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "TODO",
+    ANNOUNCE_EXIT_GELBLOB = "I don't prefer a slow death.",
+	ANNOUNCE_SHADOWTHRALL_STEALTH = "Show yourself. I've seen worse.",
+    ANNOUNCE_RABBITKING_AGGRESSIVE = "Something clawing it's way back from the grave?",
+    ANNOUNCE_RABBITKING_PASSIVE = "A gentle creature approaches.",
+    ANNOUNCE_RABBITKING_LUCKY = "That's an unusual rabbit.",
+    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "Got it!",
+    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "Not here.",
 
 	BATTLECRY =
 	{
@@ -5363,15 +5364,15 @@ return{
 			HAS_ITEM = "I don't know if it's worth it.",
 			HAS_CHARACTER = "They probably need help.",
 		},
-        RABBITKING_AGGRESSIVE = "TODO",
-        RABBITKING_PASSIVE = "TODO",
-        RABBITKING_LUCKY = "TODO",
-        RABBITKINGMINION_BUNNYMAN = "TODO",
-        ARMOR_CARROTLURE = "TODO",
-        RABBITKINGHORN = "TODO",
-        RABBITKINGHORN_CHEST = "TODO",
-        RABBITKINGSPEAR = "TODO",
-        RABBITHAT = "TODO",
+        RABBITKING_AGGRESSIVE = "It's in a foul mood.",
+        RABBITKING_PASSIVE = "He seems friendly enough.",
+        RABBITKING_LUCKY = "I should take a closer look.",
+        RABBITKINGMINION_BUNNYMAN = "You're making me angry.",
+        ARMOR_CARROTLURE = "I assume it only comes in orange.",
+        RABBITKINGHORN = "I guess it plays a type of burial song.",
+        RABBITKINGHORN_CHEST = "It's like a grave for my things.",
+        RABBITKINGSPEAR = "Death by rabbit antler. Cute.",
+        RABBITHAT = "Fine. It's adorable.",
         WORM_BOSS = "Nothing goes extinct here.",
     },
 

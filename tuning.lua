@@ -7846,6 +7846,14 @@ function Tune(overrides)
         WORM_BOSS_EAT_RANGE = 2,
         WORM_BOSS_KNOCKBACK_RANGE = 2,
 
+        SPAWN_GELBLOBS = true, -- For world settings.
+        MIN_GELBLOBS_PER_SPAWNER = 5,
+        MAX_GELBLOBS_PER_SPAWNER = 10,
+        MAX_GELBLOBS_TOTAL_IN_WORLD = 100,
+        MIN_GELBLOB_DIST_FROM_EACHOTHER = 3,
+        MAX_GELBLOB_DIST_FROM_SPAWNER = 12,
+        MIN_GELBLOB_SPAWN_DELAY = 0.25,
+        VARIANCE_GELBLOB_SPAWN_DELAY = 1,
 		GELBLOB_HEALTH = 600,
 		GELBLOB_DAMAGE = 20,
 		GELBLOB_PLANAR_DAMAGE = 20,
@@ -7882,35 +7890,35 @@ function Tune(overrides)
                 {
                     PLANAR_DAMAGE = 10,
                     CHOPPING_EFFICIENCY = 1.50,
-                    LIFE_STEAL = wilson_attack * .2,
+                    LIFE_STEAL = 0,
                     HUNGER_RATE = 0, -- Actually paused.
                 },
                 {
                     PLANAR_DAMAGE = 14,
                     CHOPPING_EFFICIENCY = 1.75,
-                    LIFE_STEAL = wilson_attack * .3,
+                    LIFE_STEAL = wilson_attack * .1,
                     HUNGER_RATE = 0.1, -- ~10.4 days.
                 },
                 {
                     PLANAR_DAMAGE = 18,
                     CHOPPING_EFFICIENCY = 2.00,
-                    LIFE_STEAL = wilson_attack * .4,
+                    LIFE_STEAL = wilson_attack * .2,
                     HUNGER_RATE = 0.2, -- ~5.2 days.
                 },
                 {
                     PLANAR_DAMAGE = 22,
                     CHOPPING_EFFICIENCY = 2.25,
-                    LIFE_STEAL = wilson_attack * .5,
+                    LIFE_STEAL = wilson_attack * .3,
                     HUNGER_RATE = 0.3, -- ~3.5 days.
                 },
             },
         },
 
-        VOIDCLOTH_BOOMERANG_ATTACK_DIST = 12,
-        VOIDCLOTH_BOOMERANG_ATTACK_DIST_MAX = 16,
-        VOIDCLOTH_BOOMERANG_USES = 150,
-        VOIDCLOTH_BOOMERANG_DAMAGE =        { min = 5, max = wilson_attack*.85 },
-        VOIDCLOTH_BOOMERANG_PLANAR_DAMAGE = { min = 5, max = wilson_attack*.85 },
+        VOIDCLOTH_BOOMERANG_ATTACK_DIST = 10,
+        VOIDCLOTH_BOOMERANG_ATTACK_DIST_MAX = 14,
+        VOIDCLOTH_BOOMERANG_USES = 85,
+        VOIDCLOTH_BOOMERANG_DAMAGE =        { min = 5, max = wilson_attack*.8 },
+        VOIDCLOTH_BOOMERANG_PLANAR_DAMAGE = { min = 5, max = wilson_attack*.8 },
         VOIDCLOTH_BOOMERANG_VS_LUNAR_BONUS = 1.25,
         VOIDCLOTH_BOOMERANG_SPEEDMULT = 1.1,
         VOIDCLOTH_BOOMERANG_PROJECTILE =
@@ -7932,7 +7940,7 @@ function Tune(overrides)
         SADDLE_SHADOW_SHADOW_RESIST = 0.9,
         SADDLE_SHADOW_VS_LUNAR_BONUS = 1.1,
 
-        ROPEBRIDGE_LENGTH_TILES = 3, -- How many tiles in a line can this make for each construction.
+        ROPEBRIDGE_LENGTH_TILES = 6, -- How many tiles in a line can this make for each construction.
         ROPEBRIDGE_HEALTH = 200,
         ROPEBRIDGE_EARTHQUAKE_DAMAGE_TAKEN = 50,
         ROPEBRIDGE_EARTHQUAKE_TIMETOBREAK = 3, -- 3 seconds is enough to run over the length in case a player is on it as it is breaking.
@@ -7954,21 +7962,24 @@ function Tune(overrides)
         RABBITKING_DAMAGE = 75,
         RABBITKING_STUN_DURATION = 5,
         RABBITKING_STOLEN_MANRABBIT_LOYALTY_TIME = 60,
+        RABBITKING_COOLDOWN = 1 * day_time,
+        RABBITKING_ABILITY_CD_POSTSTUN = 1,
         RABBITKING_ABILITY_SUMMON_CD = 60,
         RABBITKING_ABILITY_SUMMON_CD_START = 3,
         RABBITKING_ABILITY_SUMMON_COUNT = 3,
         RABBITKING_ABILITY_SUMMON_HP = 400,
-        RABBITKING_ABILITY_DROPKICK_CD = 18,
+        RABBITKING_ABILITY_SUMMON_ATTACK_PERIOD = 3,
+        RABBITKING_ABILITY_SUMMON_DAMAGE = 40,
+        RABBITKING_ABILITY_DROPKICK_CD = 12,
         RABBITKING_ABILITY_DROPKICK_CD_START = 10,
         RABBITKING_ABILITY_DROPKICK_CD_NOSUMMONS = 8,
-        RABBITKING_ABILITY_DROPKICK_CD_POSTSTUN = 1,
         RABBITKING_ABILITY_DROPKICK_SPEED = 12,
         RABBITKING_ABILITY_DROPKICK_MAXAIRTIME = 1,
         RABBITKING_ABILITY_DROPKICK_HITRADIUS = 1.5,
         RABBITKING_ABILITY_DROPKICK_KNOCKBACKRADIUS = 4,
 
         --rabbitking goodies
-        ARMOR_CARROTLURE_PERISHTIME = 3 * day_time,
+        ARMOR_CARROTLURE_PERISHTIME = 5 * day_time,
         ARMOR_CARROTLURE_RANGE = 12,
         ARMOR_CARROTLURE_MAXFOLLOWERS = 10,
         RABBITKINGHORN_RANGE = 12,
@@ -7976,7 +7987,7 @@ function Tune(overrides)
         RABBITKINGHORN_DURATION = day_time * 0.5,
         RABBITKINGSPEAR_SCARE_RADIUS = 4,
         RABBITKINGSPEAR_DAMAGE = wilson_attack * 1.5,
-        RABBITKINGSPEAR_DAMAGE_BONUS = 1.2,
+        RABBITKINGSPEAR_DAMAGE_BONUS = 1.4,
         RABBITKINGSPEAR_SANITY_DELTA = -5,
         RABBITKINGSPEAR_USES = 125,
 

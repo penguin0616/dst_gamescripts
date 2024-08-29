@@ -566,6 +566,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "Cutting edge!",
 	ANNOUNCE_HOUNDS = "Are those dogs I hear?",
 	ANNOUNCE_WORMS = "Was that a tremor?",
+    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
     ANNOUNCE_ACIDBATS = "I don't like the sound of that.",
 	ANNOUNCE_HUNGRY = "When's lunch?",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "I didn't order lunch to go. Get'em!",
@@ -993,8 +994,8 @@ return{
     -- rifts 4
     ANNOUNCE_EXIT_GELBLOB = "Let's not speak of this again.",
 	ANNOUNCE_SHADOWTHRALL_STEALTH = "Ow! Quit your skulkin' and fight me fair!",
-    ANNOUNCE_RABBITKING_AGGRESSIVE = "TODO",
-    ANNOUNCE_RABBITKING_PASSIVE = "TODO",
+    ANNOUNCE_RABBITKING_AGGRESSIVE = "What's with all that scratchin'?",
+    ANNOUNCE_RABBITKING_PASSIVE = "I hear a critter comin'.",
     ANNOUNCE_RABBITKING_LUCKY = "TODO",
     ANNOUNCE_RABBITKING_LUCKYCAUGHT = "TODO",
     ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "TODO",
@@ -5370,7 +5371,7 @@ return{
         RABBITKING_LUCKY = "TODO",
         RABBITKINGMINION_BUNNYMAN = "TODO",
         ARMOR_CARROTLURE = "TODO",
-        RABBITKINGHORN = "TODO",
+        RABBITKINGHORN = "It must play a thumpin' tune. Ugh, puns.",
         RABBITKINGHORN_CHEST = "TODO",
         RABBITKINGSPEAR = "TODO",
         RABBITHAT = "TODO",

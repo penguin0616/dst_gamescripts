@@ -1112,6 +1112,13 @@ DeconstructRecipe("terrariumchest",					{Ingredient("boards", 3)})
 DeconstructRecipe("tacklecontainer",				{Ingredient("cookiecuttershell", 2), Ingredient("rope", 1)})
 DeconstructRecipe("supertacklecontainer",			{Ingredient("cookiecuttershell", 3), Ingredient("rope", 2)})
 
+-- Rabbit King material recipes.
+DeconstructRecipe("armor_carrotlure",				{Ingredient("carrot", 8), Ingredient("rope", 3)})
+DeconstructRecipe("rabbitkinghorn",					{Ingredient("carrot", 4), Ingredient("cutreeds", 1)})
+DeconstructRecipe("rabbithat",						{Ingredient("rabbit", 1), Ingredient("cutgrass", 6)})
+-- Rabbit King drop.
+DeconstructRecipe("rabbitkingspear",				{Ingredient("beardhair", 3), Ingredient("manrabbit_tail", 1), Ingredient("rope", 1)})
+
 -- Deployed and kit item.
 DeconstructRecipe("yotb_post",						{Ingredient("boards", 2), Ingredient("goldnugget", 1)})
 DeconstructRecipe("portablecookpot",				{Ingredient("goldnugget", 2), Ingredient("charcoal", 6), Ingredient("twigs", 6)})

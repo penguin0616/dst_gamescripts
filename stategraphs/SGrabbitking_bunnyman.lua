@@ -11,7 +11,7 @@ local events = {
 	CommonHandlers.OnSink(),
     CommonHandlers.OnFallInVoid(),
     EventHandler("burrowaway", function(inst) -- Delete entity presentation.
-        if inst.sg.currentstate.name ~= "burrowaway" then 
+        if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead()) then 
             inst.sg:GoToState("burrowaway")
         end
     end),

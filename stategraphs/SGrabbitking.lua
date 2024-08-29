@@ -256,9 +256,8 @@ local states = {
         events = {
             EventHandler("animover", function(inst)
                 if inst.AnimState:AnimDone() then
-                    if not inst.components.timer:TimerExists("dropkick_cd") or inst.components.timer:GetTimeLeft("dropkick_cd") < TUNING.RABBITKING_ABILITY_DROPKICK_CD_POSTSTUN then
-                        inst.components.timer:StartTimer("dropkick_cd", TUNING.RABBITKING_ABILITY_DROPKICK_CD_POSTSTUN)
-                    end
+                    inst.components.timer:StopTimer("ability_cd")
+                    inst.components.timer:StartTimer("ability_cd", TUNING.RABBITKING_ABILITY_CD_POSTSTUN)
                     inst.sg:GoToState("idle")
                 end
             end),

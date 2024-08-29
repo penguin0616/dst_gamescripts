@@ -4694,6 +4694,11 @@ local function MakeHat(name)
         owner:RemoveTag("rabbitdisguise")
     end
     fns.rabbit_loot = {"smallmeat"}
+    fns.rabbit_oneat = function(inst)
+        if inst.components.perishable ~= nil then
+            inst.components.perishable:SetPercent(1)
+        end
+    end
 
     fns.rabbit = function()
         local inst = simple()
@@ -4717,6 +4722,9 @@ local function MakeHat(name)
         inst:AddComponent("lootdropper")
         inst.components.lootdropper:SetLoot(fns.rabbit_loot)
 
+        inst:AddComponent("eater")
+        inst.components.eater:SetDiet({ FOODTYPE.VEGGIE }, { FOODTYPE.VEGGIE })
+        inst.components.eater:SetOnEatFn(fns.rabbit_oneat)
         MakeSmallPerishableCreatureAlwaysPerishing(inst, TUNING.RABBIT_PERISH_TIME)
 
         return inst

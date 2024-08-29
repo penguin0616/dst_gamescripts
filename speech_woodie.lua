@@ -567,6 +567,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "Informative.",
 	ANNOUNCE_HOUNDS = "There's something out there.",
 	ANNOUNCE_WORMS = "Oh geez. I hope you're ready, Lucy.",
+    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
     ANNOUNCE_ACIDBATS = "You hear something, Lucy?",
 	ANNOUNCE_HUNGRY = "I'm getting peckish.",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "The beastie is nearby.",

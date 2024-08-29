@@ -1419,7 +1419,7 @@ local function TargetIsHostile(inst, target)
 end
 
 local function ValidateAttackTarget(combat, target, force_attack, x, z, has_weapon, reach)
-    if not combat:CanTarget(target) then
+	if not combat:CanTarget(target) or target:HasTag("stealth") then
         return false
     end
 
@@ -1651,15 +1651,6 @@ local function GetPickupAction(self, target, tool)
 
     if target:HasTag("quagmireharvestabletree") and not target:HasTag("fire") then
         return ACTIONS.HARVEST_TREE
-    elseif target:HasTag("grabbable") and
-        target:HasTag("mosquito") and
-        self.inst.components.skilltreeupdater ~= nil and
-        self.inst.components.skilltreeupdater:IsActivated("wurt_mosquito_craft_3") and
-        self.inst.replica.inventory ~= nil and
-        self.inst.replica.inventory:HasItemWithTag("mosquitomusk", 1)
-    then
-        -- NOTES(DiogoW): Please refactor this if more cases are added...
-        return ACTIONS.NET
     elseif target:HasTag("trapsprung") then
         return ACTIONS.CHECKTRAP
     elseif target:HasTag("minesprung") and not target:HasTag("mine_not_reusable") then
@@ -1669,7 +1660,7 @@ local function GetPickupAction(self, target, tool)
 			and ACTIONS.ACTIVATE
 			or nil
     elseif target.replica.inventoryitem ~= nil and
-        target.replica.inventoryitem:CanBePickedUp() and
+        target.replica.inventoryitem:CanBePickedUp(self.inst) and
 		not (target:HasTag("heavy") or (target:HasTag("fire") and not target:HasTag("lighter")) or target:HasTag("catchable")) and
         not target:HasTag("spider") then
         return (self:HasItemSlots() or target.replica.equippable ~= nil) and ACTIONS.PICKUP or nil
@@ -1714,7 +1705,7 @@ function PlayerController:IsDoingOrWorking()
         or self.inst:HasTag("working")
 end
 
-local TARGET_EXCLUDE_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO" }
+local TARGET_EXCLUDE_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO", "stealth" }
 local REGISTERED_CONTROLLER_ATTACK_TARGET_TAGS = TheSim:RegisterFindTags({ "_combat" }, TARGET_EXCLUDE_TAGS)
 
 local PICKUP_TARGET_EXCLUDE_TAGS = { "catchable", "mineactive", "intense", "paired" }

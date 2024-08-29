@@ -91,6 +91,26 @@ local function CLIENT_ShadowSubmissive_HostileToPlayerTest(inst, player)
 	return false
 end
 
+--------------------------------------------------------------------------------------------------------------------------------
+
+local WALK_SOUNDNAME = "WALK_SOUNDNAME"
+
+local function RuinsNightmare_OnNewState(inst, data)
+    if inst.sg:HasStateTag("moving") then
+        if not inst.SoundEmitter:PlayingSound(WALK_SOUNDNAME) then
+            inst.SoundEmitter:PlaySound("rifts4/insanity_creature3/movement", WALK_SOUNDNAME)
+        end
+
+    elseif data ~= nil and data.statename == "walk_stop" then
+        inst.SoundEmitter:KillSound(WALK_SOUNDNAME)
+        inst.SoundEmitter:PlaySound("rifts4/insanity_creature3/movement_pst")
+    else
+        inst.SoundEmitter:KillSound(WALK_SOUNDNAME)
+    end
+end
+
+--------------------------------------------------------------------------------------------------------------------------------
+
 local function MakeShadowCreature(data)
     local bank = data.bank
     local build = data.build
@@ -183,6 +203,10 @@ local function MakeShadowCreature(data)
 
         inst:AddComponent("knownlocations")
 
+        if data.master_postinit ~= nil then
+            data.master_postinit(inst, data)
+        end
+
         return inst
     end
 
@@ -224,6 +248,11 @@ local data =
         attackperiod = TUNING.RUINSNIGHTMARE_ATTACK_PERIOD,
         sanityreward = TUNING.SANITY_HUGE,
         stategraph = "SGruinsnightmare",
+        master_postinit = function(inst)
+            inst._onnewstate = RuinsNightmare_OnNewState
+
+            inst:ListenForEvent("newstate", inst._onnewstate)
+        end
     },
 }
 

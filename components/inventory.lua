@@ -55,6 +55,7 @@ local Inventory = Class(function(self, inst)
     self.isexternallyinsulated = SourceModifierList(inst, false, SourceModifierList.boolean)
 
 	-- self.noheavylifting = false
+	--self.ignorecombat = false
 
     inst:ListenForEvent("player_despawn", OnOwnerDespawned)
 

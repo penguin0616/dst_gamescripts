@@ -95,6 +95,8 @@ local function fn()
         return inst
     end
 
+    inst.scrapbook_anim = "close_idle"
+
     inst:AddComponent("inspectable")
 
     inst.components.container_proxy:SetOnOpenFn(OnOpen)

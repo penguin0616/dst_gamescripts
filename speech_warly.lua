@@ -566,6 +566,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "My brain is tingling!",
 	ANNOUNCE_HOUNDS = "I recognize that sound. Hunger.",
 	ANNOUNCE_WORMS = "Huh? What's that?",
+    ANNOUNCE_WORMS_BOSS = "I don't like the sound of that.",
     ANNOUNCE_ACIDBATS = "That sound turns my stomach.",
 	ANNOUNCE_HUNGRY = "I need food...",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "Game is close at hand...",

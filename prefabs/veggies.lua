@@ -549,6 +549,12 @@ local function MakeVeggie(name, has_seeds)
         inst.components.perishable:StartPerishing()
         inst.components.perishable.onperishreplacement = "spoiled_food"
 
+        if name == "carrot" then
+            inst:AddComponent("repairer")
+            inst.components.repairer.repairmaterial = MATERIALS.CARROT
+            inst.components.repairer.perishrepairpercent = 0.25
+        end
+
         inst:AddComponent("stackable")
         if name ~= "pumpkin" and
             name ~= "eggplant" and

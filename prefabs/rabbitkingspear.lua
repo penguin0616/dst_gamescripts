@@ -53,6 +53,7 @@ local function fn()
     inst.AnimState:SetBuild("rabbitkingspear")
     inst.AnimState:PlayAnimation("idle")
 
+    inst:AddTag("shadow_item")
     inst:AddTag("sharp")
     inst:AddTag("manrabbitscarer")
 
@@ -70,6 +71,9 @@ local function fn()
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst.scrapbook_specialinfo = "RABBITKINGSPEAR"
+    inst.scrapbook_weapondamage = { TUNING.RABBITKINGSPEAR_DAMAGE, TUNING.RABBITKINGSPEAR_DAMAGE * TUNING.RABBITKINGSPEAR_DAMAGE_BONUS }
 
     inst:AddComponent("weapon")
     inst.components.weapon:SetDamage(DamageCalculator)

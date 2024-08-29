@@ -23,14 +23,15 @@ local function initiate_mimicry(inst, mimicable_entity)
         inst._mimicry_queued = true
         local clear_mimicry_queued = function() inst._mimicry_queued = false end
         action:AddSuccessAction(clear_mimicry_queued)
-        action:AddFailAction(clear_mimicry_queued)
         inst:DoTaskInTime(20, clear_mimicry_queued)
+        action:AddFailAction(function()
+            clear_mimicry_queued(inst)
+            inst:PushEvent("eye_down")
+        end)
         inst.components.locomotor:PushAction(action)
     end
 
-    inst:PushEvent("eye_down")
-
-    inst.components.timer:StartTimer("mimic_blocker", 3 * TUNING.SEG_TIME)
+    inst.components.timer:StartTimer("mimic_blocker", 0.5 * TUNING.SEG_TIME)
 
     inst._try_mimic_task:Cancel()
     inst._try_mimic_task = nil

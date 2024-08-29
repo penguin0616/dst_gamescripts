@@ -1815,6 +1815,7 @@ MATERIALS =
     GEARS = "gears",
     MOONROCK = "moonrock",
     ICE = "ice",
+    CARROT = "carrot",
     SCULPTURE = "sculpture",
     FOSSIL = "fossil",
     MOON_ALTAR = "moon_altar",
@@ -2763,4 +2764,9 @@ CHARLIERESIDUE_MAP_ACTIONS = {
 -- Constants to reduce network overhead.
 CLIENTAUTHORITATIVESETTINGS = {
     PLATFORMHOPDELAY = 0,
+}
+
+NIGHTSWORD_FX_OFFSETS = {
+    RIGHT = -1,
+    DOWN = 2.6,
 }

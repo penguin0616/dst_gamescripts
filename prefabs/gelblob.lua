@@ -8,6 +8,7 @@ local prefabs =
 	"gelblob_back_fx",
 	"gelblob_attach_fx",
 	"gelblob_small_fx",
+	"gelblob_item_fx",
 }
 
 SetSharedLootTable("gelblob",
@@ -30,8 +31,7 @@ local HEALTH_SEGS_PER_SIZE = LEVELS_PER_SIZE - 1
 local NUM_LEVELS = NUM_SIZES * LEVELS_PER_SIZE
 local NUM_HEALTH_SEGS = NUM_SIZES * HEALTH_SEGS_PER_SIZE
 
-local PROXIMITY_TAGS = { "locomotor" }
-local PROXIMITY_CANT_TAGS = { "INLIMBO", "flight", "invisible", "notarget", "noattack", "ghost", "playerghost", "shadowthrall", "shadow", "shadowcreature", "shadowminion", "shadowchesspiece" }
+local REGISTERED_PROXIMITY_TAGS = rawget(_G, "TheSim") and TheSim:RegisterFindTags({ "locomotor" }, { "INLIMBO", "flight", "invisible", "notarget", "noattack", "ghost", "playerghost", "shadowthrall", "shadow", "shadowcreature", "shadowminion", "shadowchesspiece" }) or {}
 local PHYSICS_PADDING = 3
 local NEAR_RADIUS = 3
 
@@ -56,7 +56,7 @@ local function OnUpdateProximity(inst, fast)
 	local uncontacted = false
 
 	local x, y, z = inst.Transform:GetWorldPosition()
-	for i, v in ipairs(TheSim:FindEntities(x, y, z, NEAR_RADIUS + PHYSICS_PADDING, PROXIMITY_TAGS, PROXIMITY_CANT_TAGS)) do
+	for i, v in ipairs(TheSim:FindEntities_Registered(x, y, z, NEAR_RADIUS + PHYSICS_PADDING, REGISTERED_PROXIMITY_TAGS)) do
 		local dsq = v:GetDistanceSqToPoint(x, y, z)
 
 		if inst._suspend_radius and
@@ -117,23 +117,49 @@ local function OnContactChanged(inst, contacted, uncontacted)
 	end
 end
 
+local function CollectEquip(item, inst, ret)
+	if not (	item.components.equippable:ShouldPreventUnequipping() or
+				item.components.equippable:IsRestricted(inst) or
+				item:HasTag("nosteal") or
+				(item.components.equippable.equipslot == EQUIPSLOTS.HANDS and inst._suspendedplayer:HasTag("stronggrip"))
+			)
+	then
+		table.insert(ret, item)
+	end
+end
+
+local function StealSuspendedEquip(inst)
+	local inventory = inst._suspendedplayer and inst._suspendedplayer:IsValid() and inst._suspendedplayer.components.inventory or nil
+	if inventory then
+		local ret = {}
+		inventory:ForEachEquipment(CollectEquip, inst, ret)
+		if #ret > 0 then
+			local item = ret[math.random(#ret)]
+			inventory:Unequip(item.components.equippable.equipslot)
+			inst.components.inventory:Equip(item)
+		end
+	end
+end
+
 local function ReleaseSuspended(inst, explode)
 	if inst._suspendedtask then
 		inst._suspendedtask:Cancel()
 		inst._suspendedtask = nil
 	end
+	inst._digestcount = nil
 	if inst._suspendedplayer then
-		if inst._suspendedplayer:IsValid() then
-			inst._suspendedplayer:PushEvent("spitout", { spitter = inst, radius = 1, strengthmult = 0.6, rot = math.random() * 360 })
+		local player = inst._suspendedplayer
+		inst._suspendedplayer = nil
+		if player:IsValid() then
+			player:PushEvent("spitout", { spitter = inst, radius = 1, strengthmult = 0.6, rot = math.random() * 360 })
 			if explode then
 				inst.components.health:SetMaxDamageTakenPerHit(nil)
 				inst.components.health:DoDelta(-0.5 * TUNING.GELBLOB_HEALTH)
 				inst.components.health:SetMaxDamageTakenPerHit(TUNING.GELBLOB_HEALTH / NUM_SIZES)
+				inst.SoundEmitter:PlaySound("rifts4/goop/spit_out")
 			end
 		end
-		inst._suspendedplayer = nil
 	end
-	inst._digestcount = nil
 end
 
 local function IsSuspending(inst, target)
@@ -159,6 +185,7 @@ end
 
 local function OnUpdateSuspended2(inst)
 	DoDigest(inst, inst._suspendedplayer, true)
+	StealSuspendedEquip(inst)
 	ReleaseSuspended(inst, true)
 end
 
@@ -180,16 +207,19 @@ local function OnPlayerSuspended(inst, player)
 		IsSuspending(inst, player) and
 		not inst.components.health:IsDead()
 	then
+		inst.components.inventory:DropEverything()
 		ReleaseSuspended(inst, false)
 		inst._digestcount = 0
 		inst._suspendedplayer = player
 		inst._suspendedtask = inst:DoPeriodicTask(0.5, OnUpdateSuspended, 1)
 		inst.sg:HandleEvent("jiggle")
+		inst.SoundEmitter:PlaySound("rifts4/goop/absorb")
 	end
 end
 
 local function OnSuspendedPlayerDied(inst, player)
 	if inst._suspendedplayer == player then
+		StealSuspendedEquip(inst)
 		ReleaseSuspended(inst, true)
 	end
 end
@@ -204,7 +234,14 @@ local function OnDeath(inst)
 		v:KillFX()
 		inst._targets[k] = nil
 	end
+	inst.components.inventory:DropEverything()
 	inst.components.lootdropper:DropLoot()
+	if inst:IsAsleep() then
+		inst:Remove()
+	else
+		inst:AddTag("NOCLICK")
+		inst.persists = false
+	end
 end
 
 local function OnEntityWake(inst)
@@ -258,6 +295,7 @@ local function OnHealthDelta(inst, data)
 			elseif newlevel <= LEVELS_PER_SIZE * 2 then
 				if inst.level > LEVELS_PER_SIZE * 2 then
 					sizechanged = true
+					StealSuspendedEquip(inst)
 					ReleaseSuspended(inst, false)
 					inst.sg:GoToState("shrink_med")
 				end
@@ -323,6 +361,38 @@ local function OnLoad(inst, data)--, ents)
 	end
 end
 
+local function SuspendItem(inst, item)
+	ReleaseSuspended(inst, false)
+	inst.components.inventory:DropEverything()
+	inst.components.inventory:Equip(item)
+end
+
+local function OnEquip(inst, data)
+	if data and data.eslot == EQUIPSLOTS.HANDS then
+		inst.AnimState:ShowSymbol("swap_object")
+	end
+end
+
+--Hand objects don't clear override symbol when unequipped
+local function OnUnequip(inst, data)
+	if data and data.eslot == EQUIPSLOTS.HANDS then
+		inst.AnimState:HideSymbol("swap_object")
+	end
+end
+
+local ITEM_SPLASH_DIST = 2
+local function OnDropItem(inst, data)
+	if data and data.item and data.item:IsValid() and
+		data.item.components.inventoryitem and
+		not data.item.components.inventoryitem.is_landed
+	then
+		local fx = SpawnPrefab("gelblob_item_fx")
+		fx.entity:SetParent(data.item.entity)
+		fx:ListenForEvent("on_landed", function(item) fx:KillFX() end, data.item)
+		fx:ListenForEvent("onputininventory", function(item) fx:Remove() end, data.item)
+	end
+end
+
 local function fn()
 	local inst = CreateEntity()
 
@@ -338,6 +408,8 @@ local function fn()
 
 	inst:AddTag("blocker")
 	inst:AddTag("shadow_aligned")
+	inst:AddTag("stronggrip")
+	inst:AddTag("equipmentmodel")
 
 	inst.AnimState:SetBank("gelblob")
 	inst.AnimState:SetBuild("gelblob")
@@ -352,6 +424,8 @@ local function fn()
 	if not TheWorld.ismastersim then
 		return inst
 	end
+
+	inst.scrapbook_anim = "idle_big"
 
 	inst.size = "_big"
 	inst.level = NUM_LEVELS
@@ -370,6 +444,7 @@ local function fn()
 	inst:AddComponent("health")
 	inst.components.health:SetMaxHealth(TUNING.GELBLOB_HEALTH)
 	inst.components.health:SetMaxDamageTakenPerHit(TUNING.GELBLOB_HEALTH / NUM_SIZES)
+	inst.components.health.nofadeout = true
 	inst:ListenForEvent("healthdelta", OnHealthDelta)
 
 	inst:AddComponent("combat")
@@ -382,12 +457,19 @@ local function fn()
 
 	inst:AddComponent("inspectable")
 
+	inst:AddComponent("inventory")
+	inst.components.inventory.maxslots = 0
+	inst.components.inventory.ignorecombat = true
+
 	inst:AddComponent("lootdropper")
 	inst.components.lootdropper:SetChanceLootTable("gelblob")
 
 	inst:SetStateGraph("SGgelblob")
 	inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1)
 
+	inst:ListenForEvent("equip", OnEquip)
+	inst:ListenForEvent("unequip", OnUnequip)
+	inst:ListenForEvent("dropitem", OnDropItem)
 	inst:ListenForEvent("playersuspended", OnPlayerSuspended)
 	inst:ListenForEvent("suspendedplayerdied", OnSuspendedPlayerDied)
 	inst:ListenForEvent("death", OnDeath)
@@ -395,6 +477,7 @@ local function fn()
 	inst.OnSpawnLanded = OnSpawnLanded
 	inst.Absorb = Absorb
 	inst.OnContactChanged = OnContactChanged
+	inst.SuspendItem = SuspendItem
 	inst.OnEntityWake = OnEntityWake
 	inst.OnEntitySleep = OnEntitySleep
 	inst.OnRemoveEntity = OnRemoveEntity
@@ -496,6 +579,9 @@ local function Small_OnEntityWake(inst)
 		if inst._returntask == nil then
 			inst._returntask = inst:DoPeriodicTask(0.2, OnUpdateReturning)
 		end
+		if not inst.SoundEmitter:PlayingSound("loop") then
+			inst.SoundEmitter:PlaySound("rifts4/goop/minion_blob_wobble_lp", "loop")
+		end
 	end
 end
 
@@ -505,6 +591,7 @@ local function Small_OnEntitySleep(inst)
 		inst._returntask:Cancel()
 		inst._returntask = nil
 	end
+	inst.SoundEmitter:KillSound("loop")
 end
 
 local function OnTossLanded(inst)
@@ -512,6 +599,7 @@ local function OnTossLanded(inst)
 	inst.Physics:SetMotorVel(0, 0, 0)
 	inst.Physics:Stop()
 	if not inst:IsAsleep() then
+		inst.SoundEmitter:PlaySound("rifts4/goop/minion_blob_land")
 		Small_OnEntityWake(inst)
 	end
 end
@@ -525,6 +613,11 @@ local function Toss(inst, dist, angle)
 		inst._proximitytask:Cancel()
 		inst._proximitytask = nil
 	end
+	if inst._returntask then
+		inst._returntask:Cancel()
+		inst._returntask = nil
+	end
+	inst.SoundEmitter:KillSound("loop")
 end
 
 local function smallfn()
@@ -533,6 +626,7 @@ local function smallfn()
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
 	inst.entity:AddDynamicShadow()
+	inst.entity:AddSoundEmitter()
 	inst.entity:AddNetwork()
 
 	inst.DynamicShadow:SetSize(2, 1.5)
@@ -579,6 +673,69 @@ end
 
 --------------------------------------------------------------------------
 
+local function item_KillFX(inst)
+	if inst:IsAsleep() then
+		inst:Remove()
+		return
+	end
+
+	local x, y, z = inst.Transform:GetWorldPosition()
+	inst.entity:SetParent(nil)
+	inst.Transform:SetPosition(x, 0, z)
+	inst.AnimState:PlayAnimation("splash_impact")
+	inst:ListenForEvent("animover", inst.Remove)
+	inst.OnEntitySleep = inst.Remove
+end
+
+local function itemfn()
+	local inst = CreateEntity()
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddNetwork()
+
+	inst:AddTag("FX")
+	inst:AddTag("NOCLICK")
+
+	inst.AnimState:SetBank("gelblob")
+	inst.AnimState:SetBuild("gelblob")
+	inst.AnimState:PlayAnimation("splash_loop", true)
+	inst.AnimState:SetFinalOffset(2)
+
+	inst.entity:SetPristine()
+
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	inst.persists = false
+
+	inst.KillFX = item_KillFX
+
+	return inst
+end
+
+--------------------------------------------------------------------------
+
+local function spawnerfn()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    --[[Non-networked entity]]
+
+    inst:AddTag("gelblobspawningground")
+    inst:AddTag("NOBLOCK")
+    inst:AddTag("NOCLICK")
+
+    TheWorld:PushEvent("ms_registergelblobspawningground", inst)
+
+    return inst
+end
+
+--------------------------------------------------------------------------
+
 return Prefab("gelblob", fn, assets, prefabs),
 	Prefab("gelblob_back_fx", backfn, assets),
-	Prefab("gelblob_small_fx", smallfn, assets)
+	Prefab("gelblob_small_fx", smallfn, assets),
+	Prefab("gelblob_item_fx", itemfn, assets),
+    Prefab("gelblobspawningground", spawnerfn)

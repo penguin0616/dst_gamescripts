@@ -26,7 +26,7 @@ local events=
 
     EventHandler("attacked", function(inst)
         if not inst.sg:HasStateTag("busy") then
-           -- inst.sg:GoToState("hit")
+            inst.sg:GoToState("hit")
         end
     end),
 }
@@ -75,7 +75,7 @@ local states =
     State{
 
         name = "spit",
-        tags = {"idle", "canrotate", "busy"},
+        tags = {"canrotate", "busy"},
         onenter = function(inst, playanim)
             inst.AnimState:PlayAnimation("tail_spit")
             inst.SoundEmitter:PlaySound("rifts4/worm_boss/spit_butt")
@@ -97,6 +97,22 @@ local states =
             EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
         },
     },
+
+    State{
+
+        name = "hit",
+        tags = {"canrotate", "busy"},
+        
+        onenter = function(inst, playanim)
+            inst.AnimState:PlayAnimation("tail_hit")
+        end,
+
+        events=
+        {
+            EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
+        },
+    },
+
 
     State{
 

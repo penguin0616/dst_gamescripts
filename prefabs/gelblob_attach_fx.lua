@@ -246,6 +246,7 @@ end
 
 local function SetupBlob(inst, mainblob, target)
 	inst.entity:SetParent(target.entity)
+	target:AddTag("gelblobbed")
 	if target.isplayer then
 		local function _refreshdebuff(target) RefreshPlayerDebuff(inst, target) end
 		inst:ListenForEvent("mounted", _refreshdebuff, target)
@@ -271,7 +272,11 @@ local function KillFX(inst)
 	OnKilledDirty(inst)
 
 	local x, y, z = inst.Transform:GetWorldPosition()
-	inst.entity:SetParent(nil)
+	local parent = inst.entity:GetParent()
+	if parent then
+		parent:RemoveTag("gelblobbed")
+		inst.entity:SetParent(nil)
+	end
 	inst.Transform:SetPosition(x, y, z)
 	inst.AnimState:PlayAnimation("splash")
 	inst:ListenForEvent("animover", inst.Remove)
@@ -287,6 +292,10 @@ end
 
 local function OnRemoveEntity_Server(inst)
 	OnRemoveEntity_Client(inst)
+	local parent = inst.entity:GetParent()
+	if parent then
+		parent:RemoveTag("gelblobbed")
+	end
 	if inst.connector1 then
 		inst.connector1:Remove()
 		inst.connector1 = nil

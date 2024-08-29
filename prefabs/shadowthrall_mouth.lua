@@ -41,7 +41,7 @@ local function OnNewState(inst)
 			inst.AnimState:SetLightOverride(1)
 			inst.DynamicShadow:Enable(false)
 			RemovePhysicsColliders(inst)
-			inst.components.health:SetInvincible(true)
+			inst:AddTag("stealth")
 			inst.components.combat.battlecryenabled = false
 			inst.components.combat:SetAttackPeriod(TUNING.SHADOWTHRALL_MOUTH_STEALTH_ATTACK_PERIOD)
 			inst.components.combat:SetRange(TUNING.SHADOWTHRALL_MOUTH_STEALTH_ATTACK_RANGE)
@@ -52,7 +52,7 @@ local function OnNewState(inst)
 		inst.AnimState:SetLightOverride(0)
 		inst.DynamicShadow:Enable(true)
 		ChangeToCharacterPhysics(inst)
-		inst.components.health:SetInvincible(false)
+		inst:RemoveTag("stealth")
 		inst.components.combat.battlecryenabled = true
 		inst.components.combat:SetAttackPeriod(TUNING.SHADOWTHRALL_MOUTH_ATTACK_PERIOD)
 		inst.components.combat:SetRange(TUNING.SHADOWTHRALL_MOUTH_ATTACK_RANGE)
@@ -104,6 +104,11 @@ local function OnRemoveEntity(inst)
 	ClearStealthBiteTarget(inst)
 end
 
+--Runs on clients
+local function CanMouseThrough(inst)
+	return inst:HasTag("stealth"), true
+end
+
 local function fn()
 	local inst = CreateEntity()
 
@@ -127,8 +132,8 @@ local function fn()
 	inst.AnimState:SetBank("shadow_thrall_mouth")
 	inst.AnimState:SetBuild("shadow_thrall_mouth")
 	inst.AnimState:PlayAnimation("idle", true)
-	inst.scrapbook_anim ="scrapbook"
 
+	inst.CanMouseThrough = CanMouseThrough
 	inst.displaynamefn = DisplayNameFn
 
 	inst.entity:SetPristine()

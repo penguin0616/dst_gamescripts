@@ -272,6 +272,10 @@ local function fn()
         return inst
     end
 
+    inst.scrapbook_weaponrange  = TUNING.VOIDCLOTH_BOOMERANG_ATTACK_DIST_MAX
+    inst.scrapbook_weapondamage = { TUNING.VOIDCLOTH_BOOMERANG_DAMAGE.min, TUNING.VOIDCLOTH_BOOMERANG_DAMAGE.max }
+    inst.scrapbook_planardamage = { TUNING.VOIDCLOTH_BOOMERANG_PLANAR_DAMAGE.min, TUNING.VOIDCLOTH_BOOMERANG_PLANAR_DAMAGE.max }
+
     inst._projectiles = {}
     inst.max_projectiles = TUNING.VOIDCLOTH_BOOMERANG_PROJECTILE.MAX_ACTIVE
 
@@ -379,7 +383,6 @@ end
 
 local function Projectile_OnUpdateFn(inst, dt)
     local scalingdata = inst.scalingdata or {}
-    local boomerang = inst._boomerang ~= nil and inst._boomerang:IsValid() and inst._boomerang or nil
 
     if inst._returntarget == nil then
         -- Do nothing!
@@ -431,25 +434,22 @@ local function Projectile_OnUpdateFn(inst, dt)
         inst.AnimState:SetScale(inst.scale, inst.scale)
 
         local damage_scale = Remap(inst.scale, PROJECTILE_MIN_SIZE, PROJECTILE_MAX_SIZE, 0, 1)
-        local bonus_mult = boomerang ~= nil and boomerang._bonusenabled and TUNING.WEAPONS_VOIDCLOTH_SETBONUS_DAMAGE_MULT or 1
+        local bonus_mult = inst._bonusenabled and TUNING.WEAPONS_VOIDCLOTH_SETBONUS_DAMAGE_MULT or 1
 
         inst.components.weapon:SetDamage(bonus_mult * Lerp(TUNING.VOIDCLOTH_BOOMERANG_DAMAGE.min, TUNING.VOIDCLOTH_BOOMERANG_DAMAGE.max, damage_scale))
         inst.components.planardamage:SetBaseDamage(Lerp(TUNING.VOIDCLOTH_BOOMERANG_PLANAR_DAMAGE.min, TUNING.VOIDCLOTH_BOOMERANG_PLANAR_DAMAGE.max, damage_scale))
     end
-
-    if boomerang ~= nil then
-        if boomerang._bonusenabled then
-            inst.components.planardamage:AddBonus(inst, TUNING.WEAPONS_VOIDCLOTH_SETBONUS_PLANAR_DAMAGE, "setbonus")
-        else
-            inst.components.planardamage:RemoveBonus(inst, "setbonus")
-        end
-    end
 end
 
 local function Projectile_OnThrown(inst, owner, target, attacker)
-    --inst.SoundEmitter:PlaySound("rifts4/voidcloth_boomerang/throw_lp") -- FIXME(DiogoW): It nevers stops playing?
+    inst.SoundEmitter:PlaySound("rifts4/voidcloth_boomerang/throw_lp", "loop")
 
     inst._boomerang = owner
+    inst._bonusenabled = owner ~= nil and owner._bonusenabled
+
+    if inst._bonusenabled then
+        inst.components.planardamage:AddBonus(inst, TUNING.WEAPONS_VOIDCLOTH_SETBONUS_PLANAR_DAMAGE, "setbonus")
+    end
 
     if owner ~= nil and owner.components.weapon ~= nil then
         owner.components.weapon:OnAttack(attacker, target, inst)
@@ -459,7 +459,6 @@ local function Projectile_OnThrown(inst, owner, target, attacker)
         owner:OnProjectileCountChanged()
     end
 
-    -- TODO(DiogoW): Improve this!
     if attacker ~= nil and attacker:IsValid() then
         local fx = SpawnPrefab("voidcloth_boomerang_launch_fx")
 

@@ -57,7 +57,7 @@ local function PlayExtendedSound(inst, soundname)
 
     inst.sg.mem.soundcache[inst.sg.mem.soundid] = true
 
-    inst.SoundEmitter:PlaySound(inst.sounds[soundname], "sound_"..tostring(inst.sg.mem.soundid))
+    inst.SoundEmitter:PlaySound("rifts4/insanity_creature3/"..soundname, "sound_"..tostring(inst.sg.mem.soundid))
 
     inst:DoTaskInTime(5, FinishExtendedSound, inst.sg.mem.soundid)
 end
@@ -229,7 +229,7 @@ local states =
 
     State{
         name = "horn_attack",
-        tags = { "busy" },
+        tags = { "busy", "hit" },
 
         onenter = function(inst, target)
             inst.Physics:Stop()
@@ -305,7 +305,7 @@ local states =
             inst.AnimState:PlayAnimation("disappear")
             inst.Physics:Stop()
 
-            PlayExtendedSound(inst, "death")
+            PlayExtendedSound(inst, "die")
 
             inst:AddTag("NOCLICK")
             inst.persists = false

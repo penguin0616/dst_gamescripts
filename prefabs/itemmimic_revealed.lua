@@ -105,6 +105,9 @@ local function fn()
 		return inst
 	end
 
+    inst.scrapbook_anim = "eye_idle"
+    inst.scrapbook_inspectonseen = true
+
     --
     local health = inst:AddComponent("health")
     health:SetMaxHealth(TUNING.SHADOW_LEECH_HEALTH)
@@ -166,11 +169,11 @@ local function InitializeShadowEnvelopes()
         {
             { 0.00, { 1, 1, 1, 1.0 } },
             { 0.50, { 1, 1, 1, 0.9 } },
-            { 1.00, { 1, 1, 1, 0.3 } },
+            { 1.00, { 1, 1, 1, 0.5 } },
         }
     )
 
-    local max_scale = 1
+    local max_scale = 1.5
     EnvelopeManager:AddVector2Envelope(
         SHADOW_SCALE_ENVELOPE_NAME,
         {
@@ -183,7 +186,6 @@ local function InitializeShadowEnvelopes()
 end
 
 local MAX_LIFETIME = 15
-local GROUND_HEIGHT = 0
 local EMITTER_RADIUS = 1.0
 
 local function shadow_fn()

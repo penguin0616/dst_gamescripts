@@ -1,7 +1,19 @@
+local SHAKE_TEXT_LISTS =
+{
+    starving_l2 = true,
+    starving_l3 = true,
+    starving_l4 = true,
+}
+
 local STRING_LISTS = {}
+local SHAKE_TEXT = {}
 
 for k, v in pairs(STRINGS.SHADOW_BATTLEAXE_TALK) do
     table.insert(STRING_LISTS, v)
+
+    if SHAKE_TEXT_LISTS[k] then
+        SHAKE_TEXT[v] = true
+    end
 end
 
 local STRING_LIST_IDS = table.invert(STRING_LISTS)
@@ -15,6 +27,7 @@ local TALK_SOUNDS =
 }
 
 local TALK_SOUND_IDS = table.invert(TALK_SOUNDS)
+
 
 --------------------------------------------------------------------------
 -- Common interface
@@ -31,7 +44,7 @@ local function OnSayDirty(inst)
 
         if string ~= nil then
             local duration = math.max(3, #string/10)
-            inst._parent.components.talker:Say(string, duration, nil, nil, true)
+            inst._parent.components.talker:Say(string, duration, SHAKE_TEXT[list] ~= nil, nil, true)
         end
     end
 end

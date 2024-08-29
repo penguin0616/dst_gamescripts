@@ -566,6 +566,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "Head feels so full of smarts, florp!",
 	ANNOUNCE_HOUNDS = "Glurp... doggies coming...",
 	ANNOUNCE_WORMS = "Glurt?",
+    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
     ANNOUNCE_ACIDBATS = "Don't like.",
 	ANNOUNCE_HUNGRY = "Want food!",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "Where these footprints go?",

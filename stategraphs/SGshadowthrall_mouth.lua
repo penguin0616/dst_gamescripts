@@ -50,7 +50,15 @@ local events =
 			end
 		end
 	end),
-	CommonHandlers.OnAttacked(),
+	EventHandler("attacked", function(inst, data)
+		if not inst.components.health:IsDead() then
+			if inst.sg:HasStateTag("stealth") then
+				inst.sg:GoToState("stealth_hit")
+			elseif not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("caninterrupt") then
+				inst.sg:GoToState("hit")
+			end
+		end
+	end),
 	CommonHandlers.OnDeath(),
 }
 
@@ -391,18 +399,28 @@ local states =
 
 						local target = inst.sg.statemem.target
 						if target and target:IsValid() then
-							local spacing = target:GetPhysicsRadius(0) + 2 + inst:GetPhysicsRadius(0)
-							if dx ~= 0 or dz ~= 0 then
-								local normalizetospacing = spacing / math.sqrt(dx * dx + dz * dz)
-								pos.x = pos.x + normalizetospacing * dx
-								pos.z = pos.z + normalizetospacing * dz
-								inst.Transform:SetRotation(math.atan2(-dz, dx) * RADIANS)
-							else
-								local theta = inst.Transform:GetRotation() * DEGREES
-								pos.x = pos.x + math.cos(theta) * spacing
-								pos.z = pos.z - math.sin(theta) * spacing
+							local minspacing = inst:GetPhysicsRadius(0) + target:GetPhysicsRadius(0)
+							for gap = 2, 0, -1 do
+								local spacing = minspacing + gap
+								local x1, z1
+								if dx ~= 0 or dz ~= 0 then
+									local normalizetospacing = spacing / math.sqrt(dx * dx + dz * dz)
+									x1 = pos.x + normalizetospacing * dx
+									z1 = pos.z + normalizetospacing * dz
+								else
+									local theta = inst.Transform:GetRotation() * DEGREES
+									x1 = pos.x + math.cos(theta) * spacing
+									z1 = pos.z - math.sin(theta) * spacing
+								end
+								if TheWorld.Map:IsAboveGroundAtPoint(x1, 0, z1) and
+									TheWorld.Pathfinder:IsClear(x1, 0, z1, pos.x, 0, pos.z, { ignorecreep = true })
+								then
+									pos.x, pos.z = x1, z1
+									break
+								end
 							end
-						else
+						end
+						if dx ~= 0 or dz ~= 0 then
 							inst.Transform:SetRotation(math.atan2(-dz, dx) * RADIANS)
 						end
 
@@ -692,7 +710,7 @@ local states =
 
 	State{
 		name = "stealth_idle",
-		tags = { "stealth", "idle", "canrotate", "invisible", "noattack" },
+		tags = { "stealth", "idle", "canrotate" },
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
@@ -708,7 +726,7 @@ local states =
 
 	State{
 		name = "stealth_move",
-		tags = { "stealth", "moving", "canrotate", "invisible", "noattack" },
+		tags = { "stealth", "moving", "canrotate" },
 
 		onenter = function(inst)
 			inst:Hide()
@@ -724,7 +742,7 @@ local states =
 
 	State{
 		name = "stealth_smile",
-		tags = { "stealth", "busy", "invisible", "noattack", "jumping" },
+		tags = { "stealth", "busy" },
 
 		onenter = function(inst, target)
 			inst.components.locomotor:Stop()
@@ -771,7 +789,7 @@ local states =
 
 	State{
 		name = "stealth_bite",
-		tags = { "stealth", "attack", "busy", "invisible", "noattack" },
+		tags = { "stealth", "attack", "busy" },
 
 		onenter = function(inst, data)
 			inst.components.locomotor:Stop()
@@ -818,7 +836,7 @@ local states =
 
 	State{
 		name = "stealth_pst",
-		tags = { "stealth", "busy", "invisible", "noattack" },
+		tags = { "stealth", "busy" },
 
 		onenter = function(inst, data)
 			inst.components.locomotor:Stop()
@@ -845,6 +863,52 @@ local states =
 			inst.Physics:Stop()
 			inst:ClearStealthBiteTarget()
 		end,
+	},
+
+	State{
+		name = "stealth_on",
+		tags = { "stealth", "busy" },
+
+		onenter = function(inst)
+			inst.components.locomotor:Stop()
+			inst.AnimState:PlayAnimation("stealth_on")
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("stealth_pst")
+				end
+			end),
+		},
+	},
+
+	State{
+		name = "stealth_hit",
+		tags = { "hit", "busy" },
+
+		onenter = function(inst)
+			inst.components.locomotor:Stop()
+			inst.AnimState:PlayAnimation("stealth_off")
+			inst.SoundEmitter:PlaySound("rifts2/thrall_generic/vocalization_hit")
+		end,
+
+		timeline =
+		{
+			--[[FrameEvent(9, function(inst)
+				inst.sg:RemoveStateTag("busy")
+			end),]]
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
 	},
 }
 

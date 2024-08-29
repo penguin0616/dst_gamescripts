@@ -576,6 +576,7 @@ return {
 	ANNOUNCE_HIGHRESEARCH = "I feel so smart now!",
 	ANNOUNCE_HOUNDS = "Did you hear that?",
 	ANNOUNCE_WORMS = "Did you feel that?",
+    ANNOUNCE_WORMS_BOSS = "That sounds ominous?", --[[TODO]]
     ANNOUNCE_ACIDBATS = "Did you hear that?",
 	ANNOUNCE_HUNGRY = "I'm so hungry!",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "This track is fresh. The beast must be nearby.",
@@ -996,7 +997,7 @@ return {
 
     -- rifts 4
     ANNOUNCE_EXIT_GELBLOB = "I felt it digesting me.",
-	ANNOUNCE_SHADOWTHRALL_STEALTH = "Something bit me! Where'd it go?!",
+	ANNOUNCE_SHADOWTHRALL_STEALTH = "Something bit me! Where did it go?!",
     ANNOUNCE_RABBITKING_AGGRESSIVE = "Something is clawing its way to the surface.",
     ANNOUNCE_RABBITKING_PASSIVE = "Something is softly scuffling underground.",
     ANNOUNCE_RABBITKING_LUCKY = "What a strange rabbit!",
@@ -5371,7 +5372,7 @@ return {
 		},
         RABBITKING_AGGRESSIVE = "It has a hare-trigger temper!",
         RABBITKING_PASSIVE = "All hail the bun-evolent one!",
-        RABBITKING_LUCKY = "I should catch it for science!",
+        RABBITKING_LUCKY = "I should capture it for science!",
         RABBITKINGMINION_BUNNYMAN = "They're hoppin' mad!",
         ARMOR_CARROTLURE = "I like a tight-knit bunch.",
         RABBITKINGHORN = "The rabbits dig music.",

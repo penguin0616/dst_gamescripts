@@ -14,7 +14,7 @@ local events =
 
 local actionhandlers =
 {
-	ActionHandler(ACTIONS.NUZZLE, "try_mimic"),
+	ActionHandler(ACTIONS.NUZZLE, "try_mimic_pre"),
 }
 
 local states =
@@ -25,7 +25,6 @@ local states =
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
-			inst.AnimState:PlayAnimation("empty")
 		end,
 	},
 
@@ -81,11 +80,27 @@ local states =
 	},
 
 	State {
+		name = "try_mimic_pre",
+		tags = {"busy", "jumping"},
+
+		onenter = function(inst)
+			inst.components.locomotor:Stop()
+			inst.AnimState:PlayAnimation("eye_disappear")
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				inst.sg:GoToState("try_mimic")
+			end),
+		},
+	},
+
+	State {
 		name = "try_mimic",
 		tags = { "busy", "jumping" },
 
 		onenter = function(inst)
-			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("jump")
 
 			inst._toggle_tail_event:push()

@@ -109,7 +109,7 @@ end
 local function displaynamefn(inst)
     return (inst:HasTag("noattack")
         and not inst:HasTag("INLIMBO")
-        and not (inst.replica.inventoryitem ~= nil and inst.replica.inventoryitem:CanBePickedUp())
+        and not (inst.replica.inventoryitem ~= nil and inst.replica.inventoryitem:CanBePickedUp(nil)) -- FIXME(JBK): Add support to displaynamefn to take into account the viewer?
         and STRINGS.NAMES.MOLE_UNDERGROUND)
         or STRINGS.NAMES.MOLE_ABOVEGROUND
 end

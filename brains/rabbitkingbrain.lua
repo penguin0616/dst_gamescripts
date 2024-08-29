@@ -108,8 +108,15 @@ local function KeepFaceTargetFn_Aggressive(inst, target)
     return GetTargetPlayer(inst) == target
 end
 
+local DROPKICKDIST = TUNING.RABBITKING_ABILITY_DROPKICK_SPEED * TUNING.RABBITKING_ABILITY_DROPKICK_MAXAIRTIME
+local DROPKICKDISTSQ = DROPKICKDIST * DROPKICKDIST
+local SUMMONDISTSQ = 225 -- 15 * 15
 local function ShouldUseAbility_Aggressive(self)
     if self.inst.components.health:IsDead() then
+        return false
+    end
+
+    if self.inst.components.timer:TimerExists("ability_cd") then
         return false
     end
 
@@ -118,12 +125,14 @@ local function ShouldUseAbility_Aggressive(self)
         return false
     end
 
-    if self.inst:CanSummonMinions() then
+    local dsq = self.inst:GetDistanceSqToInst(target)
+
+    if self.inst:CanSummonMinions() and dsq < SUMMONDISTSQ then
         self.abilityname = "ability_summon"
         return true
     end
 
-    if self.inst:CanDropkick() then
+    if self.inst:CanDropkick() and dsq < DROPKICKDISTSQ then
         self.abilityname = "ability_dropkick"
         self.abilitydata = target
         return true

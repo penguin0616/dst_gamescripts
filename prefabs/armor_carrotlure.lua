@@ -7,12 +7,13 @@ local prefabs = {
 
 local UPDATE_TICK_RATE = 1
 
-local CARROTLURE_MUST_TAGS = {"manrabbit"}
+local LURE_TAG = "regular_bunnyman"
+local CARROTLURE_MUST_TAGS = {LURE_TAG}
 local function UpdateLure(inst)
     local owner = inst.components.inventoryitem and inst.components.inventoryitem.owner or nil
     if owner and owner.components.leader then
         local maxfollowers = TUNING.ARMOR_CARROTLURE_MAXFOLLOWERS
-        local currentfollowers = owner.components.leader:GetFollowersByTag("manrabbit")
+        local currentfollowers = owner.components.leader:GetFollowersByTag(LURE_TAG)
         local currentfollowerscount = #currentfollowers
         if currentfollowerscount < maxfollowers then
             local x, y, z = owner.Transform:GetWorldPosition()
@@ -31,7 +32,7 @@ local function UpdateLure(inst)
 
         for _, v in pairs(currentfollowers) do
             if v.components.follower then
-                if v:HasTag("manrabbit") then
+                if v:HasTag(LURE_TAG) then
                     v.components.follower:AddLoyaltyTime(3)
                 end
             end
@@ -106,6 +107,10 @@ local function fn()
     perishable.onperishreplacement = "spoiled_food"
     perishable:StartPerishing()
 
+    inst:AddComponent("repairable")
+    inst.components.repairable.repairmaterial = MATERIALS.CARROT
+    inst.components.repairable.announcecanfix = false
+
     inst:AddComponent("inspectable")
 
     inst:AddComponent("inventoryitem")
@@ -114,7 +119,7 @@ local function fn()
 
     local equippable = inst:AddComponent("equippable")
     equippable.equipslot = EQUIPSLOTS.BODY
-    equippable.dapperness = -TUNING.DAPPERNESS_SMALL
+    equippable.dapperness = TUNING.DAPPERNESS_TINY
     equippable:SetOnEquip(onequip)
     equippable:SetOnUnequip(onunequip)
     equippable:SetOnEquipToModel(onequiptomodel)

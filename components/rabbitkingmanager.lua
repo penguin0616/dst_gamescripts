@@ -187,8 +187,10 @@ function self:UnTrackRabbitKing()
             player:RemoveEventCallback("death", callback)
         end
     end
+    if self.rabbitkingdata.rabbitking.rabbitking_kind ~= "lucky" then
+        self.cooldown = TUNING.RABBITKING_COOLDOWN
+    end
     self.rabbitkingdata = nil
-    self.inst:StopUpdatingComponent(self)
 end
 function self:ChangeRabbitKingLeash(player)
     if self.rabbitkingdata.player:IsValid() then
@@ -243,7 +245,7 @@ function self:CreateRabbitKingForPlayer_Internal(player, pt, forcedstate_string,
     return rabbitking
 end
 function self:ShouldStopActions()
-    return self.rabbitkingdata or self.pendingplayerload
+    return self.rabbitkingdata or self.pendingplayerload or self.cooldown
 end
 function self:GetRabbitKing()
     return self.rabbitkingdata and self.rabbitkingdata.rabbitking or nil
@@ -253,7 +255,7 @@ function self:GetTargetPlayer()
 end
 function self:CreateRabbitKingForPlayer(player, pt_override, forcedstate_string, params)
     if self:ShouldStopActions() then
-        return false, "ALREADY_EXISTS"
+        return false, self.cooldown and "ON_COOLDOWN" or "ALREADY_EXISTS"
     end
 
     local pt = pt_override or self:GetRabbitKingSpawnPoint(player:GetPosition())
@@ -427,10 +429,24 @@ function self:OnUpdate(dt)
         self.rabbitkingdata.accumulator = accumulator
         if dotick then
             local rabbitking = self.rabbitkingdata.rabbitking
-            local player = self.rabbitkingdata.player
-            self:DoHouseCleaning(rabbitking, player)
+            if rabbitking.persists then
+                local player = self.rabbitkingdata.player
+                if player:IsValid() then -- Needed because the burrowaway presentation won't remove the player ref and expects to always have a player ref even if it's invalid until data is purged.
+                    self:DoHouseCleaning(rabbitking, player)
+                end
+            end
         end
     end
+    if self.cooldown then
+        self.cooldown = self.cooldown - dt
+        if self.cooldown < 0 then
+            self.cooldown = nil
+            self.inst:StopUpdatingComponent(self)
+        end
+    end
+end
+function self:LongUpdate(dt)
+    self:OnUpdate(dt)
 end
 
 -- Save/Load.
@@ -454,6 +470,7 @@ function self:OnSave()
     local data = {
         carrots_fed_max = self.carrots_fed_max,
         naughtiness_max = self.naughtiness_max,
+        cooldown = self.cooldown,
     }
     local ents
 
@@ -489,6 +506,10 @@ function self:OnLoad(data)
     self.carrots_fed_max = data.carrots_fed_max or self.carrots_fed_max
     self.naughtiness = data.naughtiness or self.naughtiness
     self.naughtiness_max = data.naughtiness_max or self.naughtiness_max
+    self.cooldown = data.cooldown or self.cooldown
+    if self.cooldown then
+        self.inst:StartUpdatingComponent(self)
+    end
 end
 function self:LoadPostPass(newents, savedata)
     if savedata.rabbitkingid then
@@ -526,6 +547,9 @@ end
 
 function self:GetDebugString()
     if not self.rabbitkingdata then
+        if self.cooldown then
+            return string.format("No Rabbit King, on cooldown: %.1f", self.cooldown)
+        end
         return string.format("No Rabbit King, carrots: %d/%d, naughtiness: %d/%d", self.carrots_fed, self.carrots_fed_max, self.naughtiness, self.naughtiness_max)
     end
 

@@ -330,9 +330,7 @@ local function OnStarving(inst, dt)
         inst.components.finiteuses:Use(math.min(dt, inst.components.finiteuses:GetUses()))
     end
 
-    if inst._owner ~= nil then
-        inst:SayRegularChatLine("starving", inst._owner)
-    end
+    inst:SayRegularChatLine("starving", inst._owner)
 end
 
 local function OnOwnerWorking(inst, owner, data)
@@ -346,10 +344,6 @@ local function OnOwnerWorking(inst, owner, data)
 
     if owner.SoundEmitter ~= nil then
         owner.SoundEmitter:PlaySound("rifts4/nightmare_axe/chop")
-    end
-
-    if data.target ~= nil and data.target:IsValid() then
-        -- TODO(DiogoW): Maybe having a effect here?
     end
 end
 
@@ -489,20 +483,48 @@ end
 
 ----------------------------------------------------------------------------------------------------------------
 
-local TALK_COLOUR = Vector3(204/255, 55/255, 55/255)
-local TALK_OFFSET = Vector3(0, 50, 0)
+local TALK_COLOUR = Vector3(204/255, 99/255, 78/255)
+local TALK_OFFSET = Vector3(0, 60, 0)
 local TALK_SOUNDNAME = "talk"
 
-local function OnDoneTalking(inst)
-    inst.localsounds.SoundEmitter:KillSound(TALK_SOUNDNAME)
+local TALK_SHAKE_INTERVAL = .05
+local TALK_SHAKE_MAX_OFFSET = 20
+
+local function ShakeTextLine(inst)
+    if inst.components.talker.widget ~= nil then
+        local x, y, z = TALK_OFFSET.z + math.random(TALK_SHAKE_MAX_OFFSET), TALK_OFFSET.y + math.random(TALK_SHAKE_MAX_OFFSET), TALK_OFFSET.z
+
+        inst.components.talker.widget:SetOffset(Vector3(x, y, z))
+    end
 end
 
-local function OnTalk(inst)
+local function OnDoneTalking(inst)
+    if inst.localsounds ~= nil then
+        inst.localsounds.SoundEmitter:KillSound(TALK_SOUNDNAME)
+    end
+
+    if inst._shakelinetask ~= nil then
+        inst._shakelinetask:Cancel()
+        inst._shakelinetask = nil
+    end
+end
+
+local function OnTalk(inst, data)
     local sound = inst._classified ~= nil and inst._classified:GetTalkSound() or nil
 
-    if sound ~= nil then
+    if sound ~= nil and inst.localsounds ~= nil then
         inst.localsounds.SoundEmitter:KillSound(TALK_SOUNDNAME)
         inst.localsounds.SoundEmitter:PlaySound(sound, TALK_SOUNDNAME)
+    end
+
+    if inst._shakelinetask ~= nil then
+        inst._shakelinetask:Cancel()
+        inst._shakelinetask = nil
+    end
+
+    -- We're using the "noanim" field for this, but it's not related to animations at all XD
+    if data ~= nil and data.noanim then
+        inst._shakelinetask = inst:DoPeriodicTask(TALK_SHAKE_INTERVAL, ShakeTextLine)
     end
 end
 
@@ -554,7 +576,9 @@ local function SayRegularChatLine(inst, list, owner)
         inst._classified:Say(list, math.random(#list), "rifts4/nightmare_axe/lvl"..inst.level.."_talk_LP")
     end
 
-    inst:StartOvertimeChatTask(owner)
+    if owner ~= nil and inst.talktask ~= nil then
+        inst:StartOvertimeChatTask(owner)
+    end
 end
 
 local function SayEpicKilledLine(inst, levelup, random)
@@ -576,13 +600,12 @@ local function SayEpicKilledLine(inst, levelup, random)
 end
 
 local function ToggleTalking(inst, turnon, owner)
-    inst._classified:SetTarget(owner)
-
     if turnon then
         inst:StartOvertimeChatTask(owner)
 
     elseif inst.talktask ~= nil then
         inst.talktask:Cancel()
+        inst.talktask = nil
     end
 end
 
@@ -600,6 +623,20 @@ end
 
 local function OnEntitySleep(inst)
     inst.SoundEmitter:KillSound(IDLE_SOUND_LOOP_NAME)
+end
+
+----------------------------------------------------------------------------------------------------------------
+
+local function OnDropped(inst)
+    if inst._classified ~= nil then
+        inst._classified:SetTarget(nil)
+    end
+end
+
+local function OnPutInInventory(inst, owner)
+    if inst._classified ~= nil then
+        inst._classified:SetTarget(owner)
+    end
 end
 
 ----------------------------------------------------------------------------------------------------------------
@@ -677,6 +714,8 @@ local function fn()
         return inst
     end
 
+    inst.scrapbook_planardamage = { TUNING.SHADOW_BATTLEAXE.LEVEL[1].PLANAR_DAMAGE, TUNING.SHADOW_BATTLEAXE.LEVEL[#TUNING.SHADOW_BATTLEAXE.LEVEL_THRESHOLDS].PLANAR_DAMAGE }
+
     inst.level = 1
     inst.epic_kill_count = 0
     inst._lifesteal = TUNING.SHADOW_BATTLEAXE.LEVEL[inst.level].LIFE_STEAL
@@ -723,6 +762,8 @@ local function fn()
 
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem:ChangeImageName("shadow_battleaxe_l1")
+    inst.components.inventoryitem:SetOnDroppedFn(OnDropped)
+    inst.components.inventoryitem:SetOnPutInInventoryFn(OnPutInInventory)
 
     inst:AddComponent("planardamage")
     inst.components.planardamage:SetBaseDamage(TUNING.SHADOW_BATTLEAXE.LEVEL[inst.level].PLANAR_DAMAGE)
