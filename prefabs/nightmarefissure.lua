@@ -438,9 +438,10 @@ local function displaynamefn(inst)
 end
 
 local function GetRareChildFn(inst)
-    local rift_enabled = TheWorld.components.riftspawner ~= nil and TheWorld.components.riftspawner:GetShadowRiftsEnabled()
+    local rift_active = TheWorld.components.riftspawner ~= nil and TheWorld.components.riftspawner:IsShadowPortalActive()
+    local ruinsnightmare_chance = rift_active and TUNING.RUINSNIGHTMARE_SPAWN_CHANCE_RIFTS or TUNING.RUINSNIGHTMARE_SPAWN_CHANCE
 
-    return rift_enabled and "ruinsnightmare" or "nightmarebeak"
+    return math.random() <= ruinsnightmare_chance and "ruinsnightmare" or "nightmarebeak"
 end
 
 local function Make(name, build, lightcolour, fxname, masterinit)

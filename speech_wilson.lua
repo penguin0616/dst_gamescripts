@@ -68,6 +68,7 @@ return {
             MOUNTED = "I can't place that from way up here.",
             HASPET = "I've already got a pet.",
 			TICOON = "I'm too invested in my own Ticoon to follow another one.",
+            BUSY_STATION = "I'll have to wait.",
         },
         CARNIVALGAME_FEED =
         {
@@ -576,7 +577,7 @@ return {
 	ANNOUNCE_HIGHRESEARCH = "I feel so smart now!",
 	ANNOUNCE_HOUNDS = "Did you hear that?",
 	ANNOUNCE_WORMS = "Did you feel that?",
-    ANNOUNCE_WORMS_BOSS = "That sounds ominous?", --[[TODO]]
+    ANNOUNCE_WORMS_BOSS = "That sounds ominous?",
     ANNOUNCE_ACIDBATS = "Did you hear that?",
 	ANNOUNCE_HUNGRY = "I'm so hungry!",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "This track is fresh. The beast must be nearby.",
@@ -1654,7 +1655,8 @@ return {
                 "Awww, she has a cute little bow.",
                 "Awww, she has a cute little bow.",
             },
-		},
+        },
+
 		ADVENTURE_PORTAL = "I'm not sure I want to fall for that a second time.",
 		AMULET = "I feel so safe when I get to wear it.",
 		ANIMAL_TRACK = "Tracks left by food. I mean... an animal.",
@@ -5380,6 +5382,22 @@ return {
         RABBITKINGSPEAR = "This will give a good thumpin'.",
         RABBITHAT = "It'll put hare on your head.",
         WORM_BOSS = "It's a big worm!",
+
+        STONE_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "I use tables periodically.",
+            HAS_ITEM = "I use tables periodically.",
+        },
+
+        STONE_CHAIR =
+        {
+            GENERIC = "I'd like to sit on that... rockin' chair!",
+            OCCUPIED = "Somebody else is sitting on that.",
+        },
+
+        CARPENTRY_BLADE_MOONGLASS = "Razor-sharp, like my mind!",
+
+        CHEST_MIMIC_REVEALED = "Horrible! Definitely horrible!",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

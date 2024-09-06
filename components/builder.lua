@@ -605,7 +605,7 @@ function Builder:DoBuild(recname, pt, rotation, skin)
         end
 
         if recipe.canbuild ~= nil then
-			local success, msg = recipe.canbuild(recipe, self.inst, pt, rotation)
+			local success, msg = recipe.canbuild(recipe, self.inst, pt, rotation, self.current_prototyper)
 			if not success then
 				return false, msg
 			end

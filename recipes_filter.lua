@@ -362,6 +362,7 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	----MOON_ALTAR-----
 	"moonglassaxe",
 	"glasscutter",
+	"carpentry_blade_moonglass",
 	"turf_meteor",
 	"turf_fungus_moon",
 	"bathbomb",
@@ -637,6 +638,24 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"carnivalgame_shooting_kit",
 	"carnivalgame_wheelspin_kit",
 	"carnivalgame_puckdrop_kit",
+
+	---- CARPENTRY ----
+
+	"boards_bunch",
+	"cutstone_bunch",
+	"wood_chair",
+	"stone_chair",
+	"wood_stool",
+	"stone_stool",
+	"wood_table_round",
+	"stone_table_round",
+	"wood_table_square",
+	"stone_table_square",
+    "decor_centerpiece",
+	"decor_lamp",
+	"decor_flowervase",
+	"decor_pictureframe",
+	"decor_portraitframe",
 }
 
 
@@ -1376,9 +1395,13 @@ CRAFTING_FILTERS.DECOR.recipes =
 	"record",
 
 	"wood_chair",
+	"stone_chair",
 	"wood_stool",
+	"stone_stool",
 	"wood_table_round",
+	"stone_table_round",
 	"wood_table_square",
+	"stone_table_square",
     "decor_centerpiece",
 	"decor_lamp",
 	"decor_flowervase",

@@ -3181,7 +3181,7 @@ function d_createscrapbookdata(print_missing_icons, noreset)
                 for tech,level in pairs(recipedata.level) do
                     if level > 0 then
                         for tree, num in pairs(t.components.prototyper.trees) do
-                            if tech == tree and num >= level then
+                            if tech == tree and (num >= level or (t.prefab == "carpentry_station" and num > 0)) then
                                 deps[tostring(recipe)] = true
                                 found = true
                                 break

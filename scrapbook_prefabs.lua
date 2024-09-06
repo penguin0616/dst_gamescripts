@@ -1772,10 +1772,13 @@ local PREFABS =
     ["wurt_swampitem_lunar"] = true,
     ["wurt_swampitem_shadow"] = true,
 
-    -- Meta 4 / Ocean QoL
+    -- Rifts 4
 
     ["armor_carrotlure"] = true,
+    ["carpentry_blade_moonglass"] = true,
+    ["chest_mimic_revealed"] = true,
     ["gelblob"] = true,
+    ["itemmimic_revealed"] = true,
     ["rabbithat"] = true,
     ["rabbitking_aggressive"] = true,
     ["rabbitking_lucky"] = true,
@@ -1790,9 +1793,12 @@ local PREFABS =
     ["shadow_battleaxe"] = true,
     ["shadow_beef_bell"] = true,
     ["shadowthrall_mouth"] = true,
+    ["stone_chair"] = true,
+    ["stone_stool"] = true,
+    ["stone_table_round"] = true,
+    ["stone_table_square"] = true,
     ["voidcloth_boomerang"] = true,
     ["worm_boss"] = true,
-    ["itemmimic_revealed"] = true,
 
     --[[POI]]
     ["charlie_stage_post"] = true,

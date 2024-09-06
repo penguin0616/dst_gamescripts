@@ -58,6 +58,7 @@ return{
             MOUNTED = "I can't place that from this lofty position.",
             HASPET = "I can only have one...",
 			TICOON = "The more friends you have, the shallower they are.",
+            BUSY_STATION = "I have to wait.",
         },
         CARNIVALGAME_FEED =
         {
@@ -566,7 +567,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "I have seen the void and it is deep and dark.",
 	ANNOUNCE_HOUNDS = "The hounds are baying.",
 	ANNOUNCE_WORMS = "Uh-oh. I think we should leave.",
-    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
+    ANNOUNCE_WORMS_BOSS = "We need to go. Now.",
     ANNOUNCE_ACIDBATS = "They've found us.",
 	ANNOUNCE_HUNGRY = "I am full of emptiness.",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "I sense the beast's presence nearby.",
@@ -1648,7 +1649,8 @@ return{
                 "Let's play, Abigail!",
                 "That's my twin sister, Abigail.",
             },
-		},
+        },
+
 		ADVENTURE_PORTAL = "What technological terror is this?",
 		AMULET = "I wonder who used to own this.",
 		ANIMAL_TRACK = "Signs of the beast.",
@@ -5374,6 +5376,22 @@ return{
         RABBITKINGSPEAR = "Death by rabbit antler. Cute.",
         RABBITHAT = "Fine. It's adorable.",
         WORM_BOSS = "Nothing goes extinct here.",
+
+        STONE_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "Abigail's favorite hiding spot.",
+            HAS_ITEM = "Abigail's favorite hiding spot.",
+        },
+
+        STONE_CHAIR =
+        {
+            GENERIC = "Abigail?",
+            OCCUPIED = "You might be sitting on Abigail.",
+        },
+
+        CARPENTRY_BLADE_MOONGLASS = "Pretty. If it was smaller I'd wear it around my neck.",
+
+        CHEST_MIMIC_REVEALED = "I did not expect that.",
     },
 
     DESCRIBE_GENERIC = "Sigh... I don't know.",

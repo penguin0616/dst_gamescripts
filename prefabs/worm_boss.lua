@@ -26,8 +26,6 @@ SetSharedLootTable("worm_boss",
     { "monstermeat",  1.00 },
     { "monstermeat",  1.00 },
     { "monstermeat",  1.00 },
-    { "monstermeat",  1.00 },
-    { "monstermeat",  1.00 },
     { "monstermeat",  0.66 },
     { "monstermeat",  0.66 },
     { "wormlight",    1.00 },
@@ -35,20 +33,35 @@ SetSharedLootTable("worm_boss",
 
 -----------------------------------------------------------------------------------------------------------------------
 
-local function GenerateLoot(inst)
+local function GenerateLoot(inst, pos)
     local loottable = {
-        boneshard = 40,
+        boneshard = 25,
+        rocks = 20,
+        flint = 15,
+        nitre = 15,
+        monstermeat = 15,
+        goldnugget = 4,
+        slurtle_shellpieces = 2,
+        tentaclespots = 2,
+        lightbulb = 2,
+        wormlight = 2,
+        guano = 2,
         redgem = 2,
         bluegem = 2,
-        thulecite = 1,
-        rocks = 8,
         purplegem = 2,
+        trinket_17 = 1,
+        trinket_12 = 1,
+        orangegem = 1,
+        yellowgem = 1,
+        greengem = 1,
+        thulecite = 1,
+        fossil_piece = 1,
     }
 
     local choice = weighted_random_choice(loottable)
 
     if choice ~= nil then
-        inst.components.lootdropper:FlingItem(SpawnPrefab(choice))
+        inst.components.lootdropper:FlingItem(SpawnPrefab(choice), pos)
     end
 end
 
@@ -148,92 +161,62 @@ end
 -----------------------------------------------------------------------------------------------------------------------
 
 local function OnDeath(inst, data)
-    -- inst.state = WORMBOSS_UTILS.STATE.DEAD
+    inst.state = WORMBOSS_UTILS.STATE.DEAD
 
-    -- if inst.new_crack ~= nil then
-    --     inst.new_crack:Remove()
-    --     inst.new_crack= nil
-    -- end
+    if inst.new_crack ~= nil then
+        inst.new_crack:Remove()
+        inst.new_crack= nil
+    end
 
-    -- local freehead  = false  -- The regular head is present.
-    -- local headchunk = nil    -- The head is in the a segmented form.
-
-    -- for _, chunk in ipairs(inst.chunks) do
-    --     -- if chunk.lastsegment ~= nil then
-    --     --     chunk.lastsegment:Remove()
-    --     -- end
-
-    --     if chunk.dirt_start ~= nil and chunk.dirt_start:IsValid() then
-    --         chunk.dirt_start:AddTag("notarget")
-    --         --chunk.dirt_start.AnimState:PlayAnimation("dirt_idle")
-    --     end
-
-    --     if chunk.dirt_end ~= nil and chunk.dirt_end:IsValid() then
-    --         chunk.dirt_end:AddTag("notarget")
-    --         --chunk.dirt_end.AnimState:PlayAnimation("dirt_idle")
-    --     end
-
-    --     for _, segment in ipairs(chunk.segments) do
-    --         if segment.head then
-    --             headchunk = chunk
-
-    --             break
-    --         end
-    --     end
-
-    --     if chunk.head then
-    --         freehead = true
-    --     end
-    -- end
-
-    -- if headchunk ~= nil then
-    --     WORMBOSS_UTILS.SpawnAboveGroundHeadCorpse(inst, headchunk)
-
-    -- elseif freehead and inst.head ~= nil then
-    --     inst.head:PushEvent("death")
-
-    -- else
-    --     WORMBOSS_UTILS.SpawnUnderGroundHeadCorpse(inst)
-    -- end
-
-    -- --inst.current_death_chunk = math.max(1, #inst.chunks - 1)
-
-    local totalsegments = 0
+    local freehead  = false  -- The regular head is present.
+    local headchunk = nil    -- The head is in the a segmented form.
 
     for _, chunk in ipairs(inst.chunks) do
-        if inst.head then
-            totalsegments = totalsegments + #chunk.segments
-        else
-            for i, segment in ipairs(chunk.segments) do
-                GenerateLoot(segment)
-                GenerateLoot(segment)
+        if chunk.lastsegment ~= nil then
+            chunk.lastsegment:Remove()
+        end
+        if chunk.dirt_start ~= nil and chunk.dirt_start:IsValid() then
+            chunk.dirt_start:AddTag("notarget")
+            chunk.dirt_start.AnimState:PlayAnimation("dirt_idle")
+            chunk.dirt_start.persists = false
+        end
+    
+        if chunk.dirt_end ~= nil and chunk.dirt_end:IsValid() then
+            chunk.dirt_end:AddTag("notarget")
+            chunk.dirt_end.AnimState:PlayAnimation("dirt_idle")
+            chunk.dirt_end.persists = false
+        end
+    
+        for _, segment in ipairs(chunk.segments) do
+            if segment.head then
+                headchunk = chunk
+                break
             end
         end
-    end
-    if totalsegments  >0 then
-        for i=1, totalsegments do
-            GenerateLoot(inst.head)
-            GenerateLoot(inst.head)
-        end
-    end
-
-    if inst.head ~= nil then
-        inst.head:PushEvent("death")
-
-        inst.state = WORMBOSS_UTILS.STATE.DEAD
-
-        for _, chunk in ipairs(inst.chunks) do
-
-            if chunk.dirt_start ~= nil and chunk.dirt_start:IsValid() then
-                chunk.dirt_start:AddTag("notarget")
-            end
-
-            if chunk.dirt_end ~= nil and chunk.dirt_end:IsValid() then
-                chunk.dirt_end:AddTag("notarget")
-            end
+        if chunk.head then
+           freehead = true
         end
     end
 
+    inst.headlootdropped = nil
+    if inst.head then
+        inst.headlootdropped = Vector3(inst.head.Transform:GetWorldPosition())
+    elseif inst.createnewchunktask then
+        inst.headlootdropped = inst.createnewchunktask._target_pt
+    elseif inst.chunks and inst.chunks[#inst.chunks] and inst.chunks[#inst.chunks].groundpoint_start then
+        inst.headlootdropped = inst.chunks[#inst.chunks].groundpoint_start
+    end
+
+    if headchunk ~= nil then
+       WORMBOSS_UTILS.SpawnAboveGroundHeadCorpse(inst, headchunk)
+    elseif freehead and inst.head ~= nil then
+       inst.head:PushEvent("death")       
+       
+    else
+       WORMBOSS_UTILS.SpawnUnderGroundHeadCorpse(inst)
+    end
+
+    inst.current_death_chunk = math.max(1, #inst.chunks - 1)
 end
 
 local function _PlayDirstPstSlowAnim(dirt)
@@ -247,11 +230,17 @@ local function OnDeathEnded(inst)
         WORMBOSS_UTILS.SpitAll(inst, nil, true)
     end
 
-    --if inst.head ~= nil then
-        --inst.head:PushEvent("death_ended")
-    --end
+    if inst.head ~= nil then
+        inst.head:PushEvent("death_ended")
+    end
 
     for _, chunk in ipairs(inst.chunks) do
+        for i,segment in ipairs(chunk.segments)do
+            if not segment.AnimState:IsCurrentAnimation("segment_death_pst") then
+                segment.AnimState:PlayAnimation("segment_death_pst")
+            end
+        end
+
         if chunk.dirt_start ~= nil then
             chunk.dirt_start:DoTaskInTime(math.random()*3 + 4, _PlayDirstPstSlowAnim)
         end
@@ -265,10 +254,12 @@ local function OnDeathEnded(inst)
         --end
     end
 
-    inst.Transform:SetPosition(inst.head.Transform:GetWorldPosition()) -- For inventory:DropEverything position.
+
+    inst.Transform:SetPosition(inst.chunks[#inst.chunks].dirt_start.Transform:GetWorldPosition()) -- For inventory:DropEverything position.
 
     inst.components.inventory:DropEverything(true)
     inst.components.lootdropper:DropLoot()
+    inst.headlootdropped = nil
 
     inst:Remove()
 end
@@ -286,30 +277,54 @@ end
 local function OnSave(inst, data)
     data.state = inst.state
 
-    if inst.createnewchunktask ~= nil then
-        data.new_chunk_pos = SerializePosition(inst.createnewchunktask._target_pt)
+    if inst.state == WORMBOSS_UTILS.STATE.DEAD then
+
+        if inst.headlootdropped then
+            data.headlootdropped =SerializePosition(inst.headlootdropped)
+        end
+
+        data.lootspots = {}
+        for i, chunk in ipairs(inst.chunks) do
+            for s,segment in ipairs(chunk.segments)do
+                if not segment:IsInLimbo() and not segment.AnimState:IsCurrentAnimation("segment_death_pst") then
+                    table.insert(data.lootspots,SerializePosition(Vector3(segment.Transform:GetWorldPosition()) ))
+                end
+            end
+        end
+
+    else
+        if inst.createnewchunktask ~= nil   then
+            data.new_chunk_pos = SerializePosition(inst.createnewchunktask._target_pt)
+        end
+
+        if #inst.chunks <= 1 then
+            return -- Not really worth saving any chunk...
+        end
+
+        data.chunks = {}
+        data.lootspots = {}
+
+        for i, chunk in ipairs(inst.chunks) do
+            local savechunk = {}
+
+            savechunk.groundpoint_start = SerializePosition(chunk.groundpoint_start)
+            savechunk.groundpoint_end   = SerializePosition(chunk.groundpoint_end  )
+
+            table.insert(data.chunks, savechunk)
+        end
     end
-
-    if #inst.chunks <= 1 then
-        return -- Not really worth saving any chunk...
-    end
-
-    data.chunks = {}
-
-    for i, chunk in ipairs(inst.chunks) do
-        local savechunk = {}
-
-        savechunk.groundpoint_start = SerializePosition(chunk.groundpoint_start)
-        savechunk.groundpoint_end   = SerializePosition(chunk.groundpoint_end  )
-
-        table.insert(data.chunks, savechunk)
-    end
-
-    -- TODO: DIGESTION
 end
 
 local function OnLoad(inst, data)
+
     if data == nil then
+        return
+    end
+
+    inst:SetState(data.state)
+    
+    if inst.state == WORMBOSS_UTILS.STATE.DEAD then
+        -- all the prefabs don't persist, just spawning the unspawned loot in post pass, then removing. 
         return
     end
 
@@ -354,8 +369,29 @@ local function OnLoad(inst, data)
     if headchunk ~= nil then
         WORMBOSS_UTILS.EmergeHead(inst, headchunk, true) -- Deferred head creation because the head emergion changes the worm state.
     end
+end
 
-    inst:SetState(data.state)
+
+local function OnLoadPostPass(inst, newents, data)
+    if data then
+        if data.lootspots then
+            for i,spot in ipairs(data.lootspots) do
+                local pos = DeserializePosition(spot)
+                GenerateLoot(inst, pos)
+                GenerateLoot(inst, pos)
+                GenerateLoot(inst, pos)
+            end
+        end
+        if data.headlootdropped then
+            local pos = DeserializePosition(data.headlootdropped) 
+            inst.Transform:SetPosition(pos.x,pos.y,pos.z)
+            inst.components.lootdropper:DropLoot()
+            inst.components.inventory:DropEverything(true)
+        end
+    end
+    if inst.state == WORMBOSS_UTILS.STATE.DEAD then
+        inst:Remove()
+    end
 end
 
 -----------------------------------------------------------------------------------------------------------------------
@@ -482,6 +518,17 @@ local function Worm_ReturnSegmentToPool(inst, segment)
     table.insert(inst.segment_pool, segment)
 end
 
+local function PushMusic(inst)
+    if ThePlayer == nil then
+        inst._playingmusic = false
+    elseif ThePlayer:IsNear(inst, inst._playingmusic and 40 or 20) then
+        inst._playingmusic = true
+        ThePlayer:PushEvent("triggeredevent", { name = "worm_boss" })
+    elseif inst._playingmusic and not ThePlayer:IsNear(inst, 50) then
+        inst._playingmusic = false
+    end
+end
+
 -----------------------------------------------------------------------------------------------------------------------
 
 local function fn() -- FIXME(DiogoW): Can this one be a CLASSIFIED/non-networked prefab?
@@ -496,11 +543,18 @@ local function fn() -- FIXME(DiogoW): Can this one be a CLASSIFIED/non-networked
     inst:AddTag("NOBLOCK")
     inst:AddTag("groundpound_immune")
     inst:AddTag("worm_boss_piece")
+    inst:AddTag("epic")
 
     inst:SetPhysicsRadiusOverride(1.15)
     inst.Physics:SetActive(false)
 
     inst.entity:SetPristine()
+
+
+    if not TheNet:IsDedicated() then
+        inst._playingmusic = false
+        inst:DoPeriodicTask(1, PushMusic, 0)
+    end
 
     if not TheWorld.ismastersim then
         return inst
@@ -551,6 +605,7 @@ local function fn() -- FIXME(DiogoW): Can this one be a CLASSIFIED/non-networked
 
     inst.OnSave = OnSave
     inst.OnLoad = OnLoad
+    inst.OnLoadPostPass = OnLoadPostPass
 
     inst.OnEntitySleep = Worm_OnEntitySleep
     inst.OnEntityWake = Worm_OnEntityWake
@@ -811,6 +866,7 @@ local function Segment_OnAnimOver(inst)
         inst.AnimState:PlayAnimation("segment_death_pst")
         GenerateLoot(inst)
         GenerateLoot(inst)
+        GenerateLoot(inst)
 
     elseif inst.AnimState:IsCurrentAnimation("segment_death_pst") then
         ErodeAway(inst, SEGMENT_ERODE_TIME)
@@ -869,12 +925,13 @@ end
 
 local function Dirt_OnAnimOver(inst)
     if inst.AnimState:IsCurrentAnimation("dirt_emerge") then
-        inst.AnimState:PlayAnimation("dirt_idle")
+
+        inst:dirt_playanimation("dirt_idle")
 
     elseif inst.AnimState:IsCurrentAnimation("dirt_pre") then
         inst.components.groundpounder:GroundPound()
         ShakeAllCameras(CAMERASHAKE.VERTICAL, .5, .03, 1, inst, SHAKE_DIST)
-        inst.AnimState:PlayAnimation("dirt_idle")
+        inst:dirt_playanimation("dirt_idle")
 
     elseif inst.AnimState:IsCurrentAnimation("dirt_pre_slow") then
         inst:RemoveTag("notarget")
@@ -883,11 +940,12 @@ local function Dirt_OnAnimOver(inst)
         WORMBOSS_UTILS.ToggleOnPhysics(inst)
         WORMBOSS_UTILS.EmergeHead(inst.worm, inst.chunk)
 
-        inst.AnimState:PlayAnimation("dirt_emerge")
+
+        inst:dirt_playanimation("dirt_emerge")
 
     elseif inst.AnimState:IsCurrentAnimation("dirt_segment_in_pre") then
         if inst.chunk ~= nil and inst.chunk.ease > 0 then
-            inst.AnimState:PlayAnimation("dirt_segment_in_pst")
+            inst:dirt_playanimation("dirt_segment_in_pst")
         end
 
     elseif inst.AnimState:IsCurrentAnimation("dirt_pst") or inst.AnimState:IsCurrentAnimation("dirt_pst_slow") then
@@ -932,6 +990,22 @@ local function Dirt_DamageRedirectFn(inst, attacker, damage, weapon, stimuli)
     return inst.worm ~= nil and inst.worm:IsValid() and inst.worm or nil
 end
 
+local function dirt_playanimation(inst, anim)
+    inst.AnimState:PlayAnimation(anim)
+    
+    if inst.AnimState:IsCurrentAnimation("dirt_emerge") then
+        inst.SoundEmitter:PlaySound("rifts4/worm_boss/dirt_emerge")        
+    elseif inst.AnimState:IsCurrentAnimation("dirt_pre_fast") then
+        inst.SoundEmitter:PlaySound("rifts4/worm_boss/dirt_pre")
+    elseif inst.AnimState:IsCurrentAnimation("dirt_pst") then
+        inst.SoundEmitter:PlaySound("rifts4/worm_boss/dirt_pst_fast")
+    elseif inst.AnimState:IsCurrentAnimation("dirt_pre_slow") then
+        inst.SoundEmitter:PlaySound("rifts4/worm_boss/dirt_pre_slow")
+    elseif inst.AnimState:IsCurrentAnimation("dirt_pst_slow") then
+        inst.SoundEmitter:PlaySound("rifts4/worm_boss/dirt_pst_slow")
+    end
+end
+
 local function dirtfn()
     local inst = CreateEntity()
 
@@ -961,6 +1035,8 @@ local function dirtfn()
     inst:AddComponent("highlightchild")
 
     inst.scrapbook_proxy = "worm_boss"
+
+    inst.dirt_playanimation = dirt_playanimation 
 
     inst.entity:SetPristine()
 

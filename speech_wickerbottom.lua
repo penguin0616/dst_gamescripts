@@ -58,6 +58,7 @@ return{
             MOUNTED = "In this elevated position, I can't reach the ground.",
             HASPET = "One domestic creature is enough for me.",
 			TICOON = "Having two trackers at once could possibly confuse them.",
+            BUSY_STATION = "Oh, botheration.",
         },
         CARNIVALGAME_FEED =
         {
@@ -566,7 +567,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "My my, that was extremely interesting!",
 	ANNOUNCE_HOUNDS = "Something is approaching.",
 	ANNOUNCE_WORMS = "Something nasty intends to rear its head.",
-    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
+    ANNOUNCE_WORMS_BOSS = "Something monstrous approaches.",
     ANNOUNCE_ACIDBATS = "What a dreadful noise they make.",
 	ANNOUNCE_HUNGRY = "Librarian needs food.",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "The appearance of this track indicates recent activity.",
@@ -1644,7 +1645,8 @@ return{
                 "Fascinating. Can you speak, specter?",
                 "Fascinating. Can you speak, specter?",
             },
-		},
+        },
+
 		ADVENTURE_PORTAL = "That violates some pretty fundamental physical laws.",
 		AMULET = "A relic from another time.",
 		ANIMAL_TRACK = "A sign of animal activity. Leads away.",
@@ -5370,6 +5372,22 @@ return{
         RABBITKINGSPEAR = "Not the most menacing weapon but it will ward off unwelcome bunnymen.",
         RABBITHAT = "This silly headpiece will render the wearer non-threatening to rabbits.",
         WORM_BOSS = "This one is older, larger... deadlier.",
+
+        STONE_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "Perfect for enjoying a cup of tea and a good book.",
+            HAS_ITEM = "Perfect for enjoying a cup of tea and a good book.",
+        },
+
+        STONE_CHAIR =
+        {
+            GENERIC = "Reminds me of the chair in my reading nook. Just stonier.",
+            OCCUPIED = "If you're going to sit, you might as well read.",
+        },
+
+        CARPENTRY_BLADE_MOONGLASS = "A moon glass saw blade. Sharp enough to cut stone.",
+
+        CHEST_MIMIC_REVEALED = "This creature mimics an artifact.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

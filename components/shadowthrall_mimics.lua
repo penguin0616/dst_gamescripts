@@ -19,7 +19,6 @@ self.inst = inst
 local _activeplayers = {}
 local _activemimics = {}
 local _scheduled_spawn_attempts = {}
-local _mimiccap = 20
 local _rift_enabled_modifiers = SourceModifierList(inst, false, SourceModifierList.boolean)
 
 --------------------------------------------------------------------------
@@ -74,7 +73,7 @@ end
 
 local function try_spawn_mimic_nearby(player, reschedule_fn)
     local keep_trying = false
-    if GetTableSize(_activemimics) < _mimiccap then
+    if GetTableSize(_activemimics) < TUNING.ITEMMIMIC_CAP then
         keep_trying = true
         local px, py, pz = player.Transform:GetWorldPosition()
         local mimicable_entities = shuffleArray(TheSim:FindEntities(
@@ -125,9 +124,7 @@ end
 --------------------------------------------------------------------------
 
 local function OnRiftAddedToPool(_, data)
-    if data and data.rift ~= nil
-            and data.rift.components.riftthralltype ~= nil
-            and data.rift.components.riftthralltype:IsThrallType(THRALL_TYPES.SHADOW.MIMIC) then
+    if data and data.rift ~= nil then
         local first_modifier = _rift_enabled_modifiers:IsEmpty()
         _rift_enabled_modifiers:SetModifier(data.rift, true)
         if first_modifier then
@@ -138,8 +135,6 @@ end
 
 local function OnRiftRemovedFromPool(_, data)
     if data and data.rift then
-        -- If the rift was a different type, that's fine,
-        -- we'll just fail to find it in the list.
         _rift_enabled_modifiers:RemoveModifier(data.rift)
         if _rift_enabled_modifiers:IsEmpty() then
             TryUpdateScheduledSpawns(inst.state.iscavenight)
@@ -215,27 +210,12 @@ function self.IsEnabled()
 end
 
 --------------------------------------------------------------------------
---[[ Save/Load ]]
---------------------------------------------------------------------------
-
-function self:OnSave()
-    return
-    {
-        mimiccap = _mimiccap,
-    }
-end
-
-function self:OnLoad(data)
-    _mimiccap = data.mimiccap or 0
-end
-
---------------------------------------------------------------------------
 --[[ Debug ]]
 --------------------------------------------------------------------------
 
 function self.GetDebugString()
     local debug_string = "ShadowThrall Mimics: %d/%d"
-    debug_string = string.format(debug_string, GetTableSize(_activemimics), _mimiccap)
+    debug_string = string.format(debug_string, GetTableSize(_activemimics), TUNING.ITEMMIMIC_CAP)
 
     if _rift_enabled_modifiers:Get() then
         debug_string = debug_string.."; ENABLED"

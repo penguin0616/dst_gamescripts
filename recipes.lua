@@ -14,8 +14,7 @@ PROTOTYPER_DEFS =
 	tacklestation				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_fishing.tex",			is_crafting_station = false},
 	turfcraftingstation			= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_turfcrafting.tex",		is_crafting_station = false},
 	bookstation					= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_books.tex",				is_crafting_station = false,	action_str = "STUDY"},
-	carpentry_station			= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_carpentry.tex",			is_crafting_station = false},
-
+	
 	ancient_altar				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_crafting_table.tex",	is_crafting_station = true,									filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.ANCIENT},
 	ancient_altar_broken		= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_crafting_table.tex",	is_crafting_station = true,									filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.ANCIENT},
 	critterlab					= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_orphanage.tex",			is_crafting_station = true,		action_str = "CRITTERS",	filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.ORPHANAGE},
@@ -29,6 +28,7 @@ PROTOTYPER_DEFS =
 	shadow_forge				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_shadow_forge.tex",		is_crafting_station = true,		action_str = "FORGE",		filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.SHADOWFORGING},
 	hermitcrab					= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_hermitcrab_shop.tex",	is_crafting_station = true,		action_str = "TRADE",		filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.HERMITCRABSHOP},
 	rabbitking_passive			= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_rabbitking.tex",		is_crafting_station = true,		action_str = "TRADE",		filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.RABBITKINGSHOP},
+	carpentry_station			= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_carpentry.tex",			is_crafting_station = true,									filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.CARPENTRY},
 
 	waxwelljournal				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_shadow.tex",			is_crafting_station = true,		action_str = "READ",		filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.SHADOW},
 	portableblender				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_foodprocessing.tex",	is_crafting_station = true,		action_str = "USE",			filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.FOODPROCESSING},
@@ -706,6 +706,7 @@ Recipe2("moon_mushroomhat",							{Ingredient("moon_cap", 4), Ingredient("red_mu
 ----MOON_ALTAR-----
 Recipe2("moonglassaxe",						{Ingredient("twigs", 2), Ingredient("moonglass", 3)},													TECH.CELESTIAL_THREE,		{nounlock=true})
 Recipe2("glasscutter",						{Ingredient("boards", 1), Ingredient("moonglass", 6)},													TECH.CELESTIAL_THREE,		{nounlock=true})
+Recipe2("carpentry_blade_moonglass",		{Ingredient("moonglass", 6), Ingredient("moonbutterfly", 1)},											TECH.CELESTIAL_THREE,		{nounlock=true})
 Recipe2("turf_meteor",						{Ingredient("moonrocknugget", 1), Ingredient("moonglass", 2)},											TECH.CELESTIAL_THREE,		{nounlock=true, numtogive=4})
 Recipe2("turf_fungus_moon",					{Ingredient("moonrocknugget", 1), Ingredient("moon_cap", 2)},											TECH.CELESTIAL_THREE,		{nounlock=true, numtogive=4})
 Recipe2("bathbomb", 						{Ingredient("moon_tree_blossom", 6), Ingredient("nitre", 1)}, 											TECH.CELESTIAL_THREE,		{nounlock=true})
@@ -738,9 +739,9 @@ Recipe2("voidcloth_scythe",					{Ingredient("horrorfuel", 3), Ingredient("voidcl
 Recipe2("voidcloth_boomerang",				{Ingredient("horrorfuel", 4), Ingredient("voidcloth", 2)},																	TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
 Recipe2("voidcloth_kit",					{Ingredient("horrorfuel", 1), Ingredient("voidcloth", 1)},																	TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
 Recipe2("beeswax_spray",					{Ingredient("horrorfuel", 5), Ingredient("beeswax", 3), Ingredient("mosquitosack", 2)},										TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
-Recipe2("shadow_beef_bell",					{Ingredient("shadowheart", 1), Ingredient("horrorfuel", 5), Ingredient("dreadstone", 4), Ingredient("voidcloth", 2)},		TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
-Recipe2("saddle_shadow",					{Ingredient("shadowheart", 1), Ingredient("horrorfuel", 8), Ingredient("dreadstone", 8), Ingredient("voidcloth", 5)},		TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
-Recipe2("shadow_battleaxe",					{Ingredient("shadowheart", 1), Ingredient("horrorfuel", 5), Ingredient("dreadstone", 3), Ingredient("voidcloth", 2)},		TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge", image="shadow_battleaxe_l1.tex"})
+Recipe2("shadow_beef_bell",					{Ingredient("shadowheart_infused", 1), Ingredient("horrorfuel", 5), Ingredient("dreadstone", 4), Ingredient("voidcloth", 2)},		TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
+Recipe2("saddle_shadow",					{Ingredient("shadowheart_infused", 1), Ingredient("horrorfuel", 8), Ingredient("dreadstone", 8), Ingredient("voidcloth", 5)},		TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge"})
+Recipe2("shadow_battleaxe",					{Ingredient("shadowheart_infused", 1), Ingredient("horrorfuel", 5), Ingredient("dreadstone", 3), Ingredient("voidcloth", 2)},		TECH.SHADOWFORGING_TWO, {nounlock=true, station_tag = "shadow_forge", image="shadow_battleaxe_l1.tex"})
 
 ----SCULPTING----
 Recipe2("chesspiece_hornucopia_builder",	{Ingredient(TECH_INGREDIENT.SCULPTING, 2), Ingredient("rocks", 2)},										TECH.SCULPTING_ONE,			{nounlock = true, actionstr="SCULPTING", image="chesspiece_hornucopia.tex"})
@@ -824,6 +825,13 @@ Recipe2("decor_lamp",									{Ingredient("twigs", 2), Ingredient("coontail", 2)
 Recipe2("decor_flowervase",								{Ingredient("log", 2), Ingredient("rope", 1)},																	TECH.CARPENTRY_TWO)
 Recipe2("decor_pictureframe",							{Ingredient("log", 2), Ingredient("twigs", 2)},																	TECH.CARPENTRY_TWO)
 Recipe2("decor_portraitframe",							{Ingredient("log", 2), Ingredient("twigs", 2), Ingredient("goldnugget", 1), Ingredient("featherpencil", 1)},	TECH.CARPENTRY_TWO)
+Recipe2("stone_chair",									{Ingredient("cutstone", 2), Ingredient("rope", 2)}, 															TECH.CARPENTRY_THREE,		{placer="stone_chair_placer",        min_spacing=1.75})
+Recipe2("stone_stool",									{Ingredient("cutstone", 1), Ingredient("rope", 2)}, 															TECH.CARPENTRY_THREE,		{placer="stone_stool_placer",        min_spacing=1.75})
+Recipe2("stone_table_round",							{Ingredient("cutstone", 3), Ingredient("rope", 2)},																TECH.CARPENTRY_THREE,		{placer="stone_table_round_placer",  min_spacing=1.75})
+Recipe2("stone_table_square",							{Ingredient("cutstone", 3), Ingredient("rope", 2)},																TECH.CARPENTRY_THREE,		{placer="stone_table_square_placer", min_spacing=1.75})
+
+Recipe2("boards_bunch",									{Ingredient("log", 20)}, 																						TECH.CARPENTRY_TWO, 		{nounlock = true, sg_state="give", product="boards",   description="boards_bunch",   image="boards_bunch.tex", numtogive=5, no_deconstruction=true, canbuild = function(recipe, builder, pt, rotation, station) return station == nil or not station.AnimState:IsCurrentAnimation("use"), "BUSY_STATION" end})
+Recipe2("cutstone_bunch",								{Ingredient("rocks", 15)}, 																						TECH.CARPENTRY_THREE, 		{nounlock = true, sg_state="give", product="cutstone", description="cutstone_bunch", image="cutstone_bunch.tex", numtogive=5, no_deconstruction=true, canbuild = function(recipe, builder, pt, rotation, station) return station == nil or not station.AnimState:IsCurrentAnimation("use"), "BUSY_STATION" end})
 
 Recipe2("phonograph",									{Ingredient("goldnugget", 3), Ingredient("transistor", 2), Ingredient("gears", 1)},								TECH.SCIENCE_TWO)
 Recipe2("record",										{Ingredient("batwing", 1), Ingredient("charcoal", 1)},															TECH.SCIENCE_TWO,			{image="record.tex"})

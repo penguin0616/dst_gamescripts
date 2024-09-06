@@ -4056,7 +4056,7 @@ STRINGS =
 
 		GELBLOB = "Icker",
 
-        RABBITKING_AGGRESSIVE = "Rabid Rabbit King",
+        RABBITKING_AGGRESSIVE = "Wrathful Rabbit King",
         RABBITKING_PASSIVE = "Benevolent Rabbit King",
         RABBITKING_LUCKY = "Fortuitous Rabbit",
         RABBITKINGMINION_BUNNYMAN = "Royal Rabbit Enforcer",
@@ -4071,6 +4071,21 @@ STRINGS =
         RUINSNIGHTMARE = "Lurking Nightmare",
 
         ITEMMIMIC_REVEALED = "Mimicreep",
+
+        STONE_CHAIR = "Stone Chair",
+        STONE_STOOL = "Stone Stool",
+        STONE_TABLE_ROUND = "Stone Round Table",
+        STONE_TABLE_SQUARE = "Stone Square Table",
+
+        BOARDS_BUNCH = "Bunch o' Boards",
+        CUTSTONE_BUNCH = "Bunch o' Stone",
+
+        CARPENTRY_BLADE_MOONGLASS = "Moon Glass Saw Blade",
+
+        CHEST_MIMIC = "Ornate Chest",
+        CHEST_MIMIC_REVEALED = "Ornery Chest",
+
+        SHADOWHEART_INFUSED = "Posessed Shadow Atrium",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -5125,6 +5140,16 @@ STRINGS =
         ARMOR_CARROTLURE = "Don this coat, and the Bunnymen shall hop to it.",
         RABBITKINGHORN = "Call on the rabbits to keep your stuff, anytime, any hare.",
         RABBITHAT = "Collecting rabbits has never been so calming.",
+
+        STONE_CHAIR = "A stone chair to sit on.",
+        STONE_STOOL = "A stone stool to sit on.",
+        STONE_TABLE_ROUND = "A round stone table to put things on.",
+        STONE_TABLE_SQUARE = "A square stone table to put things on.",
+
+        BOARDS_BUNCH = "Hoard your boards.",
+        CUTSTONE_BUNCH = "Stock your stone.",
+
+        CARPENTRY_BLADE_MOONGLASS = "For when a regular blade just won't cut it.",
     },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
@@ -6445,6 +6470,7 @@ STRINGS =
 		WINTERSFEASTCOOKING = "Feast",
         HERMITCRABSHOP = "Bottle Exchange",
         RABBITKINGSHOP = "Trading Hutch",
+        CARPENTRY = "Carpentry",
 		SLINGSHOTAMMO = "Slingshot Ammo",
 		CLOCKMAKER = "Clocksmithy",
         TURFCRAFTING = "Landscaping",
@@ -7577,6 +7603,7 @@ STRINGS.UI =
         NEEDSLUNARFORGING_TWO = "Can only be forged at a Brightsmithy.",
         NEEDSSHADOWFORGING_TWO = "Can only be crafted a Shadowcraft Plinth.",
         NEEDSCARPENTRY_TWO = "Use a Sawhorse to build a prototype!",
+        NEEDSCARPENTRY_THREE = "Use a Sawhorse with a strong blade to build a prototype!",
 
 		NEEDSYOTG = "Available during Year of the Gobbler!",
 		NEEDSYOTV = "Available during Year of the Varg!",
@@ -8666,6 +8693,7 @@ STRINGS.UI =
 		SHADOWFORGING = "Shadowcraft",
         HERMITCRABSHOP = "Bottle Exchange",
         RABBITKINGSHOP = "Trading Hutch",
+        CARPENTRY = "Carpentry",
 
         SHADOW = "Codex Umbra",
         FOODPROCESSING = "Seasonings",
@@ -10023,7 +10051,8 @@ STRINGS.UI =
         ANTLIONTRIBUTE = "Antlion Tribute",
         BATS = "Bats",
         FISSURE = "Nightmare Fissures",
-        WORMATTACKS = "Cave Worm Attacks",
+        WORMATTACKS = "Cave Worm Attacks",      
+        WORMATTACKS_BOSS = "Great Worm",
         WORMS = "Cave Worms",
         SLURPER = "Slurpers",
         BUNNYMEN = "Rabbit Hutches",
@@ -10085,6 +10114,8 @@ STRINGS.UI =
         FISHSCHOOLS = "Schools of Fish",
         WALRUS_SETTING = "MacTusk",
         COOKIECUTTERS = "Cookie Cutters",
+        ITEMMIMICS = "Mimicreeps",
+        CHEST_MIMICS = "Ornery Chests",
 
         EVERGREEN_REGROWTH = "Evergreens",
         TWIGGYTREES_REGROWTH = "Twiggy Trees",
@@ -13552,6 +13583,8 @@ STRINGS.UI =
         LOOPNEVER = "Never",
         LOOPRANDOM = "Default",
         LOOPALWAYS = "Always",
+        LOOPRARE = "Rare",
+        LOOPOFTEN = "Often",
 
         USEPRESETS = "Presets",
         USEPRESETS_LOCATION = "%s Presets",
@@ -16660,7 +16693,6 @@ STRINGS.SCRAPBOOK = {
         SPICE_SALT = "Can be added to Crock Pot food using a Portable Seasoning Station.\n\nEating a dish spiced with Seasoning Salt grants 25% more healing for healing effects.\n\nDuration 4 minutes.",
         BLUEPRINT = "It teaches you how to build a specific thing.",
         WILLOWEMBER = "When a creature dies while on fire, they drop an etherial ember of some burnt essence of life.\n\nWhen Willow attunes with her lighter, eventually she can sense and collect Hot Embers with it.\n\nWillow can learn to use embers for a variety of Pyrokinetics.",
-        RABBITKINGSPEAR = "Wards off Bunnymen through fear. Trades your own mind for power against them in more ways than one.",
 
         -- things
         ATRIUMGATE = "A broken stone ring that has an empty socket at the base.",
@@ -16772,7 +16804,7 @@ STRINGS.SCRAPBOOK = {
         SPIDERDEN = "Creates a patch of webbing on the ground near it that slows survivors and some creatures that walk on it.\n\nComes in several sizes and grows to fit its spider population.\n\nWebber may upgrade these with Silk.",
         STEERINGWHEEL = "When deployed on a boat, a survivor can use it to rotate the boats direction.",
         TACKLESTATION = "Standing near this device will provide the survivor with new Lures and Floats they can craft.",
-        CARPENTRY_STATION = "Standing near this device will provide the survivor with new Furniture they can craft.\n\nIt can also be used to quickly refine logs into boards.",
+        CARPENTRY_STATION = "Standing near this device will provide the survivor with new Furniture they can craft.",
         TENT = "A survivor can use the tent at Dusk or Night.\n\nSurvivor recovers 2 Health per second and 1 Sanity per second but consumes 0.33 Hunger per second. It also reduces 1 Wetness per second and increases temperature 1 degree per second down to 40 degrees.",
         TURFCRAFTINGSTATION = "Standing near this device will provide the survivor with new Turf they can craft.",
         TOWNPORTAL = "At the cost of 15 Sanity, a survivor can activate the device and then consume 40 Sanity per minute while they keep it active. A second survivor can use another Lazy Deserter or a Desert Stone to teleport to the active one. The teleport costs 50 Sanity.",
@@ -16866,7 +16898,7 @@ STRINGS.SCRAPBOOK = {
         -- RABBITKINGHORN = "TODO",
         -- RABBITKINGHORN_CHEST = "TODO",
         -- RABBITKINGMINION_BUNNYMAN = "TODO",
-        -- RABBITKINGSPEAR = "TODO",
+        RABBITKINGSPEAR = "Wards off Bunnymen through fear. Trades your own mind for power against them in more ways than one.",
         -- ROPE_BRIDGE_KIT = "TODO",
         SADDLE_SHADOW = "Can be put onto a Beefalo if it's willing. Faster than a regular saddle.",
         SHADOW_BATTLEAXE = "A weapon that is also a axe! It levels up by killing giants, increasing its stats, life steal and desire for death... It has 4 levels and it needs to kill 3 giants for each level.",
@@ -16874,6 +16906,7 @@ STRINGS.SCRAPBOOK = {
         -- SHADOWTHRALL_MOUTH = "TODO",
         VOIDCLOTH_BOOMERANG = "A ranged weapon that has 3 projectiles and does damage based on the projectile size.\n\nIncreases movement speed by 10% when held.",
         -- WORM_BOSS = "TODO",
+        CARPENTRY_BLADE_MOONGLASS = "Allows a Sawhorse equipped with it to build new things.",
     },
 
     -- Full name: "{name} Scrapbook Page"

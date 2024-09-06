@@ -58,6 +58,7 @@ return{
             MOUNTED = "Hair-cow is too tall. I can't reach.",
             HASPET = "Wolfgang has animal friend already!",
 			TICOON = "Wolfgang already has good furry friend.",
+            BUSY_STATION = "Wolfgang must wait.",
         },
         CARNIVALGAME_FEED =
         {
@@ -567,7 +568,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "Is maybe too much information.",
 	ANNOUNCE_HOUNDS = "I hear puppies!",
 	ANNOUNCE_WORMS = "Earth is tremble beneath Wolfgang's mighty feet!",
-    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
+    ANNOUNCE_WORMS_BOSS = "Wolfgang suggest run and live to fight another day.",
     ANNOUNCE_ACIDBATS = "Wolfgang not afraid. You are afraid.",
 	ANNOUNCE_HUNGRY = "My mighty belly is empty!",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "Animal is close!",
@@ -989,11 +990,11 @@ return{
     -- rifts 4
     ANNOUNCE_EXIT_GELBLOB = "That is no place for Wolfgang.",
 	ANNOUNCE_SHADOWTHRALL_STEALTH = "Aah! Who... what bite Wolfgang?",
-    ANNOUNCE_RABBITKING_AGGRESSIVE = "TODO",
-    ANNOUNCE_RABBITKING_PASSIVE = "TODO",
-    ANNOUNCE_RABBITKING_LUCKY = "TODO",
-    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "TODO",
-    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "TODO",
+    ANNOUNCE_RABBITKING_AGGRESSIVE = "What is that digging? Sound angry.",
+    ANNOUNCE_RABBITKING_PASSIVE = "Wolfgang hear something softly digging.",
+    ANNOUNCE_RABBITKING_LUCKY = "That is strange rabbit!",
+    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "Wolfgang!",
+    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "Wolfgang in wrong place.",
 
 	BATTLECRY =
 	{
@@ -1645,7 +1646,8 @@ return{
                 "Are you friendly ghost?",
                 "Are you friendly ghost?",
             },
-		},
+        },
+
 		ADVENTURE_PORTAL = "Is mouth door! Say Ahhhhh!",
 		AMULET = "Is very pretty.",
 		ANIMAL_TRACK = "Animal went this way.",
@@ -5361,16 +5363,32 @@ return{
 			HAS_ITEM = "Something inside but Wolfgang not like getting hands dirty.",
 			HAS_CHARACTER = "Don't fear, Wolfgang save you!",
 		},
-        RABBITKING_AGGRESSIVE = "TODO",
-        RABBITKING_PASSIVE = "TODO",
-        RABBITKING_LUCKY = "TODO",
-        RABBITKINGMINION_BUNNYMAN = "TODO",
-        ARMOR_CARROTLURE = "TODO",
-        RABBITKINGHORN = "TODO",
-        RABBITKINGHORN_CHEST = "TODO",
-        RABBITKINGSPEAR = "TODO",
-        RABBITHAT = "TODO",
-        WORM_BOSS = "It is mama worm.",
+        RABBITKING_AGGRESSIVE = "Nasty little guy.",
+        RABBITKING_PASSIVE = "Aww, is good-natured rabbit.",
+        RABBITKING_LUCKY = "Let Wolfgang catch you, little rabbit!",
+        RABBITKINGMINION_BUNNYMAN = "Bad bunny! Don't hit Wolfgang!",
+        ARMOR_CARROTLURE = "Looks healthy.",
+        RABBITKINGHORN = "Wolfgang is jazz man.",
+        RABBITKINGHORN_CHEST = "Rabbit take care of Wolfgang things!",
+        RABBITKINGSPEAR = "Is horn of mean rabbit.",
+        RABBITHAT = "Cute, no?",
+        WORM_BOSS = "It is the mama worm.",
+
+        STONE_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "Is table.",
+            HAS_ITEM = "Is table.",
+        },
+
+        STONE_CHAIR =
+        {
+            GENERIC = "Is tiny chair strong enough to hold Wolfgang?",
+            OCCUPIED = "Do not worry, friend. Wolfgang will stand.",
+        },
+
+        CARPENTRY_BLADE_MOONGLASS = "Wolfgang once receive nasty cut from glass.",
+
+        CHEST_MIMIC_REVEALED = "Wolfgang knew box too fancy to be true!",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

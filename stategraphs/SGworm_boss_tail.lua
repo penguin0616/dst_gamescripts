@@ -102,7 +102,7 @@ local states =
 
         name = "hit",
         tags = {"canrotate", "busy"},
-        
+
         onenter = function(inst, playanim)
             inst.AnimState:PlayAnimation("tail_hit")
         end,
@@ -120,13 +120,13 @@ local states =
         tags = {"dead", "canrotate", "busy"},
         onenter = function(inst, playanim)
             inst.AnimState:PlayAnimation("tail_idle_pst")
-            inst.dirt.AnimState:PlayAnimation("dirt_move")
+            inst.dirt:dirt_playanimation("dirt_move")
         end,
 
         events=
         {
             EventHandler("animover", function(inst)
-                inst.dirt.AnimState:PlayAnimation("dirt_pst_slow")
+                inst.dirt:dirt_playanimation("dirt_pst_slow")
                 inst.dirt:AddTag("notarget")
                 inst.worm.tail = nil
                 inst:Remove()

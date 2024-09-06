@@ -58,6 +58,7 @@ return{
             MOUNTED = "All our arms can't quite reach from up here.",
             HASPET = "I like the pet we've got.",
 			TICOON = "We're good with just one guide.",
+            BUSY_STATION = "We have to wait our turn.",
         },
         CARNIVALGAME_FEED =
         {
@@ -566,7 +567,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "I'm learning so much!",
 	ANNOUNCE_HOUNDS = "Doggies are coming!",
 	ANNOUNCE_WORMS = "Ohhh nooo. We're not friends with worms!",
-    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
+    ANNOUNCE_WORMS_BOSS = "Yikes! Here comes a BIG worm!",
     ANNOUNCE_ACIDBATS = "We don't like that sound.",
 	ANNOUNCE_HUNGRY = "It's time for a snack!",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "Fresh tracks!",
@@ -1644,7 +1645,8 @@ return{
                 "We're a bit old for playing peek-a-boo.",
                 "We're a bit old for playing peek-a-boo.",
             },
-		},
+        },
+
 		ADVENTURE_PORTAL = "Something wicked this way comes.",
 		AMULET = "It's a fine necklace, I suppose.",
 		ANIMAL_TRACK = "Whatever it is, it travels single file.",
@@ -5370,6 +5372,22 @@ return{
         RABBITKINGSPEAR = "It's a little fuzzy, like us!",
         RABBITHAT = "Haha!",
         WORM_BOSS = "Wow.",
+
+        STONE_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "I remember drawing at the table.",
+            HAS_ITEM = "I remember drawing at the table.",
+        },
+
+        STONE_CHAIR =
+        {
+            GENERIC = "Mother said I could never sit still.",
+            OCCUPIED = "Mother said I could never sit still.",
+        },
+
+        CARPENTRY_BLADE_MOONGLASS = "Ms. Wickerbottom said we should be extra careful with that.",
+
+        CHEST_MIMIC_REVEALED = "We didn't touch it!",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

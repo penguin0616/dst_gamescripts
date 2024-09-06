@@ -204,7 +204,7 @@ ACTIONS_MAP_REMAP = {}
 
 function SetClientRequestedAction(actioncode, mod_name)
     if mod_name then
-        CLIENT_REQUESTED_ACTION = MOD_ACTIONS_BY_ACTION_CODE[mod_name] and MOD_ACTIONS_BY_ACTION_CODE[mod_name][actioncode]
+        CLIENT_REQUESTED_ACTION = MOD_ACTIONS_BY_ACTION_CODE[mod_name] and MOD_ACTIONS_BY_ACTION_CODE[mod_name][actioncode] or nil
     else
         CLIENT_REQUESTED_ACTION = ACTIONS_BY_ACTION_CODE[actioncode]
     end
@@ -704,7 +704,7 @@ ACTIONS.PICKUP.fn = function(act)
         (
             act.target.components.inventoryitem.canbepickedup or
             (act.target.components.inventoryitem.canbepickedupalive and not act.doer:HasTag("player")) or
-            act.target.components.inventoryitem.grabbableoverridetag ~= 0 and act.doer:HasTag(act.target.components.inventoryitem.grabbableoverridetag)
+            act.target.components.inventoryitem.grabbableoverridetag ~= nil and act.doer:HasTag(act.target.components.inventoryitem.grabbableoverridetag)
         ) and
         not (act.target:IsInLimbo() or
 			(act.target.components.burnable ~= nil and act.target.components.burnable:IsBurning() and act.target.components.lighter == nil) or

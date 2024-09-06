@@ -53,15 +53,20 @@ local states =
 			inst:Hide()
 			inst.DynamicShadow:Enable(false)
 			inst.sg:SetTimeout(delay or 1)
+			inst.components.sanityaura.aura = 0
 		end,
 
 		ontimeout = function(inst)
+			inst.sg.statemem.spawning = true
 			inst.sg:GoToState("spawn")
 		end,
 
 		onexit = function(inst)
 			inst:Show()
 			inst.DynamicShadow:Enable(true)
+			if not inst.sg.statemem.spawning then
+				inst.components.sanityaura.aura = -TUNING.SANITYAURA_MED
+			end
 		end,
 	},
 
@@ -73,6 +78,7 @@ local states =
 			_PlayAnimation(inst, "spawn")
 			SetShadowScale(inst, 0.19)
 			inst.SoundEmitter:PlaySound("rifts4/goop/spawn")
+			inst.components.sanityaura.aura = -TUNING.SANITYAURA_SMALL_TINY
 		end,
 
 		timeline =
@@ -83,6 +89,9 @@ local states =
 			FrameEvent(4, function(inst) SetShadowScale(inst, 0.6) end),
 			FrameEvent(5, function(inst) SetShadowScale(inst, 0.8) end),
 
+			FrameEvent(32, function(inst)
+				inst.components.sanityaura.aura = -TUNING.SANITYAURA_MED
+			end),
 			FrameEvent(33, function(inst) SetShadowScale(inst, 0.82) end),
 			FrameEvent(34, function(inst) SetShadowScale(inst, 0.86) end),
 			FrameEvent(35, function(inst) SetShadowScale(inst, 0.92) end),
@@ -106,6 +115,7 @@ local states =
 
 		onexit = function(inst)
 			SetShadowScale(inst, 1)
+			inst.components.sanityaura.aura = -TUNING.SANITYAURA_MED
 		end,
 	},
 

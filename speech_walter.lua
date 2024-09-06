@@ -58,6 +58,7 @@ return{
             MOUNTED = "I've got to get down if I'm going to do that properly.",
             HASPET = "I think Woby might get jealous if I keep collecting pets.",
 			TICOON = "One of these guys is enough to keep track of.",
+            BUSY_STATION = "We have to wait, Woby!",
         },
         CARNIVALGAME_FEED =
         {
@@ -566,7 +567,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "I know everything now! Mostly everything, at least.",
 	ANNOUNCE_HOUNDS = "Woby? Do you hear something?",
 	ANNOUNCE_WORMS = "Something's moving...",
-    ANNOUNCE_WORMS_BOSS = "Something's coming. Something big.", --[[TODO]]
+    ANNOUNCE_WORMS_BOSS = "Something's coming. Something big.",
     ANNOUNCE_ACIDBATS = "Here they come!",
 	ANNOUNCE_HUNGRY = "Can we stop for a snack break?",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "I learned all about tracking in the Pioneers! It went thataway!",
@@ -1644,7 +1645,8 @@ return{
                 "Your sister kind of creeps me out, but you're alright!",
                 "Your sister kind of creeps me out, but you're alright!",
             },
-		},
+        },
+
 		ADVENTURE_PORTAL = "Don't be scared Woby, we'll do this together!",
 		AMULET = "I'm invincible!!",
 		ANIMAL_TRACK = "Tracks! They go this way!",
@@ -5368,8 +5370,24 @@ return{
         RABBITKINGHORN = "I can't carrot a tune! Heh. Nice, Walter.",
         RABBITKINGHORN_CHEST = "Woby, now you don't have to carry everything!",
         RABBITKINGSPEAR = "The most striking part of the rabbit. Heh.",
-        RABBITHAT = "It just sits there on your head?",
+        RABBITHAT = "Whoever wears that is a real hare-brain! Oh, Walter!",
         WORM_BOSS = "A monster worm!",
+
+        STONE_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "Woby, no paws on the table!",
+            HAS_ITEM = "Woby, no paws on the table!",
+        },
+
+        STONE_CHAIR =
+        {
+            GENERIC = "Sorry Woby, that's not for you.",
+            OCCUPIED = "Sorry Woby, that's not for you.",
+        },
+
+        CARPENTRY_BLADE_MOONGLASS = "Be careful, Woby! It's sharp!",
+
+        CHEST_MIMIC_REVEALED = "And I was right! It's a box monster, Woby!",
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

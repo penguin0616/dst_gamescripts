@@ -58,6 +58,7 @@ return{
             MOUNTED = "Even with my long arms, I still can't reach.",
             HASPET = "One pet is enough responsibility.",
 			TICOON = "I've already recruited a ticoon.",
+            BUSY_STATION = "I have to wait?!",
         },
         CARNIVALGAME_FEED =
         {
@@ -566,7 +567,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "My brain swells with power!",
 	ANNOUNCE_HOUNDS = "The hounds are growing restless.",
 	ANNOUNCE_WORMS = "Oh dear. I know what's making that sound.",
-    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
+    ANNOUNCE_WORMS_BOSS = "Curses. I know that sound.",
     ANNOUNCE_ACIDBATS = "What now?",
 	ANNOUNCE_HUNGRY = "I am empty inside.",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "I smell dung and beast sweat.",
@@ -1644,7 +1645,8 @@ return{
                 "Quite the precocious poltergeist, aren't you?",
                 "Quite the precocious poltergeist, aren't you?",
             },
-		},
+        },
+
 		ADVENTURE_PORTAL = "So that's where I left that thing!",
 		AMULET = "It channels the darkest energies of the universe.",
 		ANIMAL_TRACK = "Some dumb beast passed through here.",
@@ -5370,6 +5372,22 @@ return{
         RABBITKINGSPEAR = "About all they're good for.",
         RABBITHAT = "The rabbit goes in the hat, not on it. Preposterous.",
         WORM_BOSS = "Who unearthed this monstrosity?",
+
+        STONE_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "Someone should really set this table.",
+            HAS_ITEM = "Who set this table? It's all wrong.",
+        },
+
+        STONE_CHAIR =
+        {
+            GENERIC = "I'm appalled by the idea of sitting for some reason.",
+            OCCUPIED = "Good. You sit. Forever.",
+        },
+
+        CARPENTRY_BLADE_MOONGLASS = "Fancy... for a laborer's tool.",
+
+        CHEST_MIMIC_REVEALED = "It's a trap!",
     },
 
     DESCRIBE_GENERIC = "You tell me.",

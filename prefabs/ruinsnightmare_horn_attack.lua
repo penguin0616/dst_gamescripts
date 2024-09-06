@@ -5,7 +5,7 @@ local assets =
 
 local prefabs =
 {
-    "ruinsnightmare_horn_attack_fx",
+
 }
 
 ---------------------------------------------------------------------------------------------------------------------
@@ -19,10 +19,12 @@ local AOE_DAMAGE_RADIUS = 1.5
 local AOE_DAMAGE_RADIUS_PADDING = 3
 
 local DAMAGE_OFFSET_DIST = .5
-local COLLIDE_POINT_DIST = 3
+local COLLIDE_POINT_DIST_SQ = 3
 
-local INITIAL_SPEED = 8
-local FINAL_SPEED = 15
+local INITIAL_SPEED = 6.5
+local INITIAL_SPEED_RIFTS = 8
+local FINAL_SPEED = 13.5
+local FINAL_SPEED_RIFTS = 15
 local FINAL_SPEED_TIME = .5
 
 local INITIAL_DIST_FROM_TARGET = 10
@@ -31,26 +33,44 @@ local OWNER_REAPPEAR_TIME = 1
 
 ---------------------------------------------------------------------------------------------------------------------
 
+local function TurnIntoCollisionFx(inst)
+    inst.Physics:Teleport(inst.collision_x, 0, inst.collision_z)
+
+    inst.AnimState:PlayAnimation("horn_atk_pst")
+    inst.AnimState:SetFinalOffset(1)
+
+    inst.SoundEmitter:PlaySound("rifts4/insanity_creature3/horn_collide")
+
+    inst.components.updatelooper:RemoveOnUpdateFn(inst._OnUpdateFn)
+
+    inst.Physics:SetMotorVelOverride(0, 0, 0)
+
+    inst:AddTag("FX")
+
+    inst:ListenForEvent("animover", inst.Remove)
+    inst:ListenForEvent("entitysleep", inst.Remove)
+end
+
 local function OnUpdate(inst)
     local x, y, z = inst.Transform:GetWorldPosition()
 
     if inst.collision_x ~= nil then
-        if distsq(x, z, inst.collision_x, inst.collision_z) < COLLIDE_POINT_DIST then
-            inst:Remove()
-
+        if distsq(x, z, inst.collision_x, inst.collision_z) < COLLIDE_POINT_DIST_SQ then
             if inst.owner ~= nil then
                 inst.owner:DoTaskInTime(OWNER_REAPPEAR_TIME, inst.owner.PushEvent, "reappear")
             end
 
             if inst.spawnfx then
-                SpawnPrefab("ruinsnightmare_horn_attack_fx").Transform:SetPosition(inst.collision_x, 0, inst.collision_z)
+                TurnIntoCollisionFx(inst)
+            else
+                inst:Remove()
             end
 
             return
         end
     end
 
-    local speed = math.min(easing.inCubic(inst:GetTimeAlive(), INITIAL_SPEED, FINAL_SPEED-INITIAL_SPEED, FINAL_SPEED_TIME), FINAL_SPEED)
+    local speed = math.min(easing.inCubic(inst:GetTimeAlive(), inst._initial_speed, inst._final_speed-inst._initial_speed, FINAL_SPEED_TIME), inst._final_speed)
 
     inst.Physics:SetMotorVelOverride(speed, 0, 0)
 
@@ -83,7 +103,11 @@ local function OnUpdate(inst)
             local dz = z1 - z
 
             if (dx * dx + dz * dz) < (range * range) and combat:CanTarget(v) then
-                combat:DoAttack(v) -- TODO(DiogoW): Different damage?
+                combat:DoAttack(v)
+
+                if inst.owner.components.planarentity ~= nil then
+                    v:PushEvent("knockback", { knocker = inst, radius = AOE_DAMAGE_RADIUS, strengthmult = .6, forcelanded = true })
+                end
 
                 inst.targets[v] = true
             end
@@ -98,7 +122,7 @@ end
 local function SetUp(inst, owner, target, other)
     local x, y, z = target.Transform:GetWorldPosition()
 
-    local theta = other == nil and TWOPI * math.random() or other.Transform:GetRotation() * DEGREES
+    local theta = other == nil and (45 * math.random(8) * DEGREES) or other.Transform:GetRotation() * DEGREES
 
     inst.Transform:SetPosition(x + INITIAL_DIST_FROM_TARGET * math.cos(theta), 0, z - INITIAL_DIST_FROM_TARGET * math.sin(theta))
 
@@ -111,6 +135,17 @@ local function SetUp(inst, owner, target, other)
     inst.spawnfx = other == nil
 
     inst.components.updatelooper:AddOnUpdateFn(inst._OnUpdateFn)
+
+    inst.SoundEmitter:PlaySound("rifts4/insanity_creature3/horn_slice")
+
+    if inst.owner.components.planarentity ~= nil then
+        inst.AnimState:ShowSymbol("red")
+        inst.AnimState:SetLightOverride(1)
+        inst.AnimState:SetMultColour(1, 1, 1, 0.65)
+
+        inst._initial_speed = INITIAL_SPEED_RIFTS
+        inst._final_speed = FINAL_SPEED_RIFTS
+    end
 end
 
 local function fn()
@@ -136,12 +171,16 @@ local function fn()
 
     inst.AnimState:SetMultColour(1, 1, 1, 0.5)
     inst.AnimState:UsePointFiltering(true)
+    inst.AnimState:HideSymbol("red")
 
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst._initial_speed = INITIAL_SPEED
+    inst._final_speed = FINAL_SPEED
 
     inst.targets = {}
 

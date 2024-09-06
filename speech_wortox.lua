@@ -58,6 +58,7 @@ return{
             MOUNTED = "Either I must get down, or the world must come up.",
             HASPET = "I've made my pact with a beast already.",
 			TICOON = "Oh, but one's enough, hyuyu!",
+            BUSY_STATION = "Wait, mate!",
         },
         CARNIVALGAME_FEED =
         {
@@ -566,7 +567,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "My brain's grown three sizes this day!",
 	ANNOUNCE_HOUNDS = "The beasts are baying!",
 	ANNOUNCE_WORMS = "Something approaches from beneath!",
-    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
+    ANNOUNCE_WORMS_BOSS = "Don't bumble about, upon that rumble, no doubt!",
     ANNOUNCE_ACIDBATS = "That sounds like bats.",
 	ANNOUNCE_HUNGRY = "Oh no, I'm hungry again.",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "I love a game of hide and seek!",
@@ -992,12 +993,12 @@ return{
 
     -- rifts 4
     ANNOUNCE_EXIT_GELBLOB = "I could've died inside!",
-	ANNOUNCE_SHADOWTHRALL_STEALTH = "I felt a keen blow, dealt by an unseen foe!",
-    ANNOUNCE_RABBITKING_AGGRESSIVE = "TODO",
-    ANNOUNCE_RABBITKING_PASSIVE = "TODO",
-    ANNOUNCE_RABBITKING_LUCKY = "TODO",
-    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "TODO",
-    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "TODO",
+	ANNOUNCE_SHADOWTHRALL_STEALTH = "I felt a keen blow, from an unseen foe!",
+    ANNOUNCE_RABBITKING_AGGRESSIVE = "I'm serious, what approaches sounds furious!",
+    ANNOUNCE_RABBITKING_PASSIVE = "What's that sound from underground?",
+    ANNOUNCE_RABBITKING_LUCKY = "A special rabbit! Please don't stab it!",
+    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "Got it!",
+    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "Not quite the site.",
 
 	BATTLECRY =
 	{
@@ -1649,7 +1650,8 @@ return{
                 "Poor soul.",
                 "Poor soul.",
             },
-		},
+        },
+
 		ADVENTURE_PORTAL = "I want to play a game with you!",
 		AMULET = "A glimmering jewel that's rife with life.",
 		ANIMAL_TRACK = "Those aren't my hoofprints!",
@@ -5366,16 +5368,32 @@ return{
 			HAS_ITEM = "Enough with the guff! Let's get that stuff!",
 			HAS_CHARACTER = "They're frowning because they're drowning! Hyuyu!",
 		},
-        RABBITKING_AGGRESSIVE = "TODO",
-        RABBITKING_PASSIVE = "todo",
-        RABBITKING_LUCKY = "TODO",
+        RABBITKING_AGGRESSIVE = "Let his kicks miss you, he's got an anger issue!",
+        RABBITKING_PASSIVE = "The hare has an air about him.",
+        RABBITKING_LUCKY = "That rabbit! Grab it!",
         RABBITKINGMINION_BUNNYMAN = "It's a warrin' warren!",
-        ARMOR_CARROTLURE = "TODO",
+        ARMOR_CARROTLURE = "Carrot? Wear it!",
         RABBITKINGHORN = "It plays a tunneling tune.",
         RABBITKINGHORN_CHEST = "Subterranean storage service",
-        RABBITKINGSPEAR = "TODO",
-        RABBITHAT = "TODO",
+        RABBITKINGSPEAR = "A bludgeon from a long-eared curmudgeon.",
+        RABBITHAT = "Aww, lookit that! A rabbit hat!",
         WORM_BOSS = "Squirmy wormy! Hyuyu!",
+
+        STONE_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "Now, will the tables turn?",
+            HAS_ITEM = "The centerpiece has been set.",
+        },
+
+        STONE_CHAIR =
+        {
+            GENERIC = "I'll take a seat and rest my feet.",
+            OCCUPIED = "Move your rear, I want to sit here!",
+        },
+
+        CARPENTRY_BLADE_MOONGLASS = "But what does it cut?",
+
+        CHEST_MIMIC_REVEALED = "Why did we open it?!",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",

@@ -58,6 +58,7 @@ return{
             MOUNTED = "I must first dismount from my mighty steed.",
             HASPET = "I can only command one beastie!",
 			TICOON = "I hath already found a guide.",
+            BUSY_STATION = "It is not my time yet.",
         },
         CARNIVALGAME_FEED =
         {
@@ -566,7 +567,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "I am an excellent craftswoman.",
 	ANNOUNCE_HOUNDS = "The beasts are approaching...",
 	ANNOUNCE_WORMS = "The earth quakes with the approach of a foe!",
-    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
+    ANNOUNCE_WORMS_BOSS = "A behemoth approaches.",
     ANNOUNCE_ACIDBATS = "Show yourselves, winged foes!",
 	ANNOUNCE_HUNGRY = "How I long for a feast!",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "Hush... The creature is near.",
@@ -1644,7 +1645,8 @@ return{
                 "What do you desire, apparition?",
                 "What do you desire, apparition?",
             },
-		},
+        },
+
 		ADVENTURE_PORTAL = "Adventure is calling.",
 		AMULET = "It's red, and a fighter. Just like me!",
 		ANIMAL_TRACK = "Oh! I love a good hunt.",
@@ -5370,6 +5372,22 @@ return{
         RABBITKINGSPEAR = "It shall be a delightful insult to mine enemies to perish by rabbit antler.",
         RABBITHAT = "Ridiculous.",
         WORM_BOSS = "A snake beast worthy of mine spear!",
+
+        STONE_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "No sorrier sight than a bare table. Let us plunder!",
+            HAS_ITEM = "Not the most impressive piece of loot.",
+        },
+
+        STONE_CHAIR =
+        {
+            GENERIC = "A warrior doth not sit.",
+            OCCUPIED = "On your feet, soldier!",
+        },
+
+        CARPENTRY_BLADE_MOONGLASS = "A shame it is not a weapon.",
+
+        CHEST_MIMIC_REVEALED = "It contained not a mystery, but a curse!",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

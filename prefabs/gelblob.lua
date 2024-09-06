@@ -244,6 +244,14 @@ local function OnDeath(inst)
 	end
 end
 
+local function DoDespawn(inst)
+	if not inst.components.health:IsDead() then
+		inst.despawning = true
+		inst.components.lootdropper:SetChanceLootTable(nil)
+		inst.components.health:Kill()
+	end
+end
+
 local function OnEntityWake(inst)
 	if inst._proximitytask == nil and inst.persists then
 		inst._proximitytask = inst:DoPeriodicTask(0.5, OnUpdateProximity, math.random() * 0.1, false)
@@ -303,6 +311,9 @@ local function OnHealthDelta(inst, data)
 
 			local x, y, z = inst.Transform:GetWorldPosition()
 			local numchunks = inst.level - newlevel + (newlevel == 0 and 1 or 0)
+			if inst.despawning then
+				numchunks = inst:IsAsleep() and 0 or math.min(3, numchunks)
+			end
 			local theta = math.random() * TWOPI
 			local delta = TWOPI / numchunks
 			for i = 1, numchunks do
@@ -464,6 +475,9 @@ local function fn()
 	inst:AddComponent("lootdropper")
 	inst.components.lootdropper:SetChanceLootTable("gelblob")
 
+	inst:AddComponent("sanityaura")
+	inst.components.sanityaura.aura = -TUNING.SANITYAURA_MED
+
 	inst:SetStateGraph("SGgelblob")
 	inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1)
 
@@ -478,6 +492,7 @@ local function fn()
 	inst.Absorb = Absorb
 	inst.OnContactChanged = OnContactChanged
 	inst.SuspendItem = SuspendItem
+	inst.DoDespawn = DoDespawn
 	inst.OnEntityWake = OnEntityWake
 	inst.OnEntitySleep = OnEntitySleep
 	inst.OnRemoveEntity = OnRemoveEntity

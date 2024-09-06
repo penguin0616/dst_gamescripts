@@ -110,11 +110,11 @@ function InventoryItemHolder:TakeItem(taker)
         self.item.components.inventoryitem:OnDropped(true)
     end
 
-    self.item = nil
-
     if self.onitemtakenfn ~= nil then
         self.onitemtakenfn(self.inst, self.item, taker)
     end
+
+    self.item = nil
 
     return true
 end

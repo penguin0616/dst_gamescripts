@@ -39,9 +39,13 @@ local actionhandlers =
 local events=
 {
 
-    EventHandler("death", function(inst) -- Pushed by worm_boss, not health component!
+    EventHandler("death", function(inst, data) -- Pushed by worm_boss, not health component!
         if not inst.sg:HasStateTag("dead") then
-            inst.sg:GoToState("death")
+            if not data.loop then
+                inst.sg:GoToState("death")
+            else
+                inst.sg:GoToState("death_loop")
+            end
         end
     end),
 
@@ -75,25 +79,7 @@ local events=
 
 local states =
 {
-    State{
 
-        name = "dirt_emerge",
-        tags = {"idle", "canrotate", "busy"},
-        onenter = function(inst, playanim)
-            inst.Physics:Stop()
-            inst.AnimState:PlayAnimation("dirt_emerge_slow")
-        end,
-
-        timeline =
-        {
-           -- TimeEvent(7*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/creatures/bat/flap") end ),
-        },
-
-        events=
-        {
-            --EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
-        },
-    },
 
     State{
 
@@ -202,6 +188,7 @@ local states =
                     inst.sg.statemem.loops = inst.sg.statemem.loops -1
                     if inst.sg.statemem.loops > 0 then
                         inst.sg.statemem.safeexit = true
+                        inst.worm.chews = nil
                         inst.sg:GoToState("eat",{loops=inst.sg.statemem.loops})
                         return
                     end
@@ -209,10 +196,16 @@ local states =
 
                 inst.sg.statemem.safeexit = true
                 if inst.sg.statemem.has_big_food and inst.worm.tail then
+                    inst.worm.chews = nil
                     inst.sg:GoToState("swallow")
                 elseif #inst.worm.components.inventory:FindItems(function() return true end) > 0 or inst.sg.statemem.has_big_food then
+                    inst.worm.chews = nil
                     inst.sg:GoToState("spit")
+                elseif inst.worm.chews and inst.worm.chews > 1 then
+                    inst.worm.chews = inst.worm.chews -1
+                    inst.sg:GoToState("eat")
                 else
+                    inst.worm.chews = nil
                     if math.random() > 0.5 then
                         inst.sg:GoToState("taunt")
                     else
@@ -250,6 +243,8 @@ local states =
         tags = {"busy"},
         onenter = function(inst, data)
             inst.AnimState:PlayAnimation("swallow", false)
+
+            inst.SoundEmitter:PlaySound("rifts4/worm_boss/swallow_other")
         end,
 
         timeline =

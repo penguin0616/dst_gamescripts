@@ -11,6 +11,7 @@ local GelBlobSpawner = Class(function(self, inst)
     self.gelblobs = {}
     self.gelblobcount = 0
     self.blobbedspawners = {}
+    self.cooldownspawners = {}
     self.MIN_GELBLOBS_PER_SPAWNER = TUNING.MIN_GELBLOBS_PER_SPAWNER
     self.MAX_GELBLOBS_PER_SPAWNER = TUNING.MAX_GELBLOBS_PER_SPAWNER
     self.MAX_GELBLOBS_TOTAL_IN_WORLD = TUNING.MAX_GELBLOBS_TOTAL_IN_WORLD
@@ -18,6 +19,7 @@ local GelBlobSpawner = Class(function(self, inst)
     self.MAX_GELBLOB_DIST_FROM_SPAWNER = TUNING.MAX_GELBLOB_DIST_FROM_SPAWNER
     self.MIN_GELBLOB_SPAWN_DELAY = TUNING.MIN_GELBLOB_SPAWN_DELAY
     self.VARIANCE_GELBLOB_SPAWN_DELAY = TUNING.VARIANCE_GELBLOB_SPAWN_DELAY
+    self.COOLDOWN_GELBLOB_SPAWNER_TIME = TUNING.COOLDOWN_GELBLOB_SPAWNER_TIME
 
     self.logictickaccumulator = 0
     self.LOGIC_TICK_TIME = 1
@@ -82,6 +84,7 @@ function GelBlobSpawner:WatchGelBlob(gelblob, spawner)
         end
         if not stillhasspawner then
             self.blobbedspawners[oldspawner] = nil
+            self.cooldownspawners[oldspawner] = self.COOLDOWN_GELBLOB_SPAWNER_TIME
         end
     end, gelblob)
 end
@@ -103,11 +106,15 @@ function GelBlobSpawner:IsGelBlobbed(spawner)
     return self.blobbedspawners[spawner]
 end
 
+function GelBlobSpawner:IsCooldowned(spawner)
+    return self.cooldownspawners[spawner]
+end
+
 GelBlobSpawner.SafeToSpawnCheck = function(pt)
     return TheWorld.Map:IsPassableAtPoint(pt:Get()) and TheWorld.Map:IsDeployPointClear(pt, nil, 2)
 end
 function GelBlobSpawner:SpawnGelBlobFromSpawner(spawner, player)
-    if self:IsGelBlobbed(spawner) then
+    if self:IsGelBlobbed(spawner) or self:IsCooldowned(spawner) then
         return false
     end
 
@@ -174,7 +181,7 @@ end
 
 function GelBlobSpawner:TryRemovingGelBlobs()
     local gelblob = next(self.gelblobs)
-	gelblob.components.health:Kill()
+    gelblob:DoDespawn()
 end
 
 function GelBlobSpawner:CheckGelBlobs()
@@ -187,18 +194,26 @@ function GelBlobSpawner:CheckGelBlobs()
         if count > 0 then
             self:TryRemovingGelBlobs()
         else
+            for spawner, timeleft in pairs(self.cooldownspawners) do
+                self.cooldownspawners[spawner] = nil
+            end
             self.inst:StopUpdatingComponent(self)
         end
     end
 end
 
 function GelBlobSpawner:OnUpdate(dt)
+    for spawner, timeleft in pairs(self.cooldownspawners) do
+        timeleft = timeleft - dt
+        self.cooldownspawners[spawner] = timeleft > 0 and timeleft or nil
+    end
     self.logictickaccumulator = self.logictickaccumulator + dt
     if self.logictickaccumulator > self.LOGIC_TICK_TIME then
         self.logictickaccumulator = 0
         self:CheckGelBlobs()
     end
 end
+GelBlobSpawner.LongUpdate = GelBlobSpawner.OnUpdate
 
 -- Save/Load/Debug.
 
@@ -214,6 +229,15 @@ function GelBlobSpawner:OnSave()
         for gelblob, spawner in pairs(self.gelblobs) do
             table.insert(data.gelblobs, {gelblob = gelblob.GUID, spawner = spawner.GUID})
             table.insert(ents, gelblob.GUID)
+            table.insert(ents, spawner.GUID)
+        end
+    end
+    if next(self.cooldownspawners) then
+        data = data or {}
+        ents = ents or {}
+        data.spawnercds = {}
+        for spawner, timeleft in pairs(self.cooldownspawners) do
+            table.insert(data.spawnercds, {spawner = spawner.GUID, timeleft = timeleft})
             table.insert(ents, spawner.GUID)
         end
     end
@@ -236,10 +260,33 @@ function GelBlobSpawner:LoadPostPass(newents, savedata)
             end
         end
     end
+    if savedata.spawnercds then
+        for _, spawnercds in ipairs(savedata.spawnercds) do
+            if newents[spawnercds.spawner] then
+                local spawner = newents[spawnercds.spawner].entity
+                self.cooldownspawners[spawner] = spawnercds.timeleft
+            end
+        end
+    end
 end
 
+local function TimerSort(a, b)
+    return a.timeleft == b.timeleft and a.spawner.GUID < b.spawner.GUID or a.timeleft < b.timeleft
+end
 function GelBlobSpawner:GetDebugString()
-    return string.format("SpawnPoints: %d, GelBlobs: %d/%d", #self.spawnpoints, self.gelblobcount, self.MAX_GELBLOBS_TOTAL_IN_WORLD)
+    local cds
+    if self.cooldownspawners then
+        cds = {}
+        for spawner, timeleft in pairs(self.cooldownspawners) do
+            table.insert(cds, {spawner = spawner, timeleft = timeleft,})
+        end
+        table.sort(cds, TimerSort)
+        for i, cd in ipairs(cds) do
+            cds[i] = string.format("%s : %f", tostring(cd.spawner.GUID), cd.timeleft)
+        end
+    end
+    cds = cds[1] and table.concat(cds, "\n\t") or nil
+    return string.format("SpawnPoints: %d, GelBlobs: %d/%d%s%s", #self.spawnpoints, self.gelblobcount, self.MAX_GELBLOBS_TOTAL_IN_WORLD, cds and "\n\t" or "", cds or "")
 end
 
 return GelBlobSpawner

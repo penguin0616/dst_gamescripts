@@ -72,7 +72,6 @@ local function fn()
         return inst
     end
 
-    inst.scrapbook_specialinfo = "RABBITKINGSPEAR"
     inst.scrapbook_weapondamage = { TUNING.RABBITKINGSPEAR_DAMAGE, TUNING.RABBITKINGSPEAR_DAMAGE * TUNING.RABBITKINGSPEAR_DAMAGE_BONUS }
 
     inst:AddComponent("weapon")

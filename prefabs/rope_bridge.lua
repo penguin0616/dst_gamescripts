@@ -3,6 +3,12 @@ require("prefabutil")
 local assets =
 {
 	Asset("ANIM", "anim/rope_bridge.zip"),
+	Asset("MINIMAP_IMAGE", "rope_bridge.png"),
+}
+
+local assets_kit =
+{
+	Asset("ANIM", "anim/rope_bridge.zip"),
 }
 
 local prefabs =
@@ -150,6 +156,50 @@ local function OnAnimOver(inst)
 	end
 end
 
+local function CreateMinimapIcon()
+	local inst = CreateEntity()
+
+	--[[Non-networked entity]]
+	inst.entity:SetCanSleep(TheWorld.ismastersim)
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddMiniMapEntity()
+
+	inst.MiniMapEntity:SetIcon("rope_bridge.png")
+
+	inst:AddTag("CLASSIFIED")
+
+	return inst
+end
+
+local function OnIconOffset(inst)
+	if inst.iconoffset:value() <= 0 then
+		if inst.icon then
+			inst.icon:Remove()
+			inst.icon = nil
+		end
+	else
+		if inst.icon == nil then
+			inst.icon = CreateMinimapIcon()
+			inst.icon.entity:SetParent(inst.entity)
+		end
+		if inst.iconoffset:value() > 1 then
+			inst.icon.Transform:SetPosition(2, 0, 0)
+		end
+	end
+end
+
+local function SetIconOffset(inst, offset)
+	offset = offset and (offset == 0 and 1 or 2) or 0
+	if offset ~= inst.iconoffset:value() then
+		inst.iconoffset:set(offset)
+		if not TheNet:IsDedicated() then
+			OnIconOffset(inst)
+		end
+	end
+end
+
 local function fn()
 	local inst = CreateEntity()
 
@@ -169,12 +219,14 @@ local function fn()
 	inst.AnimState:SetLayer(LAYER_BACKGROUND)
 	inst.AnimState:SetSortOrder(1)
 
+	inst.iconoffset = net_tinybyte(inst.GUID, "rope_bridge_fx.iconffset", "iconoffsetdirty")
 	inst.animdata = net_smallbyte(inst.GUID, "rope_bridge_fx.animdata", "animdatadirty")
 
 	inst.entity:SetPristine()
 
 	if not TheWorld.ismastersim then
 		inst:ListenForEvent("animdatadirty", OnAnimData)
+		inst:ListenForEvent("iconoffsetdirty", OnIconOffset)
 
 		return inst
 	end
@@ -191,6 +243,7 @@ local function fn()
 
 	inst.persists = false
 
+	inst.SetIconOffset = SetIconOffset
 	inst.SkipPre = SkipPre
 	inst.ShakeIt = ShakeIt
 	inst.KillFX = KillFX
@@ -253,14 +306,17 @@ local function OnDeploy(inst, pt, deployer)
                 deployer.SoundEmitter:PlaySoundWithParams("turnoftides/common/together/boat/damage", { intensity = 0.8 })
             end
 
-
             local spawndata = {
                 base_time = 0.5,
                 random_time = 0.0,
                 direction = spots.direction,
             }
+			local halfspots = #spots / 2
+			local centeridx = math.ceil(halfspots)
+			local centeroffset = centeridx ~= halfspots and 0 or 0.5
             for i, spot in ipairs(spots) do
                 spawndata.base_time = 0.25 * i
+				spawndata.icon_offset = i == centeridx and centeroffset or nil
                 ropebridgemanager:QueueCreateRopeBridgeAtPoint(spot.x, spot.y, spot.z, spawndata)
             end
         end
@@ -494,5 +550,5 @@ local function placer_postinit(inst)
 end
 
 return Prefab("rope_bridge_fx", fn, assets),
-	Prefab("rope_bridge_kit", kitfn, assets, prefabs),
+	Prefab("rope_bridge_kit", kitfn, assets_kit, prefabs),
 	MakePlacer("rope_bridge_kit_placer", nil, nil, nil, true, nil, nil, nil, nil, "eight", placer_postinit)

@@ -6,6 +6,7 @@ local assets =
 
 local prefabs =
 {
+    "itemmimic_puff",
     "itemmimic_revealed_shadow",
 	"nightmarefuel",
 }
@@ -18,6 +19,8 @@ local function on_eye_up(inst)
     if not inst.components.health:IsDead() then
         inst.AnimState:PlayAnimation("eye_appear")
         inst.AnimState:PushAnimation("eye_idle")
+
+        inst.SoundEmitter:PlaySound("rifts4/mimic/eye_peek")
     end
 end
 

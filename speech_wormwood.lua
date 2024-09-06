@@ -58,6 +58,7 @@ return{
             MOUNTED = "Not up here",
             HASPET = "Already have Care Friend",
 			TICOON = "Already have friend",
+            BUSY_STATION = "Like waiting!",
         },
         CARNIVALGAME_FEED =
         {
@@ -566,7 +567,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "Smarter now",
 	ANNOUNCE_HOUNDS = "Woofers!",
 	ANNOUNCE_WORMS = "Wigglies are coming",
-    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
+    ANNOUNCE_WORMS_BOSS = "Big Wiggly!",
     ANNOUNCE_ACIDBATS = "Flying Claws?",
 	ANNOUNCE_HUNGRY = "Need stuff for belly",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "Prints!",
@@ -992,11 +993,11 @@ return{
     -- rifts 4
     ANNOUNCE_EXIT_GELBLOB = "Bad sticky",
 	ANNOUNCE_SHADOWTHRALL_STEALTH = "Bad No-See Biter!",
-    ANNOUNCE_RABBITKING_AGGRESSIVE = "TODO",
-    ANNOUNCE_RABBITKING_PASSIVE = "TODO",
-    ANNOUNCE_RABBITKING_LUCKY = "TODO",
-    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "TODO",
-    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "TODO",
+    ANNOUNCE_RABBITKING_AGGRESSIVE = "Grumpy digging!",
+    ANNOUNCE_RABBITKING_PASSIVE = "Soft digging",
+    ANNOUNCE_RABBITKING_LUCKY = "Look! Special Squee Hopper!",
+    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "Hug Squee Hopper!",
+    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "Wrong here!",
 
 	BATTLECRY =
 	{
@@ -1648,7 +1649,8 @@ return{
                 "Floaty Friend",
                 "Floaty Friend",
             },
-		},
+        },
+
 		ADVENTURE_PORTAL = "Adventure?",
 		AMULET = "Yay! More life!",
 		ANIMAL_TRACK = "Mystery Prints!",
@@ -5364,16 +5366,32 @@ return{
 			HAS_ITEM = "What inside?",
 			HAS_CHARACTER = "Help stuck friend!",
 		},
-        RABBITKING_AGGRESSIVE = "TODO",
-        RABBITKING_PASSIVE = "TODO",
-        RABBITKING_LUCKY = "TODO",
-        RABBITKINGMINION_BUNNYMAN = "TODO",
-        ARMOR_CARROTLURE = "TODO",
-        RABBITKINGHORN = "TODO",
-        RABBITKINGHORN_CHEST = "TODO",
-        RABBITKINGSPEAR = "TODO",
-        RABBITHAT = "TODO",
+        RABBITKING_AGGRESSIVE = "Mean Squee Hopper!",
+        RABBITKING_PASSIVE = "Nice Squee Hopper",
+        RABBITKING_LUCKY = "Catch Special Squee Hopper!",
+        RABBITKINGMINION_BUNNYMAN = "Mean Squee Hopper's mean friend!",
+        ARMOR_CARROTLURE = "Wear orange belly stuff?",
+        RABBITKINGHORN = "Play Squee Hopper song?",
+        RABBITKINGHORN_CHEST = "Thanks Squee Hopper!",
+        RABBITKINGSPEAR = "Mean Squee Hopper stick",
+        RABBITHAT = "Squee Hopper hat",
         WORM_BOSS = "Hello, big wiggly!",
+
+        STONE_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "Empty table",
+            HAS_ITEM = "Table full",
+        },
+
+        STONE_CHAIR =
+        {
+            GENERIC = "Sit Place",
+            OCCUPIED = "That okay! Will sit somewhere else",
+        },
+
+        CARPENTRY_BLADE_MOONGLASS = "Careful, friends! Sharp!",
+
+        CHEST_MIMIC_REVEALED = "Bad stuff! Bad!",
     },
 
     DESCRIBE_GENERIC = "Friend?",

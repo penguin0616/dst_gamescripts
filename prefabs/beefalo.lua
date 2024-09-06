@@ -985,11 +985,14 @@ function fns.OnShadowPoopTimeOver(inst)
         inst.components.inventoryitem.canbepickedup = false
 
         inst.AnimState:PlayAnimation("disappear")
+        inst.SoundEmitter:PlaySound("rifts4/beefalo_revive/poop_disappear")
 
         inst:AddComponent("colourtweener")
         inst.components.colourtweener:StartTween(BLACK_COLOUR, 6*FRAMES)
 
+        inst:AddTag("NOCLICK")
         inst:ListenForEvent("animover", inst.Remove)
+        inst:ListenForEvent("entitysleep", inst.Remove)
 
         if inst.flies ~= nil then
             inst.flies:Remove()

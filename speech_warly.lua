@@ -58,6 +58,7 @@ return{
             MOUNTED = "Mon dieu, that's far away.",
             HASPET = "I already have a little companion.",
 			TICOON = "Non, that's not the one I'm following.",
+            BUSY_STATION = "Patience!",
         },
         CARNIVALGAME_FEED =
         {
@@ -1644,7 +1645,8 @@ return{
                 "Bonjour, Mademoiselle Abigail!",
                 "Bonjour, Mademoiselle Abigail!",
             },
-		},
+        },
+
 		ADVENTURE_PORTAL = "What fresh devilment is this?",
 		AMULET = "I wear safety.",
 		ANIMAL_TRACK = "These tracks point to fresh game.",
@@ -5370,6 +5372,22 @@ return{
         RABBITKINGSPEAR = "Made from real rabbit antler.",
         RABBITHAT = "Cute topper.",
         WORM_BOSS = "That worm looks hungry!",
+
+        STONE_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "All it's missing are homecooked food and good wine.",
+            HAS_ITEM = "All it's missing are homecooked food and good wine.",
+        },
+
+        STONE_CHAIR =
+        {
+            GENERIC = "Mon chair.",
+            OCCUPIED = "Leur chair.",
+        },
+
+        CARPENTRY_BLADE_MOONGLASS = "Will it slice le jambon?",
+
+        CHEST_MIMIC_REVEALED = "It's quite horrible!",
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

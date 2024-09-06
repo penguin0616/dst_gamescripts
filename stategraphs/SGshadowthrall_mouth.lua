@@ -1,12 +1,10 @@
 require("stategraphs/commonstates")
 
 local function ChooseAttack(inst, data)
-	if data and data.target and data.target:IsValid() then
+	if data and inst:TryRegisterBiteTarget(data.target) then
 		if inst.sg:HasStateTag("stealth") then
-			if inst:TryRegisterStealthBiteTarget(data.target) then
-				inst.sg:GoToState("stealth_smile", data.target)
-				return true
-			end
+			inst.sg:GoToState("stealth_smile", data.target)
+			return true
 		elseif not inst.components.timer:TimerExists("leap_cd") then
 			inst.sg:GoToState("leap_pre", data.target)
 			return true
@@ -56,6 +54,15 @@ local events =
 				inst.sg:GoToState("stealth_hit")
 			elseif not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("caninterrupt") then
 				inst.sg:GoToState("hit")
+			end
+		end
+	end),
+	EventHandler("enterstealth", function(inst)
+		if not (inst.components.health:IsDead() or inst.sg:HasStateTag("stealth")) then
+			if inst.sg:HasStateTag("busy") then
+				inst.sg.mem.enterstealth = true
+			else
+				inst.sg:GoToState("stealth_on")
 			end
 		end
 	end),
@@ -218,6 +225,10 @@ local states =
 		tags = { "idle", "canrotate" },
 
 		onenter = function(inst, looped)
+			if inst.sg.mem.enterstealth then
+				inst.sg:GoToState("stealth_on")
+				return
+			end
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation(looped and "idle_2" or "idle")
 			for i = 1, math.random(2) - (looped and 0 or 1) do
@@ -436,6 +447,7 @@ local states =
 			if not inst.sg.statemem.leaping then
 				local x, y, z = inst.Transform:GetWorldPosition()
 				ToggleOnAllObjectCollisionsAt(inst, x, z)
+				inst:ClearBiteTarget()
 			end
 		end,
 	},
@@ -484,12 +496,16 @@ local states =
 		{
 			EventHandler("dupe_animover", function(inst)
 				if inst.dupe.AnimState:AnimDone() then
+					inst.sg.statemem.landing = true
 					inst.sg:GoToState("land", inst.sg.statemem.target)
 				end
 			end),
 		},
 
 		onexit = function(inst)
+			if not inst.sg.statemem.landing then
+				inst:ClearBiteTarget()
+			end
 			inst.dupe.Physics:ClearMotorVelOverride()
 			inst.dupe.Physics:Stop()
 			inst.dupe:RemoveFromScene()
@@ -526,7 +542,7 @@ local states =
 			FrameEvent(9, function(inst)
 				if not inst.components.combat:InCooldown() then
 					local target = inst.sg.statemem.target
-					if TryBiteRange(inst, target) and inst:IsNear(target, 6) then
+					if TryBiteRange(inst, target) and inst:IsNear(target, 6) and inst:TryRegisterBiteTarget(target) then
 						inst.sg.statemem.biting = true
 						if inst.sg.mem.lasttargets[target] then
 							inst.sg:GoToState("bite_final")
@@ -556,6 +572,7 @@ local states =
 		onexit = function(inst)
 			if not inst.sg.statemem.biting then
 				ResetBiteTargets(inst)
+				inst:ClearBiteTarget()
 			end
 		end,
 	},
@@ -577,6 +594,7 @@ local states =
 		{
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
+					inst.sg.statemem.biting = true
 					if TryBiteRange(inst, inst.sg.statemem.target) then
 						inst.sg:GoToState("bite_loop", { target = inst.sg.statemem.target })
 						return
@@ -585,6 +603,12 @@ local states =
 				end
 			end),
 		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.biting then
+				inst:ClearBiteTarget()
+			end
+		end,
 	},
 
 	State{
@@ -641,6 +665,7 @@ local states =
 		onexit = function(inst)
 			if not inst.sg.statemem.biting then
 				ResetBiteTargets(inst)
+				inst:ClearBiteTarget(TUNING.SHADOWTHRALL_MOUTH_BITE_GROUP_PERIOD)
 			end
 			inst.Physics:ClearMotorVelOverride()
 			inst.Physics:Stop()
@@ -684,6 +709,7 @@ local states =
 
 		onexit = function(inst)
 			ResetBiteTargets(inst)
+			inst:ClearBiteTarget(TUNING.SHADOWTHRALL_MOUTH_BITE_GROUP_PERIOD)
 			inst.Physics:ClearMotorVelOverride()
 			inst.Physics:Stop()
 		end,
@@ -706,6 +732,32 @@ local states =
 				end
 			end),
 		},
+	},
+
+	State{
+		name = "spawndelay",
+		tags = { "stealth", "busy", "noattack", "temp_invincible", "invisible" },
+
+		onenter = function(inst, delay)
+			inst.components.locomotor:Stop()
+			inst.Physics:SetActive(false)
+			inst:Hide()
+			inst:AddTag("NOCLICK")
+			inst.sg:SetTimeout(delay or 0)
+		end,
+
+		ontimeout = function(inst)
+			inst.sg.statemem.spawning = true
+			inst.sg:GoToState("stealth_idle")
+		end,
+
+		onexit = function(inst)
+			if not inst.sg.statemem.spawning then
+				inst:Show()
+			end
+			inst.Physics:SetActive(true)
+			inst:RemoveTag("NOCLICK")
+		end,
 	},
 
 	State{
@@ -782,7 +834,7 @@ local states =
 			if not inst.sg.statemem.stalking then
 				inst.Physics:ClearMotorVelOverride()
 				inst.Physics:Stop()
-				inst:ClearStealthBiteTarget()
+				inst:ClearBiteTarget()
 			end
 		end,
 	},
@@ -812,6 +864,7 @@ local states =
 			end),
 			FrameEvent(22, function(inst)
 				DoAOEAttack(inst, 1.5)
+				inst:ClearBiteTarget(TUNING.SHADOWTHRALL_MOUTH_STEALTH_ATTACK_GROUP_PERIOD)
 			end),
 		},
 
@@ -829,7 +882,7 @@ local states =
 			inst.Physics:ClearMotorVelOverride()
 			inst.Physics:Stop()
 			if not inst.sg.statemem.stalking then
-				inst:ClearStealthBiteTarget()
+				inst:ClearBiteTarget()
 			end
 		end,
 	},
@@ -861,7 +914,7 @@ local states =
 		onexit = function(inst)
 			inst.Physics:ClearMotorVelOverride()
 			inst.Physics:Stop()
-			inst:ClearStealthBiteTarget()
+			inst:ClearBiteTarget()
 		end,
 	},
 
@@ -872,6 +925,7 @@ local states =
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("stealth_on")
+			inst.sg.mem.enterstealth = nil
 		end,
 
 		events =
@@ -890,15 +944,44 @@ local states =
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
-			inst.AnimState:PlayAnimation("stealth_off")
+			inst.AnimState:PlayAnimation("stealth_off_pre")
+			inst.AnimState:PushAnimation("stealth_off_loop")
+			inst.AnimState:PushAnimation("stealth_off_loop")
+			inst.AnimState:PushAnimation("stealth_off_loop", false)
 			inst.SoundEmitter:PlaySound("rifts2/thrall_generic/vocalization_hit")
 		end,
 
 		timeline =
 		{
-			--[[FrameEvent(9, function(inst)
+			FrameEvent(28, function(inst)
+				inst.sg:AddStateTag("caninterrupt")
+			end),
+		},
+
+		events =
+		{
+			EventHandler("animqueueover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("stealth_hit_pst")
+				end
+			end),
+		},
+	},
+
+	State{
+		name = "stealth_hit_pst",
+		tags = { "busy", "caninterrupt" },
+
+		onenter = function(inst)
+			inst.components.locomotor:Stop()
+			inst.AnimState:PlayAnimation("stealth_off_pst")
+		end,
+
+		timeline =
+		{
+			FrameEvent(30, function(inst)
 				inst.sg:RemoveStateTag("busy")
-			end),]]
+			end),
 		},
 
 		events =

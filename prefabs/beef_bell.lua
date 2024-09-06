@@ -81,7 +81,7 @@ end
 local function CleanUpBell(inst)
     inst:RemoveTag("nobundling")
 
-    inst.components.inventoryitem:ChangeImageName(nil)
+    inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
 
     inst.AnimState:PlayAnimation("idle1", false)
     inst.components.inventoryitem.nobounce = false
@@ -159,7 +159,9 @@ local function OnUsedOnBeefalo(inst, target, user)
 
     if successful then
         inst:AddTag("nobundling")
-        inst.components.inventoryitem:ChangeImageName(inst.prefab.."_linked")
+
+        local basename = inst:GetSkinName() or inst.prefab
+        inst.components.inventoryitem:ChangeImageName(basename.."_linked")
         inst.AnimState:PlayAnimation("idle2", true)
 
         if inst:HasTag("shadowbell") then
@@ -284,6 +286,8 @@ local function CommonFn(data)
     inst:AddTag("bell")
     inst:AddTag("donotautopick")
 
+    inst._sound = data.sound
+
     if data.common_postinit ~= nil then
         data.common_postinit(inst, data)
     end
@@ -333,6 +337,7 @@ local function RegularFn()
     return CommonFn({
         bank  = "cowbell",
         build = "cowbell",
+        sound = "yotb_2021/common/cow_bell",
     })
 end
 
@@ -347,6 +352,7 @@ local function ShadowFn()
     local inst = CommonFn({
         bank  = "cowbell_shadow",
         build = "cowbell_shadow",
+        sound = "rifts4/beefalo_revive/bell_ring",
         common_postinit = ShadowCommonPostInit,
     })
 

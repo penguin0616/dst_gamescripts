@@ -7654,6 +7654,8 @@ local states =
 
             local item = inst.bufferedaction ~= nil and inst.bufferedaction.invobject or nil
 
+            inst.sg.statemem.sound = item ~= nil and item._sound or "yotb_2021/common/cow_bell"
+
             if item == nil then
                 inst.AnimState:OverrideSymbol("cbell", "cowbell", "cbell")
             else
@@ -7672,21 +7674,15 @@ local states =
 
         timeline =
         {
-            TimeEvent(1*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
-            TimeEvent(10*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
-            TimeEvent(15 * FRAMES, function(inst)
-                inst:PerformBufferedAction()
-            end),
-			TimeEvent(30 * FRAMES, function(inst)
-				inst.sg:RemoveStateTag("busy")
-			end),
-
-            TimeEvent(15*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
-            TimeEvent(25*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
-            TimeEvent(35*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
-            TimeEvent(46*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
-            TimeEvent(56*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
-            TimeEvent(67*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
+            FrameEvent(10, function(inst) inst.SoundEmitter:PlaySound(inst.sg.statemem.sound) end),
+            FrameEvent(15, function(inst) inst:PerformBufferedAction() end),
+            FrameEvent(15, function(inst) inst.SoundEmitter:PlaySound(inst.sg.statemem.sound) end),
+            FrameEvent(25, function(inst) inst.SoundEmitter:PlaySound(inst.sg.statemem.sound) end),
+            FrameEvent(30, function(inst) inst.sg:RemoveStateTag("busy") end),
+            FrameEvent(35, function(inst) inst.SoundEmitter:PlaySound(inst.sg.statemem.sound) end),
+            FrameEvent(46, function(inst) inst.SoundEmitter:PlaySound(inst.sg.statemem.sound) end),
+            FrameEvent(56, function(inst) inst.SoundEmitter:PlaySound(inst.sg.statemem.sound) end),
+            FrameEvent(67, function(inst) inst.SoundEmitter:PlaySound(inst.sg.statemem.sound) end),
         },
 
         events =
@@ -12386,7 +12382,7 @@ local states =
 						end
 					end
 				end
-			end
+			end            
 			inst:ShowHUD(true)
 			inst:SetCameraDistance()
 			inst:Show()
@@ -12401,6 +12397,8 @@ local states =
 			if inst.components.talker ~= nil then
 				inst.components.talker:StopIgnoringAll("devoured")
 			end
+
+            inst._wormdigestionsound:set(false)
 		end,
 	},
 

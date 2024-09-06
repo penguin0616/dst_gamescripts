@@ -37,10 +37,10 @@ local function retargetfn(inst)
     return target2
 end
 
-SetSharedLootTable('nightmare_creature',
+SetSharedLootTable("nightmare_creature",
 {
-    {'nightmarefuel', 1.0},
-    {'nightmarefuel', 0.5},
+    {"nightmarefuel", 1.0},
+    {"nightmarefuel", 0.5},
 })
 
 local function CanShareTargetWith(dude)
@@ -109,6 +109,55 @@ local function RuinsNightmare_OnNewState(inst, data)
     end
 end
 
+SetSharedLootTable("ruinsnightmare",
+{
+    { "nightmarefuel", 1.00 },
+    { "nightmarefuel", 1.00 },
+    { "nightmarefuel", 0.50 },
+    { "nightmarefuel", 0.25 },
+})
+
+SetSharedLootTable("ruinsnightmare_rifts",
+{
+    { "horrorfuel",    1.00 },
+    { "horrorfuel",    1.00 },
+    { "horrorfuel",    0.50 },
+    { "nightmarefuel", 1.00 },
+    { "nightmarefuel", 0.67 },
+})
+
+
+local function RuinsNightmare_CheckRift(inst)
+    local riftspawner = TheWorld.components.riftspawner
+
+    if riftspawner ~= nil and riftspawner:IsShadowPortalActive() then
+        if inst.components.planarentity == nil then
+            inst:AddComponent("planarentity")
+
+            inst:AddComponent("planardamage")
+            inst.components.planardamage:SetBaseDamage(TUNING.RUINSNIGHTMARE_PLANAR_DAMAGE)
+
+            inst.components.lootdropper:SetChanceLootTable("ruinsnightmare_rifts")
+            inst.components.locomotor.walkspeed = TUNING.RUINSNIGHTMARE_SPEED_RIFTS
+
+            inst.AnimState:ShowSymbol("red")
+            inst.AnimState:SetLightOverride(1)
+            inst.AnimState:SetMultColour(1, 1, 1, 0.65)
+        end
+
+    elseif inst.components.planarentity ~= nil then
+        inst:RemoveComponent("planarentity")
+        inst:RemoveComponent("planardamage")
+
+        inst.components.lootdropper:SetChanceLootTable("ruinsnightmare")
+        inst.components.locomotor.walkspeed = TUNING.RUINSNIGHTMARE_SPEED
+
+        inst.AnimState:HideSymbol("red")
+        inst.AnimState:SetLightOverride(0)
+        inst.AnimState:SetMultColour(1, 1, 1, 0.5)
+    end
+end
+
 --------------------------------------------------------------------------------------------------------------------------------
 
 local function MakeShadowCreature(data)
@@ -141,7 +190,7 @@ local function MakeShadowCreature(data)
 
         inst.Transform:SetFourFaced()
 
-        MakeCharacterPhysics(inst, 10, 1.5)
+        MakeCharacterPhysics(inst, 10, data.physics_rad or 1.5)
         RemovePhysicsColliders(inst)
         inst.Physics:SetCollisionGroup(COLLISION.SANITY)
         inst.Physics:CollidesWith(COLLISION.SANITY)
@@ -194,7 +243,7 @@ local function MakeShadowCreature(data)
         inst:AddComponent("shadowsubmissive")
 
         inst:AddComponent("lootdropper")
-        inst.components.lootdropper:SetChanceLootTable('nightmare_creature')
+        inst.components.lootdropper:SetChanceLootTable("nightmare_creature")
 
         inst:ListenForEvent("attacked", OnAttacked)
         inst:ListenForEvent("death", OnDeath)
@@ -247,11 +296,23 @@ local data =
         damage = TUNING.RUINSNIGHTMARE_DAMAGE,
         attackperiod = TUNING.RUINSNIGHTMARE_ATTACK_PERIOD,
         sanityreward = TUNING.SANITY_HUGE,
+        physics_rad = 2,
         stategraph = "SGruinsnightmare",
         master_postinit = function(inst)
+            inst.AnimState:HideSymbol("red")
+
+            inst.components.combat:SetRange(TUNING.RUINSNIGHTMARE_ATTACK_RANGE)
+
+            inst.components.lootdropper:SetChanceLootTable("ruinsnightmare")
+
             inst._onnewstate = RuinsNightmare_OnNewState
+            inst._onriftchanged = function(world) RuinsNightmare_CheckRift(inst) end
+
+            inst._onriftchanged(TheWorld)
 
             inst:ListenForEvent("newstate", inst._onnewstate)
+            inst:ListenForEvent("ms_riftaddedtopool",     inst._onriftchanged, TheWorld)
+            inst:ListenForEvent("ms_riftremovedfrompool", inst._onriftchanged, TheWorld)
         end
     },
 }

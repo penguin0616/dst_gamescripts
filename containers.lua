@@ -945,6 +945,7 @@ for y = 2, 0, -1 do
 end
 
 params.pandoraschest = params.treasurechest
+params.chest_mimic = params.pandoraschest
 params.skullchest = params.treasurechest
 params.terrariumchest = params.treasurechest
 params.sunkenchest = params.treasurechest

@@ -158,6 +158,8 @@ local prefabs =
     "rabbitking_lucky",
 
     "itemmimic_revealed",
+
+    "chest_mimic",
 }
 
 local monsters =
@@ -216,20 +218,21 @@ local wormspawn =
         crazy       = function() return TUNING.TOTAL_DAY_TIME * 10, math.random() * TUNING.TOTAL_DAY_TIME * 2.5 end,
     },
 
-    specialupgradecheck = function(wave_pre_upgraded, wave_override_chance)
-        if wave_pre_upgraded ~= true and wave_pre_upgraded ~= false then
-            wave_pre_upgraded = false
+    specialupgradecheck = function(wave_pre_upgraded, wave_override_chance, _wave_override_settings)
+        
+        wave_pre_upgraded = false
 
-            if math.random() < wave_override_chance then
-                wave_pre_upgraded = true
-            end
+        local chance = wave_override_chance * (_wave_override_settings["worm_boss"] or 1)
+        if _wave_override_settings["worm_boss"] ~= 0 and (math.random() < chance or _wave_override_settings["worm_boss"] == 9999) then
+            wave_pre_upgraded = true
+        end
 
-            if wave_pre_upgraded then
-                wave_override_chance = 0
-            else                
-                wave_override_chance = math.min(0.5, wave_override_chance + 0.05)
-            end
-        end    
+        if wave_pre_upgraded then
+            wave_override_chance = 0
+        else                
+            wave_override_chance = math.min(0.5, wave_override_chance + 0.05)
+        end 
+
         return wave_pre_upgraded, wave_override_chance
     end,
 
@@ -243,10 +246,10 @@ local wormspawn =
     warning_sound_thresholds = function(wave_pre_upgraded, wave_override_chance)
         if wave_pre_upgraded then
             return {
-                { time = 30, sound = "LVL4_WORM" }, -- NEED SOUND
-                { time = 60, sound = "LVL4_WORM" },
-                { time = 90, sound = "LVL4_WORM" },
-                { time = 500, sound = "LVL4_WORM" },
+                { time = 30, sound = "WORM_BOSS" },
+                { time = 60, sound = "WORM_BOSS" },
+                { time = 90, sound = "WORM_BOSS" },
+                { time = 500, sound = "WORM_BOSS" },
             }, wave_pre_upgraded
         else
             return {

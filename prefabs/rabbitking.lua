@@ -347,8 +347,7 @@ local function OnLoad_bunnyman(inst, data)
     end
 end
 
-local BUNNYMAN_SCRAPBOOK_HIDE = { "ARM_carry" }
-
+local BUNNYMAN_SCRAPBOOK_HIDE = { "hat", "ARM_carry", "HAIR_HAT" }
 local function fn_bunnyman()
     local inst = CreateEntity()
 

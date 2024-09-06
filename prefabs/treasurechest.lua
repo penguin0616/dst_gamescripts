@@ -424,13 +424,25 @@ local function pandora_master_postinit(inst)
         local is_asleep = inst:IsAsleep()
         local was_open = inst.components.container:IsOpen()
 
+        -- If chest mimics are live, we might want to turn into one. Let's check!
+        local become_mimic = TheWorld.components.shadowthrall_mimics ~= nil
+                and TheWorld.components.shadowthrall_mimics.IsEnabled()
+                and math.random() < TUNING.CHEST_MIMIC_CHANCE
+
+        if become_mimic then
+            inst = ReplacePrefab(inst, "chest_mimic")
+        end
+
         if inst.components.scenariorunner == nil then
-            inst.components.container:Close()
+            -- Forcing a close on a mimic will transform it... awkward.
+            if not become_mimic then
+                inst.components.container:Close()
+            end
             inst.components.container:DropEverythingWithTag("irreplaceable")
             inst.components.container:DestroyContents()
 
             inst:AddComponent("scenariorunner")
-            inst.components.scenariorunner:SetScript("chest_labyrinth")
+            inst.components.scenariorunner:SetScript((become_mimic and "chest_labyrinth_mimic") or "chest_labyrinth")
             inst.components.scenariorunner:Run()
         end
 

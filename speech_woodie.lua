@@ -58,6 +58,7 @@ return{
             MOUNTED = "Not as tall as a moose, but still too high to place that.",
             HASPET = "I need to take care of the pet I have.",
 			TICOON = "I've already got another one of these critters helping me.",
+            BUSY_STATION = "We gotta wait, Luce.",
         },
         CARNIVALGAME_FEED =
         {
@@ -567,7 +568,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "Informative.",
 	ANNOUNCE_HOUNDS = "There's something out there.",
 	ANNOUNCE_WORMS = "Oh geez. I hope you're ready, Lucy.",
-    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
+    ANNOUNCE_WORMS_BOSS = "Sounds like a hefty one, eh Luce?",
     ANNOUNCE_ACIDBATS = "You hear something, Lucy?",
 	ANNOUNCE_HUNGRY = "I'm getting peckish.",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "The beastie is nearby.",
@@ -988,12 +989,12 @@ return{
 
     -- rifts 4
     ANNOUNCE_EXIT_GELBLOB = "I think some got in my mouth!",
-	ANNOUNCE_SHADOWTHRALL_STEALTH = "What the heck? Luce, you see what bit me?",
-    ANNOUNCE_RABBITKING_AGGRESSIVE = "TODO",
-    ANNOUNCE_RABBITKING_PASSIVE = "TODO",
-    ANNOUNCE_RABBITKING_LUCKY = "TODO",
-    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "TODO",
-    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "TODO",
+	ANNOUNCE_SHADOWTHRALL_STEALTH = "What the heck bit me?",
+    ANNOUNCE_RABBITKING_AGGRESSIVE = "Hear that clawing, Luce?",
+    ANNOUNCE_RABBITKING_PASSIVE = "Something's crawling in the dirt.",
+    ANNOUNCE_RABBITKING_LUCKY = "Lookit that rabbit, Lucy!",
+    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "Got'er!",
+    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "Maybe we should try somewhere else.",
 
 	BATTLECRY =
 	{
@@ -1645,7 +1646,8 @@ return{
                 "That ain't right.",
                 "That ain't right.",
             },
-		},
+        },
+
 		ADVENTURE_PORTAL = "I wonder if that's the way out of here.",
 		AMULET = "Always have a backup plan.",
 		ANIMAL_TRACK = "A large woodland creature passed this way!",
@@ -5361,16 +5363,32 @@ return{
 			HAS_ITEM = "Hmm, is it worth fishin' it out?",
 			HAS_CHARACTER = "I don't think they can breath in there.",
 		},
-        RABBITKING_AGGRESSIVE = "TODO",
-        RABBITKING_PASSIVE = "TODO",
-        RABBITKING_LUCKY = "TODO",
-        RABBITKINGMINION_BUNNYMAN = "TODO",
-        ARMOR_CARROTLURE = "TODO",
-        RABBITKINGHORN = "TODO",
-        RABBITKINGHORN_CHEST = "TODO",
-        RABBITKINGSPEAR = "TODO",
-        RABBITHAT = "TODO",
+        RABBITKING_AGGRESSIVE = "Someone woke up on the wrong side of the den.",
+        RABBITKING_PASSIVE = "Hey lil' buddy, whatcha got for us?",
+        RABBITKING_LUCKY = "Let's get'er, Luce!",
+        RABBITKINGMINION_BUNNYMAN = "Back off, bunny!",
+        ARMOR_CARROTLURE = "Nice carrot vest.",
+        RABBITKINGHORN = "A horn, eh? I prefer woodwinds.",
+        RABBITKINGHORN_CHEST = "Guess you can never have too much storage.",
+        RABBITKINGSPEAR = "The rabbit's violence lives on!",
+        RABBITHAT = "I can't keep up with these trends.",
         WORM_BOSS = "We can take her, Luce!",
+
+        STONE_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "What kind of wood is this?!",
+            HAS_ITEM = "What kind of wood is this?!",
+        },
+
+        STONE_CHAIR =
+        {
+            GENERIC = "It looks a bit hard for my behind.",
+            OCCUPIED = "They're takin' a load off, eh?",
+        },
+
+        CARPENTRY_BLADE_MOONGLASS = "I know, Lucy. You're more versatile.",
+
+        CHEST_MIMIC_REVEALED = "No! Noooo!",
     },
 
     DESCRIBE_GENERIC = "What's that, eh?",

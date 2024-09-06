@@ -58,6 +58,7 @@ return{
             MOUNTED = "I can't place anything from atop this big lout!",
             HASPET = "I've already got one!",
 			TICOON = "Wait... you're not my ticoon!",
+            BUSY_STATION = "I hate waiting.",
         },
         CARNIVALGAME_FEED =
         {
@@ -568,7 +569,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "So much information!",
 	ANNOUNCE_HOUNDS = "Show yourself!",
 	ANNOUNCE_WORMS = "I do NOT wanna see what made that sound!",
-    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
+    ANNOUNCE_WORMS_BOSS = "Let's not stick around for that.",
     ANNOUNCE_ACIDBATS = "Well that's not good.",
 	ANNOUNCE_HUNGRY = "I need food!",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "I'll find you!",
@@ -1651,7 +1652,8 @@ return{
                 "So, what happened to you?",
                 "So, what happened to you?",
             },
-		},
+        },
+
 		ADVENTURE_PORTAL = "Maybe that leads home.",
 		AMULET = "I have no idea what it does, but it feels good to wear it!",
 		ANIMAL_TRACK = "It leads to my new friend.",
@@ -5367,7 +5369,7 @@ return{
 			HAS_ITEM = "Whatever is in there, I don't want it that badly.",
 			HAS_CHARACTER = "Maybe I should help.",
 		},
-        RABBITKING_AGGRESSIVE = "What is your problem, rabbit?!",
+        RABBITKING_AGGRESSIVE = "You have some real issues, buddy.",
         RABBITKING_PASSIVE = "What does it want?",
         RABBITKING_LUCKY = "I want that rabbit!",
         RABBITKINGMINION_BUNNYMAN = "Don't you guys have anything better to do?",
@@ -5377,6 +5379,22 @@ return{
         RABBITKINGSPEAR = "The original owner was a jerk.",
         RABBITHAT = "Ha! I want it.",
         WORM_BOSS = "Must be the mother.",
+
+        STONE_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "I'm not sure how to feel about non-flammable furniture.",
+            HAS_ITEM = "I'm not sure how to feel about non-flammable furniture.",
+        },
+
+        STONE_CHAIR =
+        {
+            GENERIC = "That definitely will not burn.",
+            OCCUPIED = "You can sit there. That chair will not spontaneously combust.",
+        },
+
+        CARPENTRY_BLADE_MOONGLASS = "I wish I could throw it.",
+
+        CHEST_MIMIC_REVEALED = "Kind of nasty.",
     },
 
     DESCRIBE_GENERIC = "I have no idea what that is!",

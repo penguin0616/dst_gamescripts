@@ -58,6 +58,7 @@ return{
             MOUNTED = "Can't assemble anything from up here.",
             HASPET = "Nah. I'm a one-pet gal.",
 			TICOON = "I'm not lookin' to expand my workforce.",
+            BUSY_STATION = "Looks like I gotta wait.",
         },
         CARNIVALGAME_FEED =
         {
@@ -566,7 +567,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "Cutting edge!",
 	ANNOUNCE_HOUNDS = "Are those dogs I hear?",
 	ANNOUNCE_WORMS = "Was that a tremor?",
-    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
+    ANNOUNCE_WORMS_BOSS = "Oh man, that's a big one.",
     ANNOUNCE_ACIDBATS = "I don't like the sound of that.",
 	ANNOUNCE_HUNGRY = "When's lunch?",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "I didn't order lunch to go. Get'em!",
@@ -993,12 +994,12 @@ return{
 
     -- rifts 4
     ANNOUNCE_EXIT_GELBLOB = "Let's not speak of this again.",
-	ANNOUNCE_SHADOWTHRALL_STEALTH = "Ow! Quit your skulkin' and fight me fair!",
+	ANNOUNCE_SHADOWTHRALL_STEALTH = "Ow! Quit skulkin' and fight me fair!",
     ANNOUNCE_RABBITKING_AGGRESSIVE = "What's with all that scratchin'?",
     ANNOUNCE_RABBITKING_PASSIVE = "I hear a critter comin'.",
-    ANNOUNCE_RABBITKING_LUCKY = "TODO",
-    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "TODO",
-    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "TODO",
+    ANNOUNCE_RABBITKING_LUCKY = "There is somethin' about that rabbit!",
+    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "Gotcha, rabbit!",
+    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "Nope, ain't the right spot.",
 
 	BATTLECRY =
 	{
@@ -1650,7 +1651,8 @@ return{
                 "How are you, boo?",
                 "How are you, boo?",
             },
-		},
+        },
+
 		ADVENTURE_PORTAL = "I ain't jumping willy-nilly through strange portals!",
 		AMULET = "Jewelry ain't really my thing.",
 		ANIMAL_TRACK = "Something tasty passed through here.",
@@ -5364,18 +5366,34 @@ return{
 		{
 			GENERIC = "That ain't no engine grease I ever seen.",
 			HAS_ITEM = "Looks like somethin's caught inside.",
-			HAS_CHARACTER = "Someone's in trouble.",
+			HAS_CHARACTER = "Someone's in tough spot.",
 		},
-        RABBITKING_AGGRESSIVE = "TODO",
-        RABBITKING_PASSIVE = "TODO",
-        RABBITKING_LUCKY = "TODO",
-        RABBITKINGMINION_BUNNYMAN = "TODO",
-        ARMOR_CARROTLURE = "TODO",
-        RABBITKINGHORN = "It must play a thumpin' tune. Ugh, puns.",
-        RABBITKINGHORN_CHEST = "TODO",
-        RABBITKINGSPEAR = "TODO",
-        RABBITHAT = "TODO",
+        RABBITKING_AGGRESSIVE = "What is your problem, rabbit?!",
+        RABBITKING_PASSIVE = "Friendly lil' fella ain't he?",
+        RABBITKING_LUCKY = "Gotta catch me that rabbit!",
+        RABBITKINGMINION_BUNNYMAN = "Must be somethin' in the carrots.",
+        ARMOR_CARROTLURE = "Huh. Guess ya can make clothes out of just about anything.",
+        RABBITKINGHORN = "It must play a thumpin' tune.",
+        RABBITKINGHORN_CHEST = "Mighty kind of them rabbits.",
+        RABBITKINGSPEAR = "Never thought of makin' weapons out of rabbit parts.",
+        RABBITHAT = "Okay, that's pretty darn cute.",
         WORM_BOSS = "Now that's a big ol' worm.",
+
+        STONE_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "I don't care if it's fancy, just solidly built.",
+            HAS_ITEM = "It's doin' what tables do.",
+        },
+
+        STONE_CHAIR =
+        {
+            GENERIC = "Looks sturdy enough.",
+            OCCUPIED = "Looks like that seat's spoken for.",
+        },
+
+        CARPENTRY_BLADE_MOONGLASS = "That is one sweet saw blade.",
+
+        CHEST_MIMIC_REVEALED = "Didn't I tell ya?!",
     },
 
     DESCRIBE_GENERIC = "Incredible! I have no idea what that is.",

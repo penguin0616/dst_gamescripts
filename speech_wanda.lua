@@ -58,6 +58,7 @@ return{
             MOUNTED = "I'm going to pull a muscle if I try grabbing that from up here.",
             HASPET = "I can't divide my time between any more pets!",
 			TICOON = "Wait a tick, wasn't I already following one?",
+            BUSY_STATION = "This is taking forever.",
         },
         CARNIVALGAME_FEED =
         {
@@ -566,7 +567,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "That really got the gears in my head turning!",
 	ANNOUNCE_HOUNDS = "Wait a tick... did you hear something?",
 	ANNOUNCE_WORMS = "That rumble felt... ominous.",
-    ANNOUNCE_WORMS_BOSS = "That rumblin' ain't good.", --[[TODO]]
+    ANNOUNCE_WORMS_BOSS = "It's coming...",
     ANNOUNCE_ACIDBATS = "Something's coming.",
 	ANNOUNCE_HUNGRY = "How long has it been since I last ate?",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "An animal must've been through here just moments ago.",
@@ -1644,7 +1645,8 @@ return{
                 "Poor thing. Her time came too soon.",
                 "Poor thing. Her time came too soon.",
             },
-		},
+        },
+
 		ADVENTURE_PORTAL = "What's the worst that could happen?",
 		AMULET = "I'll breathe easier knowing I have a backup plan.",
 		ANIMAL_TRACK = "Something went that way... hopefully something tasty.",
@@ -5370,6 +5372,22 @@ return{
         RABBITKINGSPEAR = "Surprisingly intimidating.",
         RABBITHAT = "A fashion statement?",
         WORM_BOSS = "We go back, don't we?",
+
+        STONE_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "A table. Will wonders never cease.",
+            HAS_ITEM = "Yes, there is something on it.",
+        },
+
+        STONE_CHAIR =
+        {
+            GENERIC = "I believe in my time, we called that a chair.",
+            OCCUPIED = "It is occupied.",
+        },
+
+        CARPENTRY_BLADE_MOONGLASS = "Well, does it saw faster?",
+
+        CHEST_MIMIC_REVEALED = "Totally not worth the peek!",
     },
 
     DESCRIBE_GENERIC = "A very particular something or other.",

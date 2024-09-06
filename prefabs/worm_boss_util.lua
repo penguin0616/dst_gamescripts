@@ -89,7 +89,7 @@ local function SpawnDirt(inst, chunk, pt, start, instant)
         (start   and "dirt_pre_slow") or
         "dirt_emerge"
 
-    dirt.AnimState:PlayAnimation(state)
+    dirt:dirt_playanimation(state)
 
     if start then
         chunk.dirt_start = dirt
@@ -148,6 +148,10 @@ local function DoChew(inst, target, useimpactsound)
         target.components.combat.noimpactsound = noimpactsound
 
         target.components.health:SetMinHealth(0)
+        
+        if target.components.sanity then
+            target.components.sanity:DoDelta(-TUNING.SANITY_SUPERTINY)
+        end
     end
 end
 
@@ -171,7 +175,6 @@ local function DoSpitOut(inst, target, spitfromhead, spitfromlocatoin)
             inst.tail
 
         target.sg.currentstate:HandleEvent(target.sg, "spitout", { spitter = source, radius = inst:GetPhysicsRadius(0) + 3, strengthmult = 1 , rot=math.random()*360 })
-
     elseif not target:HasTag("irreplaceable") then
         target:Remove()
     end
@@ -237,12 +240,19 @@ local function Digest(inst)
 
     inst:SetState(STATE.DIGESTING)
 
+    for _, ent in ipairs(inst.devoured) do
+        if ent.sg and ent.sg:HasStateTag("devoured") and ent:HasTag("player") then
+            ent._wormdigestionsound:set(true)
+        end
+    end
+
+    --
+
     for i=#inst.chunks, 1, -1 do
         local chunk = inst.chunks[i]
 
         if chunk ~= nil and chunk.head == nil then
             chunk.digesting = DIGESTING_STATE.WAITING
-
             break
         end
     end
@@ -322,19 +332,24 @@ local function CollectThingsToEat(inst, source)
     end
 
     local ate = false
-
+    local calories = 0
     for _, ent in ipairs(ents) do
         if ent.components.health == nil or not ent.components.health:IsDead() then
             if inst.components.combat.target == ent then
                 inst.components.combat:DropTarget()
             end
 
-            if ent.components.inventoryitem ~= nil then
+            if ent.components.inventoryitem ~= nil then                
+
+
                 if not inst.components.inventory:IsFull() then
+                    if ent.components.edible then
+                        calories = calories + ent.components.edible.hungervalue
+                    end                    
                     inst.components.inventory:GiveItem(ent)
                     ate = true
                 else
-                    -- Move item?
+                    inst.head.components.lootdropper:FlingItem(ent)
                 end
             else
                 local devoured = false
@@ -369,7 +384,9 @@ local function CollectThingsToEat(inst, source)
             end
         end
     end
-
+    if calories > 0 then
+        inst.chews = math.min(math.ceil(calories/20),4)
+    end
     return ate
 end
 
@@ -747,6 +764,7 @@ local function IsChunkMoving(inst, chunk)
 end
 
 local function SpawnAboveGroundHeadCorpse(inst, headchunk)
+
     for _, segment in ipairs(headchunk.segments) do
         for i=#headchunk.segments, 1, -1 do
             inst:ReturnSegmentToPool(headchunk.segments[i])
@@ -756,7 +774,7 @@ local function SpawnAboveGroundHeadCorpse(inst, headchunk)
     headchunk.segments = {}
 
     EmergeHead(inst, headchunk, true)
-    inst.head.sg:GoToState("emerge", { dead = true } )
+    inst.head:PushEvent("death",{loop=true})
 
     if headchunk.dirt_start ~= nil then
         headchunk.dirt_start.AnimState:PlayAnimation("dirt_emerge")
@@ -764,21 +782,30 @@ local function SpawnAboveGroundHeadCorpse(inst, headchunk)
 end
 
 local function SpawnUnderGroundHeadCorpse(inst)
+
+    local pt = nil
     if inst.createnewchunktask == nil then
-        return
+        if #inst.chunks > 0 then
+            pt = inst.chunks[#inst.chunks].groundpoint_start        
+        else
+            return
+        end
+    else
+        pt = inst.createnewchunktask._target_pt
+        inst.createnewchunktask:Cancel()
+        inst.createnewchunktask = nil            
     end
+ 	
+	local headchunk = CreateNewChunk(inst, pt, true)
 
-    local headchunk = CreateNewChunk(inst, inst.createnewchunktask._target_pt, true)
-
-    inst.createnewchunktask:Cancel()
-    inst.createnewchunktask = nil
-
+    
     EmergeHead(inst, headchunk, true)
     inst.head.sg:GoToState("emerge", { dead = true } )
 
     if headchunk.dirt_start ~= nil then
         headchunk.dirt_start.AnimState:PlayAnimation("dirt_emerge")
     end
+
 end
 
 local function UpdateRegularChunk(inst, chunk, dt, instant)
@@ -1270,7 +1297,7 @@ local function UpdateChunk(inst, chunk, dt, instant)
     if inst.state ~= STATE.DEAD then
         UpdateRegularChunk(inst, chunk, dt, instant)
     else
-        UpdateRegularDeadChunk_Simplified(inst, chunk, dt, instant)
+        UpdateRegularDeadChunk(inst, chunk, dt, instant)
     end
 end
 

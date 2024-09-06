@@ -363,7 +363,7 @@ local data = {
 
     shadow = {
         bonusdamage = TUNING.SADDLE_SHADOW_BONUS_DAMAGE,
-        foley = "wigfrid_foley",
+        foley = "shadow_foley",
         uses = TUNING.SADDLE_SHADOW_USES,
         speedmult = TUNING.SADDLE_SHADOW_SPEEDMULT,
         absorption = TUNING.SADDLE_SHADOW_ABSORPTION,

@@ -98,6 +98,7 @@ local _spawnmode = "escalating"
 local _spawninfo = nil
 local _wave_pre_upgraded = nil  -- You can trigger a wave upgrade when the sounds are chosen. Used for the Worm Boss. 
 local _wave_override_chance = 0 -- used for special custom wave overide like worm_boss.
+local _wave_override_settings = {}
 --for players who leave during the warning when spawns are queued
 local _delayedplayerspawninfo = {}
 local _missingplayerspawninfo = {}
@@ -594,6 +595,20 @@ local function SetDifficulty(src, difficulty)
 	end
 end
 
+local function SetWormBossDifficulty(src, difficulty)
+	if difficulty == "never" then
+		self:SetWaveOverrideSettings({wavetype = "worm_boss", setting =0})
+	elseif difficulty == "rare" then
+		self:SetWaveOverrideSettings({wavetype = "worm_boss", setting =0.5})
+	elseif difficulty == "default" then
+		self:SetWaveOverrideSettings({wavetype = "worm_boss", setting =1})
+	elseif difficulty == "often" then
+		self:SetWaveOverrideSettings({wavetype = "worm_boss", setting =2})
+	elseif difficulty == "always" then
+		self:SetWaveOverrideSettings({wavetype = "worm_boss", setting =9999})
+	end
+end
+
 local function SetSummerVariant(src, enabled)
 	if enabled == "never" then
 		self:SetSummerVariant(false)
@@ -629,6 +644,8 @@ inst:ListenForEvent("unpausehounded", OnUnpauseHounded)
 inst:ListenForEvent("hounded_setdifficulty", SetDifficulty)
 inst:ListenForEvent("hounded_setsummervariant", SetSummerVariant)
 inst:ListenForEvent("hounded_setwintervariant", SetWinterVariant)
+inst:ListenForEvent("hounds_worm_boss_setdifficulty", SetWormBossDifficulty)
+
 
 self.inst:StartUpdatingComponent(self)
 PlanNextAttack()
@@ -663,6 +680,10 @@ end
 
 function self:SetWinterVariant(enabled)
 	_spawnwintervariant = enabled
+end
+
+function self:SetWaveOverrideSettings(data)
+	_wave_override_settings[data.wavetype] = data.setting
 end
 
 function self:SpawnModeNever()
@@ -902,9 +923,8 @@ function self:OnUpdate(dt)
     end
 
     if _timetoattack < 0 then
-
     	if _spawndata.specialupgradecheck then
-    		_wave_pre_upgraded, _wave_override_chance = _spawndata.specialupgradecheck(_wave_pre_upgraded, _wave_override_chance)
+    		_wave_pre_upgraded, _wave_override_chance = _spawndata.specialupgradecheck(_wave_pre_upgraded, _wave_override_chance, _wave_override_settings)
     	end
 
         _warning = false

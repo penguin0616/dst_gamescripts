@@ -26,6 +26,7 @@ SetSharedLootTable("shadowthrall_mouth",
 	{ "nightmarefuel",	0.67 },
 })
 
+local ALL_SHADOWTHRALL_MOUTHS = {}
 local MASS = 50
 local PHYSICS_RADIUS = 0.75
 
@@ -81,27 +82,70 @@ local function KeepTargetFn(inst, target)
 		and inst:IsNear(target, TUNING.SHADOWTHRALL_DEAGGRO_RANGE)
 end
 
-local _all_stealth_bite_targets = {}
+local _all_bite_targets = {}
 
-local function TryRegisterStealthBiteTarget(inst, target)
-	if inst._stealth_bite_target == nil and target and target:IsValid() and _all_stealth_bite_targets[target] == nil then
-		inst._stealth_bite_target = target
-		_all_stealth_bite_targets[target] = true
-		return true
+local function TryRegisterBiteTarget(inst, target)
+	if target then
+		if inst._bite_target == target then
+			local task = _all_bite_targets[target]
+			if Periodic.is_instance(task) then
+				task:Cancel()
+			end
+			_all_bite_targets[target] = true
+			return true
+		elseif inst._bite_target == nil and target:IsValid() and _all_bite_targets[target] == nil then
+			if inst._stealth then
+				for k in pairs(ALL_SHADOWTHRALL_MOUTHS) do
+					if not (k._stealth or k.components.combat:InCooldown()) and k.components.combat:TargetIs(target) then
+						return false
+					end
+				end
+			end
+			inst._bite_target = target
+			_all_bite_targets[target] = true
+			return true
+		end
 	end
 	return false
 end
 
-local function ClearStealthBiteTarget(inst)
-	if inst._stealth_bite_target then
-		_all_stealth_bite_targets[inst._stealth_bite_target] = nil
-		inst._stealth_bite_target = nil
+local function OnBiteTargetCooldown(_, target)
+	_all_bite_targets[target] = nil
+end
+
+local function ClearBiteTarget(inst, cooldown)
+	if inst._bite_target then
+		local task = _all_bite_targets[inst._bite_target]
+		if Periodic.is_instance(task) then
+			task:Cancel()
+		end
+		if cooldown then
+			_all_bite_targets[inst._bite_target] = TheWorld:DoTaskInTime(cooldown, OnBiteTargetCooldown, inst._bite_target)
+		else
+			_all_bite_targets[inst._bite_target] = nil
+		end
+		inst._bite_target = nil
 	end
 end
 
-local function OnRemoveEntity(inst)
+local function OnRemoveEntity_Client(inst)
+	ALL_SHADOWTHRALL_MOUTHS[inst] = nil
+end
+
+local function OnRemoveEntity_Server(inst)
+	OnRemoveEntity_Client(inst)
 	inst.dupe:Remove()
-	ClearStealthBiteTarget(inst)
+	ClearBiteTarget(inst)
+end
+
+local function OnSave(inst, data)
+	data.stealth = inst._stealth or nil
+end
+
+local function OnLoad(inst, data)
+	if data and data.stealth and not inst._stealth then
+		inst.sg:GoToState("stealth_idle")
+	end
 end
 
 --Runs on clients
@@ -136,9 +180,13 @@ local function fn()
 	inst.CanMouseThrough = CanMouseThrough
 	inst.displaynamefn = DisplayNameFn
 
+	ALL_SHADOWTHRALL_MOUTHS[inst] = true
+
 	inst.entity:SetPristine()
 
 	if not TheWorld.ismastersim then
+		inst.OnRemoveEntity = OnRemoveEntity_Client
+
 		return inst
 	end
 
@@ -187,17 +235,18 @@ local function fn()
 	inst.components.bloomer:AttachChild(inst.dupe)
 
 	inst:AddComponent("knownlocations")
-	inst:AddComponent("entitytracker")
 
 	inst:SetStateGraph("SGshadowthrall_mouth")
 	inst:SetBrain(brain)
 
 	inst:ListenForEvent("newstate", OnNewState)
 
-	inst._stealth_bite_target = nil
-	inst.TryRegisterStealthBiteTarget = TryRegisterStealthBiteTarget
-	inst.ClearStealthBiteTarget = ClearStealthBiteTarget
-	inst.OnRemoveEntity = OnRemoveEntity
+	inst._bite_target = nil
+	inst.TryRegisterBiteTarget = TryRegisterBiteTarget
+	inst.ClearBiteTarget = ClearBiteTarget
+	inst.OnRemoveEntity = OnRemoveEntity_Server
+	inst.OnSave = OnSave
+	inst.OnLoad = OnLoad
 
 	return inst
 end

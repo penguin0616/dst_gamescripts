@@ -3287,14 +3287,6 @@ local fx =
         fn = FinalOffset1,
     },
     {
-        name = "ruinsnightmare_horn_attack_fx",
-        bank = "shadowcreature3",
-        build ="shadow_insanity3_basic",
-        anim = "horn_atk_pst",
-        tintalpha = .5,
-        fn = FinalOffset1,
-    },
-    {
         name = "beefalo_reviving_lightning_fx",
         bank = "beefalo",
         build ="beefalo_revive",
@@ -3303,6 +3295,18 @@ local fx =
         fn = function(inst)
            inst.AnimState:SetLightOverride(0.7)
             inst.AnimState:SetFinalOffset(1)
+        end,
+    },
+    {
+        name = "itemmimic_puff",
+        bank = "sand_puff",
+        build = "sand_puff",
+        anim = "forage_out",
+        sound = "rifts4/mimic/item_become_poof",
+        tint = Vector3(0, 0, 0),
+        tintalpha = .5,
+        fn = function(inst)
+            inst.AnimState:SetFinalOffset(2)
         end,
     },
 }

@@ -94,6 +94,23 @@ local function TryDespawn(inst)
     end
 end
 
+local function TryReappearingTeleport(inst)
+    local x0, y0, z0 = inst.Transform:GetWorldPosition()
+
+    for k = 1, 12 do
+        local mult = math.random() > .5 and -1 or 1
+
+        local x = x0 + (10 - k + math.random() * 5) * mult
+        local z = z0 + (10 - k + math.random() * 5) * mult
+
+        if TheWorld.Map:IsPassableAtPoint(x, 0, z) then
+            inst.Physics:Teleport(x, 0, z)
+
+            return
+        end
+    end
+end
+
 ----------------------------------------------------------------------------------------------------------------------
 
 local function SpawnDoubleHornAttack(inst, target)
@@ -115,6 +132,34 @@ local remove_after_sounds_on_animover_handler =
 {
     EventHandler("animover", OnAnimOverRemoveAfterSounds),
 }
+
+----------------------------------------------------------------------------------------------------------------------
+
+local function SetEightFaced(inst)
+    inst.Transform:SetEightFaced()
+end
+
+local function SetFourFaced(inst)
+    inst.Transform:SetFourFaced()
+end
+
+----------------------------------------------------------------------------------------------------------------------
+
+local function WasMovingFrameEventWrap(time, fn)
+    return FrameEvent(time+4, function(inst) if inst.sg.statemem.was_moving then fn(inst) end end)
+end
+
+local function WasMovingAndDashFrameEventWrap(time, fn)
+    return FrameEvent(time+4, function(inst) if inst.sg.statemem.was_moving and inst.sg.statemem.dash then fn(inst) end end)
+end
+
+local function WasNotMovingFrameEventWrap(time, fn)
+    return FrameEvent(time, function(inst) if not inst.sg.statemem.was_moving then fn(inst) end end)
+end
+
+local function WasNotMovingAndDashFrameEventWrap(time, fn)
+    return FrameEvent(time, function(inst) if not inst.sg.statemem.was_moving and inst.sg.statemem.dash then fn(inst) end end)
+end
 
 ----------------------------------------------------------------------------------------------------------------------
 
@@ -155,21 +200,25 @@ local states =
         tags = { "attack", "busy" },
 
         onenter = function(inst, target)
+            inst.sg.statemem.was_moving = inst.sg.lasttags["moving"] ~= nil
             inst.sg.statemem.target = target
 
             inst.Physics:Stop()
             inst.components.combat:StartAttack()
 
-            inst.AnimState:PlayAnimation("atk_pre")
+            inst.AnimState:PlayAnimation(inst.sg.statemem.was_moving and "atk_walk_pre" or "atk_pre")
             inst.AnimState:PushAnimation("atk", false)
 
             PlayExtendedSound(inst, "attack_grunt")
+
+            inst.sg.statemem.dash = inst.components.planarentity ~= nil
         end,
 
         timeline =
         {
-            FrameEvent(14, function(inst) PlayExtendedSound(inst, "attack") end),
-            FrameEvent(16, function(inst)
+            -- Creature is not moving, time it to atk_pre.
+            WasNotMovingFrameEventWrap(14, function(inst) PlayExtendedSound(inst, "attack") end),
+            WasNotMovingFrameEventWrap(16, function(inst)
                 -- The stategraph event handler is delayed, so it won't be
                 -- accurate for detecting attacks due to damage reflection.
                 inst:ListenForEvent("attacked", OnAttackReflected)
@@ -181,6 +230,39 @@ local states =
                     inst.sg:GoToState("hit")
                 end
             end),
+
+            WasNotMovingAndDashFrameEventWrap(9 , function(inst) inst.Physics:SetMotorVelOverride(10, 0, 0) end),
+            WasNotMovingAndDashFrameEventWrap(10, function(inst) inst.Physics:SetMotorVelOverride(20, 0, 0) end),
+            WasNotMovingAndDashFrameEventWrap(17, function(inst) inst.Physics:SetMotorVelOverride(10, 0, 0) end),
+            WasNotMovingAndDashFrameEventWrap(18, function(inst) inst.Physics:SetMotorVelOverride( 5, 0, 0) end),
+            WasNotMovingAndDashFrameEventWrap(19, function(inst) inst.Physics:SetMotorVelOverride(2.5, 0, 0) end),
+            WasNotMovingAndDashFrameEventWrap(20, function(inst) inst.Physics:SetMotorVelOverride(1.25, 0, 0) end),
+            WasNotMovingAndDashFrameEventWrap(21, function(inst) inst.Physics:SetMotorVelOverride(0.67, 0, 0) end),
+            WasNotMovingAndDashFrameEventWrap(22, function(inst) inst.Physics:ClearMotorVelOverride() inst.Physics:Stop() end),
+
+            -- Creature is moving, time it to atk_walk_pre (4 frames longer).
+            WasMovingFrameEventWrap(14, function(inst) PlayExtendedSound(inst, "attack") end),
+            WasMovingFrameEventWrap(16, function(inst)
+                -- The stategraph event handler is delayed, so it won't be
+                -- accurate for detecting attacks due to damage reflection.
+                inst:ListenForEvent("attacked", OnAttackReflected)
+                inst.components.combat:DoAttack(inst.sg.statemem.target)
+                inst:RemoveEventCallback("attacked", OnAttackReflected)
+            end),
+            WasMovingFrameEventWrap(17, function(inst)
+                if inst.sg.statemem.attackreflected and not inst.components.health:IsDead() then
+                    inst.sg:GoToState("hit")
+                end
+            end),
+
+            WasMovingAndDashFrameEventWrap(9 , function(inst) inst.Physics:SetMotorVelOverride(10, 0, 0) end),
+            WasMovingAndDashFrameEventWrap(10, function(inst) inst.Physics:SetMotorVelOverride(20, 0, 0) end),
+            WasMovingAndDashFrameEventWrap(17, function(inst) inst.Physics:SetMotorVelOverride(10, 0, 0) end),
+            WasMovingAndDashFrameEventWrap(18, function(inst) inst.Physics:SetMotorVelOverride( 5, 0, 0) end),
+            WasMovingAndDashFrameEventWrap(19, function(inst) inst.Physics:SetMotorVelOverride(2.5, 0, 0) end),
+            WasMovingAndDashFrameEventWrap(20, function(inst) inst.Physics:SetMotorVelOverride(1.25, 0, 0) end),
+            WasMovingAndDashFrameEventWrap(21, function(inst) inst.Physics:SetMotorVelOverride(0.67, 0, 0) end),
+            WasMovingAndDashFrameEventWrap(22, function(inst) inst.Physics:ClearMotorVelOverride() inst.Physics:Stop() end),
         },
 
         events =
@@ -209,18 +291,7 @@ local states =
         events =
         {
             EventHandler("animover", function(inst)
-                local x0, y0, z0 = inst.Transform:GetWorldPosition()
-
-                for k = 1, 4 do
-                    local x = x0 + math.random() * 20 - 10
-                    local z = z0 + math.random() * 20 - 10
-
-                    if TheWorld.Map:IsPassableAtPoint(x, 0, z) then
-                        inst.Physics:Teleport(x, 0, z)
-
-                        break
-                    end
-                end
+                TryReappearingTeleport(inst)
 
                 inst.sg:GoToState("appear")
             end),
@@ -241,20 +312,9 @@ local states =
         events =
         {
             EventHandler("animover", function(inst)
-                local x0, y0, z0 = inst.Transform:GetWorldPosition()
+                TryReappearingTeleport(inst)
 
-                for k = 1, 4 do
-                    local x = x0 + math.random() * 20 - 10
-                    local z = z0 + math.random() * 20 - 10
-
-                    if TheWorld.Map:IsPassableAtPoint(x, 0, z) then
-                        inst.Physics:Teleport(x, 0, z)
-
-                        break
-                    end
-                end
-
-                if inst.sg.statemem.target ~= nil and inst.sg.statemem.target:IsValid() then
+                if inst.sg.statemem.target ~= nil and inst.sg.statemem.target:IsValid() and not inst.components.health:IsDead() then
                     SpawnDoubleHornAttack(inst, inst.sg.statemem.target)
                 end
 
@@ -349,21 +409,34 @@ local states =
     },
 }
 
-CommonStates.AddWalkStates(states,
-{
-    walktimeline =
+CommonStates.AddWalkStates(
+    states,
     {
-        FrameEvent(0, function(inst)
-            local dropped = TryDropTarget(inst)
+        walktimeline =
+        {
+            FrameEvent(0, function(inst)
+                local dropped = TryDropTarget(inst)
 
-            if TryDespawn(inst) then
-                return
+                if TryDespawn(inst) then
+                    return
 
-            elseif dropped then
-                inst.sg:GoToState("taunt")
-            end
-        end),
+                elseif dropped then
+                    inst.sg:GoToState("taunt")
+                end
+            end),
+        },
     },
-})
+    nil, -- anims
+    nil, -- softstop
+    nil, -- delaystart
+    {
+        startonenter = SetEightFaced,
+        startonexit  = SetFourFaced,
+        walkonenter  = SetEightFaced,
+        walkonexit   = SetFourFaced,
+        endonenter   = SetEightFaced,
+        endonexit    = SetFourFaced,
+    }
+)
 
 return StateGraph("shadowcreature", states, events, "appear", actionhandlers)

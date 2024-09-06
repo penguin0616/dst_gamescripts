@@ -58,6 +58,7 @@ return{
             MOUNTED = "Grrr, can't reach!",
             HASPET = "Don't need 'nother pet, glort.",
 			TICOON = "Huh? You not right one!",
+            BUSY_STATION = "Hate waiting game, florpt!",
         },
         CARNIVALGAME_FEED =
         {
@@ -566,7 +567,7 @@ return{
 	ANNOUNCE_HIGHRESEARCH = "Head feels so full of smarts, florp!",
 	ANNOUNCE_HOUNDS = "Glurp... doggies coming...",
 	ANNOUNCE_WORMS = "Glurt?",
-    ANNOUNCE_WORMS_BOSS = "TODO", --[[TODO]]
+    ANNOUNCE_WORMS_BOSS = "Glorp!",
     ANNOUNCE_ACIDBATS = "Don't like.",
 	ANNOUNCE_HUNGRY = "Want food!",
 	ANNOUNCE_HUNT_BEAST_NEARBY = "Where these footprints go?",
@@ -988,11 +989,11 @@ return{
     -- rifts 4
     ANNOUNCE_EXIT_GELBLOB = "Slimey!",
 	ANNOUNCE_SHADOWTHRALL_STEALTH = "Glurph! Unhide bitey mouth!",
-    ANNOUNCE_RABBITKING_AGGRESSIVE = "TODO",
-    ANNOUNCE_RABBITKING_PASSIVE = "TODO",
-    ANNOUNCE_RABBITKING_LUCKY = "TODO",
-    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "TODO",
-    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "TODO",
+    ANNOUNCE_RABBITKING_AGGRESSIVE = "Glorp, who angry digging?",
+    ANNOUNCE_RABBITKING_PASSIVE = "What coming? Sound... nice?",
+    ANNOUNCE_RABBITKING_LUCKY = "Oooh funny rabbit!",
+    ANNOUNCE_RABBITKING_LUCKYCAUGHT = "Flort!",
+    ANNOUNCE_RABBITKINGHORN_BADSPAWNPOINT = "Glorp. Not here.",
 
 	BATTLECRY =
 	{
@@ -1644,7 +1645,8 @@ return{
                 "You... nice?",
                 "You... nice?",
             },
-		},
+        },
+
 		ADVENTURE_PORTAL = "Where this go?",
 		AMULET = "Pretty magic rock!",
 		ANIMAL_TRACK = "Tracks!",
@@ -5360,16 +5362,32 @@ return{
 			HAS_ITEM = "Florp! Surprise inside!",
 			HAS_CHARACTER = "Hello!",
 		},
-        RABBITKING_AGGRESSIVE = "TODO",
-        RABBITKING_PASSIVE = "TODO",
-        RABBITKING_LUCKY = "TODO",
-        RABBITKINGMINION_BUNNYMAN = "TODO",
-        ARMOR_CARROTLURE = "TODO",
-        RABBITKINGHORN = "TODO",
-        RABBITKINGHORN_CHEST = "TODO",
-        RABBITKINGSPEAR = "TODO",
-        RABBITHAT = "TODO",
-        WORM_BOSS = "Don't eat Wurt!",
+        RABBITKING_AGGRESSIVE = "Angry old rabbit likes kicking. Glurgh.",
+        RABBITKING_PASSIVE = "Hi, friendly mustache rabbit!",
+        RABBITKING_LUCKY = "Me gonna get you!",
+        RABBITKINGMINION_BUNNYMAN = "Flort, Bunnyman! Me thought we friends!",
+        ARMOR_CARROTLURE = "Me wear it.",
+        RABBITKINGHORN = "Me blow rabbit horn horn.",
+        RABBITKINGHORN_CHEST = "Thanks rabbit!",
+        RABBITKINGSPEAR = "Angry old rabbit horn!",
+        RABBITHAT = "Me love it much.",
+        WORM_BOSS = "Don't eat me!",
+
+        STONE_TABLE = -- Shared between the round and square tables.
+        {
+            GENERIC = "Table not set yet!",
+            HAS_ITEM = "Wicker-lady! Table all set!",
+        },
+
+        STONE_CHAIR =
+        {
+            GENERIC = "Oooh, fancy sitting-place!",
+            OCCUPIED = "Wanna turn! Move over!",
+        },
+
+        CARPENTRY_BLADE_MOONGLASS = "Pretty moon cutter!",
+
+        CHEST_MIMIC_REVEALED = "Mouth box! Glorp!",
     },
 
     DESCRIBE_GENERIC = "What that?",

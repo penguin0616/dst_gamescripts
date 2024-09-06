@@ -109,7 +109,7 @@ end
 
 local function OnGoHome(inst, child)
     -- Drops the hat before it goes home if it has any
-    local hat = child.components.inventory ~= nil and child.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) or nil -- FIXME(DiogoW): Revert this.
+    local hat = child.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
     if hat ~= nil then
         child.components.inventory:DropItem(hat)
     end
@@ -185,39 +185,6 @@ local function OnPreLoad(inst, data)
     WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.SPIDERHOLE_RELEASE_TIME, TUNING.SPIDERHOLE_REGEN_TIME)
 end
 
-----------------------------------------------------------------------------------
-
--- FIXME(DiogoW): TEMPORARY SHADOWTHRALL_MOUTH SPAWN
-
-local rift_portal_defs = require("prefabs/rift_portal_defs")
-local RIFTPORTAL_CONST = rift_portal_defs.RIFTPORTAL_CONST
-rift_portal_defs = nil
-
-local function TEMP_GetRareChildFn(inst)
-    local rifts = TheWorld.components.riftspawner ~= nil and TheWorld.components.riftspawner:GetRiftsOfAffinity(RIFTPORTAL_CONST.AFFINITY.SHADOW) or nil
-
-    if rifts == nil then
-        return "spider_spitter"
-    end
-
-    local x, y, z = inst.Transform:GetWorldPosition()
-
-    if TheSim:CountEntities(x, 0, z, 25, {"shadowthrall"}) > 0 then
-        return "spider_spitter"
-    end
-
-    for _, rift in ipairs(rifts) do
-        if rift.components.riftthralltype ~= nil and rift.components.riftthralltype:IsThrallType(THRALL_TYPES.SHADOW.TRIO) then
-            return "shadowthrall_mouth"
-        end
-
-    end
-
-    return "spider_spitter"
-end
-
-----------------------------------------------------------------------------------
-
 local function spawnerfn()
     local inst = commonfn("full", "cavespider_den.png", "spiderden", true)
 
@@ -247,7 +214,7 @@ local function spawnerfn()
     end
     inst.components.childspawner:StartRegen()
     inst.components.childspawner.childname = "spider_hider"
-    inst.components.childspawner:SetRareChild(TEMP_GetRareChildFn, TUNING.SPIDERHOLE_SPITTER_CHANCE)
+    inst.components.childspawner:SetRareChild("spider_spitter", TUNING.SPIDERHOLE_SPITTER_CHANCE)
     inst.components.childspawner.emergencychildname = TUNING.SPIDERHOLE_SPITTER_CHANCE > 0 and "spider_spitter" or "spider_hider"
     inst.components.childspawner.emergencychildrenperplayer = 1
     inst.components.childspawner.canemergencyspawn = TUNING.SPIDERHOLE_ENABLED

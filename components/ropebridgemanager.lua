@@ -37,12 +37,65 @@ end
 self.inst:ListenForEvent("worldmapsetsize", initialize_grids, _world)
 
 local QUAKE_BLOCKER_MUST_TAGS = {"quake_blocker"}
+function self:IsPointProtectedFromQuakes(x, y, z)
+    return TheSim:CountEntities(x, y, z, TUNING.QUAKE_BLOCKER_RANGE, QUAKE_BLOCKER_MUST_TAGS) > 0
+end
+function self:CalculateProtection_Internal(protected, i, tile_data)
+    -- Get bridge direction vector.
+    local direction = tile_data[2]
+    if not direction then
+        protected[i] = false
+        return
+    end
+
+    -- Normalize direction vector from world tile offsets to tile coordinate offsets.
+    local dx = (direction.x < 0 and -1) or (direction.x > 0 and 1) or 0
+    local dz = (direction.z < 0 and -1) or (direction.z > 0 and 1) or 0
+
+    local maxlength = TUNING.ROPEBRIDGE_LENGTH_TILES
+    local tx, tz = self.duration_grid:GetXYFromIndex(i)
+    -- Scan for start of bridge.
+    for j = 1, maxlength do
+        tx, tz = tx - dx, tz - dz
+        if self.duration_grid:GetDataAtPoint(tx, tz) == nil then
+            break
+        end
+    end
+    -- Try to see if any of the bridge is protected.
+    local sx, sz = tx, tz
+    local isprotected = false
+    for j = 1, maxlength do
+        tx, tz = tx + dx, tz + dz
+        if self.duration_grid:GetDataAtPoint(tx, tz) == nil then
+            break
+        end
+        local x, y, z = _map:GetTileCenterPoint(tx, tz)
+        isprotected = self:IsPointProtectedFromQuakes(x, y, z)
+        if isprotected then
+            break
+        end
+    end
+    -- Apply protection to whole bridge.
+    tx, tz = sx, sz
+    for j = 1, maxlength do
+        tx, tz = tx + dx, tz + dz
+        local index = self.duration_grid:GetIndex(tx, tz)
+        if self.duration_grid:GetDataAtIndex(index) == nil then
+            break
+        end
+        protected[index] = isprotected
+    end
+end
 function self:OnQuaked()
     local damage = TUNING.ROPEBRIDGE_EARTHQUAKE_DAMAGE_TAKEN
-    for i, _ in pairs(self.duration_grid.grid) do
-        local tile_x, tile_y = self.duration_grid:GetXYFromIndex(i)
-        local x, y, z = _map:GetTileCenterPoint(tile_x, tile_y)
-        if TheSim:CountEntities(x, y, z, TUNING.QUAKE_BLOCKER_RANGE, QUAKE_BLOCKER_MUST_TAGS) == 0 then
+    local protected = {}
+    for i, tile_data in pairs(self.duration_grid.grid) do
+        if protected[i] == nil then
+            self:CalculateProtection_Internal(protected, i, tile_data)
+        end
+        if not protected[i] then
+            local tile_x, tile_y = self.duration_grid:GetXYFromIndex(i)
+            local x, y, z = _map:GetTileCenterPoint(tile_x, tile_y)
             self:DamageRopeBridgeAtPoint(x, y, z, damage)
         end
     end
@@ -64,8 +117,8 @@ local function destroy_ropebridge_at_point(world, dx, dz, ropebridgemanager, dat
     ropebridgemanager:DestroyRopeBridgeAtPoint(dx, 0, dz, data)
 end
 
-local function create_ropebridge_at_point(world, dx, dz, ropebridgemanager, direction)
-    ropebridgemanager:CreateRopeBridgeAtPoint(dx, 0, dz, direction)
+local function create_ropebridge_at_point(world, dx, dz, ropebridgemanager, direction, icon_offset)
+	ropebridgemanager:CreateRopeBridgeAtPoint(dx, 0, dz, direction, icon_offset)
 end
 
 local function start_destroy_for_tile(_, txy, wid, ropebridgemanager)
@@ -73,12 +126,12 @@ local function start_destroy_for_tile(_, txy, wid, ropebridgemanager)
     ropebridgemanager:QueueDestroyForRopeBridgeAtPoint(center_x, center_y, center_z)
 end
 
-function self:CreateRopeBridgeAtPoint(x, y, z, direction)
+function self:CreateRopeBridgeAtPoint(x, y, z, direction, icon_offset)
     local tile_x, tile_y = _map:GetTileCoordsAtPoint(x, y, z)
-    return self:CreateRopeBridgeAtTile(tile_x, tile_y, x, z, direction)
+	return self:CreateRopeBridgeAtTile(tile_x, tile_y, x, z, direction, icon_offset)
 end
 
-function self:CreateRopeBridgeAtTile(tile_x, tile_y, x, z, direction)
+function self:CreateRopeBridgeAtTile(tile_x, tile_y, x, z, direction, icon_offset)
     local current_tile = nil
     local undertile = _world.components.undertile
     if undertile then
@@ -108,7 +161,7 @@ function self:CreateRopeBridgeAtTile(tile_x, tile_y, x, z, direction)
         z = tz
     end
 
-	self:SpawnBridgeAnim(tile_index, x, z, direction)
+	self:SpawnBridgeAnim(tile_index, x, z, direction, icon_offset)
 
     return true
 end
@@ -118,14 +171,15 @@ function self:QueueCreateRopeBridgeAtPoint(x, y, z, data)
     local data_at_point = self.duration_grid:GetDataAtPoint(tile_x, tile_y)
     if not data_at_point then
         local base_time, random_time = 0.5, 0.3
-        local direction
+		local direction, icon_offset
         if data then
             base_time = data.base_time or base_time
             random_time = data.random_time or random_time
             direction = data.direction
+			icon_offset = data.icon_offset
         end
-		self.duration_grid:SetDataAtPoint(tile_x, tile_y, { TUNING.ROPEBRIDGE_HEALTH, direction })
-        _world:DoTaskInTime(base_time + (random_time * math.random()), create_ropebridge_at_point, x, z, self, direction)
+		self.duration_grid:SetDataAtPoint(tile_x, tile_y, { TUNING.ROPEBRIDGE_HEALTH, direction, icon_offset })
+		_world:DoTaskInTime(base_time + (random_time * math.random()), create_ropebridge_at_point, x, z, self, direction, icon_offset)
     end
 end
 
@@ -252,7 +306,7 @@ function self:SpawnDamagePrefab(tile_index, health)
     end
 end
 
-function self:SpawnBridgeAnim(tile_index, x, z, direction)
+function self:SpawnBridgeAnim(tile_index, x, z, direction, icon_offset)
 	local fx = self.bridge_anims_grid:GetDataAtIndex(tile_index)
 	if fx == nil then
 		fx = SpawnPrefab("rope_bridge_fx")
@@ -263,6 +317,7 @@ function self:SpawnBridgeAnim(tile_index, x, z, direction)
 			(direction.z > 0 and -90) or
 			90
 		)
+		fx:SetIconOffset(icon_offset)
 		self.bridge_anims_grid:SetDataAtIndex(tile_index, fx)
 
 		if POPULATING then
@@ -313,7 +368,7 @@ function self:OnLoad(data)
 			if type(health) == "table" then
 				local tile_x, tile_y = self.duration_grid:GetXYFromIndex(i)
 				local x, y, z = _map:GetTileCenterPoint(tile_x, tile_y)
-				self:SpawnBridgeAnim(i, x, z, health[2])
+				self:SpawnBridgeAnim(i, x, z, health[2], health[3])
 				self:SpawnDamagePrefab(i, health[1])
 			else
 				--backward compatibility: duration_grid used to be just health value, now is an array { health, duration }

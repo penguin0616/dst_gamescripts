@@ -38,7 +38,7 @@ local states =
 
 			inst._toggle_tail_event:push()
 
-			inst.SoundEmitter:PlaySound("daywalker/leech/vocalization")
+			inst.SoundEmitter:PlaySound("rifts4/mimic/jump_out")
 			local dist = 3
 			local theta = PI2 * math.random()
 			local jump_position = inst:GetPosition()
@@ -57,7 +57,6 @@ local states =
 				inst.sg:RemoveStateTag("noattack")
 				inst.Physics:SetMotorVelOverride(inst.sg.statemem.speed * .35, 0, 0)
 				inst.Physics:CollidesWith(COLLISION.SANITY)
-				inst.SoundEmitter:PlaySound("daywalker/leech/vocalization")
 			end),
 		},
 
@@ -105,7 +104,7 @@ local states =
 
 			inst._toggle_tail_event:push()
 
-			inst.SoundEmitter:PlaySound("daywalker/leech/vocalization")
+			inst.SoundEmitter:PlaySound("rifts4/mimic/jump_in")
 
 			local action = inst:GetBufferedAction()
 			local target = (action and action.target)
@@ -136,14 +135,12 @@ local states =
 		events =
 		{
 			EventHandler("animover", function(inst)
-				inst.SoundEmitter:PlaySound("daywalker/leech/vocalization")
-
 				-- If we still have a target, and we successfully copy it, we can be removed.
 				-- Otherwise, we just land normally and behave like nothing happened.
 				local target = inst.sg.statemem.target
 				if target and TheWorld.components.shadowthrall_mimics and target:IsValid()
 						and TheWorld.components.shadowthrall_mimics.SpawnMimicFor(target) then
-					SpawnPrefab("shadow_puff").Transform:SetPosition(inst.Transform:GetWorldPosition())
+					SpawnPrefab("itemmimic_puff").Transform:SetPosition(inst.Transform:GetWorldPosition())
 					inst:Remove()
 				else
 					inst.sg:GoToState("idle")
@@ -167,7 +164,7 @@ local states =
 		tags = {"moving", "canrotate"},
 
 		onenter = function(inst)
-			inst.SoundEmitter:PlaySound("daywalker/leech/walk", "walkloop")
+			inst.SoundEmitter:PlaySound("rifts4/mimic/movement_lp", "walkloop")
 			inst.components.locomotor:StopMoving()
 			inst.sg:SetTimeout(6*FRAMES)
 		end,
@@ -175,6 +172,13 @@ local states =
 		ontimeout = function(inst)
 			inst.sg:GoToState("walk")
 		end,
+
+		events =
+		{
+			EventHandler("death", function(inst)
+				inst.SoundEmitter:KillSound("walkloop")
+			end),
+		},
 	},
 
 	State {
@@ -182,8 +186,15 @@ local states =
 		tags = {"moving", "canrotate"},
 
 		onenter = function(inst)
-            inst.components.locomotor:WalkForward()
+			inst.components.locomotor:WalkForward()
 		end,
+
+		events =
+		{
+			EventHandler("death", function(inst)
+				inst.SoundEmitter:KillSound("walkloop")
+			end),
+		},
 	},
 
 	State {
@@ -207,7 +218,7 @@ local states =
 
 CommonStates.AddDeathState(states, {
 	FrameEvent(1, function(inst)
-		inst.SoundEmitter:PlaySound("dontstarve/creatures/monkey/poopsplat")
+		inst.SoundEmitter:PlaySound("rifts4/mimic/killed")
 	end),
 })
 
