@@ -119,6 +119,12 @@ local states =
             inst.SoundEmitter:PlaySound(inst.sounds.taunt)
         end,
 
+        timeline =
+        {
+            FrameEvent(9, PlayFootstep),
+            FrameEvent(19, PlayFootstep),
+        },
+
         events =
         {
             EventHandler("animover", function(inst)
@@ -212,6 +218,8 @@ local states =
 
             inst.components.combat:StartAttack()
 
+            inst.Transform:SetNoFaced()
+
             if isopen then
                 inst.AnimState:PlayAnimation("spawn")
             else
@@ -255,6 +263,10 @@ local states =
                 inst.sg:GoToState("taunt")
             end),
         },
+
+        onexit = function(inst)
+            inst.Transform:SetSixFaced()
+        end,
     },
 
     State {

@@ -2337,6 +2337,7 @@ function Tune(overrides)
         MONKEY_HEALTH = 125,
         MONKEY_ATTACK_PERIOD = 2,
         MONKEY_MELEE_RANGE = 3,
+        MONKEY_RANGED_DAMAGE = 0,
         MONKEY_RANGED_RANGE = 17,
         MONKEY_MOVE_SPEED = 7,
         MONKEY_NIGHTMARE_CHASE_DIST = 40,

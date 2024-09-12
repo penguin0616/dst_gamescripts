@@ -190,7 +190,7 @@ end
 
 ----------------------------------------------------------------------------------------------------------------
 
-local function SetLevel(inst, level)
+local function SetLevel(inst, level, loading)
     if inst.level == level or level < 1 or level > #TUNING.SHADOW_BATTLEAXE.LEVEL_THRESHOLDS then
         return
     end
@@ -233,7 +233,9 @@ local function SetLevel(inst, level)
         soundowner.SoundEmitter:PlaySound("rifts4/nightmare_axe/levelup")
     end
 
-    inst.epic_kill_count = math.clamp(inst.epic_kill_count, 0, TUNING.SHADOW_BATTLEAXE.LEVEL_THRESHOLDS[inst.level])
+    if not loading then -- Do NOT clamp epic_kill_count on load.
+        inst.epic_kill_count = math.clamp(inst.epic_kill_count, 0, TUNING.SHADOW_BATTLEAXE.LEVEL_THRESHOLDS[inst.level])
+    end
 end
 
 local function TryLevelingUp(inst)
@@ -463,7 +465,7 @@ local function OnLoad(inst, data)
 
     for level = #TUNING.SHADOW_BATTLEAXE.LEVEL_THRESHOLDS, 1, -1 do
         if inst.epic_kill_count >= TUNING.SHADOW_BATTLEAXE.LEVEL_THRESHOLDS[level] then
-            inst:SetLevel(level)
+            inst:SetLevel(level, true)
 
             break
         end

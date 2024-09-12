@@ -194,9 +194,7 @@ local function SetIconOffset(inst, offset)
 	offset = offset and (offset == 0 and 1 or 2) or 0
 	if offset ~= inst.iconoffset:value() then
 		inst.iconoffset:set(offset)
-		if not TheNet:IsDedicated() then
-			OnIconOffset(inst)
-		end
+		OnIconOffset(inst) --dedicated server needs this too, minimap icons need to be cached on servers
 	end
 end
 

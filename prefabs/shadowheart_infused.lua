@@ -68,10 +68,9 @@ local function fn()
     inst.AnimState:SetBuild("shadowheart_infused")
     inst.AnimState:PlayAnimation("idle")
 
-    MakeInventoryFloatable(inst, "small", 0.05, 0.8)
-
     inst:AddTag("canbetrapped")
     inst:AddTag("shadowheart")
+    inst:AddTag("shoreonsink")
 
     inst.Transform:SetFourFaced()
 
@@ -84,6 +83,8 @@ local function fn()
         return inst
     end
 
+    inst.scrapbook_anim = "scrapbook"
+
     --inst.beattask = nil
 
     --
@@ -94,6 +95,7 @@ local function fn()
     local inventoryitem = inst:AddComponent("inventoryitem")
     inventoryitem:SetOnDroppedFn(ondropped)
     inventoryitem:SetOnPutInInventoryFn(onpickup)
+    inventoryitem:SetSinks(true)
     inventoryitem.canbepickedup = false
 
     --

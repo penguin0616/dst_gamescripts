@@ -5388,6 +5388,13 @@ return{
         CARPENTRY_BLADE_MOONGLASS = "A shame it is not a weapon.",
 
         CHEST_MIMIC_REVEALED = "It contained not a mystery, but a curse!",
+
+        GELBLOB_STORAGE = {
+            GENERIC  = "Once a mighty deathtrap, now a pantry.",
+            FULL = "Thy morsels, it doth preserveth.",
+        },
+        GELBLOB_STORAGE_KIT = "Peasant's work.",
+        GELBLOB_BOTTLE = "The goo hath been contained.",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

@@ -228,7 +228,7 @@ function SinkEntity(entity)
     end
 
     -- If the entity is irreplaceable, respawn it at the player
-    if entity:HasTag("irreplaceable") then
+    if entity:HasAnyTag("irreplaceable", "shoreonsink") then
         local sx, sy, sz = FindRandomPointOnShoreFromOcean(px, py, pz)
         if sx ~= nil then
             entity.Transform:SetPosition(sx, sy, sz)

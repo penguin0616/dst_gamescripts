@@ -92,7 +92,7 @@ local function fn()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
-    inst.MiniMapEntity:SetIcon("treasurechest.png")
+    inst.MiniMapEntity:SetIcon("pandoraschest.png")
 
     inst.AnimState:SetBank("pandoras_chest")
     inst.AnimState:SetBuild("pandoras_chest")
@@ -110,7 +110,7 @@ local function fn()
 
     --
     local container = inst:AddComponent("container")
-    container:WidgetSetup("treasurechest")
+    container:WidgetSetup("pandoraschest")
     container.onopenfn = onopen
     container.onclosefn = onclose
     container.skipclosesnd = true
@@ -219,18 +219,27 @@ SetSharedLootTable("chest_mimic",
 local brain = require("brains/chest_mimicbrain")
 
 -- Combat
+local RETARGET_CANT_TAGS = { "chess", "chestmonster" }
 local function RetargetFn(inst)
     return FindEntity(
         inst,
         TUNING.CHEST_MIMIC_TARGET_DIST,
         function(guy)
             return inst.components.combat:CanTarget(guy)
-        end
+        end,
+        nil,
+        RETARGET_CANT_TAGS
     )
 end
 
 local function KeepTargetFn(inst, target)
     return inst.components.combat:CanTarget(target)
+end
+
+local function OnHitOther(inst, other, damage, stimuli, weapon, damageresolved, spdamage, damageredirecttarget)
+    if not damageredirecttarget then
+        inst.components.thief:StealItem(other)
+    end
 end
 
 -- Event listeners
@@ -304,6 +313,7 @@ local function revealed_fn()
 
     inst:AddTag("canbestartled")
     inst:AddTag("chessfriend")
+    inst:AddTag("chestmonster")
     inst:AddTag("hostile")
     inst:AddTag("monster")
     inst:AddTag("scarytooceanprey")
@@ -330,6 +340,7 @@ local function revealed_fn()
     combat:SetRetargetFunction(3, RetargetFn)
     combat:SetKeepTargetFunction(KeepTargetFn)
     combat.lastwasattackedtime = -math.huge --for brain
+    combat.onhitotherfn = OnHitOther
 
     --
     local eater = inst:AddComponent("eater")
@@ -374,6 +385,9 @@ local function revealed_fn()
     --
     local sanityaura = inst:AddComponent("sanityaura")
     sanityaura.aura = -TUNING.SANITYAURA_MED
+
+    --
+    inst:AddComponent("thief")
 
     --
     local timer = inst:AddComponent("timer")

@@ -4183,8 +4183,13 @@ function PlayerController:UpdateActionsToMapActions(position, maptarget)
     return LMBaction, RMBaction
 end
 
-function PlayerController:OnMapAction(actioncode, position, maptarget)
-    local act = ACTIONS_BY_ACTION_CODE[actioncode]
+function PlayerController:OnMapAction(actioncode, position, maptarget, mod_name)
+    local act
+    if mod_name then -- Do not shorten to a short circuit logic we do not want base game actions as a fallback this would break everything.
+        act = MOD_ACTIONS_BY_ACTION_CODE[mod_name] and MOD_ACTIONS_BY_ACTION_CODE[mod_name][actioncode] or nil
+    else
+        act = ACTIONS_BY_ACTION_CODE[actioncode]
+    end
     if act == nil or not act.map_action then
         return
     end
@@ -4203,17 +4208,17 @@ function PlayerController:OnMapAction(actioncode, position, maptarget)
         end
     elseif self.locomotor == nil then
         -- TODO(JBK): Hook up pre_action_cb here.
-        SendRPCToServer(RPC.DoActionOnMap, actioncode, position.x, position.z, maptarget)
+        SendRPCToServer(RPC.DoActionOnMap, actioncode, position.x, position.z, maptarget, mod_name)
     elseif self:CanLocomote() then
         local LMBaction, RMBaction = self:GetMapActions(position, maptarget)
         if act.rmb then
             RMBaction.preview_cb = function()
-                SendRPCToServer(RPC.DoActionOnMap, actioncode, position.x, position.z, maptarget)
+                SendRPCToServer(RPC.DoActionOnMap, actioncode, position.x, position.z, maptarget, mod_name)
             end
             self.locomotor:PreviewAction(RMBaction, true)
         else
             LMBaction.preview_cb = function()
-                SendRPCToServer(RPC.DoActionOnMap, actioncode, position.x, position.z, maptarget)
+                SendRPCToServer(RPC.DoActionOnMap, actioncode, position.x, position.z, maptarget, mod_name)
             end
             self.locomotor:PreviewAction(LMBaction, true)
         end

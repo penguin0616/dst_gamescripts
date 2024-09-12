@@ -351,6 +351,24 @@ function RiftSpawner:GetNextRiftPrefab()
     return potentials[math.random(#potentials)]
 end
 
+function RiftSpawner:RiftIsShadowAffinity(rift)
+    local rift_prefab = (rift and rift.prefab) or nil
+    if not rift_prefab then return nil end
+
+    local rift_def = RIFTPORTAL_DEFS[rift_prefab]
+    local affinity = (rift_def and rift_def.Affinity) or nil
+    return affinity == RIFTPORTAL_CONST.AFFINITY.SHADOW
+end
+
+function RiftSpawner:RiftIsLunarAffinity(rift)
+    local rift_prefab = (rift and rift.prefab) or nil
+    if not rift_prefab then return nil end
+
+    local rift_def = RIFTPORTAL_DEFS[rift_prefab]
+    local affinity = (rift_def and rift_def.Affinity) or nil
+    return affinity == RIFTPORTAL_CONST.AFFINITY.LUNAR
+end
+
 
 --------------------------------------------------------------------------------
 -- Save / Load

@@ -5389,6 +5389,13 @@ return{
         CARPENTRY_BLADE_MOONGLASS = "I know, Lucy. You're more versatile.",
 
         CHEST_MIMIC_REVEALED = "No! Noooo!",
+
+        GELBLOB_STORAGE = {
+            GENERIC  = "It's supposed to keep our lunch from spoiling, eh?",
+            FULL = "Who'd wanna eat that now?",
+        },
+        GELBLOB_STORAGE_KIT = "I have bad memories of that gunk.",
+        GELBLOB_BOTTLE = "Looks potent.",
     },
 
     DESCRIBE_GENERIC = "What's that, eh?",

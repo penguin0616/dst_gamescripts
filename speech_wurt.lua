@@ -987,7 +987,7 @@ return{
     ANNOUNCE_GATHER_MERM = "Come, hungry Mermfolk! Feast and follow me! Flort!",
 
     -- rifts 4
-    ANNOUNCE_EXIT_GELBLOB = "Slimey!",
+    ANNOUNCE_EXIT_GELBLOB = "Slimy... love it!",
 	ANNOUNCE_SHADOWTHRALL_STEALTH = "Glurph! Unhide bitey mouth!",
     ANNOUNCE_RABBITKING_AGGRESSIVE = "Glorp, who angry digging?",
     ANNOUNCE_RABBITKING_PASSIVE = "What coming? Sound... nice?",
@@ -5388,6 +5388,13 @@ return{
         CARPENTRY_BLADE_MOONGLASS = "Pretty moon cutter!",
 
         CHEST_MIMIC_REVEALED = "Mouth box! Glorp!",
+
+        GELBLOB_STORAGE = {
+            GENERIC  = "What we pre-save?",
+            FULL = "Wow. Wicker-lady right! It pre-saved!",
+        },
+        GELBLOB_STORAGE_KIT = "Me make!",
+        GELBLOB_BOTTLE = "Cute!",
     },
 
     DESCRIBE_GENERIC = "What that?",

@@ -49,7 +49,7 @@ end
 --     e.g. other players' shadow creatures
 --NOTE: Normally, non-hostile creatures still show "Attack" when you mouseover.
 function fns.TargetForceAttackOnly(inst, target)
-	return target.HostileToPlayerTest ~= nil and target:HasTag("shadowcreature") and not target:HostileToPlayerTest(inst)
+	return target.HostileToPlayerTest and target:HasAnyTag("shadowcreature", "nightmarecreature") and not target:HostileToPlayerTest(inst)
 end
 
 function fns.SetGymStartState(inst)
@@ -2529,6 +2529,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.components.trader:SetAcceptTest(ShouldAcceptItem)
         inst.components.trader.onaccept = OnGetItem
         inst.components.trader.deleteitemonaccept = false
+        inst.components.trader.acceptsmimics = true
 
         -------
 

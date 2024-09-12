@@ -5388,6 +5388,13 @@ return{
         CARPENTRY_BLADE_MOONGLASS = "Fancy... for a laborer's tool.",
 
         CHEST_MIMIC_REVEALED = "It's a trap!",
+
+        GELBLOB_STORAGE = {
+            GENERIC  = "I don't trust that infernal jelly.",
+            FULL = "Somebody taste it first!",
+        },
+        GELBLOB_STORAGE_KIT = "Pass. I don't do sticky.",
+        GELBLOB_BOTTLE = "Wilson can take it on a picnic.",
     },
 
     DESCRIBE_GENERIC = "You tell me.",

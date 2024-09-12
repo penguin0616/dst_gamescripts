@@ -914,6 +914,12 @@ local COMPONENT_ACTIONS =
             end
         end,
 
+		bottler = function(inst, doer, target, actions)
+			if target:HasTag("canbebottled") then
+				table.insert(actions, ACTIONS.BOTTLE)
+			end
+		end,
+
         brush = function(inst, doer, target, actions, right)
             if not right and target:HasTag("brushable") then
                 table.insert(actions, ACTIONS.BRUSH)

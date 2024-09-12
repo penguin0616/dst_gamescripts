@@ -1193,6 +1193,7 @@ local actionhandlers =
 	ActionHandler(ACTIONS.REMOTE_TELEPORT, "remote_teleport_pre"),
 
     ActionHandler(ACTIONS.INCINERATE, "doshortaction"),
+	ActionHandler(ACTIONS.BOTTLE, "dolongaction"),
 }
 
 local events =

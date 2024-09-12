@@ -2709,6 +2709,12 @@ local function MakeHat(name)
         return inst
     end
 
+    fns.merm_removefollowers = function(owner)
+        owner.mermhat_notamerm_task = nil
+        if owner.components.leader then
+            owner.components.leader:RemoveFollowersByTag("merm")
+        end
+    end
     local function merm_disable(inst)
         local owner = inst.components.inventoryitem and inst.components.inventoryitem.owner
         if owner then
@@ -2719,10 +2725,12 @@ local function MakeHat(name)
 			if owner.mermhat_notamerm then
                 owner:RemoveTag("merm")
 	            owner:RemoveTag("mermdisguise")
-				if owner.components.leader then
-					owner.components.leader:RemoveFollowersByTag("merm")
-				end
                 owner.mermhat_notamerm = nil
+                if owner.mermhat_notamerm_task ~= nil then
+                    owner.mermhat_notamerm_task:Cancel()
+                    owner.mermhat_notamerm_task = nil
+                end
+                owner.mermhat_notamerm_task = owner:DoTaskInTime(0, fns.merm_removefollowers)
 			end
 		end
     end
@@ -2736,6 +2744,10 @@ local function MakeHat(name)
 
 			if not owner:HasTag("merm") then
 				owner.mermhat_notamerm = true
+                if owner.mermhat_notamerm_task ~= nil then
+                    owner.mermhat_notamerm_task:Cancel()
+                    owner.mermhat_notamerm_task = nil
+                end
 	            owner:AddTag("merm")
 	            owner:AddTag("mermdisguise")
 			end

@@ -152,6 +152,7 @@ local function ReleaseSuspended(inst, explode)
 		inst._suspendedplayer = nil
 		if player:IsValid() then
 			player:PushEvent("spitout", { spitter = inst, radius = 1, strengthmult = 0.6, rot = math.random() * 360 })
+			player:PushEvent("exit_gelblob", inst)
 			if explode then
 				inst.components.health:SetMaxDamageTakenPerHit(nil)
 				inst.components.health:DoDelta(-0.5 * TUNING.GELBLOB_HEALTH)
@@ -379,15 +380,27 @@ local function SuspendItem(inst, item)
 end
 
 local function OnEquip(inst, data)
-	if data and data.eslot == EQUIPSLOTS.HANDS then
-		inst.AnimState:ShowSymbol("swap_object")
+	if data then
+		if data.eslot == EQUIPSLOTS.HANDS then
+			inst.AnimState:ShowSymbol("swap_object")
+		elseif data.eslot == EQUIPSLOTS.BODY then
+			if data.item and data.item:HasTag("backpack") then
+				inst.AnimState:Show("backpack")
+			else
+				inst.AnimState:Hide("backpack")
+			end
+		end
 	end
 end
 
 --Hand objects don't clear override symbol when unequipped
 local function OnUnequip(inst, data)
-	if data and data.eslot == EQUIPSLOTS.HANDS then
-		inst.AnimState:HideSymbol("swap_object")
+	if data then
+		if data.eslot == EQUIPSLOTS.HANDS then
+			inst.AnimState:HideSymbol("swap_object")
+		elseif data.eslot == EQUIPSLOTS.BODY then
+			inst.AnimState:Hide("backpack")
+		end
 	end
 end
 
@@ -427,6 +440,7 @@ local function fn()
 	inst.AnimState:PlayAnimation("idle_big", true)
 	inst.AnimState:SetFinalOffset(7)
 	inst.AnimState:Hide("BACK")
+	inst.AnimState:Hide("backpack")
 
 	inst.highlightchildren = {}
 
@@ -562,6 +576,10 @@ local function OnUpdateReturning(inst)
 			inst.AnimState:PlayAnimation("blob_attach_middle_pst")
 			inst:ListenForEvent("animover", inst.Remove)
 			inst.OnEntitySleep = inst.Remove
+		elseif next(inst._collectors) then
+			inst.speed = nil
+			inst.Physics:SetMotorVel(0, 0, 0)
+			inst.Physics:Stop()
 		else
 			inst.speed = (inst.speed or -3 * CHUNK_RETURN_ACCEL) + CHUNK_RETURN_ACCEL
 			if inst.speed > 0 then
@@ -569,6 +587,9 @@ local function OnUpdateReturning(inst)
 				inst.Physics:SetMotorVel(dx * mult, 0, dz * mult)
 			end
 		end
+	elseif inst.components.timer:TimerExists("lifespan") then
+		inst.Physics:SetMotorVel(0, 0, 0)
+		inst.Physics:Stop()
 	else
 		inst._returntask:Cancel()
 		inst._returntask = nil
@@ -607,6 +628,25 @@ local function Small_OnEntitySleep(inst)
 		inst._returntask = nil
 	end
 	inst.SoundEmitter:KillSound("loop")
+	if not inst.persists then
+		inst:Remove()
+	end
+end
+
+
+local function Small_OnTimerDone(inst, data)
+	if data and data.name == "lifespan" then
+		if inst:IsAsleep() then
+			inst:Remove()
+		else
+			inst.persists = false
+		end
+	end
+end
+
+local function SetLifespan(inst, lifespan)
+	inst.components.timer:StartTimer("lifespan", lifespan)
+	inst:ListenForEvent("timerdone", Small_OnTimerDone)
 end
 
 local function OnTossLanded(inst)
@@ -635,6 +675,30 @@ local function Toss(inst, dist, angle)
 	inst.SoundEmitter:KillSound("loop")
 end
 
+local function ReleaseFromBottle(inst)
+	inst.AnimState:PlayAnimation("blob_pre_med")
+	inst.AnimState:SetFrame(16)
+	inst.AnimState:PushAnimation("blob_idle_med")
+	if inst._proximitytask then
+		inst._proximitytask:Cancel()
+		inst._proximitytask = nil
+	end
+	if inst._returntask then
+		inst._returntask:Cancel()
+		inst._returntask = nil
+	end
+	inst.SoundEmitter:KillSound("loop")
+	OnTossLanded(inst)
+end
+
+local function OnStartLongAction(inst, doer)
+	if inst._collectors[doer] == nil then
+		inst._collectors[doer] = doer.sg.currentstate.name
+		inst:ListenForEvent("onremove", inst._onremovecollector, doer)
+		inst:ListenForEvent("newstate", inst._onremovecollector, doer)
+	end
+end
+
 local function smallfn()
 	local inst = CreateEntity()
 
@@ -654,12 +718,13 @@ local function smallfn()
 	inst.Physics:SetCollisionMask(COLLISION.WORLD)
 	inst.Physics:SetCapsule(0.5, 1)
 
-	inst:AddTag("FX")
-	inst:AddTag("NOCLICK")
+	inst:AddTag("canbebottled")
 
 	inst.AnimState:SetBank("gelblob")
 	inst.AnimState:SetBuild("gelblob")
 	inst.AnimState:PlayAnimation("blob_idle_med", true)
+
+	inst:SetPrefabNameOverride("gelblob")
 
 	inst.entity:SetPristine()
 
@@ -670,6 +735,7 @@ local function smallfn()
 	inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1)
 
 	inst:AddComponent("entitytracker")
+	inst:AddComponent("timer")
 
 	inst._contact_radius = 0.4
 	inst._uncontact_radius = 1
@@ -677,6 +743,19 @@ local function smallfn()
 	inst._untargets = {}
 	inst._squished = false
 
+	inst._collectors = {}
+	inst._onremovecollector = function(doer, data)
+		if not (data and data.statename == inst._collectors[doer]) then
+			inst:RemoveEventCallback("onremove", inst._onremovecollector, doer)
+			inst:RemoveEventCallback("newstate", inst._onremovecollector, doer)
+			inst._collectors[doer] = nil
+		end
+	end
+
+	inst:ListenForEvent("startlongaction", OnStartLongAction)
+
+	inst.SetLifespan = SetLifespan
+	inst.ReleaseFromBottle = ReleaseFromBottle
 	inst.Toss = Toss
 	inst.OnContactChanged = Small_OnContactChanged
 	inst.OnEntityWake = Small_OnEntityWake

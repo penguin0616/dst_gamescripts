@@ -390,11 +390,13 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"voidcloth_scythe",
 	"voidcloth_boomerang",
 	"voidcloth_kit",
-	"beeswax_spray",
-
+	
 	"shadow_battleaxe",
 	"shadow_beef_bell",
 	"saddle_shadow",
+
+	"beeswax_spray",
+	"gelblob_storage_kit",
 
 	-- Hermit Crab
 	"hermitshop_hermit_bundle_shells",

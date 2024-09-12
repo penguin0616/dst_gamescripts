@@ -91,9 +91,9 @@ function self:LeashToPlayer(player)
     player:ListenForEvent("onremove", OnRemove_Player_Bridge)
     player:ListenForEvent("death", OnRemove_Player_Bridge)
 
-    self:TryToTeleportRabbitKingToLeash(self.rabbitkingdata.rabbitking, player)
     local rabbitking = self.rabbitkingdata.rabbitking
     if rabbitking.rabbitking_kind == "aggressive" then
+        self:TryToTeleportRabbitKingToLeash(rabbitking, player)
         rabbitking.components.combat:SuggestTarget(player)
     end
 end
@@ -297,6 +297,43 @@ function self:RemoveRabbitKing(rabbitking)
     else -- We need presentation if it is not sleeping.
         rabbitking:PushEvent("burrowaway")
     end
+end
+function self:TryForceRabbitKing_Internal(rabbitking) -- Used from c_spawn or other debug commands.
+    if self.pendingplayerload then -- Reschedule if there are pending loads to keep trying until it is done loading.
+        self.inst:DoTaskInTime(0, function() self:TryForceRabbitKing_Internal(rabbitking) end)
+        return
+    end
+
+    local rabbitking_old = self:GetRabbitKing()
+    if rabbitking_old then
+        if rabbitking_old ~= rabbitking then
+            if rabbitking:IsAsleep() then
+                rabbitking:Remove()
+            else
+                rabbitking.sg:GoToState("burrowaway")
+            end
+        end
+        return
+    end
+
+    if rabbitking:IsAsleep() then
+        rabbitking:Remove()
+        return
+    end
+    local x, y, z = rabbitking.Transform:GetWorldPosition()
+    local player = FindClosestPlayer(x, y, z, true)
+    if not player then
+        rabbitking.sg:GoToState("burrowaway")
+        return
+    end
+
+    if rabbitking.components.inventoryitem then
+        rabbitking.components.inventoryitem.canbepickedup = true
+        rabbitking.components.inventoryitem.canbepickedupalive = true
+    end
+    self:TrackRabbitKingForPlayer(rabbitking, player)
+    self:ResetCounters()
+    self.cooldown = nil
 end
 
 function self:CanFeedCarrot(player)

@@ -1799,6 +1799,10 @@ local PREFABS =
     ["stone_table_square"] = true,
     ["voidcloth_boomerang"] = true,
     ["worm_boss"] = true,
+    ["gelblob_storage"] = true,
+    ["gelblob_storage_kit"] = true,
+    ["shadowheart_infused"] = true,
+    ["gelblob_bottle"] = true,
 
     --[[POI]]
     ["charlie_stage_post"] = true,

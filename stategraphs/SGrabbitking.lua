@@ -91,11 +91,6 @@ local events = {
             inst.sg:GoToState("ability_summon", data)
         end
     end),
-    EventHandler("ability_summon", function(inst, data)
-        if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead()) then
-            inst.sg:GoToState("ability_summon", data)
-        end
-    end),
     EventHandler("ability_dropkick", function(inst, data)
         if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead()) then
             inst.sg:GoToState("ability_dropkick", data)
@@ -110,8 +105,21 @@ local states = {
         onenter = function(inst)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("thump")
-            -- FIXME(JBK): Sounds.
         end,
+        timeline = {
+            TimeEvent(18 * FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("rifts4/rabbit_king/thump")
+            end),
+            TimeEvent(23 * FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("rifts4/rabbit_king/thump")
+            end),
+            TimeEvent(30 * FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("rifts4/rabbit_king/thump")
+            end),
+            TimeEvent(37 * FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("rifts4/rabbit_king/thump")
+            end),
+        },
         events = {
             EventHandler("animover", function(inst)
                 if inst.AnimState:AnimDone() then
@@ -146,6 +154,7 @@ local states = {
                 inst.Physics:SetMotorVelOverride(TUNING.RABBITKING_ABILITY_DROPKICK_SPEED, 0, 0)
                 inst.sg:SetTimeout(TUNING.RABBITKING_ABILITY_DROPKICK_MAXAIRTIME)
                 inst:AddTag("flying")
+                inst.SoundEmitter:PlaySound("rifts4/rabbit_king/dropkick_lp", "dropkick_lp")
                 inst.sg.statemem.canhitsomething = true
             end),
         },
@@ -159,6 +168,7 @@ local states = {
                         local range = hitradius + ent:GetPhysicsRadius(0)
                         if ent:GetDistanceSqToPoint(x, y, z) < range * range and DoKnockback(inst, ent) then
                             inst.components.combat:DoAttack(ent)
+                            inst.SoundEmitter:PlaySound("rifts4/rabbit_king/dropkick_hit")
                             inst.sg.statemem.hitsomething = true
                             inst.sg:SetTimeout(0)
                         end
@@ -168,6 +178,7 @@ local states = {
         end,
         onexit = function(inst)
             inst:RemoveTag("flying")
+            inst.SoundEmitter:KillSound("dropkick_lp")
             inst.Physics:ClearMotorVelOverride()
             inst.components.locomotor:Stop()
             inst.components.locomotor:EnableGroundSpeedMultiplier(true)
@@ -184,6 +195,7 @@ local states = {
             inst.Transform:SetSixFaced()
             inst.AnimState:PlayAnimation("dropkick_hit")
             inst.AnimState:PushAnimation("dropkick_hit_pst", false)
+            inst.SoundEmitter:PlaySound("rifts4/rabbit_king/dropkick_hit_pst")
         end,
         timeline = {
             TimeEvent(3 * FRAMES, function(inst)
@@ -217,6 +229,7 @@ local states = {
             inst.Physics:SetMotorVelOverride(4, 0, 0)
             inst.Transform:SetSixFaced()
             inst.AnimState:PlayAnimation("dropkick_miss_pst")
+            inst.SoundEmitter:PlaySound("rifts4/rabbit_king/dropkick_miss_pst")
         end,
         timeline = {
             TimeEvent(6 * FRAMES, function(inst)
@@ -274,6 +287,7 @@ local states = {
             end
             inst.persists = false
             inst.AnimState:PlayAnimation("despawn")
+            inst.SoundEmitter:PlaySound("rifts4/rabbit_king/despawn")
         end,
         events = {
             EventHandler("animover", function(inst)
@@ -293,6 +307,7 @@ local states = {
                 inst.components.inventoryitem.canbepickedupalive = false
             end
             inst.AnimState:PlayAnimation("despawn")
+            inst.SoundEmitter:PlaySound("rifts4/rabbit_king/despawn")
             inst.sg.statemem.data = data
         end,
         events = {
@@ -318,6 +333,11 @@ local states = {
                 inst.AnimState:PushAnimation("spawn_loop", false)
             end
             inst.AnimState:PushAnimation("spawn_pst", false)
+            inst.SoundEmitter:PlaySound("rifts4/rabbit_king/spawn_lp", "spawn_lp")
+        end,
+        onexit = function(inst)
+            inst.SoundEmitter:KillSound("spawn_lp")
+            inst.SoundEmitter:PlaySound("rifts4/rabbit_king/spawn_pst")
         end,
         events = {
             EventHandler("animover", function(inst)
@@ -377,7 +397,7 @@ local states = {
                 inst.AnimState:SetBuild("rabbitking_passive_build")
             end
             inst.AnimState:PlayAnimation("transition_pre")
-            -- FIXME(JBK): Sounds.
+            inst.SoundEmitter:PlaySound("rifts4/rabbit_king/transition_pre")
         end,
         onexit = function(inst, data)
             if inst.rabbitking_kind == "aggressive" then
@@ -397,8 +417,8 @@ local states = {
         tags = {"busy"},
         onenter = function(inst, data)
             inst.AnimState:PlayAnimation("transition")
+            inst.SoundEmitter:PlaySound("rifts4/rabbit_king/transition_pst")
             inst.components.colouradder:PushColour("aggressiveswitch", 1, 1, 1, 0)
-            -- FIXME(JBK): Sounds.
         end,
         timeline = {
             TimeEvent(1*FRAMES, function(inst)
@@ -419,6 +439,7 @@ local states = {
         onenter = function(inst, data)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("trade")
+            inst.SoundEmitter:PlaySound("rifts4/rabbit_king/trade")
         end,
         events = {
             EventHandler("animover", function(inst)
@@ -558,6 +579,8 @@ local states = {
         onenter = function(inst, data)
             if inst.sounds and inst.sounds.scream then
                 inst.SoundEmitter:PlaySound(inst.sounds.scream)
+            else
+                inst.SoundEmitter:PlaySound("rifts4/rabbit_king/death")
             end
             inst.AnimState:PlayAnimation("death")
             inst.Physics:Stop()
@@ -630,6 +653,8 @@ local states = {
         onenter = function(inst)
             if inst.sounds and inst.sounds.hurt then
                 inst.SoundEmitter:PlaySound(inst.sounds.hurt)
+            else
+                inst.SoundEmitter:PlaySound("rifts4/rabbit_king/hit")
             end
             inst.AnimState:PlayAnimation("hit")
             inst.Physics:Stop()

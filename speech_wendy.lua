@@ -5392,6 +5392,13 @@ return{
         CARPENTRY_BLADE_MOONGLASS = "Pretty. If it was smaller I'd wear it around my neck.",
 
         CHEST_MIMIC_REVEALED = "I did not expect that.",
+
+        GELBLOB_STORAGE = {
+            GENERIC  = "Not so dangerous now...",
+            FULL = "Some things can't be preserved.",
+        },
+        GELBLOB_STORAGE_KIT = "Child's play.",
+        GELBLOB_BOTTLE = "I have an urge to toss it.",
     },
 
     DESCRIBE_GENERIC = "Sigh... I don't know.",

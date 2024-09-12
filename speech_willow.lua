@@ -5392,9 +5392,16 @@ return{
             OCCUPIED = "You can sit there. That chair will not spontaneously combust.",
         },
 
-        CARPENTRY_BLADE_MOONGLASS = "I wish I could throw it.",
+        CARPENTRY_BLADE_MOONGLASS = "Sharp.",
 
-        CHEST_MIMIC_REVEALED = "Kind of nasty.",
+        CHEST_MIMIC_REVEALED = "Kinda nasty.",
+
+        GELBLOB_STORAGE = {
+            GENERIC  = "There's nothing in goop.",
+            FULL = "I guess it's working?",
+        },
+        GELBLOB_STORAGE_KIT = "Talk about re-purposing.",
+        GELBLOB_BOTTLE = "I won't mistake that for jam.",
     },
 
     DESCRIBE_GENERIC = "I have no idea what that is!",

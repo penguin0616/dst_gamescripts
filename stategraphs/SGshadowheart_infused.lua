@@ -1,3 +1,5 @@
+require("stategraphs/commonstates")
+
 local events =
 {
     EventHandler("locomote", function(inst)
@@ -7,37 +9,29 @@ local events =
 
         if is_moving and not should_move then
             -- Flag our hop state to go to idle the next time it finishes.
-            inst.sg.mem.go_to_idle = true
+            inst.sg.mem.end_hop = true
         elseif is_idling and should_move then
-            inst.sg:GoToState("hop")
-
             -- If we hadn't gotten to idle yet, clear that flag.
-            if inst.sg.mem.go_to_idle then
-                inst.sg.mem.go_to_idle = nil
+            if inst.sg.mem.end_hop then
+                inst.sg.mem.end_hop = nil
             end
+
+            inst.sg:GoToState("hop")
         end
     end),
 }
 
+local function hop_animover(inst)
+    if inst.sg.mem.end_hop then
+        inst.sg.mem.end_hop = nil
+        inst.sg:GoToState("hop_pst")
+    else
+        inst.sg:GoToState("hop")
+    end
+end
+
 local states =
 {
-    State {
-        name = "idle",
-        tags = { "idle", "canrotate" },
-
-        onenter = function(inst)
-            inst.components.locomotor:StopMoving()
-            inst.AnimState:PlayAnimation("idle")
-        end,
-
-        events =
-        {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
-        },
-    },
-
     State {
         name = "hop",
         tags = { "moving", "canrotate" },
@@ -60,14 +54,7 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst)
-                if inst.sg.mem.go_to_idle then
-                    inst.sg.mem.go_to_idle = nil
-                    inst.sg:GoToState("idle")
-                else
-                    inst.sg:GoToState("hop")
-                end
-            end),
+            EventHandler("animover", hop_animover),
         },
     },
 
@@ -77,7 +64,7 @@ local states =
 
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
-            inst.AnimState:PlayAnimation("idle")
+            inst.AnimState:PlayAnimation("stunned")
             inst.sg:SetTimeout(GetRandomWithVariance(3, 1))
             inst.components.inventoryitem.canbepickedup = true
         end,
@@ -91,5 +78,8 @@ local states =
         end,
     },
 }
+
+CommonStates.AddSimpleState(states, "idle", "idle", {"idle", "canrotate"})
+CommonStates.AddSimpleState(states, "hop_pst", "hop_pst", {"canrotate"})
 
 return StateGraph("shadowheart_infused", states, events, "idle")

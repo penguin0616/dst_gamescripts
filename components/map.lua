@@ -427,6 +427,11 @@ function Map:CanDeployBridgeAtPointWithFilter(pt, inst, mouseover, tilefilterfn)
         end
     end
 
+    local id, index = self:GetTopologyIDAtPoint(pt.x, pt.y, pt.z)
+    if id and (id:find("Archive") or id:find("Labyrinth") or id:find("Atrium")) then
+        return false
+    end
+
     -- TILE_SCALE is the dimension of a tile; 1.0 is the approximate overhang, but we overestimate for safety.
     local min_distance_from_entities = (TILE_SCALE/2) + 1.2
     local min_distance_from_boat = min_distance_from_entities + TUNING.MAX_WALKABLE_PLATFORM_RADIUS

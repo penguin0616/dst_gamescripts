@@ -544,6 +544,7 @@ local function fn() -- FIXME(DiogoW): Can this one be a CLASSIFIED/non-networked
     inst:AddTag("groundpound_immune")
     inst:AddTag("worm_boss_piece")
     inst:AddTag("epic")
+    inst:AddTag("wet")
 
     inst:SetPhysicsRadiusOverride(1.15)
     inst.Physics:SetActive(false)
@@ -1006,6 +1007,13 @@ local function dirt_playanimation(inst, anim)
     end
 end
 
+local function CalcSanityAura(inst)
+    if inst.chunk and (inst.chunk.head or not inst.chunk.dirt_end ) and inst.worm and inst.worm.state ~= WORMBOSS_UTILS.STATE.DEAD then
+        return inst.worm.components.combat.target ~= nil and -TUNING.SANITYAURA_HUGE or -TUNING.SANITYAURA_LARGE
+    end
+    return 0
+end
+
 local function dirtfn()
     local inst = CreateEntity()
 
@@ -1029,6 +1037,7 @@ local function dirtfn()
     inst:AddTag("hostile")
     inst:AddTag("groundpound_immune")
     inst:AddTag("worm_boss_piece")
+    inst:AddTag("wet")
 
     inst:SetPrefabNameOverride("worm_boss")
 
@@ -1065,6 +1074,9 @@ local function dirtfn()
     inst.components.groundpounder.numRings = 2
     inst.components.groundpounder.radiusStepDistance = 2
     inst.components.groundpounder.ringWidth = 1.5
+
+    inst:AddComponent("sanityaura")
+    inst.components.sanityaura.aurafn = CalcSanityAura
 
     inst:ListenForEvent("attacked", Dirt_OnAttacked)
     inst:ListenForEvent("animover", Dirt_OnAnimOver)

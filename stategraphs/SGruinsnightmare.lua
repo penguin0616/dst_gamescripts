@@ -57,7 +57,7 @@ local function PlayExtendedSound(inst, soundname)
 
     inst.sg.mem.soundcache[inst.sg.mem.soundid] = true
 
-    inst.SoundEmitter:PlaySound("rifts4/insanity_creature3/"..soundname, "sound_"..tostring(inst.sg.mem.soundid))
+    inst.SoundEmitter:PlaySound("dontstarve/sanity/creature3/"..soundname, "sound_"..tostring(inst.sg.mem.soundid))
 
     inst:DoTaskInTime(5, FinishExtendedSound, inst.sg.mem.soundid)
 end

@@ -5388,6 +5388,13 @@ return{
         CARPENTRY_BLADE_MOONGLASS = "Well, does it saw faster?",
 
         CHEST_MIMIC_REVEALED = "Totally not worth the peek!",
+
+        GELBLOB_STORAGE = {
+            GENERIC  = "It'll extend the expiration date.",
+            FULL = "Suspended in time.",
+        },
+        GELBLOB_STORAGE_KIT = "Best get to it then.",
+        GELBLOB_BOTTLE = "What should we do with this?",
     },
 
     DESCRIBE_GENERIC = "A very particular something or other.",

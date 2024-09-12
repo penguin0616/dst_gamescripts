@@ -111,7 +111,7 @@ function GelBlobSpawner:IsCooldowned(spawner)
 end
 
 GelBlobSpawner.SafeToSpawnCheck = function(pt)
-    return TheWorld.Map:IsPassableAtPoint(pt:Get()) and TheWorld.Map:IsDeployPointClear(pt, nil, 2)
+    return TheWorld.Map:IsPassableAtPoint(pt:Get()) and TheWorld.Map:IsDeployPointClear2(pt, nil, 2)
 end
 function GelBlobSpawner:SpawnGelBlobFromSpawner(spawner, player)
     if self:IsGelBlobbed(spawner) or self:IsCooldowned(spawner) then
@@ -137,15 +137,35 @@ function GelBlobSpawner:SpawnGelBlobFromSpawner(spawner, player)
         for attempt = 1, 3 do
             offset = FindWalkableOffset(pt, math.random() * TWOPI, radius, 8, true, true, self.SafeToSpawnCheck, false, false)
             if offset then
+                local keepoffset = true
                 local playeroffset = FindWalkableOffset(ppt, math.random() * TWOPI, 4, 4, true, true, self.SafeToSpawnCheck, false, false)
                 if playeroffset then
-                    offset = (offset + playeroffset) * 0.5
-                end
-                local keepoffset = true
-                for _, oldoffset in ipairs(offsets) do
-                    if oldoffset:DistSq(offset) < self.MIN_GELBLOB_DIST_FROM_EACHOTHER_SQ then
+                    local success = false
+                    local checkoffset = (offset + playeroffset) * 0.5
+                    if not self.SafeToSpawnCheck(pt + checkoffset) then
+                        for attempt2 = 1, 3 do
+                            local t = math.random()
+                            checkoffset = playeroffset * t + offset * (t - 1)
+                            if self.SafeToSpawnCheck(pt + checkoffset) then
+                                offset = checkoffset
+                                success = true
+                                break
+                            end
+                        end
+                    else
+                        offset = checkoffset
+                        success = true
+                    end
+                    if not success then
                         keepoffset = false
-                        break
+                    end
+                end
+                if keepoffset then
+                    for _, oldoffset in ipairs(offsets) do
+                        if oldoffset:DistSq(offset) < self.MIN_GELBLOB_DIST_FROM_EACHOTHER_SQ then
+                            keepoffset = false
+                            break
+                        end
                     end
                 end
                 if keepoffset then

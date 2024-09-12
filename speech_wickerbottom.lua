@@ -5388,6 +5388,13 @@ return{
         CARPENTRY_BLADE_MOONGLASS = "A moon glass saw blade. Sharp enough to cut stone.",
 
         CHEST_MIMIC_REVEALED = "This creature mimics an artifact.",
+
+        GELBLOB_STORAGE = {
+            GENERIC  = "The dark gelatinous substance, colloquially known as Icker, will preserve our food items.",
+            FULL = "The contents are perfectly safe to consume.",
+        },
+        GELBLOB_STORAGE_KIT = "A simple food preservation method.",
+        GELBLOB_BOTTLE = "This will do nicely.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

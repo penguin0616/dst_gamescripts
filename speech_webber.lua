@@ -5388,6 +5388,13 @@ return{
         CARPENTRY_BLADE_MOONGLASS = "Ms. Wickerbottom said we should be extra careful with that.",
 
         CHEST_MIMIC_REVEALED = "We didn't touch it!",
+
+        GELBLOB_STORAGE = {
+            GENERIC  = "Looks like jelly.",
+            FULL = "Yummy!",
+        },
+        GELBLOB_STORAGE_KIT = "We can build it!",
+        GELBLOB_BOTTLE = "It's sticky like our webs!",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

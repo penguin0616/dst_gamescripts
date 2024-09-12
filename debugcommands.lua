@@ -2150,7 +2150,7 @@ local function Scrapbook_DefineSubCategory(t)
         subcat = "hat"
     elseif t.components.oceanfishingtackle then
         subcat = "tackle"
-    elseif t.components.prototyper then
+    elseif t.components.prototyper and t.sg == nil then
         subcat = "craftingstation"
     elseif t:HasTag("shadow") then
         subcat = "shadow"

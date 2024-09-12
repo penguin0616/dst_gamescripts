@@ -5389,6 +5389,13 @@ return{
         CARPENTRY_BLADE_MOONGLASS = "Wolfgang once receive nasty cut from glass.",
 
         CHEST_MIMIC_REVEALED = "Wolfgang knew box too fancy to be true!",
+
+        GELBLOB_STORAGE = {
+            GENERIC  = "Good place for Wolfgang snacks.",
+            FULL = "Hungry Wolfgang is not picky Wolfgang.",
+        },
+        GELBLOB_STORAGE_KIT = "Easy job for Wolfgang.",
+        GELBLOB_BOTTLE = "This not edible.",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

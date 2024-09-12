@@ -143,6 +143,8 @@ local function DoAOEAttack(inst, radius, heavymult, mult, forcelanded)
 					local strengthmult = (v.components.inventory and v.components.inventory:ArmorHasTag("heavyarmor") or v:HasTag("heavybody")) and heavymult or mult
 					v:PushEvent("knockback", { knocker = inst, radius = radius, strengthmult = strengthmult, forcelanded = forcelanded })
 					nexttargets[v] = true
+				else
+					v:PushEvent("bit_by_shadowthrall_stealth", inst)
 				end
 			end
 		end
@@ -253,7 +255,7 @@ local states =
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("hit")
-			inst.SoundEmitter:PlaySound("rifts2/thrall_generic/vocalization_hit")
+			inst.SoundEmitter:PlaySound("rifts4/shadowthrall_mouth/hit")
 		end,
 
 		timeline =
@@ -334,6 +336,7 @@ local states =
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("taunt")
+			inst.SoundEmitter:PlaySound("rifts4/shadowthrall_mouth/taunt")
 			local target = inst.components.combat.target
 			if target then
 				inst:ForceFacePoint(target.Transform:GetWorldPosition())
@@ -368,6 +371,7 @@ local states =
 		onenter = function(inst, targetorpos)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("leap_pre")
+			inst.SoundEmitter:PlaySound("rifts4/shadowthrall_mouth/jump_lp", "loop")
 			if targetorpos and targetorpos:is_a(Vector3) then
 				inst.sg.statemem.targetpos = targetorpos
 				inst:ForceFacePoint(inst.sg.statemem.targetpos)
@@ -448,6 +452,7 @@ local states =
 				local x, y, z = inst.Transform:GetWorldPosition()
 				ToggleOnAllObjectCollisionsAt(inst, x, z)
 				inst:ClearBiteTarget()
+				inst.SoundEmitter:KillSound("loop")
 			end
 		end,
 	},
@@ -510,6 +515,8 @@ local states =
 			inst.dupe.Physics:Stop()
 			inst.dupe:RemoveFromScene()
 
+			inst.SoundEmitter:KillSound("loop")
+
 			local x, y, z = inst.dupe.Transform:GetWorldPosition()
 			ToggleOnAllObjectCollisionsAt(inst, x, z)
 
@@ -525,6 +532,7 @@ local states =
 		onenter = function(inst, target)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("land")
+			inst.SoundEmitter:PlaySound("rifts4/shadowthrall_mouth/jump_land")
 
 			if target and target:IsValid() then
 				inst.sg.statemem.target = target
@@ -619,6 +627,7 @@ local states =
 			inst.components.locomotor:Stop()
 			inst.components.combat:StartAttack()
 			inst.AnimState:PlayAnimation("bite_loop")
+			inst.SoundEmitter:PlaySound("rifts4/shadowthrall_mouth/bite")
 			inst.Physics:SetMotorVelOverride(8, 0, 0)
 			if data then
 				inst.sg.statemem.loops = data.loops
@@ -680,6 +689,7 @@ local states =
 			inst.components.locomotor:Stop()
 			inst.components.combat:StartAttack()
 			inst.AnimState:PlayAnimation("bite_final")
+			inst.SoundEmitter:PlaySound("rifts4/shadowthrall_mouth/bite")
 			inst.Physics:SetMotorVelOverride(8, 0, 0)
 		end,
 
@@ -799,6 +809,7 @@ local states =
 		onenter = function(inst, target)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("stalk_smile_pre")
+			inst.SoundEmitter:PlaySound("rifts4/shadowthrall_mouth/stealth_appear")
 			inst.components.combat:StartAttack()
 
 			if target and target:IsValid() then
@@ -847,6 +858,7 @@ local states =
 			inst.components.locomotor:Stop()
 			inst.components.combat:StartAttack()
 			inst.AnimState:PlayAnimation("stalk_bite")
+			inst.SoundEmitter:PlaySound("rifts4/shadowthrall_mouth/stealth_bite_f0")
 			if data then
 				inst.sg.statemem.target = data.target
 				inst.sg.statemem.ease = data.ease
@@ -862,6 +874,7 @@ local states =
 				inst.Physics:ClearMotorVelOverride()
 				inst.Physics:Stop()
 			end),
+			FrameEvent(18, function(inst) inst.SoundEmitter:PlaySound("rifts4/shadowthrall_mouth/stealth_bite_f18") end),
 			FrameEvent(22, function(inst)
 				DoAOEAttack(inst, 1.5)
 				inst:ClearBiteTarget(TUNING.SHADOWTHRALL_MOUTH_STEALTH_ATTACK_GROUP_PERIOD)
@@ -925,6 +938,7 @@ local states =
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("stealth_on")
+			inst.SoundEmitter:PlaySound("rifts4/shadowthrall_mouth/enter_stealth")
 			inst.sg.mem.enterstealth = nil
 		end,
 
@@ -948,7 +962,7 @@ local states =
 			inst.AnimState:PushAnimation("stealth_off_loop")
 			inst.AnimState:PushAnimation("stealth_off_loop")
 			inst.AnimState:PushAnimation("stealth_off_loop", false)
-			inst.SoundEmitter:PlaySound("rifts2/thrall_generic/vocalization_hit")
+			inst.SoundEmitter:PlaySound("rifts4/shadowthrall_mouth/hit")
 		end,
 
 		timeline =

@@ -153,6 +153,7 @@ local function fn()
     inst.MiniMapEntity:SetIcon("carpentry_station.png")
 
     inst:AddTag("structure")
+    inst:AddTag("carpentry_station")
 
     --prototyper (from prototyper component) added to pristine state for optimization
     inst:AddTag("prototyper")

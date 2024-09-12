@@ -178,6 +178,17 @@ function self:RegisterFissure(inst)
     end
 end
 
+local function TrackOtherThralls(thrall, other1name, other1, other2name, other2)
+	if thrall and thrall.components.entitytracker then
+		if other1 then
+			thrall.components.entitytracker:TrackEntity(other1name, other1)
+		end
+		if other2 then
+			thrall.components.entitytracker:TrackEntity(other2name, other2)
+		end
+	end
+end
+
 function self:OnSpawnThralls()
     if _fissure then
         local player = FindClosestPlayerToInst(_fissure, SPAWN_THRALL_DIST, true)
@@ -192,27 +203,21 @@ function self:OnSpawnThralls()
             elseif self.thralltype == THRALL_TYPES.SHADOW.MOUTH then
                 prefab_hands, prefab_horns, prefab_wings = "shadowthrall_mouth", "shadowthrall_mouth", "shadowthrall_mouth"
             end
+
             if prefab_hands then
                 _thrall_hands = self:SpawnThrallFromPoint(prefab_hands, x, z, table.remove(angles, math.random(#angles)), table.remove(delays, math.random(#delays)))
-                if _thrall_hands.components.entitytracker ~= nil then
-                    _thrall_hands.components.entitytracker:TrackEntity("horns", _thrall_horns)
-                    _thrall_hands.components.entitytracker:TrackEntity("wings", _thrall_wings)
-                end
             end
             if prefab_horns then
-               _thrall_horns = self:SpawnThrallFromPoint(prefab_horns, x, z, table.remove(angles, math.random(#angles)), table.remove(delays, math.random(#delays)))
-                if _thrall_horns.components.entitytracker ~= nil then
-                    _thrall_horns.components.entitytracker:TrackEntity("hands", _thrall_hands)
-                    _thrall_horns.components.entitytracker:TrackEntity("wings", _thrall_wings)
-                end
+                _thrall_horns = self:SpawnThrallFromPoint(prefab_horns, x, z, table.remove(angles, math.random(#angles)), table.remove(delays, math.random(#delays)))
             end
             if prefab_wings then
                 _thrall_wings = self:SpawnThrallFromPoint(prefab_wings, x, z, table.remove(angles, math.random(#angles)), table.remove(delays, math.random(#delays)))
-                if _thrall_wings.components.entitytracker ~= nil then
-                    _thrall_wings.components.entitytracker:TrackEntity("hands", _thrall_hands)
-                    _thrall_wings.components.entitytracker:TrackEntity("horns", _thrall_horns)
-                end
             end
+
+			TrackOtherThralls(_thrall_hands, "horns", _thrall_horns, "wings", _thrall_wings)
+			TrackOtherThralls(_thrall_horns, "hands", _thrall_hands, "wings", _thrall_wings)
+			TrackOtherThralls(_thrall_wings, "hands", _thrall_hands, "horns", _thrall_horns)
+
             --Search strings:
             -- SpawnPrefab("shadowthrall_hands")
             -- SpawnPrefab("shadowthrall_horns")
@@ -269,9 +274,17 @@ function self:SafeToReleaseFissure()
     return true
 end
 
+local function ReleaseFissureWithCombatCooldowns()
+    if _spawn_thralls_task == nil and (_thrall_hands == nil or _thrall_horns == nil or _thrall_wings == nil) then
+        -- One of the trio is dead combat must have happened.
+        self:ReleaseFissure(TUNING.FISSURE_COOLDOWN_DEFEATED_ANY_THRALLS)
+    else
+        self:ReleaseFissure(TUNING.FISSURE_COOLDOWN_WALKED_AWAY)
+    end
+end
 local function CheckIfSafeToReleaseFissure()
     if self:SafeToReleaseFissure() then
-        self:ReleaseFissure(TUNING.FISSURE_COOLDOWN_WALKED_AWAY) -- This was during combat.
+        ReleaseFissureWithCombatCooldowns()
         if _thrall_combatcheck_task ~= nil then
             _thrall_combatcheck_task:Cancel()
             _thrall_combatcheck_task = nil
@@ -283,12 +296,7 @@ function self:UnregisterFissure(inst)
     if _fissure == inst then
         -- All players ran away from the target fissure, try releasing it if possible.
         if self:SafeToReleaseFissure() then
-            if _spawn_thralls_task == nil and (_thrall_hands == nil or _thrall_horns == nil or _thrall_wings == nil) then
-                -- One of the trio is dead combat must have happened.
-                self:ReleaseFissure(TUNING.FISSURE_COOLDOWN_DEFEATED_ANY_THRALLS)
-            else
-                self:ReleaseFissure(TUNING.FISSURE_COOLDOWN_WALKED_AWAY)
-            end
+            ReleaseFissureWithCombatCooldowns()
         else
             _thrall_combatcheck_task = self.inst:DoPeriodicTask(CHECK_FISSURE_INTERVAL, CheckIfSafeToReleaseFissure)
         end

@@ -5392,6 +5392,13 @@ return{
         CARPENTRY_BLADE_MOONGLASS = "Careful, friends! Sharp!",
 
         CHEST_MIMIC_REVEALED = "Bad stuff! Bad!",
+
+        GELBLOB_STORAGE = {
+            GENERIC  = "Good Sticky now?",
+            FULL = "Thanks Good Sticky!",
+        },
+        GELBLOB_STORAGE_KIT = "What make with Bad Sticky?",
+        GELBLOB_BOTTLE = "Bad Sticky trapped!",
     },
 
     DESCRIBE_GENERIC = "Friend?",

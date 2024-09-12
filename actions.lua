@@ -576,6 +576,9 @@ ACTIONS =
     -- Rifts / Meta QoL
 
     INCINERATE = Action({ priority=1, mount_valid=true }),
+
+	-- Rifts 4
+	BOTTLE = Action({ mount_valid=true }),
 }
 
 ACTIONS_BY_ACTION_CODE = {}
@@ -5299,4 +5302,10 @@ ACTIONS.INCINERATE.fn = function(act)
     end
 
     return false
+end
+
+ACTIONS.BOTTLE.fn = function(act)
+	if act.invobject and act.invobject.components.bottler then
+		return act.invobject.components.bottler:Bottle(act.target, act.doer)
+	end
 end

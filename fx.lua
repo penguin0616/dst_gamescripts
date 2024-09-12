@@ -1924,6 +1924,7 @@ local fx =
         build ="bottle",
         anim = "break",
         sound = "dontstarve/creatures/monkey/poopsplat",
+		fn = FinalOffset2,
     },
     {
         name = "messagebottle_bob_fx",

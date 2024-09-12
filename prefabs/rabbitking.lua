@@ -4,7 +4,17 @@ local KING_SCALE = 1.4
 -----------------------------------------------------------------
 -- common
 -----------------------------------------------------------------
+local function CheckRabbitKingManager(inst)
+    -- NOTES(JBK): This prefab should only have one in the world belonging to the rabbitkingmanager so we need to check if it is okay to have more.
+    -- Reason this function exists is for debug spawning players and other debug tests.
+    local rabbitkingmanager = TheWorld.components.rabbitkingmanager
+    if rabbitkingmanager == nil then
+        inst.sg:GoToState("burrowaway")
+        return
+    end
 
+    rabbitkingmanager:TryForceRabbitKing_Internal(inst)
+end
 local function fn_common(rabbitking_kind, build_override)
     local inst = CreateEntity()
 
@@ -66,6 +76,8 @@ local function fn_common(rabbitking_kind, build_override)
     inst:AddComponent("sleeper")
     inst.components.sleeper.watchlight = true
 
+    inst:DoTaskInTime(0, CheckRabbitKingManager)
+
     return inst
 end
 
@@ -77,7 +89,7 @@ local assets_passive = {
     Asset("ANIM", "anim/rabbitking_passive_build.zip"),
     Asset("ANIM", "anim/rabbitking_action.zip"),
     Asset("ANIM", "anim/manrabbit_actions.zip"),
-    --Asset("SOUND", "sound/rabbit.fsb"),
+    Asset("SOUND", "sound/rifts4.fsb"),
 }
 local prefabs_passive = {
     "smallmeat",
@@ -133,7 +145,7 @@ local assets_aggressive = {
     Asset("ANIM", "anim/rabbitking_aggressive_build.zip"),
     Asset("ANIM", "anim/rabbitking_action.zip"),
     Asset("ANIM", "anim/manrabbit_actions.zip"),
-    --Asset("SOUND", "sound/rabbit.fsb"),
+    Asset("SOUND", "sound/rifts4.fsb"),
 }
 local prefabs_aggressive = {
     "monstermeat",

@@ -88,6 +88,7 @@ local states =
         onenter = function(inst, playanim)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("emerge_taunt")
+            inst.SoundEmitter:PlaySound("rifts4/worm_boss/taunt")
         end,
 
         events=
@@ -152,8 +153,10 @@ local states =
 
             if inst.sg.statemem.has_big_food then
                 inst.AnimState:PlayAnimation("chew_small", false)
+                inst.SoundEmitter:PlaySound("rifts4/worm_boss/chew")
             else
                 inst.AnimState:PlayAnimation("chew_big", false)
+                inst.SoundEmitter:PlaySound("rifts4/worm_boss/chew_big")
             end
         end,
 
@@ -370,7 +373,7 @@ local states =
             if inst.worm and inst.worm.devoured then
                 WORMBOSS_UTILS.SpitAll(inst.worm, nil, true)
             end
-
+            inst.SoundEmitter:PlaySound("rifts4/worm_boss/death_pst")
             inst.AnimState:PlayAnimation("death_pre")
         end,
 
@@ -412,6 +415,13 @@ local states =
                 inst.AnimState:PlayAnimation("death_pst", false)
             end
 
+        end,
+
+        onupdate = function(inst,dt)
+           if inst.AnimState:IsCurrentAnimation("death_pst") and not inst.sg.statemem.pst_death_sound_played then
+                inst.sg.statemem.pst_death_sound_played = true
+                inst.SoundEmitter:PlaySound("rifts4/worm_boss/death_pst")
+           end
         end,
 
         events=

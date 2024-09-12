@@ -124,7 +124,9 @@ end
 --------------------------------------------------------------------------
 
 local function OnRiftAddedToPool(_, data)
-    if data and data.rift ~= nil then
+    if data and data.rift
+            and self.inst.components.riftspawner
+            and self.inst.components.riftspawner:RiftIsShadowAffinity(data.rift) then
         local first_modifier = _rift_enabled_modifiers:IsEmpty()
         _rift_enabled_modifiers:SetModifier(data.rift, true)
         if first_modifier then

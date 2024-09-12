@@ -3,9 +3,9 @@ require("stategraphs/commonstates")
 local events =
 {
 	CommonHandlers.OnLocomote(false, true),
-	EventHandler("jump", function(inst, target)
+	EventHandler("jump", function(inst)--, target)
 		if not inst.sg:HasStateTag("busy") then
-			inst.sg:GoToState("jump_pre", target)
+			inst.sg:GoToState("jump_pre")
 		end
 	end),
 
@@ -32,7 +32,7 @@ local states =
 		name = "jump_pre",
 		tags = { "busy", "jumping", "noattack" },
 
-		onenter = function(inst, target)
+		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("jump")
 

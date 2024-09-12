@@ -39,7 +39,7 @@ local function TurnIntoCollisionFx(inst)
     inst.AnimState:PlayAnimation("horn_atk_pst")
     inst.AnimState:SetFinalOffset(1)
 
-    inst.SoundEmitter:PlaySound("rifts4/insanity_creature3/horn_collide")
+    inst.SoundEmitter:PlaySound("dontstarve/sanity/creature3/horn_collide")
 
     inst.components.updatelooper:RemoveOnUpdateFn(inst._OnUpdateFn)
 
@@ -136,7 +136,7 @@ local function SetUp(inst, owner, target, other)
 
     inst.components.updatelooper:AddOnUpdateFn(inst._OnUpdateFn)
 
-    inst.SoundEmitter:PlaySound("rifts4/insanity_creature3/horn_slice")
+    inst.SoundEmitter:PlaySound("dontstarve/sanity/creature3/horn_slice")
 
     if inst.owner.components.planarentity ~= nil then
         inst.AnimState:ShowSymbol("red")

@@ -5385,9 +5385,16 @@ return{
             OCCUPIED = "Sorry Woby, that's not for you.",
         },
 
-        CARPENTRY_BLADE_MOONGLASS = "Be careful, Woby! It's sharp!",
+        CARPENTRY_BLADE_MOONGLASS = "Lookin' sharp! Hehe.",
 
         CHEST_MIMIC_REVEALED = "And I was right! It's a box monster, Woby!",
+
+        GELBLOB_STORAGE = {
+            GENERIC  = "What should we put in there, Woby?",
+            FULL = "It's floating in that gloop!",
+        },
+        GELBLOB_STORAGE_KIT = "This might be messy to build.",
+        GELBLOB_BOTTLE = "We really should label that.",
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

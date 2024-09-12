@@ -997,7 +997,7 @@ return {
     ANNOUNCE_GATHER_MERM = "Must be a Merm thing.",
 
     -- rifts 4
-    ANNOUNCE_EXIT_GELBLOB = "I felt it digesting me.",
+    ANNOUNCE_EXIT_GELBLOB = "I was drowning in that... stuff!",
 	ANNOUNCE_SHADOWTHRALL_STEALTH = "Something bit me! Where did it go?!",
     ANNOUNCE_RABBITKING_AGGRESSIVE = "Something is clawing its way to the surface.",
     ANNOUNCE_RABBITKING_PASSIVE = "Something is softly scuffling underground.",
@@ -5398,6 +5398,13 @@ return {
         CARPENTRY_BLADE_MOONGLASS = "Razor-sharp, like my mind!",
 
         CHEST_MIMIC_REVEALED = "Horrible! Definitely horrible!",
+
+        GELBLOB_STORAGE = { 
+            GENERIC  = "Looks empty.",
+            FULL = "It's keeping it... fresh?",
+        },
+        GELBLOB_STORAGE_KIT = "I'll preserve my judgement.",
+        GELBLOB_BOTTLE = "I tend to keep things bottled up.",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

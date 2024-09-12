@@ -5394,6 +5394,13 @@ return{
         CARPENTRY_BLADE_MOONGLASS = "That is one sweet saw blade.",
 
         CHEST_MIMIC_REVEALED = "Didn't I tell ya?!",
+
+        GELBLOB_STORAGE = {
+            GENERIC  = "At least we found some use for that muck.",
+            FULL = "And just like that, I ain't hungry no more.",
+        },
+        GELBLOB_STORAGE_KIT = "Guess I should put'er together.",
+        GELBLOB_BOTTLE = "We can take it to go!",
     },
 
     DESCRIBE_GENERIC = "Incredible! I have no idea what that is.",

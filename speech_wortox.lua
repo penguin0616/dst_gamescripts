@@ -5394,6 +5394,13 @@ return{
         CARPENTRY_BLADE_MOONGLASS = "But what does it cut?",
 
         CHEST_MIMIC_REVEALED = "Why did we open it?!",
+
+        GELBLOB_STORAGE = {
+            GENERIC  = "I do declare, there's nothing there.",
+            FULL = "Congealed and sealed!",
+        },
+        GELBLOB_STORAGE_KIT = "Grrr... Not on the fur!",
+        GELBLOB_BOTTLE = "Bottled abomination.",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",

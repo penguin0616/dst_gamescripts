@@ -1037,6 +1037,7 @@ STRINGS =
         },
 
         INCINERATE = "Destroy",
+		BOTTLE = "Collect",
     },
 
     -- PC controls get hex ranges EE90xx to EE9Fxx
@@ -4085,7 +4086,11 @@ STRINGS =
         CHEST_MIMIC = "Ornate Chest",
         CHEST_MIMIC_REVEALED = "Ornery Chest",
 
-        SHADOWHEART_INFUSED = "Posessed Shadow Atrium",
+        SHADOWHEART_INFUSED = "Possessed Shadow Atrium",
+
+        GELBLOB_STORAGE = "Icker Preserve",
+        GELBLOB_STORAGE_KIT = "Icker Preserve Kit",
+        GELBLOB_BOTTLE = "Icker Jar",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -5150,6 +5155,8 @@ STRINGS =
         CUTSTONE_BUNCH = "Stock your stone.",
 
         CARPENTRY_BLADE_MOONGLASS = "For when a regular blade just won't cut it.",
+
+        GELBLOB_STORAGE_KIT = "Keep your perishables fresh in this deadly dark jelly.",
     },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
@@ -16889,24 +16896,26 @@ STRINGS.SCRAPBOOK = {
 
         -- Rifts 4
 
-        -- ARMOR_CARROTLURE = "TODO",
-        -- GELBLOB = "TODO",
-        -- RABBITHAT = "TODO",
-        -- RABBITKING_AGGRESSIVE = "TODO",
-        -- RABBITKING_LUCKY = "TODO",
-        -- RABBITKING_PASSIVE = "TODO",
-        -- RABBITKINGHORN = "TODO",
-        -- RABBITKINGHORN_CHEST = "TODO",
-        -- RABBITKINGMINION_BUNNYMAN = "TODO",
-        RABBITKINGSPEAR = "Wards off Bunnymen through fear. Trades your own mind for power against them in more ways than one.",
-        -- ROPE_BRIDGE_KIT = "TODO",
-        SADDLE_SHADOW = "Can be put onto a Beefalo if it's willing. Faster than a regular saddle.",
-        SHADOW_BATTLEAXE = "A weapon that is also a axe! It levels up by killing giants, increasing its stats, life steal and desire for death... It has 4 levels and it needs to kill 3 giants for each level.",
-        SHADOW_BEEF_BELL = "Name and bond with one Beefalo at a time. Bonded Beefalo will follow the holder, even into caves and offline.\n\nThis bell can also be given to a dead bonded Beefalo to revive it.",
-        -- SHADOWTHRALL_MOUTH = "TODO",
-        VOIDCLOTH_BOOMERANG = "A ranged weapon that has 3 projectiles and does damage based on the projectile size.\n\nIncreases movement speed by 10% when held.",
-        -- WORM_BOSS = "TODO",
+        ARMOR_CARROTLURE = "Bunnymen are drawn to its alluring scent, powerful enough to mask the musk of meats.",
         CARPENTRY_BLADE_MOONGLASS = "Allows a Sawhorse equipped with it to build new things.",
+        CHEST_MIMIC_REVEALED = "A heartless monster. It craves the taste of loot, and flesh.",
+        ITEMMIMIC_REVEALED = "An annoying little creep that just wants to be held by you. Stomp it out quickly, before it does more creeping.",
+        GELBLOB_STORAGE = "The Icker completely stops the spoilage of food placed in it.",
+        RABBITHAT = "Blend in with the rabbits so they no longer flee from you in terror.",
+        RABBITKING_AGGRESSIVE = "This Wrathful Rabbit King will show no mercy.",
+        RABBITKING_LUCKY = "Catch a Fortuitous Rabbit for your free reward. But be warned, the reward may turn to punishment when carrying meat.",
+        RABBITKING_PASSIVE = "This Benevolent Rabbit King will barter for your belongings.",
+        RABBITKINGHORN = "Calls forth a Portable Den.",
+        RABBITKINGHORN_CHEST = "A storage for your items and other trinkets accessible from Portable Dens.",
+        RABBITKINGMINION_BUNNYMAN = "The Rabbit King commands with a Royal decree, your presence be removed no matter your plea.",
+        RABBITKINGSPEAR = "It wards off Bunnymen, but trades your own mind for power against them in more ways than one.",
+        SADDLE_SHADOW = "Can be put onto a Beefalo if it's willing. Faster than a regular saddle.",
+        SHADOW_BATTLEAXE = "It can take down both creatures and trees. You can upgrade its stats, life steal and hunger, by defeating giants.\n\nThe weapon has 4 levels, and each level requires 3 giant kills to progress.",
+        SHADOW_BEEF_BELL = "Bind a Beefalo to the bell. A bound Beefalo will follow the holder, even into the caves and offline.\n\nYou can also sacrifice this bell to revive a bound Beefalo.",
+        SHADOWHEART_INFUSED = "A working heart that used to have a new body.",
+        SHADOWTHRALL_MOUTH = "It lurks in the shadows... You'll need to find a way to expose it before you can attack it.",
+        VOIDCLOTH_BOOMERANG = "A ranged weapon that launches three projectiles, dealing more damage the farther they travel.\n\nEquipping a Void Cowl gives an additional projectile. The Gloomerang also increases movement speed by 10% when held.",
+        WORM_BOSS = "The ancestor of the Depths Worm is dangerous to attack while it's in motion.",
     },
 
     -- Full name: "{name} Scrapbook Page"

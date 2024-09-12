@@ -15,9 +15,11 @@ local function ConnectorLerpTo(inst, x, z, scale)
 end
 
 local function OnUpdateConnectorKilled(inst)
-	local x1, y1, z1 = inst._mainblob.Transform:GetWorldPosition()
-	local dx = x1 - inst._x
-	local dz = z1 - inst._z
+	if inst._mainblob:IsValid() then
+		inst._x1, inst._y1, inst._z1 = inst._mainblob.Transform:GetWorldPosition()
+	end
+	local dx = inst._x1 - inst._x
+	local dz = inst._z1 - inst._z
 	local k = inst.AnimState:GetCurrentAnimationTime() / inst._animlen
 	k = k * k
 	inst.Transform:SetPosition(inst._x + dx * k, inst._y, inst._z + dz * k)
@@ -33,6 +35,7 @@ local function KillConnector(inst, mainblob)
 	end
 
 	inst._mainblob = mainblob
+	inst._x1, inst._y1, inst._z1 = mainblob.Transform:GetWorldPosition()
 	inst._x, inst._y, inst._z = inst.Transform:GetWorldPosition()
 	inst.entity:SetParent(nil)
 	inst.Transform:SetPosition(inst._x, inst._y, inst._z)
@@ -80,7 +83,30 @@ local function CreateConnectorBlob()
 	return inst
 end
 
+local function OnMainBlobLost(inst)
+	if inst.highlightparent then
+		table.removearrayvalue(inst.highlightparent.highlightchildren, inst)
+		inst.highlightparent = nil
+	end
+	if inst.connector1 then
+		inst.connector1:Remove()
+		inst.connector1 = nil
+	end
+	if inst.connector2 then
+		inst.connector2:Remove()
+		inst.connector2 = nil
+	end
+	inst:RemoveComponent("updatelooper")
+end
+
 local function OnUpdate(inst)
+	local blob = inst.mainblob:value()
+	if blob == nil then
+		--can happen if mainblob goes to sleep on clients; teleported away from it?
+		OnMainBlobLost(inst)
+		return
+	end
+
 	local x, y, z = inst.Transform:GetWorldPosition()
 	local x1, y1, z1 = inst.mainblob:value().Transform:GetWorldPosition()
 	local dx = x - x1
@@ -159,19 +185,7 @@ local function OnMainBlobDirty(inst)
 			inst.components.updatelooper:AddOnUpdateFn(OnUpdate)
 		end
 	else
-		if inst.highlightparent then
-			table.removearrayvalue(inst.highlightparent.highlightchildren, inst)
-			inst.highlightparent = nil
-		end
-		if inst.connector1 then
-			inst.connector1:Remove()
-			inst.connector1 = nil
-		end
-		if inst.connector2 then
-			inst.connector2:Remove()
-			inst.connector2 = nil
-		end
-		inst:RemoveComponent("updatelooper")
+		OnMainBlobLost(inst)
 	end
 end
 

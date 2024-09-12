@@ -357,25 +357,150 @@ function sewing_mannequin_clear_fn(inst)
     basic_clear_fn(inst, "sewing_mannequin")
 end
 
+local winona_battery_high_skin_symbols = {
+    "wire_tip", "wire_red", "wire_blue",
+    "plug_off", "plug",
+    "panel",
+    "burnt",
+    "body",
+    "rack_frame_back", "rack_frame", "rack_base",
+}
 function winona_battery_high_init_fn(inst, build_name)
-    basic_init_fn(inst, build_name, "winona_battery_high")
+    if inst.prefab == "winona_battery_high_item" then
+        winona_battery_high_item_init_fn(inst, build_name)
+        return
+    end
+
+    if inst.prefab == "winona_battery_high_item_placer" and inst.components.placer then
+        for _, v in pairs(inst.components.placer.linked) do
+            for _, symbol in ipairs(winona_battery_high_skin_symbols) do
+                v.AnimState:OverrideItemSkinSymbol(symbol, build_name, symbol, inst.GUID, "winonabattery_high")
+            end
+        end
+    end
+    for _, symbol in ipairs(winona_battery_high_skin_symbols) do
+        inst.AnimState:OverrideItemSkinSymbol(symbol, build_name, symbol, inst.GUID, "winonabattery_high")
+    end
 end
 function winona_battery_high_clear_fn(inst)
-    basic_clear_fn(inst, "winona_battery_high")
+    if inst.prefab == "winona_battery_high_item" then
+        winona_battery_high_item_clear_fn(inst)
+        return
+    end
+
+    for _, symbol in ipairs(winona_battery_high_skin_symbols) do
+        inst.AnimState:ClearOverrideSymbol(symbol)
+    end
+end
+local function winona_battery_high_item_filter(skin_name)
+    if not skin_name:find("_item") then
+        skin_name = skin_name:gsub("winonabattery_high", "winonabattery_high_item")
+    end
+    return skin_name
+end
+function winona_battery_high_item_init_fn(inst, build_name)
+    basic_init_fn(inst, build_name, "winona_battery_high_item", winona_battery_high_item_filter)
+end
+function winona_battery_high_item_clear_fn(inst)
+    basic_clear_fn(inst, "winona_battery_high_item")
 end
 
+local winona_battery_low_skin_symbols = {
+    "wire_tip", "wire_red", "wire_blue",
+    "plug_off", "plug",
+    "panel",
+    "burnt",
+    "body", "body_2",
+}
 function winona_battery_low_init_fn(inst, build_name)
-    basic_init_fn(inst, build_name, "winona_battery_low")
+    if inst.prefab == "winona_battery_low_item" then
+        winona_battery_low_item_init_fn(inst, build_name)
+        return
+    end
+
+    if inst.prefab == "winona_battery_low_item_placer" and inst.components.placer then
+        for _, v in pairs(inst.components.placer.linked) do
+            for _, symbol in ipairs(winona_battery_low_skin_symbols) do
+                v.AnimState:OverrideItemSkinSymbol(symbol, build_name, symbol, inst.GUID, "winona_battery_low")
+            end
+        end
+    end
+    for _, symbol in ipairs(winona_battery_low_skin_symbols) do
+        inst.AnimState:OverrideItemSkinSymbol(symbol, build_name, symbol, inst.GUID, "winona_battery_low")
+    end
 end
 function winona_battery_low_clear_fn(inst)
-    basic_clear_fn(inst, "winona_battery_low")
+    if inst.prefab == "winona_battery_low_item" then
+        winona_battery_low_item_clear_fn(inst)
+        return
+    end
+
+    for _, symbol in ipairs(winona_battery_low_skin_symbols) do
+        inst.AnimState:ClearOverrideSymbol(symbol)
+    end
+end
+local function winona_battery_low_item_filter(skin_name)
+    if not skin_name:find("_item") then
+        skin_name = skin_name:gsub("winonabattery_low", "winonabattery_low_item")
+    end
+    return skin_name
+end
+function winona_battery_low_item_init_fn(inst, build_name)
+    basic_init_fn(inst, build_name, "winona_battery_low_item", winona_battery_low_item_filter)
+end
+function winona_battery_low_item_clear_fn(inst)
+    basic_clear_fn(inst, "winona_battery_low_item")
 end
 
+local winona_catapult_skin_symbols = {
+    "wire",
+    "scoop",
+    "led_parts",
+    "cog",
+    "light",
+    "base_bottom", "base_back", "base",
+    "arm",
+    "burnt1", "burnt2", "burnt3", "burnt4",
+    "burnt5", "burnt6", "burnt7",
+}
 function winona_catapult_init_fn(inst, build_name)
-    basic_init_fn(inst, build_name, "winona_catapult")
+    if inst.prefab == "winona_catapult_item" then
+        winona_catapult_item_init_fn(inst, build_name)
+        return
+    end
+
+    if inst.prefab == "winona_catapult_item_placer" and inst.components.placer then
+        for _, v in pairs(inst.components.placer.linked) do
+            for _, symbol in ipairs(winona_catapult_skin_symbols) do
+                v.AnimState:OverrideItemSkinSymbol(symbol, build_name, symbol, inst.GUID, "winona_catapult")
+            end
+        end
+    end
+    for _, symbol in ipairs(winona_catapult_skin_symbols) do
+        inst.AnimState:OverrideItemSkinSymbol(symbol, build_name, symbol, inst.GUID, "winona_catapult")
+    end
 end
 function winona_catapult_clear_fn(inst)
-    basic_clear_fn(inst, "winona_catapult")
+    if inst.prefab == "winona_catapult_item" then
+        winona_catapult_item_clear_fn(inst)
+        return
+    end
+
+    for _, symbol in ipairs(winona_catapult_skin_symbols) do
+        inst.AnimState:ClearOverrideSymbol(symbol)
+    end
+end
+local function winona_catapult_item_filter(skin_name)
+    if not skin_name:find("_item") then
+        skin_name = skin_name:gsub("winona_catapult", "winona_catapult_item")
+    end
+    return skin_name
+end
+function winona_catapult_item_init_fn(inst, build_name)
+    basic_init_fn(inst, build_name, "winona_catapult_item", winona_catapult_item_filter)
+end
+function winona_catapult_item_clear_fn(inst)
+    basic_clear_fn(inst, "winona_catapult_item")
 end
 
 local winona_spotlight_skin_symbols = {
@@ -393,6 +518,18 @@ local winona_spotlight_skin_symbols = {
     "b10", "b11", "b12", "b13",
 }
 function winona_spotlight_init_fn(inst, build_name)
+    if inst.prefab == "winona_spotlight_item" then
+        winona_spotlight_item_init_fn(inst, build_name)
+        return
+    end
+
+    if inst.prefab == "winona_spotlight_item_placer" and inst.components.placer then
+        for _, v in pairs(inst.components.placer.linked) do
+            for _, symbol in ipairs(winona_spotlight_skin_symbols) do
+                v.AnimState:OverrideItemSkinSymbol(symbol, build_name, symbol, inst.GUID, "winona_spotlight")
+            end
+        end
+    end
     for _, symbol in ipairs(winona_spotlight_skin_symbols) do
         inst.AnimState:OverrideItemSkinSymbol(symbol, build_name, symbol, inst.GUID, "winona_spotlight")
     end
@@ -403,6 +540,11 @@ function winona_spotlight_init_fn(inst, build_name)
     end
 end
 function winona_spotlight_clear_fn(inst)
+    if inst.prefab == "winona_spotlight_item" then
+        winona_spotlight_item_clear_fn(inst)
+        return
+    end
+
     for _, symbol in ipairs(winona_spotlight_skin_symbols) do
         inst.AnimState:ClearOverrideSymbol(symbol)
     end
@@ -411,6 +553,18 @@ function winona_spotlight_clear_fn(inst)
             inst._headinst.AnimState:ClearOverrideSymbol(symbol)
         end
     end
+end
+local function winona_spotlight_item_filter(skin_name)
+    if not skin_name:find("_item") then
+        skin_name = skin_name:gsub("winona_spotlight", "winona_spotlight_item")
+    end
+    return skin_name
+end
+function winona_spotlight_item_init_fn(inst, build_name)
+    basic_init_fn(inst, build_name, "winona_spotlight_item", winona_spotlight_item_filter)
+end
+function winona_spotlight_item_clear_fn(inst)
+    basic_clear_fn(inst, "winona_spotlight_item")
 end
 
 function boat_grass_item_init_fn(inst, build_name)

@@ -80,7 +80,10 @@ local function CLIENT_ShadowSubmissive_HostileToPlayerTest(inst, player)
 	if player:HasTag("shadowdominance") then
 		return false
 	end
-	local combat = inst.replica.combat
+	--V2C: nightmare creatures are always visible and hostile, unlike shadowcreatures
+	return true
+
+	--[[local combat = inst.replica.combat
 	if combat ~= nil and combat:GetTarget() == player then
 		return true
 	end
@@ -88,22 +91,24 @@ local function CLIENT_ShadowSubmissive_HostileToPlayerTest(inst, player)
 	if sanity ~= nil and sanity:IsCrazy() then
 		return true
 	end
-	return false
+	return false]]
 end
 
 --------------------------------------------------------------------------------------------------------------------------------
+
+local RUINSNIGHTMARE_SCRAPBOOK_HIDE = { "red" }
 
 local WALK_SOUNDNAME = "WALK_SOUNDNAME"
 
 local function RuinsNightmare_OnNewState(inst, data)
     if inst.sg:HasStateTag("moving") then
         if not inst.SoundEmitter:PlayingSound(WALK_SOUNDNAME) then
-            inst.SoundEmitter:PlaySound("rifts4/insanity_creature3/movement", WALK_SOUNDNAME)
+            inst.SoundEmitter:PlaySound("dontstarve/sanity/creature3/movement", WALK_SOUNDNAME)
         end
 
     elseif data ~= nil and data.statename == "walk_stop" then
         inst.SoundEmitter:KillSound(WALK_SOUNDNAME)
-        inst.SoundEmitter:PlaySound("rifts4/insanity_creature3/movement_pst")
+        inst.SoundEmitter:PlaySound("dontstarve/sanity/creature3/movement_pst")
     else
         inst.SoundEmitter:KillSound(WALK_SOUNDNAME)
     end
@@ -299,6 +304,8 @@ local data =
         physics_rad = 2,
         stategraph = "SGruinsnightmare",
         master_postinit = function(inst)
+            inst.scrapbook_hide = RUINSNIGHTMARE_SCRAPBOOK_HIDE
+
             inst.AnimState:HideSymbol("red")
 
             inst.components.combat:SetRange(TUNING.RUINSNIGHTMARE_ATTACK_RANGE)

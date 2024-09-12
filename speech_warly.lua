@@ -987,7 +987,7 @@ return{
     ANNOUNCE_GATHER_MERM = "only_used_by_wurt",
 
     -- rifts 4
-    ANNOUNCE_EXIT_GELBLOB = "I thought I was going to expire in there.",
+    ANNOUNCE_EXIT_GELBLOB = "Evil jelly!",
 	ANNOUNCE_SHADOWTHRALL_STEALTH = "Non non, I refuse to be a delicious morsel!",
     ANNOUNCE_RABBITKING_AGGRESSIVE = "Something unpleasant brewing below.",
     ANNOUNCE_RABBITKING_PASSIVE = "I hear a gentle rustling beneath our feet.",
@@ -5388,6 +5388,13 @@ return{
         CARPENTRY_BLADE_MOONGLASS = "Will it slice le jambon?",
 
         CHEST_MIMIC_REVEALED = "It's quite horrible!",
+
+        GELBLOB_STORAGE = {
+            GENERIC  = "What a... interesting way to store food.",
+            FULL = "It looks most unappetizing.",
+        },
+        GELBLOB_STORAGE_KIT = "Some assembly is required.",
+        GELBLOB_BOTTLE = "I would not spread that on any toast.",
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

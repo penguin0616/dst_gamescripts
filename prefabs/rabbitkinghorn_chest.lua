@@ -1,6 +1,6 @@
 local assets = {
     Asset("ANIM", "anim/rabbitkinghorn_chest.zip"),
-    Asset("SOUND", "sound/mole.fsb"),
+    Asset("SOUND", "sound/rifts4.fsb"),
 }
 
 local function DoQuietDown(inst, shouldemerge)
@@ -17,7 +17,7 @@ end
 
 local function DoPlayEmerge(inst)
     inst.rabbitkinghorn_emergetask = nil
-    inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/mole/emerge")
+    inst.SoundEmitter:PlaySound("rifts4/storage_den/open_pst")
 end
 local function StopEmerge(inst)
     if inst.rabbitkinghorn_emergetask ~= nil then
@@ -34,7 +34,7 @@ local function OnOpen(inst)
     inst.AnimState:PlayAnimation("open")
     inst.AnimState:PushAnimation("open_idle", false)
     if not inst.SoundEmitter:PlayingSound("move") then
-        inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/mole/move", "move")
+        inst.SoundEmitter:PlaySound("rifts4/storage_den/open", "move")
     end
     QuietDown(inst, 23 * FRAMES)
     PlayEmerge(inst, 14 * FRAMES)
@@ -47,7 +47,7 @@ local function OnClose(inst)
     inst.AnimState:PlayAnimation("close")
     inst.AnimState:PushAnimation("close_idle", false)
     if not inst.SoundEmitter:PlayingSound("move") then
-        inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/mole/move", "move")
+        inst.SoundEmitter:PlaySound("rifts4/storage_den/close", "move")
     end
     QuietDown(inst, 11 * FRAMES)
     StopEmerge(inst)
@@ -63,6 +63,7 @@ local function ontimerdone(inst, data)
         else
             inst.persists = false
             inst.components.container_proxy:SetCanBeOpened(false)
+            inst.SoundEmitter:PlaySound("rifts4/storage_den/close")
             inst.AnimState:PlayAnimation("despawn")
             inst:ListenForEvent("animover", inst.Remove)
         end
@@ -88,6 +89,10 @@ local function fn()
     inst.AnimState:SetScale(1.3, 1.3)
 
     inst:AddComponent("container_proxy")
+
+    if not TheNet:IsDedicated() then
+        inst.SoundEmitter:PlaySound("rifts4/storage_den/open_pst")
+    end
 
     inst.entity:SetPristine()
 

@@ -820,7 +820,7 @@ local function HandleSpawnInfoRec(dt, i, spawninforec, groupsdone)
 		local upgrade, houndcount = nil, nil
 
 		if _spawndata.upgrade_spawn and _spawndata.ShouldUpgrade then
-		 	upgrade, houndcount = _spawndata.ShouldUpgrade(spawninforec.players[target], _wave_pre_upgraded )
+		 	upgrade, houndcount, _wave_pre_upgraded = _spawndata.ShouldUpgrade(spawninforec.players[target], _wave_pre_upgraded )
 		end
 
 		if upgrade then

@@ -263,9 +263,10 @@ local wormspawn =
 
     ShouldUpgrade= function(amount, wave_pre_upgraded)
         if wave_pre_upgraded then
-            return true, amount
+            wave_pre_upgraded = nil   -- We've got one for the wave now, clear this so there aren't more.
+            return true, amount, wave_pre_upgraded
         else
-            return false
+            return false, nil, wave_pre_upgraded
         end
     end,
 }
