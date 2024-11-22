@@ -578,16 +578,26 @@ function PlayerController:OnControl(control, down)
         return true
     end
 
+	--V2C: control up happens here now
+	if not down and control ~= CONTROL_PRIMARY and control ~= CONTROL_SECONDARY then
+		if not self.ismastersim then
+			self:RemoteStopControl(control)
+		end
+		return
+	end
+
 	-- actions that can be done while the crafting menu is open go in here
 	if isenabled or ishudblocking then
 		if control == CONTROL_ACTION then
 			self:DoActionButton()
+			return
 		elseif control == CONTROL_ATTACK then
 			if self.ismastersim then
 				self.attack_buffer = CONTROL_ATTACK
 			else
 				self:DoAttackButton()
 			end
+			return
 		end
 	end
 
@@ -599,10 +609,11 @@ function PlayerController:OnControl(control, down)
         self:OnLeftClick(down)
     elseif control == CONTROL_SECONDARY then
         self:OnRightClick(down)
-    elseif not down then
-        if not self.ismastersim then
-            self:RemoteStopControl(control)
-        end
+	--V2C: see above for control up handling
+	--elseif not down then
+	--    if not self.ismastersim then
+	--        self:RemoteStopControl(control)
+	--    end
     elseif control == CONTROL_CANCEL then
         self:CancelPlacement()
 		self:ControllerTargetLock(false)
@@ -717,16 +728,20 @@ end
 function PlayerController:DoControllerActionButton()
     if self.placer ~= nil and self.placer_recipe ~= nil then
         --do the placement
-        if  self.placer.components.placer.can_build then
-            if self.inst.replica.builder ~= nil and
-                not self.inst.replica.builder:IsBusy() then
-                self.inst.replica.builder:MakeRecipeAtPoint(self.placer_recipe,
-                    self.placer.components.placer.override_build_point_fn ~= nil and self.placer.components.placer.override_build_point_fn(self.placer) or self.placer:GetPosition(),
-                    self.placer:GetRotation(), self.placer_recipe_skin)
+        local placer_placer = self.placer.components.placer
+        if placer_placer.can_build then
+            if self.inst.replica.builder ~= nil and not self.inst.replica.builder:IsBusy() then
+                self.inst.replica.builder:MakeRecipeAtPoint(
+                    self.placer_recipe,
+                    (placer_placer.override_build_point_fn ~= nil and placer_placer.override_build_point_fn(self.placer))
+                        or self.placer:GetPosition(),
+                    self.placer:GetRotation(),
+                    self.placer_recipe_skin
+                )
                 self:CancelPlacement()
             end
-        elseif self.placer.components.placer.onfailedplacement ~= nil then
-            self.placer.components.placer.onfailedplacement(self.inst, self.placer)
+        elseif placer_placer.onfailedplacement ~= nil then
+            placer_placer.onfailedplacement(self.inst, self.placer)
         end
         return
     end
@@ -987,7 +1002,9 @@ function PlayerController:DoControllerAltActionButton()
 					obj = self.inst
 					act = BufferedAction(obj, obj, ACTIONS.DISMOUNT)
 				else
-					self:TryAOETargeting()
+					if not self:TryAOETargeting() then
+						self:TryAOECharging(nil, true)
+					end
 					return
 				end
 			end
@@ -1188,9 +1205,10 @@ function PlayerController:OnRemoteControllerAttackButton(target, isreleased, nof
     if self.ismastersim and self:IsEnabled() and self.handler == nil then
         --Check if target is valid, otherwise make
         --it nil so that we still attack and miss.
+		self.remote_controls[CONTROL_CONTROLLER_ATTACK] = 0
         if target == true then
             --Special case, just flagging the button as down
-            self.remote_controls[CONTROL_CONTROLLER_ATTACK] = 0
+			--self.remote_controls[CONTROL_CONTROLLER_ATTACK] = 0
         elseif not noforce then
 			if self.inst.sg:HasStateTag(self.remote_authority and self.remote_predicting and "abouttoattack" or "attack") then
                 self.inst.sg.statemem.chainattack_cb = function()
@@ -1203,7 +1221,6 @@ function PlayerController:OnRemoteControllerAttackButton(target, isreleased, nof
                 self.attack_buffer._predictpos = true
             end
         else
-            self.remote_controls[CONTROL_CONTROLLER_ATTACK] = 0
             if self.inst.components.combat:CanTarget(target) then
                 self.attack_buffer = BufferedAction(self.inst, target, ACTIONS.ATTACK)
                 self.attack_buffer._controller = true
@@ -1214,6 +1231,9 @@ function PlayerController:OnRemoteControllerAttackButton(target, isreleased, nof
                 self.attack_buffer.overridedest = self.inst
             end
         end
+		if isreleased then
+			self.remote_controls[CONTROL_CONTROLLER_ATTACK] = nil
+		end
     end
 end
 
@@ -1349,16 +1369,19 @@ end
 
 function PlayerController:HasAOETargeting()
     local item = self.inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-    return item ~= nil
-        and item.components.aoetargeting ~= nil
-        and item.components.aoetargeting:IsEnabled()
+	return item and (
+		(item.components.aoetargeting and item.components.aoetargeting:IsEnabled()) or
+		(item.components.aoecharging and item.components.aoecharging:IsEnabled())
+	)
 end
 
 function PlayerController:TryAOETargeting()
     local item = self.inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
     if item ~= nil and item.components.aoetargeting ~= nil and item.components.aoetargeting:IsEnabled() then
         item.components.aoetargeting:StartTargeting()
+		return true
     end
+	return false
 end
 
 function PlayerController:StartAOETargetingUsing(item)
@@ -1380,6 +1403,66 @@ function PlayerController:CancelAOETargeting()
     if self.reticule ~= nil and self.reticule.inst.components.aoetargeting ~= nil then
         self.reticule.inst.components.aoetargeting:StopTargeting()
     end
+end
+
+local function _CalcAOEChargingStartingRotation(self)
+	--handler should always exist when we get here
+	--nil return only when mouse position unavailable, should not be possible normally
+	if self.handler then
+		if not TheInput:ControllerAttached() then
+			local pos = TheInput:GetWorldPosition()
+			return pos and self.inst:GetAngleToPoint(pos) or nil
+		else
+			local dir = GetWorldControllerVector()
+			return dir and math.atan2(-dir.z, dir.x) * RADIANS or self.inst.Transform:GetRotation()
+		end
+	end
+end
+
+function PlayerController:TryAOECharging(force_rotation, iscontroller)
+	local item = self.inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+	if item and item.components.aoecharging and item.components.aoecharging:IsEnabled() and not self:IsBusy() then
+		if self.inst.sg then
+			if force_rotation then
+				--server received remote rpc
+				self:OnRemoteBufferedAction()
+			else
+				--server or prediction client
+				force_rotation = _CalcAOEChargingStartingRotation(self)
+			end
+			if force_rotation then
+				self.inst.Transform:SetRotation(force_rotation)
+				self.inst.sg:GoToState("slingshot_charge")
+			end
+		else
+			--non-prediction client
+			--We still need to know our desired starting angle for the RPC,
+			--but we can't set transform rotation on non-prediction clients
+			force_rotation = _CalcAOEChargingStartingRotation(self)
+		end
+		if not self.ismastersim and force_rotation then
+			self.remote_controls[iscontroller and CONTROL_CONTROLLER_ALTACTION or CONTROL_SECONDARY] = 0
+			SendRPCToServer(RPC.AOECharging, force_rotation, iscontroller and 2 or 1)
+		end
+		return true
+	end
+	return false
+end
+
+function PlayerController:OnRemoteAOECharging(rotation, startflag)
+	if self.ismastersim and self:IsEnabled() and self.handler == nil then
+		if startflag then
+			local iscontroller = startflag == 2
+			self.remote_controls[iscontroller and CONTROL_CONTROLLER_ALTACTION or CONTROL_SECONDARY] = 0
+			self:TryAOECharging(rotation, iscontroller)
+		elseif self.inst.sg:HasStateTag("aoecharging") then
+			self.inst.Transform:SetRotation(rotation)
+		end
+	end
+end
+
+function PlayerController:RemoteAOEChargingDir(rotation)
+	SendRPCToServer(RPC.AOECharging, rotation)
 end
 
 function PlayerController:EchoReticuleAt(x, y, z)
@@ -1547,20 +1630,22 @@ function PlayerController:GetAttackTarget(force_attack, force_target, isretarget
     return force_target
 end
 
-function PlayerController:DoAttackButton(retarget)
+function PlayerController:DoAttackButton(retarget, isleftmouse)
     --if retarget == nil and self:IsAOETargeting() then
     --    return
     --end
 
-    local force_attack = TheInput:IsControlPressed(CONTROL_FORCE_ATTACK)
+	local control = isleftmouse and CONTROL_PRIMARY or CONTROL_ATTACK
+	local force_attack = TheInput:IsControlPressed(control)
     local target = self:GetAttackTarget(force_attack, retarget, retarget ~= self:GetCombatTarget())
 
     if target == nil then
         --Still need to let the server know our attack button is down
         if not self.ismastersim and
             self.locomotor == nil and
-            self.remote_controls[CONTROL_ATTACK] == nil then
-            self:RemoteAttackButton()
+			self.remote_controls[control] == nil
+		then
+			self:RemoteAttackButton(nil, nil, isleftmouse)
         end
         return --no target
     end
@@ -1572,20 +1657,23 @@ function PlayerController:DoAttackButton(retarget)
 		if ACTIONS.ATTACK.pre_action_cb ~= nil then
 			ACTIONS.ATTACK.pre_action_cb(BufferedAction(self.inst, target, ACTIONS.ATTACK))
 		end
-        self:RemoteAttackButton(target, force_attack)
+		self:RemoteAttackButton(target, force_attack, isleftmouse)
     elseif self:CanLocomote() then
         local buffaction = BufferedAction(self.inst, target, ACTIONS.ATTACK)
         buffaction.preview_cb = function()
-            self:RemoteAttackButton(target, force_attack)
+			local isreleased = not TheInput:IsControlPressed(control)
+			self:RemoteAttackButton(target, force_attack, isleftmouse, isreleased)
         end
         self.locomotor:PreviewAction(buffaction, true)
     end
 end
 
-function PlayerController:OnRemoteAttackButton(target, force_attack, noforce)
+--V2C: isreleased at the end because added a lot later
+function PlayerController:OnRemoteAttackButton(target, force_attack, noforce, isleftmouse, isreleased)
     if self.ismastersim and self:IsEnabled() and self.handler == nil then
         --Check if target is valid, otherwise make
         --it nil so that we still attack and miss.
+		self.remote_controls[isleftmouse and CONTROL_PRIMARY or CONTROL_ATTACK] = 0
         if target ~= nil and not noforce then
 			if self.inst.sg:HasStateTag(self.remote_authority and self.remote_predicting and "abouttoattack" or "attack") then
                 self.inst.sg.statemem.chainattack_cb = function()
@@ -1597,24 +1685,26 @@ function PlayerController:OnRemoteAttackButton(target, force_attack, noforce)
                 self.attack_buffer._predictpos = true
             end
         else
-            self.remote_controls[CONTROL_ATTACK] = 0
             target = target ~= nil and self:GetAttackTarget(force_attack, target) or nil
             if target ~= nil then
                 self.attack_buffer = BufferedAction(self.inst, target, ACTIONS.ATTACK)
             end
         end
+		if isreleased then
+			self.remote_controls[CONTROL_ATTACK] = nil
+		end
     end
 end
 
-function PlayerController:RemoteAttackButton(target, force_attack)
+--V2C: isreleased at the end because added a lot later
+function PlayerController:RemoteAttackButton(target, force_attack, isleftmouse, isreleased)
+	self.remote_controls[isleftmouse and CONTROL_PRIMARY or CONTROL_ATTACK] = target and BUTTON_REPEAT_COOLDOWN or 0
     if self.locomotor ~= nil then
-        SendRPCToServer(RPC.AttackButton, target, force_attack)
+		SendRPCToServer(RPC.AttackButton, target, force_attack, nil, isleftmouse, isreleased)
     elseif target ~= nil then
-        self.remote_controls[CONTROL_ATTACK] = BUTTON_REPEAT_COOLDOWN
-        SendRPCToServer(RPC.AttackButton, target, force_attack, true)
+		SendRPCToServer(RPC.AttackButton, target, force_attack, true, isleftmouse, isreleased)
     else
-        self.remote_controls[CONTROL_ATTACK] = 0
-        SendRPCToServer(RPC.AttackButton)
+		SendRPCToServer(RPC.AttackButton, nil, nil, nil, isleftmouse, isreleased)
     end
 end
 
@@ -1663,7 +1753,14 @@ local function GetPickupAction(self, target, tool)
         target.replica.inventoryitem:CanBePickedUp(self.inst) and
 		not (target:HasTag("heavy") or (target:HasTag("fire") and not target:HasTag("lighter")) or target:HasTag("catchable")) and
         not target:HasTag("spider") then
-        return (self:HasItemSlots() or target.replica.equippable ~= nil) and ACTIONS.PICKUP or nil
+        if self:HasItemSlots() or target.replica.equippable ~= nil then
+            if tool and tool:HasTag("nabbag") and not target:HasTag("_container") then
+                return ACTIONS.NABBAG
+            else
+                return ACTIONS.PICKUP
+            end
+        end
+        return nil
     elseif target:HasTag("pickable") and not target:HasTag("fire") then
         return ACTIONS.PICK
     elseif target:HasTag("harvestable") then
@@ -2646,7 +2743,7 @@ function PlayerController:OnUpdate(dt)
                                 self.locomotor:PushAction(BufferedAction(self.inst, retarget, ACTIONS.ATTACK), true)
                             end
                         elseif attack_control ~= CONTROL_CONTROLLER_ATTACK then
-                            self:DoAttackButton(retarget)
+							self:DoAttackButton(retarget, attack_control == CONTROL_PRIMARY)
                         else
                             self:DoControllerAttackButton(retarget)
                         end
@@ -4066,7 +4163,9 @@ function PlayerController:OnRightClick(down)
 			self.inst.replica.inventory:ReturnActiveItem()
 			local rider = self.inst.replica.rider
 			if not (rider and rider:IsRiding()) then
-				self:TryAOETargeting()
+				if not self:TryAOETargeting() then
+					self:TryAOECharging(nil, false)
+				end
 			end
 		end
     elseif maptarget ~= nil then

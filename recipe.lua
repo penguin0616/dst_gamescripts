@@ -122,6 +122,7 @@ Recipe = Class(function(self, name, ingredients, tab, level, placer_or_more_data
     self.nounlock      = nounlock or false
 
     self.numtogive     = numtogive or 1
+	self.override_numtogive_fn = more_data.override_numtogive_fn
 
     self.builder_tag   = builder_tag or nil
     self.builder_skill = more_data.builder_skill or nil

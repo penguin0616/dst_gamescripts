@@ -463,6 +463,8 @@ function Health:SetVal(val, cause, afflicter)
     local max_health = self:GetMaxWithPenalty()
     local min_health = math.min(self.minhealth or 0, max_health)
 
+    self.inst:PushEvent("pre_health_setval", {val=val, old_health=old_health})
+
     if val > max_health then
         val = max_health
     end

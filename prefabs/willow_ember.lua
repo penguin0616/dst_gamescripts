@@ -62,17 +62,6 @@ end
 
 ------------------------------------------
 
-local function EnablePickupSound(inst)
-	inst.pickupsound = nil
-end
-
-local function OnTempDisablePickupSound(inst)
-	if inst.pickupsound == nil then
-		inst.pickupsound = "NONE"
-		inst:DoStaticTaskInTime(2 * FRAMES, EnablePickupSound)
-	end
-end
-
 local function KillEmber(inst)
     inst:ListenForEvent("animover", inst.Remove)
 
@@ -175,7 +164,7 @@ local function ConsumeEmbers(inst, doer, amount)
 					for j = i, inventory:GetNumSlots() do
 						local v2 = inventory:GetItemInSlot(j)
 						if v2 and v2 ~= inst and v2.prefab == inst.prefab then
-							inst._tempdisablepickupsound:push()
+							inst.components.clientpickupsoundsuppressor:IgnoreNextPickupSound()
 							inst.pickupsound = "NONE"
 							inst.components.stackable:SetStackSize(v2.components.stackable:StackSize())
 							inventory:RemoveItem(v2, true):Remove()
@@ -893,7 +882,6 @@ local function OnUpdateSpellsDirty(inst)
 end
 
 local function DoOnClientInit(inst)
-	inst:ListenForEvent("willow_ember._tempdisablepickupsound", OnTempDisablePickupSound)
     inst:ListenForEvent("willow_ember._updatespells", OnUpdateSpellsDirty)
 	DoClientUpdateSpells(inst)
 end
@@ -957,8 +945,9 @@ local function fn()
     inst.components.aoetargeting.reticule.twinstickmode = 1
     inst.components.aoetargeting.reticule.twinstickrange = 8
 
+	inst:AddComponent("clientpickupsoundsuppressor")
+
     inst._updatespells = net_event(inst.GUID, "willow_ember._updatespells")
-	inst._tempdisablepickupsound = net_event(inst.GUID, "willow_ember._tempdisablepickupsound")
 
     inst.entity:SetPristine()
 

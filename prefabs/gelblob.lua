@@ -715,6 +715,34 @@ local function Small_OnEntitySleep(inst)
 	end
 end
 
+local function Small_KillFX(inst, quick)
+	if inst:IsAsleep() then
+		inst:Remove()
+	else
+		inst.components.timer:StopTimer("lifespan")
+		inst._returntask:Cancel()
+		inst._returntask = nil
+		inst.persists = false
+		inst.Physics:SetMotorVel(0, 0, 0)
+		inst.Physics:Stop()
+		inst.DynamicShadow:Enable(false)
+		if quick then
+			inst.AnimState:PlayAnimation("splash")
+			inst:ListenForEvent("animover", inst.Remove)
+		else
+			ErodeAway(inst)
+		end
+		inst.OnEntitySleep = inst.Remove
+		if inst._proximitytask then
+			inst._proximitytask:Cancel()
+			inst._proximitytask = nil
+		end
+		for k, v in pairs(inst._targets) do
+			v:KillFX()
+			inst._targets[k] = nil
+		end
+	end
+end
 
 local function Small_OnTimerDone(inst, data)
 	if data and data.name == "lifespan" then
@@ -771,6 +799,18 @@ local function ReleaseFromBottle(inst)
 	end
 	inst.SoundEmitter:KillSound("loop")
 	OnTossLanded(inst)
+end
+
+local function ReleaseFromAmmoAfflicted(inst)
+	ReleaseFromBottle(inst)
+	inst:RemoveTag("canbebottled")
+	inst:AddTag("NOCLICK")
+	inst.persists = false
+	if inst._proximitytask then
+		inst._proximitytask:Cancel()
+		inst._proximitytask = inst:DoPeriodicTask(0.1, OnUpdateProximity, nil, true)
+		OnUpdateProximity(inst, true)
+	end
 end
 
 local function OnStartLongAction(inst, doer)
@@ -838,7 +878,9 @@ local function smallfn()
 
 	inst.SetLifespan = SetLifespan
 	inst.ReleaseFromBottle = ReleaseFromBottle
+	inst.ReleaseFromAmmoAfflicted = ReleaseFromAmmoAfflicted
 	inst.Toss = Toss
+	inst.KillFX = Small_KillFX
 	inst.OnContactChanged = Small_OnContactChanged
 	inst.OnEntityWake = Small_OnEntityWake
 	inst.OnEntitySleep = Small_OnEntitySleep

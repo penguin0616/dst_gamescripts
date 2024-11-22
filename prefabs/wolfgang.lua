@@ -7,7 +7,7 @@ local assets =
     Asset("ANIM", "anim/player_wolfgang.zip"),
     Asset("ANIM", "anim/player_mount_wolfgang.zip"),
     Asset("ANIM", "anim/player_wolfgang_dumbbell.zip"),
-    
+
     Asset("ANIM", "anim/player_idles_wolfgang.zip"),
     Asset("ANIM", "anim/player_idles_wolfgang_skinny.zip"),
     Asset("ANIM", "anim/player_idles_wolfgang_mighty.zip"),
@@ -16,13 +16,12 @@ local assets =
 	Asset("ANIM", "anim/player_mount_coach.zip"),
 
     Asset("SOUND", "sound/wolfgang.fsb"),
-    Asset("SCRIPT", "scripts/prefabs/skilltree_wolfgang.lua"),    
+    Asset("SCRIPT", "scripts/prefabs/skilltree_wolfgang.lua"),
 }
 
 local fxassets =
 {
     Asset("ANIM", "anim/coached_fx.zip"),
-    
 }
 
 local buff_prefabs =

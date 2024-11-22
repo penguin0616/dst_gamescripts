@@ -3469,6 +3469,8 @@ local function MakeHat(name)
         setbonus:SetOnEnabledFn(lunarplant_onsetbonus_enabled)
         setbonus:SetOnDisabledFn(lunarplant_onsetbonus_disabled)
 
+        require("prefabs/skilltree_defs").CUSTOM_FUNCTIONS.wortox.SetupLunarResists(inst)
+
 		MakeForgeRepairable(inst, FORGEMATERIALS.LUNARPLANT, lunarplant_onbroken, lunarplant_onrepaired)
 		MakeHauntableLaunch(inst)
 
@@ -5128,6 +5130,10 @@ local function MakeHat(name)
             owner.components.trader:Disable()
         end
 
+        if owner.components.herdmember ~= nil then
+            owner.components.herdmember:Enable(false)
+        end
+
         if owner.components.planarentity == nil then
             owner.planarentity_added = true
 
@@ -5172,6 +5178,14 @@ local function MakeHat(name)
 
         if owner.components.talker ~= nil then
             owner.components.talker:StopIgnoringAll(inst)
+        end
+
+        if owner.components.trader ~= nil then
+            owner.components.trader:Enable()
+        end
+
+        if owner.components.herdmember ~= nil then
+            owner.components.herdmember:Enable(true)
         end
 
         if inst.fx ~= nil then
@@ -5239,8 +5253,8 @@ local function MakeHat(name)
         return inst
     end
 
-    -----------------------------------------------------------------------------
 
+    -----------------------------------------------------------------------------
     local fn = nil
     local assets = { Asset("ANIM", "anim/"..fname..".zip") }
     local prefabs = nil
@@ -5398,7 +5412,7 @@ local function MakeHat(name)
     elseif name == "dreadstone" then
     	fn = fns.dreadstone
     elseif name == "lunarplant" then
-    	prefabs = { "lunarplanthat_fx" }
+    	prefabs = { "lunarplanthat_fx", "wortox_resist_fx" }
     	fn = fns.lunarplant
     elseif name == "voidcloth" then
     	prefabs = { "voidclothhat_fx" }
@@ -6057,6 +6071,7 @@ return  MakeHat("straw"),
             frameend = 3,
             assets = { Asset("ANIM", "anim/hat_shadow_thrall_parasite.zip") },
         }),
+
 		MakeFollowFx("lunarplanthat_fx", {
 			createfn = lunarplanthat_CreateFxFollowFrame,
 			framebegin = 1,

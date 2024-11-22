@@ -25,7 +25,15 @@ local SkillTreeWidget = Class(Widget, function(self, prefabname, targetdata, fro
 
     self.midlay = self.root:AddChild(Widget())
 
-    self.bg_tree = self.root:AddChild(Image(GetSkilltreeBG(self.target.."_background.tex"), self.target.."_background.tex"))
+    local bg_tree_imagename = self.target .. "_background.tex"
+    local bg_tree_atlas = GetSkilltreeBG(bg_tree_imagename)
+    if bg_tree_atlas == nil then
+        print(string.format("FIXME: Skill tree background %s image is missing!", bg_tree_imagename))
+        self.bg_tree = self.root:AddChild(Image("images/skilltree.xml", "fallbackbackground.tex"))
+        self.bg_tree:SetTint(0, 0, 0, 1) -- Black box for missing asset.
+    else
+        self.bg_tree = self.root:AddChild(Image(bg_tree_atlas, bg_tree_imagename))
+    end
     self.bg_tree:SetPosition(2,-20)
     self.bg_tree:ScaleToSize(600, 460)
 
@@ -156,7 +164,7 @@ function SkillTreeWidget:RespecSkills()
         graphics.status = {}
     end
 
-    self.root.tree:RefreshTree()
+    self.root.tree:RefreshTree(true)
 end
 
 function SkillTreeWidget:SpawnFavorOverlay(pre)

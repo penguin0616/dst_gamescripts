@@ -1349,6 +1349,25 @@ function EntityScript:FaceAwayFromPoint(dest, force)
     self.Transform:SetRotation(math.atan2(z - dest.z, dest.x - x) / DEGREES + 180)
 end
 
+function EntityScript:IsEntityInFrontConeSlice(otherinst, wholearcangle_degrees, max_dist, circle_dist)
+    -- Distances are optional.
+    -- circle_dist lets a small circle around self to be counted regardless of the angle.
+    if max_dist or circle_dist then
+        local dsq = self:GetDistanceSqToInst(otherinst)
+        if circle_dist and (dsq < circle_dist * circle_dist) then
+            return true -- This is valid close.
+        end
+        if max_dist and (dsq > max_dist * max_dist) then
+            return false -- Too far.
+        end
+    end
+
+    -- More expensive calculations for cone slice.
+    local rotation = self.Transform:GetRotation()
+    local forward_vector = Vector3(math.cos(-rotation / RADIANS), 0 , math.sin(-rotation / RADIANS))
+    return IsWithinAngle(self:GetPosition(), forward_vector, wholearcangle_degrees / RADIANS, otherinst:GetPosition())
+end
+
 function EntityScript:IsAsleep()
     return not self.entity:IsAwake()
 end

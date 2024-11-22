@@ -132,6 +132,17 @@ function ContainerWidget:Open(container, doer)
             self.owner,
             container.replica.container
         )
+		if widget.slotscale then
+			local newscale = slot.base_scale * widget.slotscale
+			if widget.slothighlightscale == nil then
+				slot.highlight_scale = newscale + slot.highlight_scale - slot.base_scale
+			end
+			slot.base_scale = newscale
+			slot:SetScale(newscale)
+		end
+		if widget.slothighlightscale then
+			slot.highlight_scale = widget.slothighlightscale
+		end
         self.inv[i] = self:AddChild(slot)
 
         slot:SetPosition(v)

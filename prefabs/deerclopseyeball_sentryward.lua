@@ -135,7 +135,7 @@ local function OnHit(inst)
     inst:PlayEyeballHitAnim()
 end
 
-local function OnBuilt(inst)
+local function OnBuiltFn(inst)
     inst.SoundEmitter:PlaySound("rifts3/oculus_ice_radius/place")
     inst.AnimState:PlayAnimation("place")
     inst.AnimState:PushAnimation("idle_loop", false)
@@ -453,8 +453,8 @@ local function sentrywardfn()
     inst.OnEyeballTaken = OnEyeballTaken
     inst.CreateGlobalIcon = CreateGlobalIcon
 
-    inst.OnBuilt = OnBuilt
-    inst:ListenForEvent("onbuilt", inst.OnBuilt)
+    inst.OnBuiltFn = OnBuiltFn
+    inst:ListenForEvent("onbuilt", inst.OnBuiltFn)
 
     inst:AddComponent("maprevealer")
     inst:AddComponent("lootdropper")

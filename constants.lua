@@ -784,7 +784,7 @@ SPECIAL_EVENTS =
     YOTR = "year_of_the_bunnyman",
     YOTD = "year_of_the_dragonfly",
 }
-WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.HALLOWED_NIGHTS
+WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.NONE
 --WORLD_SPECIAL_EVENT = IS_BETA and SPECIAL_EVENTS.NONE or SPECIAL_EVENTS.YOTR
 WORLD_EXTRA_EVENTS = {}
 
@@ -1850,6 +1850,7 @@ UPGRADETYPES = -- NOTES(JBK): Keep this table updated in export_accountitems.lua
     MAST = "mast",
     SPEAR_LIGHTNING = "spear_lightning",
     CHEST = "chest",
+    GRAVESTONE = "gravestone",
 }
 
 SPELLTYPES = -- NOTES(JBK): Keep this table updated in export_accountitems.lua [EAITAB]
@@ -1858,6 +1859,7 @@ SPELLTYPES = -- NOTES(JBK): Keep this table updated in export_accountitems.lua [
     WURT_LUNAR = "wurt_lunar",
     SHADOW_SWAMP_BOMB = "shadow_swamp_bomb",
     LUNAR_SWAMP_BOMB = "lunar_swamp_bomb",
+    WORTOX_REVIVER_LOCK = "wortox_reviver_lock", -- Inverted and stops allowing to cast.
 }
 
 LOCKTYPE =
@@ -2018,6 +2020,7 @@ SKILLTREE_EQUIPPABLE_RESTRICTED_TAGS =
     ["inspectacleshatuser"]  = "winona",
     ["wathgrithrshielduser"] = "wathgrithr",
     [UPGRADETYPES.SPEAR_LIGHTNING.."_upgradeuser"] = "wathgrithr",
+    ["nabbaguser"] = "wortox",
 }
 
 -- IngredientMod must be one of the following values
@@ -2048,7 +2051,6 @@ TOOLACTIONS =
     NET = true,
     PLAY = true,
     UNSADDLE = true,
-	REACH_HIGH = true,
 	SCYTHE = true,
 }
 
@@ -2779,3 +2781,20 @@ NIGHTSWORD_FX_OFFSETS = {
     RIGHT = 0.75,-- -1,
     DOWN = 2.9,-- 2.6,
 }
+
+NUM_WOBY_TRAINING_ASPECTS_LEVELS = 2 -- NOTES(JBK): Keep this table updated in export_accountitems.lua [EAITAB]
+
+WOBY_TRAINING_ASPECTS = -- NOTES(JBK): Keep this table updated in export_accountitems.lua [EAITAB]
+{
+    SPEED = "speed",
+    RESISTANCE = "resistance",
+    FETCHING = "fetching",
+    DIGGING = "digging",
+    BRAVERY = "bravery",
+}
+
+WOBY_TRAINING_ASPECTS_LIST = {}
+
+for k, v in pairs(WOBY_TRAINING_ASPECTS) do
+    table.insert(WOBY_TRAINING_ASPECTS_LIST, v)
+end

@@ -140,6 +140,11 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"ghostlyelixir_retaliation",
 	"ghostlyelixir_attack",
 	"ghostlyelixir_speed",
+	"armor_flowerdress",
+	"ghostlyelixir_shadow",
+	"ghostlyelixir_lunar",	
+	"wendy_gravestone",
+	"petals",
 
 	-- Woodie
 	"wereitem_goose",
@@ -171,15 +176,35 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 
 	-- Walter
 	"slingshot",
-	"walterhat",
-	"portabletent_item",
 	"slingshotammo_rock",
 	"slingshotammo_gold",
 	"slingshotammo_marble",
 	"slingshotammo_poop",
+	"slingshotammo_honey",
 	"slingshotammo_freeze",
 	"slingshotammo_slow",
 	"slingshotammo_thulecite",
+	"slingshotammo_stinger",
+	"slingshotammo_moonglass",
+	"slingshotammo_dreadstone",
+	"slingshotammo_lunarplanthusk",
+	"slingshotammo_purebrilliance",
+	"slingshotammo_gelblob",
+	"slingshotammo_purehorror",
+	"slingshotammo_scrapfeather",
+	"slingshotammo_gunpowder",
+	"slingshotmodkit",
+	"slingshot_band_pigskin",
+	"slingshot_band_tentacle",
+	"slingshot_frame_bone",
+	"slingshot_frame_gems",
+	"slingshot_frame_wagpunk",
+	"slingshot_handle_sticky",
+	"slingshot_handle_silk",
+	"slingshot_handle_voidcloth",
+	"woby_badge_station",
+	"portabletent_item",
+	"walterhat",
 
 	-- Wolfgang
 	"mighty_gym",
@@ -268,6 +293,11 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"wormwood_lightflier",
 	"wormwood_fruitdragon",
 	"armor_lunarplant_husk",
+
+    -- Wortox
+    "wortox_reviver",
+    "wortox_souljar",
+    "wortox_nabbag",
 
 	-- Wanda
 	"pocketwatch_dismantler",
@@ -709,6 +739,8 @@ CRAFTING_FILTERS.TOOLS.recipes =
 	"spider_repellent",
     "wx78_moduleremover",
     "wx78_scanner_item",
+    "wortox_nabbag",
+	"slingshotmodkit",
 }
 
 CRAFTING_FILTERS.LIGHT.recipes =
@@ -907,6 +939,7 @@ CRAFTING_FILTERS.RESTORATION.recipes =
 	"bandage",
 	"tillweedsalve",
 	"compostwrap",
+    "wortox_reviver",
 	"reviver",
 	"lifeinjector",
 	"amulet",
@@ -1062,6 +1095,8 @@ CRAFTING_FILTERS.CONTAINERS.recipes =
 	"saltbox",
 	"fish_box",
 	"battlesong_container",
+    "wortox_souljar",
+    "wortox_nabbag",
 }
 
 CRAFTING_FILTERS.STRUCTURES.recipes =

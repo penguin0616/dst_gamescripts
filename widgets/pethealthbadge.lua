@@ -3,8 +3,8 @@ local UIAnim = require "widgets/uianim"
 
 -------------------------------------------------------------------------------------------------------
 
-local PetHealthBadge = Class(Badge, function(self, owner, colour, iconbuild)
-    Badge._ctor(self, nil, owner, colour, iconbuild, nil, nil, true)
+local PetHealthBadge = Class(Badge, function(self, owner, colour, iconbuild, bonuscolor)
+    Badge._ctor(self, nil, owner, colour, iconbuild, nil, nil, true, bonuscolor)
 
 	self.OVERRIDE_SYMBOL_BUILD = {} -- modders can add symbols-build pairs to this table by calling SetBuildForSymbol
 	self.default_symbol_build = iconbuild
@@ -47,7 +47,7 @@ function PetHealthBadge:ShowBuff(symbol)
 	self.buffsymbol = symbol
 end
 
-function PetHealthBadge:SetValues(symbol, percent, arrowdir, max_health, pulse)
+function PetHealthBadge:SetValues(symbol, percent, arrowdir, max_health, pulse, bonusmax, bonuspercent)
 	self:ShowBuff(symbol)
 
     if self.arrowdir ~= arrowdir then
@@ -69,7 +69,8 @@ function PetHealthBadge:SetValues(symbol, percent, arrowdir, max_health, pulse)
 		self:PulseRed()
 	end
 
-    self:SetPercent(percent, max_health)
+	self:SetPercent(percent, max_health, bonuspercent)
+
 end
 
 function PetHealthBadge:OnUpdate(dt)

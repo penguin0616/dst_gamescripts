@@ -2012,53 +2012,70 @@ end
 function c_spawnrift()
     local pos = ConsoleWorldPosition()
     if TheWorld.components.riftspawner then
+        if TheWorld:HasTag("cave") then
+            TheWorld:PushEvent("shadowrift_opened")
+        else
+            TheWorld:PushEvent("lunarrift_opened")
+        end
         TheWorld.components.riftspawner:SpawnRift(pos)
     end
 end
 
-local _showradius_ent =  nil
+local function showradius_createent()
+    local ent = CreateEntity()
+    --[[Non-networked entity]]
+    ent.entity:SetCanSleep(false)
+    ent.persists = false
 
+    ent.entity:AddTransform()
+    ent.entity:AddAnimState()
+
+    ent:AddTag("CLASSIFIED")
+    ent:AddTag("NOCLICK")
+
+    ent.AnimState:SetBank("firefighter_placement")
+    ent.AnimState:SetBuild("firefighter_placement")
+    ent.AnimState:PlayAnimation("idle")
+    ent.AnimState:SetLightOverride(1)
+    ent.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
+    ent.AnimState:SetLayer(LAYER_BACKGROUND)
+    ent.AnimState:SetSortOrder(1)
+    ent.AnimState:SetAddColour(0, .2, .5, 0)
+    return ent
+end
+local _showradius_ents = nil
 function c_showradius(radius, parent)
+    if _showradius_ents then
+        for _, ent in ipairs(_showradius_ents) do
+            if ent:IsValid() then
+                ent:Remove()
+            end
+        end
+        _showradius_ents = nil
+    end
+    if not radius then
+        return
+    end
+
+    if type(radius) == "number" then
+        radius = {radius}
+    end
     parent = parent or ConsoleWorldEntityUnderMouse() or ConsoleCommandPlayer()
 
-    if checknumber(radius) then
+    _showradius_ents = {}
+    for _, radius in ipairs(radius) do
+        local ent = showradius_createent()
+        if parent ~= nil then
+            ent.entity:SetParent(parent.entity)
+        end
+
         -- Sqrt because Transform applies scaling exponentially.
         --  300: Game Unit to Pixel conversion.
         -- 1900: Firefighter texture size.
         local scale = math.sqrt(radius * 300 / 1900)
+        ent.Transform:SetScale(scale, scale, scale)
 
-        if _showradius_ent == nil then
-            _showradius_ent = CreateEntity()
-
-            --[[Non-networked entity]]
-            _showradius_ent.entity:SetCanSleep(false)
-            _showradius_ent.persists = false
-
-            _showradius_ent.entity:AddTransform()
-            _showradius_ent.entity:AddAnimState()
-
-            _showradius_ent:AddTag("CLASSIFIED")
-            _showradius_ent:AddTag("NOCLICK")
-
-            _showradius_ent.AnimState:SetBank("firefighter_placement")
-            _showradius_ent.AnimState:SetBuild("firefighter_placement")
-            _showradius_ent.AnimState:PlayAnimation("idle")
-            _showradius_ent.AnimState:SetLightOverride(1)
-            _showradius_ent.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
-            _showradius_ent.AnimState:SetLayer(LAYER_BACKGROUND)
-            _showradius_ent.AnimState:SetSortOrder(1)
-            _showradius_ent.AnimState:SetAddColour(0, .2, .5, 0)
-        end
-
-        if parent ~= nil then
-            _showradius_ent.entity:SetParent(parent.entity)
-        end
-
-        _showradius_ent.Transform:SetScale(scale, scale, scale)
-
-    elseif _showradius_ent ~= nil then
-        _showradius_ent:Remove()
-        _showradius_ent = nil
+        table.insert(_showradius_ents, ent)
     end
 end
 

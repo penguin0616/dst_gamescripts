@@ -69,6 +69,11 @@ local ItemTile = Class(Widget, function(self, invitem)
         self.rechargeframe:GetAnimState():SetBuild("recharge_meter")
         self.rechargeframe:GetAnimState():PlayAnimation("frame")
         self.rechargeframe:GetAnimState():AnimateWhilePaused(false)
+        if self.item:HasTag("rechargeable_bonus") then
+            self.rechargeframe:GetAnimState():SetMultColour(0, 0.2, 0, 0.7) -- 'Bonus while' with DARK GREEN colour.
+        else
+            self.rechargeframe:GetAnimState():SetMultColour(0, 0, 0.3, 0.54) -- 'Cooldown until' with DARK BLUE colour.
+        end
     end
 
     if self.item.inv_image_bg ~= nil then
@@ -92,6 +97,7 @@ local ItemTile = Class(Widget, function(self, invitem)
 
 	self:ToggleShadowFX()
 	self:HandleAcidSizzlingFX()
+    self:HandleBuffFX(invitem)
 
     if self.rechargeframe ~= nil then
         self.recharge = self:AddChild(UIAnim())
@@ -152,6 +158,11 @@ local ItemTile = Class(Widget, function(self, invitem)
                     self:UpdateTooltip()
                 end
             end, ThePlayer)
+    self.inst:ListenForEvent("item_buff_changed",
+        function(player)
+            self:HandleBuffFX(invitem, true)
+        end,
+    ThePlayer)
     self.inst:ListenForEvent("stacksizechange",
         function(invitem, data)
             if invitem.replica.stackable ~= nil then
@@ -353,8 +364,22 @@ function ItemTile:GetDescriptionString()
                 --self.namedisp:SetHAlign(ANCHOR_LEFT)
                 if TheInput:IsControlPressed(CONTROL_FORCE_INSPECT) then
                     str = str.."\n"..TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_PRIMARY)..": "..STRINGS.INSPECTMOD
-                elseif TheInput:IsControlPressed(CONTROL_FORCE_TRADE) and not self.item.replica.inventoryitem:CanOnlyGoInPocket() then
-                    if next(player.replica.inventory:GetOpenContainers()) ~= nil then
+                elseif TheInput:IsControlPressed(CONTROL_FORCE_TRADE) then
+                    local showhint = false
+                    local containers = player.replica.inventory:GetOpenContainers()
+                    if containers then
+                        if self.item.replica.inventoryitem:CanOnlyGoInPocketOrPocketContainers() then
+                            for container, _ in pairs(containers) do
+                                if container.replica.inventoryitem and container.replica.inventoryitem:CanOnlyGoInPocket() then
+                                    showhint = true
+                                    break
+                                end
+                            end
+                        elseif not self.item.replica.inventoryitem:CanOnlyGoInPocket() then
+                            showhint = next(containers) ~= nil
+                        end
+                    end
+                    if showhint then
                         str = str.."\n"..TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_PRIMARY)..": "..((TheInput:IsControlPressed(CONTROL_FORCE_STACK) and self.item.replica.stackable ~= nil) and (STRINGS.STACKMOD.." "..STRINGS.TRADEMOD) or STRINGS.TRADEMOD)
                     end
                 elseif TheInput:IsControlPressed(CONTROL_FORCE_STACK) and self.item.replica.stackable ~= nil then
@@ -464,6 +489,9 @@ function ItemTile:SetChargePercent(percent)
     self.rechargepct = percent
 	if self.recharge.shown then
 		if percent < 1 then
+            if self.recharge.ResetColour ~= nil then
+                self.recharge.ResetColour()
+            end
 			self.recharge:GetAnimState():SetPercent("recharge", percent)
 			if not self.rechargeframe.shown then
 				self.rechargeframe:Show()
@@ -476,6 +504,19 @@ function ItemTile:SetChargePercent(percent)
 		else
 			if prev_precent < 1 and not self.recharge:GetAnimState():IsCurrentAnimation("frame_pst") then
 				self.recharge:GetAnimState():PlayAnimation("frame_pst")
+                self.recharge:GetAnimState():SetMultColour(1, 1, 1, 1)
+                local isbonus = self.item:HasTag("rechargeable_bonus")
+                self.recharge.ResetColour = function()
+                    if isbonus then
+                        self.recharge:GetAnimState():SetMultColour(0, 0.3, 0, 0.8) -- 'Bonus while' with GREEN colour.
+                    else
+                        self.recharge:GetAnimState():SetMultColour(0, 0, 0.4, 0.64) -- 'Cooldown until' with BLUE colour.
+                    end
+                    self.recharge.inst:RemoveEventCallback("animover", self.recharge.ResetColour)
+                    self.recharge.ResetColour = nil
+                end
+                
+                self.recharge.inst:ListenForEvent("animover", self.recharge.ResetColour)
 			end
 			if self.rechargeframe.shown then
 				self.rechargeframe:Hide()
@@ -657,6 +698,49 @@ function ItemTile:HandleAcidSizzlingFX(isacidsizzling)
         if self.acidsizzling ~= nil then
             self.acidsizzling:Kill()
             self.acidsizzling = nil
+        end
+    end
+end
+
+function ItemTile:HandleBuffFX(invitem, fromchanged)
+    local player_classified = ThePlayer and ThePlayer.player_classified or nil
+    if not player_classified then
+        return
+    end
+
+    if invitem.prefab == "panflute" then
+        if player_classified.wortox_panflute_buff:value() then
+            if self.freecastpanflute == nil then
+                self.freecastpanflute = self.image:AddChild(UIAnim())
+                local ref = self.freecastpanflute
+                ref:GetAnimState():SetBank("inventory_fx_buff_panflute")
+                ref:GetAnimState():SetBuild("inventory_fx_buff_panflute")
+                
+                local function RandomizeLoop()
+                    ref:GetAnimState():PlayAnimation("notes_loop", true)
+                    ref:GetAnimState():SetTime(math.random())
+                end
+                if fromchanged then
+                    ref:GetAnimState():PlayAnimation("notes_pre")
+                    local function DoRandomizeLoop()
+                        RandomizeLoop()
+                        ref.inst:RemoveEventCallback("animover", DoRandomizeLoop)
+                    end
+                    ref.inst:ListenForEvent("animover", DoRandomizeLoop)
+                else
+                    RandomizeLoop()
+                end
+                ref:GetAnimState():SetMultColour(1, 1, 1, 0.9)
+                ref:GetAnimState():AnimateWhilePaused(false)
+                ref:SetClickable(false)
+            end
+        else
+            if self.freecastpanflute ~= nil then
+                local ref = self.freecastpanflute
+                self.freecastpanflute = nil
+                ref:GetAnimState():PlayAnimation("notes_pst")
+                ref.inst:ListenForEvent("animover", function() ref:Kill() end)
+            end
         end
     end
 end

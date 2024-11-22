@@ -682,3 +682,26 @@ function HasMeatInInventoryFor(inst)
 end
 
 --------------------------------------------------------------------------
+-- These may be used on both client and server so have the callbacks acceptable for both uses.
+-- Return nil for no count logic and go back to default logic.
+
+-- For items going into a player's inventory.
+-- TODO(JBK): Logic for swapping items is not handled.
+DesiredMaxTakeCountFunctions = {}
+function SetDesiredMaxTakeCountFunction(prefab, callback)
+    DesiredMaxTakeCountFunctions[prefab] = callback
+end
+function GetDesiredMaxTakeCountFunction(prefab)
+    return DesiredMaxTakeCountFunctions[prefab]
+end
+
+-- For items going out of a player's inventory they need their own support added.
+--DesiredMaxPutCountFunctions = {}
+--function SetDesiredMaxPutCountFunction(prefab, callback)
+--    DesiredMaxPutCountFunctions[prefab] = callback
+--end
+--function GetDesiredMaxPutCountFunction(prefab)
+--    return DesiredMaxPutCountFunctions[prefab]
+--end
+
+--------------------------------------------------------------------------

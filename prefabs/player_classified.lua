@@ -479,6 +479,13 @@ fns.OnFreeSoulhopsDirty = function(inst)
     end
 end
 
+-- wortox_panflute_buff ------------------------------------------------------
+fns.OnWortoxPanfluteBuffDirty = function(inst)
+    if inst._parent ~= nil then
+        inst._parent:PushEvent("item_buff_changed")
+    end
+end
+
 ------------------------------------------------------------------------------
 -- Winona Inspectacles game
 
@@ -1138,6 +1145,7 @@ local function RegisterNetListeners_common(inst)
     inst:ListenForEvent("ingredientmoddirty", fns.RefreshCrafting)
     inst:ListenForEvent("inspectacles_gamedirty", fns.OnInspectaclesGameDirty)
     inst:ListenForEvent("roseglasses_cooldowndirty", fns.OnRoseGlassesCooldownDirty)
+    inst:ListenForEvent("wortoxpanflutebuffdirty", fns.OnWortoxPanfluteBuffDirty)
 end
 
 local function RegisterNetListeners(inst)
@@ -1191,6 +1199,7 @@ function fns.OnInitialDirtyStates(inst)
     fns.OnIsAcidSizzlingDirty(inst)
     fns.OnInspectaclesGameDirty(inst)
     fns.OnRoseGlassesCooldownDirty(inst)
+    fns.OnWortoxPanfluteBuffDirty(inst)
     OnGiftsDirty(inst)
     fns.OnYotbSkinDirty(inst)
     OnMountHurtDirty(inst)
@@ -1303,6 +1312,9 @@ local function fn()
     -- Wortox Soulhop free counter
     inst.freesoulhops = net_tinybyte(inst.GUID, "freesoulhops", "freesoulhopsdirty")
     inst.freesoulhops:set(0)
+    -- Wortox buff
+    inst.wortox_panflute_buff = net_bool(inst.GUID, "wortox_panflute_buff", "wortoxpanflutebuffdirty")
+    inst.wortox_panflute_buff:set(false)
 
     -- Winona inspectacles
     inst.inspectacles_game = net_tinybyte(inst.GUID, "inspectacles_game", "inspectacles_gamedirty")

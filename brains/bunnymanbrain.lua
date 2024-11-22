@@ -174,7 +174,7 @@ function BunnymanBrain:OnStart()
             WhileNode(function() return IsHomeOnFire(self.inst) end, "OnFire",
                 ChattyNode(self.inst, "RABBIT_PANICHOUSEFIRE",
                     Panic(self.inst))),
-            WhileNode(function() return TheWorld.state.isacidraining end, "IsAcidRaining", -- TODO @stevenm do we need the beardlord restriction...?
+            WhileNode(function() return TheWorld.state.isacidraining end, "IsAcidRaining",
                 DoAction(self.inst, GoHomeAction, "go home", true ), 1),
             FaceEntity(self.inst, GetTraderFn, KeepTraderFn),
             DoAction(self.inst, FindFoodAction),

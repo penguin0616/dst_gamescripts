@@ -372,6 +372,14 @@ function Inventory:TakeActiveItemFromHalfOfSlot(slot)
     end
 end
 
+function Inventory:TakeActiveItemFromCountOfSlot(slot)
+    if self.inst.components.inventory ~= nil then
+        self.inst.components.inventory:TakeActiveItemFromCountOfSlot(slot)
+    elseif self.classified ~= nil then
+        self.classified:TakeActiveItemFromCountOfSlot(slot)
+    end
+end
+
 function Inventory:TakeActiveItemFromAllOfSlot(slot)
     if self.inst.components.inventory ~= nil then
         self.inst.components.inventory:TakeActiveItemFromAllOfSlot(slot)
@@ -519,6 +527,14 @@ function Inventory:MoveItemFromHalfOfSlot(slot, container)
         self.inst.components.inventory:MoveItemFromHalfOfSlot(slot, container)
     elseif self.classified ~= nil then
         self.classified:MoveItemFromHalfOfSlot(slot, container)
+    end
+end
+
+function Inventory:MoveItemFromCountOfSlot(slot, container, count)
+    if self.inst.components.inventory ~= nil then
+        self.inst.components.inventory:MoveItemFromCountOfSlot(slot, container, count)
+    elseif self.classified ~= nil then
+        self.classified:MoveItemFromCountOfSlot(slot, container, count)
     end
 end
 

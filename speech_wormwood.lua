@@ -33,6 +33,12 @@ return{
         {
             NOTNOW = "Busy",
         },
+        ATTACH_GHOST = 
+        {
+            WRONG_SISTURN = "only_used_by_wendy",
+            SISTURN_OFF = "only_used_by_wendy",
+            ABIGAIL_NOT_NEAR = "only_used_by_wendy",
+        },        
         ATTUNE =
         {
             NOHEALTH = "Oooooh. Feeling sick",
@@ -336,6 +342,7 @@ return{
 			INUSE = "Friends doing it",
             NOTMASTERCHEF = "Not mine",
             NOTAMERM = "Nope. Not mine",
+            NOTSOULJARHANDLER = "Don't touch soul friends"
 		},
         SADDLE =
         {
@@ -367,6 +374,7 @@ return{
 			NOTALLOWED = "Why can't it go?",
 			INUSE = "Someone else's",
             NOTMASTERCHEF = "Not mine",
+            NOTSOULJARHANDLER = "Don't touch soul friends"
 		},
         TEACH =
         {
@@ -404,6 +412,8 @@ return{
             BEEF_BELL_INVALID_TARGET = "Not working",
             BEEF_BELL_ALREADY_USED = "Not mine",
             BEEF_BELL_HAS_BEEF_ALREADY = "Have Buddy already",
+
+			NOT_MINE = "Not mine",
         },
 		USEKLAUSSACKKEY =
         {
@@ -425,10 +435,23 @@ return{
             DOESNTWORK = "Hm...",
             ALREADYACTIVE = "Not here",
         },
+        CUSTOMIZE_WOBY_BADGES =
+        {
+            GENERIC = "only_used_by_walter",
+            BURNING = "only_used_by_walter",
+            INUSE = "only_used_by_walter",
+        },
         YOTB_UNLOCKSKIN =
         {
             ALREADYKNOWN = "Know it",
         },
+        MUTATE = 
+        {
+            NOGHOST = "only_used_by_wendy",
+            NONEWMOON = "only_used_by_wendy",
+            NOFULLMOON = "only_used_by_wendy",
+            NOTNIGHT = "only_used_by_wendy",
+        },        
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -707,7 +730,23 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_EMPTY_NICE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_EMPTY_NAUGHTY =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_SOUL_FEW =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_FEW_NICE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_FEW_NAUGHTY =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
@@ -715,7 +754,31 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_MANY_NICE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_MANY_NAUGHTY =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_NICE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_NAUGHTY =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
@@ -1001,6 +1064,14 @@ return{
 
 	-- Hallowed Nights 2024
 	ANNOUNCE_NOPUMPKINCARVINGONFIRE = "Naughty fire!",
+
+    --rifts 5
+    ANNOUNCE_WENDY_BABYSITTER_SET = "only_used_by_wendy", 
+    ANNOUNCE_WENDY_BABYSITTER_STOP = "only_used_by_wendy",
+
+	ANNOUNCE_WORTOX_REVIVER_FAILTELEPORT = "Same here?",
+
+    ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
 	BATTLECRY =
 	{
@@ -3959,14 +4030,29 @@ return{
             "Pat pat!",
         },
 		WALTERHAT = "Look like friend!",
-		SLINGSHOT = "Pew pew!",
+		SLINGSHOT =
+		{
+			GENERIC = "Pew pew!",
+--fallback to speech_wilson.lua 			NOT_MINE = "only_used_by_walter",
+		},
 		SLINGSHOTAMMO_ROCK = "Pew pew things",
 		SLINGSHOTAMMO_MARBLE = "Pew pew things",
 		SLINGSHOTAMMO_THULECITE = "Pew pew things",
         SLINGSHOTAMMO_GOLD = "Pew pew things",
+		SLINGSHOTAMMO_HONEY = "Pew pew things",
         SLINGSHOTAMMO_SLOW = "Pew pew things",
         SLINGSHOTAMMO_FREEZE = "Pew pew things",
 		SLINGSHOTAMMO_POOP = "Poop things",
+		SLINGSHOTAMMO_STINGER = "Pew pew stings",
+		SLINGSHOTAMMO_MOONGLASS = "Night Ball things?",
+		SLINGSHOTAMMO_GELBLOB = "Pew pew things",
+		SLINGSHOTAMMO_SCRAPFEATHER = "Pew pew things",
+        SLINGSHOTAMMO_MOONGLASSCHARGED = "Pew pew things",
+        SLINGSHOTAMMO_DREADSTONE = "Pew pew things",
+        SLINGSHOTAMMO_GUNPOWDER = "Bang bang things",
+        SLINGSHOTAMMO_LUNARPLANTHUSK = "Pew pew things",
+        SLINGSHOTAMMO_PUREBRILLIANCE = "Pew pew things",
+        SLINGSHOTAMMO_PUREHORROR = "Pew pew things",
         PORTABLETENT = "Soft house",
         PORTABLETENT_ITEM = "Not done yet",
 
@@ -4008,6 +4094,10 @@ return{
 
         --Wortox
 --fallback to speech_wilson.lua         WORTOX_SOUL = "only_used_by_wortox", --only wortox can inspect souls
+        --WORTOX_DECOY is not needed because it uses the default WORTOX inspection.
+        WORTOX_NABBAG = "Stealy bag",
+        WORTOX_REVIVER = "Soul friend heart",
+        WORTOX_SOULJAR = "Soul friend party?",
 
         PORTABLECOOKPOT_ITEM =
         {
@@ -5418,6 +5508,24 @@ return{
         SHADOWTHRALL_PARASITE = "What Grabby Face want? Face?",
 
         PUMPKINCARVER = "Make pumpkin friend face",
+
+        -- Meta 5
+        GHOSTLYELIXIR_LUNAR = "For ghost friend",
+        GHOSTLYELIXIR_SHADOW = "For ghost friend",
+        REVIVER_FLOWER = "TODO", -- [[TODO]]
+
+		SLINGSHOTMODKIT = "Walter loves pew pew",
+		SLINGSHOT_BAND_PIGSKIN = "Walter loves pew pew",
+		SLINGSHOT_BAND_TENTACLE = "Walter loves pew pew",
+		SLINGSHOT_BAND_MIMIC = "Walter loves pew pew",
+		SLINGSHOT_FRAME_BONE = "Walter loves pew pew",
+		SLINGSHOT_FRAME_GEMS = "Walter loves pew pew",
+		SLINGSHOT_FRAME_WAGPUNK = "Walter loves pew pew",
+		SLINGSHOT_HANDLE_STICKY = "Walter loves pew pew",
+		SLINGSHOT_HANDLE_SILK = "Walter loves pew pew",
+		SLINGSHOT_HANDLE_VOIDCLOTH = "Walter loves pew pew",
+
+        WOBY_BADGE_STATION = "Smart woofer!",
     },
 
     DESCRIBE_GENERIC = "Friend?",

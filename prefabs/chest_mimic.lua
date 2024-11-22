@@ -11,6 +11,7 @@ local prefabs =
     "chest_mimic_revealed",
     "chest_mimic_ruinsspawn_tracker",
     "shadowheart_infused",
+	"slingshot_band_mimic",
 }
 
 local CHEST_SOUNDS = {
@@ -282,18 +283,27 @@ local function OnRevealedDeath(inst, data)
     end
 end
 
--- Infuse shadow heart on death if we have one.
-local function find_shadowheart(item) return item.prefab == "shadowheart" end
+local MORPHABLE_ITEMS =
+{
+	["shadowheart"] = "shadowheart_infused",
+	["slingshot_band_tentacle"] = "slingshot_band_mimic",
+}
+
+-- Infuse one item on death if we have one.
+local function find_morphable(item) return MORPHABLE_ITEMS[item.prefab] ~= nil end
 
 local function loot_setup_fn(lootdropper)
     local inst = lootdropper.inst
 
-    local shadowheart = inst.components.inventory:FindItem(find_shadowheart)
-    if shadowheart then
-        inst.components.inventory:RemoveItem(shadowheart, true, true, false)
-        shadowheart:Remove()
-        inst.components.lootdropper:SetLoot({"shadowheart_infused"})
-    end
+	local morphable = inst.components.inventory:FindItem(find_morphable)
+	if morphable then
+		local newprefab = MORPHABLE_ITEMS[morphable.prefab]
+		if newprefab then
+			inst.components.inventory:RemoveItem(morphable, true, true, false)
+			morphable:Remove()
+			inst.components.lootdropper:SetLoot({ newprefab })
+		end
+	end
 end
 
 --

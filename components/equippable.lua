@@ -126,6 +126,13 @@ function Equippable:GetWalkSpeedMult()
 end
 
 function Equippable:IsRestricted(target)
+    local linkeditem = self.inst.components.linkeditem
+    if linkeditem and linkeditem:IsEquippableRestrictedToOwner() then
+        local owneruserid = linkeditem:GetOwnerUserID()
+        if owneruserid and owneruserid ~= target.userid then
+            return true
+        end
+    end
     return self.restrictedtag ~= nil
         and self.restrictedtag:len() > 0
         and not target:HasTag(self.restrictedtag)

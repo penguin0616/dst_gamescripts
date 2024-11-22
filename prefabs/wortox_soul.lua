@@ -21,9 +21,27 @@ local function topocket(inst)
     end
 end
 
-local function KillSoul(inst)
+local function KillSoul_FromPocket_Bursted(inst)
+    inst.soul_heal_mult = (inst.soul_heal_mult or 0) + TUNING.SKILLS.WORTOX.WORTOX_SOULPROTECTOR_3_MULT
+    inst.soul_bursting = true
+    inst.AnimState:PlayAnimation("idle_small_pst")
     inst:ListenForEvent("animover", inst.Remove)
-    inst.AnimState:PlayAnimation("idle_pst")
+    inst.SoundEmitter:PlaySound("dontstarve/characters/wortox/soul/spawn", nil, .5)
+    wortox_soul_common.DoHeal(inst)
+end
+local function KillSoul_FromPocket(inst)
+    if inst.soul_doburst then
+        inst.AnimState:PlayAnimation("burst")
+        inst.AnimState:PushAnimation("idle_small_loop", true)
+        local delay = TUNING.SKILLS.WORTOX.WORTOX_SOULPROTECTOR_3_DELAY
+        if inst.soul_doburst_faster then
+            delay = delay + TUNING.SKILLS.WORTOX.WORTOX_SOULPROTECTOR_4_DELAY
+        end
+        inst:DoTaskInTime(delay, KillSoul_FromPocket_Bursted)
+    else
+        inst.AnimState:PlayAnimation("idle_pst")
+        inst:ListenForEvent("animover", inst.Remove)
+    end
     inst.SoundEmitter:PlaySound("dontstarve/characters/wortox/soul/spawn", nil, .5)
     wortox_soul_common.DoHeal(inst)
 end
@@ -31,11 +49,22 @@ end
 local function toground(inst)
     inst.persists = false
     if inst._task == nil then
-        inst._task = inst:DoTaskInTime(.4 + math.random() * .7, KillSoul) -- NOTES(JBK): This is 1.1 max keep it in sync with "[WST]"
+        inst._task = inst:DoTaskInTime(.4 + math.random() * .7, KillSoul_FromPocket) -- NOTES(JBK): This is 1.1 max keep it in sync with "[WST]"
     end
     if inst.AnimState:IsCurrentAnimation("idle_loop") then
 		inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1)
     end
+end
+
+local function MakeSmallVisual(inst)
+    inst.persists = false
+    if inst._task ~= nil then
+        inst._task:Cancel()
+        inst._task = nil
+    end
+    inst.SoundEmitter:PlaySound("dontstarve/characters/wortox/soul/spawn", nil, .5)
+    inst.AnimState:PlayAnimation("idle_small_pst")
+    inst:ListenForEvent("animover", inst.Remove)
 end
 
 local SOUL_TAGS = { "soul" }
@@ -54,11 +83,31 @@ local function OnDropped(inst)
 end
 
 local function OnCharged(inst)
-    if inst.components.inventoryitem ~= nil then
-        local owner = inst.components.inventoryitem.owner
-        if owner and owner.FinishPortalHop then
-            owner:FinishPortalHop()
+    inst:RemoveTag("nosouljar")
+end
+
+local function OnDischarged(inst)
+    inst:AddTag("nosouljar")
+end
+
+local function ModifyStats(inst, owner)
+    local skilltreeupdater = owner.components.skilltreeupdater
+    if skilltreeupdater then
+        if skilltreeupdater:IsActivated("wortox_soulprotector_1") then
+            inst.soul_heal_range_modifier = (inst.soul_heal_range_modifier or 0) + TUNING.SKILLS.WORTOX.WORTOX_SOULPROTECTOR_1_RANGE
         end
+        if skilltreeupdater:IsActivated("wortox_soulprotector_3") then
+            inst.soul_doburst = true
+        end
+        if skilltreeupdater:IsActivated("wortox_soulprotector_4") then
+            inst.soul_doburst_faster = true
+            inst.soul_heal_range_modifier = (inst.soul_heal_range_modifier or 0) + TUNING.SKILLS.WORTOX.WORTOX_SOULPROTECTOR_4_RANGE
+        end
+    end
+    if owner.wortox_inclination == "nice" then
+        inst.soul_heal_premult = TUNING.SKILLS.WORTOX.NICE_HEALING_MULT
+    elseif owner.wortox_inclination == "naughty" then
+        inst.soul_heal_premult = TUNING.SKILLS.WORTOX.NAUGHTY_HEALING_MULT
     end
 end
 
@@ -99,7 +148,7 @@ local function fn()
 
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.canbepickedup = false
-    inst.components.inventoryitem.canonlygoinpocket = true
+    inst.components.inventoryitem.canonlygoinpocketorpocketcontainers = true
     inst.components.inventoryitem:SetOnDroppedFn(OnDropped)
 
     inst:AddComponent("stackable")
@@ -108,6 +157,7 @@ local function fn()
 
     inst:AddComponent("rechargeable")
     inst.components.rechargeable:SetOnChargedFn(OnCharged)
+    inst.components.rechargeable:SetOnDischargedFn(OnDischarged)
 
     inst:AddComponent("inspectable")
     inst:AddComponent("soul")
@@ -120,7 +170,34 @@ local function fn()
     inst._task = nil
     toground(inst)
 
+    inst.ModifyStats = ModifyStats
+    inst.MakeSmallVisual = MakeSmallVisual
+
     return inst
+end
+
+if TheSim then -- updateprefabs guard
+    SetDesiredMaxTakeCountFunction("wortox_soul", function(player, inventory, container_item, container)
+        local max_count = TUNING.WORTOX_MAX_SOULS -- NOTES(JBK): Keep this logic the same in counts in wortox. [WSCCF]
+        if player and player.components.skilltreeupdater and player.components.skilltreeupdater:IsActivated("wortox_souljar_2") and player.replica.inventory then
+            local filledsouljars = 0
+            for slot = 1, player.replica.inventory:GetNumSlots() do
+                local item = player.replica.inventory:GetItemInSlot(slot)
+                if item and item.prefab == "wortox_souljar" and item.souljar_filled:value() then
+                    if item ~= container.inst then -- Exclude self because this will lower it on taking items out of it.
+                        filledsouljars = filledsouljars + 1
+                    end
+                end
+            end
+            local activeitem = player.replica.inventory:GetActiveItem()
+            if activeitem and activeitem.prefab == "wortox_souljar" and activeitem.souljar_filled:value() then
+                filledsouljars = filledsouljars + 1
+            end
+            max_count = max_count + math.min(filledsouljars, TUNING.SKILLS.WORTOX.FILLED_SOULJAR_SOULCAP_MAX_JARS) * TUNING.SKILLS.WORTOX.FILLED_SOULJAR_SOULCAP_INCREASE_PER
+        end
+        local has, count = inventory:Has("wortox_soul", 0, false)
+        return math.max(max_count - count, 0)
+    end)
 end
 
 return Prefab("wortox_soul", fn, assets, prefabs)

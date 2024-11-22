@@ -327,25 +327,33 @@ end
 
 local function ShouldAcceptItem(inst, item)
     if inst:HasTag("playerghost") then
-        return item.prefab == "reviver" and inst:IsOnPassablePoint()
+        return item:HasTag("reviver") and inst:IsOnPassablePoint()
     else
         return item.components.inventoryitem ~= nil
     end
 end
 
 local function OnGetItem(inst, giver, item)
-    if item ~= nil and item.prefab == "reviver" and inst:HasTag("playerghost") then
+    if item ~= nil and item:HasTag("reviver") and inst:HasTag("playerghost") then
         if item.skin_sound then
             item.SoundEmitter:PlaySound(item.skin_sound)
         end
+        local dohealthpenalty = not item:HasTag("noreviverhealthpenalty")
+
         item:PushEvent("usereviver", { user = giver })
         giver.hasRevivedPlayer = true
         AwardPlayerAchievement("hasrevivedplayer", giver)
         item:Remove()
         inst:PushEvent("respawnfromghost", { source = item, user = giver })
 
-        inst.components.health:DeltaPenalty(TUNING.REVIVE_HEALTH_PENALTY)
-        giver.components.sanity:DoDelta(TUNING.REVIVE_OTHER_SANITY_BONUS)
+        if dohealthpenalty then
+            inst.components.health:DeltaPenalty(TUNING.REVIVE_HEALTH_PENALTY)
+        end
+        local sanitybonus = TUNING.REVIVE_OTHER_SANITY_BONUS
+        if giver.components.skilltreeupdater and giver.components.skilltreeupdater:IsActivated("wortox_lifebringer_2") then
+            sanitybonus = sanitybonus + TUNING.SKILLS.WORTOX.REVIVE_OTHER_SANITY_BONUS
+        end
+        giver.components.sanity:DoDelta(sanitybonus)
     elseif item ~= nil and giver.components.age ~= nil then
 		if giver.components.age:GetAgeInDays() >= TUNING.ACHIEVEMENT_HELPOUT_GIVER_MIN_AGE and inst.components.age:GetAgeInDays() <= TUNING.ACHIEVEMENT_HELPOUT_RECEIVER_MAX_AGE then
 			AwardPlayerAchievement("helping_hand", giver)
@@ -1678,6 +1686,7 @@ local function SaveForReroll(inst)
         petleash = inst.components.petleash ~= nil and inst.components.petleash:OnSave() or nil,
         maps = inst.player_classified ~= nil and inst.player_classified.MapExplorer ~= nil and inst.player_classified.MapExplorer:RecordAllMaps() or nil,
 		seamlessplayerswapper = inst.components.seamlessplayerswapper ~= nil and inst.components.seamlessplayerswapper:SaveForReroll() or nil,
+        dogtrainer = inst.components.dogtrainer ~= nil and inst.components.dogtrainer:OnSave() or nil,
         curses = curses,
     }
     return next(data) ~= nil and data or nil
@@ -1700,6 +1709,9 @@ local function LoadForReroll(inst, data)
 	if data.seamlessplayerswapper ~= nil and inst.components.seamlessplayerswapper ~= nil then
         inst.components.seamlessplayerswapper:OnLoad(data.seamlessplayerswapper)
 	end
+    if data.dogtrainer ~= nil and inst.components.dogtrainer ~= nil then
+        inst.components.dogtrainer:OnLoad(data.dogtrainer)
+    end
 
     if data.curses then
         for curse,num in pairs(data.curses)do
@@ -1982,6 +1994,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
         Asset("ANIM", "anim/player_shadow_thrall_parasite.zip"),
 
+        Asset("ANIM", "anim/wortox_teleport_reviver.zip"),
+
         Asset("INV_IMAGE", "skull_"..name),
 
         Asset("SCRIPT", "scripts/prefabs/player_common_extensions.lua"),
@@ -2081,6 +2095,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.IsActionsVisible = IsActionsVisible
         inst.CanSeeTileOnMiniMap = ex_fns.CanSeeTileOnMiniMap
         inst.CanSeePointOnMiniMap = ex_fns.CanSeePointOnMiniMap
+        inst.GetSeeableTilePercent = ex_fns.GetSeeableTilePercent
         inst.MakeGenericCommander = ex_fns.MakeGenericCommander
 	end
 
@@ -2166,6 +2181,24 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         end
     end
 
+local function auratest(inst, target, can_initiate)
+
+    if target.components.minigame_participator ~= nil then
+        return false
+    end
+
+    if (target:HasTag("player") and not TheNet:GetPVPEnabled()) or target:HasTag("ghost") or target:HasTag("noauradamage") then
+        return false
+    end
+
+    if target.components.follower and target.components.follower.leader ~= nil and
+         target.components.follower.leader:HasTag("player") then
+        return false
+    end
+
+    return true
+end
+
     local function fn()
         local inst = CreateEntity()
 
@@ -2228,7 +2261,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.AnimState:AddOverrideBuild("player_actions_farming")
         inst.AnimState:AddOverrideBuild("player_actions_cowbell")
 
-        inst.AnimState:AddOverrideBuild("player_shadow_thrall_parasite")        
+        inst.AnimState:AddOverrideBuild("player_shadow_thrall_parasite")
 
         inst.DynamicShadow:SetSize(1.3, .6)
 
@@ -2306,6 +2339,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:AddComponent("boatcannonuser")
 
 		inst:AddComponent("spellbookcooldowns")
+
+        inst:AddComponent("avengingghost")
 
 		if TheNet:GetServerGameMode() == "lavaarena" then
             inst:AddComponent("healthsyncer")
@@ -2623,6 +2658,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.components.singingshelltrigger.trigger_range = TUNING.SINGINGSHELL_TRIGGER_RANGE
 
         inst:AddComponent("timer")
+        inst:AddComponent("counter")
 
         inst:AddComponent("cursable")
 
@@ -2633,6 +2669,21 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 		inst.components.channelcaster:SetOnStopChannelingFn(fns.OnStopChannelCastingItem)
 
         inst:AddComponent("experiencecollector")
+
+        -- Used by Walter, but on every character for save-loading.
+        inst:AddComponent("dogtrainer")
+        inst.components.dogtrainer:SetAspects(WOBY_TRAINING_ASPECTS_LIST)
+
+
+        -------------------------------------
+
+        local aura = inst:AddComponent("aura")
+        aura.radius = 4
+        aura.tickperiod = 1
+        aura.ignoreallies = true
+        aura.auratestfn = auratest
+        aura:Enable(false)
+        --------------------------------------
 
         inst:AddInherentAction(ACTIONS.PICK)
         inst:AddInherentAction(ACTIONS.SLEEPIN)

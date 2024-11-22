@@ -6,16 +6,7 @@ local AbigailBrain = Class(Brain, function(self, inst)
 end)
 
 local WANDER_TIMING = {minwaittime = 6, randwaittime = 6}
-
---[[
-local function GetFaceTargetFn(inst)
-    return inst.components.follower.leader
-end
-
-local function KeepFaceTargetFn(inst, target)
-    return inst.components.follower.leader == target
-end
-]]
+local MAX_BABYSIT_WANDER = 6
 
 local function GetLeader(inst)
     return inst.components.follower.leader
@@ -46,18 +37,20 @@ local function KeepTraderFn(inst, target)
 end
 
 local function ShouldWatchMinigame(inst)
-	if inst.components.follower.leader ~= nil and inst.components.follower.leader.components.minigame_participator ~= nil then
-		if inst.components.combat.target == nil or inst.components.combat.target.components.minigame_participator ~= nil then
-			return true
-		end
-	end
-	return false
+    return inst.components.follower.leader ~= nil
+        and inst.components.follower.leader.components.minigame_participator ~= nil
+        and (inst.components.combat.target == nil or inst.components.combat.target.components.minigame_participator ~= nil)
 end
 
 local function WatchingMinigame(inst)
-	return (inst.components.follower.leader ~= nil and inst.components.follower.leader.components.minigame_participator ~= nil) and inst.components.follower.leader.components.minigame_participator:GetMinigame() or nil
+    local leader = inst.components.follower.leader
+	return (leader ~= nil
+        and leader.components.minigame_participator ~= nil
+        and leader.components.minigame_participator:GetMinigame())
+        or nil
 end
 
+--
 local function DefensiveCanFight(inst)
 
     local target = inst.components.combat.target
@@ -95,55 +88,93 @@ local function AggressiveCanFight(inst)
     return false
 end
 
+local function GetBabysitterPos(inst)
+    return (inst.ghost_babysitter ~= nil and not inst.sg:HasStateTag("busy") and inst.ghost_babysitter:GetPosition())
+        or nil
+end
+
+local PRIORITY_NODE_RATE = 0.25
 function AbigailBrain:OnStart()
+
 	local watch_game = WhileNode( function() return ShouldWatchMinigame(self.inst) end, "Watching Game",
         PriorityNode({
             Follow(self.inst, WatchingMinigame, TUNING.MINIGAME_CROWD_DIST_MIN, TUNING.MINIGAME_CROWD_DIST_TARGET, TUNING.MINIGAME_CROWD_DIST_MAX),
             RunAway(self.inst, "minigame_participator", 5, 7),
             FaceEntity(self.inst, WatchingMinigame, WatchingMinigame),
-		}, 0.25))
+		}, PRIORITY_NODE_RATE))
 
     --#1 priority is dancing beside your leader. Obviously.
     local dance = WhileNode(function() return ShouldDanceParty(self.inst) end, "Dance Party",
         PriorityNode({
             Leash(self.inst, GetLeaderPos, TUNING.ABIGAIL_DEFENSIVE_MED_FOLLOW, TUNING.ABIGAIL_DEFENSIVE_MED_FOLLOW),
             ActionNode(function() DanceParty(self.inst) end),
-    }, .25))
+    }, PRIORITY_NODE_RATE))
 
+    local transparent_behaviour = WhileNode(function() return self.inst._is_transparent end, "Is Transparent",
+        PriorityNode({
+            Leash(self.inst, GetLeaderPos, TUNING.ABIGAIL_DEFENSIVE_MED_FOLLOW, TUNING.ABIGAIL_DEFENSIVE_MED_FOLLOW, true),
+            StandStill(self.inst),
+        }, PRIORITY_NODE_RATE)
+    )
 
+    --
     local defensive_mode = WhileNode(function() return self.inst.is_defensive end, "DefensiveMove",
         PriorityNode({
-            dance,
-            watch_game,
+            WhileNode(function() return self.inst:HasTag("gestalt") and self.inst.components.combat.target and self.inst.components.combat:InCooldown() end, "gestalt avoid",
+                RunAway(self.inst, function() return self.inst.components.combat.target end, 5, 7)),
 
             WhileNode(function() return DefensiveCanFight(self.inst) end, "CanFight",
                 ChaseAndAttack(self.inst, TUNING.ABIGAIL_DEFENSIVE_MAX_CHASE_TIME)),
-
 			FaceEntity(self.inst, GetTraderFn, KeepTraderFn),
+
+            WhileNode(function() return GetBabysitterPos(self.inst) end, "babysitter",
+                Wander(self.inst, GetBabysitterPos, MAX_BABYSIT_WANDER, WANDER_TIMING)
+            ),
+
             Follow(self.inst, function() return self.inst.components.follower.leader end,
                     TUNING.ABIGAIL_DEFENSIVE_MIN_FOLLOW, TUNING.ABIGAIL_DEFENSIVE_MED_FOLLOW, TUNING.ABIGAIL_DEFENSIVE_MAX_FOLLOW, true),
             Wander(self.inst, nil, nil, WANDER_TIMING),
-        }, .25)
+        }, PRIORITY_NODE_RATE)
     )
 
-
+    --
     local aggressive_mode = PriorityNode({
-        dance,
-        watch_game,
+        WhileNode(function() return self.inst:HasTag("gestalt") and self.inst.components.combat.target and self.inst.components.combat:InCooldown() end, "gestalt avoid",
+            RunAway(self.inst, function() return self.inst.components.combat.target end, 5, 7)),
 
         WhileNode(function() return AggressiveCanFight(self.inst) end, "CanFight",
             ChaseAndAttack(self.inst, TUNING.ABIGAIL_AGGRESSIVE_MAX_CHASE_TIME)),
 
         FaceEntity(self.inst, GetTraderFn, KeepTraderFn),
+
+        WhileNode(function() return GetBabysitterPos(self.inst) end, "babysitter",
+            Wander(self.inst, GetBabysitterPos, MAX_BABYSIT_WANDER, WANDER_TIMING)
+        ),
+
         Follow(self.inst, function() return self.inst.components.follower.leader end,
                 TUNING.ABIGAIL_AGGRESSIVE_MIN_FOLLOW, TUNING.ABIGAIL_AGGRESSIVE_MED_FOLLOW, TUNING.ABIGAIL_AGGRESSIVE_MAX_FOLLOW, true),
         Wander(self.inst),
-    }, .25)
+    }, PRIORITY_NODE_RATE)
 
+    --
     local root = PriorityNode({
-        defensive_mode,
-        aggressive_mode,
-    }, .25)
+        WhileNode(
+            function()
+                return not self.inst.sg:HasStateTag("swoop")
+            end,
+            "<swoop state guard>",
+            PriorityNode({
+
+                dance,
+                watch_game,
+                transparent_behaviour,
+
+                defensive_mode,
+                aggressive_mode,
+
+            }, PRIORITY_NODE_RATE)
+        )
+    }, PRIORITY_NODE_RATE)
 
     self.bt = BT(self.inst, root)
 end

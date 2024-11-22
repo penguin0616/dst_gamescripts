@@ -504,6 +504,28 @@ local function TakeActiveItemFromHalfOfSlot(inst, slot)
     end
 end
 
+local function TakeActiveItemFromCountOfSlot(inst, slot, count)
+    if not IsBusy(inst) then
+        local inventory, active_item, busy = QueryActiveItem()
+        if not busy and inventory ~= nil and active_item == nil then
+            local item = inst:GetItemInSlot(slot)
+            if item ~= nil then
+                local takeitem = SlotItem(item, slot)
+                local stackable = item.replica.stackable
+                if stackable and stackable:StackSize() > count then
+                    inventory:PushNewActiveItem(takeitem, inst, slot)
+                    local stacksize = stackable:StackSize()
+                    PushStackSize(inst, inventory, item, stacksize - count, true, count, false)
+                else
+                    PushItemLose(inst, takeitem)
+                    inventory:PushNewActiveItem(takeitem, inst, slot)
+                end
+                SendRPCToServer(RPC.TakeActiveItemFromCountOfSlot, slot, inst._parent, count)
+            end
+        end
+    end
+end
+
 local function TakeActiveItemFromAllOfSlot(inst, slot)
     if not IsBusy(inst) then
         local inventory, active_item, busy = QueryActiveItem()
@@ -690,6 +712,45 @@ local function MoveItemFromHalfOfSlot(inst, slot, container)
     end
 end
 
+local function MoveItemFromCountOfSlot(inst, slot, container, count)
+    if not IsBusy(inst) then
+        local container_classified = container ~= nil and container.replica.inventory ~= nil and container.replica.inventory.classified or (container.replica.container ~= nil and container.replica.container.classified or nil)
+        if container_classified ~= nil and not container_classified:IsBusy() then
+            local item = inst:GetItemInSlot(slot)
+            if item ~= nil then
+                if container_classified.ignoreoverflow ~= nil and container_classified:GetOverflowContainer() == (inst._parent and inst._parent.replica.container) then
+                    container_classified.ignoreoverflow = true
+                end
+
+                local remainder = nil
+                local player = ThePlayer
+                if player ~= nil and player.components.constructionbuilderuidata ~= nil and player.components.constructionbuilderuidata:GetContainer() == container then
+                    local targetslot = player.components.constructionbuilderuidata:GetSlotForIngredient(item.prefab)
+                    if targetslot ~= nil then
+                        remainder = container_classified:ReceiveItem(item, count, targetslot)
+                    end
+                else
+                    remainder = container_classified:ReceiveItem(item, count)
+                end
+
+                if container_classified.ignoreoverflow then
+                    container_classified.ignoreoverflow = false
+                end
+
+                if remainder ~= nil then
+                    if remainder > 0 then
+                        PushStackSize(inst, nil, item, nil, nil, remainder, true, true)
+                    else
+                        local takeitem = SlotItem(item, slot)
+                        PushItemLose(inst, takeitem)
+                    end
+                    SendRPCToServer(RPC.MoveItemFromCountOfSlot, slot, inst._parent, container.replica.container ~= nil and container or nil, count)
+                end
+            end
+        end
+    end
+end
+
 local function ReceiveItem(inst, item, count, forceslot)
     if not IsBusy(inst) and (forceslot == nil or (forceslot >= 1 and forceslot <= #inst._items)) then
         local isstackable = item.replica.stackable ~= nil
@@ -831,6 +892,7 @@ local function fn()
         inst.PutOneOfActiveItemInSlot = PutOneOfActiveItemInSlot
         inst.PutAllOfActiveItemInSlot = PutAllOfActiveItemInSlot
         inst.TakeActiveItemFromHalfOfSlot = TakeActiveItemFromHalfOfSlot
+        inst.TakeActiveItemFromCountOfSlot = TakeActiveItemFromCountOfSlot
         inst.TakeActiveItemFromAllOfSlot = TakeActiveItemFromAllOfSlot
         inst.AddOneOfActiveItemToSlot = AddOneOfActiveItemToSlot
         inst.AddAllOfActiveItemToSlot = AddAllOfActiveItemToSlot
@@ -838,6 +900,7 @@ local function fn()
 		inst.SwapOneOfActiveItemWithSlot = SwapOneOfActiveItemWithSlot
         inst.MoveItemFromAllOfSlot = MoveItemFromAllOfSlot
         inst.MoveItemFromHalfOfSlot = MoveItemFromHalfOfSlot
+        inst.MoveItemFromCountOfSlot = MoveItemFromCountOfSlot
 
         --Exposed for inventory
         inst.ReceiveItem = ReceiveItem

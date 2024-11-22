@@ -232,7 +232,13 @@ local Wisecracker = Class(function(self, inst)
 
     if inst:HasTag("soulstealer") then
         inst:ListenForEvent("soulempty", function(inst)
-            inst.components.talker:Say(GetString(inst, "ANNOUNCE_SOUL_EMPTY"))
+            if inst.wortox_inclination == "nice" then
+                inst.components.talker:Say(GetString(inst, "ANNOUNCE_SOUL_EMPTY_NICE"))
+            elseif inst.wortox_inclination == "naughty" then
+                inst.components.talker:Say(GetString(inst, "ANNOUNCE_SOUL_EMPTY_NAUGHTY"))
+            else
+                inst.components.talker:Say(GetString(inst, "ANNOUNCE_SOUL_EMPTY"))
+            end
         end)
 
         local soultoofew_time = 0
@@ -240,7 +246,13 @@ local Wisecracker = Class(function(self, inst)
             local t = GetTime()
             if t > soultoofew_time then
                 soultoofew_time = t + 30
-                inst.components.talker:Say(GetString(inst, "ANNOUNCE_SOUL_FEW"))
+                if inst.wortox_inclination == "nice" then
+                    inst.components.talker:Say(GetString(inst, "ANNOUNCE_SOUL_FEW_NICE"))
+                elseif inst.wortox_inclination == "naughty" then
+                    inst.components.talker:Say(GetString(inst, "ANNOUNCE_SOUL_FEW_NAUGHTY"))
+                else
+                    inst.components.talker:Say(GetString(inst, "ANNOUNCE_SOUL_FEW"))
+                end
             end
         end)
 
@@ -249,10 +261,28 @@ local Wisecracker = Class(function(self, inst)
             local t = GetTime()
             if t > soultoomany_time then
                 soultoomany_time = t + 30
-                inst.components.talker:Say(GetString(inst, "ANNOUNCE_SOUL_MANY"))
+                if inst.wortox_inclination == "nice" then
+                    inst.components.talker:Say(GetString(inst, "ANNOUNCE_SOUL_MANY_NICE"))
+                elseif inst.wortox_inclination == "naughty" then
+                    inst.components.talker:Say(GetString(inst, "ANNOUNCE_SOUL_MANY_NAUGHTY"))
+                else
+                    inst.components.talker:Say(GetString(inst, "ANNOUNCE_SOUL_MANY"))
+                end
             end
         end)
+
+        inst:ListenForEvent("wortox_panflute_playing_active", function(inst)
+            inst.components.talker:Say(GetString(inst, "ANNOUNCE_PANFLUTE_BUFF_ACTIVE"))
+        end)
+
+        inst:ListenForEvent("wortox_panflute_playing_expired", function(inst)
+            inst.components.talker:Say(GetString(inst, "ANNOUNCE_PANFLUTE_BUFF_EXPIRED"))
+        end)
     end
+
+    inst:ListenForEvent("wortox_reviver_failteleport", function(inst, data)
+        inst.components.talker:Say(GetString(inst, "ANNOUNCE_WORTOX_REVIVER_FAILTELEPORT"))
+    end)
 
 	inst:ListenForEvent("on_halloweenmoonpotion_failed", function(inst)
 		inst.components.talker:Say(GetString(inst, "ANNOUNCE_MOONPOTION_FAILED"))

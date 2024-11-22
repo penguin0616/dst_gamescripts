@@ -386,7 +386,7 @@ function SingingInspiration:InstantInspire(songdata)
             for _, ent in ipairs(entities_near_me) do
                 if self.inst.components.combat:CanTarget(ent)
                     and not HasFriendlyLeader(ent, self.inst, PVP_enabled)
-                    and (not ent:HasTag("prey") or (ent:HasTag("prey") and ent:HasTag("hostile")))
+                    and (not ent:HasTag("prey") or ent:HasTag("hostile"))
                     then
 
                     fn(self.inst, ent)

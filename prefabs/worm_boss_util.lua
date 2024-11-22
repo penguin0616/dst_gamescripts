@@ -708,7 +708,7 @@ local function MoveSegmentUnderGround(inst, chunk, test_segment, percent, instan
 
     chunk.segmentstotal = chunk.segmentstotal - 1
 
-    if #chunk.segments <= 0 and chunk.dirt_end:IsValid() then
+    if #chunk.segments <= 0 and chunk.dirt_end and chunk.dirt_end:IsValid() then
         chunk.dirt_end.AnimState:PlayAnimation("dirt_pst_slow")
     end
 

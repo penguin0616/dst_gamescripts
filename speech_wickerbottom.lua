@@ -33,6 +33,12 @@ return{
         {
             NOTNOW = "Patience is a virtue.",
         },
+        ATTACH_GHOST = 
+        {
+            WRONG_SISTURN = "only_used_by_wendy",
+            SISTURN_OFF = "only_used_by_wendy",
+            ABIGAIL_NOT_NEAR = "only_used_by_wendy",
+        },        
         ATTUNE =
         {
             NOHEALTH = "I'm feeling too ill for that.",
@@ -336,6 +342,7 @@ return{
 			INUSE = "Be sure to sort by color and weight, dear.",
             NOTMASTERCHEF = "It would be rude of me to tamper with it.",
             NOTAMERM = "I don't believe the locals would take kindly to that.",
+            NOTSOULJARHANDLER = "Best not interfere."
 		},
         SADDLE =
         {
@@ -367,6 +374,7 @@ return{
 			NOTALLOWED = "Nonsense.",
 			INUSE = "I do hope you're keeping organized, my dear.",
             NOTMASTERCHEF = "It would be rude of me to tamper with it.",
+            NOTSOULJARHANDLER = "Best not interfere."
 		},
         TEACH =
         {
@@ -404,6 +412,8 @@ return{
             BEEF_BELL_INVALID_TARGET = "That won't do.",
             BEEF_BELL_ALREADY_USED = "It's already formed a bond with someone else, dear.",
             BEEF_BELL_HAS_BEEF_ALREADY = "I don't require any more beefalo.",
+
+			NOT_MINE = "It does not belong to me.",
         },
 		USEKLAUSSACKKEY =
         {
@@ -425,10 +435,23 @@ return{
             DOESNTWORK = "The contest will have to wait for the time being.",
             ALREADYACTIVE = "I imagine there must be a competition going on elsewhere.",
         },
+        CUSTOMIZE_WOBY_BADGES =
+        {
+            GENERIC = "only_used_by_walter",
+            BURNING = "only_used_by_walter",
+            INUSE = "only_used_by_walter",
+        },
         YOTB_UNLOCKSKIN =
         {
             ALREADYKNOWN = "I've already familiarized myself with this particular pattern.",
         },
+        MUTATE = 
+        {
+            NOGHOST = "only_used_by_wendy",
+            NONEWMOON = "only_used_by_wendy",
+            NOFULLMOON = "only_used_by_wendy",
+            NOTNIGHT = "only_used_by_wendy",
+        },        
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -703,7 +726,23 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_EMPTY_NICE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_EMPTY_NAUGHTY =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_SOUL_FEW =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_FEW_NICE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_FEW_NAUGHTY =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
@@ -711,7 +750,31 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_MANY_NICE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_MANY_NAUGHTY =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_NICE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_NAUGHTY =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
@@ -997,6 +1060,14 @@ return{
 
 	-- Hallowed Nights 2024
 	ANNOUNCE_NOPUMPKINCARVINGONFIRE = "A hot mess indeed.",
+
+    --rifts 5
+    ANNOUNCE_WENDY_BABYSITTER_SET = "only_used_by_wendy", 
+    ANNOUNCE_WENDY_BABYSITTER_STOP = "only_used_by_wendy",
+
+	ANNOUNCE_WORTOX_REVIVER_FAILTELEPORT = "Utterly disappointing.",
+
+    ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
 	BATTLECRY =
 	{
@@ -3955,14 +4026,29 @@ return{
             "I was always more of a cat person, but she is very sweet.",
         },
 		WALTERHAT = "I suppose one must try to stay young at heart.",
-		SLINGSHOT = "Do be careful with that, dear.",
+		SLINGSHOT =
+		{
+			GENERIC = "Do be careful with that, dear.",
+--fallback to speech_wilson.lua 			NOT_MINE = "only_used_by_walter",
+		},
 		SLINGSHOTAMMO_ROCK = "Remember to clean up after yourself, dear.",
 		SLINGSHOTAMMO_MARBLE = "Remember to clean up after yourself, dear.",
 		SLINGSHOTAMMO_THULECITE = "Remember to clean up after yourself, dear.",
         SLINGSHOTAMMO_GOLD = "Remember to clean up after yourself, dear.",
+		SLINGSHOTAMMO_HONEY = "Remember to clean up after yourself, dear.",
         SLINGSHOTAMMO_SLOW = "Remember to clean up after yourself, dear.",
         SLINGSHOTAMMO_FREEZE = "Remember to clean up after yourself, dear.",
 		SLINGSHOTAMMO_POOP = "Oh dear...",
+		SLINGSHOTAMMO_STINGER = "Remember to clean up after yourself, dear.",
+		SLINGSHOTAMMO_MOONGLASS = "Remember to clean up after yourself, dear.",
+		SLINGSHOTAMMO_GELBLOB = "Remember to clean up after yourself, dear.",
+		SLINGSHOTAMMO_SCRAPFEATHER = "Remember to clean up after yourself, dear.",
+        SLINGSHOTAMMO_MOONGLASSCHARGED = "Remember to clean up after yourself, dear.",
+        SLINGSHOTAMMO_DREADSTONE = "Remember to clean up after yourself, dear.",
+        SLINGSHOTAMMO_GUNPOWDER = "Remember to clean up after yourself, dear.",
+        SLINGSHOTAMMO_LUNARPLANTHUSK = "Remember to clean up after yourself, dear.",
+        SLINGSHOTAMMO_PUREBRILLIANCE = "Remember to clean up after yourself, dear.",
+        SLINGSHOTAMMO_PUREHORROR = "Remember to clean up after yourself, dear.",
         PORTABLETENT = "It's a lovely tent, but I'm afraid I don't have much use for it.",
         PORTABLETENT_ITEM = "How very practical.",
 
@@ -4004,6 +4090,10 @@ return{
 
         --Wortox
 --fallback to speech_wilson.lua         WORTOX_SOUL = "only_used_by_wortox", --only wortox can inspect souls
+        --WORTOX_DECOY is not needed because it uses the default WORTOX inspection.
+        WORTOX_NABBAG = "I hope he won't take after that nasty Krampus.",
+        WORTOX_REVIVER = "Be responsible and we'll never have to use it.",
+        WORTOX_SOULJAR = "A receptacle for souls.",
 
         PORTABLECOOKPOT_ITEM =
         {
@@ -5414,6 +5504,24 @@ return{
         SHADOWTHRALL_PARASITE = "A sort of parasite hailing from another realm.",
 
         PUMPKINCARVER = "I have carved many pumpkins in my day, and I was quite skilled.",
+
+        -- Meta 5
+        GHOSTLYELIXIR_LUNAR = "Color-coded and clearly labeled. Well done!",
+        GHOSTLYELIXIR_SHADOW = "Color-coded and clearly labeled. Well done!",
+        REVIVER_FLOWER = "todo", -- [[TODO]]
+
+		SLINGSHOTMODKIT = "What is that Walter up to now?",
+		SLINGSHOT_BAND_PIGSKIN = "What is that Walter up to now?",
+		SLINGSHOT_BAND_TENTACLE = "What is that Walter up to now?",
+		SLINGSHOT_BAND_MIMIC = "What is that Walter up to now?",
+		SLINGSHOT_FRAME_BONE = "What is that Walter up to now?",
+		SLINGSHOT_FRAME_GEMS = "What is that Walter up to now?",
+		SLINGSHOT_FRAME_WAGPUNK = "What is that Walter up to now?",
+		SLINGSHOT_HANDLE_STICKY = "What is that Walter up to now?",
+		SLINGSHOT_HANDLE_SILK = "What is that Walter up to now?",
+		SLINGSHOT_HANDLE_VOIDCLOTH = "What is that Walter up to now?",
+
+        WOBY_BADGE_STATION = "Woby's penchant for learning is unprecedented.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

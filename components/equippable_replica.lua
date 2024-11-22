@@ -31,6 +31,13 @@ end
 
 function Equippable:IsRestricted(target)
     --return true if restricted (can't equip)
+    local linkeditem = self.inst.components.linkeditem
+    if linkeditem and linkeditem:IsEquippableRestrictedToOwner() then
+        local owneruserid = linkeditem:GetOwnerUserID()
+        if owneruserid and owneruserid ~= target.userid then
+            return true
+        end
+    end
     if self.inst.components.equippable ~= nil then
         return self.inst.components.equippable:IsRestricted(target)
     end

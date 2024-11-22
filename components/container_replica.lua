@@ -317,6 +317,7 @@ function Container:CanTakeItemInSlot(item, slot)
         and item.replica.inventoryitem ~= nil
         and item.replica.inventoryitem:CanGoInContainer()
         and not item.replica.inventoryitem:CanOnlyGoInPocket()
+        and (not item.replica.inventoryitem:CanOnlyGoInPocketOrPocketContainers() or self.inst.replica.inventoryitem and self.inst.replica.inventoryitem:CanOnlyGoInPocket())
         and not (GetGameModeProperty("non_item_equips") and item.replica.equippable ~= nil)
         and (self.itemtestfn == nil or self:itemtestfn(item, slot))
 end
@@ -339,6 +340,7 @@ function Container:ShouldPrioritizeContainer(item)
         and item.replica.inventoryitem ~= nil
         and item.replica.inventoryitem:CanGoInContainer()
         and not item.replica.inventoryitem:CanOnlyGoInPocket()
+        and (not item.replica.inventoryitem:CanOnlyGoInPocketOrPocketContainers() or self.inst.replica.inventoryitem and self.inst.replica.inventoryitem:CanOnlyGoInPocket())
         and not (GetGameModeProperty("non_item_equips") and item.replica.equippable ~= nil)
         and (self:priorityfn(item))
 end
@@ -508,6 +510,14 @@ function Container:TakeActiveItemFromHalfOfSlot(slot)
     end
 end
 
+function Container:TakeActiveItemFromCountOfSlot(slot, count)
+    if self.inst.components.container ~= nil then
+        self.inst.components.container:TakeActiveItemFromCountOfSlot(slot, count, ThePlayer)
+    elseif self.classified ~= nil then
+        self.classified:TakeActiveItemFromCountOfSlot(slot, count)
+    end
+end
+
 function Container:TakeActiveItemFromAllOfSlot(slot)
     if self.inst.components.container ~= nil then
         self.inst.components.container:TakeActiveItemFromAllOfSlot(slot, ThePlayer)
@@ -561,6 +571,14 @@ function Container:MoveItemFromHalfOfSlot(slot, container)
         self.inst.components.container:MoveItemFromHalfOfSlot(slot, container, ThePlayer)
     elseif self.classified ~= nil then
         self.classified:MoveItemFromHalfOfSlot(slot, container)
+    end
+end
+
+function Container:MoveItemFromCountOfSlot(slot, container, count)
+    if self.inst.components.container ~= nil then
+        self.inst.components.container:MoveItemFromCountOfSlot(slot, container, count, ThePlayer)
+    elseif self.classified ~= nil then
+        self.classified:MoveItemFromCountOfSlot(slot, container, count)
     end
 end
 

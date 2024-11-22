@@ -1694,3 +1694,83 @@ function MakeWaxablePlant(inst)
     waxable:SetWaxfn(WAXED_PLANTS.WaxPlant)
     waxable:SetNeedsSpray()
 end
+
+--------------------------------------------------------------------------
+
+local function GiveOrDropItem(item, inventory, pos)
+    if inventory ~= nil then
+        inventory:GiveItem(item, nil, pos)
+    else
+        item.Transform:SetPosition(pos:Get())
+        item.components.inventoryitem:OnDropped(true)
+    end
+end
+
+local function MaterialRecycler_OnBuilt(inst, builder) -- Give rewards after consuming ingredients for inventory organanization purposes.
+    if inst._recycle_materials_data == nil then
+        return
+    end
+
+    local pos = builder:GetPosition()
+
+    for reward, data in pairs(inst._recycle_materials_data) do
+        local prefab = SpawnPrefab(reward)
+
+        if prefab ~= nil then
+            if prefab.components.stackable ~= nil then
+                prefab.components.stackable:SetStackSize(data.number)
+
+                GiveOrDropItem(prefab, data.container, pos)
+            else
+                GiveOrDropItem(prefab, data.container, pos)
+
+                for i = 2, data.number do
+                    local addt_prefab = SpawnPrefab(reward)
+                    GiveOrDropItem(addt_prefab, data.container, pos)
+                end
+            end
+        end
+    end
+
+    inst._recycle_materials_data = nil
+end
+
+function MakeCraftingMaterialRecycler(inst, data)
+    assert(not (DEBUG_MODE and inst.onPreBuilt ~= nil))
+    assert(not (DEBUG_MODE and inst.OnBuiltFn ~= nil))
+    assert(not (DEBUG_MODE and inst._recycle_materials_data ~= nil))
+
+    local function OnPreBuilt(inst, builder, materials, recipe)
+        inst._recycle_materials_data = {}
+
+        for material, reward in pairs(data) do
+            if materials ~= nil and materials[material] ~= nil then
+                local total = 0
+                local container
+        
+                for item, amount in pairs(materials[material]) do
+                    total = total + amount
+
+                    if container == nil then
+                        container = item.components.inventoryitem:GetContainer() -- Also returns inventory component.
+                    end
+                end
+        
+                if total > 0 then
+                    inst._recycle_materials_data[reward] = {
+                        number = total,
+                        container = container,
+                    }
+                end
+            end
+        end
+
+        if not next(inst._recycle_materials_data) then
+            inst._recycle_materials_data = nil
+        end
+    end
+
+    inst.onPreBuilt = OnPreBuilt
+    inst.OnBuiltFn  = MaterialRecycler_OnBuilt
+end
+

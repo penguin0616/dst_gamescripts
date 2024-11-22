@@ -18,21 +18,56 @@ local function OnHealthPctDirty(inst)
     inst:PushEvent("clientpethealthdirty", { percent = inst.components.pethealthbar._healthpct:value() })
 end
 
+local function OnBonusMaxDirty(inst)
+    inst:PushEvent("clientpetmaxbonusdirty", { max = inst.components.pethealthbar._maxbonus:value() })
+end
+
+local function OnBonusPctDirty(inst)
+    inst:PushEvent("clientpetbonusdirty", { percent = inst.components.pethealthbar._bonuspct:value() })
+end
+
 local function OnPetSkinDirty(inst)
     inst:PushEvent("clientpetskindirty")
 end
 
 local function OnHealthDelta(inst, data)
     local self = inst.components.pethealthbar
+
 	local prev_health = self._healthpct:value()
-	self._healthpct:set(data.newpercent) -- setting then testing against the old value so the persistion in the net_float will work out correctly
+    self._healthpct:set(data.newpercent) -- setting then testing against the old value so the persistion in the net_float will work out correctly
     if prev_health ~= self._healthpct:value() then
         self._healthpct:set(data.newpercent)
-		if not data.overtime and data.oldpercent ~= nil then
-			self._pulse:set_local(0)
-			self._pulse:set(data.oldpercent < data.newpercent and 1 or 2)
-		end
+
+        if self._maxbonus:value() <= 0 then -- if there is _maxbonus, it's handled in OnBonusChange
+    		if not data.overtime and data.oldpercent ~= nil then
+    			self._pulse:set_local(0)
+    			self._pulse:set(data.oldpercent < data.newpercent and 1 or 2)
+    		end
+        end
+        
         OnHealthPctDirty(inst)
+    end
+
+end
+
+local function OnBonusChange(inst, data)
+    local self = inst.components.pethealthbar
+
+    if data.max ~= nil then
+        self._maxbonus:set(data.max)
+    end
+    if data.newpercent then
+        local prev_health = self._bonuspct:value()
+        self._bonuspct:set(data.newpercent) -- setting then testing against the old value so the persistion in the net_float will work out correctly
+        if prev_health ~= self._bonuspct:value() then
+            self._bonuspct:set(data.newpercent)
+            if not data.overtime and data.oldpercent ~= nil then
+                self._pulse:set_local(0)
+                self._pulse:set(data.oldpercent < data.newpercent and 1 or 2)
+            end
+            OnBonusPctDirty(inst)
+        end
+
     end
 end
 
@@ -50,12 +85,23 @@ local PetHealthBar = Class(function(self, inst)
     self._pulse = net_tinybyte(inst.GUID, "pethealthbar._pulse", "pethealthpulsedirty") -- 1 = green, 2 = red -- Note: This is hooked up like a net_event
     self._healthpct = net_float(inst.GUID, "pethealthbar._healthpct", "pethealthpctdirty")
     self._petskin = net_hash(inst.GUID, "pethealthbar._petskin", "pethealthpetskindirty")
+
+    self._maxbonus = net_ushortint(inst.GUID, "pethealthbar._maxbonus", "petbonusmaxdirty")
+    self._bonuspct = net_float(inst.GUID, "pethealthbar._bonuspct", "petbonuspctdirty")
+
+    self._maxbonus:set(0)
+    self._bonuspct:set(0)
+
     self.petskin_str = ""
     self._healthpct:set(1)
 
     if self.ismastersim then
         self._onhealthdelta = function(pet, data)
             OnHealthDelta(self.inst, data)
+        end
+
+        self._onsetbonuschange = function(pet,data)
+            OnBonusChange(self.inst, data)
         end
 
         self.corrosives = {}
@@ -97,6 +143,10 @@ local PetHealthBar = Class(function(self, inst)
         inst:ListenForEvent("pethealthmaxdirty", OnHealthMaxDirty)
         inst:ListenForEvent("pethealthpctdirty", OnHealthPctDirty)
         inst:ListenForEvent("pethealthpetskindirty", OnPetSkinDirty)
+
+        inst:ListenForEvent("petbonusmaxdirty", OnBonusMaxDirty)
+        inst:ListenForEvent("petbonuspctdirty", OnBonusPctDirty)
+
         inst:DoTaskInTime(0, OnHealthPctDirty)
     end
 end,
@@ -116,6 +166,14 @@ function PetHealthBar:GetMaxHealth()
     return self._maxhealth:value()
 end
 
+function PetHealthBar:GetMaxBonus()
+    if  self._maxbonus:value() > 0 then
+        return self._maxbonus:value()
+    else 
+        return nil
+    end
+end
+
 function PetHealthBar:GetOverTime()
     -- returns -2 large down, -1 small down, 0 none, 1 small up, 2 large up
     local val = self._status:value()
@@ -127,6 +185,15 @@ end
 function PetHealthBar:GetPercent()
     return self._healthpct:value()
 end
+
+function PetHealthBar:GetPercentBonus()
+    if self._maxbonus:value() > 0 then
+        return self._bonuspct:value()
+    else
+        return nil
+    end
+end
+
 
 function PetHealthBar:GetPulse()
 	return self._pulse:value()
@@ -185,6 +252,8 @@ function PetHealthBar:SetPet(pet, symbol, maxhealth)
             self.inst:RemoveEventCallback("starthealthregen", self._onstarthealthregen, self.pet)
             self.inst:RemoveEventCallback("startsmallhealthregen", self._onstartsmallhealthregen, self.pet)
 
+            self.inst:RemoveEventCallback("pethealthbar_bonuschange", self._onsetbonuschange, self.pet)
+
             local k = next(self.corrosives)
             while k ~= nil do
                 self.inst:RemoveEventCallback("onremove", self._onremovecorrosive, k)
@@ -213,6 +282,9 @@ function PetHealthBar:SetPet(pet, symbol, maxhealth)
         self.inst:ListenForEvent("startcorrosivedebuff", self._onstartcorrsivedebuff, pet)
         self.inst:ListenForEvent("starthealthregen", self._onstarthealthregen, pet)
         self.inst:ListenForEvent("startsmallhealthregen", self._onstartsmallhealthregen, pet)
+
+        self.inst:ListenForEvent("pethealthbar_bonuschange",    self._onsetbonuschange, pet)        
+
         self.task = self.inst:DoTaskInTime(0, InitPet, self, pet)
 
         self.inst:StartUpdatingComponent(self)

@@ -13,7 +13,11 @@ local assets =
 	Asset("ANIM", "anim/player_wendy_commune.zip"),
 	Asset("ANIM", "anim/player_wendy_mount_commune.zip"),
 	Asset("ANIM", "anim/wendy_flower_over.zip"),
+	Asset("ANIM", "anim/wendy_elixir.zip"),	
     Asset("ANIM", "anim/player_idles_wendy.zip"),
+    Asset("ANIM", "anim/wendy_elixer_mounted.zip"),
+
+    Asset("SCRIPT", "scripts/prefabs/skilltree_wendy.lua"),
 }
 
 local prefabs =
@@ -25,6 +29,10 @@ local prefabs =
 	"abigailsummonfx_mount",
 	"abigailunsummonfx",
 	"abigailunsummonfx_mount",
+
+	"shadow_ground_seeking_bolt",
+	"wendy_sanityaura_buff_on_fx",
+	"wendy_sanityaura_buff_off_fx",
 }
 
 local start_inv = {}
@@ -87,6 +95,53 @@ local function RefreshFlowerTooltip(inst)
 	end
 end
 
+
+local function testForSanityAuraBuff(inst, oldlist)
+	local newlist = {}
+
+	-- IF ACTIVE SISTURN, COLLECT NEARBY PLAYERS
+	if TheWorld.components.sisturnregistry and TheWorld.components.sisturnregistry:IsActive() then
+		local pos = Vector3(inst.Transform:GetWorldPosition())
+		newlist = FindPlayersInRange( pos.x, pos.y, pos.z, 25, true )	
+	end
+
+	-- SETUP PLAYERS THAT ARE NEW TO THE POLL
+	for i,player in ipairs(newlist)do
+		local newplayer = true
+		for t,previousplayer in ipairs(oldlist)do
+			if player == previousplayer then
+				newplayer = false
+			end
+		end
+
+		if newplayer then
+			if player.components.sanity then
+				local fx = SpawnPrefab("wendy_sanityaura_buff_on_fx")
+				player:AddChild(fx)
+				player.components.sanity.neg_aura_modifiers:SetModifier(inst, TUNING.WENDYSKILL_SISTURN_SANITY_MODIFYER, "wendyskill"..inst.GUID)
+			end
+		end
+	end
+
+	-- REMOVE PLAYERS NOW MISSING
+	for i,player in ipairs(oldlist)do
+		local quit = true
+		for t,newplayer in ipairs(newlist)do
+			if player == newplayer then
+				quit = false
+			end
+		end
+		if quit then
+			if player.components.sanity then
+				local fx = SpawnPrefab("wendy_sanityaura_buff_off_fx")
+				player:AddChild(fx)
+				player.components.sanity.neg_aura_modifiers:RemoveModifier(inst, "wendyskill"..inst.GUID)
+			end
+		end
+	end	
+
+	return newlist
+end
 --------------------------------------------------------------------------
 
 local function common_postinit(inst)
@@ -102,7 +157,7 @@ local function common_postinit(inst)
 
     inst.AnimState:AddOverrideBuild("wendy_channel")
     inst.AnimState:AddOverrideBuild("player_idles_wendy")
-
+    
 	inst._bondlevel = net_tinybyte(inst.GUID, "wendy._bondlevel", "_bondleveldirty")
 	inst.refreshflowertooltip = net_event(inst.GUID, "refreshflowertooltip")
     inst:ListenForEvent("playeractivated", OnPlayerActivated)
@@ -183,6 +238,23 @@ local function ghostlybond_changebehaviour(inst, ghost)
 	return true
 end
 
+local function checkforshadowsacrifice(inst,data)
+
+	if inst.components.skilltreeupdater and inst.components.skilltreeupdater:IsActivated("wendy_shadow_3") and 
+	   inst.components.ghostlybond and inst.components.ghostlybond.ghost and not inst.components.ghostlybond.ghost:HasTag("INLIMBO") then
+
+	    local x, y, z = inst.Transform:GetWorldPosition()
+	    local fx = SpawnPrefab("shadow_ground_seeking_bolt")
+	    fx.Transform:SetPosition(x,y,z)
+	   
+        fx.target = inst.components.ghostlybond.ghost
+        fx.toward = true
+        fx.finishfn = function() inst.components.ghostlybond.ghost:DoShadowBurstBuff() end
+        fx:findnextlocation()
+		
+	end
+end
+
 local function update_sisturn_state(inst, is_active)
 	if inst.components.ghostlybond ~= nil then
 		if is_active == nil then
@@ -196,6 +268,34 @@ local function CustomCombatDamage(inst, target)
 	return (target:HasDebuff("abigail_vex_debuff")) and TUNING.ABIGAIL_VEX_GHOSTLYFRIEND_DAMAGE_MOD
 		or (target == inst.components.ghostlybond.ghost and target:HasTag("abigail")) and 0
 		or 1
+end
+
+-------------------------------------------------------------------------------
+local SKILL_CHANGE_EVENTS = { "wendy_sisturn" }
+local function OnActivateSkill(inst, data)
+	if data and data.skill then
+		for _, skill_event in pairs(SKILL_CHANGE_EVENTS) do
+			if string.sub(data.skill, 1, string.len(skill_event)) == skill_event then
+				TheWorld:PushEvent(skill_event.."skillchanged", inst)
+			end
+		end
+	end
+end
+
+local function OnDeactivateSkill(inst, data)
+	if data and data.skill then
+		for _, skill_event in pairs(SKILL_CHANGE_EVENTS) do
+			if string.sub(data.skill, 1, string.len(skill_event)) == skill_event then
+				TheWorld:PushEvent(skill_event.."skillchanged", inst)
+			end
+		end
+	end
+end
+
+local function OnSkillTreeInitialized(inst)
+	for _, skill_event in pairs(SKILL_CHANGE_EVENTS) do
+		TheWorld:PushEvent(skill_event.."skillchanged", inst)
+	end
 end
 
 -------------------------------------------------------------------------------
@@ -224,6 +324,23 @@ local function OnLoad(inst, data)
     end
 end
 
+local function OnBabysitterSet(inst, data)
+	if data then
+		inst.components.talker:Say(GetString(inst, "ANNOUNCE_WENDY_BABYSITTER_SET"))		
+	else
+		inst.components.talker:Say(GetString(inst, "ANNOUNCE_WENDY_BABYSITTER_STOP"))		
+	end
+end
+
+local function redirect_to_abigail(inst, amount, overtime, cause, ignore_invincible, afflicter, ignore_absorb)
+
+	if inst:HasTag("ghostlybond_redirect") and inst.components.ghostlybond and inst.components.ghostlybond.ghost and not inst.components.ghostlybond.ghost:HasTag("INLIMBO") then
+		inst.components.ghostlybond.ghost.components.health:DoDelta(amount)
+		return true
+	end
+end
+
+--------------------------------------------------------------------------------
 local function master_postinit(inst)
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
 
@@ -237,6 +354,9 @@ local function master_postinit(inst)
     inst.components.sanity.neg_aura_mult = TUNING.WENDY_SANITY_MULT
     inst.components.sanity:AddSanityAuraImmunity("ghost")
     inst.components.sanity:SetPlayerGhostImmunity(true)
+
+    inst:AddComponent("sanityauraadjuster")
+    inst.components.sanityauraadjuster:SetAdjustmentFn(testForSanityAuraBuff)
 
     inst.components.foodaffinity:AddPrefabAffinity("bananapop", TUNING.AFFINITY_15_CALORIES_SMALL)
 
@@ -256,9 +376,20 @@ local function master_postinit(inst)
 
 		inst.components.combat.customdamagemultfn = CustomCombatDamage
 
+		inst.components.health.redirect = redirect_to_abigail
+
 		inst:ListenForEvent("death", ondeath)
 		inst:ListenForEvent("ms_becameghost", ondeath)
 		inst:ListenForEvent("ms_respawnedfromghost", onresurrection)
+
+		-- Skilltree update events
+		inst:ListenForEvent("onactivateskill_server", OnActivateSkill)
+		inst:ListenForEvent("ondeactivateskill_server", OnDeactivateSkill)
+		inst:ListenForEvent("ms_skilltreeinitialized", OnSkillTreeInitialized)
+
+		inst:ListenForEvent("babysitter_set", OnBabysitterSet)
+
+		inst:ListenForEvent("murdered", function(inst, data) checkforshadowsacrifice(inst,data) end)
 
 		inst:ListenForEvent("onsisturnstatechanged", function(world, data) update_sisturn_state(inst, data.is_active) end, TheWorld)
 		update_sisturn_state(inst)

@@ -165,6 +165,9 @@ local prefabs =
     "worm_boss",
 
 	"shadowthrall_parasite",
+
+    -- Meta 5
+    "graveguard_ghost",
 }
 
 local monsters =
@@ -235,17 +238,18 @@ local wormspawn =
             wave_override_chance = 0
         elseif TheWorld.state.cycles > TUNING.WORM_BOSS_DAYS then
             wave_override_chance = math.min(0.5, wave_override_chance + 0.05)
-        end 
-        
+        end
+
         return wave_pre_upgraded, wave_override_chance
     end,
 
-    warning_speech = function(wave_pre_upgraded)        
+    warning_speech = function(wave_pre_upgraded)
         if wave_pre_upgraded then
             return "ANNOUNCE_WORMS_BOSS", wave_pre_upgraded
+        else
+            return "ANNOUNCE_WORMS", wave_pre_upgraded
         end
-        return "ANNOUNCE_WORMS", wave_pre_upgraded
-    end,    
+    end,
 
     warning_sound_thresholds = function(wave_pre_upgraded, wave_override_chance)
         if wave_pre_upgraded then
@@ -261,7 +265,7 @@ local wormspawn =
                 { time = 60, sound = "LVL3_WORM" },
                 { time = 90, sound = "LVL2_WORM" },
                 { time = 500, sound = "LVL1_WORM" },
-            }, wave_pre_upgraded 
+            }, wave_pre_upgraded
         end
     end,
 
@@ -454,6 +458,7 @@ local function master_postinit(inst)
     inst:AddComponent("kramped")
     inst:AddComponent("chessunlocks")
     inst:AddComponent("townportalregistry")
+    inst:AddComponent("linkeditemmanager")
 
     --world management
     inst:AddComponent("forestresourcespawner") -- a cave version of this would be nice, but it serves it's purpose...
@@ -491,6 +496,9 @@ local function master_postinit(inst)
     inst:AddComponent("shadowthrallmanager")
 	inst:AddComponent("ruinsshadelingspawner")
     inst:AddComponent("shadowthrall_mimics")
+
+    -- Meta 5
+    inst:AddComponent("decoratedgrave_ghostmanager")
 
     return inst
 end

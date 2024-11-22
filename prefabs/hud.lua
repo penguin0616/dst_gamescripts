@@ -43,6 +43,7 @@ local assets =
     Asset("ANIM", "anim/status_meter.zip"),
     Asset("ANIM", "anim/status_health.zip"),
     Asset("ANIM", "anim/status_abigail.zip"),
+    Asset("ANIM", "anim/status_ghost.zip"),    
     Asset("ANIM", "anim/status_hunger.zip"),
     Asset("ANIM", "anim/status_sanity.zip"),
     Asset("ANIM", "anim/status_wet.zip"),
@@ -57,6 +58,7 @@ local assets =
     Asset("ANIM", "anim/recharge_meter.zip"),
     Asset("ANIM", "anim/inventory_fx_shadow.zip"),
     Asset("ANIM", "anim/inventory_fx_acidsizzle.zip"),
+    Asset("ANIM", "anim/inventory_fx_buff_panflute.zip"),
     Asset("ANIM", "anim/compass_bg.zip"),
     Asset("ANIM", "anim/compass_needle.zip"),
     Asset("ANIM", "anim/compass_hud.zip"),
@@ -124,10 +126,12 @@ local assets =
     Asset("ANIM", "anim/status_wx.zip"),
     Asset("ANIM", "anim/status_wet_wx.zip"),
 
+    -- Skill trees.
     Asset("ANIM", "anim/skills_activate.zip"),
     Asset("ANIM", "anim/skills_shadow.zip"),
     Asset("ANIM", "anim/skills_lunar.zip"),
     Asset("ANIM", "anim/skill_unlock.zip"),
+    Asset("ANIM", "anim/wortox_balance.zip"),
 
     Asset("ANIM", "anim/wagstaff_armor_target.zip"),
     Asset("ANIM", "anim/wagpunk_over.zip"),

@@ -1,4 +1,4 @@
-local brain = require("brains/crittersbrain")
+local brain = require("brains/wobysmallbrain")
 
 local WAKE_TO_FOLLOW_DISTANCE = 6
 local SLEEP_NEAR_LEADER_DISTANCE = 5
@@ -52,6 +52,7 @@ local assets =
     Asset("ANIM", "anim/pupington_emotes.zip"),
     Asset("ANIM", "anim/pupington_traits.zip"),
     Asset("ANIM", "anim/pupington_jump.zip"),
+    Asset("ANIM", "anim/pupington_action.zip"),
 
     Asset("ANIM", "anim/pupington_woby_build.zip"),
     Asset("ANIM", "anim/pupington_transform.zip"),
@@ -67,6 +68,7 @@ local function LinkToPlayer(inst, player)
     inst.components.follower:SetLeader(player)
 
     inst:ListenForEvent("onremove", inst._onlostplayerlink, player)
+    inst:ListenForEvent("performaction", inst._onplayeraction, player)
 end
 
 local function OnPlayerLinkDespawn(inst, forcedrop)
@@ -139,6 +141,197 @@ local function OnHungerDelta(inst, data)
     end
 end
 
+----------------------------------------------------------------------------------------------------------------------
+
+-- TODO(DiogoW): Adjust these chances...
+
+local DIGGING_REWARDS =
+{
+    LOCATIONS =
+    {
+        FOREST =
+        {
+            cutgrass = 1,
+            twigs = 1,
+            petals = 1,
+            silk = 1,
+            rope = 1,
+            seeds = 1,
+            purplegem = 1,
+            bluegem = 1,
+            redgem = 1,
+            orangegem = 1,
+            yellowgem = 1,
+            greengem = 1,
+            trinket_6 = 1,
+            trinket_4 = 1,
+            cutreeds = 1,
+            feather_crow = 1,
+            feather_robin = 1,
+            feather_canary = 1,
+            trinket_3 = 1,
+            beefalowool = 1,
+            butterflywings = 1,
+            berries = 1,
+            blueprint = 1,
+            petals_evil = 1,
+            trinket_8 = 1,
+            houndstooth = 1,
+            stinger = 1,
+            gears = 1,
+            boneshard = 1,
+            coontail = 1,
+            transistor = 1,
+            charcoal = 1,
+            flint = 1,
+            goldnugget = 1,
+            nitre = 1,
+            log = 1,
+            rocks = 1,
+            marble = 1,
+            pinecone = 1,
+            wagpunk_bits = 1,
+            spidergland = 1,
+            steelwool = 1,
+            shovel = 1,
+            panflute = 1,
+            pickaxe = 1,
+            axe = 1,
+            twiggy_nut = 1,
+            carrot = 1,
+            bird_egg = 1,
+            smallmeat = 1,
+            rottenegg = 1,
+        },
+
+        CAVES = {
+            cutgrass = 1,
+            twigs = 1,
+            silk = 1,
+            rope = 1,
+            purplegem = 1,
+            bluegem = 1,
+            redgem = 1,
+            orangegem = 1,
+            yellowgem = 1,
+            greengem = 1,
+            trinket_6 = 1,
+            trinket_4 = 1,
+            trinket_3 = 1,
+            blueprint = 1,
+            trinket_8 = 1,
+            gears = 1,
+            boneshard = 1,
+            transistor = 1,
+            charcoal = 1,
+            flint = 1,
+            goldnugget = 1,
+            nitre = 1,
+            log = 1,
+            rocks = 1,
+            marble = 1,
+            pinecone = 1,
+            wagpunk_bits = 1,
+            spidergland = 1,
+            shovel = 1,
+            panflute = 1,
+            pickaxe = 1,
+            axe = 1,
+
+            snurtle_shellpieces = 1,
+            thulecite = 1,
+            thulecite_pieces = 1,
+            slurtleslime = 1,
+            multitool_axe_pickaxe = 1,
+            foliage = 1,
+            batwing = 1,
+            manrabbit_tail = 1,
+            blue_cap = 1,
+            red_cap = 1,
+            green_cap = 1,
+            wormlight = 1,
+            cutlichen = 1,
+        },
+    },
+
+    SEASONS =
+    {
+        [SEASONS.AUTUMN] =
+        {
+            furtuft = 1,
+        },
+
+        [SEASONS.WINTER] =
+        {
+            feather_robin_winter = 1,
+            beard_hair = 1,
+            walrus_tusk = 1,
+        },
+
+        [SEASONS.SPRING] =
+        {
+            goose_feather = 1,
+            lureplantbulb = 1,
+            lightninggoathorn = 1,
+        },
+
+        [SEASONS.SUMMER] =
+        {
+
+        },
+    },
+}
+
+local function GetDiggingReward(inst)
+    local tuning = TUNING.SKILLS.WALTER.WOBY_DIGGING_LOOT_CHANCE
+    local chance = tuning.min
+
+    local dogtrainer = inst._playerlink ~= nil and inst._playerlink.components.dogtrainer or nil
+
+    if dogtrainer ~= nil then
+        local pct = dogtrainer:GetAspectPercent(WOBY_TRAINING_ASPECTS.DIGGING)
+
+        chance = tuning.min + (tuning.max - tuning.min) * pct
+    end
+
+    if math.random() > chance then
+        return -- No reward!
+    end
+
+    local location = DIGGING_REWARDS.LOCATIONS[string.upper(TheWorld.worldprefab)] or DIGGING_REWARDS.LOCATIONS.FOREST
+    local season = not TheWorld:HasTag("cave") and DIGGING_REWARDS.SEASONS[TheWorld.state.season] or nil -- No season related loot for caves.
+
+    local choices = season ~= nil and MergeMaps(location, season) or location
+
+    return weighted_random_choice(choices)
+end
+
+local function SpawnDiggingReward(inst)
+    local reward = inst:GetDiggingReward()
+
+    if reward == nil then
+        return
+    end
+
+    reward = SpawnPrefab(reward)
+
+    if reward == nil then
+        return
+    end
+
+    reward.Transform:SetPosition(inst.Transform:GetWorldPosition())
+
+    Launch(reward, inst, 1)
+
+    return reward
+end
+
+local function OnPlayerAction(inst, data)
+    inst._lastleaderaction = data.action -- Used in the brain!
+end
+
+----------------------------------------------------------------------------------------------------------------------
+
 local function fn()
     local inst = CreateEntity()
 
@@ -154,6 +347,11 @@ local function fn()
     inst.AnimState:SetBank("pupington")
     inst.AnimState:SetBuild("pupington_woby_build")
     inst.AnimState:PlayAnimation("idle_loop")
+
+    -- FIXME(DiogoW): it might be better to just have these in the pupington_action file.
+    inst.AnimState:OverrideSymbol("dirt_base", "mole_build", "dirt_base")
+    inst.AnimState:OverrideSymbol("wormmovefx", "mole_build", "wormmovefx")
+    inst.AnimState:OverrideSymbol("hill", "mole_build", "hill")
 
     MakeCharacterPhysics(inst, 1, .5)
 
@@ -240,8 +438,11 @@ local function fn()
     inst.LinkToPlayer = LinkToPlayer
 	inst.OnPlayerLinkDespawn = OnPlayerLinkDespawn
 	inst._onlostplayerlink = function(player) inst._playerlink = nil end
+	inst._onplayeraction = function(player, data) OnPlayerAction(inst, data) end
 
     inst.FinishTransformation = FinishTransformation
+    inst.GetDiggingReward = GetDiggingReward
+    inst.SpawnDiggingReward = SpawnDiggingReward
 
     inst.persists = false
 

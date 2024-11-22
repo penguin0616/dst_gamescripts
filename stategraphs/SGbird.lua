@@ -6,6 +6,10 @@ local actionhandlers =
     ActionHandler(ACTIONS.GOHOME, "flyaway"),
 }
 
+local function IsStuck(inst)
+	return inst:HasAnyTag("honey_ammo_afflicted", "gelblob_ammo_afflicted") and TheWorld.Map:IsPassableAtPoint(inst.Transform:GetWorldPosition())
+end
+
 local events =
 {
     EventHandler("gotosleep", function(inst)
@@ -137,8 +141,18 @@ local states =
 
         events =
         {
+			EventHandler("stop_honey_ammo_afflicted", function(inst)
+				if not (inst.components.health:IsDead() or (inst.components.burnable and inst.components.burnable:IsBurning()) or IsStuck(inst)) then
+					inst.sg:GoToState("flyaway")
+				end
+			end),
+			EventHandler("stop_gelblob_ammo_afflicted", function(inst)
+				if not (inst.components.health:IsDead() or (inst.components.burnable and inst.components.burnable:IsBurning()) or IsStuck(inst)) then
+					inst.sg:GoToState("flyaway")
+				end
+			end),
             EventHandler("onextinguish", function(inst)
-                if not inst.components.health:IsDead() then
+				if not (inst.components.health:IsDead() or IsStuck(inst)) then
                     inst.sg:GoToState("idle", "flap_post")
                 end
             end),
@@ -269,6 +283,11 @@ local states =
         tags = { "flight", "busy", "notarget" },
 
         onenter = function(inst)
+			if IsStuck(inst) then
+				inst.sg:GoToState("distress_pre")
+				return
+			end
+
 			inst:AddTag("NOCLICK")
 
             if inst.components.floater ~= nil then

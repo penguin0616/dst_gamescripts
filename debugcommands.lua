@@ -262,6 +262,47 @@ function d_oceanarena()
     sharkboimanager:FindAndPlaceOceanArenaOverTime()
 end
 
+local function d_exploreX(filterfn, precision)
+    precision = math.floor(precision or 5)
+    local player = ConsoleCommandPlayer()
+    if not player then
+        c_announce("Not playing as a character.")
+        return
+    end
+    local map = TheWorld.Map
+    local TileGroupManager = TileGroupManager
+    local w, h = map:GetSize()
+    for tx = 0, w, precision do
+        for ty = 0, h, precision do
+            local tile = map:GetTile(tx, ty)
+            if filterfn(tile, tx, ty) then
+                local x, y, z = map:GetTileCenterPoint(tx, ty)
+                player.player_classified.MapExplorer:RevealArea(x, 0, z)
+            end
+        end
+    end
+end
+function d_exploreland()
+    d_exploreX(function(tile, tx, ty)
+        return TileGroupManager:IsLandTile(tile)
+    end)
+end
+function d_exploreocean()
+    d_exploreX(function(tile, tx, ty)
+        return TileGroupManager:IsOceanTile(tile)
+    end)
+end
+function d_explore_printunseentiles()
+    local player = ConsoleCommandPlayer()
+    d_exploreX(function(tile, tx, ty)
+        if not TileGroupManager:IsInvalidTile(tile) and not TileGroupManager:IsOceanTile(tile) and not player:CanSeeTileOnMiniMap(tx, ty) then -- Same logic from engine with search tag [STMSTCC]
+            local x, y, z = TheWorld.Map:GetTileCenterPoint(tx, ty)
+            print("Unseen tile at", x, z)
+        end
+        return false
+    end, 1)
+end
+
 local TELEPORTBOAT_ITEM_MUST_TAGS = {"_inventoryitem",}
 local TELEPORTBOAT_ITEM_CANT_TAGS = {"FX", "NOCLICK", "DECOR", "INLIMBO",}
 local TELEPORTBOAT_BLOCKER_CANT_TAGS = {"FX", "NOCLICK", "DECOR", "INLIMBO", "_inventoryitem",}
@@ -371,7 +412,9 @@ function d_resetskilltree()
     local skilldefs = require("prefabs/skilltree_defs").SKILLTREE_DEFS[player.prefab]
     if skilldefs ~= nil then
         for skill, data in pairs(skilldefs) do
-            skilltreeupdater:DeactivateSkill(skill)
+            if data.rpc_id then
+                skilltreeupdater:DeactivateSkill(skill)
+            end
         end
     end
 
@@ -380,10 +423,6 @@ end
 
 function d_reloadskilltreedefs()
     require("prefabs/skilltree_defs").DEBUG_REBUILD()
-
-    if ThePlayer ~= nil and ThePlayer.HUD ~= nil then
-        ThePlayer.HUD:OpenPlayerInfoScreen()
-    end
 end
 
 function d_printskilltreestringsforcharacter(character)

@@ -1155,6 +1155,22 @@ local fx =
         fn = FinalOffset3,
     },
     {
+        name = "ghostlyelixir_shadow_fx",
+        bank = "abigail_vial_fx",
+        build = "abigail_vial_fx",
+        anim = "buff_shadow",
+        --sound = "dontstarve/characters/wendy/abigail/buff/shadow", --[[TODO]]
+        fn = FinalOffset3,
+    }, 
+    {
+        name = "ghostlyelixir_lunar_fx",
+        bank = "abigail_vial_fx",
+        build = "abigail_vial_fx",
+        anim = "buff_lunar",
+        --sound = "dontstarve/characters/wendy/abigail/buff/lunar", --[[TODO]]
+        fn = FinalOffset3,
+    },        
+    {
         name = "ghostlyelixir_slowregen_dripfx",
         bank = "abigail_buff_drip",
         build = "abigail_vial_fx",
@@ -1214,6 +1230,26 @@ local fx =
 		    inst.AnimState:SetFinalOffset(3)
 		end,
     },
+    {
+        name = "ghostlyelixir_shadow_dripfx",
+        bank = "abigail_buff_drip",
+        build = "abigail_vial_fx",
+        anim = "abigail_buff_drip",
+        fn = function(inst)
+            inst.AnimState:OverrideSymbol("fx_swap", "abigail_vial_fx", "fx_shadow_02")
+            inst.AnimState:SetFinalOffset(3)
+        end,
+    },
+    {
+        name = "ghostlyelixir_lunar_dripfx",
+        bank = "abigail_buff_drip",
+        build = "abigail_vial_fx",
+        anim = "abigail_buff_drip",
+        fn = function(inst)
+            inst.AnimState:OverrideSymbol("fx_swap", "abigail_vial_fx", "fx_lunar_02")
+            inst.AnimState:SetFinalOffset(3)
+        end,
+    },        
     {
         name = "disease_puff",
         bank = "flies",
@@ -3266,6 +3302,70 @@ local fx =
         end,
     },
     {
+        name = "wortox_teleport_reviver_top",
+        bank = "wortox_teleport_reviver_fx",
+        build = "wortox_teleport_reviver_fx",
+        anim = "reviver_teleport",
+        fn = FinalOffset1,
+    },
+    {
+        name = "wortox_teleport_reviver_bottom",
+        bank = "wortox_teleport_reviver_fx",
+        build = "wortox_teleport_reviver_fx",
+        anim = "reviver_jumpout",
+        fn = FinalOffset1,
+    },
+    {
+        name = "wortox_decoy_explode_fx",
+        bank = "wortox_teleport_reviver_fx",
+        build = "wortox_teleport_reviver_fx",
+        anim = "decoy_laughsplode", -- Ha, ha, ha..
+        nofaced = true,
+        fn = function(inst)
+            inst.entity:AddSoundEmitter()
+            inst.SoundEmitter:PlaySound("dontstarve/characters/wortox/soul/hop_out")
+            inst.AnimState:SetFinalOffset(1)
+        end,
+    },
+    {
+        name = "wortox_decoy_fizzle_fx",
+        bank = "wortox_teleport_reviver_fx",
+        build = "wortox_teleport_reviver_fx",
+        anim = "decoy_deathfade",
+        nofaced = true,
+        fn = function(inst)
+            inst.entity:AddSoundEmitter()
+            inst.SoundEmitter:PlaySound("dontstarve/characters/wortox/soul/hop_out")
+            inst.AnimState:SetFinalOffset(1)
+        end,
+    },
+    {
+        name = "wortox_decoy_expire_fx",
+        bank = "wortox_teleport_reviver_fx",
+        build = "wortox_teleport_reviver_fx",
+        anim = "decoy_expirefade",
+        nofaced = true,
+        fn = function(inst)
+            inst.entity:AddSoundEmitter()
+            inst.SoundEmitter:PlaySound("dontstarve/characters/wortox/soul/hop_out")
+            inst.AnimState:SetFinalOffset(1)
+        end,
+    },
+    {
+        name = "wortox_resist_fx",
+        bank = "planar_resist_fx",
+        build = "planar_resist_fx",
+        anim = "deflect",
+        sound = "dontstarve/characters/wortox/soul/hop_out",
+        fn = function(inst)
+            local scale = .8 + math.random() * .4
+            inst.AnimState:SetScale(math.random() < .5 and scale or -scale, scale)
+            local WORTOX_LUNAR_OFFSET = 0.1
+            inst.AnimState:SetMultColour(0, 0, 0, 1)
+            inst.AnimState:SetAddColour(154 / 255 + WORTOX_LUNAR_OFFSET, 23 / 255 + WORTOX_LUNAR_OFFSET, 19 / 255 + WORTOX_LUNAR_OFFSET, 0)
+        end,
+    },
+    {
         name = "voidcloth_boomerang_launch_fx",
         bank = "boomerang_voidcloth",
         build ="boomerang_voidcloth",
@@ -3330,6 +3430,60 @@ local fx =
            inst:DoTaskInTime(35*FRAMES, function() inst.SoundEmitter:KillSound("soundfx") end)
         end,        
     },    
+
+    {
+        name = "wendy_sanityaura_buff_on_fx",
+        bank = "wendy_sanityaura_buff_fx",
+        build = "wendy_sanityaura_buff_fx",
+        anim = "on",
+    },
+    
+    {
+        name = "wendy_sanityaura_buff_off_fx",
+        bank = "wendy_sanityaura_buff_fx",
+        build = "wendy_sanityaura_buff_fx",
+        anim = "off",
+    },           
+
+    {
+        name = "abigail_attack_shadow_fx",
+        bank = "abigail_attack_fx",
+        build = "abigail_attack_fx",
+        anim = "attack3_ground_pre",
+        animqueue = true,
+        --sound = "hallowednights2024/thrall_parasite/possess_monster",
+        fn = function(inst)
+            inst.AnimState:PushAnimation("attack3_ground_loop",false)  
+            inst.AnimState:PushAnimation("attack3_ground_pst",false)
+            inst.AnimState:SetMultColour(0,0,0,1)
+
+            inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
+            inst.AnimState:SetLayer(LAYER_GROUND)
+            inst.AnimState:SetSortOrder(1)
+            inst.AnimState:SetFinalOffset(1)
+        end,        
+    },
+
+    {
+        name = "abigail_rising_twinkles_fx",
+        bank = "abigail_rising_twinkles",
+        build = "abigail_rising_twinkles",
+        anim = "abigail_rising_twinkles",
+    }, 
+
+    {
+        name = "abigail_gestalt_hit_fx",
+        bank = "abigail_meta5_fx",
+        build = "abigail_meta5_fx",
+        anim = "ghostalt_atk",
+        bloom = true,
+    },   
+    {
+        name = "abigail_shadow_buff_fx",
+        bank = "abigail_meta5_fx",
+        build = "abigail_meta5_fx",
+        anim = "sacrifice_boost",
+    },         
 }
 
 for cratersteamindex = 1, 4 do
@@ -3366,13 +3520,41 @@ for j = 0, 3, 3 do
     end
 end
 
-local shot_types = {"rock", "gold", "marble", "thulecite", "freeze", "slow", "poop", "trinket_1"}
+local shot_types =
+{
+    "rock",
+    "gold",
+    "marble",
+    "thulecite",
+	"honey",
+    "freeze",
+    "slow",
+    "poop",
+    "moonglass",
+    "moonglasscharged",
+    "dreadstone",
+    "gunpowder",
+    "lunarplanthusk",
+    "purebrilliance",
+    "purehorror",
+	"gelblob",
+    "scrapfeather",
+    "stinger",
+    "trinket_1",
+}
+
+local aoe_shot_types =
+{
+    stinger = true,
+    moonglass = true,
+}
+
 for _, shot_type in ipairs(shot_types) do
     table.insert(fx, {
         name = "slingshotammo_hitfx_"..shot_type,
         bank = "slingshotammo",
         build = "slingshotammo",
-        anim = "used",
+        anim = aoe_shot_types[shot_type] and ("used_"..shot_type) or "used",
         sound = "dontstarve/characters/walter/slingshot/"..shot_type,
         fn = function(inst)
 			if shot_type ~= "rock" then

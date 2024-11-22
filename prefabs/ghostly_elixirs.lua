@@ -5,18 +5,27 @@ local potion_tunings =
 	ghostlyelixir_slowregen =
 	{
 		TICK_RATE = TUNING.GHOSTLYELIXIR_SLOWREGEN_TICK_TIME,
-		ONAPPLY = function(inst, target) target:PushEvent("startsmallhealthregen", inst) end,
-		TICK_FN = function(inst, target) target.components.health:DoDelta(TUNING.GHOSTLYELIXIR_SLOWREGEN_HEALING, true, inst.prefab) end,
+		ONAPPLY = function(inst, target)
+			target:PushEvent("startsmallhealthregen", inst)
+		end,
+		TICK_FN = function(inst, target)
+			target.components.health:DoDelta(TUNING.GHOSTLYELIXIR_SLOWREGEN_HEALING, true, inst.prefab)
+		end,
 		DURATION = TUNING.GHOSTLYELIXIR_SLOWREGEN_DURATION,
         FLOATER = {"small", 0.15, 0.55},
 		fx = "ghostlyelixir_slowregen_fx",
 		dripfx = "ghostlyelixir_slowregen_dripfx",
+		skill_modifier_long_duration = true,
 	},
 	ghostlyelixir_fastregen =
 	{
 		TICK_RATE = TUNING.GHOSTLYELIXIR_FASTREGEN_TICK_TIME,
-		ONAPPLY = function(inst, target) target:PushEvent("starthealthregen", inst) end,
-		TICK_FN = function(inst, target) target.components.health:DoDelta(TUNING.GHOSTLYELIXIR_FASTREGEN_HEALING, true, inst.prefab) end,
+		ONAPPLY = function(inst, target)
+			target:PushEvent("starthealthregen", inst)
+		end,
+		TICK_FN = function(inst, target)
+			target.components.health:DoDelta(TUNING.GHOSTLYELIXIR_FASTREGEN_HEALING, true, inst.prefab)
+		end,
 		DURATION = TUNING.GHOSTLYELIXIR_FASTREGEN_DURATION,
         FLOATER = {"small", 0.15, 0.55},
 		fx = "ghostlyelixir_fastregen_fx",
@@ -25,12 +34,12 @@ local potion_tunings =
 	ghostlyelixir_attack =
 	{
 		ONAPPLY = function(inst, target)
-			if target.UpdateDamage ~= nil then
+			if target.UpdateDamage then
 				target:UpdateDamage()
 			end
 		end,
 		ONDETACH = function(inst, target)
-			if target:IsValid() and target.UpdateDamage ~= nil then
+			if target:IsValid() and target.UpdateDamage then
 				target:UpdateDamage()
 			end
 		end,
@@ -38,15 +47,23 @@ local potion_tunings =
         FLOATER = {"small", 0.1, 0.5},
 		fx = "ghostlyelixir_attack_fx",
 		dripfx = "ghostlyelixir_attack_dripfx",
+		skill_modifier_long_duration = true,
 	},
 	ghostlyelixir_speed =
 	{
 		DURATION = TUNING.GHOSTLYELIXIR_SPEED_DURATION,
-		ONAPPLY = function(inst, target) target.components.locomotor:SetExternalSpeedMultiplier(inst, "ghostlyelixir", TUNING.GHOSTLYELIXIR_SPEED_LOCO_MULT) end,
+		ONAPPLY = function(inst, target)
+			target.components.locomotor:SetExternalSpeedMultiplier(
+				inst,
+				"ghostlyelixir",
+				TUNING.GHOSTLYELIXIR_SPEED_LOCO_MULT
+			)
+		end,
         FLOATER = {"small", 0.2, 0.4},
 		fx = "ghostlyelixir_speed_fx",
 		dripfx = "ghostlyelixir_speed_dripfx",
 		speed_hauntable = true,
+		skill_modifier_long_duration = true,
 	},
 	ghostlyelixir_shield =
 	{
@@ -55,6 +72,7 @@ local potion_tunings =
 		shield_prefab = "abigailforcefieldbuffed",
 		fx = "ghostlyelixir_shield_fx",
 		dripfx = "ghostlyelixir_shield_dripfx",
+		skill_modifier_long_duration = true,
 	},
 	ghostlyelixir_retaliation =
 	{
@@ -63,16 +81,50 @@ local potion_tunings =
 		shield_prefab = "abigailforcefieldretaliation",
 		fx = "ghostlyelixir_retaliation_fx",
 		dripfx = "ghostlyelixir_retaliation_dripfx",
+		skill_modifier_long_duration = true,
+	},
+
+	ghostlyelixir_shadow =
+	{
+		DURATION = TUNING.WENDYSKILL_SHADOWELIXIR_DURATION,
+        FLOATER = {"small", 0.2, 0.4},
+		fx = "ghostlyelixir_shadow_fx",
+		dripfx = "ghostlyelixir_shadow_dripfx",
+		ONAPPLY = function(inst, target)
+		end,
+		ONDETACH = function(inst, target)
+		end,
+		skill_modifier_long_duration = true,
+	},
+	ghostlyelixir_lunar =
+	{
+		DURATION = TUNING.WENDYSKILL_LUNARELIXIR_DURATION,
+        FLOATER = {"small", 0.2, 0.4},
+		fx = "ghostlyelixir_lunar_fx",
+		dripfx = "ghostlyelixir_lunar_dripfx",
+		ONAPPLY = function(inst, target)
+			target.components.planardamage:AddBonus(inst, TUNING.WENDYSKILL_LUNARELIXIR_DAMAGEBONUS, "ghostlyelixir_lunarbonus")
+		end,
+		ONDETACH = function(inst, target)
+			target.components.planardamage:RemoveBonus(inst, "ghostlyelixir_lunarbonus")
+		end,
+		skill_modifier_long_duration = true,
 	},
 }
 
 local function DoApplyElixir(inst, giver, target)
-	return target:AddDebuff("elixir_buff", inst.buff_prefab, nil, nil, function()
+	local buff = target:AddDebuff("elixir_buff", inst.buff_prefab, nil, nil, function()
 		local cur_buff = target:GetDebuff("elixir_buff")
 		if cur_buff ~= nil and cur_buff.prefab ~= inst.buff_prefab then
 			target:RemoveDebuff("elixir_buff")
 		end
 	end)
+
+	if buff then
+		local new_buff = target:GetDebuff("elixir_buff")
+		new_buff:buff_skill_modifier_fn(giver)
+		return buff
+	end
 end
 
 local SPEED_HAUNT_MULTIPLIER_NAME = "haunted_speedpot"
@@ -115,6 +167,7 @@ local function potion_fn(anim, potion_tunings, buff_prefab)
     inst.AnimState:PlayAnimation(anim)
     inst.scrapbook_anim = anim
     inst.scrapbook_specialinfo = "GHOSTLYELIXER".. string.upper(anim)
+    inst.elixir_buff_type = anim
 
     if potion_tunings.FLOATER ~= nil then
         MakeInventoryFloatable(inst, potion_tunings.FLOATER[1], potion_tunings.FLOATER[2], potion_tunings.FLOATER[3])
@@ -232,6 +285,24 @@ local function buff_OnDetached(inst, target)
 	inst:Remove()
 end
 
+local function buff_skill_modifier_fn(inst,doer)
+		local duration_mult = 1
+		
+		if inst.potion_tunings.skill_modifier_long_duration then
+			if doer.components.skilltreeupdater:IsActivated("wendy_potion_3") then
+				duration_mult = duration_mult + TUNING.SKILLS.WENDY.POTION_3_MOD
+			elseif doer.components.skilltreeupdater:IsActivated("wendy_potion_2") then
+				duration_mult = duration_mult + TUNING.SKILLS.WENDY.POTION_2_MOD
+			elseif doer.components.skilltreeupdater:IsActivated("wendy_potion_1") then
+				duration_mult = duration_mult + TUNING.SKILLS.WENDY.POTION_1_MOD
+			end
+		end
+
+        inst.components.timer:StopTimer("decay")
+        inst.components.timer:StartTimer("decay", inst.potion_tunings.DURATION * duration_mult )
+
+end
+
 local function buff_fn(tunings, dodelta_fn)
     local inst = CreateEntity()
 
@@ -242,6 +313,7 @@ local function buff_fn(tunings, dodelta_fn)
         return inst
     end
 
+    inst.buff_skill_modifier_fn = buff_skill_modifier_fn
     inst.entity:AddTransform()
 
     --[[Non-networked entity]]
@@ -253,20 +325,20 @@ local function buff_fn(tunings, dodelta_fn)
 
     inst:AddTag("CLASSIFIED")
 
-    inst:AddComponent("debuff")
-    inst.components.debuff:SetAttachedFn(buff_OnAttached)
-    inst.components.debuff:SetDetachedFn(buff_OnDetached)
-    inst.components.debuff:SetExtendedFn(buff_OnExtended)
-    inst.components.debuff.keepondespawn = true
+    local debuff = inst:AddComponent("debuff")
+    debuff:SetAttachedFn(buff_OnAttached)
+    debuff:SetDetachedFn(buff_OnDetached)
+    debuff:SetExtendedFn(buff_OnExtended)
+    debuff.keepondespawn = true
 
-    inst:AddComponent("timer")
-    inst.components.timer:StartTimer("decay", tunings.DURATION)
+    local timer = inst:AddComponent("timer")
+    timer:StartTimer("decay", tunings.DURATION)
     inst:ListenForEvent("timerdone", buff_OnTimerDone)
 
     return inst
 end
 
-local function AddPotion(potions, name, anim)
+local function AddPotion(potions, name, anim, extra_assets)
 	local potion_prefab = "ghostlyelixir_"..name
 	local buff_prefab = potion_prefab.."_buff"
 
@@ -274,6 +346,8 @@ local function AddPotion(potions, name, anim)
 		Asset("ANIM", "anim/ghostly_elixirs.zip"),
 		Asset("ANIM", "anim/abigail_buff_drip.zip"),
 	}
+	if extra_assets then ConcatArrays(assets, extra_assets) end
+
 	local prefabs = {
 		buff_prefab,
 		potion_tunings[potion_prefab].fx,
@@ -298,5 +372,7 @@ AddPotion(potions, "shield", "shield")
 AddPotion(potions, "attack", "attack")
 AddPotion(potions, "speed", "speed")
 AddPotion(potions, "retaliation", "retaliation")
+AddPotion(potions, "shadow", "shadow")
+AddPotion(potions, "lunar", "lunar")
 
 return unpack(potions)

@@ -205,6 +205,7 @@ function Container:DropItemAt(itemtodrop, x, y, z)
         item.prevslot = nil
         self.inst:PushEvent("dropitem", {item = item})
     end
+    return item
 end
 
 function Container:CanTakeItemInSlot(item, slot)
@@ -212,6 +213,7 @@ function Container:CanTakeItemInSlot(item, slot)
         and item.components.inventoryitem ~= nil
         and item.components.inventoryitem.cangoincontainer
         and not item.components.inventoryitem.canonlygoinpocket
+        and (not item.components.inventoryitem.canonlygoinpocketorpocketcontainers or self.inst.components.inventoryitem and self.inst.components.inventoryitem.canonlygoinpocket)
         and (slot == nil or (slot >= 1 and slot <= self.numslots))
         and not (GetGameModeProperty("non_item_equips") and item.components.equippable ~= nil)
         and (self.itemtestfn == nil or self:itemtestfn(item, slot))
@@ -235,6 +237,7 @@ function Container:ShouldPrioritizeContainer(item)
         and item.components.inventoryitem ~= nil
         and item.components.inventoryitem.cangoincontainer
         and not item.components.inventoryitem.canonlygoinpocket
+        and (not item.components.inventoryitem.canonlygoinpocketorpocketcontainers or self.inst.components.inventoryitem and self.inst.components.inventoryitem.canonlygoinpocket)
         and not (GetGameModeProperty("non_item_equips") and item.components.equippable ~= nil)
         and (self:priorityfn(item))
 end
@@ -959,6 +962,29 @@ function Container:TakeActiveItemFromHalfOfSlot(slot, opener)
     end
 end
 
+function Container:TakeActiveItemFromCountOfSlot(slot, count, opener)
+    local inventory, active_item = QueryActiveItem(self, opener)
+    local item = self:GetItemInSlot(slot)
+    if item ~= nil and
+        active_item == nil and
+        inventory ~= nil then
+
+        self.currentuser = opener
+
+        if item.components.stackable and item.components.stackable:StackSize() > count then
+            local countedstack = item.components.stackable:Get(count)
+            countedstack.prevslot = slot
+            countedstack.prevcontainer = self
+            inventory:GiveActiveItem(countedstack)
+        else
+            self:RemoveItemBySlot(slot)
+            inventory:GiveActiveItem(item)
+        end
+
+        self.currentuser = nil
+    end
+end
+
 function Container:TakeActiveItemFromAllOfSlot(slot, opener)
     local inventory, active_item = QueryActiveItem(self, opener)
     local item = self:GetItemInSlot(slot)
@@ -1168,6 +1194,60 @@ function Container:MoveItemFromHalfOfSlot(slot, container, opener)
                 if not container:GiveItem(halfstack, targetslot) then
                     self.ignoresound = true
                     self:GiveItem(halfstack, slot, nil, true)
+                    self.ignoresound = false
+                end
+
+                --Hacks for altering normal inventory:GiveItem() behaviour
+                if container.ignoreoverflow then
+                    container.ignoreoverflow = false
+                end
+                if container.ignorefull then
+                    container.ignorefull = false
+                end
+            end
+
+            self.currentuser = nil
+            container.currentuser = nil
+        end
+    end
+end
+
+function Container:MoveItemFromCountOfSlot(slot, container, count, opener)
+    local item = self:GetItemInSlot(slot)
+    if item ~= nil and container ~= nil then
+        container = container.components.container or container.components.inventory
+        if container ~= nil and container:IsOpenedBy(opener) then
+
+            self.currentuser = opener
+            container.currentuser = opener
+
+            local targetslot =
+                opener.components.constructionbuilderuidata ~= nil and
+                opener.components.constructionbuilderuidata:GetContainer() == container.inst and
+                opener.components.constructionbuilderuidata:GetSlotForIngredient(item.prefab) or
+                nil
+
+            if container:CanTakeItemInSlot(item, targetslot) then
+                local countedstack
+                if item.components.stackable and item.components.stackable:StackSize() > count then
+                    countedstack = item.components.stackable:Get(count)
+                else
+                    countedstack = self:RemoveItemBySlot(slot)
+                end
+                countedstack.prevcontainer = nil
+                countedstack.prevslot = nil
+
+                --Hacks for altering normal inventory:GiveItem() behaviour
+                if container.ignoreoverflow ~= nil and container:GetOverflowContainer() == self then
+                    container.ignoreoverflow = true
+                end
+                if container.ignorefull ~= nil then
+                    container.ignorefull = true
+                end
+
+                if not container:GiveItem(countedstack, targetslot) then
+                    self.ignoresound = true
+                    self:GiveItem(countedstack, slot, nil, true)
                     self.ignoresound = false
                 end
 

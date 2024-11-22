@@ -6,6 +6,7 @@ local WereBadge        = require "widgets/werebadge"
 local MoistureMeter    = require "widgets/moisturemeter"
 local BoatMeter        = require "widgets/boatmeter"
 local PetHealthBadge   = require "widgets/pethealthbadge"
+local AvengingGhostBadge = require "widgets/avengingghostbadge"
 local InspirationBadge = require "widgets/inspirationbadge"
 local MightyBadge      = require "widgets/mightybadge"
 local ResurrectButton  = require "widgets/resurrectbutton"
@@ -86,7 +87,14 @@ local function OnSetPlayerMode(inst, self)
         inst:ListenForEvent("clientpetmaxhealthdirty", self.onpethealthdirty, self.owner)
         inst:ListenForEvent("clientpethealthpulsedirty", self.onpethealthdirty, self.owner)
         inst:ListenForEvent("clientpethealthstatusdirty", self.onpethealthdirty, self.owner)
+        inst:ListenForEvent("clientpetbonusdirty", self.onpethealthdirty, self.owner)
+
         self:RefreshPetHealth()
+    end
+
+    if self.onavengetimedirty then
+        inst:RemoveEventCallback("clientavengetimedirty", self.onavengetimedirty, self.owner)
+        self.onavengetimedirty = nil
     end
 
     if self.pethealthbadge ~= nil and self.onpetskindirty == nil then
@@ -149,7 +157,13 @@ local function OnSetGhostMode(inst, self)
         self.inst:RemoveEventCallback("clientpethealthsymboldirty", self.onpethealthdirty, self.owner)
         self.inst:RemoveEventCallback("clientpetmaxhealthdirty", self.onpethealthdirty, self.owner)
         self.inst:RemoveEventCallback("clientpethealthstatusdirty", self.onpethealthdirty, self.owner)
+        self.inst:RemoveEventCallback("clientpetbonusdirty", self.onpethealthdirty, self.owner)        
         self.onpethealthdirty = nil
+    end
+
+    if self.avengingghostbadge ~= nil then
+        self.onavengetimedirty = function() self:RefreshAvengingGhost() end
+        self.inst:ListenForEvent("clientavengetimedirty", self.onavengetimedirty, self.owner)
     end
 
     if self.onpetskindirty ~= nil then
@@ -294,9 +308,15 @@ local StatusDisplays = Class(Widget, function(self, owner)
         self:AddWereness()
     end
 
+    if owner.components.avengingghost then
+        self.avengingghostbadge = self:AddChild(AvengingGhostBadge(owner, nil, "status_abigail" ))
+        self.avengingghostbadge:SetPosition(self.column3, -40, 0)
+        self.avengingghostbadge:Hide()
+    end
+
 	if owner.components.pethealthbar ~= nil then
 		if owner.prefab == "wendy" then
-			self.pethealthbadge = self:AddChild(PetHealthBadge(owner, { 254 / 255, 253 / 255, 237 / 255, 1 }, "status_abigail"))
+			self.pethealthbadge = self:AddChild(PetHealthBadge(owner, { 254 / 255, 253 / 255, 237 / 255, 1 }, "status_abigail", { 35 / 255, 152 / 255, 156 / 255, 1 } ))
 			self.pethealthbadge:SetPosition(self.column4, -100, 0)
 
 		    self.moisturemeter:SetPosition(self.column2, -100, 0)
@@ -482,6 +502,10 @@ function StatusDisplays:SetGhostMode(ghostmode)
         if self.mightybadge ~= nil then
             self.mightybadge:Show()
         end
+
+        if self.avengingghostbadge then            
+            self.avengingghostbadge:Hide()
+        end        
     end
 
     if self.rezbuttontask ~= nil then
@@ -668,8 +692,18 @@ end
 
 function StatusDisplays:RefreshPetHealth()
     local pethealthbar = self.owner.components.pethealthbar
-	self.pethealthbadge:SetValues(pethealthbar:GetSymbol(), pethealthbar:GetPercent(), pethealthbar:GetOverTime(), pethealthbar:GetMaxHealth(), pethealthbar:GetPulse())
+	self.pethealthbadge:SetValues(pethealthbar:GetSymbol(), pethealthbar:GetPercent(), pethealthbar:GetOverTime(), pethealthbar:GetMaxHealth(), pethealthbar:GetPulse(), pethealthbar:GetMaxBonus(), pethealthbar:GetPercentBonus())
 	pethealthbar:ResetPulse()
+end
+
+function StatusDisplays:RefreshAvengingGhost()
+    local avengeingghost = self.owner.components.avengingghost
+    if avengeingghost:GetTime() > 0 then
+        self.avengingghostbadge:Show()
+        self.avengingghostbadge:SetValues(avengeingghost:GetSymbol(), avengeingghost:GetTime(),  avengeingghost:GetMaxTime())
+    else
+        self.avengingghostbadge:Hide()
+    end
 end
 
 function StatusDisplays:RefreshPetSkin()

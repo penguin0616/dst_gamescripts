@@ -386,7 +386,7 @@ end
 local function MakeDeviceStage(name, client_postinit, master_postinit, construction_data)
 	local function fn()
 
-   		local inst = CreateEntity()
+        local inst = CreateEntity()
 
         inst.entity:AddTransform()
         inst.entity:AddAnimState()

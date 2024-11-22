@@ -6,6 +6,8 @@ local assets =
     Asset("SCRIPT", "scripts/prefabs/player_common.lua"),
     Asset("ANIM", "anim/player_idles_walter.zip"),
     Asset("SOUND", "sound/walter.fsb"),
+
+    Asset("SCRIPT", "scripts/prefabs/skilltree_walter.lua"),
 }
 
 local prefabs =
@@ -65,6 +67,13 @@ end
 local function OnHealthDelta(inst, data)
     if data.amount < 0 then
         inst.components.sanity:DoDelta(data.amount * ((data ~= nil and data.overtime) and TUNING.WALTER_SANITY_DAMAGE_OVERTIME_RATE or TUNING.WALTER_SANITY_DAMAGE_RATE) * inst._sanity_damage_protection:Get())
+
+		local mount = inst.components.rider:GetMount()
+
+		if mount ~= nil and mount:HasTag("woby") then
+			inst.components.dogtrainer:DoAspectDeltaIfHasBadge(WOBY_TRAINING_ASPECTS.BRAVERY, TUNING.SKILLS.WALTER.WOBY_BADGES_ASPECT_GAIN_RATE.bravery)
+			inst.components.dogtrainer:DoAspectDeltaIfHasBadge(WOBY_TRAINING_ASPECTS.RESISTANCE, TUNING.SKILLS.WALTER.WOBY_BADGES_ASPECT_GAIN_RATE.resistance)
+		end
     end
 end
 
@@ -150,20 +159,65 @@ local function OnTimerDone(inst, data)
 end
 
 local function OnAttacked(inst, data)
-    if inst.components.rider:IsRiding() then
-        local mount = inst.components.rider:GetMount()
-        if mount:HasTag("woby") then
-			local damage = data and data.damage or TUNING.WALTER_WOBYBUCK_DAMAGE_MAX * 0.5 -- Fallback in case of mods.
-			inst._wobybuck_damage = inst._wobybuck_damage + damage
-			if inst._wobybuck_damage >= TUNING.WALTER_WOBYBUCK_DAMAGE_MAX then
-				inst.components.timer:StopTimer("wobybuck")
-				inst._wobybuck_damage = 0
-				mount.components.rideable:Buck()
-			else
-				ResetOrStartWobyBuckTimer(inst)
-			end
-        end
-    end
+    if not inst.components.rider:IsRiding() then
+		return
+	end
+
+	local mount = inst.components.rider:GetMount()
+
+	if not mount:HasTag("woby") then
+		return
+	end
+
+	local damage = data and data.damage or TUNING.WALTER_WOBYBUCK_DAMAGE_MAX * 0.5 -- Fallback in case of mods.
+
+	inst._wobybuck_damage = inst._wobybuck_damage + damage
+
+	local damage_threshold = mount:AddTrainingBonus(TUNING.WALTER_WOBYBUCK_DAMAGE_MAX, WOBY_TRAINING_ASPECTS.RESISTANCE)
+
+	if inst._wobybuck_damage >= damage_threshold then
+		inst.components.timer:StopTimer("wobybuck")
+		inst._wobybuck_damage = 0
+
+		mount.components.rideable:Buck()
+	else
+		ResetOrStartWobyBuckTimer(inst)
+	end
+end
+
+local INCREASE_SPEED_ASPECT_TASK_PERIOD = 10
+
+local function IncreaveSpeedAspect(inst, dt)
+	inst.components.dogtrainer:DoAspectDeltaIfHasBadge(WOBY_TRAINING_ASPECTS.SPEED, dt * TUNING.SKILLS.WALTER.WOBY_BADGES_ASPECT_GAIN_RATE.speed)
+end
+
+local function OnMounted(inst, data)
+	if data.target == nil or not data.target:HasTag("woby") then
+		return
+	end
+
+	local woby_sanity_protection = data.target:AddTrainingBonus(0, WOBY_TRAINING_ASPECTS.BRAVERY)
+
+	if woby_sanity_protection > 0 then
+		inst._sanity_damage_protection:SetModifier(data.target, woby_sanity_protection)
+	end
+
+	if inst.components.dogtrainer:HasBadgeOfAspect(WOBY_TRAINING_ASPECTS.SPEED) then
+		if inst._wobyspeedaspecttask ~= nil then
+			inst._wobyspeedaspecttask:Cancel()
+		end
+
+		inst._wobyspeedaspecttask = inst:DoPeriodicTask(INCREASE_SPEED_ASPECT_TASK_PERIOD, IncreaveSpeedAspect, nil, INCREASE_SPEED_ASPECT_TASK_PERIOD)
+	end
+end
+
+local function OnDismounted(inst, data)
+	inst._sanity_damage_protection:RemoveModifier(data.target)
+
+	if inst._wobyspeedaspecttask ~= nil then
+		inst._wobyspeedaspecttask:Cancel()
+		inst._wobyspeedaspecttask = nil
+	end
 end
 
 local function OnWobyTransformed(inst, woby)
@@ -286,6 +340,10 @@ local function master_postinit(inst)
 
 	inst.components.petleash:SetMaxPets(0) -- walter can only have Woby as a pet
 
+	if inst.components.dogtrainer ~= nil then
+		inst.components.dogtrainer:Enable() -- FIXME(DiogoW): Enable when enabling the skill?
+	end
+
 	inst:AddComponent("storyteller")
 	inst.components.storyteller:SetStoryToTellFn(StoryToTellFn)
 	inst.components.storyteller:SetOnStoryOverFn(StoryTellingDone)
@@ -311,6 +369,9 @@ local function master_postinit(inst)
     inst.OnDespawn = OnDespawn
     inst:ListenForEvent("ms_playerreroll", OnReroll)
 	inst:ListenForEvent("onremove", OnRemoveEntity)
+
+	inst:ListenForEvent("mounted", OnMounted)
+    inst:ListenForEvent("dismounted", OnDismounted)
 
 end
 

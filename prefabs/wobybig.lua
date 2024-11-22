@@ -69,8 +69,12 @@ local function SetRunSpeed(inst, speed)
         return
     end
 
+    speed = inst:AddTrainingBonus(speed, WOBY_TRAINING_ASPECTS.SPEED)
+
     inst.components.locomotor.runspeed = speed
+
     local rider = inst.components.rideable:GetRider()
+
     if rider and rider.player_classified ~= nil then
         rider.player_classified.riderrunspeed:set(speed)
     end
@@ -189,6 +193,31 @@ local function ShouldSleep(inst)
     return (IsLeaderSleeping(inst) or IsLeaderTellingStory(inst)) and inst.components.follower:IsNearLeader(SLEEP_NEAR_LEADER_DISTANCE)
 end
 
+local function AddTrainingBonus(inst, value, aspect)
+    local badge_fmt = string.upper(aspect).."_%d"
+
+    local bonus = 0
+
+    local dogtrainer = inst._playerlink ~= nil and inst._playerlink.components.dogtrainer or nil
+
+    if dogtrainer ~= nil then
+        local pct = dogtrainer:GetAspectPercent(aspect)
+        local tuning = TUNING.SKILLS.WALTER.WOBY_BADGES
+
+        local badge
+
+        for i=1, NUM_WOBY_TRAINING_ASPECTS_LEVELS do
+            badge = badge_fmt:format(i)
+
+            if tuning[badge] ~= nil and dogtrainer:HasBadge(badge) then
+                bonus = bonus + tuning[badge] * pct
+            end
+        end
+    end
+
+    return value + bonus
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -226,6 +255,8 @@ local function fn()
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst.AddTrainingBonus = AddTrainingBonus
 
     inst:AddComponent("eater")
     inst.components.eater:SetDiet({ FOODTYPE.MONSTER }, { FOODTYPE.MONSTER })
@@ -283,7 +314,6 @@ local function fn()
     inst.LinkToPlayer = LinkToPlayer
 	inst.OnPlayerLinkDespawn = OnPlayerLinkDespawn
 	inst._onlostplayerlink = function(player) inst._playerlink = nil end
-
 
     inst.FinishTransformation = FinishTransformation
 

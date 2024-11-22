@@ -270,16 +270,13 @@ local function CommonActualRez(inst)
 end
 
 local function DoActualRez(inst, source, item)
-    local x, y, z
-    if source ~= nil then
-        x, y, z = source.Transform:GetWorldPosition()
-    else
-        x, y, z = inst.Transform:GetWorldPosition()
-    end
+    local x, y, z = (source or inst).Transform:GetWorldPosition()
 
-    local diefx = SpawnPrefab("die_fx")
-    if diefx and x and y and z then
-        diefx.Transform:SetPosition(x, y, z)
+    if x and y and z then
+        local diefx = SpawnPrefab("die_fx")
+        if diefx then
+            diefx.Transform:SetPosition(x, y, z)
+        end
     end
 
     -- inst.AnimState:SetBank("wilson")
@@ -527,7 +524,7 @@ local function OnRespawnFromGhost(inst, data) -- from ListenForEvent "respawnfro
         inst:DoTaskInTime(0, DoActualRez)
     elseif inst.sg.currentstate.name == "remoteresurrect" then
         inst:DoTaskInTime(0, DoMoveToRezSource, data.source, 24 * FRAMES)
-    elseif data.source.prefab == "reviver" then
+    elseif data.source:HasTag("reviver") then
         inst:DoTaskInTime(0, DoActualRez, nil, data.source)
     elseif data.source.prefab == "pocketwatch_revive" then
         if not data.from_haunt then
@@ -551,7 +548,7 @@ local function OnRespawnFromGhost(inst, data) -- from ListenForEvent "respawnfro
 
     inst.rezsource =
         data ~= nil and (
-            (data.source ~= nil and data.source.prefab ~= "reviver" and data.source:GetBasicDisplayName()) or
+            (data.source ~= nil and not data.source:HasTag("reviver") and data.source:GetBasicDisplayName()) or
             (data.user ~= nil and data.user:GetDisplayName())
         ) or
         STRINGS.NAMES.SHENANIGANS
@@ -701,7 +698,7 @@ local function OnRespawnFromPlayerCorpse(inst, data)
 
     inst.rezsource =
         data ~= nil and (
-            (data.source ~= nil and data.source.prefab ~= "reviver" and data.source.name) or
+            (data.source ~= nil and not data.source:HasTag("reviver") and data.source.name) or
             (data.user ~= nil and data.user:GetDisplayName())
         ) or
         STRINGS.NAMES.SHENANIGANS
@@ -887,6 +884,16 @@ end
 local function CanSeePointOnMiniMap(inst, px, py, pz) -- Convenience wrapper.
     local tx, ty = TheWorld.Map:GetTileXYAtPoint(px, py, pz)
     return inst.player_classified.MapExplorer:IsTileSeeable(tx, ty)
+end
+
+local function GetSeeableTilePercent(inst)
+    local total = TheWorld.Map:CalcTotalSeeableTiles() -- This is cached on the engine side so performance is hit once.
+    if total == 0 then
+        return 1 -- We see everything because this is infinitely seeable.
+    end
+    local current = inst.player_classified.MapExplorer:GetSeeableTileCount()
+    local percent = (current / total) * TUNING.PLAYER_MAP_LANDSEEN_FUDGE_FACTOR
+    return math.min(percent, 1) -- Clamp from overshooting.
 end
 
 local function GenericCommander_OnAttackOther(inst, data)
@@ -1086,6 +1093,7 @@ return
 	GivePlayerStartingItems		= GivePlayerStartingItems,
     CanSeeTileOnMiniMap         = CanSeeTileOnMiniMap,
     CanSeePointOnMiniMap        = CanSeePointOnMiniMap,
+    GetSeeableTilePercent       = GetSeeableTilePercent,
     MakeGenericCommander        = MakeGenericCommander,
     OnMurderCheckForFishRepel   = OnMurderCheckForFishRepel,
     OnOnStageEvent              = OnOnStageEvent,

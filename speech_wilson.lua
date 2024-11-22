@@ -43,6 +43,12 @@ return {
         {
             NOTNOW = "They must be busy now.",
         },
+        ATTACH_GHOST = 
+        {
+            WRONG_SISTURN = "only_used_by_wendy",
+            SISTURN_OFF = "only_used_by_wendy",
+            ABIGAIL_NOT_NEAR = "only_used_by_wendy",
+        },        
         ATTUNE =
         {
             NOHEALTH = "I don't feel well enough.",
@@ -346,6 +352,7 @@ return {
 			INUSE = "They're elbow deep in junk right now.",
             NOTMASTERCHEF = "I'm not a fancy enough chef for that.",
             NOTAMERM = "I don't think the merms would be happy about that.",
+            NOTSOULJARHANDLER = "It's not my cup of tea.", -- "I better not use this."
 		},
         SADDLE =
         {
@@ -377,6 +384,7 @@ return {
 			NOTALLOWED = "That can't go in there.",
 			INUSE = "I should wait my turn.",
             NOTMASTERCHEF = "I'm not a fancy enough chef for that.",
+            NOTSOULJARHANDLER = "I'm not soul'ed on it.", -- "I better not use this."
 		},
         TEACH =
         {
@@ -414,6 +422,8 @@ return {
             BEEF_BELL_INVALID_TARGET = "I couldn't possibly!",
             BEEF_BELL_ALREADY_USED = "This beefalo already belongs to someone else.",
             BEEF_BELL_HAS_BEEF_ALREADY = "I don't need a whole herd.",
+
+			NOT_MINE = "This belongs to someone else.",
         },
 		USEKLAUSSACKKEY =
         {
@@ -435,10 +445,23 @@ return {
             DOESNTWORK = "I guess they don't support the arts here.",
             ALREADYACTIVE = "He must be busy with another contest somewhere.",
         },
+        CUSTOMIZE_WOBY_BADGES =
+        {
+            GENERIC = "only_used_by_walter",
+            BURNING = "only_used_by_walter",
+            INUSE = "only_used_by_walter",
+        },
         YOTB_UNLOCKSKIN =
         {
             ALREADYKNOWN = "I'm seeing a familiar pattern... I've learned this already!",
         },
+        MUTATE = 
+        {
+            NOGHOST = "only_used_by_wendy",
+            NONEWMOON = "only_used_by_wendy",
+            NOFULLMOON = "only_used_by_wendy",
+            NOTNIGHT = "only_used_by_wendy",
+        },        
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -713,7 +736,23 @@ return {
     {
         "only_used_by_wortox",
     },
+    ANNOUNCE_SOUL_EMPTY_NICE =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_SOUL_EMPTY_NAUGHTY =
+    {
+        "only_used_by_wortox",
+    },
     ANNOUNCE_SOUL_FEW =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_SOUL_FEW_NICE =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_SOUL_FEW_NAUGHTY =
     {
         "only_used_by_wortox",
     },
@@ -721,7 +760,31 @@ return {
     {
         "only_used_by_wortox",
     },
+    ANNOUNCE_SOUL_MANY_NICE =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_SOUL_MANY_NAUGHTY =
+    {
+        "only_used_by_wortox",
+    },
     ANNOUNCE_SOUL_OVERLOAD =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_SOUL_OVERLOAD_NICE =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_SOUL_OVERLOAD_NAUGHTY =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
     {
         "only_used_by_wortox",
     },
@@ -1007,6 +1070,14 @@ return {
 
 	-- Hallowed Nights 2024
 	ANNOUNCE_NOPUMPKINCARVINGONFIRE = "This pumpkin is cooked.",
+
+    --rifts 5
+    ANNOUNCE_WENDY_BABYSITTER_SET = "only_used_by_wendy", 
+    ANNOUNCE_WENDY_BABYSITTER_STOP = "only_used_by_wendy",
+
+	ANNOUNCE_WORTOX_REVIVER_FAILTELEPORT = "Hmm. What went wrong?",
+
+    ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
 	BATTLECRY =
 	{
@@ -3965,14 +4036,29 @@ return {
             "It's a scientific fact that petting a good dog will improve your day.",
         },
 		WALTERHAT = "I was never exactly \"outdoorsy\" in my youth.",
-		SLINGSHOT = "The bane of windows everywhere.",
+		SLINGSHOT =
+		{
+			GENERIC = "The bane of windows everywhere.",
+			NOT_MINE = "only_used_by_walter",
+		},
 		SLINGSHOTAMMO_ROCK = "Shots to be slinged.",
 		SLINGSHOTAMMO_MARBLE = "Shots to be slinged.",
 		SLINGSHOTAMMO_THULECITE = "Shots to be slinged.",
         SLINGSHOTAMMO_GOLD = "Shots to be slinged.",
+		SLINGSHOTAMMO_HONEY = "Shots to be slinged.",
         SLINGSHOTAMMO_SLOW = "Shots to be slinged.",
         SLINGSHOTAMMO_FREEZE = "Shots to be slinged.",
 		SLINGSHOTAMMO_POOP = "Poop projectiles.",
+		SLINGSHOTAMMO_STINGER = "Shots to be stinged?",
+		SLINGSHOTAMMO_MOONGLASS = "Shots to be slinged... slung?",
+		SLINGSHOTAMMO_GELBLOB = "Shots to be slinged.",
+		SLINGSHOTAMMO_SCRAPFEATHER = "Shots to be slinged.",
+        SLINGSHOTAMMO_MOONGLASSCHARGED = "Shots to be slinged.",
+        SLINGSHOTAMMO_DREADSTONE = "Shots to be slinged.",
+        SLINGSHOTAMMO_GUNPOWDER = "Shots to be slinged.",
+        SLINGSHOTAMMO_LUNARPLANTHUSK = "Shots to be slinged.",
+        SLINGSHOTAMMO_PUREBRILLIANCE = "Shots to be slinged.",
+        SLINGSHOTAMMO_PUREHORROR = "Shots to be slinged.",
         PORTABLETENT = "I feel like I haven't had a proper night's sleep in ages!",
         PORTABLETENT_ITEM = "This requires some a-tent-tion.",
 
@@ -4014,6 +4100,10 @@ return {
 
         --Wortox
         WORTOX_SOUL = "only_used_by_wortox", --only wortox can inspect souls
+        --WORTOX_DECOY is not needed because it uses the default WORTOX inspection.
+        WORTOX_NABBAG = "He's a chip off the ol' Krampus.",
+        WORTOX_REVIVER = "I can guess what that's fur.",
+        WORTOX_SOULJAR = "It's rather jarring if you think about it.",
 
         PORTABLECOOKPOT_ITEM =
         {
@@ -5424,6 +5514,24 @@ return {
         SHADOWTHRALL_PARASITE = "It makes my brain itch.",
 
         PUMPKINCARVER = "Who's up for a gourd time?",
+
+        -- Meta 5
+        GHOSTLYELIXIR_LUNAR = "Ah yes. Very science-y.",
+        GHOSTLYELIXIR_SHADOW = "Ah yes. Very science-y.",
+        REVIVER_FLOWER = "It's a Telltale Heart that looks like it was made of Dark Petals.", -- [[TODO]]
+
+		SLINGSHOTMODKIT = "Walter's really giving it his best shot.",
+		SLINGSHOT_BAND_PIGSKIN = "Walter's really giving it his best shot.",
+		SLINGSHOT_BAND_TENTACLE = "Walter's really giving it his best shot.",
+		SLINGSHOT_BAND_MIMIC = "Walter's really giving it his best shot.",
+		SLINGSHOT_FRAME_BONE = "Walter's really giving it his best shot.",
+		SLINGSHOT_FRAME_GEMS = "Walter's really giving it his best shot.",
+		SLINGSHOT_FRAME_WAGPUNK = "Walter's really giving it his best shot.",
+		SLINGSHOT_HANDLE_STICKY = "Walter's really giving it his best shot.",
+		SLINGSHOT_HANDLE_SILK = "Walter's really giving it his best shot.",
+		SLINGSHOT_HANDLE_VOIDCLOTH = "Walter's really giving it his best shot.",
+
+        WOBY_BADGE_STATION = "I guess you can teach an old dog new tricks.",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

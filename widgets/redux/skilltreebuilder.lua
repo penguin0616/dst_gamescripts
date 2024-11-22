@@ -267,11 +267,6 @@ function SkillTreeBuilder:buildbuttons(panel, pos, data, offset, root)
 		self.skillgraphics[skill].button = skillbutton
 		self.skillgraphics[skill].frame = skillimage
         self.skillgraphics[skill].button_decorations = subdata.button_decorations
-        if subdata.button_decorations ~= nil then
-            if subdata.button_decorations.init ~= nil then
-                subdata.button_decorations.init(skillbutton, root, self.fromfrontend)
-            end
-        end
 		table.insert(self.buttongrid,{button=skillbutton,x=newpos.x,y=newpos.y,skill=skill,forced_focus=subdata.forced_focus,defaultfocus=subdata.defaultfocus,})
 	end	
 end
@@ -354,7 +349,7 @@ function getdesc(skill, prefabname)
 	return skilldata.desc
 end
 
-function SkillTreeBuilder:RefreshTree()
+function SkillTreeBuilder:RefreshTree(skillschanged)
     local characterprefab, availableskillpoints, activatedskills, skilltreeupdater
     local frontend = self.fromfrontend
     local readonly = self.readonly
@@ -387,6 +382,17 @@ function SkillTreeBuilder:RefreshTree()
         activatedskills = TheSkillTree:GetActivatedSkills(characterprefab)
     end
     
+    if not self.button_decorations_init then
+        self.button_decorations_init = true
+        for _, graphics in pairs(self.skillgraphics) do
+            if graphics.button_decorations ~= nil then
+                if graphics.button_decorations.init ~= nil then
+                    graphics.button_decorations.init(graphics.button, self.skilltreewidget.midlay, self.fromfrontend, characterprefab, activatedskills)
+                end
+            end
+        end
+    end
+    
 	local function make_connected_clickable(skill)
 		if self.skilltreedef[skill].connects then
 			for i,connected_skill in ipairs(self.skilltreedef[skill].connects)do
@@ -404,9 +410,14 @@ function SkillTreeBuilder:RefreshTree()
 
 	for skill,graphics in pairs(self.skillgraphics) do
 		-- ROOT ITEMS ARE ACTIVATABLE
+        -- NOTES(JBK): But only if they have an rpc_id.
 		if self.skilltreedef[skill].root then
-			graphics.status.activatable = true
+			graphics.status.activatable = self.skilltreedef[skill].rpc_id ~= nil
 		end
+        -- NOTES(JBK): All infographics are highlighted.
+        if self.skilltreedef[skill].infographic then
+            graphics.status.activated = true
+        end
 	end
 
 	for skill,graphics in pairs(self.skillgraphics) do
@@ -438,16 +449,12 @@ function SkillTreeBuilder:RefreshTree()
 
 	for skill,graphics in pairs(self.skillgraphics) do
 		if self.skilltreedef[skill].locks then
-			local activatable = true
+			graphics.status.activatable = self.skilltreedef[skill].rpc_id ~= nil
 			for i,lock in ipairs(self.skilltreedef[skill].locks) do
 				if not self.skillgraphics[lock].status.lock_open then
-					activatable = false
+					graphics.status.activatable = false
 					break
 				end
-			end
-			graphics.status.activatable = false
-			if activatable then
-				graphics.status.activatable = true
 			end
 		end
 	end
@@ -536,6 +543,16 @@ function SkillTreeBuilder:RefreshTree()
 		end
 	end
 
+    if skillschanged then
+        for _, graphics in pairs(self.skillgraphics) do
+            if graphics.button_decorations ~= nil then
+                if graphics.button_decorations.onskillschanged ~= nil then
+                    graphics.button_decorations.onskillschanged(graphics.button, self.selectedskill, self.fromfrontend, characterprefab, activatedskills)
+                end
+            end
+        end
+    end
+
 	self.root.xptotal:SetString(availableskillpoints)
 	if availableskillpoints <= 0 and TheSkillTree:GetSkillXP(characterprefab) >= TUNING.FIXME_DO_NOT_USE_FOR_MODS_NEW_MAX_XP_VALUE then -- >= TheSkillTree:GetMaximumExperiencePoints() then
 		self.root.xp_tospend:SetString(STRINGS.SKILLTREE.KILLPOINTS_MAXED)
@@ -582,7 +599,7 @@ function SkillTreeBuilder:RefreshTree()
 			self.infopanel.intro:Hide()
 			
             if not readonly then
-                if availableskillpoints > 0 and self.skillgraphics[self.selectedskill].status.activatable and not skilltreeupdater:IsActivated(self.selectedskill, characterprefab) and not self.skilltreedef[self.selectedskill].lock_open then
+                if availableskillpoints > 0 and self.skillgraphics[self.selectedskill].status.activatable and not skilltreeupdater:IsActivated(self.selectedskill, characterprefab) then
 
                 	self.infopanel.activatedbg:Hide()
                     self.infopanel.activatebutton:Show()                    
@@ -596,7 +613,7 @@ function SkillTreeBuilder:RefreshTree()
                 end
             end
 
-			if self.skillgraphics[self.selectedskill].status.activated then
+			if self.skillgraphics[self.selectedskill].status.activated and not self.skilltreedef[self.selectedskill].infographic then
 				self.infopanel.activatedtext:Show()
 				self.infopanel.activatedbg:Show()
 			end
@@ -635,7 +652,7 @@ function SkillTreeBuilder:LearnSkill(skilltreeupdater, characterprefab)
 	    	self.skilltreewidget:SpawnFavorOverlay(true)
 		end
 
-	    self:RefreshTree()
+	    self:RefreshTree(true)
 	end
 end
 
@@ -656,11 +673,15 @@ function SkillTreeBuilder:CreateTree(prefabname, targetdata, readonly)
 
 	--for i,panel in ipairs(self.root.panels)do
 	for i,paneldata in ipairs(skilltreedefs.SKILLTREE_ORDERS[self.target]) do
-
-		local panel = self.root.panels[paneldata[1]]
-		current_x = current_x + last_width + TILESIZE
-		last_width = panel.c_width
-		panel:SetPosition(current_x , 170 )
+        local panelname = paneldata[1]
+        local panel = self.root.panels[panelname]
+        if panel then
+            current_x = current_x + last_width + TILESIZE
+            last_width = panel.c_width
+            panel:SetPosition(current_x , 170 )
+        else
+            print(string.format("FIXME: Skill tree order named %s has no skill data!", panelname))
+        end
 	end
 
 	self:RefreshTree()

@@ -33,6 +33,12 @@ return{
         {
             NOTNOW = "Let's come back later.",
         },
+        ATTACH_GHOST = 
+        {
+            WRONG_SISTURN = "only_used_by_wendy",
+            SISTURN_OFF = "only_used_by_wendy",
+            ABIGAIL_NOT_NEAR = "only_used_by_wendy",
+        },        
         ATTUNE =
         {
             NOHEALTH = "I can't! I need medical attention! Where's the first aid kit?!",
@@ -336,6 +342,7 @@ return{
 			INUSE = "Do you like radio shows? There was this great horror one I used to listen to-",
             NOTMASTERCHEF = "I'll go check on my own supplies.",
             NOTAMERM = "I don't want to make the bog monsters mad at me!",
+            NOTSOULJARHANDLER = "They're souls Woby, not treats."
 		},
         SADDLE =
         {
@@ -367,6 +374,7 @@ return{
 			NOTALLOWED = "That's against the rules.",
 			INUSE = "\"A Pinetree Pioneer is patient and polite.\" But uh, hurry up please?",
             NOTMASTERCHEF = "I'd rather cook over a campfire, honestly...",
+            NOTSOULJARHANDLER = "They're souls Woby, not treats."
 		},
         TEACH =
         {
@@ -404,6 +412,8 @@ return{
             BEEF_BELL_INVALID_TARGET = "I don't think that's going to work.",
             BEEF_BELL_ALREADY_USED = "I already rang it!",
             BEEF_BELL_HAS_BEEF_ALREADY = "I've already got as many big fuzzy friends as I can manage.",
+
+			NOT_MINE = "That's not ours, Woby.",
         },
 		USEKLAUSSACKKEY =
         {
@@ -425,10 +435,23 @@ return{
             DOESNTWORK = "Maybe he took the day off?",
             ALREADYACTIVE = "There must be another contest going on somewhere else.",
         },
+        CUSTOMIZE_WOBY_BADGES =
+        {
+            GENERIC = "Hmm. I wonder why it's not working?",
+            BURNING = "It's too on fire to use.",
+            INUSE = "Someone's using it now.",
+        },
         YOTB_UNLOCKSKIN =
         {
             ALREADYKNOWN = "We already know this one, don't we Woby?",
         },
+        MUTATE = 
+        {
+            NOGHOST = "only_used_by_wendy",
+            NONEWMOON = "only_used_by_wendy",
+            NOFULLMOON = "only_used_by_wendy",
+            NOTNIGHT = "only_used_by_wendy",
+        },        
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -703,7 +726,23 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_EMPTY_NICE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_EMPTY_NAUGHTY =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_SOUL_FEW =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_FEW_NICE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_FEW_NAUGHTY =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
@@ -711,7 +750,31 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_MANY_NICE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_MANY_NAUGHTY =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_NICE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_NAUGHTY =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
@@ -997,6 +1060,14 @@ return{
 
 	-- Hallowed Nights 2024
 	ANNOUNCE_NOPUMPKINCARVINGONFIRE = "Do I still get the badge?",
+
+    --rifts 5
+    ANNOUNCE_WENDY_BABYSITTER_SET = "only_used_by_wendy", 
+    ANNOUNCE_WENDY_BABYSITTER_STOP = "only_used_by_wendy",
+
+	ANNOUNCE_WORTOX_REVIVER_FAILTELEPORT = "Aww man!",
+
+    ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
 	BATTLECRY =
 	{
@@ -3955,14 +4026,29 @@ return{
             "What's the matter, girl? Did someone fall down a well?",
         },
 		WALTERHAT = "A Pinetree Pioneer should always wear appropriate headgear.",
-		SLINGSHOT = "You never know what you'll run into out in the wilderness.",
+		SLINGSHOT =
+		{
+			GENERIC = "You never know what you'll run into out in the wilderness.",
+			NOT_MINE = "I really shouldn't pick up things that don't belong to me.",
+		},
 		SLINGSHOTAMMO_ROCK = "They're not the best, but they'll work.",
 		SLINGSHOTAMMO_MARBLE = "I wish they weren't so hard to find!",
 		SLINGSHOTAMMO_THULECITE = "Shadow magic is pretty handy, I see why the Ancients liked it!",
         SLINGSHOTAMMO_GOLD = "These rounds are golden! Literally!",
+		SLINGSHOTAMMO_HONEY = "Sweet!",
         SLINGSHOTAMMO_SLOW = "That should slow them down!",
         SLINGSHOTAMMO_FREEZE = "Almost as chilling as my favourite radio shows!",
 		SLINGSHOTAMMO_POOP = "Gross... but a distraction is a distraction.",
+		SLINGSHOTAMMO_STINGER = "Better be careful with these.",
+		SLINGSHOTAMMO_MOONGLASS = "Now I can hit'em with the moon!",
+		SLINGSHOTAMMO_GELBLOB = "Icky. I like it.",
+		SLINGSHOTAMMO_SCRAPFEATHER = "They're in for a shock!",
+        SLINGSHOTAMMO_MOONGLASSCHARGED = "Moonshots!",
+        SLINGSHOTAMMO_DREADSTONE = "These will pack a real punch.",
+        SLINGSHOTAMMO_GUNPOWDER = "Woby, we're going out with a BANG!",
+        SLINGSHOTAMMO_LUNARPLANTHUSK = "Prickly-wickly.",
+        SLINGSHOTAMMO_PUREBRILLIANCE = "Yes, Woby. We are brilliant!",
+        SLINGSHOTAMMO_PUREHORROR = "Spooktacular! Hehe.",
         PORTABLETENT = "Nice and sturdy!",
         PORTABLETENT_ITEM = "I'll have this set up lickety-split!",
 
@@ -4004,6 +4090,10 @@ return{
 
         --Wortox
 --fallback to speech_wilson.lua         WORTOX_SOUL = "only_used_by_wortox", --only wortox can inspect souls
+        --WORTOX_DECOY is not needed because it uses the default WORTOX inspection.
+        WORTOX_NABBAG = "That looks fun to use.",
+        WORTOX_REVIVER = "Safety first still, right Woby?",
+        WORTOX_SOULJAR = "For a soul collection!",
 
         PORTABLECOOKPOT_ITEM =
         {
@@ -5414,6 +5504,24 @@ return{
         SHADOWTHRALL_PARASITE = "I think it just wants a friend.",
 
         PUMPKINCARVER = "Safety first, Woby!",
+
+        -- Meta 5
+        GHOSTLYELIXIR_LUNAR = "Ghosts can drink potions? Uh, of course I knew that!",
+        GHOSTLYELIXIR_SHADOW = "Ghosts can drink potions? Uh, of course I knew that!",
+        REVIVER_FLOWER = "TODO", -- [[TODO]]
+
+		SLINGSHOTMODKIT = "Time to mod my trusty slingshot?",
+		SLINGSHOT_BAND_PIGSKIN = "Mmm. Smells like bacon.",
+		SLINGSHOT_BAND_TENTACLE = "I think it twitched.",
+		SLINGSHOT_BAND_MIMIC = "Creepy!",
+		SLINGSHOT_FRAME_BONE = "Bad to the bone! Hehe.",
+		SLINGSHOT_FRAME_GEMS = "Fancy.",
+		SLINGSHOT_FRAME_WAGPUNK = "I could slingshot forever.",
+		SLINGSHOT_HANDLE_STICKY = "It's gross but effective!",
+		SLINGSHOT_HANDLE_SILK = "It's good tape.",
+		SLINGSHOT_HANDLE_VOIDCLOTH = "Oh yeah. Here we go.",
+
+        WOBY_BADGE_STATION = "You're the smartest dog ever, Woby!",
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

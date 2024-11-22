@@ -241,6 +241,7 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
 
     if self.can_show_skilltree and not TheInput:ControllerAttached() and not ThePlayer then
         self.switch_context_button:Show()
+        self.inst:ListenForEvent("debug_rebuild_skilltreedata", function() if self.currentContext == "skills" then self:SwitchContext() self:SwitchContext() end end, TheGlobalInstance)
     else
         self.switch_context_button:Hide()
     end

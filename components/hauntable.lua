@@ -3,11 +3,7 @@ local function DefaultOnHauntFn(inst, haunter)
 end
 
 local function onhaunted(self, haunted)
-    if haunted then
-        self.inst:AddTag("haunted")
-    else
-        self.inst:RemoveTag("haunted")
-    end
+    self.inst:AddOrRemoveTag("haunted", haunted)
 end
 
 local Hauntable = Class(function(self, inst)

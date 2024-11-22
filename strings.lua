@@ -676,12 +676,14 @@ STRINGS =
             BEEF_BELL = "Bond",
             KITCOON_NAMETAG = "Name",
             SHADOW_BEEF_BELL = "Bind",
+			SLINGSHOTMODKIT = "Mod",
         },
         STOPUSINGITEM =
         {
             GENERIC = "Stop",
             BEEF_BELL = "Break Bond",
             SHADOW_BEEF_BELL = "Break Binding",
+			SLINGSHOTMODKIT = "Stop Modding",
         },
         USEDOOR =
         {
@@ -702,6 +704,7 @@ STRINGS =
             MUSIC = "Play",
             RESKIN = "Sweep",
             TERRAFORM = "Marshify",
+            SQUEEZE = "Squeeze",
         },
         BLINK =
         {
@@ -999,11 +1002,13 @@ STRINGS =
             GENERIC = "Read",
             PYROKINESIS = "Stoke Embers",
 			REMOTE = "Use",
+            GHOSTTALK = "Whisper",
         },
 		CLOSESPELLBOOK = {
             GENERIC = "Close",
             PYROKINESIS = "Extinguish",
 			REMOTE = "Stop",
+            GHOSTTALK = "Quiet",
         },
 
         -- Pirates
@@ -1045,6 +1050,31 @@ STRINGS =
 
 		-- Hallowed Nights 2024
 		CARVEPUMPKIN = "Carve",
+
+        -- Meta 5
+        NABBAG = "Knab",
+
+        ATTACH_GHOST =
+        {
+            RELEASE = "RIP {ghost}",
+            RETRIEVE = "Call {ghost}",
+        },
+
+        GRAVEDIG = "Relocate",
+
+		MODSLINGSHOT = "Apply",
+		CONTAINER_INSTALL_ITEM =
+		{
+			GENERIC = "Install",
+			UNINSTALL = "Uninstall",
+		},
+
+        MUTATE =
+        {
+            MUTATE_TARGET = "Mutate {target}",
+        },
+
+        CUSTOMIZE_WOBY_BADGES = "Customize Woby Training",
     },
 
     -- PC controls get hex ranges EE90xx to EE9Fxx
@@ -3222,13 +3252,25 @@ STRINGS =
         WOBYSMALL = "Woby",
         WALTERHAT = "Pinetree Pioneer Hat",
 		SLINGSHOT = "Trusty Slingshot",
+		SLINGSHOT_FMT = "{name}'s Slingshot",
 		SLINGSHOTAMMO_ROCK = "Pebbles",
 		SLINGSHOTAMMO_MARBLE = "Marbles",
 		SLINGSHOTAMMO_THULECITE = "Cursed Rounds",
         SLINGSHOTAMMO_GOLD = "Gold Rounds",
+		SLINGSHOTAMMO_HONEY = "Sticky Rounds",
         SLINGSHOTAMMO_SLOW = "Slow-Down Rounds",
         SLINGSHOTAMMO_FREEZE = "Freeze Rounds",
 		SLINGSHOTAMMO_POOP = "Poop Pellets",
+        SLINGSHOTAMMO_STINGER = "Stinger Rounds",
+        SLINGSHOTAMMO_MOONGLASS = "Moon Glass Rounds",
+		SLINGSHOTAMMO_GELBLOB = "Icky Rounds",
+		SLINGSHOTAMMO_SCRAPFEATHER = "Shockscrap Rounds",
+        SLINGSHOTAMMO_MOONGLASSCHARGED = "Infused Moon Glass Rounds",
+        SLINGSHOTAMMO_DREADSTONE = "Dreadstone Rounds",
+        SLINGSHOTAMMO_GUNPOWDER = "Gunpowder Rounds",
+        SLINGSHOTAMMO_LUNARPLANTHUSK = "Brightshade Husk Rounds",
+        SLINGSHOTAMMO_PUREBRILIANCE = "Pure Brilliance Rounds",
+        SLINGSHOTAMMO_PUREHORROR = "Pure Horror Rounds",
         PORTABLETENT_ITEM = "Tent Roll",
         PORTABLETENT = "Camper's Tent",
 
@@ -3247,6 +3289,14 @@ STRINGS =
 
 		POCKETWATCH_PORTAL_ENTRANCE = "Time Rift",
 		POCKETWATCH_PORTAL_EXIT = "Time Rift",
+
+        -- Wortox
+        WORTOX_REVIVER_FMT = "{name}'s Twintailed Heart",
+        WORTOX_REVIVER = "Twintailed Heart", -- For an unclaimed Heart.
+        WORTOX_NABBAG = "Knabsack",
+        WORTOX_SOULJAR = "Soul Jar",
+        WORTOX_DECOY_FMT = "{name}?",
+        WORTOX_DECOY = "Wortox?", -- For an unnamed Decoy.
 
         -- Wigfrid
         BATTLESONG_DURABILITY = "Weaponized Warble",
@@ -4114,6 +4164,25 @@ STRINGS =
         PUMPKINCARVER1 = "Pumpkin Scooper",
         PUMPKINCARVER2 = "Pumpkin Knife",
         PUMPKINCARVER3 = "Pumpkin Saw",
+
+        -- Meta 5
+        GHOSTLYELIXIR_LUNAR = "Luminous Wrath",
+        GHOSTLYELIXIR_SHADOW = "Cursed Vexation",
+        ARMOR_FLOWERDRESS = "Floral Shroud",
+        GRAVEGUARD_GHOST = "Bigspook",
+
+		SLINGSHOTMODKIT = "Slingshot Field Kit",
+		SLINGSHOT_BAND_PIGSKIN = "Pig Skin Slingshot Band",
+		SLINGSHOT_BAND_TENTACLE = "Flailing Slingshot Band",
+		SLINGSHOT_BAND_MIMIC = "Possessed Slingshot Band",
+		SLINGSHOT_FRAME_BONE = "Bony Slingshot Frame",
+		SLINGSHOT_FRAME_GEMS = "Thulecite Slingshot Frame",
+		SLINGSHOT_FRAME_WAGPUNK = "Scrappy Slingshot Frame",
+		SLINGSHOT_HANDLE_STICKY = "Slingshot Sticky Handle",
+		SLINGSHOT_HANDLE_SILK = "Slingshot Grip Tape",
+		SLINGSHOT_HANDLE_VOIDCLOTH = "Slingshot Void Grip",
+
+        WOBY_BADGE_STATION = "Woby Training Station",        
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -4766,6 +4835,7 @@ STRINGS =
 		GHOSTLYELIXIR_SPEED = "Give your soul a little boo-st.",
 		GHOSTLYELIXIR_RETALIATION = "Give foes a taste of their own medicine.",
 		SISTURN = "A place to rest your weary soul.",
+        PETALS = "Purify your petals.",
 
 		-- Walter
         WALTERHAT = "Form and function over fashion.",
@@ -4774,9 +4844,20 @@ STRINGS =
 		SLINGSHOTAMMO_MARBLE = "Don't lose them, now!",
 		SLINGSHOTAMMO_THULECITE = "What could go wrong?",
         SLINGSHOTAMMO_GOLD = "Their fanciness makes them work better.",
+		SLINGSHOTAMMO_HONEY = "Sticky and sweet!",
         SLINGSHOTAMMO_SLOW = "What \"laws of physics\"?",
         SLINGSHOTAMMO_FREEZE = "Freeze foes in their tracks.",
 		SLINGSHOTAMMO_POOP = "Disgusting and distracting.",
+        SLINGSHOTAMMO_STINGER = "Stings all around!",
+        SLINGSHOTAMMO_MOONGLASS = "Shatter expectations.",
+		SLINGSHOTAMMO_GELBLOB = "Sticky and icky!",
+        SLINGSHOTAMMO_SCRAPFEATHER = "Shockingly shocking!",
+        SLINGSHOTAMMO_MOONGLASSCHARGED = "", --[[TODO]]
+        SLINGSHOTAMMO_DREADSTONE = "Dreadfully strong.",
+        SLINGSHOTAMMO_GUNPOWDER = "Explode onto the scene!",
+        SLINGSHOTAMMO_LUNARPLANTHUSK = "Ensnare your enemies.",
+        SLINGSHOTAMMO_PUREBRILIANCE = "You'll be over the Moon with these.",
+        SLINGSHOTAMMO_PUREHORROR = "Reinforcements against dark forces.",
         PORTABLETENT = "Portable protection from the elements.",
         PORTABLETENT_ITEM = "Portable protection from the elements.",
 
@@ -5180,6 +5261,27 @@ STRINGS =
         CARPENTRY_BLADE_MOONGLASS = "For when a regular blade just won't cut it.",
 
         GELBLOB_STORAGE_KIT = "Keep your perishables fresh in this deadly dark jelly.",
+
+        -- Meta 5
+        GHOSTLYELIXIR_LUNAR = "Abigail will pack an outerplanar punch.",
+        GHOSTLYELIXIR_SHADOW = "As if a ghost attack wasn't vexing enough.",
+        ARMOR_FLOWERDRESS = "Abigail wants to protect you.",
+
+        WOBY_BADGE_STATION = "Train your Pinetree Pooch!",
+
+		SLINGSHOTMODKIT = "Slingshotting is serious business.",
+		SLINGSHOT_BAND_PIGSKIN = "Sling farther!",
+		SLINGSHOT_BAND_TENTACLE = "Sling farther-er!",
+		SLINGSHOT_FRAME_BONE = "More ammo? Yes please!",
+		SLINGSHOT_FRAME_GEMS = "A little bit of this, and a little bit of that!",
+		SLINGSHOT_FRAME_WAGPUNK = "Embrace your ammo hoarding tendencies!",
+		SLINGSHOT_HANDLE_STICKY = "Get attached to your slingshot.",
+		SLINGSHOT_HANDLE_SILK = "Sling faster!",
+		SLINGSHOT_HANDLE_VOIDCLOTH = "Sling faster-er!",
+
+        WORTOX_REVIVER = "Soul revival of a single ghostly friend. May bring others closer.",
+        WORTOX_NABBAG = "Takes items off the ground and swings them into your enemies.",
+        WORTOX_SOULJAR = "Why let them be free when you can stuff them all into a jar?",
     },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
@@ -6444,6 +6546,29 @@ STRINGS =
         "It reads \"Don't worry, it's cozy.\" That's nice.",
         "\"And don't come back.\"",
         "The inscription reads \"Always Watching\". Odd.",
+    },
+
+    -- Epitaphs, for Wendy's gravestone construct
+    WENDY_EPITAPHS =
+    {
+        "\"Sweet slumber.\"",
+        "\"This world could not hold me.\"",
+        "\"I didn't like it here anyway.\"",
+        "\"I've better places to be.\"",
+    },
+
+    -- Lines for Wendy grave quests
+    WENDY_QUEST_EPITAPHS =
+    {
+        AXE = "\"Here lies a guy that needed an axe.\"",
+        PICKAXE = "\"Here lies a guy that needed a pickaxe.\"",
+        TRAP = "\"Here lies someone that needed to trap more food.\"",
+        TORCH = "\"Here lies a lady that needed more light.\"",
+        COOKBOOK = "\"Here lies someone that should have known more recipes.\"",
+        OCEANFISHINGROD = "\"Here lies someone that was never taught to fish.\"",
+        FARM_PLOW_ITEM = "\"Here lies someone that was never taught to farm.\"",
+        WINTERHAT = "\"He died of cold ears.\"",
+        BOOMERANG = "\"She died when her weapon failed to come back.\"",
     },
 
     MESSAGEBOTTLE_NOTES =
@@ -8198,7 +8323,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "Beta Branch", -- "Title/nBeta Branch"
+		MAINBANNER_BETA_TITLE = "Skill Spotlight - Beta Branch\nWalter, Wendy & Wortox", -- "Title/nBeta Branch"
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -9170,10 +9295,12 @@ STRINGS.UI =
         DISCONNECT_CONTROLLER = " to Disconnect",
         CONNECTING = "Connecting",
         NEW_SKIN_ANNOUNCEMENT = "%s got a new skin: ",
+		LOADING_ASSETS_PROGRESS = "Loading Assets: %s",
         LAUNCHING_SERVER = "Launching Server",
         SERVER_WORLDGEN = "Server is Generating World",
         INITIALIZING_SERVER = "Initializing Server",
         WORLDGENERATING_SERVER = "Generating World",
+		WORLDGENERATING_SERVER_PROGRESS = "Generating World: %s",
         CURRENTLY_SPEAKING = "Currently Speaking...",
         RETRYING = "Retrying",
         RESTORING = "Restoring Backup",
@@ -10647,6 +10774,8 @@ STRINGS.UI =
         USECAVES_NAME_CAVE = "{server}",
         USECAVES_NAME_NOCAVE = "No {server}",
         REMEMBERCOICE = "Remember my choice.",
+		WORLDGEN_FAILED_TITLE = "World Generation Failed",
+		WORLDGEN_FAILED_BODY = "Could not generate a world using these settings.\nDo you want to try again?",
     },
 
     CLOUDSERVERCREATIONSCREEN =
@@ -13836,6 +13965,27 @@ STRINGS.UI =
         OK     = "I'm ready!",
         CANCEL = "Let me think about it.",
     },
+
+    WOBY_BADGES_POPUP =
+    {
+        BADGES = {
+            SPEED_1 = "Agility I",
+            SPEED_2 = "Agility II",
+            RESISTANCE_1 = "Bravery I",
+            RESISTANCE_2 = "Bravery II",
+            FETCHING_1 = "Fetching I",
+            FETCHING_2 = "Fetching II",
+            DIGGING_1 = "Digging I",
+            DIGGING_2 = "Digging II",
+            BRAVERY_1 = "Support I",
+            BRAVERY_2 = "Support II",
+
+            EMPTY_SLOT = "Empty",
+        },
+
+        SAVE = "Confirm Training",
+        CANCEL = "Cancel",
+    },
 }
 
 --these are broken out into their own files for ease of editing
@@ -15025,6 +15175,14 @@ STRINGS.SKILLTREE = {
 
         AMPHIBIAN = "AMPHIBIAN",
         SWAMPMASTER = "MERMDOM",
+
+        NICE = "NICE",
+        NEUTRAL = "NEUTRAL",
+        NAUGHTY = "NAUGHTY",
+
+        WOBYBADGES = "WOBY TRAINING",
+        SLINGSHOTAMMO = "PROJECTILE PRO",
+        SLINGSHOTMODS = "SLINGSHOTSMITH",
     },
 
     ONLINE_DATA_USER_OFFLINE = "Login to use online skillset data.",
@@ -15039,6 +15197,356 @@ STRINGS.SKILLTREE = {
 
     ALLEGIANCE_LOCK_4_DESC = "Have no lunar affinity.",
     ALLEGIANCE_LOCK_5_DESC = "Have no shadow affinity.",
+
+    -- CHARACTER SKILL NAMES AND DESCRIPTIONS
+    WALTER =
+    {
+        WALTER_SLINGSHOT_AMMO_STINGER_TITLE = "Stinger Rounds Maker",
+        WALTER_SLINGSHOT_AMMO_STINGER_DESC = "Learn to craft Stinger Rounds: an ammo made of Stingers that does damage in a small area when hitting a creature.",
+
+        WALTER_SLINGSHOT_AMMO_MOONGLASSCHARGED_TITLE = "Moon Glass Rounds Maker",
+        WALTER_SLINGSHOT_AMMO_MOONGLASSCHARGED_DESC = "Learn to craft Infused Moon Glass Rounds: an ammo made of Infused Moon Shards that [...].", --TODO(DiogoW)
+
+        WALTER_SLINGSHOT_AMMO_DREADSTONE_TITLE = "Dreadstone Rounds Maker",
+        WALTER_SLINGSHOT_AMMO_DREADSTONE_DESC = "Learn to craft Dreadstone Rounds: an ammo made of Dreadstone that does a dreadful amount of damage.",
+
+        WALTER_SLINGSHOT_AMMO_SCRAPFEATHER_TITLE = "Shockscrap Rounds Maker",
+        WALTER_SLINGSHOT_AMMO_SCRAPFEATHER_DESC = "Learn to craft Shockscrap Rounds: an ammo made of Scrap and Saffron Feathers that does electric damage.",
+
+        WALTER_SLINGSHOT_AMMO_HONEY_TITLE = "Sticky Rounds Maker",
+        WALTER_SLINGSHOT_AMMO_HONEY_DESC = "Learn to craft Sticky Rounds: an ammo made of Honey that slightly slows down creatures.",
+
+        WALTER_SLINGSHOT_AMMO_MOONGLASS_TITLE = "Moon Glass Rounds Maker",
+        WALTER_SLINGSHOT_AMMO_MOONGLASS_DESC = "Learn to craft Moon Glass Rounds: an ammo made of Moon Shards that does damage in a considerable area when hitting a creature.",
+
+        WALTER_SLINGSHOT_AMMO_GUNPOWDER_TITLE = "Gunpowder Rounds Maker",
+        WALTER_SLINGSHOT_AMMO_GUNPOWDER_DESC = "Learn to craft Gunpowder Rounds: an ammo made of Gunpowder that explodes on contact, doing considerable damage!",--TODO
+
+        ---------------------------------------------------------------------------------
+
+        WALTER_SLINGSHOT_AMMO_ECONOMY_LOCK_DESC = "Learn 5 Projectile Pro skills to unlock.",
+
+        WALTER_SLINGSHOT_AMMO_ECONOMY_1_TITLE = "Projectile Pro I",
+        WALTER_SLINGSHOT_AMMO_ECONOMY_1_DESC = "Learn how to craft ammo slightly more efficiently.",
+
+        WALTER_SLINGSHOT_AMMO_ECONOMY_2_TITLE = "Projectile Pro II",
+        WALTER_SLINGSHOT_AMMO_ECONOMY_2_DESC = "Learn how to craft ammo considerable more efficiently.",
+
+        ---------------------------------------------------------------------------------
+
+        WALTER_WOBY_BADGE_SPEED_1_TITLE = "Agility Training I",
+        WALTER_WOBY_BADGE_SPEED_1_DESC = "Unlocks the first agility badge at the Woby Training Station.\nThis badge considerably increases Woby's speed. It improves based on badge progress.",
+
+        WALTER_WOBY_BADGE_SPEED_2_TITLE = "Agility Training II",
+        WALTER_WOBY_BADGE_SPEED_2_DESC = "Unlocks the second agility badge at the Woby Training Station.\nThis badge greatly increases Woby's speed.",
+
+        WALTER_WOBY_BADGE_RESISTANCE_1_TITLE ="Bravery Training I",
+        WALTER_WOBY_BADGE_RESISTANCE_1_DESC = "Unlocks the first bravery badge at the Woby Training Station.\nThis badge considerably increases the damage you can take before Woby knocks you off. It improves based on badge progress.",
+
+        WALTER_WOBY_BADGE_RESISTANCE_2_TITLE = "Bravery Training II",
+        WALTER_WOBY_BADGE_RESISTANCE_2_DESC = "Unlocks the second bravery badge at the Woby Training Station.\nThis badge greatly increases the damage you can take before Woby knocks you off.",
+
+        WALTER_WOBY_BADGE_BRAVERY_1_TITLE = "Support Training I",
+        WALTER_WOBY_BADGE_BRAVERY_1_DESC = "Unlocks the first support badge at the Woby Training Station.\nThis badge considerably decreases the loss of sanity when taking damage while riding Woby. It improves based on badge progress.",
+
+        WALTER_WOBY_BADGE_BRAVERY_2_TITLE = "Support Training II",
+        WALTER_WOBY_BADGE_BRAVERY_2_DESC = "Unlocks the second support badge at the Woby Training Station.\nThis badge greatly decreases the loss of sanity when taking damage while riding Woby.",
+
+        WALTER_WOBY_BADGE_DIGGING_1_TITLE = "Digging Training I",
+        WALTER_WOBY_BADGE_DIGGING_1_DESC = "Unlocks the first digging badge at the Woby Training Station.\nThis badge teaches Woby how to dig to find items. The chance of a successful excavation increases with badge progress.",
+
+        WALTER_WOBY_BADGE_DIGGING_2_TITLE = "Digging Training II",
+        WALTER_WOBY_BADGE_DIGGING_2_DESC = "Unlocks the second digging badge at the Woby Training Station.\nHaving the second level of this badge decreases the time between excavations.",
+
+        WALTER_WOBY_BADGE_FETCHING_1_TITLE = "Fetching Training I",
+        WALTER_WOBY_BADGE_FETCHING_1_DESC = "Unlocks the first fetching badge at the Woby Training Station.\nThis badge teaches Woby how assist you in picking up items. The chance of a successful fetch increases with badge progress.",
+
+        WALTER_WOBY_BADGE_FETCHING_2_TITLE = "Fetching Training II",
+        WALTER_WOBY_BADGE_FETCHING_2_DESC = "Unlocks the second fetching badge at the Woby Training Station.\nHaving the second level of this badge decreases fetching cooldown and increases the range.",
+
+        ---------------------------------------------------------------------------------
+
+		WALTER_SLINGSHOT_MODDING_TITLE = "Slingshotsmith",
+		WALTER_SLINGSHOT_MODDING_DESC = "Unlocks the Slingshot Field Kit and some basic parts for customizing your Slingshot.",
+
+		WALTER_SLINGSHOT_HANDLE_STICKY_TITLE = "Sticky Handle",
+		WALTER_SLINGSHOT_HANDLE_STICKY_DESC = "Unlocks a handle mod that prevents the Slingshot from slipping out of your hands.",
+
+		WALTER_SLINGSHOT_HANDLE_VOIDCLOTH_TITLE = "Void Grip",
+		WALTER_SLINGSHOT_HANDLE_VOIDCLOTH_DESC = "Unlocks a handle mod that improves your firing rate.",
+
+		WALTER_SLINGSHOT_BAND_TENTACLE_TITLE = "Flailing Band",
+		WALTER_SLINGSHOT_BAND_TENTACLE_DESC = "Unlocks a rubber band mod that improves your firing distance.",
+
+		WALTER_SLINGSHOT_FRAME_GEMS_TITLE = "Thulecite Frame",
+		WALTER_SLINGSHOT_FRAME_GEMS_DESC = "Unlocks a frame mod that adds a special ammo slot used for an alternate special attack.",
+
+		WALTER_SLINGSHOT_FRAME_WAGPUNK_TITLE = "Scrappy Frame",
+		WALTER_SLINGSHOT_FRAME_WAGPUNK_DESC = "Unlocks a frame mod that expands your ammo slot size and adds an alternate charged attack.",
+
+        ---------------------------------------------------------------------------------
+
+        WALTER_ALLEGIANCE_LOCK_1_DESC = "Learn 12 skills to unlock.", -- TODO(DiogoW): Something else?
+
+        WALTER_ALLEGIANCE_LUNAR_TITLE = "Lunar Affinity",
+        WALTER_ALLEGIANCE_LUNAR_DESC = "Learn to craft the Brightshade Husk Rounds. Just damage, for now... More coming soon!",
+
+        WALTER_ALLEGIANCE_SHADOW_TITLE = "Shadow Affinity",
+        WALTER_ALLEGIANCE_SHADOW_DESC = "Learn to craft the Icky Rounds. These rounds greatly slows down creatures. More coming soon!",
+    },
+
+    --[[WANDA = {
+    },]]
+
+    --[[WARLY = {
+    },]]
+
+    WATHGRITHR = {
+        WATHGRITHR_ARSENAL_SPEAR_1_TITLE = "Bragi's Blessing I",
+        WATHGRITHR_ARSENAL_SPEAR_1_DESC = "Inspiration gain rate will increase a little when attacking using Battle Spears.",
+
+        WATHGRITHR_ARSENAL_SPEAR_2_TITLE = "Bragi's Blessing II",
+        WATHGRITHR_ARSENAL_SPEAR_2_DESC = "Inspiration gain rate will increase a fair amount when attacking using Battle Spears.",
+
+        WATHGRITHR_ARSENAL_SPEAR_3_TITLE = "Elding Spear",
+        WATHGRITHR_ARSENAL_SPEAR_3_DESC = "Learn to craft the Elding Spear: an electric weapon that does more damage to wet targets.",
+
+        WATHGRITHR_ARSENAL_SPEAR_4_TITLE = "Elding Spear Enhancement I",
+        WATHGRITHR_ARSENAL_SPEAR_4_DESC = "The Elding Spear can now perform a special attack.\nThis attack repairs Charged Elding Spears if it hits a target.",
+
+        WATHGRITHR_ARSENAL_SPEAR_5_TITLE = "Elding Spear Enhancement II",
+        WATHGRITHR_ARSENAL_SPEAR_5_DESC = "Upgrade the Elding Spear using Restrained Static to deal +20 Planar Damage.",
+
+        ----------------------------------------------------------------------------
+
+        WATHGRITHR_ARSENAL_HELMET_1_TITLE = "Hard Helm I",
+        WATHGRITHR_ARSENAL_HELMET_1_DESC = "Battle Helms will be a little more durable when worn by Wigfrid.",
+
+        WATHGRITHR_ARSENAL_HELMET_2_TITLE = "Hard Helm II",
+        WATHGRITHR_ARSENAL_HELMET_2_DESC = "Battle Helms will be a fair amount more durable when worn by Wigfrid.",
+
+        WATHGRITHR_ARSENAL_HELMET_3_TITLE = "Commander's Helm",
+        WATHGRITHR_ARSENAL_HELMET_3_DESC = "Learn to craft the Commander's Helm: a helm that protects against knockback attacks.",
+
+        WATHGRITHR_ARSENAL_HELMET_4_TITLE = "Commander's Helm Enhancement I",
+        WATHGRITHR_ARSENAL_HELMET_4_DESC = "The Commander's Helm now has protection against planar damage.",
+
+        WATHGRITHR_ARSENAL_HELMET_5_TITLE = "Commander's Helm Enhancement II",
+        WATHGRITHR_ARSENAL_HELMET_5_DESC = "Wigfrid's natural healing ability will repair her Commander's Helm when she continues to fight at maximum health.",
+
+
+        ----------------------------------------------------------------------------
+
+        WATHGRITHR_ARSENAL_SHIELD_1_TITLE = "Battle Rönd",
+        WATHGRITHR_ARSENAL_SHIELD_1_DESC = "Learn to craft the Battle Rönd. This shield can be used to attack, block attacks, and provide extra protection while equipped.",
+
+        WATHGRITHR_ARSENAL_SHIELD_2_TITLE = "Battle Rönd Enhancement I",
+        WATHGRITHR_ARSENAL_SHIELD_2_DESC = "The duration of the Battle Rönd's ability to block attacks will be increased.",
+
+        WATHGRITHR_ARSENAL_SHIELD_3_TITLE = "Battle Rönd Enhancement II",
+        WATHGRITHR_ARSENAL_SHIELD_3_DESC = "After blocking an attack with the Battle Rönd, your next attack within 5 seconds will deal +15-30 damage based on the damage blocked.",
+
+        ----------------------------------------------------------------------------
+
+        WATHGRITHR_BEEFALO_1_TITLE = "Noble Mount I",
+        WATHGRITHR_BEEFALO_1_DESC = "Beefalos will be domesticated 15% faster.",
+
+        WATHGRITHR_BEEFALO_2_TITLE = "Noble Mount II",
+        WATHGRITHR_BEEFALO_2_DESC = "Beefalos will allow you to ride them for 30% longer.",
+
+        WATHGRITHR_BEEFALO_3_TITLE = "Noble Mount III",
+        WATHGRITHR_BEEFALO_3_DESC = "Riding a beefalo will make your inspiration slowly rise until it reaches the halfway mark.",
+
+        WATHGRITHR_BEEFALO_SADDLE_TITLE = "Battle Saddle",
+        WATHGRITHR_BEEFALO_SADDLE_DESC = "Learn to craft a new Beefalo Saddle that protects your Beefalo.",
+
+        ----------------------------------------------------------------------------
+
+        WATHGRITHR_SONGS_CONTAINER_LOCK_DESC = "Have 6 different Battle Calls in your inventory to unlock.",
+
+        WATHGRITHR_SONGS_CONTAINER_TITLE = "Battle Call Canister",
+        WATHGRITHR_SONGS_CONTAINER_DESC = "Learn to craft the Battle Call Canister, a storage solution for Battle Songs and Battle Stingers.",
+
+        ----------------------------------------------------------------------------
+
+        WATHGRITHR_SONGS_INSTANTSONG_CD_LOCK_DESC = "Perform Battle Stingers 10 times to unlock.",
+
+        WATHGRITHR_SONGS_INSTANTSONG_CD_TITLE = "Fighting Words",
+        WATHGRITHR_SONGS_INSTANTSONG_CD_DESC = "Battle Stingers will no longer consume Inspiration, and instead have a cooldown.",
+
+        ----------------------------------------------------------------------------
+
+        WATHGRITHR_SONGS_REVIVEWARRIOR_LOCK_DESC = "Play a Beefalo Horn to unlock.",
+
+        WATHGRITHR_SONGS_REVIVEWARRIOR_TITLE = "Encore",
+        WATHGRITHR_SONGS_REVIVEWARRIOR_DESC = "Learn to craft the Warrior's Reprise: Bring your allies back to life for an encore performance.",
+
+        ----------------------------------------------------------------------------
+
+        WATHGRITHR_COMBAT_DEFENSE_TITLE = "Mystic Resilience",
+        WATHGRITHR_COMBAT_DEFENSE_DESC = "Receive a divine blessing that will provide you with +5 Planar Defense.",
+        ----------------------------------------------------------------------------
+
+        WATHGRITHR_ALLEGIANCE_LOCK_1_DESC = "Learn 12 skills to unlock.",
+
+        WATHGRITHR_ALLEGIANCE_LUNAR_TITLE = "Lunar Melodist",
+        WATHGRITHR_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity with the ability to craft the Enlightened Lullaby.\nAllies take less damage from Lunar Aligned enemies and deal bonus damage to Shadow Aligned enemies.",
+
+        WATHGRITHR_ALLEGIANCE_SHADOW_TITLE = "Shadow Chanteuse",
+        WATHGRITHR_ALLEGIANCE_SHADOW_DESC = "The Queen will reward your loyalty with the ability to craft the Dark Lament.\nAllies take less damage from Shadow Aligned enemies and deal bonus damage to Lunar Aligned enemies.",
+    },
+
+    --[[WAXWELL = {
+    },]]
+
+    --[[WEBBER = {
+    },]]
+
+    WENDY = {
+        WENDY_SISTURN_1_TITLE = "Blessed Sisturn I",
+        WENDY_SISTURN_1_DESC = "The chilling aura of death preserves the petals placed in the sisturn longer.",
+        WENDY_SISTURN_2_TITLE = "Blessed Sisturn II",
+        WENDY_SISTURN_2_DESC = "Wendy's resistance to scary things is increased, and she grants some of that confidence to others nearby.",
+        WENDY_SISTURN_3_TITLE = "Blessed Sisturn III",
+        WENDY_SISTURN_3_DESC = "Abigail can be sent to rest at her urn, letting her health rise above normal levels.",
+
+        WENDY_GHOSTCOMMAND_1_TITLE = "Team Spirit I",
+        WENDY_GHOSTCOMMAND_1_DESC = "Wendy can remind Abigail she's a ghost, able to be unseen by her enemies to escape bad situations.",
+        WENDY_GHOSTCOMMAND_2_TITLE = "Team Spirit II",
+        WENDY_GHOSTCOMMAND_2_DESC = "Abigail can dash to anywhere Wendy needs reinforcement.",
+        WENDY_GHOSTCOMMAND_3_TITLE = "Team Spirit III",
+        WENDY_GHOSTCOMMAND_3_DESC = "Abigail can use her powers as a spooky ghost to scare things.",
+
+        WENDY_SMALLGHOST_1_TITLE = "Pipspook Quest I",
+        WENDY_SMALLGHOST_1_DESC = "Pipspook lost toys aren't quite so far away.",
+        WENDY_SMALLGHOST_2_TITLE = "Pipspook Quest II",
+        WENDY_SMALLGHOST_2_DESC = "Pipspooks remember more lost toys to find.",
+        WENDY_SMALLGHOST_3_TITLE = "Pipspook Quest III",
+        WENDY_SMALLGHOST_3_DESC = "Pipspooks produce more Mourning Glories.",
+
+        WENDY_GRAVESTONE_1_TITLE = "Grave Beautification",
+        WENDY_GRAVESTONE_1_DESC = "Wendy can adorn graves with flowers inviting the spirits living there to come out and visit.",
+        WENDY_GRAVESTONE_2_TITLE = "Final Resting Place?",
+        WENDY_GRAVESTONE_2_DESC = "Wendy can dig up gravestones and relocate them.",
+        WENDY_MAKEGRAVEMOUNDS_TITLE = "Gravestones By Wendy",
+        WENDY_MAKEGRAVEMOUNDS_DESC = "Wendy can make her own gravestones.",
+
+        WENDY_POTION_1_TITLE = "Strong Brew I",
+        WENDY_POTION_1_DESC = "Elixirs with one day duration will now last a third longer.",
+        WENDY_POTION_2_TITLE = "Strong Brew II",
+        WENDY_POTION_2_DESC = "Elixirs with one day duration will now last two thirds longer.",
+        WENDY_POTION_3_TITLE = "Strong Brew III",
+        WENDY_POTION_3_DESC = "Elixirs with one day duration will now last two days.",
+
+        WENDY_PETAL_1_TITLE = "Dark Petals I",
+        WENDY_PETAL_1_DESC = "Evil flowers hold no fear for Wendy.\nShe can purify Dark Petals into regular petals.",
+        WENDY_PETAL_2_TITLE = "Dark Petals II",
+        WENDY_PETAL_2_DESC = "Abigail teaches Wendy to make a shroud of flowers to wear.\nWhen worn, Wendy's wounds will be transferred to Abigail until she is unsummoned.",
+
+        WENDY_AVENGING_GHOST_TITLE = "Vengeful Ghost",
+        WENDY_AVENGING_GHOST_DESC = "When Wendy or her friends are killed, their spirit is vengeful and able to wreak havoc on the living world for a short time.",
+
+        WENDY_SHADOW_LOCK_1_DESC = "Defeat the Fuel Weaver",
+        WENDY_SHADOW_LOCK_2_DESC = "Have no other allegiance",
+
+        WENDY_SHADOW_1_TITLE = "Shadow Allegiance I",
+        WENDY_SHADOW_1_DESC = "Abigail attunes with the shadows and earns some Planar Defense.",
+        WENDY_SHADOW_2_TITLE = "Shadow Allegiance II",
+        WENDY_SHADOW_2_DESC = "Wendy can craft an elixir infused with shadow magic that increases Abigail's Vex duration.",
+        WENDY_SHADOW_3_TITLE = "Shadow Allegiance III",
+        WENDY_SHADOW_3_DESC = "Dark Magic is released whenever Wendy uses the Murder action that creates a burst of Planar damage when it hits Abigail.",
+
+        WENDY_LUNAR_LOCK_1_DESC = "Defeat the Celestial Champion",
+        WENDY_LUNAR_LOCK_2_DESC = "Have no other allegiance",
+
+        WENDY_LUNAR_1_TITLE = "Lunar Allegiance I",
+        WENDY_LUNAR_1_DESC = "Abigail attunes with lunar energies and earns some Planar Defense.",
+        WENDY_LUNAR_2_TITLE = "Lunar Allegiance II",
+        WENDY_LUNAR_2_DESC = "Wendy can craft an elixir infused with lunar energy that gives Abigail a boost of Planar Damage for its duration.",
+        WENDY_LUNAR_3_TITLE = "Lunar Allegiance III",
+        WENDY_LUNAR_3_DESC = "Wendy can use the Moon Dial during a full moon to fill Abigail with lunar energy, turning her into a Gestalt. The Moon Dial can restore her ghost status during a new moon.",
+    },
+
+    --[[WICKERBOTTOM = {
+    },]]
+
+    WILLOW = {
+        -- LIGHTER
+        WILLOW_CONTROLLED_BURN_1_TITLE = "Controlled Burning",
+        WILLOW_CONTROLLED_BURN_1_DESC = "Controlled fires you set won't spread, and burnable loot will just smolder.\nItems like torches and Willow's lighter have a 100% chance to ignite targets.",
+        WILLOW_CONTROLLED_BURN_2_TITLE = "Burn Duration",
+        WILLOW_CONTROLLED_BURN_2_DESC = "Creatures burn for a longer time.",
+        WILLOW_CONTROLLED_BURN_3_TITLE = "Fire Fighter",
+        WILLOW_CONTROLLED_BURN_3_DESC = "Your fires deal more damage to creatures over time.",
+
+        WILLOW_ATTUNED_LIGHTER_TITLE = "Hungry Lighter",
+        WILLOW_ATTUNED_LIGHTER_DESC = "Stop things from burning by absorbing the flame (even when they're only smoldering) with your lighter.",
+        WILLOW_EMBERS_TITLE = "Ember Tender",
+        WILLOW_EMBERS_DESC = "Collect and use Embers to perform Pyrokinetic effects.\nYou can collect Embers from burned creatures with your lighter.\nUse Embers to refuel the lighter.",
+
+        WILLOW_FIRE_BURST_TITLE = "Spontaneous Combustion",
+        WILLOW_FIRE_BURST_DESC = "Use Embers to ignite creatures in an area near you.",
+        WILLOW_FIRE_BALL_TITLE = "Fire Ball",
+        WILLOW_FIRE_BALL_DESC = "Use Embers to create a ball of flame for heat and light.",
+        WILLOW_FIRE_FRENZY_TITLE = "Burning Frenzy",
+        WILLOW_FIRE_FRENZY_DESC = "For 60 seconds, add 25% weapon damage when attacking burning targets.",
+
+        WILLOW_LIGHTRADIUS_1_TITLE = "Brighter Lighter I",
+        WILLOW_LIGHTRADIUS_1_DESC = "Increase your lighter's brightness a little.",
+        WILLOW_LIGHTRADIUS_2_TITLE = "Brighter Lighter II",
+        WILLOW_LIGHTRADIUS_2_DESC = "Increase your lighter's brightness a lot.",
+
+        -- BERNIE
+        WILLOW_BERNIESPEED_1_TITLE = "Accelerant I",
+        WILLOW_BERNIESPEED_1_DESC = "Bernie's movement speed is a little faster.",
+        WILLOW_BERNIESPEED_2_TITLE = "Accelerant II",
+        WILLOW_BERNIESPEED_2_DESC = "Bernie's movement speed is much faster.",
+
+        WILLOW_BERNIESANITY_1_TITLE = "Bearly Sane I",
+        WILLOW_BERNIESANITY_1_DESC = "Bernie will become animated at a higher sanity threshold.",
+        WILLOW_BERNIESANITY_2_TITLE = "Bearly Sane II",
+        WILLOW_BERNIESANITY_2_DESC = "Bernie will become animated at an even higher sanity threshold.",
+        WILLOW_BERNIEAI_TITLE = "Hot-Headed",
+        WILLOW_BERNIEAI_DESC = "Bernie will activate to fight hostile lunar and shadow aligned creatures regardless of Willow's sanity.",
+
+
+        WILLOW_BERNIEREGEN_1_TITLE = "Patch Up I",
+        WILLOW_BERNIEREGEN_1_DESC = "Bernie's health regenerates slowly.",
+        WILLOW_BERNIEREGEN_2_TITLE = "Patch Up II",
+        WILLOW_BERNIEREGEN_2_DESC = "Bernie's health regenerates quicker.",
+
+        WILLOW_BERNIE_LOCK_DESC = "Learn at least 4 Bernie skills to unlock.",
+
+        WILLOW_BERNIEHEALTH_1_TITLE = "Tough Stuffing I",
+        WILLOW_BERNIEHEALTH_1_DESC = "Bernie's total health is a little higher.",
+        WILLOW_BERNIEHEALTH_2_TITLE = "Tough Stuffing II",
+        WILLOW_BERNIEHEALTH_2_DESC = "Bernie's total health is much higher.",
+
+        WILLOW_BERNIE_DOUBLE_LOCK_DESC = "Learn at least 8 Bernie skills to unlock.",
+
+        WILLOW_BURNINGBERNIE_TITLE = "Burning Bernie",
+        WILLOW_BURNINGBERNIE_DESC = "Igniting Bernie will give him a firey aura for a short time.\nEnemies that attack an ignited Bernie will take damage back.",
+
+
+        -- ALLIEGIANCE
+        WILLOW_ALLEGIANCE_LOCK_1_DESC = "Find and defeat the Ancient Fuelweaver.\nHave no Lunar Allegiance Skills.",
+        WILLOW_ALLEGIANCE_LOCK_2_DESC = "Learn 6 Bernie skills to unlock.",
+        WILLOW_ALLEGIANCE_LOCK_3_DESC = "Learn 7 Lighter skills to unlock.",
+
+        WILLOW_ALLEGIANCE_SHADOW_1_TITLE = "Shadow Fire-Raiser",
+        WILLOW_ALLEGIANCE_SHADOW_1_DESC = "The Queen will reward your loyalty with the power of shadow fire.\nSummon multiple tendrils of black flame to seek out hostile targets.",
+        WILLOW_ALLEGIANCE_SHADOW_2_TITLE = "Shadow Bernie",
+        WILLOW_ALLEGIANCE_SHADOW_2_DESC = "Tap into the darkness to strengthen Bernie's planar attack and defense, particularly against lunar enemies.",
+
+        WILLOW_ALLEGIANCE_LOCK_4_DESC = "Find and defeat the Celestial Champion.\nHave no Shadow Allegiance Skills.",
+        WILLOW_ALLEGIANCE_LOCK_5_DESC = "Learn 7 Lighter skills to unlock.",
+        WILLOW_ALLEGIANCE_LOCK_6_DESC = "Learn 6 Bernie skills to unlock.",
+
+        WILLOW_ALLEGIANCE_LUNAR_1_TITLE = "Lunar Fire-Raiser",
+        WILLOW_ALLEGIANCE_LUNAR_1_DESC = "The Cryptic Founder will reward your curiosity with the formula for lunar flames.\nUse Embers to blast cold lunar flames.",
+        WILLOW_ALLEGIANCE_LUNAR_2_TITLE = "Lunar Bernie",
+        WILLOW_ALLEGIANCE_LUNAR_2_DESC = "Entreat the moon to strengthen Bernie's planar attack and defense, particularly against shadow enemies.",
+    },
 
     WILSON = {
 
@@ -15125,6 +15633,159 @@ STRINGS.SKILLTREE = {
 
         WILSON_ALLEGIANCE_LUNAR_TITLE = "Lunar Innovator",
         WILSON_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity with the secrets of Lunar Transmutation.",
+    },
+
+    WINONA = {
+        -- Low shelf.
+        WINONA_SPOTLIGHT_HEATED_TITLE = "Hotlight",
+        WINONA_SPOTLIGHT_HEATED_DESC = "Upgrade your Spotlights to give off heat when it's cold out.",
+        WINONA_SPOTLIGHT_RANGE_TITLE = "Spacious Spotlight",
+        WINONA_SPOTLIGHT_RANGE_DESC = "Upgrade your Spotlights to illuminate a larger area.",
+        WINONA_PORTABLE_STRUCTURES_TITLE = "Portability",
+        WINONA_PORTABLE_STRUCTURES_DESC = "Easily dismantle your machines, and learn how to build a Handy Remote to remotely control Catapults.",
+        WINONA_GADGET_RECHARGE_TITLE = "Quick Charge",
+        WINONA_GADGET_RECHARGE_DESC = "Gadgets placed next to a Generator or G.E.M.erator recharge 100% faster.",
+        WINONA_BATTERY_IDLEDRAIN_TITLE = "Energy-Saver",
+        WINONA_BATTERY_IDLEDRAIN_DESC = "Generators and G.E.M.erators no longer consume energy while they're not in use.\nMachines connected to Generators won't consume energy while in sleep mode.",
+
+        WINONA_LOWSHELF_LOCK_DESC = "Learn 3 skills on the shelf below to unlock the skills on the shelf above.",
+        -- Mid shelf.
+        WINONA_CATAPULT_SPEED_1_TITLE = "Rapid-Fire I",
+        WINONA_CATAPULT_SPEED_1_DESC = "Tune-up your Catapults to increase their firing rate by 5%.",
+        WINONA_CATAPULT_SPEED_2_TITLE = "Rapid-Fire II",
+        WINONA_CATAPULT_SPEED_2_DESC = "Tune-up your Catapults to increase their firing rate by 10%.",
+        WINONA_CATAPULT_SPEED_3_TITLE = "Rapid-Fire III",
+        WINONA_CATAPULT_SPEED_3_DESC = "Tune-up your Catapults to increase their firing rate by 20%.",
+        WINONA_CATAPULT_AOE_1_TITLE = "Explosive Volley I",
+        WINONA_CATAPULT_AOE_1_DESC = "Modify your Catapults to deal damage to a 25% larger area.",
+        WINONA_CATAPULT_AOE_2_TITLE = "Explosive Volley II",
+        WINONA_CATAPULT_AOE_2_DESC = "Modify your Catapults to deal damage to a 50% larger area.",
+        WINONA_CATAPULT_AOE_3_TITLE = "Explosive Volley III",
+        WINONA_CATAPULT_AOE_3_DESC = "Modify your Catapults to deal damage to a 100% larger area.",
+
+        WINONA_PORTABLE_STRUCTURES_LOCK_DESC = "Requires the Portability skill and access to this shelf to unlock.",
+        WINONA_CATAPULT_VOLLEY_TITLE = "Precise Targeting",
+        WINONA_CATAPULT_VOLLEY_DESC = "All Catapults within range of your Handy Remote fire at your selected target.",
+        WINONA_CATAPULT_BOOST_TITLE = "Barrage",
+        WINONA_CATAPULT_BOOST_DESC = "All Catapults within range of your Handy Remote have an increased firing rate for a short period of time.",
+        WINONA_BATTERY_EFFICIENCY_1_TITLE = "Greater Generator I",
+        WINONA_BATTERY_EFFICIENCY_1_DESC = "Boost the efficiency of Generators and G.E.M.erators by 25%.",
+        WINONA_BATTERY_EFFICIENCY_2_TITLE = "Greater Generator II",
+        WINONA_BATTERY_EFFICIENCY_2_DESC = "Boost the efficiency of Generators and G.E.M.erators by 50%.",
+        WINONA_BATTERY_EFFICIENCY_3_TITLE = "Greater Generator III",
+        WINONA_BATTERY_EFFICIENCY_3_DESC = "Boost the efficiency of Generators and G.E.M.erators by 100%.",
+
+        WINONA_MIDSHELF_LOCK_DESC = "Learn 6 total skills from the shelves below to unlock the skills on the shelf above.",
+        -- Shadow.
+        WINONA_SHADOW_1_TITLE = "Nightmare Generator",
+        WINONA_SHADOW_1_DESC = "Learn how to utilize Nightmare Fuel as a fuel source for Generators.",
+        WINONA_SHADOW_2_TITLE = "Pure Horror Generator",
+        WINONA_SHADOW_2_DESC = "Learn how to utilize Pure Horror as a fuel source for Generators.",
+
+        WINONA_SHADOW_3_LOCK_DESC = "Requires the Portability and Pure Horror Generator skills to unlock.",
+        WINONA_SHADOW_3_TITLE = "Shadow Strike",
+        WINONA_SHADOW_3_DESC = "Use your Handy Remote to select a target for a shadow-infused Catapult attack.",
+
+        WINONA_CHARLIE_1_TITLE = "Shadow Seeker I",
+        WINONA_CHARLIE_1_DESC = "The Queen imparts a design for enchanted glasses that reveal hidden traces of shadow magic.\nDoes she want you to find her?",
+
+        WINONA_CHARLIE_2_LOCK_DESC = "Requires the Shadow Seeker I skill, and to not have Founder's Keepers II to unlock.",
+        WINONA_CHARLIE_2_TITLE = "Shadow Seeker II",
+        WINONA_CHARLIE_2_DESC = "Become more adept at locating traces of shadow magic.\nThe Queen will watch over you.",
+        -- Lunar.
+        WINONA_LUNAR_1_TITLE = "Enlightened G.E.M.erator",
+        WINONA_LUNAR_1_DESC = "Learn how to utilize Enlightened Shards as a fuel source for G.E.M.erators.",
+        WINONA_LUNAR_2_TITLE = "Brilliance G.E.M.erator",
+        WINONA_LUNAR_2_DESC = "Learn how to utilize Pure Brilliance as a fuel source for G.E.M.erators.",
+
+        WINONA_LUNAR_3_LOCK_DESC = "Requires the Portability and Brilliance G.E.M.erator skills to unlock.",
+        WINONA_LUNAR_3_TITLE = "Enlightened Strike",
+        WINONA_LUNAR_3_DESC = "Use your Handy Remote to select a target for a lunar essence-infused Catapult attack.",
+
+        WINONA_WAGSTAFF_1_TITLE = "Founder's Keepers I",
+        WINONA_WAGSTAFF_1_DESC = "Build a device inspired by the Cryptic Founder's designs to track down hidden supply caches.\nGain mastery over all technology found in Cacheboxes.",
+
+        WINONA_WAGSTAFF_2_LOCK_DESC = "Requires the Founder's Keepers I skill, and to not have Shadow Seeker II to unlock.",
+        WINONA_WAGSTAFF_2_TITLE = "Founder's Keepers II",
+        WINONA_WAGSTAFF_2_DESC = "Broaden the scope of your Inspectacles to locate higher-grade supply caches.\nGain mastery over all technology found in Advanced Cacheboxes.",
+    },
+
+    WOLFGANG = {
+        WOLFGANG_CRITWORK_1_TITLE = "Chore Workout I",
+        WOLFGANG_CRITWORK_1_DESC = "Chance to one-shot while working improved to 5%.",
+
+        WOLFGANG_CRITWORK_2_TITLE = "Chore Workout II",
+        WOLFGANG_CRITWORK_2_DESC = "Chance to one-shot while working improved to 10%.",
+
+        WOLFGANG_CRITWORK_3_TITLE = "Chore Workout III",
+        WOLFGANG_CRITWORK_3_DESC = "Chance to one-shot while working improved to 15%.",
+        ---
+        WOLFGANG_DUMBBELL_CRAFTING_TITLE = "Dumbbell Developer",
+        WOLFGANG_DUMBBELL_CRAFTING_DESC = "Learn to craft several new dumbbells.",
+        ---
+        WOLFGANG_DUMBBELL_THROWING_1_TITLE = "Heavy Hitter I",
+        WOLFGANG_DUMBBELL_THROWING_1_DESC = "Increase the damage of thrown dumbbells by 50%.",
+
+        WOLFGANG_DUMBBELL_THROWING_2_TITLE = "Heavy Hitter II",
+        WOLFGANG_DUMBBELL_THROWING_2_DESC = "Increase the damage of thrown dumbbells by 100%.",
+        ---
+        WOLFGANG_COACH_TITLE = "Coach Wolfgang",
+        WOLFGANG_COACH_DESC = "Learn to craft a Coaching Whistle.\nWhile coaching, Normal Wolfgang will raise friends' sanity and boost followers' damage.",
+
+        WOLFGANG_NORMAL_SPEED_TITLE = "Leg Day",
+        WOLFGANG_NORMAL_SPEED_DESC = "+10% speed boost when Normal.",
+        ---
+        WOLFGANG_GYM_OVERBUFF_1_TITLE = "Push the Limits I",
+        WOLFGANG_GYM_OVERBUFF_1_DESC = "Use the gym to push your Mighty Meter past its limit.\n Mighty Meter can go up to 110.",
+
+        WOLFGANG_GYM_OVERBUFF_2_TITLE = "Push the Limits II",
+        WOLFGANG_GYM_OVERBUFF_2_DESC = "Use the gym to push your Mighty Meter past its limit.\n Mighty Meter can go up to 120.",
+
+        WOLFGANG_GYM_OVERBUFF_3_TITLE = "Push the Limits III",
+        WOLFGANG_GYM_OVERBUFF_3_DESC = "Use the gym to push your Mighty Meter past its limit.\n Mighty Meter can go up to 130.",
+
+        WOLFGANG_GYM_OVERBUFF_4_TITLE = "Push the Limits IV",
+        WOLFGANG_GYM_OVERBUFF_4_DESC = "Use the gym to push your Mighty Meter past its limit.\n Mighty Meter can go up to 140.",
+
+        WOLFGANG_GYM_OVERBUFF_5_TITLE = "Push the Limits V",
+        WOLFGANG_GYM_OVERBUFF_5_DESC = "Use the gym to push your Mighty Meter past its limit.\n Mighty Meter can go up to 150.",
+
+        WOLFGANG_AUTO_GYM_TITLE = "Gym Mastery",
+        WOLFGANG_AUTO_GYM_DESC = "Perfect your gym workout.\nMini game will complete automatically.",
+
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_1_TITLE = "Mighty Weapons I",
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_1_DESC = "Bring out the full strength of planar melee weapons.\nAdd +5 Planar Damage to planar melee weapons when Mighty.",
+
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_2_TITLE = "Mighty Weapons II",
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_2_DESC = "Bring out the full strength of planar melee weapons.\nAdd +10 Planar Damage to planar melee weapons when Mighty.",
+
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_3_TITLE = "Mighty Weapons III",
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_3_DESC = "Bring out the full strength of planar melee weapons.\nAdd +15 Planar Damage to planar melee weapons when Mighty.",
+
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_4_TITLE = "Mighty Weapons IV",
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_4_DESC = "Bring out the full strength of planar melee weapons.\nAdd +20 Planar Damage to planar melee weapons when Mighty.",
+
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_5_TITLE = "Mighty Weapons V",
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_5_DESC = "Bring out the full strength of planar melee weapons.\nAdd +25 Planar Damage to planar melee weapons when Mighty.",
+        ---
+        WOLFGANG_ALLEGIANCE_SHADOW_1_TITLE = "Shadow Guard I",
+        WOLFGANG_ALLEGIANCE_SHADOW_1_DESC = "The Queen will reward your loyalty with devastating strength.\nAdd +10% of total damage fighting Lunar-aligned creatures when Mighty.",
+
+        WOLFGANG_ALLEGIANCE_SHADOW_2_TITLE = "Shadow Guard II",
+        WOLFGANG_ALLEGIANCE_SHADOW_2_DESC = "The Queen will reward your loyalty with devastating strength.\nAdd +20% of total damage fighting Lunar-aligned creatures when Mighty.",
+
+        WOLFGANG_ALLEGIANCE_SHADOW_3_TITLE = "Shadow Guard III",
+        WOLFGANG_ALLEGIANCE_SHADOW_3_DESC = "The Queen will reward your loyalty with devastating strength.\nAdd +30% of total damage fighting Lunar-aligned creatures when Mighty.",
+
+        WOLFGANG_ALLEGIANCE_LUNAR_1_TITLE = "Lunar Strategist I",
+        WOLFGANG_ALLEGIANCE_LUNAR_1_DESC = "The Cryptic Founder will reward your curiosity by revealing the enemy's weaknesses.\nAdd +10% of total damage fighting Shadow-aligned creatures when Mighty.",
+
+        WOLFGANG_ALLEGIANCE_LUNAR_2_TITLE = "Lunar Strategist II",
+        WOLFGANG_ALLEGIANCE_LUNAR_2_DESC = "The Cryptic Founder will reward your curiosity by revealing the enemy's weaknesses.\nAdd +20% of total damage fighting Shadow-aligned creatures when Mighty.",
+
+        WOLFGANG_ALLEGIANCE_LUNAR_3_TITLE = "Lunar Strategist III",
+        WOLFGANG_ALLEGIANCE_LUNAR_3_DESC = "The Cryptic Founder will reward your curiosity by revealing the enemy's weaknesses.\nAdd +30% of total damage fighting Shadow-aligned creatures when Mighty.",
+
     },
 
     WOODIE = {
@@ -15225,85 +15886,6 @@ STRINGS.SKILLTREE = {
         WOODIE_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity by blocking the moon's ability to trigger your curse.",
     },
 
-    WOLFGANG = {
-
-        WOLFGANG_CRITWORK_1_TITLE = "Chore Workout I",
-        WOLFGANG_CRITWORK_1_DESC = "Chance to one-shot while working improved to 5%.",
-
-        WOLFGANG_CRITWORK_2_TITLE = "Chore Workout II",
-        WOLFGANG_CRITWORK_2_DESC = "Chance to one-shot while working improved to 10%.",
-
-        WOLFGANG_CRITWORK_3_TITLE = "Chore Workout III",
-        WOLFGANG_CRITWORK_3_DESC = "Chance to one-shot while working improved to 15%.",
-        ---
-        WOLFGANG_DUMBBELL_CRAFTING_TITLE = "Dumbbell Developer",
-        WOLFGANG_DUMBBELL_CRAFTING_DESC = "Learn to craft several new dumbbells.",
-        ---
-        WOLFGANG_DUMBBELL_THROWING_1_TITLE = "Heavy Hitter I",
-        WOLFGANG_DUMBBELL_THROWING_1_DESC = "Increase the damage of thrown dumbbells by 50%.",
-
-        WOLFGANG_DUMBBELL_THROWING_2_TITLE = "Heavy Hitter II",
-        WOLFGANG_DUMBBELL_THROWING_2_DESC = "Increase the damage of thrown dumbbells by 100%.",
-        ---
-        WOLFGANG_COACH_TITLE = "Coach Wolfgang",
-        WOLFGANG_COACH_DESC = "Learn to craft a Coaching Whistle.\nWhile coaching, Normal Wolfgang will raise friends' sanity and boost followers' damage.",
-
-        WOLFGANG_NORMAL_SPEED_TITLE = "Leg Day",
-        WOLFGANG_NORMAL_SPEED_DESC = "+10% speed boost when Normal.",
-        ---
-        WOLFGANG_GYM_OVERBUFF_1_TITLE = "Push the Limits I",
-        WOLFGANG_GYM_OVERBUFF_1_DESC = "Use the gym to push your Mighty Meter past its limit.\n Mighty Meter can go up to 110.",
-
-        WOLFGANG_GYM_OVERBUFF_2_TITLE = "Push the Limits II",
-        WOLFGANG_GYM_OVERBUFF_2_DESC = "Use the gym to push your Mighty Meter past its limit.\n Mighty Meter can go up to 120.",
-
-        WOLFGANG_GYM_OVERBUFF_3_TITLE = "Push the Limits III",
-        WOLFGANG_GYM_OVERBUFF_3_DESC = "Use the gym to push your Mighty Meter past its limit.\n Mighty Meter can go up to 130.",
-
-        WOLFGANG_GYM_OVERBUFF_4_TITLE = "Push the Limits IV",
-        WOLFGANG_GYM_OVERBUFF_4_DESC = "Use the gym to push your Mighty Meter past its limit.\n Mighty Meter can go up to 140.",
-
-        WOLFGANG_GYM_OVERBUFF_5_TITLE = "Push the Limits V",
-        WOLFGANG_GYM_OVERBUFF_5_DESC = "Use the gym to push your Mighty Meter past its limit.\n Mighty Meter can go up to 150.",
-
-        WOLFGANG_AUTO_GYM_TITLE = "Gym Mastery",
-        WOLFGANG_AUTO_GYM_DESC = "Perfect your gym workout.\nMini game will complete automatically.",
-
-        WOLFGANG_MIGHTY_PLANAR_DAMAGE_1_TITLE = "Mighty Weapons I",
-        WOLFGANG_MIGHTY_PLANAR_DAMAGE_1_DESC = "Bring out the full strength of planar melee weapons.\nAdd +5 Planar Damage to planar melee weapons when Mighty.",
-
-        WOLFGANG_MIGHTY_PLANAR_DAMAGE_2_TITLE = "Mighty Weapons II",
-        WOLFGANG_MIGHTY_PLANAR_DAMAGE_2_DESC = "Bring out the full strength of planar melee weapons.\nAdd +10 Planar Damage to planar melee weapons when Mighty.",
-
-        WOLFGANG_MIGHTY_PLANAR_DAMAGE_3_TITLE = "Mighty Weapons III",
-        WOLFGANG_MIGHTY_PLANAR_DAMAGE_3_DESC = "Bring out the full strength of planar melee weapons.\nAdd +15 Planar Damage to planar melee weapons when Mighty.",
-
-        WOLFGANG_MIGHTY_PLANAR_DAMAGE_4_TITLE = "Mighty Weapons IV",
-        WOLFGANG_MIGHTY_PLANAR_DAMAGE_4_DESC = "Bring out the full strength of planar melee weapons.\nAdd +20 Planar Damage to planar melee weapons when Mighty.",
-
-        WOLFGANG_MIGHTY_PLANAR_DAMAGE_5_TITLE = "Mighty Weapons V",
-        WOLFGANG_MIGHTY_PLANAR_DAMAGE_5_DESC = "Bring out the full strength of planar melee weapons.\nAdd +25 Planar Damage to planar melee weapons when Mighty.",
-        ---
-        WOLFGANG_ALLEGIANCE_SHADOW_1_TITLE = "Shadow Guard I",
-        WOLFGANG_ALLEGIANCE_SHADOW_1_DESC = "The Queen will reward your loyalty with devastating strength.\nAdd +10% of total damage fighting Lunar-aligned creatures when Mighty.",
-
-        WOLFGANG_ALLEGIANCE_SHADOW_2_TITLE = "Shadow Guard II",
-        WOLFGANG_ALLEGIANCE_SHADOW_2_DESC = "The Queen will reward your loyalty with devastating strength.\nAdd +20% of total damage fighting Lunar-aligned creatures when Mighty.",
-
-        WOLFGANG_ALLEGIANCE_SHADOW_3_TITLE = "Shadow Guard III",
-        WOLFGANG_ALLEGIANCE_SHADOW_3_DESC = "The Queen will reward your loyalty with devastating strength.\nAdd +30% of total damage fighting Lunar-aligned creatures when Mighty.",
-
-        WOLFGANG_ALLEGIANCE_LUNAR_1_TITLE = "Lunar Strategist I",
-        WOLFGANG_ALLEGIANCE_LUNAR_1_DESC = "The Cryptic Founder will reward your curiosity by revealing the enemy's weaknesses.\nAdd +10% of total damage fighting Shadow-aligned creatures when Mighty.",
-
-        WOLFGANG_ALLEGIANCE_LUNAR_2_TITLE = "Lunar Strategist II",
-        WOLFGANG_ALLEGIANCE_LUNAR_2_DESC = "The Cryptic Founder will reward your curiosity by revealing the enemy's weaknesses.\nAdd +20% of total damage fighting Shadow-aligned creatures when Mighty.",
-
-        WOLFGANG_ALLEGIANCE_LUNAR_3_TITLE = "Lunar Strategist III",
-        WOLFGANG_ALLEGIANCE_LUNAR_3_DESC = "The Cryptic Founder will reward your curiosity by revealing the enemy's weaknesses.\nAdd +30% of total damage fighting Shadow-aligned creatures when Mighty.",
-
-    },
-
     WORMWOOD = {
         BUTTERFLY_FRIEND_TITLE = "Butterfly Friend",
         BUTTERFLY_FRIEND_DESC = "Butterflies will no longer fly away from you.",
@@ -15395,253 +15977,84 @@ STRINGS.SKILLTREE = {
         LUNAR_MUTATIONS_3_DESC = "Tap into your lunar roots to transform Dragon Fruit into Saladmanders.\nSaladmanders you've created will attack things you do.\nTransforming maximum Saladmanders gives them a health boost.",
     },
 
-    WILLOW = {
-        -- LIGHTER
-        WILLOW_CONTROLLED_BURN_1_TITLE = "Controlled Burning",
-        WILLOW_CONTROLLED_BURN_1_DESC = "Controlled fires you set won't spread, and burnable loot will just smolder.\nItems like torches and Willow's lighter have a 100% chance to ignite targets.",
-        WILLOW_CONTROLLED_BURN_2_TITLE = "Burn Duration",
-        WILLOW_CONTROLLED_BURN_2_DESC = "Creatures burn for a longer time.",
-        WILLOW_CONTROLLED_BURN_3_TITLE = "Fire Fighter",
-        WILLOW_CONTROLLED_BURN_3_DESC = "Your fires deal more damage to creatures over time.",
+    WORTOX = {
+        -- GENERIC - Not skills but information boxes the player will be able to hover over for more information.
+        WORTOX_INCLINATION_METER_TITLE = "The Scales",
+        WORTOX_INCLINATION_METER_DESC = "Based off of how many Nice or Naughty skills selected, you will find yourself leaning towards a certain inclination.",
+        WORTOX_INCLINATION_NICE_DESC = "Nice inclination.\nHealing and Sanity gains from dropped Souls is increased.\nSanity loss from eating Souls is increased.",
+        WORTOX_INCLINATION_NAUGHTY_DESC = "Naughty inclination.\nHealing and Sanity gains from dropped Souls is decreased.\nSanity loss from eating Souls is decreased.",
 
-        WILLOW_ATTUNED_LIGHTER_TITLE = "Hungry Lighter",
-        WILLOW_ATTUNED_LIGHTER_DESC = "Stop things from burning by absorbing the flame (even when they're only smoldering) with your lighter.",
-        WILLOW_EMBERS_TITLE = "Ember Tender",
-        WILLOW_EMBERS_DESC = "Collect and use Embers to perform Pyrokinetic effects.\nYou can collect Embers from burned creatures with your lighter.\nUse Embers to refuel the lighter.",
+        -- LOCKS
+        WORTOX_NICE_LOCK_DESC = "Requires the skill below and 5 total Nice skills to unlock.",
+        WORTOX_NAUGHTY_LOCK_DESC = "Requires the skill below and 5 total Naughty skills to unlock.",
 
-        WILLOW_FIRE_BURST_TITLE = "Spontaneous Combustion",
-        WILLOW_FIRE_BURST_DESC = "Use Embers to ignite creatures in an area near you.",
-        WILLOW_FIRE_BALL_TITLE = "Fire Ball",
-        WILLOW_FIRE_BALL_DESC = "Use Embers to create a ball of flame for heat and light.",
-        WILLOW_FIRE_FRENZY_TITLE = "Burning Frenzy",
-        WILLOW_FIRE_FRENZY_DESC = "For 60 seconds, add 25% weapon damage when attacking burning targets.",
+        -- NICE
+        WORTOX_LIFEBRINGER_1_TITLE = "Lifebringer I",
+        WORTOX_LIFEBRINGER_1_DESC = "Learn how to channel Souls into a Twintailed Heart, a creation used to revive ghostly friends.",
+        WORTOX_LIFEBRINGER_2_TITLE = "Lifebringer II",
+        WORTOX_LIFEBRINGER_2_DESC = "Your Sanity gains from reviving others is increased.",
+        WORTOX_LIFEBRINGER_3_TITLE = "Lifebringer III",
+        WORTOX_LIFEBRINGER_3_DESC = "Allow the Twintailed Heart to be used by another which will pull them to you from near or afar.\nUsing it yourself will free the Souls inside.",
 
-        WILLOW_LIGHTRADIUS_1_TITLE = "Brighter Lighter I",
-        WILLOW_LIGHTRADIUS_1_DESC = "Increase your lighter's brightness a little.",
-        WILLOW_LIGHTRADIUS_2_TITLE = "Brighter Lighter II",
-        WILLOW_LIGHTRADIUS_2_DESC = "Increase your lighter's brightness a lot.",
+        WORTOX_SOULPROTECTOR_1_TITLE = "Reaching Souls I",
+        WORTOX_SOULPROTECTOR_1_DESC = "Dropped Souls will heal at an increased range.",
+        WORTOX_SOULPROTECTOR_2_TITLE = "Reaching Souls II",
+        WORTOX_SOULPROTECTOR_2_DESC = "Souls will come to you faster.",
+        WORTOX_SOULPROTECTOR_3_TITLE = "Soul Bastion I",
+        WORTOX_SOULPROTECTOR_3_DESC = "Dropped Souls will do a second healing wave for a lower amount after a delay.",
+        WORTOX_SOULPROTECTOR_4_TITLE = "Soul Bastion II",
+        WORTOX_SOULPROTECTOR_4_DESC = "Reduce the delay for the second healing wave to happen.\nDropped Souls will heal at an increased range.",
 
-        -- BERNIE
-        WILLOW_BERNIESPEED_1_TITLE = "Accelerant I",
-        WILLOW_BERNIESPEED_1_DESC = "Bernie's movement speed is a little faster.",
-        WILLOW_BERNIESPEED_2_TITLE = "Accelerant II",
-        WILLOW_BERNIESPEED_2_DESC = "Bernie's movement speed is much faster.",
+        WORTOX_LIFTEDSPIRITS_1_TITLE = "Lifted Spirits I",
+        WORTOX_LIFTEDSPIRITS_1_DESC = "Souls waiting to be freed in a Soul Echo will enhance your movement speed.",
+        WORTOX_LIFTEDSPIRITS_2_TITLE = "Lifted Spirits II",
+        WORTOX_LIFTEDSPIRITS_2_DESC = "Soul Echo duration is increased.",
+        WORTOX_LIFTEDSPIRITS_3_TITLE = "Reverberation",
+        WORTOX_LIFTEDSPIRITS_3_DESC = "Soul Echo may happen a second time.\nThis does not decrease Soul Hop costs from the Map.",
+        WORTOX_LIFTEDSPIRITS_4_TITLE = "Capricious Movement",
+        WORTOX_LIFTEDSPIRITS_4_DESC = "Soul Hop cost from the Map will be reduced by how much of the current world has been explored.",
 
-        WILLOW_BERNIESANITY_1_TITLE = "Bearly Sane I",
-        WILLOW_BERNIESANITY_1_DESC = "Bernie will become animated at a higher sanity threshold.",
-        WILLOW_BERNIESANITY_2_TITLE = "Bearly Sane II",
-        WILLOW_BERNIESANITY_2_DESC = "Bernie will become animated at an even higher sanity threshold.",
-        WILLOW_BERNIEAI_TITLE = "Hot-Headed",
-        WILLOW_BERNIEAI_DESC = "Bernie will activate to fight hostile lunar and shadow aligned creatures regardless of Willow's sanity.",
+        -- NEUTRAL
+        WORTOX_PANFLUTE_PLAYING_TITLE = "Impromptu Flautist", -- Center
+        WORTOX_PANFLUTE_PLAYING_DESC = "You periodically feel a musical pull to play your flute if you are holding it. Pan Flutes will not lose durability one time when feeling this urge to play.",
+        WORTOX_PANFLUTE_DURATION_TITLE = "Pleasant Pastorale", -- Left
+        WORTOX_PANFLUTE_DURATION_DESC = "Pan Flutes soothe more by increasing its sleep duration.",
+        WORTOX_PANFLUTE_FORGET_TITLE = "Cloudy Carmen", -- Right
+        WORTOX_PANFLUTE_FORGET_DESC = "Things waking up after your Pan Flute playing will not be able to become hostile towards you for a moment.",
 
+        -- NAUGHTY
 
-        WILLOW_BERNIEREGEN_1_TITLE = "Patch Up I",
-        WILLOW_BERNIEREGEN_1_DESC = "Bernie's health regenerates slowly.",
-        WILLOW_BERNIEREGEN_2_TITLE = "Patch Up II",
-        WILLOW_BERNIEREGEN_2_DESC = "Bernie's health regenerates quicker.",
+        WORTOX_THIEF_1_TITLE = "Soul Thief I",
+        WORTOX_THIEF_1_DESC = "Souls are created and attracted to you from further away.",
+        WORTOX_THIEF_2_TITLE = "Soul Thief II",
+        WORTOX_THIEF_2_DESC = "Souls will last longer while being attracted to you.",
+        WORTOX_THIEF_3_TITLE = "Soul Pierce I",
+        WORTOX_THIEF_3_DESC = "Souls attracted to you will hurt other creatures with Souls along its path.\nA held Knabsack will lend part of its damage to the damage dealt.",
+        WORTOX_THIEF_4_TITLE = "Soul Pierce II",
+        WORTOX_THIEF_4_DESC = "Souls attracted to you will repel away initially before coming towards you.",
 
-        WILLOW_BERNIE_LOCK_DESC = "Learn at least 4 Bernie skills to unlock.",
+        WORTOX_NABBAG_TITLE = "Knabsacker",
+        WORTOX_NABBAG_DESC = "You've hung around Krampus enough to create a Knabsack for your own item stealing desires. Packs a punch depending on how full your inventory is. Pure Brilliance and Horror add Planar Damage.",
+        WORTOX_SOULJAR_1_TITLE = "Soul Jar",
+        WORTOX_SOULJAR_1_DESC = "Learn how to craft and use a Soul Jar to store Souls for later use.\nSoul Jars will leak Souls over time when not in your inventory.",
+        WORTOX_SOULJAR_2_TITLE = "Overflowing Greed",
+        WORTOX_SOULJAR_2_DESC = "Holding filled Soul Jars increases your maximum Souls allowed to be held at once by 2 each, stopping you from overloading of Soul power.\nThis works up to 5 filled Soul Jars.",
+        WORTOX_SOULJAR_3_TITLE = "Covetous Collector",
+        WORTOX_SOULJAR_3_DESC = "Holding filled Soul Jars increases the damage of the Knabsack.\nThis works up to 5 filled Soul Jars.",
 
-        WILLOW_BERNIEHEALTH_1_TITLE = "Tough Stuffing I",
-        WILLOW_BERNIEHEALTH_1_DESC = "Bernie's total health is a little higher.",
-        WILLOW_BERNIEHEALTH_2_TITLE = "Tough Stuffing II",
-        WILLOW_BERNIEHEALTH_2_DESC = "Bernie's total health is much higher.",
+        WORTOX_SOULDECOY_1_TITLE = "Soul Decoy I",
+        WORTOX_SOULDECOY_1_DESC = "Soul Hopping for the first hop leaves behind a Soul Decoy to draw the attention of nearby attackers targeting you.",
+        WORTOX_SOULDECOY_2_TITLE = "Soul Decoy II",
+        WORTOX_SOULDECOY_2_DESC = "Soul Decoys will stay around for a bit longer if they are unharmed.",
+        WORTOX_SOULDECOY_3_TITLE = "Soul Decoy III",
+        WORTOX_SOULDECOY_3_DESC = "Soul Decoys will now explode and inflict damage on things lured by it or attacking you upon expiration.\nA held Knabsack will lend part of its damage to the damage dealt.",
 
-        WILLOW_BERNIE_DOUBLE_LOCK_DESC = "Learn at least 8 Bernie skills to unlock.",
+        -- AFFINITY
+        WORTOX_ALLEGIANCE_LUNAR_TITLE = "Lunar Swindler",
+        WORTOX_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity by showing you power from wearing a Brightshade Helm or Armor. Souls waiting to be freed in a Soul Echo will absorb the damage from Shadow Aligned enemies, and expire the timer.",
 
-        WILLOW_BURNINGBERNIE_TITLE = "Burning Bernie",
-        WILLOW_BURNINGBERNIE_DESC = "Igniting Bernie will give him a firey aura for a short time.\nEnemies that attack an ignited Bernie will take damage back.",
-
-
-        -- ALLIEGIANCE
-        WILLOW_ALLEGIANCE_LOCK_1_DESC = "Find and defeat the Ancient Fuelweaver.\nHave no Lunar Allegiance Skills.",
-        WILLOW_ALLEGIANCE_LOCK_2_DESC = "Learn 6 Bernie skills to unlock.",
-        WILLOW_ALLEGIANCE_LOCK_3_DESC = "Learn 7 Lighter skills to unlock.",
-
-        WILLOW_ALLEGIANCE_SHADOW_1_TITLE = "Shadow Fire-Raiser",
-        WILLOW_ALLEGIANCE_SHADOW_1_DESC = "The Queen will reward your loyalty with the power of shadow fire.\nSummon multiple tendrils of black flame to seek out hostile targets.",
-        WILLOW_ALLEGIANCE_SHADOW_2_TITLE = "Shadow Bernie",
-        WILLOW_ALLEGIANCE_SHADOW_2_DESC = "Tap into the darkness to strengthen Bernie's planar attack and defense, particularly against lunar enemies.",
-
-        WILLOW_ALLEGIANCE_LOCK_4_DESC = "Find and defeat the Celestial Champion.\nHave no Shadow Allegiance Skills.",
-        WILLOW_ALLEGIANCE_LOCK_5_DESC = "Learn 7 Lighter skills to unlock.",
-        WILLOW_ALLEGIANCE_LOCK_6_DESC = "Learn 6 Bernie skills to unlock.",
-
-        WILLOW_ALLEGIANCE_LUNAR_1_TITLE = "Lunar Fire-Raiser",
-        WILLOW_ALLEGIANCE_LUNAR_1_DESC = "The Cryptic Founder will reward your curiosity with the formula for lunar flames.\nUse Embers to blast cold lunar flames.",
-        WILLOW_ALLEGIANCE_LUNAR_2_TITLE = "Lunar Bernie",
-        WILLOW_ALLEGIANCE_LUNAR_2_DESC = "Entreat the moon to strengthen Bernie's planar attack and defense, particularly against shadow enemies.",
-    },
-
-    WATHGRITHR =
-    {
-        WATHGRITHR_ARSENAL_SPEAR_1_TITLE = "Bragi's Blessing I",
-        WATHGRITHR_ARSENAL_SPEAR_1_DESC = "Inspiration gain rate will increase a little when attacking using Battle Spears.",
-
-        WATHGRITHR_ARSENAL_SPEAR_2_TITLE = "Bragi's Blessing II",
-        WATHGRITHR_ARSENAL_SPEAR_2_DESC = "Inspiration gain rate will increase a fair amount when attacking using Battle Spears.",
-
-        WATHGRITHR_ARSENAL_SPEAR_3_TITLE = "Elding Spear",
-        WATHGRITHR_ARSENAL_SPEAR_3_DESC = "Learn to craft the Elding Spear: an electric weapon that does more damage to wet targets.",
-
-        WATHGRITHR_ARSENAL_SPEAR_4_TITLE = "Elding Spear Enhancement I",
-        WATHGRITHR_ARSENAL_SPEAR_4_DESC = "The Elding Spear can now perform a special attack.\nThis attack repairs Charged Elding Spears if it hits a target.",
-
-        WATHGRITHR_ARSENAL_SPEAR_5_TITLE = "Elding Spear Enhancement II",
-        WATHGRITHR_ARSENAL_SPEAR_5_DESC = "Upgrade the Elding Spear using Restrained Static to deal +20 Planar Damage.",
-
-        ----------------------------------------------------------------------------
-
-        WATHGRITHR_ARSENAL_HELMET_1_TITLE = "Hard Helm I",
-        WATHGRITHR_ARSENAL_HELMET_1_DESC = "Battle Helms will be a little more durable when worn by Wigfrid.",
-
-        WATHGRITHR_ARSENAL_HELMET_2_TITLE = "Hard Helm II",
-        WATHGRITHR_ARSENAL_HELMET_2_DESC = "Battle Helms will be a fair amount more durable when worn by Wigfrid.",
-
-        WATHGRITHR_ARSENAL_HELMET_3_TITLE = "Commander's Helm",
-        WATHGRITHR_ARSENAL_HELMET_3_DESC = "Learn to craft the Commander's Helm: a helm that protects against knockback attacks.",
-
-        WATHGRITHR_ARSENAL_HELMET_4_TITLE = "Commander's Helm Enhancement I",
-        WATHGRITHR_ARSENAL_HELMET_4_DESC = "The Commander's Helm now has protection against planar damage.",
-
-        WATHGRITHR_ARSENAL_HELMET_5_TITLE = "Commander's Helm Enhancement II",
-        WATHGRITHR_ARSENAL_HELMET_5_DESC = "Wigfrid's natural healing ability will repair her Commander's Helm when she continues to fight at maximum health.",
-
-
-        ----------------------------------------------------------------------------
-
-        WATHGRITHR_ARSENAL_SHIELD_1_TITLE = "Battle Rönd",
-        WATHGRITHR_ARSENAL_SHIELD_1_DESC = "Learn to craft the Battle Rönd. This shield can be used to attack, block attacks, and provide extra protection while equipped.",
-
-        WATHGRITHR_ARSENAL_SHIELD_2_TITLE = "Battle Rönd Enhancement I",
-        WATHGRITHR_ARSENAL_SHIELD_2_DESC = "The duration of the Battle Rönd's ability to block attacks will be increased.",
-
-        WATHGRITHR_ARSENAL_SHIELD_3_TITLE = "Battle Rönd Enhancement II",
-        WATHGRITHR_ARSENAL_SHIELD_3_DESC = "After blocking an attack with the Battle Rönd, your next attack within 5 seconds will deal +15-30 damage based on the damage blocked.",
-
-        ----------------------------------------------------------------------------
-
-        WATHGRITHR_BEEFALO_1_TITLE = "Noble Mount I",
-        WATHGRITHR_BEEFALO_1_DESC = "Beefalos will be domesticated 15% faster.",
-
-        WATHGRITHR_BEEFALO_2_TITLE = "Noble Mount II",
-        WATHGRITHR_BEEFALO_2_DESC = "Beefalos will allow you to ride them for 30% longer.",
-
-        WATHGRITHR_BEEFALO_3_TITLE = "Noble Mount III",
-        WATHGRITHR_BEEFALO_3_DESC = "Riding a beefalo will make your inspiration slowly rise until it reaches the halfway mark.",
-
-        WATHGRITHR_BEEFALO_SADDLE_TITLE = "Battle Saddle",
-        WATHGRITHR_BEEFALO_SADDLE_DESC = "Learn to craft a new Beefalo Saddle that protects your Beefalo.",
-
-        ----------------------------------------------------------------------------
-
-        WATHGRITHR_SONGS_CONTAINER_LOCK_DESC = "Have 6 different Battle Calls in your inventory to unlock.",
-
-        WATHGRITHR_SONGS_CONTAINER_TITLE = "Battle Call Canister",
-        WATHGRITHR_SONGS_CONTAINER_DESC = "Learn to craft the Battle Call Canister, a storage solution for Battle Songs and Battle Stingers.",
-
-        ----------------------------------------------------------------------------
-
-        WATHGRITHR_SONGS_INSTANTSONG_CD_LOCK_DESC = "Perform Battle Stingers 10 times to unlock.",
-
-        WATHGRITHR_SONGS_INSTANTSONG_CD_TITLE = "Fighting Words",
-        WATHGRITHR_SONGS_INSTANTSONG_CD_DESC = "Battle Stingers will no longer consume Inspiration, and instead have a cooldown.",
-
-        ----------------------------------------------------------------------------
-
-        WATHGRITHR_SONGS_REVIVEWARRIOR_LOCK_DESC = "Play a Beefalo Horn to unlock.",
-
-        WATHGRITHR_SONGS_REVIVEWARRIOR_TITLE = "Encore",
-        WATHGRITHR_SONGS_REVIVEWARRIOR_DESC = "Learn to craft the Warrior's Reprise: Bring your allies back to life for an encore performance.",
-
-        ----------------------------------------------------------------------------
-
-        WATHGRITHR_COMBAT_DEFENSE_TITLE = "Mystic Resilience",
-        WATHGRITHR_COMBAT_DEFENSE_DESC = "Receive a divine blessing that will provide you with +5 Planar Defense.",
-        ----------------------------------------------------------------------------
-
-        WATHGRITHR_ALLEGIANCE_LOCK_1_DESC = "Learn 12 skills to unlock.",
-
-        WATHGRITHR_ALLEGIANCE_LUNAR_TITLE = "Lunar Melodist",
-        WATHGRITHR_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity with the ability to craft the Enlightened Lullaby.\nAllies take less damage from Lunar Aligned enemies and deal bonus damage to Shadow Aligned enemies.",
-
-        WATHGRITHR_ALLEGIANCE_SHADOW_TITLE = "Shadow Chanteuse",
-        WATHGRITHR_ALLEGIANCE_SHADOW_DESC = "The Queen will reward your loyalty with the ability to craft the Dark Lament.\nAllies take less damage from Shadow Aligned enemies and deal bonus damage to Lunar Aligned enemies.",
-    },
-
-    WINONA = {
-        -- Low shelf.
-        WINONA_SPOTLIGHT_HEATED_TITLE = "Hotlight",
-        WINONA_SPOTLIGHT_HEATED_DESC = "Upgrade your Spotlights to give off heat when it's cold out.",
-        WINONA_SPOTLIGHT_RANGE_TITLE = "Spacious Spotlight",
-        WINONA_SPOTLIGHT_RANGE_DESC = "Upgrade your Spotlights to illuminate a larger area.",
-        WINONA_PORTABLE_STRUCTURES_TITLE = "Portability",
-        WINONA_PORTABLE_STRUCTURES_DESC = "Easily dismantle your machines, and learn how to build a Handy Remote to remotely control Catapults.",
-        WINONA_GADGET_RECHARGE_TITLE = "Quick Charge",
-        WINONA_GADGET_RECHARGE_DESC = "Gadgets placed next to a Generator or G.E.M.erator recharge 100% faster.",
-        WINONA_BATTERY_IDLEDRAIN_TITLE = "Energy-Saver",
-        WINONA_BATTERY_IDLEDRAIN_DESC = "Generators and G.E.M.erators no longer consume energy while they're not in use.\nMachines connected to Generators won't consume energy while in sleep mode.",
-
-        WINONA_LOWSHELF_LOCK_DESC = "Learn 3 skills on the shelf below to unlock the skills on the shelf above.",
-        -- Mid shelf.
-        WINONA_CATAPULT_SPEED_1_TITLE = "Rapid-Fire I",
-        WINONA_CATAPULT_SPEED_1_DESC = "Tune-up your Catapults to increase their firing rate by 5%.",
-        WINONA_CATAPULT_SPEED_2_TITLE = "Rapid-Fire II",
-        WINONA_CATAPULT_SPEED_2_DESC = "Tune-up your Catapults to increase their firing rate by 10%.",
-        WINONA_CATAPULT_SPEED_3_TITLE = "Rapid-Fire III",
-        WINONA_CATAPULT_SPEED_3_DESC = "Tune-up your Catapults to increase their firing rate by 20%.",
-        WINONA_CATAPULT_AOE_1_TITLE = "Explosive Volley I",
-        WINONA_CATAPULT_AOE_1_DESC = "Modify your Catapults to deal damage to a 25% larger area.",
-        WINONA_CATAPULT_AOE_2_TITLE = "Explosive Volley II",
-        WINONA_CATAPULT_AOE_2_DESC = "Modify your Catapults to deal damage to a 50% larger area.",
-        WINONA_CATAPULT_AOE_3_TITLE = "Explosive Volley III",
-        WINONA_CATAPULT_AOE_3_DESC = "Modify your Catapults to deal damage to a 100% larger area.",
-
-        WINONA_PORTABLE_STRUCTURES_LOCK_DESC = "Requires the Portability skill and access to this shelf to unlock.",
-        WINONA_CATAPULT_VOLLEY_TITLE = "Precise Targeting",
-        WINONA_CATAPULT_VOLLEY_DESC = "All Catapults within range of your Handy Remote fire at your selected target.",
-        WINONA_CATAPULT_BOOST_TITLE = "Barrage",
-        WINONA_CATAPULT_BOOST_DESC = "All Catapults within range of your Handy Remote have an increased firing rate for a short period of time.",
-        WINONA_BATTERY_EFFICIENCY_1_TITLE = "Greater Generator I",
-        WINONA_BATTERY_EFFICIENCY_1_DESC = "Boost the efficiency of Generators and G.E.M.erators by 25%.",
-        WINONA_BATTERY_EFFICIENCY_2_TITLE = "Greater Generator II",
-        WINONA_BATTERY_EFFICIENCY_2_DESC = "Boost the efficiency of Generators and G.E.M.erators by 50%.",
-        WINONA_BATTERY_EFFICIENCY_3_TITLE = "Greater Generator III",
-        WINONA_BATTERY_EFFICIENCY_3_DESC = "Boost the efficiency of Generators and G.E.M.erators by 100%.",
-
-        WINONA_MIDSHELF_LOCK_DESC = "Learn 6 total skills from the shelves below to unlock the skills on the shelf above.",
-        -- Shadow.
-        WINONA_SHADOW_1_TITLE = "Nightmare Generator",
-        WINONA_SHADOW_1_DESC = "Learn how to utilize Nightmare Fuel as a fuel source for Generators.",
-        WINONA_SHADOW_2_TITLE = "Pure Horror Generator",
-        WINONA_SHADOW_2_DESC = "Learn how to utilize Pure Horror as a fuel source for Generators.",
-
-        WINONA_SHADOW_3_LOCK_DESC = "Requires the Portability and Pure Horror Generator skills to unlock.",
-        WINONA_SHADOW_3_TITLE = "Shadow Strike",
-        WINONA_SHADOW_3_DESC = "Use your Handy Remote to select a target for a shadow-infused Catapult attack.",
-
-        WINONA_CHARLIE_1_TITLE = "Shadow Seeker I",
-        WINONA_CHARLIE_1_DESC = "The Queen imparts a design for enchanted glasses that reveal hidden traces of shadow magic.\nDoes she want you to find her?",
-
-        WINONA_CHARLIE_2_LOCK_DESC = "Requires the Shadow Seeker I skill, and to not have Founder's Keepers II to unlock.",
-        WINONA_CHARLIE_2_TITLE = "Shadow Seeker II",
-        WINONA_CHARLIE_2_DESC = "Become more adept at locating traces of shadow magic.\nThe Queen will watch over you.",
-        -- Lunar.
-        WINONA_LUNAR_1_TITLE = "Enlightened G.E.M.erator",
-        WINONA_LUNAR_1_DESC = "Learn how to utilize Enlightened Shards as a fuel source for G.E.M.erators.",
-        WINONA_LUNAR_2_TITLE = "Brilliance G.E.M.erator",
-        WINONA_LUNAR_2_DESC = "Learn how to utilize Pure Brilliance as a fuel source for G.E.M.erators.",
-
-        WINONA_LUNAR_3_LOCK_DESC = "Requires the Portability and Brilliance G.E.M.erator skills to unlock.",
-        WINONA_LUNAR_3_TITLE = "Enlightened Strike",
-        WINONA_LUNAR_3_DESC = "Use your Handy Remote to select a target for a lunar essence-infused Catapult attack.",
-
-        WINONA_WAGSTAFF_1_TITLE = "Founder's Keepers I",
-        WINONA_WAGSTAFF_1_DESC = "Build a device inspired by the Cryptic Founder's designs to track down hidden supply caches.\nGain mastery over all technology found in Cacheboxes.",
-
-        WINONA_WAGSTAFF_2_LOCK_DESC = "Requires the Founder's Keepers I skill, and to not have Shadow Seeker II to unlock.",
-        WINONA_WAGSTAFF_2_TITLE = "Founder's Keepers II",
-        WINONA_WAGSTAFF_2_DESC = "Broaden the scope of your Inspectacles to locate higher-grade supply caches.\nGain mastery over all technology found in Advanced Cacheboxes.",
+        WORTOX_ALLEGIANCE_SHADOW_TITLE = "Shadow Harvester",
+        WORTOX_ALLEGIANCE_SHADOW_DESC = "The Queen will reward your loyalty by unlocking power from wielding a Shadow Reaper. Souls waiting to be freed in a Soul Echo will cause damage dealt to spread out to close enemies, and expire the timer.",
     },
 
     WURT = {
@@ -15711,6 +16124,9 @@ STRINGS.SKILLTREE = {
         WURT_SHADOW_ALLEGIANCE_1_DESC = "Your merm followers may die, but their shadows live on.\nInfuse fallen merms' shadows with Planar power using Pure Horror.",
         WURT_SHADOW_ALLEGIANCE_2_DESC = "No land shall be safe from the dark and beautiful corruption of the Marsh.",
     },
+    
+    --[[WX78 = {
+    },]]
 }
 
 STRINGS.SCRAPBOOK = {
@@ -16106,7 +16522,7 @@ STRINGS.SCRAPBOOK = {
         WOODCARVEDHAT = "Protects wearer from falling debris during earthquakes.",
         MINIFAN = "Cools the holder while they run.",
         FISHINGROD = "Catch fish in ponds.",
-        OCEANFISHINGROD = "Catch fish in the ocean.\n\nUse bobbers and lures to increase your chanes.",
+        OCEANFISHINGROD = "Catch fish in the ocean.\n\nUse bobbers and lures to increase your chances.",
         OCEANFISHINGLURERED = "Used with a Sea Fishing Rod.\n\nMost effective during the day time.",
         OCEANFISHINGLUREGREEN = "Used with a Sea Fishing Rod.\n\nMost effective during dusk.",
         OCEANFISHINGLUREBLUE = "Used with a Sea Fishing Rod.\n\nMost effective during the night.",
@@ -16130,7 +16546,7 @@ STRINGS.SCRAPBOOK = {
         ANIMALTRACK = "A footprint of an animal that was walking somewhere.",
         ARCHIVERESONATOR = "A mysterious device that burns arrows into the dirt.",
         TENTACLEPILLARHOLE = "A hole leading to a tunnel that leads somewhere else.",
-        BOATCANNON = "Can be loaded with cannoballs.\n\nOnce loaded, it can be aimed to fire. The direction can be changed by standing next it from differnet sides before aiming.",
+        BOATCANNON = "Can be loaded with cannoballs.\n\nOnce loaded, it can be aimed to fire. The direction can be changed by standing next to it from different sides before aiming.",
         SACREDCHEST = "A container with 6 slots. Could be a 6 item combination lock, only Metheus knows.",
         TREASURECHEST = "A container with 9 slots.",
         MINOTAURCHEST = "A container with 12 slots.",
