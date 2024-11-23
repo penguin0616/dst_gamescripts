@@ -785,6 +785,8 @@ return{
 		"Uh oh... I'm all out of ammo.",
 		"Uh... just kidding!",
 	},
+	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "Uh... just kidding!", --TODO
+	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "Uh... just kidding!", --TODO
 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 	{
         "Darnit, the fire went out right at the best part!",

@@ -4170,6 +4170,7 @@ STRINGS =
         GHOSTLYELIXIR_SHADOW = "Cursed Vexation",
         ARMOR_FLOWERDRESS = "Floral Shroud",
         GRAVEGUARD_GHOST = "Bigspook",
+        DUG_GRAVESTONE = "Headstone",
 
 		SLINGSHOTMODKIT = "Slingshot Field Kit",
 		SLINGSHOT_BAND_PIGSKIN = "Pig Skin Slingshot Band",
@@ -5266,6 +5267,7 @@ STRINGS =
         GHOSTLYELIXIR_LUNAR = "Abigail will pack an outerplanar punch.",
         GHOSTLYELIXIR_SHADOW = "As if a ghost attack wasn't vexing enough.",
         ARMOR_FLOWERDRESS = "Abigail wants to protect you.",
+        WENDY_RECIPE_GRAVESTONE = "No one deserves an unmarked grave.",
 
         WOBY_BADGE_STATION = "Train your Pinetree Pooch!",
 
@@ -5280,7 +5282,7 @@ STRINGS =
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Sling faster-er!",
 
         WORTOX_REVIVER = "Soul revival of a single ghostly friend. May bring others closer.",
-        WORTOX_NABBAG = "Takes items off the ground and swings them into your enemies.",
+        WORTOX_NABBAG = "Stuff it and swing it!",
         WORTOX_SOULJAR = "Why let them be free when you can stuff them all into a jar?",
     },
 
@@ -15224,7 +15226,7 @@ STRINGS.SKILLTREE = {
 
         ---------------------------------------------------------------------------------
 
-        WALTER_SLINGSHOT_AMMO_ECONOMY_LOCK_DESC = "Learn 5 Projectile Pro skills to unlock.",
+        WALTER_SLINGSHOT_AMMO_ECONOMY_LOCK_DESC = "Learn 4 Projectile Pro and/or Affinity skills to unlock.",
 
         WALTER_SLINGSHOT_AMMO_ECONOMY_1_TITLE = "Projectile Pro I",
         WALTER_SLINGSHOT_AMMO_ECONOMY_1_DESC = "Learn how to craft ammo slightly more efficiently.",
@@ -15234,59 +15236,48 @@ STRINGS.SKILLTREE = {
 
         ---------------------------------------------------------------------------------
 
-        WALTER_WOBY_BADGE_SPEED_1_TITLE = "Agility Training I",
-        WALTER_WOBY_BADGE_SPEED_1_DESC = "Unlocks the first agility badge at the Woby Training Station.\nThis badge considerably increases Woby's speed. It improves based on badge progress.",
+        WALTER_WOBY_BADGE_BASE_TITLE = "Woby Training",
+        WALTER_WOBY_BADGE_BASE_DESC = "Learn to craft the Woby Training Station and unlock the basic version of every training badge.",
 
         WALTER_WOBY_BADGE_SPEED_2_TITLE = "Agility Training II",
-        WALTER_WOBY_BADGE_SPEED_2_DESC = "Unlocks the second agility badge at the Woby Training Station.\nThis badge greatly increases Woby's speed.",
-
-        WALTER_WOBY_BADGE_RESISTANCE_1_TITLE ="Bravery Training I",
-        WALTER_WOBY_BADGE_RESISTANCE_1_DESC = "Unlocks the first bravery badge at the Woby Training Station.\nThis badge considerably increases the damage you can take before Woby knocks you off. It improves based on badge progress.",
+        WALTER_WOBY_BADGE_SPEED_2_DESC = "Unlocks the second agility badge at the Woby Training Station.\nThis badge greatly increases Woby's speed. It gets improved based on badge progress.",
 
         WALTER_WOBY_BADGE_RESISTANCE_2_TITLE = "Bravery Training II",
-        WALTER_WOBY_BADGE_RESISTANCE_2_DESC = "Unlocks the second bravery badge at the Woby Training Station.\nThis badge greatly increases the damage you can take before Woby knocks you off.",
-
-        WALTER_WOBY_BADGE_BRAVERY_1_TITLE = "Support Training I",
-        WALTER_WOBY_BADGE_BRAVERY_1_DESC = "Unlocks the first support badge at the Woby Training Station.\nThis badge considerably decreases the loss of sanity when taking damage while riding Woby. It improves based on badge progress.",
+        WALTER_WOBY_BADGE_RESISTANCE_2_DESC = "Unlocks the second bravery badge at the Woby Training Station.\nThis badge greatly increases the damage you can take before Woby knocks you off. It gets improved based on badge progress.",
 
         WALTER_WOBY_BADGE_BRAVERY_2_TITLE = "Support Training II",
-        WALTER_WOBY_BADGE_BRAVERY_2_DESC = "Unlocks the second support badge at the Woby Training Station.\nThis badge greatly decreases the loss of sanity when taking damage while riding Woby.",
+        WALTER_WOBY_BADGE_BRAVERY_2_DESC = "Unlocks the second support badge at the Woby Training Station.\nThis badge greatly decreases the loss of sanity when taking damage while riding Woby. It gets improved based on badge progress.",
 
         WALTER_WOBY_BADGE_DIGGING_1_TITLE = "Digging Training I",
         WALTER_WOBY_BADGE_DIGGING_1_DESC = "Unlocks the first digging badge at the Woby Training Station.\nThis badge teaches Woby how to dig to find items. The chance of a successful excavation increases with badge progress.",
 
         WALTER_WOBY_BADGE_DIGGING_2_TITLE = "Digging Training II",
-        WALTER_WOBY_BADGE_DIGGING_2_DESC = "Unlocks the second digging badge at the Woby Training Station.\nHaving the second level of this badge decreases the time between excavations.",
-
-        WALTER_WOBY_BADGE_FETCHING_1_TITLE = "Fetching Training I",
-        WALTER_WOBY_BADGE_FETCHING_1_DESC = "Unlocks the first fetching badge at the Woby Training Station.\nThis badge teaches Woby how assist you in picking up items. The chance of a successful fetch increases with badge progress.",
+        WALTER_WOBY_BADGE_DIGGING_2_DESC = "Unlocks the second digging badge at the Woby Training Station.\nThis badge teaches Woby how to dig to find items.\nDecreases the time between excavations.",
 
         WALTER_WOBY_BADGE_FETCHING_2_TITLE = "Fetching Training II",
-        WALTER_WOBY_BADGE_FETCHING_2_DESC = "Unlocks the second fetching badge at the Woby Training Station.\nHaving the second level of this badge decreases fetching cooldown and increases the range.",
+        WALTER_WOBY_BADGE_FETCHING_2_DESC = "Unlocks the second fetching badge at the Woby Training Station.\nThis badge teaches Woby how assist you in picking up items. Fetch success increases with badge progress.",
 
         ---------------------------------------------------------------------------------
 
 		WALTER_SLINGSHOT_MODDING_TITLE = "Slingshotsmith",
-		WALTER_SLINGSHOT_MODDING_DESC = "Unlocks the Slingshot Field Kit and some basic parts for customizing your Slingshot.",
+		WALTER_SLINGSHOT_MODDING_DESC = "Learn to craft the Slingshot Field Kit and some basic parts for customizing your Slingshot.",
 
 		WALTER_SLINGSHOT_HANDLE_STICKY_TITLE = "Sticky Handle",
-		WALTER_SLINGSHOT_HANDLE_STICKY_DESC = "Unlocks a handle mod that prevents the Slingshot from slipping out of your hands.",
+		WALTER_SLINGSHOT_HANDLE_STICKY_DESC = "Learn to craft a handle mod that prevents the Slingshot from slipping out of your hands.",
 
 		WALTER_SLINGSHOT_HANDLE_VOIDCLOTH_TITLE = "Void Grip",
-		WALTER_SLINGSHOT_HANDLE_VOIDCLOTH_DESC = "Unlocks a handle mod that improves your firing rate.",
+		WALTER_SLINGSHOT_HANDLE_VOIDCLOTH_DESC = "Learn to craft a handle mod that improves your firing rate.",
 
 		WALTER_SLINGSHOT_BAND_TENTACLE_TITLE = "Flailing Band",
-		WALTER_SLINGSHOT_BAND_TENTACLE_DESC = "Unlocks a rubber band mod that improves your firing distance.",
+		WALTER_SLINGSHOT_BAND_TENTACLE_DESC = "Learn to craft a rubber band mod that improves your firing distance.",
 
 		WALTER_SLINGSHOT_FRAME_GEMS_TITLE = "Thulecite Frame",
-		WALTER_SLINGSHOT_FRAME_GEMS_DESC = "Unlocks a frame mod that adds a special ammo slot used for an alternate special attack.",
+		WALTER_SLINGSHOT_FRAME_GEMS_DESC = "Learn to craft a frame mod that adds a special ammo slot used for an alternate special attack.",
 
 		WALTER_SLINGSHOT_FRAME_WAGPUNK_TITLE = "Scrappy Frame",
-		WALTER_SLINGSHOT_FRAME_WAGPUNK_DESC = "Unlocks a frame mod that expands your ammo slot size and adds an alternate charged attack.",
+		WALTER_SLINGSHOT_FRAME_WAGPUNK_DESC = "Learn to craft a frame mod that expands your ammo slot size and adds an alternate charged attack.",
 
         ---------------------------------------------------------------------------------
-
-        WALTER_ALLEGIANCE_LOCK_1_DESC = "Learn 12 skills to unlock.", -- TODO(DiogoW): Something else?
 
         WALTER_ALLEGIANCE_LUNAR_TITLE = "Lunar Affinity",
         WALTER_ALLEGIANCE_LUNAR_DESC = "Learn to craft the Brightshade Husk Rounds. Just damage, for now... More coming soon!",
@@ -15425,7 +15416,7 @@ STRINGS.SKILLTREE = {
         WENDY_SMALLGHOST_3_DESC = "Pipspooks produce more Mourning Glories.",
 
         WENDY_GRAVESTONE_1_TITLE = "Grave Beautification",
-        WENDY_GRAVESTONE_1_DESC = "Wendy can adorn graves with flowers inviting the spirits living there to come out and visit.",
+        WENDY_GRAVESTONE_1_DESC = "Wendy can adorn graves with flowers inviting the spirits living there to come out and visit.\nGraveyard spirits often promote dark gardens.",
         WENDY_GRAVESTONE_2_TITLE = "Final Resting Place?",
         WENDY_GRAVESTONE_2_DESC = "Wendy can dig up gravestones and relocate them.",
         WENDY_MAKEGRAVEMOUNDS_TITLE = "Gravestones By Wendy",
@@ -15992,7 +15983,7 @@ STRINGS.SKILLTREE = {
         WORTOX_LIFEBRINGER_1_TITLE = "Lifebringer I",
         WORTOX_LIFEBRINGER_1_DESC = "Learn how to channel Souls into a Twintailed Heart, a creation used to revive ghostly friends.",
         WORTOX_LIFEBRINGER_2_TITLE = "Lifebringer II",
-        WORTOX_LIFEBRINGER_2_DESC = "Your Sanity gains from reviving others is increased.",
+        WORTOX_LIFEBRINGER_2_DESC = "Your ghostly friends will no longer suffer health penalties when you revive them with a Twintailed Heart.",
         WORTOX_LIFEBRINGER_3_TITLE = "Lifebringer III",
         WORTOX_LIFEBRINGER_3_DESC = "Allow the Twintailed Heart to be used by another which will pull them to you from near or afar.\nUsing it yourself will free the Souls inside.",
 
@@ -16054,7 +16045,7 @@ STRINGS.SKILLTREE = {
         WORTOX_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity by showing you power from wearing a Brightshade Helm or Armor. Souls waiting to be freed in a Soul Echo will absorb the damage from Shadow Aligned enemies, and expire the timer.",
 
         WORTOX_ALLEGIANCE_SHADOW_TITLE = "Shadow Harvester",
-        WORTOX_ALLEGIANCE_SHADOW_DESC = "The Queen will reward your loyalty by unlocking power from wielding a Shadow Reaper. Souls waiting to be freed in a Soul Echo will cause damage dealt to spread out to close enemies, and expire the timer.",
+        WORTOX_ALLEGIANCE_SHADOW_DESC = "The Queen will reward your loyalty by unlocking power from wielding a Shadow Reaper. Souls waiting to be freed in a Soul Echo will cause damage dealt to spread out to close enemies or hit one target twice, and expire the timer.",
     },
 
     WURT = {

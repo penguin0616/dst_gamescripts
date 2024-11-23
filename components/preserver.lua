@@ -15,4 +15,15 @@ function Preserver:GetPerishRateMultiplier(item)
 			or 1
 end
 
+
+function Preserver:GetDebugString()
+	local s = nil
+	if type(self.perish_rate_multiplier) == "number" then
+     	s = string.format("perish rate mult = %.2f", self.perish_rate_multiplier)
+	else
+		s = "perish rate mult = FUNCTION"
+	end
+    return s
+end
+
 return Preserver

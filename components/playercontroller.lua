@@ -996,16 +996,13 @@ function PlayerController:DoControllerAltActionButton()
 			if act ~= nil then
 				obj = nil
 				isspecial = true
+			elseif self:TryAOETargeting() or self:TryAOECharging(nil, true) then
+				return
 			else
 				local rider = self.inst.replica.rider
 				if rider ~= nil and rider:IsRiding() then
 					obj = self.inst
 					act = BufferedAction(obj, obj, ACTIONS.DISMOUNT)
-				else
-					if not self:TryAOETargeting() then
-						self:TryAOECharging(nil, true)
-					end
-					return
 				end
 			end
         end
@@ -1369,15 +1366,43 @@ end
 
 function PlayerController:HasAOETargeting()
     local item = self.inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-	return item and (
-		(item.components.aoetargeting and item.components.aoetargeting:IsEnabled()) or
-		(item.components.aoecharging and item.components.aoecharging:IsEnabled())
-	)
+	if item then
+		local isriding
+		if item.components.aoetargeting and item.components.aoetargeting:IsEnabled() then
+			if item.components.aoetargeting.allowriding then
+				return true
+			end
+			isriding = self.inst.replica.rider
+			isriding = isriding ~= nil and isriding:IsRiding()
+			if not isriding then
+				return true
+			end
+		end
+		if item.components.aoecharging and item.components.aoecharging:IsEnabled() then
+			if item.components.aoecharging.allowriding then
+				return true
+			end
+			if isriding == nil then
+				isriding = self.inst.replica.rider
+				isriding = isriding ~= nil and isriding:IsRiding()
+			end
+			if not isriding then
+				return true
+			end
+		end
+	end
+	return false
 end
 
 function PlayerController:TryAOETargeting()
     local item = self.inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
     if item ~= nil and item.components.aoetargeting ~= nil and item.components.aoetargeting:IsEnabled() then
+		if not item.components.aoetargeting.allowriding then
+			local rider = self.inst.replica.rider
+			if rider and rider:IsRiding() then
+				return false
+			end
+		end
         item.components.aoetargeting:StartTargeting()
 		return true
     end
@@ -1422,6 +1447,12 @@ end
 function PlayerController:TryAOECharging(force_rotation, iscontroller)
 	local item = self.inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
 	if item and item.components.aoecharging and item.components.aoecharging:IsEnabled() and not self:IsBusy() then
+		if not item.components.aoecharging.allowriding then
+			local rider = self.inst.replica.rider
+			if rider and rider:IsRiding() then
+				return false
+			end
+		end
 		if self.inst.sg then
 			if force_rotation then
 				--server received remote rpc
@@ -4161,11 +4192,8 @@ function PlayerController:OnRightClick(down)
 		end
 		if not closed then
 			self.inst.replica.inventory:ReturnActiveItem()
-			local rider = self.inst.replica.rider
-			if not (rider and rider:IsRiding()) then
-				if not self:TryAOETargeting() then
-					self:TryAOECharging(nil, false)
-				end
+			if self:TryAOETargeting() or self:TryAOECharging(nil, false) then
+				return
 			end
 		end
     elseif maptarget ~= nil then

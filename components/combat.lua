@@ -1189,19 +1189,30 @@ function Combat:GetDamageReflect(target, damage, weapon, stimuli)
 end
 
 local AREAATTACK_MUST_TAGS = { "_combat" }
-function Combat:DoAreaAttack(target, range, weapon, validfn, stimuli, excludetags)
+function Combat:DoAreaAttack(target, range, weapon, validfn, stimuli, excludetags, onlyontarget)
     local hitcount = 0
     local x, y, z = target.Transform:GetWorldPosition()
-    local ents = TheSim:FindEntities(x, y, z, range, AREAATTACK_MUST_TAGS, excludetags)
-    for i, ent in ipairs(ents) do
-        if ent ~= target and
-            ent ~= self.inst and
-            self:IsValidTarget(ent) and
+    if onlyontarget then
+        local ent = target
+        if self:IsValidTarget(ent) and
             (validfn == nil or validfn(ent, self.inst)) then
             self.inst:PushEvent("onareaattackother", { target = ent, weapon = weapon, stimuli = stimuli })
-			local dmg, spdmg = self:CalcDamage(ent, weapon, self.areahitdamagepercent)
-			ent.components.combat:GetAttacked(self.inst, dmg, weapon, stimuli, spdmg)
+            local dmg, spdmg = self:CalcDamage(ent, weapon, self.areahitdamagepercent)
+            ent.components.combat:GetAttacked(self.inst, dmg, weapon, stimuli, spdmg)
             hitcount = hitcount + 1
+        end
+    else
+        local ents = TheSim:FindEntities(x, y, z, range, AREAATTACK_MUST_TAGS, excludetags)
+        for i, ent in ipairs(ents) do
+            if ent ~= target and
+                ent ~= self.inst and
+                self:IsValidTarget(ent) and
+                (validfn == nil or validfn(ent, self.inst)) then
+                self.inst:PushEvent("onareaattackother", { target = ent, weapon = weapon, stimuli = stimuli })
+                local dmg, spdmg = self:CalcDamage(ent, weapon, self.areahitdamagepercent)
+                ent.components.combat:GetAttacked(self.inst, dmg, weapon, stimuli, spdmg)
+                hitcount = hitcount + 1
+            end
         end
     end
 

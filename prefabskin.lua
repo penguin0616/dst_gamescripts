@@ -1272,11 +1272,16 @@ end
 --------------------------------------------------------------------------
 gravestone_init_fn = function(inst, build_name)
     basic_init_fn( inst, build_name, "gravestones" )
-    inst.AnimState:PlayAnimation("grave1")
 end
 gravestone_clear_fn = function(inst)
     basic_clear_fn(inst, "gravestones" )
-    inst.AnimState:PlayAnimation("grave" .. inst.random_stone_choice)
+end
+dug_gravestone_init_fn = function(inst, build_name)
+    basic_init_fn( inst, build_name, "gravestones" )
+end
+dug_gravestone_clear_fn = function(inst)
+    basic_clear_fn(inst, "gravestones" )
+    inst.components.inventoryitem:ChangeImageName("dug_gravestone" .. (inst.random_stone_choice == "1" and "" or inst.random_stone_choice))
 end
 
 --------------------------------------------------------------------------

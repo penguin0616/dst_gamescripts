@@ -15852,22 +15852,42 @@ local states =
 				else
 					local buffaction = inst:GetBufferedAction()
 					local equip = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-					if equip and equip.components.weapon and equip.components.weapon.projectile then
+					if equip then
+						if equip.components.slingshotmods and not equip.components.slingshotmods:CheckRequiredSkillsForPlayer(inst) then
+							inst:ClearBufferedAction()
+							inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL"))
+							inst.sg:GoToState("idle")
+							return
+						end
+
+						if not (equip.components.weapon and equip.components.weapon.projectile) then
+							inst:ClearBufferedAction()
+							inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_OUT_OF_AMMO"))
+							inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/no_ammo")
+							inst.sg:GoToState("idle")
+							return
+						end
+
+						local ammo = equip.components.container and equip.components.container:GetItemInSlot(1) or nil
+						if ammo and ammo.REQUIRED_SKILL and not (inst.components.skilltreeupdater and inst.components.skilltreeupdater:IsActivated(ammo.REQUIRED_SKILL)) then
+							inst:ClearBufferedAction()
+							inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL"))
+							inst.sg:GoToState("idle")
+							return
+						end
+
 						local target = buffaction and buffaction.target or nil
 						if target and target:IsValid() and inst.components.combat:CanTarget(target) then
 							inst:PerformBufferedAction()
 							inst.sg:RemoveStateTag("abouttoattack")
 							inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/shoot")
-						else
-							inst:ClearBufferedAction()
-							inst.sg:GoToState("idle")
+							return
 						end
-					else --out of ammo
-						inst:ClearBufferedAction()
-						inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_OUT_OF_AMMO"))
-						inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/no_ammo")
-						inst.sg:GoToState("idle")
 					end
+
+					--failed
+					inst:ClearBufferedAction()
+					inst.sg:GoToState("idle")
 				end
 			end),
 			FrameEvent(8, function(inst)
@@ -15979,19 +15999,41 @@ local states =
 			FrameEvent(4, function(inst)
 				local buffaction = inst:GetBufferedAction()
 				local equip = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-				if equip and equip.components.container and equip.components.container:GetItemInSlot(equip.components.container:GetNumSlots()) then
+				if equip then
+					if equip.components.slingshotmods and not equip.components.slingshotmods:CheckRequiredSkillsForPlayer(inst) then
+						inst:ClearBufferedAction()
+						inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL"))
+						inst.sg:GoToState("idle")
+						return
+					end
+
+					local ammo = equip.components.container and equip.components.container:GetItemInSlot(equip.components.container:GetNumSlots()) or nil
+					if ammo == nil then
+						inst:ClearBufferedAction()
+						inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_OUT_OF_AMMO"))
+						inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/no_ammo")
+						inst.sg:GoToState("idle")
+						return
+					end
+
+					if ammo.REQUIRED_SKILL and not (inst.components.skilltreeupdater and inst.components.skilltreeupdater:IsActivated(ammo.REQUIRED_SKILL)) then
+						inst:ClearBufferedAction()
+						inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL"))
+						inst.sg:GoToState("idle")
+						return
+					end
+
 					if inst.sg.statemem.chargeticks == nil then
 						inst:PerformBufferedAction()
 					elseif equip.components.aoecharging and equip.components.aoecharging:IsEnabled() then
 						equip.components.aoecharging:ReleaseChargedAttack(inst, inst.sg.statemem.chargeticks)
 					end
 					inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/shoot")
-				else --out of ammo
-					inst:ClearBufferedAction()
-					inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_OUT_OF_AMMO"))
-					inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/no_ammo")
-					inst.sg:GoToState("idle")
 				end
+
+				--failed
+				inst:ClearBufferedAction()
+				inst.sg:GoToState("idle")
 			end),
 			FrameEvent(8, function(inst)
 				inst.sg:RemoveStateTag("busy")

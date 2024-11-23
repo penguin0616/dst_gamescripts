@@ -339,6 +339,9 @@ local function OnGetItem(inst, giver, item)
             item.SoundEmitter:PlaySound(item.skin_sound)
         end
         local dohealthpenalty = not item:HasTag("noreviverhealthpenalty")
+        if item.prefab == "wortox_reviver" and giver.components.skilltreeupdater and giver.components.skilltreeupdater:IsActivated("wortox_lifebringer_2") then
+            dohealthpenalty = false
+        end
 
         item:PushEvent("usereviver", { user = giver })
         giver.hasRevivedPlayer = true
@@ -349,11 +352,7 @@ local function OnGetItem(inst, giver, item)
         if dohealthpenalty then
             inst.components.health:DeltaPenalty(TUNING.REVIVE_HEALTH_PENALTY)
         end
-        local sanitybonus = TUNING.REVIVE_OTHER_SANITY_BONUS
-        if giver.components.skilltreeupdater and giver.components.skilltreeupdater:IsActivated("wortox_lifebringer_2") then
-            sanitybonus = sanitybonus + TUNING.SKILLS.WORTOX.REVIVE_OTHER_SANITY_BONUS
-        end
-        giver.components.sanity:DoDelta(sanitybonus)
+        giver.components.sanity:DoDelta(TUNING.REVIVE_OTHER_SANITY_BONUS)
     elseif item ~= nil and giver.components.age ~= nil then
 		if giver.components.age:GetAgeInDays() >= TUNING.ACHIEVEMENT_HELPOUT_GIVER_MIN_AGE and inst.components.age:GetAgeInDays() <= TUNING.ACHIEVEMENT_HELPOUT_RECEIVER_MAX_AGE then
 			AwardPlayerAchievement("helping_hand", giver)
@@ -1686,7 +1685,7 @@ local function SaveForReroll(inst)
         petleash = inst.components.petleash ~= nil and inst.components.petleash:OnSave() or nil,
         maps = inst.player_classified ~= nil and inst.player_classified.MapExplorer ~= nil and inst.player_classified.MapExplorer:RecordAllMaps() or nil,
 		seamlessplayerswapper = inst.components.seamlessplayerswapper ~= nil and inst.components.seamlessplayerswapper:SaveForReroll() or nil,
-        dogtrainer = inst.components.dogtrainer ~= nil and inst.components.dogtrainer:OnSave() or nil,
+        dogtrainer = inst.components.dogtrainer ~= nil and inst.components.dogtrainer:SaveForReroll() or nil,
         curses = curses,
     }
     return next(data) ~= nil and data or nil

@@ -131,7 +131,7 @@ function DogTrainer:DecodeAndValidateBadgesData(data)
         if checkuint(aspectid) and checkuint(level) and level >= 1 and level <= NUM_WOBY_TRAINING_ASPECTS_LEVELS then
             aspect = WOBY_TRAINING_ASPECTS_LIST[data[i]]
 
-            if aspect ~= nil and (slots + level) <= max_slots then
+            if aspect ~= nil and self:HasBadgeSkill(aspect, level) and (slots + level) <= max_slots then
                 table.insert(activebadges, string.format("%s_%d", string.upper(aspect), level))
 
                 slots = slots + level
@@ -148,6 +148,20 @@ function DogTrainer:HasBadge(badge)
     return table.contains(self.badges, badge)
 end
 
+local BADGE_SKILL_FMT = "walter_woby_badge_%s_%d"
+
+function DogTrainer:HasBadgeSkill(aspect, level)
+    local skilltreeupdater = self.inst.components.skilltreeupdater
+
+    if skilltreeupdater == nil then
+        return false
+    end
+
+    local skill = level <= 1 and "walter_woby_badge_base" or BADGE_SKILL_FMT:format(aspect, level)
+
+    return skilltreeupdater:IsActivated(skill)
+end
+
 function DogTrainer:HasBadgeOfAspect(aspect)
     local badge_fmt = string.upper(aspect).."_%d"
 
@@ -161,6 +175,22 @@ function DogTrainer:HasBadgeOfAspect(aspect)
 end
 
 ------------------------------------------------------------------------------------------------------------------
+
+function DogTrainer:SaveForReroll() -- No enabled badges save data when rerolling!
+    local ret = { aspects = {} }
+
+    for i, aspect in ipairs(self.aspects) do
+        ret.aspects[aspect] = {
+            aspectdata = self.aspectsdata[aspect] or nil,
+        }
+
+        if not next(ret.aspects[aspect]) then
+            ret.aspects[aspect] = nil
+        end
+    end
+
+    return next(ret.aspects) ~= nil and ret or nil
+end
 
 function DogTrainer:OnSave()
     local ret = { aspects = {} }
@@ -190,6 +220,8 @@ function DogTrainer:OnLoad(data, newents)
 
     local enabled_badges = {}
 
+    local slots, max_slots = 0, TUNING.SKILLS.WALTER.WOBY_MAX_BADGES_SLOTS
+
     if data.aspects ~= nil then
         for aspect, data in pairs(data.aspects) do
             if self.aspects_ids[aspect] ~= nil then
@@ -198,9 +230,11 @@ function DogTrainer:OnLoad(data, newents)
                 if data.bitlevels ~= nil then
                     local badge_fmt = string.upper(aspect).."_%d"
 
-                    for i=1, NUM_WOBY_TRAINING_ASPECTS_LEVELS do
-                        if checkbit(data.bitlevels, 2^(i-1)) then
-                            table.insert(enabled_badges, badge_fmt:format(i))
+                    for level=1, NUM_WOBY_TRAINING_ASPECTS_LEVELS do
+                        if checkbit(data.bitlevels, 2^(level-1)) and (slots + level) <= max_slots then
+                            table.insert(enabled_badges, badge_fmt:format(level))
+
+                            slots = slots + level
                         end
                     end
                 end
@@ -216,7 +250,7 @@ end
 ------------------------------------------------------------------------------------------------------------------
 
 function DogTrainer:OnRemoveFromEntity()
-
+    self.inst:RemoveTag("dogtrainer")
 end
 
 function DogTrainer:GetDebugString()

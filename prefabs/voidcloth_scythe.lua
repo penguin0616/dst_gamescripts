@@ -298,7 +298,13 @@ end
 
 local function DoShadowAoE(inst, attacker, target)
     if attacker.components.combat then
-        attacker.components.combat:DoAreaAttack(target, TUNING.SKILLS.WORTOX.VOIDCLOTHSCYTHE_AOE_RANGE, inst, ShadowAoEValidFn, nil, TheNet:GetPVPEnabled() and NO_TAGS_PVP or NO_TAGS)
+        local range = TUNING.SKILLS.WORTOX.VOIDCLOTHSCYTHE_AOE_RANGE
+        local weapon = inst
+        local excludetags = TheNet:GetPVPEnabled() and NO_TAGS_PVP or NO_TAGS
+        local hitcount = attacker.components.combat:DoAreaAttack(target, range, weapon, ShadowAoEValidFn, nil, excludetags)
+        if hitcount == 0 and target:IsValid() then
+            attacker.components.combat:DoAreaAttack(target, range, weapon, ShadowAoEValidFn, nil, excludetags, true)
+        end
     end
 end
 

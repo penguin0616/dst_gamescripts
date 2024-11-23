@@ -42,6 +42,7 @@ local AOECharging = Class(function(self, inst)
 	self.pingprefab = nil
 	self.reticule = nil
 	self.owner = nil
+	self.allowriding = true
 	--self.refreshchargeticksfn = nil
 
 	self.enabled = net_bool(inst.GUID, "aoecharging.enabled", "enableddirty")
@@ -64,6 +65,10 @@ end)
 
 function AOECharging:OnRemoveEntity()
 	self:SetChargingOwner(nil)
+end
+
+function AOECharging:SetAllowRiding(val)
+	self.allowriding = val ~= false
 end
 
 function AOECharging:IsEnabled()

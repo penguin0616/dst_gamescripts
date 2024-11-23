@@ -668,12 +668,16 @@ function Controls:OnUpdate(dt)
                 textblock:SetString(table.concat(cmds, "\n"))
             end
 		elseif not self.groundactionhint.shown then
-			if self.dismounthintdelay <= 0
-				and self.owner.replica.rider ~= nil
-				and self.owner.replica.rider:IsRiding() then
-				self.playeractionhint.text:SetString(TheInput:GetLocalizedControl(controller_id, CONTROL_CONTROLLER_ALTACTION).." "..STRINGS.ACTIONS.DISMOUNT)
-				self.playeractionhint:Show()
-				self.playeractionhint:SetTarget(self.owner)
+			if self.dismounthintdelay <= 0 then
+				local rider = self.owner.replica.rider
+				if rider and rider:IsRiding() and not (self.owner.components.playercontroller and self.owner.components.playercontroller:HasAOETargeting()) then
+					self.playeractionhint.text:SetString(TheInput:GetLocalizedControl(controller_id, CONTROL_CONTROLLER_ALTACTION).." "..STRINGS.ACTIONS.DISMOUNT)
+					self.playeractionhint:Show()
+					self.playeractionhint:SetTarget(self.owner)
+				else
+					self.playeractionhint:Hide()
+					self.playeractionhint:SetTarget(nil)
+				end
 			else
 				self.playeractionhint:Hide()
 				self.playeractionhint:SetTarget(nil)

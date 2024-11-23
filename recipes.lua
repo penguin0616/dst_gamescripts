@@ -122,8 +122,8 @@ Recipe2("ghostlyelixir_retaliation",	{Ingredient("livinglog", 1),Ingredient("gho
 Recipe2("ghostlyelixir_attack",			{Ingredient("stinger", 1), Ingredient("ghostflower", 3)},										TECH.NONE,				{builder_tag="elixirbrewer"})
 Recipe2("ghostlyelixir_speed",			{Ingredient("honey", 1), Ingredient("ghostflower", 1)},											TECH.NONE,				{builder_tag="elixirbrewer"})
 Recipe2("armor_flowerdress",			{Ingredient("petals_evil", 20), Ingredient("ghostflower", 2)},									TECH.NONE,				{builder_skill="wendy_petal_2"})
-Recipe2("ghostlyelixir_shadow",			{Ingredient("nightmarefuel", 1), Ingredient("ghostflower", 3)},									TECH.NONE,				{builder_tag="wendy_shadow_craft"})
-Recipe2("ghostlyelixir_lunar",			{Ingredient("moonglass", 1), Ingredient("ghostflower", 3)},										TECH.NONE,				{builder_tag="wendy_lunar_craft"})
+Recipe2("ghostlyelixir_shadow",			{Ingredient("purehorror", 1), Ingredient("ghostflower", 3)},									TECH.NONE,				{builder_tag="wendy_shadow_craft"})
+Recipe2("ghostlyelixir_lunar",			{Ingredient("purebrilliance", 1), Ingredient("ghostflower", 3)},								TECH.NONE,				{builder_tag="wendy_lunar_craft"})
 Recipe2("wendy_gravestone",				{Ingredient("cutstone", 1), Ingredient("petals_evil", 4)}, 										TECH.NONE,				{builder_skill="wendy_makegravemounds", product="wendy_recipe_gravestone", placer="wendy_recipe_gravestone_placer", min_spacing=0, no_deconstruction=true, image="dug_gravestone.tex"})
 Recipe2("petals",						{Ingredient("petals_evil", 4), Ingredient("ghostflower", 1)},									TECH.NONE,				{builder_skill="wendy_petal_1", numtogive=4})
 
@@ -195,7 +195,7 @@ Recipe2("slingshot_handle_sticky",		{Ingredient("glommerfuel", 1)},									 			
 Recipe2("slingshot_handle_silk",		{Ingredient("silk", 2)},										 								TECH.NONE,				{builder_tag="pebblemaker", nounlock=true, builder_skill = "walter_slingshot_modding"})
 Recipe2("slingshot_handle_voidcloth",	{Ingredient("voidcloth", 1)},										 							TECH.NONE,				{builder_tag="pebblemaker", nounlock=true, builder_skill = "walter_slingshot_handle_voidcloth"})
 
-Recipe2("woby_badge_station",			{Ingredient("boards", 2), Ingredient("log", 6), Ingredient("rope", 2), Ingredient("silk", 3)},	TECH.SCIENCE_ONE,		{builder_tag="pinetreepioneer", placer="woby_badge_station_placer"})
+Recipe2("woby_badge_station",			{Ingredient("boards", 2), Ingredient("log", 6), Ingredient("rope", 2), Ingredient("silk", 3)},	TECH.NONE,				{builder_tag="pinetreepioneer", builder_skill = "walter_woby_badge_base", placer="woby_badge_station_placer"})
 
 -- Wolfgang
 Recipe2("mighty_gym",					{Ingredient("boards", 4), Ingredient("cutstone", 2), Ingredient("rope", 3)},					TECH.SCIENCE_ONE,		{builder_tag="strongman", placer="mighty_gym_placer"})

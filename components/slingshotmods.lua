@@ -68,6 +68,22 @@ function SlingshotMods:GetPartBuildAndSymbol(slot)
 	end
 end
 
+function SlingshotMods:CheckRequiredSkillsForPlayer(player)
+	if not self.ismastersim then
+		return
+	elseif self.containerinst then
+		local skilltreeupdater = player.components.skilltreeupdater
+		local container = self.containerinst.components.container
+		for i = 1, container:GetNumSlots() do
+			local part = container:GetItemInSlot(i)
+			if part and part.REQUIRED_SKILL and not (skilltreeupdater and skilltreeupdater:IsActivated(part.REQUIRED_SKILL)) then
+				return false
+			end
+		end
+	end
+	return true
+end
+
 local function doclose(inst)
 	inst.components.slingshotmods:Close()
 end

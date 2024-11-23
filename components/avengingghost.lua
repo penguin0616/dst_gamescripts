@@ -114,7 +114,7 @@ function Avengingghost:StartAvenging(time)
 
 	local set = time or MAX_TIME
 	self._avengetime:set(set)
-				
+			
 				--self.inst.player_classified:SetGhostMode(false)
                 --self.inst.Light:SetColour(255/255, 32/255, 32/255)
 
@@ -139,26 +139,30 @@ function Avengingghost:StopAvenging()
 	if not self.ismastersim then
 		return
 	end
-	self._avengetime:set(0)
 
-    self.inst:StopWatchingWorldState("isnight", SetGhostDamage)
-    self.inst:StopWatchingWorldState("isday", SetGhostDamage)
-    self.inst:StopWatchingWorldState("isdusk", SetGhostDamage)
- 	self.inst.components.combat.defaultdamage = self.olddamage
+	if self.olddamage then
+		self._avengetime:set(0)
 
-				if self.inst:HasTag("playerghost") then
-					--self.inst.player_classified:SetGhostMode(true)
-				end
- 				--self.inst.Light:SetColour(180/255, 195/255, 225/255)
+	    self.inst:StopWatchingWorldState("isnight", SetGhostDamage)
+	    self.inst:StopWatchingWorldState("isday", SetGhostDamage)
+	    self.inst:StopWatchingWorldState("isdusk", SetGhostDamage)
+	 	self.inst.components.combat.defaultdamage = self.olddamage
 
-    self.inst.SoundEmitter:KillSound("angry")
-    self.inst.AnimState:SetMultColour(1, 1, 1, 1)
+					if self.inst:HasTag("playerghost") then
+						--self.inst.player_classified:SetGhostMode(true)
+					end
+	 				--self.inst.Light:SetColour(180/255, 195/255, 225/255)
 
-    if self.inst.ghost_attack_fx then
-        self.inst.ghost_attack_fx:Remove()
-    end
+	    self.inst.SoundEmitter:KillSound("angry")
+	    self.inst.AnimState:SetMultColour(1, 1, 1, 1)
 
-	self.inst.components.aura:Enable(false)
+	    if self.inst.ghost_attack_fx then
+	        self.inst.ghost_attack_fx:Remove()
+	    end
+
+		self.inst.components.aura:Enable(false)
+		self.olddamage = nil
+	end
 	self.inst:StopUpdatingComponent(self)
 end
 

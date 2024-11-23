@@ -1227,6 +1227,8 @@ local COMPONENT_ACTIONS =
                     ) then
                     table.insert(actions, target:HasTag("bundle") and ACTIONS.BUNDLESTORE or ACTIONS.STORE)
                 end
+            elseif inventoryitem and inventoryitem:CanOnlyGoInPocketOrPocketContainers() then
+                -- Not tradable.
 			elseif target.replica.constructionsite ~= nil and target.replica.constructionsite:IsEnabled() then
                 if not (GetGameModeProperty("non_item_equips") and inst.replica.equippable ~= nil) and
                     not (target:HasTag("BURNABLE_fueled") and inst:HasTag("BURNABLE_fuel")) then

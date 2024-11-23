@@ -252,7 +252,7 @@ defs["slingshot_handle_silk"] =
 	slot = "handle",
 	anim = "idle_silk",
 	swap_symbol = "swap_handle_silk",
-	skill = "walter_slingshot_handle_silk",
+	skill = "walter_slingshot_modding",
 }
 
 -----------------------------------------------------------------------------------------------------------------------------------------------

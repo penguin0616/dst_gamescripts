@@ -75,10 +75,10 @@ local function MakeTackleContainer(name, bank, build, assets)
         inst.entity:AddTransform()
         inst.entity:AddAnimState()
         inst.entity:AddSoundEmitter()
-        inst.entity:AddMiniMapEntity()
+        --inst.entity:AddMiniMapEntity()
         inst.entity:AddNetwork()
 
-		inst.MiniMapEntity:SetIcon(name..".png")
+		--inst.MiniMapEntity:SetIcon(name..".png") -- FIXME(JBK): These do not exist.
 
         inst.AnimState:SetBank(bank)
         inst.AnimState:SetBuild(build)

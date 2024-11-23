@@ -1949,7 +1949,36 @@ ACTIONS.GIVE.stroverridefn = function(act)
     end
 end
 
+local function ShouldBlockGiving(act)
+    local inventoryitem = act.invobject.replica.inventoryitem
+    if not inventoryitem then
+        return false
+    end
+
+    if inventoryitem:CanOnlyGoInPocket() then
+        return true
+    end
+
+    if inventoryitem:CanOnlyGoInPocketOrPocketContainers() then
+        if act.target and act.target.replica.inventoryitem and act.target.replica.inventoryitem:CanOnlyGoInPocket() then
+            if act.target.replica.container and act.target.replica.container:CanBeOpened() or
+                act.target.replica.container_proxy and act.target.replica.container_proxy:CanBeOpened() then
+                if inventoryitem:IsGrandOwner(act.doer) then
+                    return false
+                end
+            end
+        end
+        return true
+    end
+
+    return false
+end
+
 ACTIONS.GIVE.fn = function(act)
+    if ShouldBlockGiving(act) then
+        return false
+    end
+
     if act.target ~= nil then
         if act.target:HasTag("playbill_lecturn") and act.invobject.components.playbill then
             act.target.components.playbill_lecturn:SwapPlayBill(act.invobject, act.doer)
@@ -2009,6 +2038,10 @@ ACTIONS.GIVE.fn = function(act)
 end
 
 ACTIONS.GIVETOPLAYER.fn = function(act)
+    if ShouldBlockGiving(act) then
+        return false
+    end
+
     if act.target ~= nil and
             act.target.components.trader ~= nil and
             act.target.components.inventory ~= nil and
@@ -2027,6 +2060,10 @@ ACTIONS.GIVETOPLAYER.fn = function(act)
 end
 
 ACTIONS.GIVEALLTOPLAYER.fn = function(act)
+    if ShouldBlockGiving(act) then
+        return false
+    end
+
     if act.target ~= nil and
         act.target.components.trader ~= nil and
         act.target.components.inventory ~= nil and
@@ -3110,8 +3147,8 @@ ACTIONS_MAP_REMAP[ACTIONS.BLINK.code] = function(act, targetpos)
     end
     local dist_perhop_mod = ((TUNING.SKILLS.WORTOX.MAPHOP_DISTANCE_SCALER_MAX - TUNING.WORTOX_MAPHOP_DISTANCE_SCALER) * seeabletilepercent + TUNING.WORTOX_MAPHOP_DISTANCE_SCALER)
     local hopspersoul = TUNING.WORTOX_FREEHOP_HOPSPERSOUL
-    local dist_perhop = act.distance * dist_perhop_mod * (hopspersoul - 1) -- NOTES(JBK): Do not adjust by GetHopsPerSoul here because it is two multipliers for the same effect.
-    local dist_mod = math.min((doer._freesoulhop_counter or 0), hopspersoul - 1) * act.distance -- Adds to the total distance based off of the counter to remove distance able to be done from the hop do not include map gains here.
+    local dist_perhop = act.distance * dist_perhop_mod * hopspersoul -- NOTES(JBK): Do not adjust by GetHopsPerSoul here because it is two multipliers for the same effect.
+    local dist_mod = math.min((doer._freesoulhop_counter or 0), hopspersoul) * act.distance -- Adds to the total distance based off of the counter to remove distance able to be done from the hop do not include map gains here.
     local dist_souls = (dist + dist_mod) / dist_perhop
     act_remap.maxsouls = TUNING.WORTOX_MAX_SOULS
     act_remap.distancemod = dist_mod

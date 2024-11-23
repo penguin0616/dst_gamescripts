@@ -102,7 +102,7 @@ local function BuildSkillsData(SkillTreeFns)
             },
         },
         wendy_potion_2 = {
-            pos = {X+ 152,Y-192}, --  {COL2+22, CURV2-23},-- math.floor(295*.74), POS_Y_1+ -- + math.floor(295*.74),Y+math.floor(-377*.74) -- 600 -457
+            pos = {X+ 152,Y-192},
             tags = {"potion"},
             connects = {
                 "wendy_potion_3",
@@ -239,8 +239,8 @@ local function BuildSkillsData(SkillTreeFns)
     local allegiance_skills =
     {
 
-        wendy_shadow_lock_1 = SkillTreeFns.MakeFuelWeaverLock({connects={"wendy_shadow_lock_2"}, pos = {COL3+TILEGAP/2 +21, A_BASE_H} }),
-        wendy_shadow_lock_2 = SkillTreeFns.MakeNoLunarLock({connects={"wendy_shadow_1"}, pos = {COL4+TILEGAP/2 +18, A_BASE_H} }, true),
+        wendy_shadow_lock_1 = SkillTreeFns.MakeFuelWeaverLock({ pos = {COL3+TILEGAP/2 +21, A_BASE_H} }),
+        wendy_shadow_lock_2 = SkillTreeFns.MakeNoLunarLock({ pos = {COL4+TILEGAP/2 +18, A_BASE_H} }),
 
         wendy_shadow_1 = {
             pos = {COL5+TILEGAP/2 +21, A_BASE_H },
@@ -248,6 +248,8 @@ local function BuildSkillsData(SkillTreeFns)
             connects = {
                 "wendy_shadow_2",
             },
+
+            locks = {"wendy_shadow_lock_1", "wendy_shadow_lock_2"},
 
             onactivate = function(inst, fromload)
                 inst:AddTag("player_shadow_aligned")
@@ -311,8 +313,8 @@ local function BuildSkillsData(SkillTreeFns)
             tags = {"allegiance","shadow","shadow_favor"},
         },
 
-        wendy_lunar_lock_1 = SkillTreeFns.MakeCelestialChampionLock({ connects={"wendy_lunar_lock_2"}, pos = {COL3+TILEGAP/2 +21,A_BASE_H+TILEGAP}}),
-        wendy_lunar_lock_2 = SkillTreeFns.MakeNoShadowLock({ connects={"wendy_lunar_1"}, pos = {COL4+TILEGAP/2 +18, A_BASE_H+TILEGAP}}, true), 
+        wendy_lunar_lock_1 = SkillTreeFns.MakeCelestialChampionLock({ pos = {COL3+TILEGAP/2 +21,A_BASE_H+TILEGAP}}),
+        wendy_lunar_lock_2 = SkillTreeFns.MakeNoShadowLock({ pos = {COL4+TILEGAP/2 +18, A_BASE_H+TILEGAP}}), 
 
         wendy_lunar_1 = {
             pos = {COL5+TILEGAP/2 +21, A_BASE_H+TILEGAP },
@@ -320,6 +322,8 @@ local function BuildSkillsData(SkillTreeFns)
             connects = {
                 "wendy_lunar_2",
             },
+
+            locks = {"wendy_lunar_lock_1", "wendy_lunar_lock_2"},
 
             onactivate = function(inst, fromload)
                 inst:AddTag("player_lunar_aligned")

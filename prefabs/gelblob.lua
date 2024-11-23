@@ -673,21 +673,7 @@ local function OnUpdateReturning(inst)
 		inst.Physics:SetMotorVel(0, 0, 0)
 		inst.Physics:Stop()
 	else
-		inst._returntask:Cancel()
-		inst._returntask = nil
-		inst.persists = false
-		inst.Physics:SetMotorVel(0, 0, 0)
-		inst.Physics:Stop()
-		inst.DynamicShadow:Enable(false)
-		ErodeAway(inst)
-		if inst._proximitytask then
-			inst._proximitytask:Cancel()
-			inst._proximitytask = nil
-		end
-		for k, v in pairs(inst._targets) do
-			v:KillFX()
-			inst._targets[k] = nil
-		end
+		inst:KillFX()
 	end
 end
 
@@ -718,10 +704,17 @@ end
 local function Small_KillFX(inst, quick)
 	if inst:IsAsleep() then
 		inst:Remove()
-	else
+	elseif not inst.killed then
+		inst.killed = true
+		if inst.tossing then
+			inst.tossing:Cancel()
+			inst.tossing = nil
+		end
 		inst.components.timer:StopTimer("lifespan")
-		inst._returntask:Cancel()
-		inst._returntask = nil
+		if inst._returntask then
+			inst._returntask:Cancel()
+			inst._returntask = nil
+		end
 		inst.persists = false
 		inst.Physics:SetMotorVel(0, 0, 0)
 		inst.Physics:Stop()

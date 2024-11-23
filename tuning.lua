@@ -7189,7 +7189,7 @@ function Tune(overrides)
                 WOBY_FETCHING_ASSIST_COOLDOWN = 5,
                 WOBY_FETCHING_ASSIST_SUCCESS_CHANCE = { min=.6, max=1 },
 
-                WOBY_MAX_BADGES_SLOTS = 6,
+                WOBY_MAX_BADGES_SLOTS = 4,
 
                 WOBY_BADGES = {
                     -- Speed bonus.
@@ -7237,8 +7237,6 @@ function Tune(overrides)
                 NAUGHTY_SANITY_MULT = 0.0,
                 -- wortox_lifebringer_1
                 REVIVE_PERISH_TIME = 10 * total_day_time * perish_warp,
-                -- wortox_lifebringer_2
-                REVIVE_OTHER_SANITY_BONUS = 40,
                 -- wortox_soulprotector_1
                 WORTOX_SOULPROTECTOR_1_RANGE = 3,
                 -- wortox_soulprotector_2
@@ -7258,7 +7256,7 @@ function Tune(overrides)
                 -- wortox_panflute_forget
                 WORTOX_PANFLUTE_FORGET_DURATION = 5, -- How long to keep targets without an aggro target.
                 -- wortox_liftedspirits_1
-                WORTOX_SOULECHO_SPEEDMULT = 1.1, -- Bonus speed for the duration of Soul Echo.
+                WORTOX_SOULECHO_SPEEDMULT = 1.2, -- Bonus speed for the duration of Soul Echo.
                 -- wortox_liftedspirits_2
                 WORTOX_FREEHOP_TIMELIMIT_MULT = 1.5, -- How much to scale the original time limit for the cooldown by.
                 -- wortox_liftedspirits_3
@@ -7273,7 +7271,7 @@ function Tune(overrides)
                 SOULDECOY_DURATION_BONUS = 3,
                 -- wortox_souldecoy_3
                 SOULDECOY_EXPLODE_RADIUS = 4,
-                SOULDECOY_EXPLODE_DAMAGE = wilson_attack * 0.75,
+                SOULDECOY_EXPLODE_DAMAGE = wilson_attack * 1.5,
                 -- wortox_nabbag
                 NABBAG_DAMAGE_MIN = wilson_attack * 0.4,
                 NABBAG_DAMAGE_MAX = wilson_attack,
@@ -7281,7 +7279,7 @@ function Tune(overrides)
                 NABBAG_CONEANGLE = 140,
                 NABBAG_MAX_RADIUS = 3,
                 NABBAG_CIRCLE_RADIUS = 1,
-                NABBAG_SOUL_DAMAGE_RATIO = 0.1, -- How much of the nabbag's damage is added onto soul damage.
+                NABBAG_SOUL_DAMAGE_RATIO = 0.2, -- How much of the nabbag's damage is added onto soul damage.
                 NABBAG_VS_SHADOW_BONUS = 1.1,
                 NABBAG_VS_LUNAR_BONUS = 1.1,
                 NABBAG_PLANAR_DAMAGE_PER_TYPE = 5, -- From Pure Brilliance and Pure Horror so 2 times this for maximum planar.
@@ -7299,7 +7297,7 @@ function Tune(overrides)
                 -- wortox_thief_2
                 SOUL_PROJECTILE_LIFETIME_BONUS = 2,
                 -- wortox_thief_3
-                SOUL_SPEAR_DAMAGE = wilson_attack * 0.25,
+                SOUL_SPEAR_DAMAGE = wilson_attack * 0.5,
                 SOUL_SPEAR_HIT_COOLDOWN = 0.35,
                 -- wortox_thief_4
                 SOUL_PROJECTILE_REPEL_DURATION = 0.5,
@@ -7309,7 +7307,7 @@ function Tune(overrides)
                 -- wortox_allegiance_shadow
                 ALLEGIANCE_SHADOW_RESIST = 0.9,
                 ALLEGIANCE_VS_LUNAR_BONUS = 1.1,
-                VOIDCLOTHSCYTHE_AOE_RANGE = 2,
+                VOIDCLOTHSCYTHE_AOE_RANGE = 2.5,
             },
         },
 
@@ -8248,11 +8246,14 @@ function Tune(overrides)
         WENDYSKILL_GRAVESTONE_DECORATETIME = 6 * total_day_time,
         WENDYSKILL_GRAVESTONE_GHOSTCOUNT = 4,
         WENDYSKILL_GRAVESTONE_EVILFLOWERCOUNT = 3,
+        WENDYSKILL_GRAVEGHOST_DEADTIME = 2 * seg_time,
 
         WENDYSKILL_SISTURN_SANITY_MODIFYER = 0.75,
 
         WENDY_SHADOW_GHOST_BURST_DAMAGE = 55,
         WENDY_SHADOW_GHOST_BURST_PLANAR_DAMAGE = 20,
+
+        WENDY_SISTURN_PETAL_PRESRVE = 0.5,
 
     }
 

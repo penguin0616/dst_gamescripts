@@ -1,29 +1,25 @@
 local PADDING = 38
 
-local BADGE_POS_X_LEFT = -218
+local BADGE_POS_X_LEFT = -217
 local BADGE_POS_Y_TOP = 173 - PADDING * 3
 
-local MODS_POS_X_MIDDLE = 55
+local MODS_POS_X_MIDDLE = 57
 local MODS_POS_Y_TOP = 173 - PADDING * 1.75
 
-local AMMO_POS_X_LEFT = -218 + PADDING/2
+local AMMO_POS_X_LEFT = -217 + PADDING/2
 local AMMO_POS_Y_TOP = 183
 
-local AMMO_ECONOMY_POS_X = AMMO_POS_X_LEFT + PADDING * 5.75
+local AMMO_ECONOMY_POS_X = MODS_POS_X_MIDDLE - PADDING - 5
 local AMMO_ECONOMY_POS_Y_TOP = 193
 
-local ALLEGIANCE_LOCK_POS_X = 202
-local ALLEGIANCE_SHADOW_POS_X = ALLEGIANCE_LOCK_POS_X - 24
-local ALLEGIANCE_LUNAR_POS_X  = ALLEGIANCE_LOCK_POS_X + 24
+local ALLEGIANCE_LOCK_POS_X = 201
+local ALLEGIANCE_SHADOW_POS_X = ALLEGIANCE_LOCK_POS_X - 22
+local ALLEGIANCE_LUNAR_POS_X  = ALLEGIANCE_LOCK_POS_X + 25
 local ALLEGIANCE_POS_Y_TOP = 183
 
 local POSITIONS =
 {
-    walter_woby_badge_speed_1      = { x = BADGE_POS_X_LEFT + PADDING * 0, y = BADGE_POS_Y_TOP },
-    walter_woby_badge_resistance_1 = { x = BADGE_POS_X_LEFT + PADDING * 1, y = BADGE_POS_Y_TOP },
-    walter_woby_badge_bravery_1    = { x = BADGE_POS_X_LEFT + PADDING * 2, y = BADGE_POS_Y_TOP },
-    walter_woby_badge_digging_1    = { x = BADGE_POS_X_LEFT + PADDING * 3, y = BADGE_POS_Y_TOP },
-    walter_woby_badge_fetching_1   = { x = BADGE_POS_X_LEFT + PADDING * 4, y = BADGE_POS_Y_TOP },
+    walter_woby_badge_base = { x = BADGE_POS_X_LEFT + PADDING * 2, y = BADGE_POS_Y_TOP },
 
     walter_woby_badge_speed_2      = { x = BADGE_POS_X_LEFT + PADDING * 0, y = BADGE_POS_Y_TOP - PADDING },
     walter_woby_badge_resistance_2 = { x = BADGE_POS_X_LEFT + PADDING * 1, y = BADGE_POS_Y_TOP - PADDING },
@@ -31,12 +27,12 @@ local POSITIONS =
     walter_woby_badge_digging_2    = { x = BADGE_POS_X_LEFT + PADDING * 3, y = BADGE_POS_Y_TOP - PADDING },
     walter_woby_badge_fetching_2   = { x = BADGE_POS_X_LEFT + PADDING * 4, y = BADGE_POS_Y_TOP - PADDING },
 
-    walter_slingshot_modding          = { x = MODS_POS_X_MIDDLE,           y = MODS_POS_Y_TOP - PADDING * 0 },
+    walter_slingshot_modding          = { x = MODS_POS_X_MIDDLE,           y = MODS_POS_Y_TOP - PADDING * 0     },
     walter_slingshot_band_tentacle    = { x = MODS_POS_X_MIDDLE - PADDING, y = MODS_POS_Y_TOP - PADDING * 1.125 },
     walter_slingshot_handle_sticky    = { x = MODS_POS_X_MIDDLE,           y = MODS_POS_Y_TOP - PADDING * 1.125 },
     walter_slingshot_frame_gems       = { x = MODS_POS_X_MIDDLE + PADDING, y = MODS_POS_Y_TOP - PADDING * 1.125 },
-    walter_slingshot_handle_voidcloth = { x = MODS_POS_X_MIDDLE,           y = MODS_POS_Y_TOP - PADDING * 2.25 },
-    walter_slingshot_frame_wagpunk    = { x = MODS_POS_X_MIDDLE + PADDING, y = MODS_POS_Y_TOP - PADDING * 2.25 },
+    walter_slingshot_handle_voidcloth = { x = MODS_POS_X_MIDDLE,           y = MODS_POS_Y_TOP - PADDING * 2.25  },
+    walter_slingshot_frame_wagpunk    = { x = MODS_POS_X_MIDDLE + PADDING, y = MODS_POS_Y_TOP - PADDING * 2.25  },
 
     -- Layout with 6 skills.
     walter_slingshot_ammo_moonglass        = { x = AMMO_POS_X_LEFT + PADDING * 0.5, y = AMMO_POS_Y_TOP           },
@@ -57,17 +53,16 @@ local POSITIONS =
     -- walter_slingshot_ammo_moonglasscharged = { x = AMMO_POS_X_LEFT + PADDING * 2.5, y = AMMO_POS_Y_TOP - PADDING },
 
     walter_slingshot_ammo_economy_lock = { x = AMMO_ECONOMY_POS_X + PADDING * 0 , y = AMMO_ECONOMY_POS_Y_TOP },
-    walter_slingshot_ammo_economy_1    = { x = AMMO_ECONOMY_POS_X + PADDING * 1 , y = AMMO_ECONOMY_POS_Y_TOP  },
+    walter_slingshot_ammo_economy_1    = { x = AMMO_ECONOMY_POS_X + PADDING * 1 , y = AMMO_ECONOMY_POS_Y_TOP },
     walter_slingshot_ammo_economy_2    = { x = AMMO_ECONOMY_POS_X + PADDING * 2 , y = AMMO_ECONOMY_POS_Y_TOP },
 
-    walter_allegiance_lock_1        = { x = ALLEGIANCE_LOCK_POS_X,   y = ALLEGIANCE_POS_Y_TOP - PADDING * 0.00 },
-    walter_allegiance_shadow_lock_1 = { x = ALLEGIANCE_SHADOW_POS_X, y = ALLEGIANCE_POS_Y_TOP - PADDING * 1.34 },
-    walter_allegiance_shadow_lock_2 = { x = ALLEGIANCE_SHADOW_POS_X, y = ALLEGIANCE_POS_Y_TOP - PADDING * 2.57 },
-    walter_allegiance_lunar_lock_1  = { x = ALLEGIANCE_LUNAR_POS_X,  y = ALLEGIANCE_POS_Y_TOP - PADDING * 1.34 },
-    walter_allegiance_lunar_lock_2  = { x = ALLEGIANCE_LUNAR_POS_X,  y = ALLEGIANCE_POS_Y_TOP - PADDING * 2.57 },
+    walter_allegiance_shadow_lock_1 = { x = ALLEGIANCE_SHADOW_POS_X, y = ALLEGIANCE_POS_Y_TOP - PADDING * 0.2  },
+    walter_allegiance_shadow_lock_2 = { x = ALLEGIANCE_SHADOW_POS_X, y = ALLEGIANCE_POS_Y_TOP - PADDING * 1.55 },
+    walter_allegiance_lunar_lock_1  = { x = ALLEGIANCE_LUNAR_POS_X,  y = ALLEGIANCE_POS_Y_TOP - PADDING * 0.2  },
+    walter_allegiance_lunar_lock_2  = { x = ALLEGIANCE_LUNAR_POS_X,  y = ALLEGIANCE_POS_Y_TOP - PADDING * 1.55 },
 
-    walter_allegiance_shadow = { x = ALLEGIANCE_LUNAR_POS_X,  y = ALLEGIANCE_POS_Y_TOP - PADDING * 4 },
-    walter_allegiance_lunar  = { x = ALLEGIANCE_SHADOW_POS_X, y = ALLEGIANCE_POS_Y_TOP - PADDING * 4 },
+    walter_allegiance_shadow = { x = ALLEGIANCE_SHADOW_POS_X,  y = ALLEGIANCE_POS_Y_TOP - PADDING * 3 },
+    walter_allegiance_lunar  = { x = ALLEGIANCE_LUNAR_POS_X,   y = ALLEGIANCE_POS_Y_TOP - PADDING * 3 },
 }
 
 --------------------------------------------------------------------------------------------------
@@ -110,10 +105,9 @@ end
 local BADGE_SKILLNAME_FMT = "walter_woby_badge_%s_%d"
 
 local function CreateWobyBadgeSkill(skills, name)
-    for i=1, NUM_WOBY_TRAINING_ASPECTS_LEVELS do
+    for i=2, NUM_WOBY_TRAINING_ASPECTS_LEVELS do
         skills[BADGE_SKILLNAME_FMT:format(name, i)] = {
             group = "wobybadges",
-            root = i == 1,
 
             connects = i < NUM_WOBY_TRAINING_ASPECTS_LEVELS and { BADGE_SKILLNAME_FMT:format(name, i+1) },
         }
@@ -213,7 +207,7 @@ local ORDERS =
     {"wobybadges",     { BADGE_POS_X_LEFT + PADDING * 2, BADGE_POS_Y_TOP + 30      }},
     {"slingshotammo",  { BADGE_POS_X_LEFT + PADDING * 2, AMMO_POS_Y_TOP + 30       }},
     {"slingshotmods",  { MODS_POS_X_MIDDLE,              MODS_POS_Y_TOP + 30       }},
-    {"allegiance",     { ALLEGIANCE_LOCK_POS_X,          ALLEGIANCE_POS_Y_TOP + 30 }},
+    {"allegiance",     { ALLEGIANCE_LOCK_POS_X,          ALLEGIANCE_POS_Y_TOP + 25 }},
 }
 
 --------------------------------------------------------------------------------------------------
@@ -225,6 +219,15 @@ end
 local function BuildSkillsData(SkillTreeFns)
     local skills =
     {
+        walter_woby_badge_base = {
+            group = "slingshotmods",
+            root = true,
+
+            connects = {}, -- Connections are added below.
+        },
+
+        -----------------------------------------------------------------------------------------------------------------
+
         walter_slingshot_modding = {
             group = "slingshotmods",
             root = true,
@@ -262,7 +265,7 @@ local function BuildSkillsData(SkillTreeFns)
             group = "slingshotammo",
             root = true,
 
-            lock_open = CreateSkillTagCountLockFn("slingshotammo", 5, SkillTreeFns),
+            lock_open = CreateSkillTagCountLockFn("slingshotammo", 4, SkillTreeFns),
         },
 
         walter_slingshot_ammo_economy_1 = {
@@ -278,16 +281,6 @@ local function BuildSkillsData(SkillTreeFns)
 
         -----------------------------------------------------------------------------------------------------------------
 
-        walter_allegiance_lock_1 = {
-            group = "allegiance",
-
-            root = true,
-
-            lock_open = function(prefabname, activatedskills, readonly)
-                return SkillTreeFns.CountSkills(prefabname, activatedskills) >= 12 -- TODO(DiogoW)
-            end,
-        },
-
         walter_allegiance_shadow_lock_1 = SkillTreeFns.MakeFuelWeaverLock(),
         walter_allegiance_shadow_lock_2 = SkillTreeFns.MakeNoLunarLock(),
 
@@ -296,9 +289,9 @@ local function BuildSkillsData(SkillTreeFns)
 
         walter_allegiance_shadow = {
             group = "allegiance",
-            tags = { "shadow", "shadow_favor" },
+            tags = { "slingshotammo", "shadow", "shadow_favor" },
 
-            locks = { "walter_allegiance_lock_1", "walter_allegiance_shadow_lock_1", "walter_allegiance_shadow_lock_2" },
+            locks = { "walter_allegiance_shadow_lock_1", "walter_allegiance_shadow_lock_2" },
 
             onactivate = ONACTIVATE_FNS.AllegianceShadow,
             ondeactivate = ONDEACTIVATE_FNS.AllegianceShadow,
@@ -306,9 +299,9 @@ local function BuildSkillsData(SkillTreeFns)
 
         walter_allegiance_lunar = {
             group = "allegiance",
-            tags = { "lunar", "lunar_favor" },
+            tags = { "slingshotammo", "lunar", "lunar_favor" },
 
-            locks = { "walter_allegiance_lock_1", "walter_allegiance_lunar_lock_1", "walter_allegiance_lunar_lock_2" },
+            locks = { "walter_allegiance_lunar_lock_1", "walter_allegiance_lunar_lock_2" },
 
             onactivate = ONACTIVATE_FNS.AllegianceLunar,
             ondeactivate = ONDEACTIVATE_FNS.AllegianceLunar,
@@ -317,6 +310,8 @@ local function BuildSkillsData(SkillTreeFns)
 
     for i, badge in ipairs(WOBY_TRAINING_ASPECTS_LIST) do
         CreateWobyBadgeSkill(skills, badge)
+
+        table.insert(skills.walter_woby_badge_base.connects, BADGE_SKILLNAME_FMT:format(badge, 2))
     end
 
     for i, type in ipairs(BASIC_AMMO_TYPES) do

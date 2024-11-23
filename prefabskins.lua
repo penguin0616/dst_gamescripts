@@ -546,6 +546,17 @@ PREFAB_SKINS = {
 	{
 		"hat_dreadstone_horn",
 	},
+	dug_gravestone =
+	{
+		"dug_gravestone_fantasy",
+		"dug_gravestone_fantasy2",
+		"dug_gravestone_fantasy3",
+		"dug_gravestone_fantasy4",
+		"dug_gravestone_gothic",
+		"dug_gravestone_gothic2",
+		"dug_gravestone_gothic3",
+		"dug_gravestone_gothic4",
+	},
 	earmuffshat =
 	{
 		"earmuffshat_beeguard",

@@ -1,9 +1,11 @@
 local assets =
 {
     Asset("ANIM", "anim/gravestones.zip"),
-    Asset("ANIM", "anim/gravestones_placement.zip"),
     Asset("MINIMAP_IMAGE", "gravestones"),
     Asset("INV_IMAGE", "dug_gravestone"),
+    Asset("INV_IMAGE", "dug_gravestone2"),
+    Asset("INV_IMAGE", "dug_gravestone3"),
+    Asset("INV_IMAGE", "dug_gravestone4"),
 
     Asset("SCRIPT", "scripts/prefabs/wendy_grave_quest_defs.lua"),
 }
@@ -67,9 +69,15 @@ end
 -- Dig Up
 local function OnDugUp(inst, tool, worker)
     local ix, iy, iz = inst.Transform:GetWorldPosition()
-    local dug_up_inst = SpawnPrefab("dug_gravestone", inst:GetSkinBuild(), inst.skin_id)
+    local skin_build = inst:GetSkinBuild()
+    if skin_build then
+        skin_build = "dug_" .. skin_build
+    end
+    local dug_up_inst = SpawnPrefab("dug_gravestone", skin_build, inst.skin_id)
     dug_up_inst.Transform:SetPosition(ix, iy, iz)
     dug_up_inst:SetStoneType(inst.random_stone_choice)
+    dug_up_inst:SetEpitaph(inst._epitaph_index, inst.setepitaph)
+
     Launch(dug_up_inst, worker, 1)
 
     if inst.mound then
@@ -86,8 +94,6 @@ local function OnDugUp(inst, tool, worker)
             end
         end
     end
-
-    -- TODO @stevenm deal with mound and ghost?
 
     inst:Remove()
 
@@ -231,7 +237,6 @@ local function fn()
 
     inst.AnimState:SetBank("gravestone")
     inst.AnimState:SetBuild("gravestones")
-    inst.AnimState:AddOverrideBuild("gravestones_placement")
     inst.AnimState:Hide("flower")
 
     inst.scrapbook_anim = "grave1"
@@ -292,15 +297,47 @@ end
 local function SetStoneType(inst, stone_type)
     inst.random_stone_choice = stone_type or tostring(math.random(4))
     inst.AnimState:PlayAnimation("dug_grave" .. inst.random_stone_choice)
+    if not inst:GetSkinBuild() then
+        inst.components.inventoryitem:ChangeImageName("dug_gravestone" .. (inst.random_stone_choice == "1" and "" or inst.random_stone_choice))
+    end
+end
+
+local function SetDugEpitaph(inst, index, setstring)
+    if setstring then
+        inst._epitaph = setstring
+        inst.components.inspectable:SetDescription("'"..setstring.."'")
+    elseif index then
+        inst._epitaph = index
+        inst.components.inspectable:SetDescription(STRINGS.EPITAPHS[index])
+    else
+        inst._epitaph = math.random(#STRINGS.EPITAPHS)
+        inst.components.inspectable:SetDescription(STRINGS.EPITAPHS[inst._epitaph])
+    end
 end
 
 local function OnDugDeployed(inst, pt, deployer)
-    local gravestone = SpawnPrefab("gravestone", inst:GetSkinBuild(), inst.skin_id)
+    local skin_build = inst:GetSkinBuild()
+    if skin_build then
+        skin_build:gsub("dug_", "")
+    end
+
+    local gravestone = SpawnPrefab("gravestone", skin_build, inst.skin_id)
     gravestone.Transform:SetPosition(pt:Get())
 
     gravestone.random_stone_choice = inst.random_stone_choice
     gravestone.AnimState:PlayAnimation("grave"..gravestone.random_stone_choice.."_place")
     gravestone.AnimState:PushAnimation("grave"..gravestone.random_stone_choice)
+
+    if inst._epitaph then
+        local epitaph_type = type(inst._epitaph)
+        if epitaph_type == "number" then
+            gravestone._epitaph_index = inst._epitaph
+            gravestone.components.inspectable:SetDescription(STRINGS.EPITAPHS[inst._epitaph])
+        elseif epitaph_type == "string" then
+            gravestone.setepitaph = inst._epitaph
+            gravestone.components.inspectable:SetDescription("'"..inst._epitaph.."'")
+        end
+    end
 
     local mound = gravestone.mound
     if mound then
@@ -318,6 +355,7 @@ end
 local function OnDugSave(inst, data)
     data.stone_index = inst.random_stone_choice
     data.mound_dug = inst._mound_dug
+    data.epitaph = inst._epitaph
 end
 
 local function OnDugLoad(inst, data, newents)
@@ -326,9 +364,22 @@ local function OnDugLoad(inst, data, newents)
     if data.stone_index then
         inst.random_stone_choice = data.stone_index
         inst.AnimState:PlayAnimation("dug_grave"..data.stone_index)
+        if not inst:GetSkinBuild() then
+            inst.components.inventoryitem:ChangeImageName("dug_gravestone" .. (inst.random_stone_choice == "1" and "" or inst.random_stone_choice))
+        end
     end
 
     inst._mound_dug = data.mound_dug
+
+    if data.epitaph then
+        inst._epitaph = data.epitaph
+        local epitaph_type = type(data.epitaph)
+        if epitaph_type == "number" then
+            inst.components.inspectable:SetDescription(STRINGS.EPITAPHS[data.epitaph])
+        elseif epitaph_type == "string" then
+            inst.components.inspectable:SetDescription("'"..data.epitaph.."'")
+        end
+    end
 end
 
 local function dug_fn()
@@ -342,7 +393,6 @@ local function dug_fn()
 
     inst.AnimState:SetBank("gravestone")
     inst.AnimState:SetBuild("gravestones")
-    inst.AnimState:AddOverrideBuild("gravestones_placement")
     inst.AnimState:Hide("flower")
 
     inst.scrapbook_anim = "dug_grave1"
@@ -354,16 +404,20 @@ local function dug_fn()
 
     inst.random_stone_choice = tostring(math.random(4))
     inst.SetStoneType = SetStoneType
-
-    inst.AnimState:PlayAnimation("dug_grave"..inst.random_stone_choice)
+    inst.SetEpitaph = SetDugEpitaph
 
     local deployable = inst:AddComponent("deployable")
     deployable.ondeploy = OnDugDeployed
 
+    inst._epitaph = math.random(#STRINGS.EPITAPHS)
     inst:AddComponent("inspectable")
+    inst.components.inspectable:SetDescription(STRINGS.EPITAPHS[inst._epitaph])
 
     local inventoryitem = inst:AddComponent("inventoryitem")
     inventoryitem:SetSinks(true)
+
+    inst.AnimState:PlayAnimation("dug_grave"..inst.random_stone_choice)
+    inst.components.inventoryitem:ChangeImageName("dug_gravestone" .. (inst.random_stone_choice == "1" and "" or inst.random_stone_choice))
 
     inst.OnSave = OnDugSave
     inst.OnLoad = OnDugLoad

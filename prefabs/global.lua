@@ -345,6 +345,8 @@ local assets =
 
     Asset("IMAGE", "images/colour_cubes/identity_colourcube.tex"),
 
+    Asset("MINIMAP_IMAGE", "missing_asset"), -- NOTES(JBK): You better fix this if you see it!
+
     Asset("SHADER", "shaders/anim.ksh"),
     Asset("SHADER", "shaders/anim_fade.ksh"),
     Asset("SHADER", "shaders/anim_bloom.ksh"),

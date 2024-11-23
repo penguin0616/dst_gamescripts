@@ -442,7 +442,7 @@ function WobyBadgesScreen:GetGridItems()
                 index = i + (self.NUM_BADGES_PER_ROW * (j-1)),
                 aspect = aspect,
                 level = j,
-                skill = BADGE_SKILL_FMT:format(string.lower(aspect), j),
+                skill = j == 1 and "walter_woby_badge_base" or BADGE_SKILL_FMT:format(string.lower(aspect), j),
                 progress = aspect_data ~= nil and aspect_data.percentage or 0,
                 active = aspect_data ~= nil and aspect_data.active[badge_name] or false,
             })
@@ -525,7 +525,7 @@ function WobyBadgesScreen:SaveAndClose()
         end
     end
 
-    POPUPS.WOBYBADGECUSTOMIZATION:Close(self.owner, #data > 0 and ZipAndEncodeString(data) or nil)
+    POPUPS.WOBYBADGECUSTOMIZATION:Close(self.owner, ZipAndEncodeString(data))
 
     TheFrontEnd:PopScreen(self)
 end

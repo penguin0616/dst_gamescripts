@@ -795,6 +795,8 @@ return {
 		"only_used_by_walter",
 		"only_used_by_walter",
 	},
+	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter", --TODO
+	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter", --TODO
 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 	{
         "only_used_by_walter",

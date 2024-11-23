@@ -34,8 +34,11 @@ local function ConfigureSkillTreeUpgrades(inst, builder)
 	return dirty
 end
 
+
 local function ApplySkillModifiers(inst)
-	inst.components.preserver:SetPerishRateMultiplier(inst._petal_preserve)
+	if inst._petal_preserve then 
+		inst.components.preserver:SetPerishRateMultiplier(TUNING.WENDY_SISTURN_PETAL_PRESRVE) 
+	end
 	if inst.components.sanityaura then
 		inst.components.sanityaura.aura = inst._sanityaura_size or TUNING.SANITYAURA_SMALL
 	end
@@ -77,7 +80,6 @@ local function on_built(inst, data)
     inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/sisturn/hit")
 
 	if not data.builder then return end
-
 	inst._builder_id = data.builder.userid
 	if ConfigureSkillTreeUpgrades(inst, data.builder) then
 		ApplySkillModifiers(inst)
@@ -153,6 +155,7 @@ local function OnSave(inst, data)
 	data.preserve_rate = inst._preserve_rate
 	data.sanityaura_size = inst._sanityaura_size
 	data.builder_id = inst._builder_id
+	data.petal_preserve = inst._petal_preserve
 end
 
 local function OnLoad(inst, data)
@@ -163,6 +166,7 @@ local function OnLoad(inst, data)
 			inst._builder_id = data.builder_id
 			inst._preserve_rate = data.preserve_rate
 			inst._sanityaura_size = data.sanityaura_size
+			inst._petal_preserve = data.petal_preserve
 
 			ApplySkillModifiers(inst)
 		end

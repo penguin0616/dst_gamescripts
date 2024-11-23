@@ -3034,6 +3034,102 @@ table.insert(prefs, CreatePrefabSkin("dragonling_wyvern_builder",
 	release_group = 17,
 }))
 
+table.insert(prefs, CreatePrefabSkin("dug_gravestone_fantasy",
+{
+	base_prefab = "dug_gravestone",
+	type = "item",
+	build_name_override = "gravestone_fantasy",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) dug_gravestone_init_fn(inst, "gravestone_fantasy") end,
+	skin_tags = { },
+	release_group = 136,
+}))
+
+table.insert(prefs, CreatePrefabSkin("dug_gravestone_fantasy2",
+{
+	base_prefab = "dug_gravestone",
+	type = "item",
+	build_name_override = "gravestone_fantasy2",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) dug_gravestone_init_fn(inst, "gravestone_fantasy2") end,
+	skin_tags = { },
+	release_group = 136,
+}))
+
+table.insert(prefs, CreatePrefabSkin("dug_gravestone_fantasy3",
+{
+	base_prefab = "dug_gravestone",
+	type = "item",
+	build_name_override = "gravestone_fantasy3",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) dug_gravestone_init_fn(inst, "gravestone_fantasy3") end,
+	skin_tags = { },
+	release_group = 136,
+}))
+
+table.insert(prefs, CreatePrefabSkin("dug_gravestone_fantasy4",
+{
+	base_prefab = "dug_gravestone",
+	type = "item",
+	build_name_override = "gravestone_fantasy4",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) dug_gravestone_init_fn(inst, "gravestone_fantasy4") end,
+	skin_tags = { },
+	release_group = 136,
+}))
+
+table.insert(prefs, CreatePrefabSkin("dug_gravestone_gothic",
+{
+	base_prefab = "dug_gravestone",
+	type = "item",
+	build_name_override = "gravestone_gothic",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) dug_gravestone_init_fn(inst, "gravestone_gothic") end,
+	skin_tags = { },
+	release_group = 136,
+}))
+
+table.insert(prefs, CreatePrefabSkin("dug_gravestone_gothic2",
+{
+	base_prefab = "dug_gravestone",
+	type = "item",
+	build_name_override = "gravestone_gothic2",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) dug_gravestone_init_fn(inst, "gravestone_gothic2") end,
+	skin_tags = { },
+	release_group = 136,
+}))
+
+table.insert(prefs, CreatePrefabSkin("dug_gravestone_gothic3",
+{
+	base_prefab = "dug_gravestone",
+	type = "item",
+	build_name_override = "gravestone_gothic3",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) dug_gravestone_init_fn(inst, "gravestone_gothic3") end,
+	skin_tags = { },
+	release_group = 136,
+}))
+
+table.insert(prefs, CreatePrefabSkin("dug_gravestone_gothic4",
+{
+	base_prefab = "dug_gravestone",
+	type = "item",
+	build_name_override = "gravestone_gothic4",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) dug_gravestone_init_fn(inst, "gravestone_gothic4") end,
+	skin_tags = { },
+	release_group = 136,
+}))
+
 table.insert(prefs, CreatePrefabSkin("earmuffshat_beeguard",
 {
 	base_prefab = "earmuffshat",
@@ -4309,6 +4405,7 @@ table.insert(prefs, CreatePrefabSkin("gravestone_fantasy",
 	init_fn = function(inst) gravestone_init_fn(inst, "gravestone_fantasy") end,
 	skin_tags = { "GRAVESTONE", "FANTASY", "CRAFTABLE", },
 	release_group = 136,
+	granted_items = { "dug_gravestone_fantasy", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("gravestone_fantasy2",
@@ -4320,6 +4417,7 @@ table.insert(prefs, CreatePrefabSkin("gravestone_fantasy2",
 	init_fn = function(inst) gravestone_init_fn(inst, "gravestone_fantasy2") end,
 	skin_tags = { "GRAVESTONE", "FANTASY", "CRAFTABLE", },
 	release_group = 136,
+	granted_items = { "dug_gravestone_fantasy2", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("gravestone_fantasy3",
@@ -4331,6 +4429,7 @@ table.insert(prefs, CreatePrefabSkin("gravestone_fantasy3",
 	init_fn = function(inst) gravestone_init_fn(inst, "gravestone_fantasy3") end,
 	skin_tags = { "GRAVESTONE", "FANTASY", "CRAFTABLE", },
 	release_group = 136,
+	granted_items = { "dug_gravestone_fantasy3", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("gravestone_fantasy4",
@@ -4342,6 +4441,7 @@ table.insert(prefs, CreatePrefabSkin("gravestone_fantasy4",
 	init_fn = function(inst) gravestone_init_fn(inst, "gravestone_fantasy4") end,
 	skin_tags = { "GRAVESTONE", "FANTASY", "CRAFTABLE", },
 	release_group = 136,
+	granted_items = { "dug_gravestone_fantasy4", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("gravestone_gothic",
@@ -4353,6 +4453,7 @@ table.insert(prefs, CreatePrefabSkin("gravestone_gothic",
 	init_fn = function(inst) gravestone_init_fn(inst, "gravestone_gothic") end,
 	skin_tags = { "GRAVESTONE", "GOTHIC", "CRAFTABLE", },
 	release_group = 136,
+	granted_items = { "dug_gravestone_gothic", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("gravestone_gothic2",
@@ -4364,6 +4465,7 @@ table.insert(prefs, CreatePrefabSkin("gravestone_gothic2",
 	init_fn = function(inst) gravestone_init_fn(inst, "gravestone_gothic2") end,
 	skin_tags = { "GRAVESTONE", "GOTHIC", "CRAFTABLE", },
 	release_group = 136,
+	granted_items = { "dug_gravestone_gothic2", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("gravestone_gothic3",
@@ -4375,6 +4477,7 @@ table.insert(prefs, CreatePrefabSkin("gravestone_gothic3",
 	init_fn = function(inst) gravestone_init_fn(inst, "gravestone_gothic3") end,
 	skin_tags = { "GRAVESTONE", "GOTHIC", "CRAFTABLE", },
 	release_group = 136,
+	granted_items = { "dug_gravestone_gothic3", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("gravestone_gothic4",
@@ -4386,6 +4489,7 @@ table.insert(prefs, CreatePrefabSkin("gravestone_gothic4",
 	init_fn = function(inst) gravestone_init_fn(inst, "gravestone_gothic4") end,
 	skin_tags = { "GRAVESTONE", "GOTHIC", "CRAFTABLE", },
 	release_group = 136,
+	granted_items = { "dug_gravestone_gothic4", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("greenstaff_an",

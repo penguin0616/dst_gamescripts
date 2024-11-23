@@ -33,7 +33,7 @@ local _update_time = UPDATE_RATE
 local function ghost_count()
     local count = 0
     for _, ghost in pairs(_decorated_graves) do
-        if ghost then
+        if type(ghost) == "table" and ghost.prefab then
             count = count + 1
         end
     end
@@ -55,7 +55,7 @@ local function stop_updating()
     self.inst:StopUpdatingComponent(self)
 
     for _, ghost in pairs(_decorated_graves) do
-        if ghost then
+        if type(ghost) == "table" and ghost.prefab then
             ghost._despawn_queued = true
         end
     end
@@ -66,7 +66,7 @@ end
 --------------------------------------------------------------------------
 
 local function OnDecoratedGraveRemoved(grave)
-    if _decorated_graves[grave] then
+    if type(_decorated_graves[grave]) == "table" and _decorated_graves[grave].prefab then
         _decorated_graves[grave]._despawn_queued = true
         _decorated_graves[grave] = nil
         inst:RemoveEventCallback("onremove", OnDecoratedGraveRemoved, grave)
@@ -125,7 +125,7 @@ inst:ListenForEvent("ms_playerleft", OnPlayerLeft)
 --------------------------------------------------------------------------
 
 function self:RegisterDecoratedGrave(grave)
-    if not grave or _decorated_graves[grave] then return end
+    if not grave or _decorated_graves[grave] ~= nil then return end
 
     -- Want to == nil b/c we're using false as a meaningful value
     if next(_decorated_graves) == nil then
@@ -159,7 +159,7 @@ function self:OnUpdate(dt)
             if #graves_near_ghostfriend > 0 then
                 local graves_with_ghosts_count = 0
                 for _, grave in pairs(graves_near_ghostfriend) do
-                    if _decorated_graves[grave] then -- Not nil or false
+                    if type(_decorated_graves[grave]) == "table" and _decorated_graves[grave].prefab then
                         graves_with_ghosts_count = graves_with_ghosts_count + 1
                     end
                 end
@@ -176,7 +176,15 @@ function self:OnUpdate(dt)
                             _decorated_graves[grave] = new_ghost
                             self.inst:ListenForEvent("onremove", function()
                                 if grave and grave:IsValid() then
-                                    _decorated_graves[grave] = false
+                                    local time = (new_ghost.components.health:IsDead() and TUNING.WENDYSKILL_GRAVEGHOST_DEADTIME) or 5
+                                    _decorated_graves[grave] = self.inst:DoTaskInTime(time, function()
+                                        -- Something weird may have happened in the meantime;
+                                        -- make sure we're in the same state.
+                                        local grave_data = _decorated_graves[grave]
+                                        if grave_data and type(grave_data) == "table" and not grave_data.prefab then
+                                            _decorated_graves[grave] = false
+                                        end
+                                    end)
                                 end
                             end, new_ghost)
 
@@ -191,7 +199,7 @@ function self:OnUpdate(dt)
     local gx, gy, gz
     local player, pdsq
     for _, ghost in pairs(_decorated_graves) do
-        if ghost then
+        if type(ghost) == "table" and ghost.prefab then
             gx, gy, gz = ghost.Transform:GetWorldPosition()
             player, pdsq = FindClosestPlayer(gx, gy, gz, true)
             if pdsq > (DESPAWN_DISTANCE * DESPAWN_DISTANCE) then
