@@ -506,9 +506,44 @@ local function slingshotex_OnChargedAttack(inst, doer, ticks)
 	end
 end
 
+local function slingshotex_RefreshAttunedSkills(inst, owner)
+	if owner and inst.components.slingshotmods:CheckRequiredSkillsForPlayer(owner) then
+		inst.components.aoecharging:SetEnabled(inst.components.weapon.projectile ~= nil)
+	else
+		inst.components.aoecharging:SetEnabled(false)
+	end
+end
+
 --NOTE: this runs separately from the common OnAmmoLoaded/OnAmmoUnloaded handlers
 local function slingshotex_CheckChargeAmmo(inst, data)
-	inst.components.aoecharging:SetEnabled(inst.components.container:GetItemInSlot(1) ~= nil)
+	slingshotex_RefreshAttunedSkills(inst, inst._owner)
+end
+
+local function slingshotex_WatchSkillRefresh(inst, owner)
+	if inst._owner then
+		inst:RemoveEventCallback("onactivateskill_server", inst._onskillrefresh, inst._owner)
+		inst:RemoveEventCallback("ondeactivateskill_server", inst._onskillrefresh, inst._owner)
+		inst:RemoveEventCallback("itemget", slingshotex_CheckChargeAmmo)
+		inst:RemoveEventCallback("itemlose", slingshotex_CheckChargeAmmo)
+	end
+	inst._owner = owner
+	if owner then
+		inst:ListenForEvent("onactivateskill_server", inst._onskillrefresh, owner)
+		inst:ListenForEvent("ondeactivateskill_server", inst._onskillrefresh, owner)
+		inst:ListenForEvent("itemget", slingshotex_CheckChargeAmmo)
+		inst:ListenForEvent("itemlose", slingshotex_CheckChargeAmmo)
+	end
+end
+
+local function slingshotex_OnEquipped(inst, data)
+	local owner = data and data.owner or nil
+	slingshotex_WatchSkillRefresh(inst, owner)
+	slingshotex_RefreshAttunedSkills(inst, owner)
+end
+
+local function slingshotex_OnUnequipped(inst, data)
+	slingshotex_WatchSkillRefresh(inst, nil)
+	slingshotex_RefreshAttunedSkills(inst, nil)
 end
 
 local function slingshotex_master_postinit(inst)
@@ -518,8 +553,11 @@ local function slingshotex_master_postinit(inst)
 	inst.components.aoecharging:SetOnChargedAttackFn(slingshotex_OnChargedAttack)
 	inst.components.aoecharging:SetEnabled(false)
 
-	inst:ListenForEvent("itemget", slingshotex_CheckChargeAmmo)
-	inst:ListenForEvent("itemlose", slingshotex_CheckChargeAmmo)
+	--NOTE: these run separately from the common OnEquip/OnUnequip handlers
+	inst:ListenForEvent("equipped", slingshotex_OnEquipped)
+	inst:ListenForEvent("unequipped", slingshotex_OnUnequipped)
+
+	inst._onskillrefresh = function(owner) slingshotex_RefreshAttunedSkills(inst, owner) end
 end
 
 --------------------------------------------------------------------------
@@ -593,9 +631,44 @@ local function slingshot2ex_SpellFn(inst, doer, pos)
 	end
 end
 
+local function slingshot2ex_RefreshAttunedSkills(inst, owner)
+	if owner and inst.components.slingshotmods:CheckRequiredSkillsForPlayer(owner) then
+		inst.components.aoetargeting:SetEnabled(inst.components.container:GetItemInSlot(2) ~= nil)
+	else
+		inst.components.aoetargeting:SetEnabled(false)
+	end
+end
+
 --NOTE: this runs separately from the common OnAmmoLoaded/OnAmmoUnloaded handlers
-local function slingshot2ex_CheckSpecialAmmo(inst, data)
-	inst.components.aoetargeting:SetEnabled(inst.components.container:GetItemInSlot(2) ~= nil)
+local function slingshot2ex_CheckSpecialAmmo(inst, _)
+	slingshot2ex_RefreshAttunedSkills(inst, inst._owner)
+end
+
+local function slingshot2ex_WatchSkillRefresh(inst, owner)
+	if inst._owner then
+		inst:RemoveEventCallback("onactivateskill_server", inst._onskillrefresh, inst._owner)
+		inst:RemoveEventCallback("ondeactivateskill_server", inst._onskillrefresh, inst._owner)
+		inst:RemoveEventCallback("itemget", slingshot2ex_CheckSpecialAmmo)
+		inst:RemoveEventCallback("itemlose", slingshot2ex_CheckSpecialAmmo)
+	end
+	inst._owner = owner
+	if owner then
+		inst:ListenForEvent("onactivateskill_server", inst._onskillrefresh, owner)
+		inst:ListenForEvent("ondeactivateskill_server", inst._onskillrefresh, owner)
+		inst:ListenForEvent("itemget", slingshot2ex_CheckSpecialAmmo)
+		inst:ListenForEvent("itemlose", slingshot2ex_CheckSpecialAmmo)
+	end
+end
+
+local function slingshot2ex_OnEquipped(inst, data)
+	local owner = data and data.owner or nil
+	slingshot2ex_WatchSkillRefresh(inst, owner)
+	slingshot2ex_RefreshAttunedSkills(inst, owner)
+end
+
+local function slingshot2ex_OnUnequipped(inst, data)
+	slingshot2ex_WatchSkillRefresh(inst, nil)
+	slingshot2ex_RefreshAttunedSkills(inst, nil)
 end
 
 local function slingshot2ex_master_postinit(inst)
@@ -606,8 +679,11 @@ local function slingshot2ex_master_postinit(inst)
 
 	inst.components.aoetargeting:SetEnabled(false)
 
-	inst:ListenForEvent("itemget", slingshot2ex_CheckSpecialAmmo)
-	inst:ListenForEvent("itemlose", slingshot2ex_CheckSpecialAmmo)
+	--NOTE: these run separately from the common OnEquip/OnUnequip handlers
+	inst:ListenForEvent("equipped", slingshot2ex_OnEquipped)
+	inst:ListenForEvent("unequipped", slingshot2ex_OnUnequipped)
+
+	inst._onskillrefresh = function(owner) slingshot2ex_RefreshAttunedSkills(inst, owner) end
 end
 
 --------------------------------------------------------------------------

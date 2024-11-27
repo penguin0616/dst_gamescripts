@@ -185,15 +185,15 @@ local function SoulSpearTick(inst, owner)
         end
     end
 
-    local hitsomething = false
-
     local damage = TUNING.SKILLS.WORTOX.SOUL_SPEAR_DAMAGE
-    if owner.components.skilltreeupdater and owner.components.skilltreeupdater:IsActivated("wortox_nabbag") then
-        local item = owner.components.inventory and owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) or nil
-        if item and item.prefab == "wortox_nabbag" and item.components.weapon then
-            damage = damage + item.components.weapon.damage * TUNING.SKILLS.WORTOX.NABBAG_SOUL_DAMAGE_RATIO
-        end
+    if owner and owner.components.skilltreeupdater and owner.components.skilltreeupdater:IsActivated("wortox_souljar_3") then
+        local souls_max = TUNING.SKILLS.WORTOX.SOUL_DAMAGE_MAX_SOULS
+        local damage_percent = math.min(owner.soulcount or 0, souls_max) / souls_max
+        damage = damage * (1 + (TUNING.SKILLS.WORTOX.SOUL_DAMAGE_SOULS_BONUS_MULT - 1) * damage_percent)
     end
+
+
+    local hitsomething = false
     local r = inst:GetPhysicsRadius(0) + 0.5 -- Extra padding for visual ambiguity.
     local x, y, z = inst.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x, y, z, MAX_PHYSICS_RADIUS, COMBAT_MUSTHAVE_TAGS, COMBAT_CANTHAVE_TAGS)
@@ -205,7 +205,13 @@ local function SoulSpearTick(inst, owner)
             local dsq = dx * dx + dz * dz
             local dr = r2 + r
             if dsq < dr * dr and inst:SoulSpearTest(ent, owner) then
-                ent.components.combat:GetAttacked(owner, damage)
+                local damagetoent = damage
+                local explosiveresist = ent.components.explosiveresist
+                if explosiveresist then
+                    damagetoent = damagetoent * (1 - explosiveresist:GetResistance())
+                    explosiveresist:OnExplosiveDamage(damagetoent, owner)
+                end
+                ent.components.combat:GetAttacked(owner, damagetoent)
                 hitsomething = true
             end
         end

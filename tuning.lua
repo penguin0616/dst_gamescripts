@@ -4701,6 +4701,8 @@ function Tune(overrides)
 		ABIGAIL_VEX_DAMAGE_MOD = 1.1,
 		ABIGAIL_VEX_GHOSTLYFRIEND_DAMAGE_MOD = 1.4,
 
+        ABIGAIL_SHADOW_VEX_DAMAGE_MOD = 1.3,
+        ABIGAIL_SHADOW_VEX_GHOSTLYFRIEND_DAMAGE_MOD = 1.6,
 
         ABIGAIL_DMG_PERIOD = 1.5,
         ABIGAIL_DMG_PLAYER_PERCENT = 0.25,
@@ -4792,6 +4794,7 @@ function Tune(overrides)
 
 		SLINGSHOT_MAX_CHARGE_TIME = 0.5,
 		SLINGSHOT_MAX_CHARGE_DAMAGE_MULT = 2,
+		SLINGSHOT_MAX_CHARGE_SPEED_MULT = 1.25,
 		SLINGSHOT_MOD_BONUS_RANGE_1 = 1,
 		SLINGSHOT_MOD_BONUS_RANGE_2 = 2,
 		SLINGSHOT_MOD_FREE_AMMO_CHANCE = 0.3,
@@ -7175,9 +7178,13 @@ function Tune(overrides)
                 POTION_2_MOD = 0.66,
                 POTION_3_MOD = 1,
 
-                GHOST_PLANARDEFENSE = 5,
+                GHOST_PLANARDEFENSE = 15,
 
-                SISTURN_3_MAX_HEALTH_BOOST = 100,
+                SISTURN_3_MAX_HEALTH_BOOST = 300,
+
+                MURDER_BUFF_DURATION = 5,
+                MURDER_BUFF_MULTIPLIER = 2,
+                MURDER_DEFENSE_BUFF = 5,
             },
             ---
             WALTER = {
@@ -7248,9 +7255,9 @@ function Tune(overrides)
                 WORTOX_SOULPROTECTOR_4_DELAY = -1.5,
                 WORTOX_SOULPROTECTOR_4_RANGE = 3,
                 -- wortox_panflute_playing
-                WORTOX_PANFLUTE_INSPIRATION_DURATION = total_day_time * 0.25, -- How long the inspired state should last.
+                WORTOX_PANFLUTE_INSPIRATION_DURATION = total_day_time * 0.5, -- How long the inspired state should last.
                 WORTOX_PANFLUTE_INSPIRATION_WAIT = total_day_time, -- How long to wait before being able to get inspired after the last.
-                WORTOX_PANFLUTE_INSPIRATION_WAIT_VARIANCE = total_day_time * 0.25,
+                WORTOX_PANFLUTE_INSPIRATION_WAIT_VARIANCE = total_day_time * 0.1,
                 -- wortox_panflute_duration
                 WORTOX_PANFLUTE_SLEEP_DURATION = 10, -- Bonus for sleep stats.
                 -- wortox_panflute_forget
@@ -7276,28 +7283,24 @@ function Tune(overrides)
                 NABBAG_DAMAGE_MIN = wilson_attack * 0.4,
                 NABBAG_DAMAGE_MAX = wilson_attack,
                 NABBAG_USES = 200,
-                NABBAG_CONEANGLE = 140,
+                NABBAG_CONEANGLE = 150,
                 NABBAG_MAX_RADIUS = 3,
-                NABBAG_CIRCLE_RADIUS = 1,
-                NABBAG_SOUL_DAMAGE_RATIO = 0.2, -- How much of the nabbag's damage is added onto soul damage.
-                NABBAG_VS_SHADOW_BONUS = 1.1,
-                NABBAG_VS_LUNAR_BONUS = 1.1,
-                NABBAG_PLANAR_DAMAGE_PER_TYPE = 5, -- From Pure Brilliance and Pure Horror so 2 times this for maximum planar.
+                NABBAG_CIRCLE_RADIUS = 1.25,
                 -- wortox_souljar_1
                 SOULJAR_LEAK_TIME = 30,
                 -- wortox_souljar_2
-                FILLED_SOULJAR_SOULCAP_INCREASE_PER = 2,
-                FILLED_SOULJAR_SOULCAP_MAX_JARS = 5,
+                FILLED_SOULJAR_SOULCAP_INCREASE_PER = 5,
                 -- wortox_souljar_3
-                FILLED_SOULJAR_NABBAG_DAMAGE_BONUS = wilson_attack, -- Total for MAX_JARS held.
-                FILLED_SOULJAR_NABBAG_MAX_JARS = 5,
+                SOUL_DAMAGE_NABBAG_BONUS_MULT = 2,
+                SOUL_DAMAGE_SOULS_BONUS_MULT = 1.25,
+                SOUL_DAMAGE_MAX_SOULS = 100, -- Number of Souls total for the above modifiers.
                 -- wortox_thief_1
                 SOULEXTRACT_RANGE_BONUS = 10,
                 SOULSTEALER_RANGE_BONUS = 4,
                 -- wortox_thief_2
                 SOUL_PROJECTILE_LIFETIME_BONUS = 2,
                 -- wortox_thief_3
-                SOUL_SPEAR_DAMAGE = wilson_attack * 0.5,
+                SOUL_SPEAR_DAMAGE = wilson_attack * 0.75,
                 SOUL_SPEAR_HIT_COOLDOWN = 0.35,
                 -- wortox_thief_4
                 SOUL_PROJECTILE_REPEL_DURATION = 0.5,
@@ -8224,6 +8227,7 @@ function Tune(overrides)
         -- Wendy Skill Tree
         WENDYSKILL_LUNARELIXIR_DURATION = 4 * seg_time,
         WENDYSKILL_LUNARELIXIR_DAMAGEBONUS = 5,
+        WENDYSKILL_LUNARELIXIR_DAMAGEBONUS_GESTALT = 50,
         WENDYSKILL_LUNARELIXIR_DEFENSEBONUS = 5,
 
         WENDYSKILL_SHADOWELIXIR_DURATION = total_day_time,

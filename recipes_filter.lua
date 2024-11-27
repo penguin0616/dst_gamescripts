@@ -145,6 +145,7 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"ghostlyelixir_lunar",	
 	"wendy_gravestone",
 	"petals",
+	"petals_evil",
 
 	-- Woodie
 	"wereitem_goose",
@@ -375,6 +376,8 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"ruinshat",
 	"armorruins",
 	"ruins_bat",
+	"slingshotammo_thulecite",
+	"slingshot_frame_gems",
 	"eyeturret_item",
     "shadow_forge_kit",
 	"blueprint_craftingset_ruins_builder",
@@ -393,6 +396,7 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"moonglassaxe",
 	"glasscutter",
 	"carpentry_blade_moonglass",
+	"slingshotammo_moonglass",
 	"turf_meteor",
 	"turf_fungus_moon",
 	"bathbomb",
@@ -408,6 +412,8 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"pickaxe_lunarplant",
 	"shovel_lunarplant",
 	"lunarplant_kit",
+	"slingshotammo_lunarplanthusk",
+	"slingshotammo_purebrilliance",
 
 	"beargerfur_sack",
 	"deerclopseyeball_sentryward_kit",
@@ -420,6 +426,9 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"voidcloth_scythe",
 	"voidcloth_boomerang",
 	"voidcloth_kit",
+	"slingshotammo_gelblob",
+	"slingshotammo_purehorror",
+	"slingshot_handle_voidcloth",
 	
 	"shadow_battleaxe",
 	"shadow_beef_bell",
@@ -847,6 +856,7 @@ CRAFTING_FILTERS.WEAPONS.recipes =
 	"boat_cannon_kit",
 	"cannonball_rock_item",
 	"fence_rotator",
+    "wortox_nabbag",
 }
 
 CRAFTING_FILTERS.ARMOUR.recipes =

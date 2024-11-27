@@ -103,7 +103,12 @@ local potion_tunings =
 		fx = "ghostlyelixir_lunar_fx",
 		dripfx = "ghostlyelixir_lunar_dripfx",
 		ONAPPLY = function(inst, target)
-			target.components.planardamage:AddBonus(inst, TUNING.WENDYSKILL_LUNARELIXIR_DAMAGEBONUS, "ghostlyelixir_lunarbonus")
+			target.components.planardamage:RemoveBonus(inst, "ghostlyelixir_lunarbonus")
+			if target:HasTag("gestalt") then
+				target.components.planardamage:AddBonus(inst, TUNING.WENDYSKILL_LUNARELIXIR_DAMAGEBONUS_GESTALT, "ghostlyelixir_lunarbonus")
+			else
+				target.components.planardamage:AddBonus(inst, TUNING.WENDYSKILL_LUNARELIXIR_DAMAGEBONUS, "ghostlyelixir_lunarbonus")
+			end
 		end,
 		ONDETACH = function(inst, target)
 			target.components.planardamage:RemoveBonus(inst, "ghostlyelixir_lunarbonus")

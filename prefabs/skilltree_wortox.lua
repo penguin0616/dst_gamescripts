@@ -142,9 +142,19 @@ local CUSTOMFUNCTION;CUSTOM_FUNCTIONS = {
             z - radius * math.sin(theta)
         )
     end,
+    LunarResists = { -- NOTES(JBK): Keep in sync in armor_skeleton. [ASRPS]
+        "_combat",
+        "explosive",
+        "quakedebris",
+        "lunarhaildebris",
+        "caveindebris",
+        "trapdamage",
+    },
     SetupLunarResists = function(item)
         local resistance = item:AddComponent("resistance")
-        resistance:AddResistance("shadow_aligned")
+        for _, v in ipairs(CUSTOM_FUNCTIONS.LunarResists) do
+            resistance:AddResistance(v)
+        end
         resistance:SetShouldResistFn(CUSTOM_FUNCTIONS.ShouldResistFn)
         resistance:SetOnResistDamageFn(CUSTOM_FUNCTIONS.OnResistDamage)
     end,

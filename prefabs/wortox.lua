@@ -239,7 +239,7 @@ local function DropSouls(inst, souls, dropcount)
 end
 
 local function OnReroll(inst)
-    local souls, count = GetSouls(inst)
+    local souls, count = inst:GetSouls()
     DropSouls(inst, souls, count)
 end
 
@@ -271,17 +271,17 @@ end
 local function CheckForOverload(inst, souls, count)
     local max_count = TUNING.WORTOX_MAX_SOULS -- NOTES(JBK): Keep this logic the same in counts in wortox_soul. [WSCCF]
     if inst.components.skilltreeupdater and inst.components.skilltreeupdater:IsActivated("wortox_souljar_2") then
-        local filledsouljars = 0
+        local souljars = 0
         inst.components.inventory:ForEachItemSlot(function(item)
-            if item.prefab == "wortox_souljar" and item.souljar_filled:value() then
-                filledsouljars = filledsouljars + 1
+            if item.prefab == "wortox_souljar" then
+                souljars = souljars + 1
             end
         end)
         local activeitem = inst.components.inventory:GetActiveItem()
-        if activeitem and activeitem.prefab == "wortox_souljar" and activeitem.souljar_filled:value() then
-            filledsouljars = filledsouljars + 1
+        if activeitem and activeitem.prefab == "wortox_souljar" then
+            souljars = souljars + 1
         end
-        max_count = max_count + math.min(filledsouljars, TUNING.SKILLS.WORTOX.FILLED_SOULJAR_SOULCAP_MAX_JARS) * TUNING.SKILLS.WORTOX.FILLED_SOULJAR_SOULCAP_INCREASE_PER
+        max_count = max_count + souljars * TUNING.SKILLS.WORTOX.FILLED_SOULJAR_SOULCAP_INCREASE_PER
     end
     if count > max_count then
         if inst._souloverloadtask then
@@ -289,13 +289,32 @@ local function CheckForOverload(inst, souls, count)
             inst._souloverloadtask = nil
         end
         inst._souloverloadtask = inst:DoTaskInTime(1.2, ClearSoulOverloadTask) -- NOTES(JBK): This is >1.1 max keep it in sync with "[WST]"
-        --convert count to drop count
-        count = count - math.floor(max_count / 2) + math.random(0, 2) - 1
-        DropSouls(inst, souls, count)
+        local dropcount = count - math.floor(max_count / 2) + math.random(0, 2) - 1
+        count = count - dropcount
+        DropSouls(inst, souls, dropcount)
         inst.components.sanity:DoDelta(-TUNING.SANITY_MEDLARGE)
         inst:PushEvent("souloverload")
     elseif count > max_count * TUNING.WORTOX_WISECRACKER_TOOMANY then
         inst:PushEvent("soultoomany") -- This event is not used elsewhere outside of wisecracker.
+    end
+    inst.components.inventory:ForEachItemSlot(function(item)
+        if item.prefab == "wortox_souljar" then
+            count = count + item.soulcount
+        end
+    end)
+    local activeitem = inst.components.inventory:GetActiveItem()
+    if activeitem then
+        if activeitem.prefab == "wortox_souljar" then
+            count = count + activeitem.soulcount
+        end
+    end
+
+    inst.soulcount = count
+end
+local function HandleLeftoversFn(inst, item)
+    if item and item.prefab == "wortox_soul" then
+        local souls, count = inst:GetSouls()
+        inst:CheckForOverload(souls, count + 1) -- This item did not fit in the inventory so we will act like it did for overloading.
     end
 end
 local function CheckSoulsAdded(inst)
@@ -305,7 +324,7 @@ local function CheckSoulsAdded(inst)
         inst._checksoulstask = inst:DoTaskInTime(0, CheckSoulsAdded)
         return
     end
-    local souls, count = GetSouls(inst)
+    local souls, count = inst:GetSouls()
     if inst.finishportalhoptask ~= nil then
         local percent = (inst.finishportalhoptaskmaxtime - GetTaskRemaining(inst.finishportalhoptask)) / inst.finishportalhoptaskmaxtime
         for i, soul in pairs(souls) do
@@ -314,7 +333,7 @@ local function CheckSoulsAdded(inst)
             end
         end
     end
-    CheckForOverload(inst, souls, count)
+    inst:CheckForOverload(souls, count)
 end
 
 local function CheckSoulsRemoved(inst)
@@ -324,11 +343,11 @@ local function CheckSoulsRemoved(inst)
         inst._checksoulstask = inst:DoTaskInTime(0, CheckSoulsRemoved)
         return
     end
-    local souls, count = GetSouls(inst)
+    local souls, count = inst:GetSouls()
     local TOOFEW = TUNING.WORTOX_MAX_SOULS * TUNING.WORTOX_WISECRACKER_TOOFEW
     if count >= TOOFEW then
         -- Check for overload in case a soul jar left the inventory.
-        CheckForOverload(inst, souls, count)
+        inst:CheckForOverload(souls, count)
         return
     end
     if count == 0 then
@@ -340,12 +359,14 @@ local function CheckSoulsRemoved(inst)
             if jar.components.container then
                 for _, soul in ipairs(jar.components.container:FindItems(IsSoul)) do
                     count = count + GetStackSize(soul)
-                    if count >= TOOFEW then
-                        return
-                    end
                 end
             end
         end
+    end
+
+    inst.soulcount = count
+    if count >= TOOFEW then
+        return
     end
     inst:PushEvent(count > 0 and "soultoofew" or "soulempty") -- These events are not used elsewhere outside of wisecracker.
 end
@@ -531,7 +552,7 @@ local function TryToPortalHop(inst, souls, consumeall)
     end
 
     souls = souls or 1
-    local _, soulscount = GetSouls(inst)
+    local _, soulscount = inst:GetSouls()
     if soulscount < souls then
         return false
     end
@@ -629,6 +650,8 @@ local function master_postinit(inst)
     inst.GetHopsPerSoul = GetHopsPerSoul
     inst.GetSoulEchoCooldownTime = GetSoulEchoCooldownTime
     inst.DoCheckSoulsAdded = DoCheckSoulsAdded
+    inst.GetSouls = GetSouls
+    inst.CheckForOverload = CheckForOverload
 
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
 
@@ -650,6 +673,9 @@ local function master_postinit(inst)
     inst.components.souleater:SetOnEatSoulFn(OnEatSoul)
 
     inst._checksoulstask = nil
+    inst.soulcount = 0
+
+    inst.components.inventory.HandleLeftoversFn = HandleLeftoversFn
 
     inst:ListenForEvent("stacksizechange", OnStackSizeChange)
     inst:ListenForEvent("gotnewitem", OnGotNewItem)
@@ -1174,13 +1200,12 @@ end
 
 local function DoExplosion_decoy(inst)
     local decoyowner = inst.decoyowner and inst.decoyowner:IsValid() and inst.decoyowner or nil
-    if decoyowner then
-        if decoyowner.components.skilltreeupdater and decoyowner.components.skilltreeupdater:IsActivated("wortox_nabbag") then
-            local item = decoyowner.components.inventory and decoyowner.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) or nil
-            if item and item.prefab == "wortox_nabbag" and item.components.weapon then
-                inst.components.combat:SetDefaultDamage(inst.components.combat.defaultdamage + item.components.weapon.damage * TUNING.SKILLS.WORTOX.NABBAG_SOUL_DAMAGE_RATIO)
-            end
-        end
+    local damage = inst.components.combat.defaultdamage
+    if decoyowner and decoyowner.components.skilltreeupdater and decoyowner.components.skilltreeupdater:IsActivated("wortox_souljar_3") then
+        local souls_max = TUNING.SKILLS.WORTOX.SOUL_DAMAGE_MAX_SOULS
+        local damage_percent = math.min(decoyowner.soulcount or 0, souls_max) / souls_max
+        damage = damage * (1 + (TUNING.SKILLS.WORTOX.SOUL_DAMAGE_SOULS_BONUS_MULT - 1) * damage_percent)
+        inst.components.combat:SetDefaultDamage(damage)
     end
     local x, y, z = inst.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x, y, z, TUNING.SKILLS.WORTOX.SOULDECOY_EXPLODE_RADIUS, COMBAT_TAGS, TheNet:GetPVPEnabled() and NO_TAGS_PVP or NO_TAGS)
@@ -1194,11 +1219,16 @@ local function DoExplosion_decoy(inst)
                     end
                 end
                 if inst.decoylured[ent] or shouldharm then
-                    inst.components.combat:DoAttack(ent)
-                    if ent:IsValid() and decoyowner:IsValid() and (shouldharm or not inst.components.combat:HasTarget()) then
-                        if ent:GetDistanceSqToInst(decoyowner) <= PLAYER_CAMERA_SEE_DISTANCE_SQ then
-                            ent.components.combat:SetTarget(decoyowner)
+                    if decoyowner then
+                        local damagetoent = damage
+                        local explosiveresist = ent.components.explosiveresist
+                        if explosiveresist then
+                            damagetoent = damagetoent * (1 - explosiveresist:GetResistance())
+                            explosiveresist:OnExplosiveDamage(damagetoent, decoyowner)
                         end
+                        ent.components.combat:GetAttacked(decoyowner, damagetoent)
+                    else
+                        inst.components.combat:DoAttack(ent)
                     end
                 end
             end

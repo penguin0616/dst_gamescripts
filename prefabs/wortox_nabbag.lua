@@ -15,7 +15,7 @@ local BUCKET_NAMES = {
 }
 local BUCKET_SIZE = #BUCKET_NAMES
 
-local function UpdateStats(inst, percent, filledsouljars, has_lunar, has_shadow)
+local function UpdateStats(inst, percent, souls)
     -- Make the sizes into buckets.
     local bucket = math.clamp(math.ceil(percent * BUCKET_SIZE), 1, BUCKET_SIZE)
     inst.nabbag_size = BUCKET_NAMES[bucket]
@@ -24,43 +24,16 @@ local function UpdateStats(inst, percent, filledsouljars, has_lunar, has_shadow)
 
     local owner = inst.components.inventoryitem.owner
     if inst.components.weapon then
-        local bonusdamage = 0
-        if owner and owner.components.skilltreeupdater and owner.components.skilltreeupdater:IsActivated("wortox_souljar_3") then
-            local filledsouljars_max = TUNING.SKILLS.WORTOX.FILLED_SOULJAR_NABBAG_MAX_JARS
-            local filledsouljars_percent = math.min(filledsouljars, filledsouljars_max) / filledsouljars_max
-            bonusdamage = bonusdamage + TUNING.SKILLS.WORTOX.FILLED_SOULJAR_NABBAG_DAMAGE_BONUS * filledsouljars_percent
-        end
         local maxdamage = TUNING.SKILLS.WORTOX.NABBAG_DAMAGE_MAX
         local mindamage = TUNING.SKILLS.WORTOX.NABBAG_DAMAGE_MIN
-        inst.components.weapon:SetDamage((maxdamage - mindamage) * percent + mindamage + bonusdamage)
+        local damage = (maxdamage - mindamage) * percent + mindamage
+        if owner and owner.components.skilltreeupdater and owner.components.skilltreeupdater:IsActivated("wortox_souljar_3") then
+            local souls_max = TUNING.SKILLS.WORTOX.SOUL_DAMAGE_MAX_SOULS
+            local damage_percent = math.min(owner.soulcount or 0, souls_max) / souls_max
+            damage = damage * (1 + (TUNING.SKILLS.WORTOX.SOUL_DAMAGE_NABBAG_BONUS_MULT - 1) * damage_percent)
+        end
+        inst.components.weapon:SetDamage(damage)
         inst.components.weapon.attackwearmultipliers:SetModifier(inst, percent)
-    end
-
-    local planarbonus = ((has_lunar and 1 or 0) + (has_shadow and 1 or 0)) * TUNING.SKILLS.WORTOX.NABBAG_PLANAR_DAMAGE_PER_TYPE
-    if planarbonus > 0 then -- FIXME(JBK): Add VFX for this.
-        local planardamage = inst.components.planardamage
-        if not planardamage then
-            planardamage = inst:AddComponent("planardamage")
-        end
-        planardamage:SetBaseDamage(planarbonus)
-
-        local damagetypebonus = inst.components.damagetypebonus
-        if not damagetypebonus then
-            damagetypebonus = inst:AddComponent("damagetypebonus")
-        end
-        if has_lunar then
-            damagetypebonus:AddBonus("shadow_aligned", inst, TUNING.SKILLS.WORTOX.NABBAG_VS_SHADOW_BONUS)
-        else
-            damagetypebonus:RemoveBonus("shadow_aligned", inst)
-        end
-        if has_shadow then
-            damagetypebonus:AddBonus("lunar_aligned", inst, TUNING.SKILLS.WORTOX.NABBAG_VS_LUNAR_BONUS)
-        else
-            damagetypebonus:RemoveBonus("lunar_aligned", inst)
-        end
-    else
-        inst:RemoveComponent("planardamage")
-        inst:RemoveComponent("damagetypebonus")
     end
 
     if inst.wortox_nabbag_body ~= nil then
@@ -82,36 +55,31 @@ end
 
 local function OnInventoryStateChanged_Internal(inst, owner)
     if owner.components.inventory == nil then
-        inst:UpdateStats(0, 0, false, false)
+        inst:UpdateStats(0, 0)
         return
     end
 
-    local has_lunar, has_shadow
-    local filledsouljars = 0 -- NOTES(JBK): Keep this logic the same for filledsouljars in wortox_soul and wortox. [WSCCF]
+    local souls = 0
     local count = 0
     owner.components.inventory:ForEachItemSlot(function(item)
         count = count + 1
-        if item.prefab == "wortox_souljar" and item.souljar_filled:value() then
-            filledsouljars = filledsouljars + 1
-        elseif item.prefab == "purebrilliance" then
-            has_lunar = true
-        elseif item.prefab == "horrorfuel" then
-            has_shadow = true
+        if item.prefab == "wortox_soul" then
+            souls = souls + (item.components.stackable and item.components.stackable:StackSize() or 1)
+        elseif item.prefab == "wortox_souljar" then
+            souls = souls + item.soulcount
         end
     end)
     local activeitem = owner.components.inventory:GetActiveItem()
     if activeitem then
-        if activeitem.prefab == "wortox_souljar" and activeitem.souljar_filled:value() then
-            filledsouljars = filledsouljars + 1
-        elseif activeitem.prefab == "purebrilliance" then
-            has_lunar = true
-        elseif activeitem.prefab == "horrorfuel" then
-            has_shadow = true
+        if activeitem.prefab == "wortox_soul" then
+            souls = souls + (activeitem.components.stackable and activeitem.components.stackable:StackSize() or 1)
+        elseif activeitem.prefab == "wortox_souljar" then
+            souls = souls + activeitem.soulcount
         end
     end
     local maxslots = owner.components.inventory:GetNumSlots()
     local percent = maxslots == 0 and 0 or count / maxslots
-    inst:UpdateStats(percent, filledsouljars, has_lunar, has_shadow)
+    inst:UpdateStats(percent, souls)
 end
 
 local function ToggleOverrideSymbols(inst, owner)
@@ -154,8 +122,6 @@ local function OnEquip(inst, owner)
 
     inst:ListenForEvent("itemget", inst.OnInventoryStateChanged, owner)
     inst:ListenForEvent("itemlose", inst.OnInventoryStateChanged, owner)
-    inst:ListenForEvent("souljar_filled", inst.OnInventoryStateChanged, owner)
-    inst:ListenForEvent("souljar_unfilled", inst.OnInventoryStateChanged, owner)
 
     inst.OnInventoryStateChanged(owner)
 end
@@ -173,10 +139,8 @@ local function OnUnequip(inst, owner)
 
     inst:RemoveEventCallback("itemget", inst.OnInventoryStateChanged, owner)
     inst:RemoveEventCallback("itemlose", inst.OnInventoryStateChanged, owner)
-    inst:RemoveEventCallback("souljar_filled", inst.OnInventoryStateChanged, owner)
-    inst:RemoveEventCallback("souljar_unfilled", inst.OnInventoryStateChanged, owner)
 
-    inst:UpdateStats(0, 0, false, false)
+    inst:UpdateStats(0, 0)
 end
 
 local function DoLoadCheckForPlayers(inst)

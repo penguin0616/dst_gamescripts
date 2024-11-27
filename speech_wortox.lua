@@ -737,8 +737,8 @@ return{
     ANNOUNCE_SOUL_EMPTY_NAUGHTY =
     {
         "I am absolutely famished!",
-        "I'm starved for some scrumptious souls.",
-        "MUST EAT TASTY SOULS!",
+        "I'm starved for some delicious souls!",
+        "I yearn for those tasty treats!",
     },
     ANNOUNCE_SOUL_FEW =
     {
@@ -752,7 +752,7 @@ return{
     },
     ANNOUNCE_SOUL_FEW_NAUGHTY =
     {
-        "I've got a hankering for a few yummy souls.",
+        "My collection is running low.",
         "I'll need a soul snack soon.",
     },
     ANNOUNCE_SOUL_MANY =

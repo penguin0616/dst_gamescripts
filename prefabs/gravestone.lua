@@ -349,7 +349,7 @@ local function OnDugDeployed(inst, pt, deployer)
         end
     end
 
-    -- Deployable doesn't need to remove the instance!
+    inst:Remove()
 end
 
 local function OnDugSave(inst, data)

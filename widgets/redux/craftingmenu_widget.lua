@@ -209,9 +209,18 @@ function CraftingMenuWidget:ApplyFilters()
 
 	local show_hidden = current_filter == CRAFTING_FILTERS.EVERYTHING.name
 
+	--Forced hints are mainly used for hinting character skilltree recipe unlocks that also require
+	--a crafting station, so we should make sure they do not show up on the wrong crafting station.
+	local show_forced_hints = current_filter ~= CRAFTING_FILTERS.CRAFTING_STATION.name
+
 	for i, recipe_name in metaipairs(self.sort_class) do
 		local data = self.crafting_hud.valid_recipes[recipe_name]
-		if data and (show_hidden or data.meta.build_state ~= "hide") and IsRecipeValidForFilter(self, recipe_name, filter_recipes) and IsRecipeValidForStation(self, data.recipe, station, current_filter) then
+		if data and
+			(show_hidden or data.meta.build_state ~= "hide") and
+			(show_forced_hints or data.meta.build_state ~= "hint" or not data.recipe.force_hint) and
+			IsRecipeValidForFilter(self, recipe_name, filter_recipes) and
+			IsRecipeValidForStation(self, data.recipe, station, current_filter)
+		then
 			table.insert(self.filtered_recipes, data)
 		end
 	end

@@ -239,19 +239,14 @@ local function ghostlybond_changebehaviour(inst, ghost)
 end
 
 local function checkforshadowsacrifice(inst,data)
-
 	if inst.components.skilltreeupdater and inst.components.skilltreeupdater:IsActivated("wendy_shadow_3") and 
 	   inst.components.ghostlybond and inst.components.ghostlybond.ghost and not inst.components.ghostlybond.ghost:HasTag("INLIMBO") then
 
-	    local x, y, z = inst.Transform:GetWorldPosition()
-	    local fx = SpawnPrefab("shadow_ground_seeking_bolt")
-	    fx.Transform:SetPosition(x,y,z)
-	   
-        fx.target = inst.components.ghostlybond.ghost
-        fx.toward = true
-        fx.finishfn = function() inst.components.ghostlybond.ghost:DoShadowBurstBuff() end
-        fx:findnextlocation()
-		
+		local fx = SpawnPrefab("shadow_puff_large_front")
+    	fx.Transform:SetScale(1.2,1.2,1.2)
+    	fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+
+	    inst.components.ghostlybond.ghost:DoShadowBurstBuff(data.stackmult)
 	end
 end
 
@@ -265,7 +260,9 @@ local function update_sisturn_state(inst, is_active)
 end
 
 local function CustomCombatDamage(inst, target)
-	return (target:HasDebuff("abigail_vex_debuff")) and TUNING.ABIGAIL_VEX_GHOSTLYFRIEND_DAMAGE_MOD
+
+	return (target:HasDebuff("abigail_vex_debuff") and target:GetDebuff("abigail_vex_debuff").prefab == "abigail_vex_debuff") and TUNING.ABIGAIL_VEX_GHOSTLYFRIEND_DAMAGE_MOD
+		or (target:HasDebuff("abigail_vex_debuff") and target:GetDebuff("abigail_vex_debuff").prefab == "abigail_vex_shadow_debuff") and TUNING.ABIGAIL_SHADOW_VEX_GHOSTLYFRIEND_DAMAGE_MOD
 		or (target == inst.components.ghostlybond.ghost and target:HasTag("abigail")) and 0
 		or 1
 end
@@ -333,6 +330,8 @@ local function OnBabysitterSet(inst, data)
 end
 
 local function redirect_to_abigail(inst, amount, overtime, cause, ignore_invincible, afflicter, ignore_absorb)
+
+	--print("AFFLICTER",afflicter)
 
 	if inst:HasTag("ghostlybond_redirect") and inst.components.ghostlybond and inst.components.ghostlybond.ghost and not inst.components.ghostlybond.ghost:HasTag("INLIMBO") then
 		inst.components.ghostlybond.ghost.components.health:DoDelta(amount)

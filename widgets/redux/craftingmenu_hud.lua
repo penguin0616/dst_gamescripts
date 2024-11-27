@@ -287,7 +287,7 @@ function CraftingMenuHUD:RebuildRecipes()
 
 				local is_build_tag_restricted = not builder:CanLearn(recipe.name) -- canlearn is "not build tag restricted"
 
-				if knows_recipe or should_hint_recipe or freecrafting then --Knows enough to see it
+				if knows_recipe or should_hint_recipe or recipe.force_hint or freecrafting then --Knows enough to see it
 				--and (self.filter == nil or self.filter(recipe.name, builder, nil)) -- Has no filter or passes the filter in place
 
 					if builder:IsBuildBuffered(recipe.name) and not is_build_tag_restricted then
@@ -311,6 +311,9 @@ function CraftingMenuHUD:RebuildRecipes()
 					elseif CanPrototypeRecipe(recipe.level, tech_trees) then
 						meta.can_build = builder:HasIngredients(recipe)
 						meta.build_state = recipe.nounlock and (meta.can_build and "has_ingredients" or "no_ingredients") or "prototype"
+					elseif recipe.force_hint then
+						meta.can_build = false
+						meta.build_state = "hint"
 					elseif recipe.nounlock then
 						meta.can_build = false
 						meta.build_state = "hide"

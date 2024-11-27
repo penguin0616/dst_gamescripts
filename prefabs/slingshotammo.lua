@@ -452,16 +452,18 @@ local function SetHighProjectile(inst)
 end
 
 local function SetChargedMultiplier(inst, mult)
-	mult = 1 + (TUNING.SLINGSHOT_MAX_CHARGE_DAMAGE_MULT - 1) * mult
-	if inst.components.weapon then
-		local dmg = inst.components.weapon.damage
-		if dmg and  dmg > 0 then
-			inst.components.weapon:SetDamage(dmg * mult)
-		end
+	local damagemult = 1 + (TUNING.SLINGSHOT_MAX_CHARGE_DAMAGE_MULT - 1) * mult
+	local speedmult = 1 + (TUNING.SLINGSHOT_MAX_CHARGE_SPEED_MULT - 1) * mult
+
+	local dmg = inst.components.weapon.damage
+	if dmg and  dmg > 0 then
+		inst.components.weapon:SetDamage(dmg * damagemult)
 	end
 	if inst.components.planardamage then
 		inst.components.planardamage:AddMultiplier(inst, mult, "chargedattack")
 	end
+
+	inst.components.projectile:SetSpeed(inst.components.projectile.speed * speedmult)
 end
 
 local function projectile_fn(ammo_def)

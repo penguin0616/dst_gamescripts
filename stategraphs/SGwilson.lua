@@ -8267,7 +8267,7 @@ local states =
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("wendy_commune_pre")
-            inst.SoundEmitter:PlaySound("meta5/wendy/commune")
+            inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/wisper")
             inst.AnimState:PushAnimation("wendy_commune_pst", false)
 
             if inst.bufferedaction ~= nil then

@@ -812,6 +812,7 @@ STRINGS =
             WATHGRITHR_SHIELD = "Block",
             SPEAR_WATHGRITHR_LIGHTNING = "Lightning Strike",
             SPEAR_WATHGRITHR_LIGHTNING_CHARGED = "Lightning Strike",
+			SLINGSHOT2EX = "Shoot",
         },
         DISMANTLE = "Dismantle",
         TACKLE = "Charge",
@@ -4837,6 +4838,7 @@ STRINGS =
 		GHOSTLYELIXIR_RETALIATION = "Give foes a taste of their own medicine.",
 		SISTURN = "A place to rest your weary soul.",
         PETALS = "Purify your petals.",
+        PETALS_EVIL = "Stain your petals.",
 
 		-- Walter
         WALTERHAT = "Form and function over fashion.",
@@ -15430,7 +15432,7 @@ STRINGS.SKILLTREE = {
         WENDY_POTION_3_DESC = "Elixirs with one day duration will now last two days.",
 
         WENDY_PETAL_1_TITLE = "Dark Petals I",
-        WENDY_PETAL_1_DESC = "Evil flowers hold no fear for Wendy.\nShe can purify Dark Petals into regular petals.",
+        WENDY_PETAL_1_DESC = "Evil flowers hold no fear for Wendy.\nShe can stain Petals into Dark Petals and purify Dark Petals.",
         WENDY_PETAL_2_TITLE = "Dark Petals II",
         WENDY_PETAL_2_DESC = "Abigail teaches Wendy to make a shroud of flowers to wear.\nWhen worn, Wendy's wounds will be transferred to Abigail until she is unsummoned.",
 
@@ -15443,9 +15445,9 @@ STRINGS.SKILLTREE = {
         WENDY_SHADOW_1_TITLE = "Shadow Allegiance I",
         WENDY_SHADOW_1_DESC = "Abigail attunes with the shadows and earns some Planar Defense.",
         WENDY_SHADOW_2_TITLE = "Shadow Allegiance II",
-        WENDY_SHADOW_2_DESC = "Wendy can craft an elixir infused with shadow magic that increases Abigail's Vex duration.",
+        WENDY_SHADOW_2_DESC = "Wendy can craft an elixir infused with shadow magic that increases Abigail's Vex damage.",
         WENDY_SHADOW_3_TITLE = "Shadow Allegiance III",
-        WENDY_SHADOW_3_DESC = "Dark Magic is released whenever Wendy uses the Murder action that creates a burst of Planar damage when it hits Abigail.",
+        WENDY_SHADOW_3_DESC = "Dark Magic is released whenever Wendy uses the Murder action filling Abigail with more power for a short time.",
 
         WENDY_LUNAR_LOCK_1_DESC = "Defeat the Celestial Champion",
         WENDY_LUNAR_LOCK_2_DESC = "Have no other allegiance",
@@ -16001,7 +16003,7 @@ STRINGS.SKILLTREE = {
         WORTOX_LIFTEDSPIRITS_2_TITLE = "Lifted Spirits II",
         WORTOX_LIFTEDSPIRITS_2_DESC = "Soul Echo duration is increased.",
         WORTOX_LIFTEDSPIRITS_3_TITLE = "Reverberation",
-        WORTOX_LIFTEDSPIRITS_3_DESC = "Soul Echo may happen a second time.\nThis does not decrease Soul Hop costs from the Map.",
+        WORTOX_LIFTEDSPIRITS_3_DESC = "Soul Echo will happen a second time.\nThis does not decrease Soul Hop costs from the Map.",
         WORTOX_LIFTEDSPIRITS_4_TITLE = "Capricious Movement",
         WORTOX_LIFTEDSPIRITS_4_DESC = "Soul Hop cost from the Map will be reduced by how much of the current world has been explored.",
 
@@ -16020,29 +16022,29 @@ STRINGS.SKILLTREE = {
         WORTOX_THIEF_2_TITLE = "Soul Thief II",
         WORTOX_THIEF_2_DESC = "Souls will last longer while being attracted to you.",
         WORTOX_THIEF_3_TITLE = "Soul Pierce I",
-        WORTOX_THIEF_3_DESC = "Souls attracted to you will hurt other creatures with Souls along its path.\nA held Knabsack will lend part of its damage to the damage dealt.",
+        WORTOX_THIEF_3_DESC = "Souls attracted to you will hurt other creatures with Souls along its path.",
         WORTOX_THIEF_4_TITLE = "Soul Pierce II",
         WORTOX_THIEF_4_DESC = "Souls attracted to you will repel away initially before coming towards you.",
 
         WORTOX_NABBAG_TITLE = "Knabsacker",
-        WORTOX_NABBAG_DESC = "You've hung around Krampus enough to create a Knabsack for your own item stealing desires. Packs a punch depending on how full your inventory is. Pure Brilliance and Horror add Planar Damage.",
+        WORTOX_NABBAG_DESC = "You've hung around Krampus enough to create a Knabsack for your own item stealing desires. Packs a punch depending on how full your inventory is.",
         WORTOX_SOULJAR_1_TITLE = "Soul Jar",
         WORTOX_SOULJAR_1_DESC = "Learn how to craft and use a Soul Jar to store Souls for later use.\nSoul Jars will leak Souls over time when not in your inventory.",
         WORTOX_SOULJAR_2_TITLE = "Overflowing Greed",
-        WORTOX_SOULJAR_2_DESC = "Holding filled Soul Jars increases your maximum Souls allowed to be held at once by 2 each, stopping you from overloading of Soul power.\nThis works up to 5 filled Soul Jars.",
+        WORTOX_SOULJAR_2_DESC = "Holding Soul Jars increases your maximum Souls allowed to be held at once by 5 each, stopping you from overloading of Soul power.",
         WORTOX_SOULJAR_3_TITLE = "Covetous Collector",
-        WORTOX_SOULJAR_3_DESC = "Holding filled Soul Jars increases the damage of the Knabsack.\nThis works up to 5 filled Soul Jars.",
+        WORTOX_SOULJAR_3_DESC = "Held Souls and Souls inside of Soul Jars increases both the damage of the Knabsack and the damage of Souls, up to 100 total Souls collected.",
 
         WORTOX_SOULDECOY_1_TITLE = "Soul Decoy I",
         WORTOX_SOULDECOY_1_DESC = "Soul Hopping for the first hop leaves behind a Soul Decoy to draw the attention of nearby attackers targeting you.",
         WORTOX_SOULDECOY_2_TITLE = "Soul Decoy II",
         WORTOX_SOULDECOY_2_DESC = "Soul Decoys will stay around for a bit longer if they are unharmed.",
         WORTOX_SOULDECOY_3_TITLE = "Soul Decoy III",
-        WORTOX_SOULDECOY_3_DESC = "Soul Decoys will now explode and inflict damage on things lured by it or attacking you upon expiration.\nA held Knabsack will lend part of its damage to the damage dealt.",
+        WORTOX_SOULDECOY_3_DESC = "Soul Decoys will now explode and inflict damage on things lured by it or attacking you upon expiration.",
 
         -- AFFINITY
         WORTOX_ALLEGIANCE_LUNAR_TITLE = "Lunar Swindler",
-        WORTOX_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity by showing you power from wearing a Brightshade Helm or Armor. Souls waiting to be freed in a Soul Echo will absorb the damage from Shadow Aligned enemies, and expire the timer.",
+        WORTOX_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity by showing you power from wearing a Brightshade Helm or Brightshade Armor. Souls waiting to be freed in a Soul Echo will absorb incoming damage, and expire the timer.",
 
         WORTOX_ALLEGIANCE_SHADOW_TITLE = "Shadow Harvester",
         WORTOX_ALLEGIANCE_SHADOW_DESC = "The Queen will reward your loyalty by unlocking power from wielding a Shadow Reaper. Souls waiting to be freed in a Soul Echo will cause damage dealt to spread out to close enemies or hit one target twice, and expire the timer.",

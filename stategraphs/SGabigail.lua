@@ -12,9 +12,14 @@ local function startaura(inst)
         return
     end
 
-    inst.Light:SetColour(255/255, 32/255, 32/255)
+    if inst:HasDebuff("abigail_murder_buff") then
+        inst.Light:SetColour(32/255, 32/255, 32/255)
+        inst.AnimState:SetMultColour(92/255, 92/255, 92/255, 1)
+    else
+        inst.Light:SetColour(255/255, 32/255, 32/255)        
+        inst.AnimState:SetMultColour(207/255, 92/255, 92/255, 1)
+    end
     inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/abigail/attack_LP", "angry")
-    inst.AnimState:SetMultColour(207/255, 92/255, 92/255, 1)
 
     local attack_anim = "attack" .. tostring(inst.attack_level or 1)
 
@@ -330,7 +335,11 @@ local states =
         {
             TimeEvent(FRAMES, function(inst)
                 if math.random() < 0.8 then
-                    inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/abigail/howl")
+                    if inst:HasTag("gestalt") then
+                        inst.SoundEmitter:PlaySound("meta5/abigail/gestalt_abigail_idle")
+                    else    
+                        inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/abigail/howl")
+                    end
                 end
             end),
         },
@@ -400,7 +409,11 @@ local states =
         {
             TimeEvent(FRAMES, function(inst)
                 if math.random() < 0.8 then
-                    inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/abigail/howl")
+                    if inst:HasTag("gestalt") then
+                        inst.SoundEmitter:PlaySound("meta5/abigail/gestalt_abigail_idle")
+                    else                     
+                        inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/abigail/howl")
+                    end
                 end
             end),
         },
@@ -719,8 +732,12 @@ local states =
             inst.components.locomotor:Stop()
 
 
+            inst.SoundEmitter:PlaySound("meta5/abigail/gestalt_abigail_dashattack_pre")
+
+
             inst.sg.statemem.oldattackdamage = inst.components.combat.defaultdamage
-            if TheWorld.state.isnight or inst:HasDebuff("ghostlyelixir_attack_buff") then
+
+            if TheWorld.state.isnight or (inst:HasDebuff("elixir_buff") and inst.components.debuffable:GetDebuff("elixir_buff").prefab == "ghostlyelixir_attack_buff" )  then
                 inst.components.combat.defaultdamage = TUNING.ABIGAIL_GESTALT_DAMAGE.night
             elseif TheWorld.state.isday then 
                 inst.components.combat.defaultdamage = TUNING.ABIGAIL_GESTALT_DAMAGE.day
@@ -759,6 +776,10 @@ local states =
 
                     inst:SetTransparentPhysics(false)
                 end ),
+
+            TimeEvent(33*FRAMES, function(inst)
+                    inst.SoundEmitter:PlaySound("meta5/abigail/gestalt_abigail_dashattack_pst")                  
+                end ),            
         },
 
         onupdate = function(inst)
@@ -775,6 +796,8 @@ local states =
                         local fx = SpawnPrefab("abigail_gestalt_hit_fx")                        
                             fx.entity:SetParent(target.entity)
                             target:AddChild(fx)
+                            inst.SoundEmitter:PlaySound("meta5/abigail/gestalt_abigail_dashattack_hit")
+                            
                         end
                     end
                 end

@@ -45,8 +45,7 @@ local function UpdatePercent(inst)
         return
     end
 
-    local filled = false
-    if inst.components.container and inst.components.finiteuses then
+    if inst.components.container then
         local count, maxcount = 0, 0
         inst.components.container:ForEachItem(function(item)
             if item.components.stackable then
@@ -57,12 +56,13 @@ local function UpdatePercent(inst)
                 maxcount = maxcount + 1
             end
         end)
+        inst.soulcount = count
         local percent = (maxcount == 0 and 0 or math.min(count / maxcount, 1))
         
-        inst.components.finiteuses:SetPercent(percent)
-        if percent == 1 then
-            filled = true
+        if inst.components.finiteuses then
+            inst.components.finiteuses:SetPercent(percent)
         end
+
         local owner = inst.components.inventoryitem and inst.components.inventoryitem.owner or nil
         local shouldleakfrombadowner = owner == nil or owner.components.skilltreeupdater == nil or not owner.components.skilltreeupdater:IsActivated("wortox_souljar_1") 
         if percent > 0 and shouldleakfrombadowner and not inst.components.container:IsOpen() then
@@ -74,19 +74,9 @@ local function UpdatePercent(inst)
                 inst.leaksoulstask:Cancel()
                 inst.leaksoulstask = nil
             end
-            if owner then
-                if percent ~= inst.souljar_oldpercent then
-                    if percent == 1 then
-                        owner:PushEvent("souljar_filled")
-                    elseif inst.souljar_oldpercent == 1 then
-                        owner:PushEvent("souljar_unfilled")
-                    end
-                end
-            end
             inst.souljar_oldpercent = percent
         end
     end
-    inst.souljar_filled:set(filled)
 end
 
 local function OnItemGet(inst, data)
@@ -186,8 +176,6 @@ local function fn()
     inst:AddTag("portablestorage")
     inst:AddTag("souljar")
 
-    inst.souljar_filled = net_bool(inst.GUID, "wortox_souljar.souljar_filled", "issouljarfilleddirty")
-
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
@@ -231,6 +219,7 @@ local function fn()
     inst:ListenForEvent("onremove", StopTasks)
 
     inst.souljar_needsinit = true
+    inst.soulcount = 0
     inst:DoTaskInTime(0, OnInit)
 
     return inst

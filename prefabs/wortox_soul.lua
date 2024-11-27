@@ -180,20 +180,18 @@ if TheSim then -- updateprefabs guard
     SetDesiredMaxTakeCountFunction("wortox_soul", function(player, inventory, container_item, container)
         local max_count = TUNING.WORTOX_MAX_SOULS -- NOTES(JBK): Keep this logic the same in counts in wortox. [WSCCF]
         if player and player.components.skilltreeupdater and player.components.skilltreeupdater:IsActivated("wortox_souljar_2") and player.replica.inventory then
-            local filledsouljars = 0
+            local souljars = 0
             for slot = 1, player.replica.inventory:GetNumSlots() do
                 local item = player.replica.inventory:GetItemInSlot(slot)
-                if item and item.prefab == "wortox_souljar" and item.souljar_filled:value() then
-                    if item ~= container.inst then -- Exclude self because this will lower it on taking items out of it.
-                        filledsouljars = filledsouljars + 1
-                    end
+                if item and item.prefab == "wortox_souljar" then
+                    souljars = souljars + 1
                 end
             end
             local activeitem = player.replica.inventory:GetActiveItem()
-            if activeitem and activeitem.prefab == "wortox_souljar" and activeitem.souljar_filled:value() then
-                filledsouljars = filledsouljars + 1
+            if activeitem and activeitem.prefab == "wortox_souljar" then
+                souljars = souljars + 1
             end
-            max_count = max_count + math.min(filledsouljars, TUNING.SKILLS.WORTOX.FILLED_SOULJAR_SOULCAP_MAX_JARS) * TUNING.SKILLS.WORTOX.FILLED_SOULJAR_SOULCAP_INCREASE_PER
+            max_count = max_count + souljars * TUNING.SKILLS.WORTOX.FILLED_SOULJAR_SOULCAP_INCREASE_PER
         end
         local has, count = inventory:Has("wortox_soul", 0, false)
         return math.max(max_count - count, 0)

@@ -1003,6 +1003,8 @@ function PlayerController:DoControllerAltActionButton()
 				if rider ~= nil and rider:IsRiding() then
 					obj = self.inst
 					act = BufferedAction(obj, obj, ACTIONS.DISMOUNT)
+				else
+					return
 				end
 			end
         end
@@ -1667,7 +1669,7 @@ function PlayerController:DoAttackButton(retarget, isleftmouse)
     --end
 
 	local control = isleftmouse and CONTROL_PRIMARY or CONTROL_ATTACK
-	local force_attack = TheInput:IsControlPressed(control)
+	local force_attack = TheInput:IsControlPressed(CONTROL_FORCE_ATTACK)
     local target = self:GetAttackTarget(force_attack, retarget, retarget ~= self:GetCombatTarget())
 
     if target == nil then
