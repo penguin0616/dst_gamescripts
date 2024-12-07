@@ -4,23 +4,50 @@ local prefabs =
     "wendy_recipe_gravestone_placer",
 }
 
-local WENDY_PLACER_SNAP_DISTANCE = 1.0
-
 --
+local function OnProxyBuilt(inst, data)
+    if not data or not data.builder then
+        inst:Remove()
+        return
+    end
+
+    inst.components.writeable:BeginWriting(data.builder)
+end
+
+-- Writeable
+local function OnWritten(inst, written_text, writer)
+end
+
+local WENDY_PLACER_SNAP_DISTANCE = 1.0
 local SKELETON_TAGS = {"skeleton"}
-local function wendy_recipe_gravestone_replace(inst)
+local function OnWritingEnded(inst)
+    if not inst.components.writeable then return end
+
     local closest_skeleton = FindEntity(inst, WENDY_PLACER_SNAP_DISTANCE, nil, SKELETON_TAGS)
     if closest_skeleton then
         closest_skeleton:Remove()
     end
 
-    SpawnPrefab("attune_out_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
+    local ix, iy, iz = inst.Transform:GetWorldPosition()
+    SpawnPrefab("attune_out_fx").Transform:SetPosition(ix, iy, iz)
 
-    local gravestone = ReplacePrefab(inst, "gravestone")
+    local gravestone = SpawnPrefab("gravestone")
+    gravestone.Transform:SetPosition(ix, iy, iz)
     gravestone.random_stone_choice = math.random(4)
     gravestone.AnimState:PlayAnimation("grave"..gravestone.random_stone_choice.."_place")
+    gravestone.AnimState:PushAnimation("grave"..gravestone.random_stone_choice)
+
+    if inst.components.writeable:IsWritten() then
+        local epitaph = inst.components.writeable:GetText()
+        gravestone.setepitaph = epitaph
+        gravestone.components.inspectable:SetDescription("'"..epitaph.."'")
+    end
+
+    inst:DoTaskInTime(0, inst.Remove)
+    --inst:Remove()
 end
 
+--
 local function wendy_recipe_gravestone_fn()
     local inst = CreateEntity()
 
@@ -29,12 +56,25 @@ local function wendy_recipe_gravestone_fn()
 
     inst:AddTag("NOCLICK")
 
+    --Sneak these into pristine state for optimization
+    inst:AddTag("_writeable")
+
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst
     end
 
-    inst:DoTaskInTime(0, wendy_recipe_gravestone_replace)
+    --Remove these tags so that they can be added properly when replicating components below
+    inst:RemoveTag("_writeable")
+
+    local writeable = inst:AddComponent("writeable")
+    writeable:SetDefaultWriteable(false)
+    writeable:SetAutomaticDescriptionEnabled(false)
+    writeable:SetWriteableDistance(2)
+    writeable:SetOnWrittenFn(OnWritten)
+    writeable:SetOnWritingEndedFn(OnWritingEnded)
+
+    inst:ListenForEvent("onbuilt", OnProxyBuilt)
 
     return inst
 end

@@ -182,7 +182,7 @@ local function updatefn(inst, comp, dt)
 	if inst.update_timer <= 0 then
 		inst.update_timer = inst.update_timer + 1
 
-		for ghost,i in pairs(comp.babysitting)do
+		for ghost in pairs(comp.babysitting) do
 			if not inst.components.container:IsFull() then
 				inst.components.ghostbabysitter:RemoveGhost(ghost)
 			elseif ghost.components.health:GetPercent() >= 1 and ghost:GetDistanceSqToInst(inst) < 25*25 then

@@ -1202,6 +1202,10 @@ params.slingshotex = deepcopy(params.slingshot)
 params.slingshotex.widget.animbank = "ui_slingshot_wagpunk"
 params.slingshotex.widget.animbuild = "ui_slingshot_wagpunk"
 
+params.slingshot999ex = deepcopy(params.slingshotex)
+params.slingshot999ex.widget.animbank = "ui_slingshot_wagpunk"
+params.slingshot999ex.widget.animbuild = "ui_slingshot_wagpunk"
+
 params.slingshot2 =
 {
 	widget =
@@ -1686,13 +1690,46 @@ params.wortox_souljar =
         pos = Vector3(0, 195, 0),
         side_align_tip = 160,
         opensound = "meta5/wortox/souljar_lid_pop",
-        closesound = "meta5/wortox/souljar_close",
+        closesound = "meta5/wortox/souljar_close_pop",
     },
     type = "chest",
 }
 
 function params.wortox_souljar.itemtestfn(container, item, slot)
     return item:HasTag("soul") and not item:HasTag("nosouljar")
+end
+
+--------------------------------------------------------------------------
+--[[ wendy_elixir_container ]]
+--------------------------------------------------------------------------
+
+params.elixir_container =
+{
+    widget =
+    {
+        slotpos = {},
+        slotbg  = {},
+        animbank  = "ui_elixir_container_2x4",
+        animbuild = "ui_elixir_container_2x4",
+        pos = Vector3(75, 195, 0),
+        side_align_tip = 160,
+    },
+    type = "chest",
+}
+
+local battlesong_container_bg = { image = "elixir_slot.tex", atlas = "images/hud2.xml" }
+
+for y = 0, 3 do
+    table.insert(params.elixir_container.widget.slotpos, Vector3(-162     , -75 * y + 114, 0))
+    table.insert(params.elixir_container.widget.slotpos, Vector3(-162 + 75, -75 * y + 114, 0))
+
+    table.insert(params.elixir_container.widget.slotbg, battlesong_container_bg)
+    table.insert(params.elixir_container.widget.slotbg, battlesong_container_bg)
+end
+
+function params.elixir_container.itemtestfn(container, item, slot)
+    -- Battlesongs.
+    return item:HasTag("ghostlyelixir")
 end
 
 --------------------------------------------------------------------------

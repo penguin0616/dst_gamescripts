@@ -770,21 +770,32 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_WARNING =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_USED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
 
     --walter specfic
+--fallback to speech_wilson.lua 	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
@@ -4043,12 +4054,11 @@ return{
 		SLINGSHOTAMMO_MOONGLASS = "FLESHSACKS WASTING PRECIOUS INORGANIC MOON BITS",
 		SLINGSHOTAMMO_GELBLOB = "FLESHSACKS, FINDING NEW INNOVATIVE WAYS TO THROW... GUNK AT EACH OTHER",
 		SLINGSHOTAMMO_SCRAPFEATHER = "FLESHSACKS, FINDING NEW INNOVATIVE WAYS TO THROW ROCKS AT EACH OTHER",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "FLESHSACKS, FINDING NEW INNOVATIVE WAYS TO THROW ROCKS AT EACH OTHER",
         SLINGSHOTAMMO_DREADSTONE = "FLESHSACKS, FINDING NEW INNOVATIVE WAYS TO THROW ROCKS AT EACH OTHER",
         SLINGSHOTAMMO_GUNPOWDER = "FLESHSACKS, FINDING NEW INNOVATIVE WAYS TO THROW ROCKS AT EACH OTHER",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "FLESHSACKS, FINDING NEW INNOVATIVE WAYS TO THROW ROCKS AT EACH OTHER",
         SLINGSHOTAMMO_PUREBRILLIANCE = "FLESHSACKS, FINDING NEW INNOVATIVE WAYS TO THROW ROCKS AT EACH OTHER",
-        SLINGSHOTAMMO_PUREHORROR = "FLESHSACKS, FINDING NEW INNOVATIVE WAYS TO THROW ROCKS AT EACH OTHER",
+        SLINGSHOTAMMO_HORRORFUEL = "FLESHSACKS, FINDING NEW INNOVATIVE WAYS TO THROW ROCKS AT EACH OTHER",
         PORTABLETENT = "RECHARGING STATION",
         PORTABLETENT_ITEM = "TENT LOADING... INCOMPLETE",
 
@@ -4081,6 +4091,7 @@ return{
 		GHOSTLYELIXIR_ATTACK = "INFERIOR CRAFTSMANSHIP. A CHILD COULD HAVE MADE THIS",
 		GHOSTLYELIXIR_SPEED = "INFERIOR CRAFTSMANSHIP. A CHILD COULD HAVE MADE THIS",
 		GHOSTLYELIXIR_RETALIATION = "INFERIOR CRAFTSMANSHIP. A CHILD COULD HAVE MADE THIS",
+        GHOSTLYELIXIR_REVIVE = "INFERIOR CRAFTSMANSHIP. A CHILD COULD HAVE MADE THIS",
 		SISTURN =
 		{
 			GENERIC = "WEAK ORGANIC SENTIMENTALITY",
@@ -5516,12 +5527,15 @@ return{
 		SLINGSHOT_BAND_MIMIC = "WEAPON AUGMENTATION. NICE BUT STILL PRIMITIVE",
 		SLINGSHOT_FRAME_BONE = "WEAPON AUGMENTATION. NICE BUT STILL PRIMITIVE",
 		SLINGSHOT_FRAME_GEMS = "WEAPON AUGMENTATION. NICE BUT STILL PRIMITIVE",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "TODO",
 		SLINGSHOT_FRAME_WAGPUNK = "WEAPON AUGMENTATION. NICE BUT STILL PRIMITIVE",
 		SLINGSHOT_HANDLE_STICKY = "WEAPON AUGMENTATION. NICE BUT STILL PRIMITIVE",
 		SLINGSHOT_HANDLE_SILK = "WEAPON AUGMENTATION. NICE BUT STILL PRIMITIVE",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "WEAPON AUGMENTATION. NICE BUT STILL PRIMITIVE",
 
         WOBY_BADGE_STATION = "DROOL MACHINE RECALIBRATION SYSTEM",
+
+        ELIXIR_CONTAINER = "UNDEAD SYSTEM ENHANCEMENT PACK",
     },
 
     DESCRIBE_GENERIC = "ERROR: UNKNOWN",

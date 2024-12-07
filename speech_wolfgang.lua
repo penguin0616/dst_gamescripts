@@ -771,21 +771,32 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_WARNING =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_USED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
 
     --walter specfic
+--fallback to speech_wilson.lua 	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
@@ -4044,12 +4055,11 @@ return{
 		SLINGSHOTAMMO_MOONGLASS = "Is little bits of moon.",
 		SLINGSHOTAMMO_GELBLOB = "Is little bits of junk.",
 		SLINGSHOTAMMO_SCRAPFEATHER = "Is little bits of junk.",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "Is little bits of junk.",
         SLINGSHOTAMMO_DREADSTONE = "Is little bits of junk.",
         SLINGSHOTAMMO_GUNPOWDER = "Is little bits of junk.",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "Is little bits of junk.",
         SLINGSHOTAMMO_PUREBRILLIANCE = "Is little bits of junk.",
-        SLINGSHOTAMMO_PUREHORROR = "Is little bits of scary.",
+        SLINGSHOTAMMO_HORRORFUEL = "Is little bits of scary.",
         PORTABLETENT = "Is good, solid tent!",
         PORTABLETENT_ITEM = "Wolfgang will set up tent. Make it strong!",
 
@@ -4082,6 +4092,7 @@ return{
 		GHOSTLYELIXIR_ATTACK = "Wolfgang not trust tiny bottles made by creepy girl.",
 		GHOSTLYELIXIR_SPEED = "Wolfgang not trust tiny bottles made by creepy girl.",
 		GHOSTLYELIXIR_RETALIATION = "Wolfgang not trust tiny bottles made by creepy girl.",
+        GHOSTLYELIXIR_REVIVE = "Wolfgang not trust tiny bottles made by creepy girl.",
 		SISTURN =
 		{
 			GENERIC = "Is like tiny house for bird! But why is little pot here?",
@@ -5517,12 +5528,15 @@ return{
 		SLINGSHOT_BAND_MIMIC = "Be careful, little scout boy!",
 		SLINGSHOT_FRAME_BONE = "Be careful, little scout boy!",
 		SLINGSHOT_FRAME_GEMS = "Be careful, little scout boy!",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "Be careful, little scout boy!",
 		SLINGSHOT_FRAME_WAGPUNK = "Be careful, little scout boy!",
 		SLINGSHOT_HANDLE_STICKY = "Be careful, little scout boy!",
 		SLINGSHOT_HANDLE_SILK = "Be careful, little scout boy!",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Be careful, little scout boy!",
 
         WOBY_BADGE_STATION = "Smart Woby!",
+
+        ELIXIR_CONTAINER = "Little ghost girl have many supplements.",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

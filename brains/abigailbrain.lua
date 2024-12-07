@@ -1,3 +1,4 @@
+require "behaviours/doaction"
 require "behaviours/follow"
 require "behaviours/wander"
 
@@ -18,6 +19,17 @@ end
 
 local function DanceParty(inst)
     inst:PushEvent("dance")
+end
+
+local function HauntAction(inst)
+    local haunt_action = BufferedAction(inst, inst._haunt_target, ACTIONS.HAUNT)
+    haunt_action:AddSuccessAction(inst._OnHauntTargetRemoved)
+    haunt_action:AddFailAction(inst._OnHauntTargetRemoved)
+    haunt_action.validfn = function()
+        -- InLimbo covers stuff like items getting picked up
+        return inst._haunt_target ~= nil and not inst._haunt_target:IsInLimbo()
+    end
+    return haunt_action
 end
 
 local function ShouldDanceParty(inst)
@@ -117,11 +129,15 @@ function AbigailBrain:OnStart()
         }, PRIORITY_NODE_RATE)
     )
 
+    local haunt_behaviour = WhileNode(function() return self.inst._haunt_target ~= nil end, "Haunt Something",
+        DoAction(self.inst, HauntAction, nil, true, TUNING.WENDYSKILL_COMMAND_COOLDOWN)
+    )
+
     --
     local defensive_mode = WhileNode(function() return self.inst.is_defensive end, "DefensiveMove",
         PriorityNode({
             WhileNode(function() return self.inst:HasTag("gestalt") and self.inst.components.combat.target and self.inst.components.combat:InCooldown() end, "gestalt avoid",
-                RunAway(self.inst, function() return self.inst.components.combat.target end, 5, 7)),
+                RunAway(self.inst, function() return self.inst.components.combat.target end, 7, 9)),
 
             WhileNode(function() return DefensiveCanFight(self.inst) end, "CanFight",
                 ChaseAndAttack(self.inst, TUNING.ABIGAIL_DEFENSIVE_MAX_CHASE_TIME)),
@@ -140,7 +156,7 @@ function AbigailBrain:OnStart()
     --
     local aggressive_mode = PriorityNode({
         WhileNode(function() return self.inst:HasTag("gestalt") and self.inst.components.combat.target and self.inst.components.combat:InCooldown() end, "gestalt avoid",
-            RunAway(self.inst, function() return self.inst.components.combat.target end, 5, 7)),
+            RunAway(self.inst, function() return self.inst.components.combat.target end, 7, 9)),
 
         WhileNode(function() return AggressiveCanFight(self.inst) end, "CanFight",
             ChaseAndAttack(self.inst, TUNING.ABIGAIL_AGGRESSIVE_MAX_CHASE_TIME)),
@@ -168,6 +184,7 @@ function AbigailBrain:OnStart()
                 dance,
                 watch_game,
                 transparent_behaviour,
+                haunt_behaviour,
 
                 defensive_mode,
                 aggressive_mode,

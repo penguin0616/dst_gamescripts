@@ -10,6 +10,7 @@ local assets =
     Asset("ANIM", "anim/brightmare_gestalt_evolved.zip"),
     Asset("ANIM", "anim/ghost_abigail_commands.zip"),
     Asset("ANIM", "anim/ghost_abigail_gestalt_build.zip"),
+    Asset("ANIM", "anim/ghost_abigail_shadow_build.zip"),
 
     Asset("SOUND", "sound/ghost.fsb"),
 }
@@ -71,8 +72,13 @@ local function UpdateGhostlyBondLevel(inst, level)
 end
 
 local ABIGAIL_DEFENSIVE_MAX_FOLLOW_DSQ = TUNING.ABIGAIL_DEFENSIVE_MAX_FOLLOW * TUNING.ABIGAIL_DEFENSIVE_MAX_FOLLOW
+local ABIGAIL_GESTALT_DEFENSIVE_MAX_FOLLOW_DSQ = TUNING.ABIGAIL_GESTALT_DEFENSIVE_MAX_FOLLOW * TUNING.ABIGAIL_GESTALT_DEFENSIVE_MAX_FOLLOW
 local function IsWithinDefensiveRange(inst)
-    return (inst._playerlink ~= nil) and inst:GetDistanceSqToInst(inst._playerlink) < ABIGAIL_DEFENSIVE_MAX_FOLLOW_DSQ
+    local range = ABIGAIL_DEFENSIVE_MAX_FOLLOW_DSQ
+    if inst:HasTag("gestalt") and inst.components.combat.target then
+        range = ABIGAIL_GESTALT_DEFENSIVE_MAX_FOLLOW_DSQ
+    end
+    return (inst._playerlink ~= nil) and inst:GetDistanceSqToInst(inst._playerlink) < range
 end
 
 local function SetTransparentPhysics(inst, on)
@@ -319,14 +325,22 @@ local function AbleToAcceptTest(inst, item)
 end
 
 local function OnDebuffAdded(inst, name, debuff)
-    if inst._playerlink ~= nil and inst._playerlink.components.pethealthbar ~= nil and name == "elixir_buff" then
-        inst._playerlink.components.pethealthbar:SetSymbol(debuff.prefab)
+    if inst._playerlink ~= nil and inst._playerlink.components.pethealthbar ~= nil then
+        if name == "super_elixir_buff" then
+            inst._playerlink.components.pethealthbar:SetSymbol2(debuff.prefab)
+        elseif name == "elixir_buff" then
+            inst._playerlink.components.pethealthbar:SetSymbol(debuff.prefab)
+        end
     end
 end
 
 local function OnDebuffRemoved(inst, name, debuff)
-    if inst._playerlink ~= nil and inst._playerlink.components.pethealthbar ~= nil and name == "elixir_buff" then
-		inst._playerlink.components.pethealthbar:SetSymbol(0)
+    if inst._playerlink ~= nil and inst._playerlink.components.pethealthbar ~= nil then
+        if name == "super_elixir_buff" then
+            inst._playerlink.components.pethealthbar:SetSymbol2(0)
+        elseif name == "elixir_buff" then
+            inst._playerlink.components.pethealthbar:SetSymbol(0)
+        end
 	end
 end
 
@@ -363,13 +377,19 @@ local function ApplyDebuff(inst, data)
 	if target ~= nil then
         local buff = "abigail_vex_debuff"
 
-        if inst:GetDebuff("elixir_buff") and inst:GetDebuff("elixir_buff").prefab == "ghostlyelixir_shadow_buff" then
+        if inst:GetDebuff("super_elixir_buff") and inst:GetDebuff("super_elixir_buff").prefab == "ghostlyelixir_shadow_buff" then
             buff = "abigail_vex_shadow_debuff"
         end
 
-        target:AddDebuff("abigail_vex_debuff", buff)
+        local olddebuff = target:GetDebuff("abigail_vex_debuff")
+        if olddebuff and olddebuff.prefab ~= buff then            
+            target:RemoveDebuff("abigail_vex_debuff")
+        end
+
+        target:AddDebuff("abigail_vex_debuff", buff, nil, nil, nil, inst)
 
         local debuff = target:GetDebuff("abigail_vex_debuff")
+
         local skin_build = inst:GetSkinBuild()
         if skin_build ~= nil and debuff ~= nil then
             debuff.AnimState:OverrideItemSkinSymbol("flower", skin_build, "flower", inst.GUID, "abigail_attack_fx" )
@@ -394,6 +414,10 @@ local function linktoplayer(inst, player)
         if elixir_buff then
             player.components.pethealthbar:SetSymbol(elixir_buff.prefab)
         end
+        local elixir_buff2 = inst:GetDebuff("super_elixir_buff")
+        if elixir_buff2 then
+            player.components.pethealthbar:SetSymbol2(elixir_buff2.prefab)
+        end        
     end
 
     if player:HasTag("player_shadow_aligned") then
@@ -442,7 +466,7 @@ local function DoGhostEscape(inst)
     inst.components.fader:Fade(1.0, 0.3, 0.75, do_transparency)
     inst.components.aura:Enable(false)
     inst.components.locomotor:SetExternalSpeedMultiplier(inst, "transparency", 1.25)
-    inst:AddTag("NOTARGET")
+    inst:AddTag("notarget")
     inst._is_transparent = true
 
 	inst.components.timer:StartTimer("undo_transparency", TUNING.WENDYSKILL_ESCAPE_TIME)
@@ -484,7 +508,7 @@ local function DoGhostScare(inst)
 end
 
 local ATTACK_MUST_TAGS = {"_health", "_combat"}
-local ATTACK_NO_TAGS = {"INLIMBO", "FX", "DECOR", "NOCLICK"}
+local ATTACK_NO_TAGS = {"DECOR", "FX", "INLIMBO", "NOCLICK"}
 local function DoGhostAttackAt(inst, pos)
 	local px, py, pz = pos:Get()
 	local targets_near_position = TheSim:FindEntities(px, py, pz, 2, ATTACK_MUST_TAGS, ATTACK_NO_TAGS)
@@ -499,14 +523,24 @@ local function DoGhostAttackAt(inst, pos)
     inst.components.timer:StartTimer("block_retargets", 10)
 end
 
+local HAUNT_CANT_TAGS = {"catchable", "DECOR", "FX", "haunted", "INLIMBO", "NOCLICK"}
+local function DoGhostHauntAt(inst, pos)
+	local px, py, pz = pos:Get()
+	local targets_near_position = TheSim:FindEntities(px, py, pz, 2, nil, HAUNT_CANT_TAGS)
+	if #targets_near_position > 0 then
+        inst._haunt_target = targets_near_position[1]
+        inst:ListenForEvent("onremove", inst._OnHauntTargetRemoved, inst._haunt_target)
+	end
+end
+
 -- Timer
 local function OnTimerDone(inst, data)
     if data.name == "undo_transparency" then
         inst.components.fader:Fade(0.3, 1.0, 0.75, do_transparency)
-        if not inst:HasTag("gestalt") then inst.components.aura:Enable(true) end        
+        if not inst:HasTag("gestalt") then inst.components.aura:Enable(true) end
         inst.components.locomotor:RemoveExternalSpeedMultiplier(inst, "transparency")
-        inst:RemoveTag("NOTARGET")
-        inst._is_transparent = false -- TODO @stevenm Maybe do this at the end of the fade instead.
+        inst:RemoveTag("notarget")
+        inst._is_transparent = false
     end
 end
 
@@ -518,11 +552,6 @@ local function getstatus(inst)
 		or "LEVEL1"
 end
 
-local MAXRANGE = 3
-local NO_TAGS_NO_PLAYERS =  { "INLIMBO", "notarget", "noattack", "invisible", "wall", "player", "companion" }
-local NO_TAGS =             { "INLIMBO", "notarget", "noattack", "invisible", "wall", "playerghost" }
-local COMBAT_TARGET_TAGS = { "_combat" }
-
 local function DoShadowBurstBuff(inst, stack)
     local x,y,z = inst.Transform:GetWorldPosition()
     SpawnPrefab("abigail_attack_shadow_fx").Transform:SetPosition(x,y,z)
@@ -530,10 +559,10 @@ local function DoShadowBurstBuff(inst, stack)
     inst:AddChild(fx)
 
     if not inst:HasDebuff("abigail_murder_buff") then
-        inst:AddDebuff("abigail_murder_buff", "abigail_murder_buff")    
+        inst:AddDebuff("abigail_murder_buff", "abigail_murder_buff")
         stack = stack-1
     end
-    
+
     local time = GetTaskRemaining(inst:GetDebuff("abigail_murder_buff").decaytimer)
     inst:GetDebuff("abigail_murder_buff"):murder_buff_OnExtended(math.min( time + stack*TUNING.SKILLS.WENDY.MURDER_BUFF_DURATION,  20*TUNING.SKILLS.WENDY.MURDER_BUFF_DURATION )  )
 end
@@ -541,7 +570,7 @@ end
 local function SetBabysitter(inst, sisturn)
     if inst.components.follower and inst.components.follower.leader and
         inst.components.follower.leader:HasTag("can_set_babysitter") and
-        sisturn and 
+        sisturn and
         sisturn.components.container:IsFull() then
 
         if not inst.ghost_babysitter then
@@ -557,32 +586,37 @@ local function SetBabysitter(inst, sisturn)
     end
 end
 
+local function calcabigailmaxhealthbonus(inst)
+    if inst.components.follower and inst.components.follower.leader and
+        inst.components.follower.leader.components.skilltreeupdater and
+        inst.components.follower.leader.components.skilltreeupdater:IsActivated("wendy_sisturn_4") then
+            return TUNING.SKILLS.WENDY.SISTURN_3_MAX_HEALTH_BOOST + TUNING.SKILLS.WENDY.SISTURN_3_MAX_HEALTH_BOOST
+    end
+
+    return TUNING.SKILLS.WENDY.SISTURN_3_MAX_HEALTH_BOOST
+end
+
 local function UpdateBonusHealth(inst, newbonus)
     local max = nil
-                  
+    local calculated_max_health_bonus = calcabigailmaxhealthbonus(inst)
+
     if inst.bonus_max_health == 0 and newbonus > 0 then
-        max=TUNING.SKILLS.WENDY.SISTURN_3_MAX_HEALTH_BOOST
+        max = calculated_max_health_bonus
     elseif inst.bonus_max_health > 0 and newbonus <= 0 then
         max = 0
     end
 
-    local oldpercent = 0
-    local newpercent = 0
-    
-    if inst.bonus_max_health > 0 then
-        oldpercent = inst.bonus_max_health/TUNING.SKILLS.WENDY.SISTURN_3_MAX_HEALTH_BOOST
-        newpercent = newbonus/TUNING.SKILLS.WENDY.SISTURN_3_MAX_HEALTH_BOOST
-    end
-
     inst.bonus_max_health = newbonus
-
-    inst:PushEvent("pethealthbar_bonuschange", {max=max, oldpercent=oldpercent, newpercent= newpercent})
+    inst:PushEvent("pethealthbar_bonuschange", {
+        max = max,
+        oldpercent = inst.bonus_max_health/calculated_max_health_bonus,
+        newpercent = newbonus/calculated_max_health_bonus,
+    })
 end
 
-
 local function AddBonusHealth(inst,val)
-    if inst.bonus_max_health < TUNING.SKILLS.WENDY.SISTURN_3_MAX_HEALTH_BOOST then
-        local newmax = math.min(TUNING.SKILLS.WENDY.SISTURN_3_MAX_HEALTH_BOOST, inst.bonus_max_health + val )
+    if inst.bonus_max_health < calcabigailmaxhealthbonus(inst) then
+        local newmax = math.min(calcabigailmaxhealthbonus(inst), inst.bonus_max_health + val )
         inst:UpdateBonusHealth(newmax)
         local fx = SpawnPrefab("abigail_rising_twinkles_fx")
         inst:AddChild(fx)
@@ -599,7 +633,7 @@ local function OnHealthChanged(inst, data)
     else
         inst.bonus_max_health = 0
     end
-   
+
     if inst.bonus_max_health ~= oldbonus then
         UpdateBonusHealth(inst, math.max(0, inst.bonus_max_health ))
     end
@@ -608,7 +642,7 @@ local function OnHealthChanged(inst, data)
 end
 
 local function SetToGestalt(inst)
-    print("SET TO GESTALT")
+    inst.SoundEmitter:PlaySound("meta5/abigail/abigail_gestalt_transform_stinger")
     inst:AddTag("gestalt")
     inst.components.aura:Enable(false)
     inst.AnimState:SetBuild( "ghost_abigail_gestalt_build" )
@@ -618,15 +652,16 @@ local function SetToGestalt(inst)
     inst.AnimState:OverrideSymbol("v1_embers",      "lunarthrall_plant_front",      "v1_embers")
     inst.AnimState:OverrideSymbol("v1_melt2",       "lunarthrall_plant_front",      "v1_melt2")
 
+    inst.components.combat:SetAttackPeriod(3)
 
-    if inst:HasDebuff("elixir_buff") and inst.components.debuffable:GetDebuff("elixir_buff").prefab == "ghostlyelixir_lunar_buff" then    
+    if inst:HasDebuff("super_elixir_buff") and inst.components.debuffable:GetDebuff("super_elixir_buff").prefab == "ghostlyelixir_lunar_buff" then
         inst.components.planardamage:RemoveBonus(inst, "ghostlyelixir_lunarbonus")
-        inst.components.planardamage:AddBonus(inst, TUNING.WENDYSKILL_LUNARELIXIR_DAMAGEBONUS_GESTALT, "ghostlyelixir_lunarbonus")
-    end                                
+        inst.components.planardamage:AddBonus(inst, TUNING.SKILLS.WENDY.LUNARELIXIR_DAMAGEBONUS_GESTALT, "ghostlyelixir_lunarbonus")
+    end
 
 end
 local function SetToNormal(inst)
-    print("SET TO GHOST")
+    inst.SoundEmitter:PlaySound("meta5/abigail/abigail_gestalt_transform_stinger")
     inst:RemoveTag("gestalt")
     inst.components.aura:Enable(true)
     inst.AnimState:SetBuild( "ghost_abigail_build" )
@@ -636,15 +671,22 @@ local function SetToNormal(inst)
     inst.AnimState:ClearOverrideSymbol("v1_embers")
     inst.AnimState:ClearOverrideSymbol("v1_melt2")
 
-    if inst:HasDebuff("elixir_buff") and inst.components.debuffable:GetDebuff("elixir_buff").prefab == "ghostlyelixir_lunar_buff" then
+    inst.components.combat:SetAttackPeriod(4)
+
+    if inst:HasDebuff("super_elixir_buff") and inst.components.debuffable:GetDebuff("super+elixir_buff").prefab == "ghostlyelixir_lunar_buff" then
         inst.components.planardamage:RemoveBonus(inst, "ghostlyelixir_lunarbonus")
-        inst.components.planardamage:AddBonus(inst, TUNING.WENDYSKILL_LUNARELIXIR_DAMAGEBONUS, "ghostlyelixir_lunarbonus")
-    end     
+        inst.components.planardamage:AddBonus(inst, TUNING.SKILLS.WENDY.LUNARELIXIR_DAMAGEBONUS, "ghostlyelixir_lunarbonus")
+    end
 end
 
 local function OnSave(inst, data)
     data.bonus_max_health = inst.bonus_max_health
     data.gestalt = inst:HasTag("gestalt")
+end
+
+local function onload_bonushealth_task(inst, new_bonus_max_health)
+    inst.bonus_max_health = 0
+    inst:UpdateBonusHealth(new_bonus_max_health)
 end
 
 local function OnLoad(inst, data)
@@ -653,13 +695,10 @@ local function OnLoad(inst, data)
         if data.gestalt then
             SetToGestalt(inst)
         end
-    end
-end
 
-local function OnLoadPostPass(inst, newents, data)
-    if data ~= nil then
         if data.bonus_max_health then
-            UpdateBonusHealth(inst, data.bonus_max_health)
+            inst.bonus_max_health = data.bonus_max_health
+            inst:DoTaskInTime(1, onload_bonushealth_task, data.bonus_max_health)
         end
     end
 end
@@ -729,6 +768,14 @@ local function fn()
     inst.is_defensive = true
     inst.issued_health_warning = false
     --inst._playerlink = nil
+
+    --inst._haunt_target = nil
+    inst._OnHauntTargetRemoved = function()
+        if inst._haunt_target then
+            inst:RemoveEventCallback("onremove", inst._OnHauntTargetRemoved, inst._haunt_target)
+            inst._haunt_target = nil
+        end
+    end
 
     --
     inst.auratest = auratest
@@ -820,6 +867,7 @@ local function fn()
     inst:ListenForEvent("do_ghost_escape", DoGhostEscape)
     inst:ListenForEvent("do_ghost_scare", DoGhostScare)
     inst:ListenForEvent("do_ghost_attackat", DoGhostAttackAt)
+    inst:ListenForEvent("do_ghost_hauntat", DoGhostHauntAt)
     inst:ListenForEvent("timerdone", OnTimerDone)
     inst:ListenForEvent("set_babysitter", SetBabysitter)
     inst:ListenForEvent("pre_health_setval", OnHealthChanged)
@@ -837,7 +885,6 @@ local function fn()
 
     inst.OnSave = OnSave
     inst.OnLoad = OnLoad
-    inst.OnLoadPostPass = OnLoadPostPass
 
     --
 	inst._on_ghostlybond_level_change = function(player, data) on_ghostlybond_level_change(inst, player, data) end
@@ -912,7 +959,7 @@ local function retaliationattack_fn()
 end
 
 -------------------------------------------------------------------------------
-local function CreateDebuff(name, data)
+local function CreateDebuff(name)
 
     local function do_hit_fx(inst)
         local fx = SpawnPrefab("abigail_vex_hit")
@@ -929,16 +976,25 @@ local function CreateDebuff(name, data)
         end
     end
 
-    local function buff_OnExtended(inst)
+    local function buff_OnExtended(inst, target, followsymbol, followoffset, data, buffer)
         if inst.decaytimer ~= nil then
             inst.decaytimer:Cancel()
+        end            
+        local duration = TUNING.ABIGAIL_VEX_DURATION
+        if buffer and buffer:HasTag("gestalt") then
+            duration = TUNING.ABIGAIL_VEX_DURATION * TUNING.SKILLS.WENDY.ABIGAIL_GESTALT_VEX_MULT
         end
-        inst.decaytimer = inst:DoTaskInTime(data.duration, function() inst.components.debuff:Stop() end)
+
+        inst.decaytimer = inst:DoTaskInTime(duration, function() inst.components.debuff:Stop() end)
     end
 
-    local function buff_OnAttached(inst, target)
+    local function buff_OnAttached(inst, target, followsymbol, followoffset, data, buffer)
         if target ~= nil and target:IsValid() and not target.inlimbo and target.components.combat ~= nil and target.components.health ~= nil and not target.components.health:IsDead() then
-            target.components.combat.externaldamagetakenmultipliers:SetModifier(inst, data.damage)
+            local mult = TUNING.ABIGAIL_VEX_DAMAGE_MOD
+            if name == "abigail_vex_shadow_debuff" then
+                mult = TUNING.ABIGAIL_SHADOW_VEX_DAMAGE_MOD
+            end
+            target.components.combat.externaldamagetakenmultipliers:SetModifier(inst, mult)
 
             inst.entity:SetParent(target.entity)
             inst.Transform:SetPosition(0, 0, 0)
@@ -950,7 +1006,7 @@ local function CreateDebuff(name, data)
             inst:ListenForEvent("attacked", inst._on_target_attacked, target)
         end
 
-        buff_OnExtended(inst)
+        buff_OnExtended(inst, target, nil, nil, nil, buffer)
 
         inst:ListenForEvent("death", function() inst.components.debuff:Stop() end, target)
     end
@@ -1004,6 +1060,7 @@ local function CreateDebuff(name, data)
         inst.components.debuff:SetAttachedFn(buff_OnAttached)
         inst.components.debuff:SetDetachedFn(buff_OnDetached)
         inst.components.debuff:SetExtendedFn(buff_OnExtended)
+        inst.buff_OnExtended = buff_OnExtended
 
         return inst
     end
@@ -1038,46 +1095,58 @@ end
 
 --------------------------------------------------------------------------------
 
+local function murder_buff_OnExtended(inst, duration)
+    if inst.decaytimer ~= nil then
+        inst.decaytimer:Cancel()
+    end
+    inst.decaytimer = inst:DoTaskInTime(duration or TUNING.SKILLS.WENDY.MURDER_BUFF_DURATION , function() inst.components.debuff:Stop() end)
+end
 
-    local function murder_buff_OnExtended(inst, duration)
-        if inst.decaytimer ~= nil then
-            inst.decaytimer:Cancel()
-        end
-        inst.decaytimer = inst:DoTaskInTime(duration or TUNING.SKILLS.WENDY.MURDER_BUFF_DURATION , function() inst.components.debuff:Stop() end)
+local function murder_buff_OnAttached(inst, target)
+    murder_buff_OnExtended(inst)
+    if target ~= nil and target:IsValid() and target.components.combat ~= nil then
+        target.components.combat.externaldamagemultipliers:SetModifier(inst, TUNING.SKILLS.WENDY.MURDER_BUFF_MULTIPLIER)
     end
 
-    local function murder_buff_OnAttached(inst, target)
-        murder_buff_OnExtended(inst)
+    target.AnimState:SetBuild( "ghost_abigail_shadow_build" )
+
+    if target.components.aura and target.components.aura.applying then
+        target:PushEvent("stopaura")
+        target:PushEvent("startaura")
+    end
+
+    local fx = SpawnPrefab("shadow_puff_large_front")
+    fx.Transform:SetScale(1.2,1.2,1.2)
+    fx.Transform:SetPosition(target.Transform:GetWorldPosition())
+
+    target.components.planardefense:AddBonus(inst, TUNING.SKILLS.WENDY.MURDER_DEFENSE_BUFF, "wendymurderbuff")
+
+    inst:ListenForEvent("death", function() inst.components.debuff:Stop() end, target)        
+end
+
+local function murder_buff_OnDetached(inst, target)
+    if inst.decaytimer ~= nil then
+        inst.decaytimer:Cancel()
+        inst.decaytimer = nil
+
         if target ~= nil and target:IsValid() and target.components.combat ~= nil then
-            target.components.combat.externaldamagemultipliers:SetModifier(inst, TUNING.SKILLS.WENDY.MURDER_BUFF_MULTIPLIER)
+            target.components.combat.externaldamagemultipliers:RemoveModifier(inst)
         end
+
+        target.AnimState:SetBuild( "ghost_abigail_build" )
+
         if target.components.aura and target.components.aura.applying then
             target:PushEvent("stopaura")
             target:PushEvent("startaura")
         end
 
-        target.components.planardefense:AddBonus(inst, TUNING.SKILLS.WENDY.MURDER_DEFENSE_BUFF, "wendymurderbuff")
+        local fx = SpawnPrefab("shadow_puff_large_front")
+        fx.Transform:SetScale(1.2,1.2,1.2)
+        fx.Transform:SetPosition(target.Transform:GetWorldPosition())        
 
-        inst:ListenForEvent("death", function() inst.components.debuff:Stop() end, target)        
-    end
-
-    local function murder_buff_OnDetached(inst, target)
-        if inst.decaytimer ~= nil then
-            inst.decaytimer:Cancel()
-            inst.decaytimer = nil
-
-            if target ~= nil and target:IsValid() and target.components.combat ~= nil then
-                target.components.combat.externaldamagemultipliers:RemoveModifier(inst)
-            end
-
-            if target.components.aura and target.components.aura.applying then
-                target:PushEvent("stopaura")
-                target:PushEvent("startaura")
-            end     
-
-            target.components.planardefense:RemoveModifier(inst, "wendymurderbuff")
-        end            
-    end
+        target.components.planardefense:RemoveBonus(inst, "wendymurderbuff")
+    end            
+end
 
 local function abigail_murder_buff_fn()
     local inst = CreateEntity()
@@ -1099,7 +1168,7 @@ end
 
 return Prefab("abigail", fn, assets, prefabs),
 	   Prefab("abigail_retaliation", retaliationattack_fn, {Asset("ANIM", "anim/abigail_shield.zip")} ),
-       CreateDebuff("abigail_vex_debuff", {duration=TUNING.ABIGAIL_VEX_DURATION, damage=TUNING.ABIGAIL_VEX_DAMAGE_MOD} ),
-       CreateDebuff("abigail_vex_shadow_debuff", {duration=TUNING.ABIGAIL_VEX_DURATION, damage=TUNING.ABIGAIL_VEX_DAMAGE_MOD} ),
+       CreateDebuff("abigail_vex_debuff"),
+       CreateDebuff("abigail_vex_shadow_debuff"),
 	   Prefab("abigail_vex_hit", abigail_vex_hit_fn, {Asset("ANIM", "anim/abigail_debuff_fx.zip")} ),
        Prefab("abigail_murder_buff", abigail_murder_buff_fn)

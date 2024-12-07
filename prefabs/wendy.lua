@@ -239,14 +239,10 @@ local function ghostlybond_changebehaviour(inst, ghost)
 end
 
 local function checkforshadowsacrifice(inst,data)
-	if inst.components.skilltreeupdater and inst.components.skilltreeupdater:IsActivated("wendy_shadow_3") and 
-	   inst.components.ghostlybond and inst.components.ghostlybond.ghost and not inst.components.ghostlybond.ghost:HasTag("INLIMBO") then
-
-		local fx = SpawnPrefab("shadow_puff_large_front")
-    	fx.Transform:SetScale(1.2,1.2,1.2)
-    	fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
-
-	    inst.components.ghostlybond.ghost:DoShadowBurstBuff(data.stackmult)
+	if inst.components.skilltreeupdater and inst.components.skilltreeupdater:IsActivated("wendy_shadow_3") and
+			inst.components.ghostlybond and inst.components.ghostlybond.ghost and not inst.components.ghostlybond.ghost:HasTag("INLIMBO") then
+		inst.SoundEmitter:PlaySound("meta5/abigail/abigail_nightmare_buff_stinger")
+		inst.components.ghostlybond.ghost:DoShadowBurstBuff(data.stackmult)
 	end
 end
 

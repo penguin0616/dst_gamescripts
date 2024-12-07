@@ -2024,7 +2024,7 @@ local COMPONENT_ACTIONS =
         end,
 
         nabbag = function(inst, doer, target, actions, right)
-            if right and target.replica.inventoryitem and target.replica.inventoryitem:CanBePickedUp(doer) and not target:HasTag("_container") then
+            if right and target.replica.inventoryitem and target.replica.inventoryitem:CanBePickedUp(doer) and not target:HasAnyTag("_container", "heavy") then
                 table.insert(actions, ACTIONS.NABBAG)
             end
         end,

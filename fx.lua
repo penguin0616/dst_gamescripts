@@ -3306,6 +3306,7 @@ local fx =
         bank = "wortox_teleport_reviver_fx",
         build = "wortox_teleport_reviver_fx",
         anim = "reviver_teleport",
+        sound = "meta5/wortox/ttheart_in_f31",
         fn = FinalOffset1,
     },
     {
@@ -3314,6 +3315,16 @@ local fx =
         build = "wortox_teleport_reviver_fx",
         anim = "reviver_jumpout",
         fn = FinalOffset1,
+    },
+    {
+        name = "wortox_soul_spawn_fx",
+        bank = "wortox_teleport_reviver_fx",
+        build = "wortox_teleport_reviver_fx",
+        anim = "soul_spawn_poof",
+        fn = function(inst)
+            inst.entity:AddSoundEmitter()
+            inst.SoundEmitter:PlaySound("dontstarve/characters/wortox/soul/hop_out")
+        end,
     },
     {
         name = "wortox_decoy_explode_fx",
@@ -3483,7 +3494,65 @@ local fx =
         bank = "abigail_meta5_fx",
         build = "abigail_meta5_fx",
         anim = "sacrifice_boost",
-    },         
+    },
+    {
+		name = "purebrilliance_mark_hit_fx",
+		bank = "slingshotammo_purebrilliance_mark_fx",
+		build = "slingshotammo_purebrilliance_mark_fx",
+		anim = "fx_hit",
+		fn = function(inst)
+			local scale = 1.2 + math.random() * .2
+			inst.AnimState:SetScale(math.random() < .5 and scale or -scale, scale)
+			inst.AnimState:SetFinalOffset(7)
+		end,
+	},
+	{
+		name = "slingshot_ice_aoe_fx",
+		bank = "slingshotammo",
+		build = "slingshotammo",
+		anim = "slingshot_aoe",
+		tint = Vector3(163/255, 185/255, 203/255),
+		fn = function(inst)
+			inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
+			inst.AnimState:SetLayer(LAYER_BACKGROUND)
+			inst.AnimState:SetSortOrder(3)
+		end,
+	},
+	{
+		name = "slingshot_slow_aoe_fx",
+		bank = "slingshotammo",
+		build = "slingshotammo",
+		anim = "slingshot_aoe",
+		tint = Vector3(73/255, 28/255, 85/255),
+		fn = function(inst)
+			inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
+			inst.AnimState:SetLayer(LAYER_BACKGROUND)
+			inst.AnimState:SetSortOrder(3)
+		end,
+	},
+	{
+		name = "slingshot_shadow_aoe_fx",
+		bank = "slingshotammo",
+		build = "slingshotammo",
+		anim = "slingshot_aoe",
+		tint = Vector3(0, 0, 0),
+		fn = function(inst)
+			inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
+			inst.AnimState:SetLayer(LAYER_BACKGROUND)
+			inst.AnimState:SetSortOrder(3)
+		end,
+	},
+	{
+		name = "slingshot_lunar_aoe_fx",
+		bank = "slingshotammo",
+		build = "slingshotammo",
+		anim = "slingshot_aoe",
+		fn = function(inst)
+			inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
+			inst.AnimState:SetLayer(LAYER_BACKGROUND)
+			inst.AnimState:SetSortOrder(3)
+		end,
+	},
 }
 
 for cratersteamindex = 1, 4 do
@@ -3531,12 +3600,11 @@ local shot_types =
     "slow",
     "poop",
     "moonglass",
-    "moonglasscharged",
     "dreadstone",
     "gunpowder",
     "lunarplanthusk",
     "purebrilliance",
-    "purehorror",
+	"horrorfuel",
 	"gelblob",
     "scrapfeather",
     "stinger",
@@ -3559,6 +3627,13 @@ for _, shot_type in ipairs(shot_types) do
         fn = function(inst)
 			if shot_type ~= "rock" then
 		        inst.AnimState:OverrideSymbol("rock", "slingshotammo", shot_type)
+
+				if shot_type == "horrorfuel" then
+					inst.AnimState:SetLightOverride(1)
+                elseif shot_type == "purebrilliance" then
+                    inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+                    inst.AnimState:SetLightOverride(.1)
+				end
 			end
 		    inst.AnimState:SetFinalOffset(3)
 		end,

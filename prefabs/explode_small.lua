@@ -34,6 +34,10 @@ local function MakeExplosion(data)
         end
         inst.AnimState:SetLightOverride(data ~= nil and data.light_override or 1)
 
+        if data ~= nil and data.final_offset ~= nil then
+            inst.AnimState:SetFinalOffset(data.final_offset)
+        end
+
         if data ~= nil and type(data.sound) == "function" then
             data.sound(inst)
         else
@@ -130,6 +134,12 @@ local extras =
         end,
         scale = .5,
     },
+    slingshotammo_gunpowder =
+    {
+        final_offset = 3,
+        bloom = false,
+        light_override = 0,
+    },
 }
 
 return Prefab("explode_small", MakeExplosion(), assets),
@@ -139,5 +149,6 @@ return Prefab("explode_small", MakeExplosion(), assets),
     Prefab("reskin_tool_toilet_explode_fx", MakeExplosion(extras.reskin_toilet), assets),
     Prefab("explode_small_slurtle", MakeExplosion(extras.slurtle), assets),
     Prefab("explode_small_slurtlehole", MakeExplosion(extras.slurtlehole), assets),
-    Prefab("explode_firecrackers", MakeExplosion(extras.firecrackers), assets)
+    Prefab("explode_firecrackers", MakeExplosion(extras.firecrackers), assets),
+    Prefab("slingshotammo_gunpowder_explode", MakeExplosion(extras.slingshotammo_gunpowder), assets)
 

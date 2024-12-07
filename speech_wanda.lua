@@ -770,21 +770,32 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_WARNING =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_USED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
 
     --walter specfic
+--fallback to speech_wilson.lua 	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
@@ -4043,12 +4054,11 @@ return{
 		SLINGSHOTAMMO_MOONGLASS = "These obviously weren't made with precision in mind.",
 		SLINGSHOTAMMO_GELBLOB = "These obviously weren't made with precision in mind.",
 		SLINGSHOTAMMO_SCRAPFEATHER = "These obviously weren't made with precision in mind.",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "These obviously weren't made with precision in mind.",
         SLINGSHOTAMMO_DREADSTONE = "These obviously weren't made with precision in mind.",
         SLINGSHOTAMMO_GUNPOWDER = "These obviously weren't made with precision in mind.",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "These obviously weren't made with precision in mind.",
         SLINGSHOTAMMO_PUREBRILLIANCE = "These obviously weren't made with precision in mind.",
-        SLINGSHOTAMMO_PUREHORROR = "These obviously weren't made with precision in mind.",
+        SLINGSHOTAMMO_HORRORFUEL = "These obviously weren't made with precision in mind.",
         PORTABLETENT = "A safe place to spend the night would be a welcome change.",
         PORTABLETENT_ITEM = "Someone with more time on their hands should set it up.",
 
@@ -4081,6 +4091,7 @@ return{
 		GHOSTLYELIXIR_ATTACK = "A little bit of metaphysical meddling never hurt anyone.",
 		GHOSTLYELIXIR_SPEED = "A little bit of metaphysical meddling never hurt anyone.",
 		GHOSTLYELIXIR_RETALIATION = "A little bit of metaphysical meddling never hurt anyone.",
+        GHOSTLYELIXIR_REVIVE = "A little bit of metaphysical meddling never hurt anyone.",
 		SISTURN =
 		{
 			GENERIC = "Death should be the farthest thing from a child's mind...",
@@ -5516,12 +5527,15 @@ return{
 		SLINGSHOT_BAND_MIMIC = "Rather innovative for a child.",
 		SLINGSHOT_FRAME_BONE = "Rather innovative for a child.",
 		SLINGSHOT_FRAME_GEMS = "Rather innovative for a child.",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "Rather innovative for a child.",
 		SLINGSHOT_FRAME_WAGPUNK = "Rather innovative for a child.",
 		SLINGSHOT_HANDLE_STICKY = "Rather innovative for a child.",
 		SLINGSHOT_HANDLE_SILK = "Rather innovative for a child.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Rather innovative for a child.",
 
         WOBY_BADGE_STATION = "She's a fast learner.",
+
+        ELIXIR_CONTAINER = "Pretty, practical.",
     },
 
     DESCRIBE_GENERIC = "A very particular something or other.",

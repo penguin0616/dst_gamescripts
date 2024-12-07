@@ -770,21 +770,32 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_WARNING =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_USED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
 
     --walter specfic
+--fallback to speech_wilson.lua 	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
@@ -4043,12 +4054,11 @@ return{
 		SLINGSHOTAMMO_MOONGLASS = "Remember to clean up after yourself, dear.",
 		SLINGSHOTAMMO_GELBLOB = "Remember to clean up after yourself, dear.",
 		SLINGSHOTAMMO_SCRAPFEATHER = "Remember to clean up after yourself, dear.",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "Remember to clean up after yourself, dear.",
         SLINGSHOTAMMO_DREADSTONE = "Remember to clean up after yourself, dear.",
         SLINGSHOTAMMO_GUNPOWDER = "Remember to clean up after yourself, dear.",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "Remember to clean up after yourself, dear.",
         SLINGSHOTAMMO_PUREBRILLIANCE = "Remember to clean up after yourself, dear.",
-        SLINGSHOTAMMO_PUREHORROR = "Remember to clean up after yourself, dear.",
+        SLINGSHOTAMMO_HORRORFUEL = "Remember to clean up after yourself, dear.",
         PORTABLETENT = "It's a lovely tent, but I'm afraid I don't have much use for it.",
         PORTABLETENT_ITEM = "How very practical.",
 
@@ -4081,6 +4091,7 @@ return{
 		GHOSTLYELIXIR_ATTACK = "Color-coded and clearly labeled. Well done!",
 		GHOSTLYELIXIR_SPEED = "Color-coded and clearly labeled. Well done!",
 		GHOSTLYELIXIR_RETALIATION = "Color-coded and clearly labeled. Well done!",
+        GHOSTLYELIXIR_REVIVE = "Color-coded and clearly labeled. Well done!",
 		SISTURN =
 		{
 			GENERIC = "The poor dear.",
@@ -5516,12 +5527,15 @@ return{
 		SLINGSHOT_BAND_MIMIC = "What is that Walter up to now?",
 		SLINGSHOT_FRAME_BONE = "What is that Walter up to now?",
 		SLINGSHOT_FRAME_GEMS = "What is that Walter up to now?",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "What is that Walter up to now?",
 		SLINGSHOT_FRAME_WAGPUNK = "What is that Walter up to now?",
 		SLINGSHOT_HANDLE_STICKY = "What is that Walter up to now?",
 		SLINGSHOT_HANDLE_SILK = "What is that Walter up to now?",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "What is that Walter up to now?",
 
         WOBY_BADGE_STATION = "Woby's penchant for learning is unprecedented.",
+
+        ELIXIR_CONTAINER = "What a pretty elixir organizer!",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

@@ -780,23 +780,32 @@ return {
     {
         "only_used_by_wortox",
     },
+    ANNOUNCE_SOUL_OVERLOAD_WARNING =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+    {
+        "only_used_by_wortox",
+    },
     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
     {
         "only_used_by_wortox",
     },
-    ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+    ANNOUNCE_PANFLUTE_BUFF_USED =
     {
         "only_used_by_wortox",
     },
 
     --walter specfic
+	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 	{
 		"only_used_by_walter",
 		"only_used_by_walter",
 	},
-	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter", --TODO
-	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter", --TODO
+	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 	{
         "only_used_by_walter",
@@ -4055,12 +4064,11 @@ return {
 		SLINGSHOTAMMO_MOONGLASS = "Shots to be slinged... slung?",
 		SLINGSHOTAMMO_GELBLOB = "Shots to be slinged.",
 		SLINGSHOTAMMO_SCRAPFEATHER = "Shots to be slinged.",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "Shots to be slinged.",
         SLINGSHOTAMMO_DREADSTONE = "Shots to be slinged.",
         SLINGSHOTAMMO_GUNPOWDER = "Shots to be slinged.",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "Shots to be slinged.",
         SLINGSHOTAMMO_PUREBRILLIANCE = "Shots to be slinged.",
-        SLINGSHOTAMMO_PUREHORROR = "Shots to be slinged.",
+        SLINGSHOTAMMO_HORRORFUEL = "Shots to be slinged.",
         PORTABLETENT = "I feel like I haven't had a proper night's sleep in ages!",
         PORTABLETENT_ITEM = "This requires some a-tent-tion.",
 
@@ -4093,6 +4101,7 @@ return {
 		GHOSTLYELIXIR_ATTACK = "Ah yes. Very science-y.",
 		GHOSTLYELIXIR_SPEED = "Ah yes. Very science-y.",
 		GHOSTLYELIXIR_RETALIATION = "Ah yes. Very science-y.",
+        GHOSTLYELIXIR_REVIVE = "Ah yes. Very science-y.",
 		SISTURN =
 		{
 			GENERIC = "Some flowers would liven it up a bit.",
@@ -5528,12 +5537,15 @@ return {
 		SLINGSHOT_BAND_MIMIC = "Walter's really giving it his best shot.",
 		SLINGSHOT_FRAME_BONE = "Walter's really giving it his best shot.",
 		SLINGSHOT_FRAME_GEMS = "Walter's really giving it his best shot.",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "Walter's really giving it his best shot.",
 		SLINGSHOT_FRAME_WAGPUNK = "Walter's really giving it his best shot.",
 		SLINGSHOT_HANDLE_STICKY = "Walter's really giving it his best shot.",
 		SLINGSHOT_HANDLE_SILK = "Walter's really giving it his best shot.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Walter's really giving it his best shot.",
 
         WOBY_BADGE_STATION = "I guess you can teach an old dog new tricks.",
+
+        ELIXIR_CONTAINER = "That's more of a mortician's bag than a basket.", --[[TODO]]
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

@@ -23,6 +23,7 @@ local prefabs =
     "wortox_forget_debuff",
     "wortox_panflute_buff",
     "wortox_decoy",
+    "wortox_overloading_fx",
 }
 
 local start_inv = {}
@@ -257,6 +258,11 @@ local function RecalculateInclination(inst) -- Server and Client ran.
 
     if new_inclination ~= old_inclination then
         inst.wortox_inclination = new_inclination
+        if new_inclination == "nice" then
+            inst:RemoveTag("monster")
+        else
+            inst:AddTag("monster")
+        end
         inst:PushEvent("wortox_inclination_changed", {old_inclination = old_inclination, new_inclination = new_inclination})
     end
 end
@@ -267,6 +273,35 @@ end
 
 local function OnSkillTreeInitialized(inst)
     inst.wortox_needstreeinit = nil
+    require("prefabs/skilltree_defs").CUSTOM_FUNCTIONS.wortox.TryPanfluteTimerSetup(inst)
+end
+local function DestroyOverloadingFX(inst)
+    if inst.wortox_souloverload_stoppertask then
+        inst.wortox_souloverload_stoppertask:Cancel()
+        inst.wortox_souloverload_stoppertask = nil
+    end
+    if inst.wortox_souloverload_fx then
+        if inst.wortox_souloverload_fx:IsValid() then
+            inst.wortox_souloverload_fx:Remove()
+        end
+        inst.wortox_souloverload_fx = nil
+    end
+end
+local function ForceCheckOverload(inst)
+    DestroyOverloadingFX(inst)
+    inst.wortox_souloverload_forceoverloading = true
+    local souls, count = inst:GetSouls()
+    inst:CheckForOverload(souls, count)
+    inst.wortox_souloverload_forceoverloading = nil
+end
+local function CreateOverloadingFX(inst)
+    if inst.wortox_souloverload_stoppertask == nil then
+        inst.wortox_souloverload_stoppertask = inst:DoTaskInTime(TUNING.SKILLS.WORTOX.NAUGHTY_OVERLOAD_STOP_TIME, ForceCheckOverload)
+        inst.wortox_souloverload_fx = SpawnPrefab("wortox_overloading_fx")
+        inst.wortox_souloverload_fx.entity:SetParent(inst.entity)
+        inst.wortox_souloverload_fx.Follower:FollowSymbol(inst.GUID, inst.components.combat.hiteffectsymbol, 0, 0, 0)
+        inst:PushEvent("souloverloadwarning") -- Wisecracker.
+    end
 end
 local function CheckForOverload(inst, souls, count)
     local max_count = TUNING.WORTOX_MAX_SOULS -- NOTES(JBK): Keep this logic the same in counts in wortox_soul. [WSCCF]
@@ -284,18 +319,31 @@ local function CheckForOverload(inst, souls, count)
         max_count = max_count + souljars * TUNING.SKILLS.WORTOX.FILLED_SOULJAR_SOULCAP_INCREASE_PER
     end
     if count > max_count then
-        if inst._souloverloadtask then
-            inst._souloverloadtask:Cancel()
-            inst._souloverloadtask = nil
+        local dooverload = true
+        if inst.wortox_inclination == "naughty" and not inst.wortox_souloverload_forceoverloading then
+            CreateOverloadingFX(inst)
+            dooverload = false
         end
-        inst._souloverloadtask = inst:DoTaskInTime(1.2, ClearSoulOverloadTask) -- NOTES(JBK): This is >1.1 max keep it in sync with "[WST]"
-        local dropcount = count - math.floor(max_count / 2) + math.random(0, 2) - 1
-        count = count - dropcount
-        DropSouls(inst, souls, dropcount)
-        inst.components.sanity:DoDelta(-TUNING.SANITY_MEDLARGE)
-        inst:PushEvent("souloverload")
-    elseif count > max_count * TUNING.WORTOX_WISECRACKER_TOOMANY then
-        inst:PushEvent("soultoomany") -- This event is not used elsewhere outside of wisecracker.
+        if dooverload then
+            if inst._souloverloadtask then
+                inst._souloverloadtask:Cancel()
+                inst._souloverloadtask = nil
+            end
+            inst._souloverloadtask = inst:DoTaskInTime(1.2, ClearSoulOverloadTask) -- NOTES(JBK): This is >1.1 max keep it in sync with "[WST]"
+            local dropcount = count - math.floor(max_count / 2) + math.random(0, 2) - 1
+            count = count - dropcount
+            DropSouls(inst, souls, dropcount)
+            inst.components.sanity:DoDelta(-TUNING.SANITY_MEDLARGE)
+            inst:PushEvent("souloverload") -- Stategraph.
+        end
+    else
+        if count > max_count * TUNING.WORTOX_WISECRACKER_TOOMANY then
+            inst:PushEvent("soultoomany") -- This event is not used elsewhere outside of wisecracker.
+        end
+        if inst.wortox_souloverload_stoppertask then
+            DestroyOverloadingFX(inst)
+            inst:PushEvent("souloverloadavoided") -- Wisecracker.
+        end
     end
     inst.components.inventory:ForEachItemSlot(function(item)
         if item.prefab == "wortox_souljar" then
@@ -311,11 +359,12 @@ local function CheckForOverload(inst, souls, count)
 
     inst.soulcount = count
 end
-local function HandleLeftoversFn(inst, item)
+local function HandleLeftoversShouldDropFn(inst, item)
     if item and item.prefab == "wortox_soul" then
         local souls, count = inst:GetSouls()
         inst:CheckForOverload(souls, count + 1) -- This item did not fit in the inventory so we will act like it did for overloading.
     end
+    return true
 end
 local function CheckSoulsAdded(inst)
     inst._checksoulstask = nil
@@ -364,11 +413,14 @@ local function CheckSoulsRemoved(inst)
         end
     end
 
+    local should_wisecrack = inst.soulcount ~= count
     inst.soulcount = count
     if count >= TOOFEW then
         return
     end
-    inst:PushEvent(count > 0 and "soultoofew" or "soulempty") -- These events are not used elsewhere outside of wisecracker.
+    if should_wisecrack then
+        inst:PushEvent(count > 0 and "soultoofew" or "soulempty") -- These events are not used elsewhere outside of wisecracker.
+    end
 end
 
 local function CheckSoulsRemovedAfterAnim(inst, anim)
@@ -525,6 +577,7 @@ local function FinishPortalHop(inst)
         ClearSoulhopCounter(inst)
     end
     inst:RemoveDebuff("wortox_soulecho_buff")
+    inst:DoCheckSoulsAdded()
 end
 
 local function GetHopsPerSoul(inst)
@@ -622,7 +675,7 @@ local function common_postinit(inst)
     if not TheWorld.ismastersim then
         inst:ListenForEvent("freesoulhopschanged", OnFreesoulhopsChanged)
         inst:ListenForEvent("onactivateskill_client", inst.RecalculateInclination)
-        inst:ListenForEvent("onactivateskill_client", inst.RecalculateInclination)
+        inst:ListenForEvent("ondeactivateskill_client", inst.RecalculateInclination)
     end
 end
 
@@ -675,7 +728,7 @@ local function master_postinit(inst)
     inst._checksoulstask = nil
     inst.soulcount = 0
 
-    inst.components.inventory.HandleLeftoversFn = HandleLeftoversFn
+    inst.components.inventory.HandleLeftoversShouldDropFn = HandleLeftoversShouldDropFn
 
     inst:ListenForEvent("stacksizechange", OnStackSizeChange)
     inst:ListenForEvent("gotnewitem", OnGotNewItem)
@@ -890,6 +943,127 @@ local function soulecho_buff_fx_fn()
 end
 
 -----------------------------------------------------------------------------
+-- OVERLOADING FX
+-----------------------------------------------------------------------------
+
+local TEXTURE_overloading_fx = "fx/soul.tex"
+local SHADER_overloading_fx = "shaders/vfx_particle.ksh"
+local COLOUR_ENVELOPE_NAME_overloading_fx = "colourenvelope_overloading_fx"
+local SCALE_ENVELOPE_NAME_overloading_fx = "scaleenvelope_overloading_fx"
+
+local overloading_fx_assets = {
+    Asset("IMAGE", TEXTURE_overloading_fx),
+    Asset("SHADER", SHADER_overloading_fx),
+}
+
+local function InitEnvelope_overloading_fx()
+    local function IntColour(r, g, b, a)
+        return { r / 255, g / 255, b / 255, a / 255 }
+    end
+
+    EnvelopeManager:AddColourEnvelope(COLOUR_ENVELOPE_NAME_overloading_fx,
+        {
+            { 0, IntColour(255, 255, 255, 225) },
+            { 1, IntColour(255, 255, 255, 0) },
+        }
+    )
+
+    local max_scale = 1
+    EnvelopeManager:AddVector2Envelope(
+        SCALE_ENVELOPE_NAME_overloading_fx,
+        {
+            { 0,    { max_scale * .5, max_scale * .5 } },
+            { 1,    { max_scale, max_scale } },
+        }
+    )
+
+    InitEnvelope_overloading_fx = nil
+end
+
+local MAX_LIFETIME_overloading_fx = 0.5
+local function overloading_fx_emit(effect, sphere_emitter, direction)
+    local px, py, pz = sphere_emitter()
+    local vx, vy, vz = px, py * 0.01, pz
+
+    local uv_offset = math.random(0, 9) / 10
+
+    effect:AddParticleUV(
+        0,
+        MAX_LIFETIME_overloading_fx, -- lifetime
+        px * 0.2, py + math.random(), pz * 0.2, -- position
+        vx + direction.x * 0.05, vy + direction.y * 0.05, vz + direction.z * 0.05, -- velocity
+        uv_offset, 0 -- uv offset
+    )
+end
+
+local function overloading_fx_fn()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddNetwork()
+    inst.entity:AddFollower()
+
+    inst:AddTag("FX")
+
+    inst.entity:SetPristine()
+
+    inst.persists = false
+
+    --Dedicated server does not need to spawn local particle fx
+    if TheNet:IsDedicated() then
+        return inst
+    elseif InitEnvelope_overloading_fx ~= nil then
+        InitEnvelope_overloading_fx()
+    end
+
+    local effect = inst.entity:AddVFXEffect()
+    effect:InitEmitters(1)
+
+    effect:SetRenderResources(0, TEXTURE_overloading_fx, SHADER_overloading_fx)
+    effect:SetUVFrameSize(0, 1/10, 1)
+    effect:SetMaxNumParticles(0, 200)
+    effect:SetMaxLifetime(0, MAX_LIFETIME_overloading_fx)
+    effect:SetColourEnvelope(0, COLOUR_ENVELOPE_NAME_overloading_fx)
+    effect:SetScaleEnvelope(0, SCALE_ENVELOPE_NAME_overloading_fx)
+    effect:SetBlendMode(0, BLENDMODE.Premultiplied)
+    effect:EnableBloomPass(0, true)
+    effect:SetSortOrder(0, 0)
+    effect:SetSortOffset(0, 1)
+
+    effect:SetAcceleration(0, 0, 0, 0)
+    effect:SetDragCoefficient(0, 0.1)
+
+    -----------------------------------------------------
+
+    local tick_time = TheSim:GetTickTime()
+    local low_per_tick = 3 * tick_time
+    local high_per_tick = 30 * tick_time
+    local sphere_emitter = CreateSphereEmitter(.25)
+    local num_to_emit = 0
+    EmitterManager:AddEmitter(inst, nil, function()
+        local parent = inst.entity:GetParent()
+        if parent then
+            local cur_pos = parent:GetPosition()
+            if inst.last_pos == nil then
+                inst.last_pos = cur_pos
+            end
+            local dist_moved = cur_pos - inst.last_pos
+            local t = math.clamp(dist_moved:Length(), 0, 1)
+            dist_moved:Normalize() -- Convert to direction vector.
+            local per_tick = Lerp(low_per_tick, high_per_tick, t)
+            num_to_emit = num_to_emit + per_tick
+            while num_to_emit > 0 do
+                overloading_fx_emit(effect, sphere_emitter, dist_moved)
+                num_to_emit = num_to_emit - 1
+            end
+            inst.last_pos = cur_pos
+        end
+    end)
+
+    return inst
+end
+
+-----------------------------------------------------------------------------
 -- PANFLUTE FORGET BUFF
 -----------------------------------------------------------------------------
 
@@ -974,10 +1148,8 @@ local function ClearPanfluteBuffIconFX(target)
 end
 
 local function OnAttached_panflute(inst, target, followsymbol, followoffset, data)
-    local duration = TUNING.SKILLS.WORTOX.WORTOX_PANFLUTE_INSPIRATION_DURATION
     inst.entity:SetParent(target.entity)
     inst.Transform:SetPosition(0, 0, 0) --in case of loading
-    inst.components.timer:StartTimer("buffover", duration)
     inst:ListenForEvent("death", function()
         inst.components.debuff:Stop()
     end, target)
@@ -996,28 +1168,12 @@ local function OnDetached_panflute(inst, target)
             if target.wortox_panflute_buff_count <= 0 then
                 target.wortox_panflute_buff_count = nil
                 ClearPanfluteBuffIconFX(target)
+                require("prefabs/skilltree_defs").CUSTOM_FUNCTIONS.wortox.TryResetPanfluteTimer(target)
+                target:PushEvent("wortox_panflute_playing_used") -- Wisecracker.
             end
         end
     end
     inst:Remove()
-end
-
-local function OnExtendedBuff_panflute(inst, target, followsymbol, followoffset, data)
-    local duration = TUNING.SKILLS.WORTOX.WORTOX_PANFLUTE_INSPIRATION_DURATION
-    local time_remaining = inst.components.timer:GetTimeLeft("buffover")
-    if time_remaining == nil or duration > time_remaining then
-        inst.components.timer:SetTimeLeft("buffover", duration)
-    end
-end
-
-local function OnTimerDone_panflute(inst, data)
-    if data.name == "buffover" then
-        local target = inst.entity:GetParent()
-        if target then
-            target:PushEvent("wortox_panflute_playing_expired") -- Wisecracker.
-        end
-        inst.components.debuff:Stop()
-    end
 end
 
 local function wortox_panflute_buff_fn() -- FIXME(JBK): VFX particle for musical inclination.
@@ -1039,12 +1195,7 @@ local function wortox_panflute_buff_fn() -- FIXME(JBK): VFX particle for musical
     inst:AddComponent("debuff")
     inst.components.debuff:SetAttachedFn(OnAttached_panflute)
     inst.components.debuff:SetDetachedFn(OnDetached_panflute)
-    inst.components.debuff:SetExtendedFn(OnExtendedBuff_panflute)
     inst.components.debuff.keepondespawn = true
-
-    inst:AddComponent("timer")
-    inst:ListenForEvent("timerdone", OnTimerDone_panflute)
-
     return inst
 end
 
@@ -1082,6 +1233,7 @@ end
 
 local wortox_decoy_assets = {
     Asset("ANIM", "anim/player_emote_extra.zip"),
+    Asset("ANIM", "anim/player_emotes_dance2.zip"),
     Asset("ANIM", "anim/player_actions.zip"),
 }
 
@@ -1090,11 +1242,8 @@ local wortox_decoy_prefabs = {
     "wortox_decoy_fizzle_fx",
 }
 
---see winona_catapult_projectile
-local NO_TAGS_PVP = { "INLIMBO", "playerghost", "FX", "NOCLICK", "DECOR", "notarget", "companion", "decoy" }
-local NO_TAGS = shallowcopy(NO_TAGS_PVP)
-table.insert(NO_TAGS, "player")
-local COMBAT_TAGS = { "_combat" }
+local COMBAT_MUSTHAVE_TAGS = { "_combat", "_health" }
+local COMBAT_CANTHAVE_TAGS = { "INLIMBO", "soul", "noauradamage", "companion" }
 
 local function BreakDecoysFor(decoyowner)
     local wortox_decoy_inst = decoyowner.wortox_decoy_inst
@@ -1124,13 +1273,15 @@ local function SetOwner_decoy(inst, decoyowner)
     BreakDecoysFor(inst.decoyowner) -- Break old decoys from new owner.
 
     local x, y, z = inst.Transform:GetWorldPosition()
-    local ents = TheSim:FindEntities(x, y, z, TUNING.SKILLS.WORTOX.SOULDECOY_TAUNT_RADIUS, COMBAT_TAGS, NO_TAGS) -- Do not try to lure players.
+    local ents = TheSim:FindEntities(x, y, z, TUNING.SKILLS.WORTOX.SOULDECOY_TAUNT_RADIUS, COMBAT_MUSTHAVE_TAGS, COMBAT_CANTHAVE_TAGS)
     for _, ent in ipairs(ents) do
         if ent:IsValid() and ent.entity:IsVisible() then
             if ent.components.combat and ent.components.combat:TargetIs(inst.decoyowner) and ent.components.combat:CanTarget(inst) then
-                ent.components.combat:SetTarget(inst)
-                if ent.components.combat:TargetIs(inst) then
-                    inst.decoylured[ent] = true
+                if wortox_soul_common.SoulDamageTest(inst, ent, decoyowner) then
+                    ent.components.combat:SetTarget(inst)
+                    if ent.components.combat:TargetIs(inst) then
+                        inst.decoylured[ent] = true
+                    end
                 end
             end
         end
@@ -1175,11 +1326,13 @@ local function OnDeath_decoy(inst)
     -- Add nearby things targeting the lure to the lured list.
     local decoyowner = inst.decoyowner and inst.decoyowner:IsValid() and inst.decoyowner or nil
     local x, y, z = inst.Transform:GetWorldPosition()
-    local ents = TheSim:FindEntities(x, y, z, TUNING.SKILLS.WORTOX.SOULDECOY_TAUNT_RADIUS, COMBAT_TAGS, TheNet:GetPVPEnabled() and NO_TAGS_PVP or NO_TAGS)
+    local ents = TheSim:FindEntities(x, y, z, TUNING.SKILLS.WORTOX.SOULDECOY_TAUNT_RADIUS, COMBAT_MUSTHAVE_TAGS, COMBAT_CANTHAVE_TAGS)
     for _, ent in ipairs(ents) do
         if ent.components.combat then
             if ent.components.combat:TargetIs(inst) or decoyowner and ent.components.combat:TargetIs(decoyowner) then
-                inst.decoylured[ent] = true
+                if wortox_soul_common.SoulDamageTest(inst, ent, decoyowner) then
+                    inst.decoylured[ent] = true
+                end
             end
         end
     end
@@ -1208,14 +1361,16 @@ local function DoExplosion_decoy(inst)
         inst.components.combat:SetDefaultDamage(damage)
     end
     local x, y, z = inst.Transform:GetWorldPosition()
-    local ents = TheSim:FindEntities(x, y, z, TUNING.SKILLS.WORTOX.SOULDECOY_EXPLODE_RADIUS, COMBAT_TAGS, TheNet:GetPVPEnabled() and NO_TAGS_PVP or NO_TAGS)
+    local ents = TheSim:FindEntities(x, y, z, TUNING.SKILLS.WORTOX.SOULDECOY_EXPLODE_RADIUS, COMBAT_MUSTHAVE_TAGS, COMBAT_CANTHAVE_TAGS)
     for _, ent in ipairs(ents) do
         if ent:IsValid() and ent.entity:IsVisible() then
             if inst.components.combat:CanTarget(ent) then
                 local shouldharm = false
                 if ent.components.combat then
                     if ent.components.combat:TargetIs(inst) or decoyowner and ent.components.combat:TargetIs(decoyowner) then
-                        shouldharm = true
+                        if wortox_soul_common.SoulDamageTest(inst, ent, decoyowner) then
+                            shouldharm = true
+                        end
                     end
                 end
                 if inst.decoylured[ent] or shouldharm then
@@ -1326,6 +1481,7 @@ end
 return MakePlayerCharacter("wortox", prefabs, assets, common_postinit, master_postinit),
 Prefab("wortox_soulecho_buff", wortox_soulecho_fn, nil, soulecho_buff_prefabs),
 Prefab("wortox_soulecho_buff_fx", soulecho_buff_fx_fn, soulecho_buff_fx_assets),
+Prefab("wortox_overloading_fx", overloading_fx_fn, overloading_fx_assets),
 Prefab("wortox_forget_debuff", wortox_forget_debuff_fn),
 Prefab("wortox_panflute_buff", wortox_panflute_buff_fn),
 Prefab("wortox_decoy", wortox_decoy_fn, wortox_decoy_assets, wortox_decoy_prefabs)

@@ -774,21 +774,32 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_WARNING =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_USED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
 
     --walter specfic
+--fallback to speech_wilson.lua 	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
@@ -4047,12 +4058,11 @@ return{
 		SLINGSHOTAMMO_MOONGLASS = "Night Ball things?",
 		SLINGSHOTAMMO_GELBLOB = "Pew pew things",
 		SLINGSHOTAMMO_SCRAPFEATHER = "Pew pew things",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "Pew pew things",
         SLINGSHOTAMMO_DREADSTONE = "Pew pew things",
         SLINGSHOTAMMO_GUNPOWDER = "Bang bang things",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "Pew pew things",
         SLINGSHOTAMMO_PUREBRILLIANCE = "Pew pew things",
-        SLINGSHOTAMMO_PUREHORROR = "Pew pew things",
+        SLINGSHOTAMMO_HORRORFUEL = "Pew pew things",
         PORTABLETENT = "Soft house",
         PORTABLETENT_ITEM = "Not done yet",
 
@@ -4085,6 +4095,7 @@ return{
 		GHOSTLYELIXIR_ATTACK = "For ghost friend",
 		GHOSTLYELIXIR_SPEED = "For ghost friend",
 		GHOSTLYELIXIR_RETALIATION = "For ghost friend",
+        GHOSTLYELIXIR_REVIVE = "For ghost friend",
 		SISTURN =
 		{
 			GENERIC = "Lonely",
@@ -5520,12 +5531,15 @@ return{
 		SLINGSHOT_BAND_MIMIC = "Walter loves pew pew",
 		SLINGSHOT_FRAME_BONE = "Walter loves pew pew",
 		SLINGSHOT_FRAME_GEMS = "Walter loves pew pew",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "TODO",
 		SLINGSHOT_FRAME_WAGPUNK = "Walter loves pew pew",
 		SLINGSHOT_HANDLE_STICKY = "Walter loves pew pew",
 		SLINGSHOT_HANDLE_SILK = "Walter loves pew pew",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Walter loves pew pew",
 
         WOBY_BADGE_STATION = "Smart woofer!",
+
+        ELIXIR_CONTAINER = "Yummy ghost friend juice", --[[TODO]]
     },
 
     DESCRIBE_GENERIC = "Friend?",

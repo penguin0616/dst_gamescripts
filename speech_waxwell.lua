@@ -770,21 +770,32 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_WARNING =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_USED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
 
     --walter specfic
+--fallback to speech_wilson.lua 	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
@@ -4043,12 +4054,11 @@ return{
 		SLINGSHOTAMMO_MOONGLASS = "Ah, now that might be interesting.",
 		SLINGSHOTAMMO_GELBLOB = "Ah, now that might be interesting.",
 		SLINGSHOTAMMO_SCRAPFEATHER = "Ah, now that might be interesting.",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "Ah, now that might be interesting.",
         SLINGSHOTAMMO_DREADSTONE = "Ah, now that might be interesting.",
         SLINGSHOTAMMO_GUNPOWDER = "Ah, now that might be interesting.",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "Ah, now that might be interesting.",
         SLINGSHOTAMMO_PUREBRILLIANCE = "Ah, now that might be interesting.",
-        SLINGSHOTAMMO_PUREHORROR = "Ah, now that might be interesting.",
+        SLINGSHOTAMMO_HORRORFUEL = "Ah, now that might be interesting.",
         PORTABLETENT = "Oh, how I miss sleeping indoors.",
         PORTABLETENT_ITEM = "Surely someone else can set it up.",
 
@@ -4081,6 +4091,7 @@ return{
 		GHOSTLYELIXIR_ATTACK = "It appears someone has been toying with the dark arts and crafts.",
 		GHOSTLYELIXIR_SPEED = "It appears someone has been toying with the dark arts and crafts.",
 		GHOSTLYELIXIR_RETALIATION = "It appears someone has been toying with the dark arts and crafts.",
+        GHOSTLYELIXIR_REVIVE = "It appears someone has been toying with the dark arts and crafts.",
 		SISTURN =
 		{
 			GENERIC = "I can't help but wonder... no, it couldn't be.",
@@ -5516,12 +5527,15 @@ return{
 		SLINGSHOT_BAND_MIMIC = "He'll shoot his eye out if he's not careful.",
 		SLINGSHOT_FRAME_BONE = "He'll shoot his eye out if he's not careful.",
 		SLINGSHOT_FRAME_GEMS = "He'll shoot his eye out if he's not careful.",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "He'll shoot his eye out if he's not careful.",
 		SLINGSHOT_FRAME_WAGPUNK = "He'll shoot his eye out if he's not careful.",
 		SLINGSHOT_HANDLE_STICKY = "He'll shoot his eye out if he's not careful.",
 		SLINGSHOT_HANDLE_SILK = "He'll shoot his eye out if he's not careful.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "He'll shoot his eye out if he's not careful.",
 
         WOBY_BADGE_STATION = "Pfft. Dog acts.",
+
+        ELIXIR_CONTAINER = "Don't think I'm fooled by its innocent appearance.",
     },
 
     DESCRIBE_GENERIC = "You tell me.",

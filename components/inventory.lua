@@ -1050,7 +1050,9 @@ function Inventory:GiveItem(inst, slot, src_pos)
             returnvalue = true
             shouldwisecrack = false
         else
-            self:DropItem(inst, true, true)
+            if self.HandleLeftoversShouldDropFn == nil or self.HandleLeftoversShouldDropFn(self.inst, inst) then
+                self:DropItem(inst, true, true)
+            end
         end
     end
     if shouldwisecrack and not (self.isloading or self.silentfull) and self.maxslots > 0 then

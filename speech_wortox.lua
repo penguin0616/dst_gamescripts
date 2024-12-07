@@ -785,23 +785,36 @@ return{
         "My precious souls!",
         "Those were mine! All mine!",
     },
+    ANNOUNCE_SOUL_OVERLOAD_WARNING =
+    {
+        "The souls are going to burst my brim!",
+        "The burden of souls is certain to pop!",
+    },
+    ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+    {
+        "My brim is back from making a crack.",
+        "I had to stop before I popped.",
+    },
     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
     {
         "I feel the call to toot my flute! Hyuyu!",
         "My flute's my muse, I can't refuse!",
     },
-    ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+    ANNOUNCE_PANFLUTE_BUFF_USED =
     {
-        "Alas, the urge to play my flute has passed.",
-        "Aww, my flute has gone mute!",
+        "What a hoot, to play my flute!",
+        "A treat that feeds the soul! Hyuyu!",
     },
 
     --walter specfic
+--fallback to speech_wilson.lua 	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
@@ -4061,12 +4074,11 @@ return{
 		SLINGSHOTAMMO_MOONGLASS = "Oooh, how fun!",
 		SLINGSHOTAMMO_GELBLOB = "Oooh, how fun!",
 		SLINGSHOTAMMO_SCRAPFEATHER = "Oooh, how fun!",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "Oooh, how fun!",
         SLINGSHOTAMMO_DREADSTONE = "Oooh, how fun!",
         SLINGSHOTAMMO_GUNPOWDER = "Oooh, how fun!",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "Oooh, how fun!",
         SLINGSHOTAMMO_PUREBRILLIANCE = "Oooh, how fun!",
-        SLINGSHOTAMMO_PUREHORROR = "Oooh, how fun!",
+        SLINGSHOTAMMO_HORRORFUEL = "Oooh, how fun!",
         PORTABLETENT = "So many pranks to pull! Do I push it in the lake? Toss in a snake?",
         PORTABLETENT_ITEM = "Round and round, tent goes up and then comes down!",
 
@@ -4099,6 +4111,7 @@ return{
 		GHOSTLYELIXIR_ATTACK = "Hyuyu! Someone's getting crafty!",
 		GHOSTLYELIXIR_SPEED = "Hyuyu! Someone's getting crafty!",
 		GHOSTLYELIXIR_RETALIATION = "Hyuyu! Someone's getting crafty!",
+        GHOSTLYELIXIR_REVIVE = "Hyuyu! Someone's getting crafty!",
 		SISTURN =
 		{
 			GENERIC = "A touching tribute to a treasured twin.",
@@ -5534,12 +5547,15 @@ return{
 		SLINGSHOT_BAND_MIMIC = "Hotshot! Is he not?",
 		SLINGSHOT_FRAME_BONE = "Hotshot! Is he not?",
 		SLINGSHOT_FRAME_GEMS = "Hotshot! Is he not?",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "Hotshot! Is he not?",
 		SLINGSHOT_FRAME_WAGPUNK = "Hotshot! Is he not?",
 		SLINGSHOT_HANDLE_STICKY = "Hotshot! Is he not?",
 		SLINGSHOT_HANDLE_SILK = "Hotshot! Is he not?",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Hotshot! Is he not?",
 
         WOBY_BADGE_STATION = "A proud pup leveling up!",
+
+        ELIXIR_CONTAINER = "Any mixers for those elixirs?",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",

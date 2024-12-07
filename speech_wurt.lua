@@ -770,21 +770,32 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_WARNING =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_USED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
 
     --walter specfic
+--fallback to speech_wilson.lua 	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
@@ -4043,12 +4054,11 @@ return{
 		SLINGSHOTAMMO_MOONGLASS = "Bits of stuff",
 		SLINGSHOTAMMO_GELBLOB = "Bits of stuff.",
 		SLINGSHOTAMMO_SCRAPFEATHER = "Bits of stuff.",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "Bits of stuff.",
         SLINGSHOTAMMO_DREADSTONE = "Bits of stuff.",
         SLINGSHOTAMMO_GUNPOWDER = "Bits of stuff.",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "Bits of stuff.",
         SLINGSHOTAMMO_PUREBRILLIANCE = "Bits of stuff.",
-        SLINGSHOTAMMO_PUREHORROR = "Bits of stuff.",
+        SLINGSHOTAMMO_HORRORFUEL = "Bits of stuff.",
         PORTABLETENT = "Is sleeping place.",
         PORTABLETENT_ITEM = "Building something, florp?",
 
@@ -4081,6 +4091,7 @@ return{
 		GHOSTLYELIXIR_ATTACK = "Ooooh! Me wanna make some too, florp!",
 		GHOSTLYELIXIR_SPEED = "Ooooh! Me wanna make some too, florp!",
 		GHOSTLYELIXIR_RETALIATION = "Ooooh! Me wanna make some too, florp!",
+        GHOSTLYELIXIR_REVIVE = "Ooooh! Me wanna make some too, florp!",
 		SISTURN =
 		{
 			GENERIC = "What in jar? Snacks?",
@@ -5516,12 +5527,15 @@ return{
 		SLINGSHOT_BAND_MIMIC = "Pine boy shooty toy. Florp!",
 		SLINGSHOT_FRAME_BONE = "Pine boy shooty toy. Florp!",
 		SLINGSHOT_FRAME_GEMS = "Pine boy toys. Florp!",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "Pine boy toys. Florp!",
 		SLINGSHOT_FRAME_WAGPUNK = "Pine boy shooty toy. Florp!",
 		SLINGSHOT_HANDLE_STICKY = "Pine boy shooty toy. Florp!",
 		SLINGSHOT_HANDLE_SILK = "Pine boy shooty toy. Florp!",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Pine boy shooty toy. Florp!",
 
         WOBY_BADGE_STATION = "Pine boy teach doggie.",
+
+        ELIXIR_CONTAINER = "Abby-gill won't share treats. Glurgh.", --[[TODO]]
     },
 
     DESCRIBE_GENERIC = "What that?",

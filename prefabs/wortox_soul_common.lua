@@ -26,7 +26,11 @@ local function DoHeal(inst)
     end
     if healtargetscount > 0 then
         -- Healing adjustments are absolute from the releaser.
-        local amt = math.max(TUNING.WORTOX_SOULHEAL_MINIMUM_HEAL, (TUNING.HEALING_MED * (inst.soul_heal_premult or 1) - TUNING.WORTOX_SOULHEAL_LOSS_PER_PLAYER * (healtargetscount - 1)) * (inst.soul_heal_mult or 1))
+        local loss_per_player = TUNING.WORTOX_SOULHEAL_LOSS_PER_PLAYER
+        if inst.soul_heal_player_efficient then
+            loss_per_player = loss_per_player * TUNING.SKILLS.WORTOX.WORTOX_SOULPROTECTOR_4_LOSS_PER_PLAYER_MULT
+        end
+        local amt = math.max(TUNING.WORTOX_SOULHEAL_MINIMUM_HEAL, (TUNING.HEALING_MED * (inst.soul_heal_premult or 1) - loss_per_player * (healtargetscount - 1)) * (inst.soul_heal_mult or 1))
         for i = 1, healtargetscount do
             local v = healtargets[i]
             v.components.health:DoDelta(amt, nil, inst.prefab)
@@ -55,6 +59,32 @@ local function HasSoul(victim)
 				victim.components.murderable ~= nil
 			)
 		and not victim:HasAnyTag(SOULLESS_TARGET_TAGS)
+end
+
+local function SoulDamageTest(inst, ent, owner)
+    if ent == owner or owner.components.combat == nil then
+        return false
+    end
+
+    if ent.components.health and ent.components.health:IsDead() then
+        return false
+    end
+
+    if ent:HasTag("saddled") then
+        return false
+    end
+
+    if ent:HasTag("player") and not TheNet:GetPVPEnabled() then
+        return false
+    end
+
+    if owner.components.combat:TargetHasFriendlyLeader(ent) or not owner.components.combat:CanTarget(ent) then
+        return false
+    end
+
+    -- FIXME(JBK): Did I miss something? Bug report it!
+
+    return fns.HasSoul(ent)
 end
 
 local function GetNumSouls(victim)
@@ -113,6 +143,7 @@ fns = {
     SpawnSoulAt = SpawnSoulAt,
     SpawnSoulsAt = SpawnSoulsAt,
     GiveSouls = GiveSouls,
+    SoulDamageTest = SoulDamageTest,
 }
 
 return fns

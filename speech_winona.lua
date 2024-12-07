@@ -776,21 +776,32 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_WARNING =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_USED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
 
     --walter specfic
+--fallback to speech_wilson.lua 	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
@@ -4049,12 +4060,11 @@ return{
 		SLINGSHOTAMMO_MOONGLASS = "Hmph. Handmade. The shape's all irregular.",
 		SLINGSHOTAMMO_GELBLOB = "Hmph. Handmade. The shape's all irregular.",
 		SLINGSHOTAMMO_SCRAPFEATHER = "Hmph. Handmade. The shape's all irregular.",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "Hmph. Handmade. The shape's all irregular.",
         SLINGSHOTAMMO_DREADSTONE = "Hmph. Handmade. The shape's all irregular.",
         SLINGSHOTAMMO_GUNPOWDER = "Hmph. Handmade. The shape's all irregular.",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "Hmph. Handmade. The shape's all irregular.",
         SLINGSHOTAMMO_PUREBRILLIANCE = "Hmph. Handmade. The shape's all irregular.",
-        SLINGSHOTAMMO_PUREHORROR = "Hmph. Handmade. The shape's all irregular.",
+        SLINGSHOTAMMO_HORRORFUEL = "Hmph. Handmade. The shape's all irregular.",
         PORTABLETENT = "Aw, this reminds me of campin' with Charlie when we were little...",
         PORTABLETENT_ITEM = "Need any help settin' that up?",
 
@@ -4087,6 +4097,7 @@ return{
 		GHOSTLYELIXIR_ATTACK = "I don't think that's safe to drink...",
 		GHOSTLYELIXIR_SPEED = "I don't think that's safe to drink...",
 		GHOSTLYELIXIR_RETALIATION = "I don't think that's safe to drink...",
+        GHOSTLYELIXIR_REVIVE = "I don't think that's safe to drink...",
 		SISTURN =
 		{
 			GENERIC = "Nothin' stronger than the bond between sisters.",
@@ -5522,12 +5533,15 @@ return{
 		SLINGSHOT_BAND_MIMIC = "Aww, Walt's quite a lil' tinkerer.",
 		SLINGSHOT_FRAME_BONE = "Aww, Walt's quite a lil' tinkerer.",
 		SLINGSHOT_FRAME_GEMS = "Aww, Walt's quite a lil' tinkerer.",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "Aww, Walt's quite a lil' tinkerer.",
 		SLINGSHOT_FRAME_WAGPUNK = "Aww, Walt's quite a lil' tinkerer.",
 		SLINGSHOT_HANDLE_STICKY = "Aww, Walt's quite a lil' tinkerer.",
 		SLINGSHOT_HANDLE_SILK = "Aww, Walt's quite a lil' tinkerer.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Aww, Walt's quite a lil' tinkerer.",
 
         WOBY_BADGE_STATION = "Atta girl, Wobes!",
+
+        ELIXIR_CONTAINER = "Ain't no picnic for the livin' round here.",
     },
 
     DESCRIBE_GENERIC = "Incredible! I have no idea what that is.",

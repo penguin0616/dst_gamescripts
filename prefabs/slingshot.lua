@@ -11,6 +11,13 @@ local assets_ex =
 	Asset("INV_IMAGE", "slingshot"),
 }
 
+local assets_999ex =
+{
+	Asset("ANIM", "anim/slingshot.zip"),
+	Asset("ANIM", "anim/ui_slingshot_wagpunk.zip"),
+	Asset("INV_IMAGE", "slingshot"),
+}
+
 local assets_2 =
 {
 	Asset("ANIM", "anim/slingshot.zip"),
@@ -62,15 +69,13 @@ local SCRAPBOOK_DEPS =
     "slingshotammo_poop",
     "slingshotammo_stinger",
     "slingshotammo_moonglass",
-    "slingshotammo_moonglasscharged",
     "slingshotammo_dreadstone",
     "slingshotammo_gunpowder",
     "slingshotammo_lunarplanthusk",
 	"slingshotammo_purebrilliance",
-    "slingshotammo_purehorror",
+    "slingshotammo_horrorfuel",
 	"slingshotammo_gelblob",
     "slingshotammo_scrapfeather",
-    "slingshotammo_stinger",
     "trinket_1",
 }
 
@@ -239,6 +244,9 @@ local function OnProjectileLaunched(inst, attacker, target, proj)
     end
 	if inst.chargedmult and proj.SetChargedMultiplier then
 		proj:SetChargedMultiplier(inst.chargedmult)
+	end
+	if inst.magicamplified and proj.SetMagicAmplified then
+		proj:SetMagicAmplified()
 	end
 
 	if inst.components.slingshotmods:HasPartName("slingshot_band_mimic") and
@@ -548,7 +556,6 @@ end
 
 local function slingshotex_master_postinit(inst)
 	inst.components.inventoryitem:ChangeImageName("slingshot")
-	inst.components.container:EnableInfiniteStackSize(true)
 
 	inst.components.aoecharging:SetOnChargedAttackFn(slingshotex_OnChargedAttack)
 	inst.components.aoecharging:SetEnabled(false)
@@ -558,6 +565,13 @@ local function slingshotex_master_postinit(inst)
 	inst:ListenForEvent("unequipped", slingshotex_OnUnequipped)
 
 	inst._onskillrefresh = function(owner) slingshotex_RefreshAttunedSkills(inst, owner) end
+end
+
+--------------------------------------------------------------------------
+
+local function slingshot999ex_master_postinit(inst)
+	slingshotex_master_postinit(inst)
+	inst.components.container:EnableInfiniteStackSize(true)
 end
 
 --------------------------------------------------------------------------
@@ -616,7 +630,9 @@ local function slingshot2ex_SpellFn(inst, doer, pos)
 		target.Transform:SetPosition(x + math.cos(angle) * TARGET_RANGE, 0, z - math.sin(angle) * TARGET_RANGE)
 
 		inst.overrideammoslot = 2
+		inst.magicamplified = true
 		inst.components.weapon:LaunchProjectile(doer, target)
+		inst.magicamplified = nil
 		inst.overrideammoslot = nil
 
 		if specialammo:IsValid() then
@@ -717,6 +733,7 @@ end
 
 return MakeSlingshot("slingshot",	assets_basic,	prefabs_basic),
 	MakeSlingshot("slingshotex",	assets_ex,		prefabs_ex,		slingshotex_common_postinit,	slingshotex_master_postinit),
+	MakeSlingshot("slingshot999ex",	assets_999ex,	prefabs_ex,		slingshotex_common_postinit,	slingshot999ex_master_postinit),
 	MakeSlingshot("slingshot2",		assets_2,		prefabs_basic,	slingshot2_common_postinit,		slingshot2_master_postinit),
 	MakeSlingshot("slingshot2ex",	assets_2ex,		prefabs_2ex,	slingshot2ex_common_postinit,	slingshot2ex_master_postinit),
 	Prefab("slingshotparts_fx", partsfxfn)

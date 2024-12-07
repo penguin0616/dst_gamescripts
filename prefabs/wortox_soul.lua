@@ -95,19 +95,17 @@ local function ModifyStats(inst, owner)
     if skilltreeupdater then
         if skilltreeupdater:IsActivated("wortox_soulprotector_1") then
             inst.soul_heal_range_modifier = (inst.soul_heal_range_modifier or 0) + TUNING.SKILLS.WORTOX.WORTOX_SOULPROTECTOR_1_RANGE
+            if skilltreeupdater:IsActivated("wortox_soulprotector_2") then
+                inst.soul_heal_range_modifier = inst.soul_heal_range_modifier + TUNING.SKILLS.WORTOX.WORTOX_SOULPROTECTOR_2_RANGE
+            end
         end
         if skilltreeupdater:IsActivated("wortox_soulprotector_3") then
             inst.soul_doburst = true
         end
         if skilltreeupdater:IsActivated("wortox_soulprotector_4") then
             inst.soul_doburst_faster = true
-            inst.soul_heal_range_modifier = (inst.soul_heal_range_modifier or 0) + TUNING.SKILLS.WORTOX.WORTOX_SOULPROTECTOR_4_RANGE
+            inst.soul_heal_player_efficient = true
         end
-    end
-    if owner.wortox_inclination == "nice" then
-        inst.soul_heal_premult = TUNING.SKILLS.WORTOX.NICE_HEALING_MULT
-    elseif owner.wortox_inclination == "naughty" then
-        inst.soul_heal_premult = TUNING.SKILLS.WORTOX.NAUGHTY_HEALING_MULT
     end
 end
 

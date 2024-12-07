@@ -180,24 +180,48 @@ end
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
+defs["slingshot_frame_wagpunk_0"] =
+{
+	slot = "frame",
+	anim = "idle_wagpunk_0",
+	swap_symbol = "swap_frame_wagpunk_0",
+	usedeferreduninstall = true,
+	prefabs = { "slingshot", "slingshotex" },
+	skill = "walter_slingshot_frame_wagpunk",
+}
+
+defs.slingshot_frame_wagpunk_0.oninstalledfn = function(inst, slingshot)
+	if slingshot.prefab ~= "slingshotex" then
+		ReplaceSlingshot(slingshot, "slingshotex")
+	end
+end
+
+defs.slingshot_frame_wagpunk_0.onuninstalledfn = function(inst, slingshot)
+	if slingshot.prefab == "slingshotex" and not slingshot.components.slingshotmods:HasPartName("slingshot_frame_wagpunk_0") then
+		ReplaceSlingshot(slingshot, "slingshot")
+	end
+end
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
 defs["slingshot_frame_wagpunk"] =
 {
 	slot = "frame",
 	anim = "idle_wagpunk",
 	swap_symbol = "swap_frame_wagpunk",
 	usedeferreduninstall = true,
-	prefabs = { "slingshot", "slingshotex" },
+	prefabs = { "slingshot", "slingshot999ex" },
 	skill = "walter_slingshot_frame_wagpunk",
 }
 
 defs.slingshot_frame_wagpunk.oninstalledfn = function(inst, slingshot)
-	if slingshot.prefab ~= "slingshotex" then
-		ReplaceSlingshot(slingshot, "slingshotex")
+	if slingshot.prefab ~= "slingshot999ex" then
+		ReplaceSlingshot(slingshot, "slingshot999ex")
 	end
 end
 
 defs.slingshot_frame_wagpunk.onuninstalledfn = function(inst, slingshot)
-	if slingshot.prefab == "slingshotex" and not slingshot.components.slingshotmods:HasPartName("slingshot_frame_wagpunk") then
+	if slingshot.prefab == "slingshot999ex" and not slingshot.components.slingshotmods:HasPartName("slingshot_frame_wagpunk") then
 		ReplaceSlingshot(slingshot, "slingshot")
 	end
 end

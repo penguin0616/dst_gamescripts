@@ -401,6 +401,23 @@ function d_rabbitking(kind)
     end
 end
 
+function d_fullmoon()
+    if TheWorld.ismastersim then
+        TheWorld:PushEvent("ms_setmoonphase", {moonphase = "full", iswaxing = false})
+    end
+end
+
+function d_newmoon()
+    if TheWorld.ismastersim then
+        TheWorld:PushEvent("ms_setmoonphase", {moonphase = "new", iswaxing = true})
+    end
+end
+
+function d_unlockaffinities()
+    TheGenericKV:SetKV("fuelweaver_killed", "1")
+    TheGenericKV:SetKV("celestialchampion_killed", "1")
+end
+
 function d_resetskilltree()
     local player = ConsoleCommandPlayer()
 
@@ -411,10 +428,21 @@ function d_resetskilltree()
     local skilltreeupdater = player.components.skilltreeupdater
     local skilldefs = require("prefabs/skilltree_defs").SKILLTREE_DEFS[player.prefab]
     if skilldefs ~= nil then
-        for skill, data in pairs(skilldefs) do
-            if data.rpc_id then
-                skilltreeupdater:DeactivateSkill(skill)
+        local attempts = 50
+        while attempts > 0 do -- FIXME(JBK): This needs to be done in skilltreeupdater and carefully handled for server and client sync.
+            local keepgoing = false
+            for skill, data in pairs(skilldefs) do
+                if data.rpc_id then
+                    if skilltreeupdater:IsActivated(skill) then
+                        keepgoing = true
+                        skilltreeupdater:DeactivateSkill(skill)
+                    end
+                end
             end
+            if not keepgoing then
+                break
+            end
+            attempts = attempts - 1
         end
     end
 
@@ -3798,5 +3826,16 @@ function d_shadowparasite(host_prefab)
 
     host.components.inventory:GiveItem(mask)
     host.components.inventory:Equip(mask)
+end
+
+function d_test_purebrilliance_ammo()
+    local slingshot = SpawnPrefab("slingshot")
+    local ammo = SpawnPrefab("slingshotammo_purebrilliance")
+    local player = ConsoleCommandPlayer()
+
+    ammo.components.stackable:SetStackSize(ammo.components.stackable.maxsize)
+    slingshot.components.container:GiveItem(ammo)
+
+    player.components.inventory:Equip(slingshot)
 end
 

@@ -770,21 +770,32 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_WARNING =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_USED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
 
     --walter specfic
+--fallback to speech_wilson.lua 	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
@@ -4047,12 +4058,11 @@ return{
 		SLINGSHOTAMMO_MOONGLASS = "Someone could trip and break their neck. Pretty though.",
 		SLINGSHOTAMMO_GELBLOB = "Someone could trip and break their neck. Maybe it will be me.",
 		SLINGSHOTAMMO_SCRAPFEATHER = "Someone could trip and break their neck. Maybe it will be me.",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "Someone could trip and break their neck. Maybe it will be me.",
         SLINGSHOTAMMO_DREADSTONE = "Someone could trip and break their neck. Maybe it will be me.",
         SLINGSHOTAMMO_GUNPOWDER = "Someone could trip and break their neck. Maybe it will be me.",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "Someone could trip and break their neck. Maybe it will be me.",
         SLINGSHOTAMMO_PUREBRILLIANCE = "Someone could trip and break their neck. Maybe it will be me.",
-        SLINGSHOTAMMO_PUREHORROR = "Someone could trip and break their neck. Maybe it will be me.",
+        SLINGSHOTAMMO_HORRORFUEL = "Someone could trip and break their neck. Maybe it will be me.",
         PORTABLETENT = "It makes no difference where I rest my head, my nights are filled with bad dreams.",
         PORTABLETENT_ITEM = "Abigail and I set up a tent in our backyard once. It was... fun.",
 
@@ -4085,6 +4095,7 @@ return{
 		GHOSTLYELIXIR_ATTACK = "Abigail was always the strong one.",
 		GHOSTLYELIXIR_SPEED = "It's quite sugary.",
 		GHOSTLYELIXIR_RETALIATION = "It has a bitter aftertaste.",
+        GHOSTLYELIXIR_REVIVE = "You'll feel like yourself again soon, Abby.",
 		SISTURN =
 		{
 			GENERIC = "It's a memorial to my sister... but it's so bare...",
@@ -5520,12 +5531,15 @@ return{
 		SLINGSHOT_BAND_MIMIC = "Walter is getting serious with his slingshotting.",
 		SLINGSHOT_FRAME_BONE = "Walter is getting serious with his slingshotting.",
 		SLINGSHOT_FRAME_GEMS = "Walter is getting serious with his slingshotting.",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "Walter is getting serious with his slingshotting.",
 		SLINGSHOT_FRAME_WAGPUNK = "Walter is getting serious with his slingshotting.",
 		SLINGSHOT_HANDLE_STICKY = "Walter is getting serious with his slingshotting.",
 		SLINGSHOT_HANDLE_SILK = "Walter is getting serious with his slingshotting.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Walter is getting serious with his slingshotting.",
 
         WOBY_BADGE_STATION = "What a good girl, that Woby.",
+
+        ELIXIR_CONTAINER = "If only I could have helped you then, as much as I can now.",
     },
 
     DESCRIBE_GENERIC = "Sigh... I don't know.",

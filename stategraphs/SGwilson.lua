@@ -7762,7 +7762,7 @@ local states =
 					inst.sg:RemoveStateTag("busy")
 				end
 			end),
-			TimeEvent(52 * FRAMES, function(inst)
+			TimeEvent(52 * FRAMES, function(inst) -- NOTES(JBK): Keep FRAMES in sync with panflute. [PFSSTS]
 				if not inst.sg.statemem.action_failed then
 					inst.sg:RemoveStateTag("busy")
 				end
@@ -8287,26 +8287,19 @@ local states =
 
         timeline =
         {
-            TimeEvent(14 * FRAMES, function(inst)
+            TimeEvent(10 * FRAMES, function(inst)
 				if not inst:PerformBufferedAction() then
 					inst.sg.statemem.action_failed = true
 				end
             end),
+			TimeEvent(14 * FRAMES, function(inst)
+				if inst.sg.statemem.action_failed then
+					inst.AnimState:SetFrame(17)
+				end
+			end),
 			TimeEvent(18 * FRAMES, function(inst)
-				if inst.sg.statemem.action_failed then
-					inst.AnimState:SetFrame(24)
-				end
+                inst.sg:RemoveStateTag("busy")
 			end),
-			TimeEvent(29 * FRAMES, function(inst)
-				if inst.sg.statemem.action_failed then
-					inst.sg:RemoveStateTag("busy")
-				end
-			end),
-            TimeEvent(35 * FRAMES, function(inst)
-				if not inst.sg.statemem.action_failed then
-					inst.sg:RemoveStateTag("busy")
-				end
-            end),
         },
 
         events =
@@ -14137,8 +14130,17 @@ local states =
         timeline =
         {
             FrameEvent(9, function(inst)
-                if inst.sg.statemem.item and inst.sg.statemem.item.OnStartBody and inst.sg.statemem.item:IsValid() then
-                    inst.sg.statemem.item:OnStartBody(inst)
+                if inst.sg.statemem.item and inst.sg.statemem.item:IsValid() then
+                    if inst.sg.statemem.item.OnStartBody then
+                        inst.sg.statemem.item:OnStartBody(inst)
+                    end
+                end
+            end),
+            FrameEvent(18, function(inst)
+                if inst.sg.statemem.item and inst.sg.statemem.item:IsValid() then
+                    if inst.sg.statemem.item.crushitemcast_sound then
+                        inst.SoundEmitter:PlaySound(inst.sg.statemem.item.crushitemcast_sound)
+                    end
                 end
             end),
         },
@@ -14325,7 +14327,7 @@ local states =
         timeline =
         {
             FrameEvent(1, function(inst)
-                inst.SoundEmitter:PlaySound("dontstarve/characters/wortox/soul/hop_out")
+                inst.SoundEmitter:PlaySound("meta5/wortox/ttheart_out_f1")
                 inst.DynamicShadow:Enable(true)
             end),
             FrameEvent(5, function(inst)
@@ -21760,6 +21762,7 @@ local states =
             inst.components.locomotor:Stop()
 
             inst.AnimState:PlayAnimation("wendy_elixir")
+            inst.SoundEmitter:PlaySound("meta5/wendy/pour_elixir_f17") 
 
             inst.sg.statemem.action = inst:GetBufferedAction()
 

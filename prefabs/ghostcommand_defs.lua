@@ -25,12 +25,11 @@ end
 
 local BASECOMMANDS = {
 	{
-		label = "Unsummon",
+		label = STRINGS.GHOSTCOMMANDS.UNSUMMON,
 		onselect = function(inst)
 			local spellbook = inst.components.spellbook
-			spellbook:SetSpellName("Unsummon")
+			spellbook:SetSpellName(STRINGS.GHOSTCOMMANDS.UNSUMMON)
 
-			-- TODO @stevenm don't really like this. Wonder if there's another way.
 			inst:AddTag("unsummoning_spell")
 			if TheWorld.ismastersim then
 				inst.components.aoespell:SetSpellFn(nil)
@@ -55,9 +54,7 @@ local BASECOMMANDS = {
 }
 
 -- Rile Up and Soothe actions
-
 local function GhostChangeBehaviour(inst, doer)
-	-- TODO @stevenm do we need to double check that we're defensive here? Can the action get queued up multiple times?
 	doer.components.ghostlybond:ChangeBehaviour()
 
 	inst:PushEvent("spellupdateneeded", doer)
@@ -65,8 +62,6 @@ local function GhostChangeBehaviour(inst, doer)
 	return true
 end
 
--- TODO @stevenm there's probably a smarter way to do these two commands,
--- since they're almost exactly the same (maybe set the label when it's retrieved)
 local RILE_UP_ACTION = {
 	label = STRINGS.ACTIONS.COMMUNEWITHSUMMONED.MAKE_AGGRESSIVE,
 	onselect = function(inst)
@@ -170,14 +165,30 @@ local function GhostScareSpell(inst, doer)
 	return true
 end
 
+local function GhostHauntSpell(inst, doer, pos)
+	local doer_ghostlybond = doer.components.ghostlybond
+	if not doer_ghostlybond then return false end
+
+	local ghost = doer_ghostlybond.ghost
+	if not ghost then return false end
+
+	ghost:PushEvent("do_ghost_hauntat", pos)
+
+	if doer.components.spellbookcooldowns then
+		doer.components.spellbookcooldowns:RestartSpellCooldown("ghostcommand", TUNING.WENDYSKILL_COMMAND_COOLDOWN)
+	end
+
+	return true
+end
+
 local SKILLTREE_COMMAND_DEFS =
 {
 	["wendy_ghostcommand_1"] =
 	{
-		label = "Escape",
+		label = STRINGS.GHOSTCOMMANDS.ESCAPE,
 		onselect = function(inst)
 			local spellbook = inst.components.spellbook
-			spellbook:SetSpellName("Escape")
+			spellbook:SetSpellName(STRINGS.GHOSTCOMMANDS.ESCAPE)
 
 			if TheWorld.ismastersim then
 				inst.components.aoespell:SetSpellFn(nil)
@@ -211,12 +222,12 @@ local SKILLTREE_COMMAND_DEFS =
 	},
 	["wendy_ghostcommand_2"] =
     {
-        label = "Attack At",
+        label = STRINGS.GHOSTCOMMANDS.ATTACK_AT,
         onselect = function(inst)
 			local spellbook = inst.components.spellbook
 			local aoetargeting = inst.components.aoetargeting
 
-            spellbook:SetSpellName("Attack At")
+            spellbook:SetSpellName(STRINGS.GHOSTCOMMANDS.ATTACK_AT)
             aoetargeting:SetDeployRadius(0)
 			aoetargeting:SetRange(20)
             aoetargeting.reticule.reticuleprefab = "reticuleaoeghosttarget"
@@ -254,12 +265,56 @@ local SKILLTREE_COMMAND_DEFS =
 		end,
 		cooldowncolor = { 0.65, 0.65, 0.65, 0.75 },
     },
+	["wendy_ghostcommand_haunt"] =
+    {
+        label = STRINGS.GHOSTCOMMANDS.HAUNT_AT,
+        onselect = function(inst)
+			local spellbook = inst.components.spellbook
+			local aoetargeting = inst.components.aoetargeting
+
+            spellbook:SetSpellName(STRINGS.GHOSTCOMMANDS.HAUNT_AT)
+            aoetargeting:SetDeployRadius(0)
+			aoetargeting:SetRange(20)
+            aoetargeting.reticule.reticuleprefab = "reticuleaoeghosttarget"
+            aoetargeting.reticule.pingprefab = "reticuleaoeghosttarget_ping"
+
+            aoetargeting.reticule.mousetargetfn = nil
+            aoetargeting.reticule.targetfn = ReticuleGhostTargetFn
+            aoetargeting.reticule.updatepositionfn = nil
+			aoetargeting.reticule.twinstickrange = 15
+
+            if TheWorld.ismastersim then
+                aoetargeting:SetTargetFX("reticuleaoeghosttarget")
+                inst.components.aoespell:SetSpellFn(GhostHauntSpell)
+                spellbook:SetSpellFn(nil)
+            end
+        end,
+        execute = StartAOETargeting,
+		bank = "spell_icons_wendy",
+		build = "spell_icons_wendy",
+		anims =
+		{
+			idle = { anim = "haunt" },
+			focus = { anim = "haunt_focus", loop = true },
+			down = { anim = "haunt_pressed" },
+			cooldown = { anim = "haunt_cooldown" },
+		},
+        widget_scale = ICON_SCALE,
+		checkcooldown = function(doer)
+			--client safe
+			return (doer ~= nil
+				and doer.components.spellbookcooldowns
+				and doer.components.spellbookcooldowns:GetSpellCooldownPercent("ghostcommand"))
+				or nil
+		end,
+		cooldowncolor = { 0.65, 0.65, 0.65, 0.75 },
+    },
 	["wendy_ghostcommand_3"] =
     {
-        label = "Scare",
+        label = STRINGS.GHOSTCOMMANDS.SCARE,
 		onselect = function(inst)
 			local spellbook = inst.components.spellbook
-			spellbook:SetSpellName("Escape")
+			spellbook:SetSpellName(STRINGS.GHOSTCOMMANDS.SCARE)
 
 			if TheWorld.ismastersim then
 				inst.components.aoespell:SetSpellFn(nil)
@@ -294,21 +349,16 @@ local SKILLTREE_COMMAND_DEFS =
 }
 
 local function GetGhostCommandsFor(owner)
-    local commands
+    local commands = shallowcopy(BASECOMMANDS)
 
-    local has_ghost = owner:HasTag("ghostfriend_summoned")
-    if has_ghost then
-        commands = shallowcopy(BASECOMMANDS)
+	local behaviour_command = (owner:HasTag("has_aggressive_follower") and SOOTHE_ACTION) or RILE_UP_ACTION
+	table.insert(commands, behaviour_command)
 
-		local behaviour_command = (owner:HasTag("has_aggressive_follower") and SOOTHE_ACTION) or RILE_UP_ACTION
-		table.insert(commands, behaviour_command)
-
-        for skill, skill_command in pairs(SKILLTREE_COMMAND_DEFS) do
-            if owner.components.skilltreeupdater:IsActivated(skill) then
-                table.insert(commands, skill_command)
-            end
-        end
-    end
+	for skill, skill_command in pairs(SKILLTREE_COMMAND_DEFS) do
+		if owner.components.skilltreeupdater:IsActivated(skill) then
+			table.insert(commands, skill_command)
+		end
+	end
 
     return commands
 end

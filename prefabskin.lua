@@ -850,20 +850,39 @@ umbrella_clear_fn = function(inst) basic_clear_fn(inst, "umbrella" ) end
 oceanfishingrod_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "fishingrod_ocean" ) end
 oceanfishingrod_clear_fn = function(inst) basic_clear_fn(inst, "fishingrod_ocean" ) end
 
-amulet_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "amulets" ) end
-amulet_clear_fn = function(inst) basic_clear_fn(inst, "amulets" ) end
-
-yellowamulet_init_fn = function(inst, build_name)
-    basic_init_fn( inst, build_name, "amulets" )
-
+local generic_amulet_init_fn = function(inst, build_name)
+    basic_init_fn(inst, build_name, "amulets")
     if not TheWorld.ismastersim then
         return
     end
-
     AddSkinSounds(inst)
 end
-yellowamulet_clear_fn = function(inst)
-    basic_clear_fn( inst, "amulets" )
+local generic_amulet_clear_fn = function(inst)
+    basic_clear_fn(inst, "amulets")
+    RemoveSkinSounds(inst)
+end
+blueamulet_init_fn = generic_amulet_init_fn
+blueamulet_clear_fn = generic_amulet_clear_fn
+greenamulet_init_fn = generic_amulet_init_fn
+greenamulet_clear_fn = generic_amulet_clear_fn
+orangeamulet_init_fn = generic_amulet_init_fn
+orangeamulet_clear_fn = generic_amulet_clear_fn
+purpleamulet_init_fn = generic_amulet_init_fn
+purpleamulet_clear_fn = generic_amulet_clear_fn
+amulet_init_fn = generic_amulet_init_fn
+amulet_clear_fn = generic_amulet_clear_fn
+yellowamulet_init_fn = generic_amulet_init_fn
+yellowamulet_clear_fn = generic_amulet_clear_fn
+
+beargerfur_sack_init_fn = function(inst, build_name)
+    basic_init_fn(inst, build_name, "beargerfur_sack")
+    if not TheWorld.ismastersim then
+        return
+    end
+    AddSkinSounds(inst)
+end
+beargerfur_sack_clear_fn = function(inst)
+    basic_clear_fn(inst, "beargerfur_sack")
     RemoveSkinSounds(inst)
 end
 
@@ -2195,6 +2214,29 @@ function wall_stone_init_fn(inst, build_name)
 end
 function wall_stone_clear_fn(inst)
     inst.AnimState:SetBuild("wall_stone")
+end
+
+--------------------------------------------------------------------------
+--[[ wall_dreadstone skin functions ]]
+--------------------------------------------------------------------------
+function wall_dreadstone_item_init_fn(inst, build_name)
+    inst.linked_skinname = build_name --hack that relies on the build name to match the linked skinname
+    inst.AnimState:SetSkin(build_name, "wall_dreadstone") --same hack is used here by the deployable code in player controller
+    inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
+end
+function wall_dreadstone_item_clear_fn(inst)
+    inst.linked_skinname = nil
+    inst.AnimState:SetBuild("wall_dreadstone")
+    inst.components.inventoryitem:ChangeImageName()
+end
+function wall_dreadstone_init_fn(inst, build_name)
+    if inst.components.placer == nil and not TheWorld.ismastersim then
+        return
+    end
+    inst.AnimState:SetSkin(build_name, "wall_dreadstone")
+end
+function wall_dreadstone_clear_fn(inst)
+    inst.AnimState:SetBuild("wall_dreadstone")
 end
 
 --------------------------------------------------------------------------

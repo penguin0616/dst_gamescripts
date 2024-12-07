@@ -12,13 +12,9 @@ local function startaura(inst)
         return
     end
 
-    if inst:HasDebuff("abigail_murder_buff") then
-        inst.Light:SetColour(32/255, 32/255, 32/255)
-        inst.AnimState:SetMultColour(92/255, 92/255, 92/255, 1)
-    else
-        inst.Light:SetColour(255/255, 32/255, 32/255)        
-        inst.AnimState:SetMultColour(207/255, 92/255, 92/255, 1)
-    end
+    inst.Light:SetColour(255/255, 32/255, 32/255)
+    inst.AnimState:SetMultColour(207/255, 92/255, 92/255, 1)
+
     inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/abigail/attack_LP", "angry")
 
     local attack_anim = "attack" .. tostring(inst.attack_level or 1)
@@ -27,6 +23,14 @@ local function startaura(inst)
     inst:AddChild(inst.attack_fx)
     inst.attack_fx.AnimState:PlayAnimation(attack_anim .. "_pre")
     inst.attack_fx.AnimState:PushAnimation(attack_anim .. "_loop", true)
+
+    if inst:HasDebuff("abigail_murder_buff") then
+        inst.attack_fx.AnimState:SetBuild("abigail_attack_fx_shadow_build")
+
+        inst.attack_fx.AnimState:OverrideSymbol("fx_swirl",       "abigail_attack_fx_shadow_build",      "fx_swirl")
+        inst.attack_fx.AnimState:OverrideSymbol("fx_aoe_swirl",       "abigail_attack_fx_shadow_build",      "fx_aoe_swirl")
+        inst.attack_fx.AnimState:OverrideSymbol("fx_swirl_01",       "abigail_attack_fx_shadow_build",      "fx_swirl_01")
+    end
 
     local skin_build = inst:GetSkinBuild()
     if skin_build then
@@ -50,7 +54,7 @@ local function onattack(inst)
     if inst:HasTag("gestalt") and
        inst.components.health ~= nil and
        not inst.components.health:IsDead() and
-       not inst.sg:HasStateTag("busy") then  --(not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("hit")) then
+       not inst.sg:HasStateTag("busy") then
         inst.sg:GoToState("gestalt_attack")
     end
 end
@@ -82,6 +86,11 @@ local function dash_attack_onupdate(inst, dt)
     end
 end
 
+local actionhandlers =
+{
+    ActionHandler(ACTIONS.HAUNT, "haunt_pre"),
+}
+
 local events =
 {
     CommonHandlers.OnLocomote(true, true),
@@ -89,7 +98,7 @@ local events =
     EventHandler("startaura", startaura),
     EventHandler("stopaura", stopaura),
     EventHandler("attacked", function(inst)
-        if not (inst.components.health:IsDead() or inst.sg:HasStateTag("dissipate")) then
+        if not (inst.components.health:IsDead() or inst.sg:HasStateTag("dissipate")) and not inst.sg:HasStateTag("swoop") then
             inst.sg:GoToState("hit")
         end
     end),
@@ -337,7 +346,7 @@ local states =
                 if math.random() < 0.8 then
                     if inst:HasTag("gestalt") then
                         inst.SoundEmitter:PlaySound("meta5/abigail/gestalt_abigail_idle")
-                    else    
+                    else
                         inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/abigail/howl")
                     end
                 end
@@ -411,7 +420,7 @@ local states =
                 if math.random() < 0.8 then
                     if inst:HasTag("gestalt") then
                         inst.SoundEmitter:PlaySound("meta5/abigail/gestalt_abigail_idle")
-                    else                     
+                    else
                         inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/abigail/howl")
                     end
                 end
@@ -465,7 +474,7 @@ local states =
         end,
 
         timeline = {
-            FrameEvent(13, function(inst)
+            FrameEvent(10, function(inst)
                 inst.sg.mem.aoe_attack_times = {}
 
                 inst.Light:SetColour(255/255, 32/255, 32/255)
@@ -614,6 +623,12 @@ local states =
             inst.Transform:SetNoFaced()
         end,
 
+        timeline = {
+            FrameEvent(16, function(inst)
+                inst.sg:RemoveStateTag("busy")
+            end),
+        },
+
         events =
         {
             EventHandler("animover", function(inst)
@@ -631,8 +646,9 @@ local states =
         tags = { "busy" },
 
         onenter = function(inst, data)
-            inst.components.locomotor:Stop()
+            inst.components.locomotor:Stop()            
             inst.AnimState:PlayAnimation("abigail_scare")
+            inst.SoundEmitter:PlaySound("meta5/abigail/jumpscare")
         end,
 
         timeline =
@@ -705,13 +721,6 @@ local states =
             inst.AnimState:PlayAnimation("abigail_transform")
         end,
 
-        timeline =
-        {
-            FrameEvent(15, function(inst)
-
-            end),
-        },
-
         events =
         {
             EventHandler("animover", function(inst)
@@ -725,15 +734,41 @@ local states =
 
     State {
         name = "gestalt_attack",
+        tags = { "busy", "nointerrupt", "noattack"},
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.SoundEmitter:PlaySound("meta5/abigail/gestalt_abigail_dashattack_pre")
+
+            inst.Physics:Stop()
+
+            inst.AnimState:PlayAnimation("gestalt_attack_pre")
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("gestalt_loop_attack")
+                end
+            end),
+        },
+    },
+
+    State {
+        name = "gestalt_loop_attack",
         tags = { "busy", "nointerrupt", "noattack", "swoop"},
 
         onenter = function(inst)
-
             inst.components.locomotor:Stop()
+            inst.Physics:Stop()
+            inst:SetTransparentPhysics(true)
+            inst.components.locomotor:EnableGroundSpeedMultiplier(false)
+            inst.Physics:ClearMotorVelOverride()
+            inst.Physics:SetMotorVelOverride(15, 0, 0)
 
-
-            inst.SoundEmitter:PlaySound("meta5/abigail/gestalt_abigail_dashattack_pre")
-
+            inst.AnimState:PlayAnimation("gestalt_attack_loop", true)
+            inst.sg:SetTimeout(3)
 
             inst.sg.statemem.oldattackdamage = inst.components.combat.defaultdamage
 
@@ -745,44 +780,21 @@ local states =
                 inst.components.combat.defaultdamage = TUNING.ABIGAIL_GESTALT_DAMAGE.dusk
             end
 
-            inst.Physics:Stop()
-            inst.components.locomotor:EnableGroundSpeedMultiplier(false)
-
-            inst.AnimState:PlayAnimation("attack")
+            inst.components.combat:StartAttack()
+            inst.sg.statemem.enable_attack = true
         end,
 
-        timeline=
-        {
-            TimeEvent(8*FRAMES, function(inst)
-                    inst:SetTransparentPhysics(true)
-
-                    if inst.components.combat.target ~= nil then
-                        inst:ForceFacePoint(inst.components.combat.target.Transform:GetWorldPosition())
-                    end
-
-                    inst.Physics:ClearMotorVelOverride()
-                    inst.Physics:SetMotorVelOverride(15, 0, 0)
-
-                    inst.components.combat:StartAttack()
-                    inst.sg.statemem.enable_attack = true
-                end ),
-
-            TimeEvent(21*FRAMES, function(inst)
-
-                    inst.Physics:ClearMotorVelOverride()
-                    inst.components.locomotor:Stop()
-
-                    inst.sg.statemem.enable_attack = false
-
-                    inst:SetTransparentPhysics(false)
-                end ),
-
-            TimeEvent(33*FRAMES, function(inst)
-                    inst.SoundEmitter:PlaySound("meta5/abigail/gestalt_abigail_dashattack_pst")                  
-                end ),            
-        },
+        ontimeout = function(inst)
+            inst.sg.statemem.enable_attack = false
+        end,
 
         onupdate = function(inst)
+
+            if inst.components.combat.target and inst.components.combat.target:IsValid() and inst.sg.statemem.enable_attack then
+                local x,y,z = inst.components.combat.target.Transform:GetWorldPosition()
+                inst:ForceFacePoint(x,y,z)
+            end
+
             if inst.sg.statemem.enable_attack then
                 local target = inst.components.combat.target
                 if target ~= nil and target:IsValid() and inst:GetDistanceSqToInst(target) <= TUNING.GESTALT_ATTACK_HIT_RANGE_SQ then
@@ -793,29 +805,32 @@ local states =
                         inst:ApplyDebuff({target=target})
 
                         if target.components.combat and target.components.combat.hiteffectsymbol then
-                        local fx = SpawnPrefab("abigail_gestalt_hit_fx")                        
+                        local fx = SpawnPrefab("abigail_gestalt_hit_fx")
                             fx.entity:SetParent(target.entity)
                             target:AddChild(fx)
                             inst.SoundEmitter:PlaySound("meta5/abigail/gestalt_abigail_dashattack_hit")
-                            
                         end
                     end
                 end
             end
-        end,
 
-        events =
-        {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
-        },
+            if (inst.sg.statemem.enable_attack == false or inst.components.combat.target == nil or not inst.components.combat.target:IsValid() or inst.components.combat.target.components.health:IsDead() ) 
+                and not inst.end_gestalt_attack_task then
+                    inst.end_gestalt_attack_task = inst:DoTaskInTime(0.5,function() inst.sg:GoToState("gestalt_pst_attack") end)
+            end
+        end,
 
         onexit = function(inst)
 
             inst.components.locomotor:EnableGroundSpeedMultiplier(true)
             inst.Physics:ClearMotorVelOverride()
             inst.components.locomotor:Stop()
+            inst.sg.statemem.enable_attack = false
+
+            if inst.end_gestalt_attack_task then
+                inst.end_gestalt_attack_task:Cancel()
+                inst.end_gestalt_attack_task = nil
+            end
 
             if inst.sg.statemem.oldattackdamage then
                 inst.components.combat.defaultdamage = inst.sg.statemem.oldattackdamage
@@ -824,6 +839,65 @@ local states =
             inst:SetTransparentPhysics(false)
         end,
     },
+
+    State {
+        name = "gestalt_pst_attack",
+        tags = { "busy", "nointerrupt", "noattack"},
+
+        onenter = function(inst)
+            inst.SoundEmitter:PlaySound("meta5/abigail/gestalt_abigail_dashattack_pst")
+            inst.AnimState:PlayAnimation("gestalt_attack_pst")
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("idle")
+            end),
+        },
+    },
+
+    State {
+        name = "haunt_pre",
+        tags = { "busy", "doing" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("dissipate")
+            inst.SoundEmitter:PlaySound("dontstarve/ghost/ghost_haunt", nil, nil, true)
+        end,
+
+        timeline =
+        {
+            FrameEvent(15, function(inst)
+                inst:PerformBufferedAction()
+            end)
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("haunt")
+            end),
+        },
+    },
+
+    State {
+        name = "haunt",
+        tags = { "busy", "doing" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("appear")
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("idle")
+            end),
+        },
+    },
 }
 
-return StateGraph("abigail", states, events, "appear")
+return StateGraph("abigail", states, events, "appear", actionhandlers)

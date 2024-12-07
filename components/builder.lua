@@ -674,7 +674,7 @@ function Builder:DoBuild(recname, pt, rotation, skin)
                     end
                     ProfileStatsAdd("build_"..prod.prefab)
 
-					local numtogive = recipe.override_numtogive_fn and recipe.override_numtogive_fn(self.inst) or recipe.numtogive
+					local numtogive = recipe.override_numtogive_fn and recipe.override_numtogive_fn(recipe, self.inst) or recipe.numtogive
 
                     if prod.components.equippable ~= nil
 						and not recipe.dropitem

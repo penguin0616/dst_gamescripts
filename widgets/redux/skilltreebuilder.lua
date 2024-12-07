@@ -9,7 +9,11 @@ local UIAnim = require "widgets/uianim"
 require("util")
 
 local TILESIZE = 32
-local TILESIZE_FRAME = 40
+local TILESIZE_FRAME = TILESIZE + 8
+local INFOGRAPHIC_RATIO = 80 / 64 -- frame size / background size
+local TILESIZE_INFOGRAPHIC = TILESIZE - 5
+local TILESIZE_INFOGRAPHIC_CIRCLE = TILESIZE_INFOGRAPHIC * SQRT2
+local TILESIZE_INFOGRAPHIC_FRAME = TILESIZE_INFOGRAPHIC_CIRCLE * INFOGRAPHIC_RATIO - 4 -- Small overlap for icon frame to cover edges.
 local LOCKSIZE = 24
 local SPACE = 5 
 
@@ -31,6 +35,15 @@ local IMAGE_SELECTABLE_OVER = "selectable_over.tex"
 local IMAGE_X = "locked.tex"
 local IMAGE_FRAME = "frame.tex"
 local IMAGE_FRAME_LOCK = "frame_octagon.tex"
+
+local IMAGE_INFOGRAPHIC = "infographic.tex"
+local IMAGE_INFOGRAPHIC_OVER = "infographic.tex"
+local IMAGE_INFOGRAPHIC_ON = "infographic_on.tex"
+local IMAGE_INFOGRAPHIC_ON_OVER = "infographic_on.tex"
+local IMAGE_INFOGRAPHIC_OFF = "infographic_off.tex"
+local IMAGE_INFOGRAPHIC_OFF_OVER = "infographic_off.tex"
+local IMAGE_INFOGRAPHIC_FRAME = "frame_infographic.tex"
+
 local TEMPLATES = require "widgets/redux/templates"
 
 local function getSizeOfList(list)
@@ -213,7 +226,11 @@ function SkillTreeBuilder:buildbuttons(panel, pos, data, offset, root)
 		local skillimage = nil
 
 		skillbutton = self:AddChild(ImageButton(ATLAS,IMAGE_SELECTED,IMAGE_SELECTED,IMAGE_SELECTED,IMAGE_SELECTED,IMAGE_SELECTED))
-		skillbutton:ForceImageSize(TILESIZE, TILESIZE)
+        if subdata.infographic then
+            skillbutton:ForceImageSize(TILESIZE_INFOGRAPHIC_CIRCLE, TILESIZE_INFOGRAPHIC_CIRCLE)
+        else
+            skillbutton:ForceImageSize(TILESIZE, TILESIZE)
+        end
 		skillbutton:Hide()
 		skillbutton:SetOnGainFocus(function()
 			if TheInput:ControllerAttached() then
@@ -245,16 +262,27 @@ function SkillTreeBuilder:buildbuttons(panel, pos, data, offset, root)
 		if subdata.icon then
 			local tex = subdata.icon..".tex"
 			skillicon = skillbutton:AddChild(Image( GetSkilltreeIconAtlas(tex), tex ))
-			skillicon:ScaleToSize(TILESIZE-4, TILESIZE-4)
+            if subdata.infographic then
+                skillicon:ScaleToSize(TILESIZE_INFOGRAPHIC, TILESIZE_INFOGRAPHIC)
+            else
+                skillicon:ScaleToSize(TILESIZE-4, TILESIZE-4)
+            end
 			skillicon:MoveToFront()
 		end
 
 		local frame = IMAGE_FRAME
-		if subdata.lock_open then
-			frame = IMAGE_FRAME_LOCK
-		end
-		skillimage = self:AddChild(Image(ATLAS,frame)) 
-		skillimage:ScaleToSize(TILESIZE_FRAME, TILESIZE_FRAME)
+        if subdata.infographic then -- Higher priority than lock_open.
+            frame = IMAGE_INFOGRAPHIC_FRAME
+        elseif subdata.lock_open then
+            frame = IMAGE_FRAME_LOCK
+            skillbutton:SetScale(0.8, 0.8, 1)
+        end
+		skillimage = self:AddChild(Image(ATLAS,frame))
+        if subdata.infographic then
+            skillimage:ScaleToSize(TILESIZE_INFOGRAPHIC_FRAME, TILESIZE_INFOGRAPHIC_FRAME)
+        else
+            skillimage:ScaleToSize(TILESIZE_FRAME, TILESIZE_FRAME)
+        end
 		skillimage:Hide()
 
 		local newpos = Vector3(subdata.pos[1],subdata.pos[2]+ offset,0)
@@ -328,7 +356,7 @@ end
 
 function gettitle(skill, prefabname, skillgraphics)
 	local skilldata = skilltreedefs.SKILLTREE_DEFS[prefabname][skill]
-	if skilldata.lock_open then
+	if skilldata.lock_open and not skilldata.infographic then
 		local lockstatus = skillgraphics[skill].status.lock_open
 		if lockstatus then
 			if lockstatus == "question"  then
@@ -417,6 +445,10 @@ function SkillTreeBuilder:RefreshTree(skillschanged)
         -- NOTES(JBK): All infographics are highlighted.
         if self.skilltreedef[skill].infographic then
             graphics.status.activated = true
+            graphics.status.infographic = true
+            -- Make them not resize or move when hovering or clicking.
+            graphics.button.scale_on_focus = false
+            graphics.button.move_on_click = false
         end
 	end
 
@@ -468,19 +500,26 @@ function SkillTreeBuilder:RefreshTree(skillschanged)
 		end
 
 		if graphics.status.lock then
-			graphics.button:SetScale(0.8,0.8,1)
 			graphics.button:Show()
 			if graphics.status.lock_open then
 				if graphics.status.lock_open == "question" then
 					graphics.button:SetTextures(ATLAS, IMAGE_QUESTION, IMAGE_QUESTION_OVER,IMAGE_QUESTION,IMAGE_QUESTION,IMAGE_QUESTION)
 				else
-					graphics.button:SetTextures(ATLAS, IMAGE_UNLOCKED, IMAGE_UNLOCKED_OVER,IMAGE_UNLOCKED,IMAGE_UNLOCKED,IMAGE_UNLOCKED)
+                    if graphics.status.infographic then
+                        graphics.button:SetTextures(ATLAS, IMAGE_INFOGRAPHIC_ON, IMAGE_INFOGRAPHIC_ON_OVER, IMAGE_INFOGRAPHIC_ON, IMAGE_INFOGRAPHIC_ON, IMAGE_INFOGRAPHIC_ON)
+                    else
+                        graphics.button:SetTextures(ATLAS, IMAGE_UNLOCKED, IMAGE_UNLOCKED_OVER, IMAGE_UNLOCKED, IMAGE_UNLOCKED, IMAGE_UNLOCKED)
+                    end
 				end
 
 				
 				if graphics.oldstatus and graphics.oldstatus.lock_open == nil then
 
-					graphics.button:SetTextures(ATLAS, IMAGE_LOCKED, IMAGE_LOCKED_OVER,IMAGE_LOCKED,IMAGE_LOCKED,IMAGE_LOCKED)
+                    if graphics.status.infographic then
+                        graphics.button:SetTextures(ATLAS, IMAGE_INFOGRAPHIC_OFF, IMAGE_INFOGRAPHIC_OFF_OVER, IMAGE_INFOGRAPHIC_OFF, IMAGE_INFOGRAPHIC_OFF, IMAGE_INFOGRAPHIC_OFF)
+                    else
+                        graphics.button:SetTextures(ATLAS, IMAGE_LOCKED, IMAGE_LOCKED_OVER, IMAGE_LOCKED, IMAGE_LOCKED, IMAGE_LOCKED)
+                    end
 					self.inst:DoTaskInTime(0.5, function()
 						TheFrontEnd:GetSound():PlaySound("wilson_rework/ui/unlock_gatedskill")
 						local pos = graphics.button:GetPosition()
@@ -494,7 +533,11 @@ function SkillTreeBuilder:RefreshTree(skillschanged)
 					    end)
 					end)
 					self.inst:DoTaskInTime(13/30, function()
-						graphics.button:SetTextures(ATLAS, IMAGE_UNLOCKED, IMAGE_UNLOCKED_OVER,IMAGE_UNLOCKED,IMAGE_UNLOCKED,IMAGE_UNLOCKED)
+                        if graphics.status.infographic then
+                            graphics.button:SetTextures(ATLAS, IMAGE_INFOGRAPHIC_ON, IMAGE_INFOGRAPHIC_ON_OVER, IMAGE_INFOGRAPHIC_ON, IMAGE_INFOGRAPHIC_ON, IMAGE_INFOGRAPHIC_ON)
+                        else
+                            graphics.button:SetTextures(ATLAS, IMAGE_UNLOCKED, IMAGE_UNLOCKED_OVER, IMAGE_UNLOCKED, IMAGE_UNLOCKED, IMAGE_UNLOCKED)
+                        end
 					end)
                     if graphics.button_decorations ~= nil then
                         if graphics.button_decorations.onunlocked ~= nil then
@@ -509,7 +552,11 @@ function SkillTreeBuilder:RefreshTree(skillschanged)
                     end
 				end
 			else
-				graphics.button:SetTextures(ATLAS, IMAGE_LOCKED, IMAGE_LOCKED_OVER,IMAGE_LOCKED,IMAGE_LOCKED,IMAGE_LOCKED)
+                if graphics.status.infographic then
+                    graphics.button:SetTextures(ATLAS, IMAGE_INFOGRAPHIC_OFF, IMAGE_INFOGRAPHIC_OFF_OVER, IMAGE_INFOGRAPHIC_OFF, IMAGE_INFOGRAPHIC_OFF, IMAGE_INFOGRAPHIC_OFF)
+                else
+                    graphics.button:SetTextures(ATLAS, IMAGE_LOCKED, IMAGE_LOCKED_OVER, IMAGE_LOCKED, IMAGE_LOCKED, IMAGE_LOCKED)
+                end
                 if graphics.button_decorations ~= nil then
                     if graphics.button_decorations.onlocked ~= nil then
                         graphics.button_decorations.onlocked(graphics.button, graphics.oldstatus == nil or graphics.oldstatus.lock_open == graphics.status.lock_open, self.fromfrontend)
@@ -518,7 +565,11 @@ function SkillTreeBuilder:RefreshTree(skillschanged)
 			end
 		elseif graphics.status.activated then
 			graphics.button:Show()
-			graphics.button:SetTextures(ATLAS, IMAGE_SELECTED, IMAGE_SELECTED_OVER,IMAGE_SELECTED,IMAGE_SELECTED,IMAGE_SELECTED)
+            if graphics.status.infographic then
+                graphics.button:SetTextures(ATLAS, IMAGE_INFOGRAPHIC, IMAGE_INFOGRAPHIC_OVER, IMAGE_INFOGRAPHIC, IMAGE_INFOGRAPHIC, IMAGE_INFOGRAPHIC)
+            else
+                graphics.button:SetTextures(ATLAS, IMAGE_SELECTED, IMAGE_SELECTED_OVER, IMAGE_SELECTED, IMAGE_SELECTED, IMAGE_SELECTED)
+            end
             if graphics.button_decorations ~= nil then
                 if graphics.button_decorations.onunlocked ~= nil then
                     graphics.button_decorations.onunlocked(graphics.button, true, self.fromfrontend)

@@ -770,21 +770,32 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_WARNING =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_USED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
 
     --walter specfic
+--fallback to speech_wilson.lua 	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
@@ -4043,12 +4054,11 @@ return{
 		SLINGSHOTAMMO_MOONGLASS = "This looks like a key ingredient for a slingshot.",
 		SLINGSHOTAMMO_GELBLOB = "This looks like a key ingredient for a slingshot.",
 		SLINGSHOTAMMO_SCRAPFEATHER = "This looks like a key ingredient for a slingshot.",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "This looks like a key ingredient for a slingshot.",
         SLINGSHOTAMMO_DREADSTONE = "This looks like a key ingredient for a slingshot.",
         SLINGSHOTAMMO_GUNPOWDER = "This looks like a key ingredient for a slingshot.",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "This looks like a key ingredient for a slingshot.",
         SLINGSHOTAMMO_PUREBRILLIANCE = "This looks like a key ingredient for a slingshot.",
-        SLINGSHOTAMMO_PUREHORROR = "This looks like a key ingredient for a slingshot.",
+        SLINGSHOTAMMO_HORRORFUEL = "This looks like a key ingredient for a slingshot.",
         PORTABLETENT = "It looks very cozy.",
         PORTABLETENT_ITEM = "All rolled up like a crepe.",
 
@@ -4081,6 +4091,7 @@ return{
 		GHOSTLYELIXIR_ATTACK = "I'm not sure about some of those ingredients, mademoiselle.",
 		GHOSTLYELIXIR_SPEED = "I'm not sure about some of those ingredients, mademoiselle.",
 		GHOSTLYELIXIR_RETALIATION = "I'm not sure about some of those ingredients, mademoiselle.",
+        GHOSTLYELIXIR_REVIVE = "I'm not sure about some of those ingredients, mademoiselle.",
 		SISTURN =
 		{
 			GENERIC = "Poor mademoiselle...",
@@ -5516,12 +5527,15 @@ return{
 		SLINGSHOT_BAND_MIMIC = "Young Walter is an artist with his slingshot.",
 		SLINGSHOT_FRAME_BONE = "Young Walter is an artist with his slingshot.",
 		SLINGSHOT_FRAME_GEMS = "Young Walter is an artist with his slingshot.",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "Young Walter is an artist with his slingshot.",
 		SLINGSHOT_FRAME_WAGPUNK = "Young Walter is an artist with his slingshot.",
 		SLINGSHOT_HANDLE_STICKY = "Young Walter is an artist with his slingshot.",
 		SLINGSHOT_HANDLE_SILK = "Young Walter is an artist with his slingshot.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Young Walter is an artist with his slingshot.",
 
         WOBY_BADGE_STATION = "She is a clever girl.",
+
+        ELIXIR_CONTAINER = "Maman loved... loves picnics.",
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

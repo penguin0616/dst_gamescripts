@@ -106,6 +106,9 @@ local function SpellFn(inst, target, pos, caster)
             end
             caster.wortox_ignoresoulcounts = nil
         end
+        if caster.SoundEmitter then
+            caster.SoundEmitter:PlaySound("meta5/wortox/twintailed_heart_release")
+        end
         caster.sg:GoToState("wortox_teleport_reviver_selfuse", { item = inst, })
     else
         -- Go to owner.
@@ -218,6 +221,7 @@ local function fn()
     inst.OnStartBody = OnStartBody
     inst.OnStopBody = OnStopBody
     inst.OnConsume = OnConsume
+    inst.crushitemcast_sound = "meta5/wortox/ttheart_in_f18"
 
     local inventoryitem = inst:AddComponent("inventoryitem")
     inventoryitem:SetOnPutInInventoryFn(OnPutInInventory)

@@ -770,21 +770,32 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_WARNING =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_USED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
 
     --walter specfic
+--fallback to speech_wilson.lua 	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
@@ -4043,12 +4054,11 @@ return{
 		SLINGSHOTAMMO_MOONGLASS = "Do you want us to help clean up?",
 		SLINGSHOTAMMO_GELBLOB = "Do you want us to help clean up?",
 		SLINGSHOTAMMO_SCRAPFEATHER = "Do you want us to help clean up?",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "Do you want us to help clean up?",
         SLINGSHOTAMMO_DREADSTONE = "Do you want us to help clean up?",
         SLINGSHOTAMMO_GUNPOWDER = "Do you want us to help clean up?",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "Do you want us to help clean up?",
         SLINGSHOTAMMO_PUREBRILLIANCE = "Do you want us to help clean up?",
-        SLINGSHOTAMMO_PUREHORROR = "Do you want us to help clean up?",
+        SLINGSHOTAMMO_HORRORFUEL = "Do you want us to help clean up?",
         PORTABLETENT = "Yay, we're camping!",
         PORTABLETENT_ITEM = "Let us help!",
 
@@ -4081,6 +4091,7 @@ return{
 		GHOSTLYELIXIR_ATTACK = "Hey, you didn't tell me you were making crafts!",
 		GHOSTLYELIXIR_SPEED = "Hey, you didn't tell me you were making crafts!",
 		GHOSTLYELIXIR_RETALIATION = "Hey, you didn't tell me you were making crafts!",
+        GHOSTLYELIXIR_REVIVE = "Hey, you didn't tell me you were making crafts!",
 		SISTURN =
 		{
 			GENERIC = "It's a little Abigail house!",
@@ -5516,12 +5527,15 @@ return{
 		SLINGSHOT_BAND_MIMIC = "Walter has the best toys.",
 		SLINGSHOT_FRAME_BONE = "Walter has the best toys.",
 		SLINGSHOT_FRAME_GEMS = "Walter has the best toys.",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "Walter has the best toys.",
 		SLINGSHOT_FRAME_WAGPUNK = "Walter has the best toys.",
 		SLINGSHOT_HANDLE_STICKY = "Walter has the best toys.",
 		SLINGSHOT_HANDLE_SILK = "Walter has the best toys.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Walter has the best toys.",
 
         WOBY_BADGE_STATION = "Good girl, Woby!",
+
+        ELIXIR_CONTAINER = "Will Abigail mind if we try some?",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

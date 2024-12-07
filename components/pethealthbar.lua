@@ -2,6 +2,10 @@ local function OnSymbolDirty(inst)
     inst:PushEvent("clientpethealthsymboldirty", { symbol = inst.components.pethealthbar:GetSymbol() })
 end
 
+local function OnSymbolDirty2(inst)
+    inst:PushEvent("clientpethealthsymboldirty", { symbol2 = inst.components.pethealthbar:GetSymbol2() })
+end
+
 local function OnStatusDirty(inst)
     inst:PushEvent("clientpethealthstatusdirty")
 end
@@ -39,12 +43,12 @@ local function OnHealthDelta(inst, data)
         self._healthpct:set(data.newpercent)
 
         if self._maxbonus:value() <= 0 then -- if there is _maxbonus, it's handled in OnBonusChange
-    		if not data.overtime and data.oldpercent ~= nil then
-    			self._pulse:set_local(0)
-    			self._pulse:set(data.oldpercent < data.newpercent and 1 or 2)
-    		end
+            if not data.overtime and data.oldpercent ~= nil then
+                self._pulse:set_local(0)
+                self._pulse:set(data.oldpercent < data.newpercent and 1 or 2)
+            end
         end
-        
+
         OnHealthPctDirty(inst)
     end
 
@@ -80,6 +84,7 @@ local PetHealthBar = Class(function(self, inst)
     self.ismastersim = TheWorld.ismastersim
 
     self._symbol = net_hash(inst.GUID, "pethealthbar._symbol", "pethealthsymboldirty")
+    self._symbol2 = net_hash(inst.GUID, "pethealthbar._symbol2", "pethealthsymbol2dirty")
     self._status = net_tinybyte(inst.GUID, "pethealthbar._status", "pethealthstatusdirty") -- [0-4] for over time
     self._maxhealth = net_ushortint(inst.GUID, "pethealthbar._maxhealth", "pethealthmaxdirty")
     self._pulse = net_tinybyte(inst.GUID, "pethealthbar._pulse", "pethealthpulsedirty") -- 1 = green, 2 = red -- Note: This is hooked up like a net_event
@@ -162,6 +167,10 @@ function PetHealthBar:GetSymbol()
     return self._symbol:value()
 end
 
+function PetHealthBar:GetSymbol2()
+    return self._symbol2:value()
+end
+
 function PetHealthBar:GetMaxHealth()
     return self._maxhealth:value()
 end
@@ -210,6 +219,13 @@ function PetHealthBar:SetSymbol(symbol)
     if self.ismastersim and self._symbol:value() ~= symbol then
         self._symbol:set(symbol)
         OnSymbolDirty(self.inst)
+    end
+end
+
+function PetHealthBar:SetSymbol2(symbol)
+    if self.ismastersim and self._symbol2:value() ~= symbol then
+        self._symbol2:set(symbol)
+        OnSymbolDirty2(self.inst)
     end
 end
 
@@ -283,7 +299,7 @@ function PetHealthBar:SetPet(pet, symbol, maxhealth)
         self.inst:ListenForEvent("starthealthregen", self._onstarthealthregen, pet)
         self.inst:ListenForEvent("startsmallhealthregen", self._onstartsmallhealthregen, pet)
 
-        self.inst:ListenForEvent("pethealthbar_bonuschange",    self._onsetbonuschange, pet)        
+        self.inst:ListenForEvent("pethealthbar_bonuschange",    self._onsetbonuschange, pet)
 
         self.task = self.inst:DoTaskInTime(0, InitPet, self, pet)
 

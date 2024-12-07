@@ -31,20 +31,21 @@ local ORDERS = { -- Title positions.
 local function OnTimerDone(inst, data)
     if data then
         if data.name == "wortox_panflute_playing" then
-            if inst.components.inventory and inst.components.inventory:Has("panflute", 1, true) then
-                inst:AddDebuff("wortox_panflute_buff", "wortox_panflute_buff")
-            end
-            inst.components.timer:StartTimer("wortox_panflute_playing", GetRandomWithVariance(TUNING.SKILLS.WORTOX.WORTOX_PANFLUTE_INSPIRATION_WAIT, TUNING.SKILLS.WORTOX.WORTOX_PANFLUTE_INSPIRATION_WAIT_VARIANCE))
+            inst:AddDebuff("wortox_panflute_buff", "wortox_panflute_buff")
         end
     end
 end
 
 local function OnDeath(inst, data)
-    inst.components.timer:PauseTimer("wortox_panflute_playing")
+    if inst.components.timer:TimerExists("wortox_panflute_playing") then
+        inst.components.timer:PauseTimer("wortox_panflute_playing")
+    end
 end
 
 local function OnRespawnedFromGhost(inst, data)
-    inst.components.timer:ResumeTimer("wortox_panflute_playing")
+    if inst.components.timer:TimerExists("wortox_panflute_playing") then
+        inst.components.timer:ResumeTimer("wortox_panflute_playing")
+    end
 end
 
 local function UpdateSoulJars(item)
@@ -96,7 +97,7 @@ local function UpdateNabBags(inst)
     end
 end
 
-local CUSTOMFUNCTION;CUSTOM_FUNCTIONS = {
+local CUSTOM_FUNCTIONS;CUSTOM_FUNCTIONS = {
     CalculateInclination = function(nice, naughty)
         if math.abs(nice - naughty) >= TUNING.SKILLS.WORTOX.TIPPED_BALANCE_THRESHOLD then
             if nice > naughty then
@@ -157,6 +158,32 @@ local CUSTOMFUNCTION;CUSTOM_FUNCTIONS = {
         end
         resistance:SetShouldResistFn(CUSTOM_FUNCTIONS.ShouldResistFn)
         resistance:SetOnResistDamageFn(CUSTOM_FUNCTIONS.OnResistDamage)
+    end,
+    TryResetPanfluteTimer = function(inst)
+        if inst.components.skilltreeupdater and inst.components.skilltreeupdater:IsActivated("wortox_panflute_playing") then
+            if not inst.components.timer:TimerExists("wortox_panflute_playing") then
+                inst.components.timer:StartTimer("wortox_panflute_playing", GetRandomWithVariance(TUNING.SKILLS.WORTOX.WORTOX_PANFLUTE_INSPIRATION_WAIT, TUNING.SKILLS.WORTOX.WORTOX_PANFLUTE_INSPIRATION_WAIT_VARIANCE))
+            end
+            if inst.components.health:IsDead() then
+                inst.components.timer:PauseTimer("wortox_panflute_playing")
+            end
+        end
+    end,
+    TryPanfluteTimerSetup = function(inst)
+        if inst.wortox_needstreeinit then
+            return
+        end
+        if inst.components.skilltreeupdater and inst.components.skilltreeupdater:IsActivated("wortox_panflute_playing") then
+            if not inst.components.timer:TimerExists("wortox_panflute_playing") and not inst:HasDebuff("wortox_panflute_buff") then
+                inst.components.timer:StartTimer("wortox_panflute_playing", GetRandomWithVariance(TUNING.SKILLS.WORTOX.WORTOX_PANFLUTE_INSPIRATION_WAIT, TUNING.SKILLS.WORTOX.WORTOX_PANFLUTE_INSPIRATION_WAIT_VARIANCE))
+            end
+            if inst.components.health:IsDead() then
+                inst.components.timer:PauseTimer("wortox_panflute_playing")
+            end
+            inst:ListenForEvent("timerdone", OnTimerDone)
+            inst:ListenForEvent("death", OnDeath)
+            inst:ListenForEvent("ms_respawnedfromghost", OnRespawnedFromGhost)
+        end
     end,
 }
 
@@ -228,7 +255,6 @@ local function BuildSkillsData(SkillTreeFns)
                     xppos.x = 0
                     root.parent.tree.root.xp:SetPosition(xppos:Get())
 
-                    button.clickoffset = Vector3(0, 0, 0)
                     local tokenlayer = button:AddChild(Widget())
                     button.tokenlayer = tokenlayer
 
@@ -289,10 +315,13 @@ local function BuildSkillsData(SkillTreeFns)
             },
         },
         wortox_inclination_nice = {
+            title = STRINGS.SKILLTREE.WORTOX.WORTOX_INCLINATION_NICE_TITLE,
             desc = STRINGS.SKILLTREE.WORTOX.WORTOX_INCLINATION_NICE_DESC,
+            icon = "wortox_inclination_nice",
             pos = {ORIGIN_SCALES_X - HAND_BAR_LENGTH - LOCK_SPACER, ORIGIN_SCALES_Y + HAND_BAR_HEIGHT + LOCK_SPACER * 0.25},
             group = "neutral",
             tags = {"lock"},
+            infographic = true,
             root = true,
             forced_focus = {
                 right = "wortox_inclination_meter",
@@ -304,10 +333,13 @@ local function BuildSkillsData(SkillTreeFns)
             end,
         },
         wortox_inclination_naughty = {
+            title = STRINGS.SKILLTREE.WORTOX.WORTOX_INCLINATION_NAUGHTY_TITLE,
             desc = STRINGS.SKILLTREE.WORTOX.WORTOX_INCLINATION_NAUGHTY_DESC,
+            icon = "wortox_inclination_naughty",
             pos = {ORIGIN_SCALES_X + HAND_BAR_LENGTH + LOCK_SPACER, ORIGIN_SCALES_Y + HAND_BAR_HEIGHT + LOCK_SPACER * 0.25},
             group = "neutral",
             tags = {"lock"},
+            infographic = true,
             root = true,
             forced_focus = {
                 left = "wortox_inclination_meter",
@@ -512,19 +544,11 @@ local function BuildSkillsData(SkillTreeFns)
             tags = {"neutral"},
             root = true,
             connects = {
-                "wortox_panflute_duration",
+                "wortox_panflute_soulcaller",
                 "wortox_panflute_forget",
             },
             onactivate = function(inst)
-                if not inst.components.timer:TimerExists("wortox_panflute_playing") then
-                    inst.components.timer:StartTimer("wortox_panflute_playing", GetRandomWithVariance(TUNING.SKILLS.WORTOX.WORTOX_PANFLUTE_INSPIRATION_WAIT, TUNING.SKILLS.WORTOX.WORTOX_PANFLUTE_INSPIRATION_WAIT_VARIANCE))
-                end
-                if inst.components.health:IsDead() then
-                    inst.components.timer:PauseTimer("wortox_panflute_playing")
-                end
-                inst:ListenForEvent("timerdone", OnTimerDone)
-                inst:ListenForEvent("death", OnDeath)
-                inst:ListenForEvent("ms_respawnedfromghost", OnRespawnedFromGhost)
+                CUSTOM_FUNCTIONS.TryPanfluteTimerSetup(inst)
             end,
             ondeactivate = function(inst)
                 inst.components.timer:StopTimer("wortox_panflute_playing")
@@ -534,10 +558,10 @@ local function BuildSkillsData(SkillTreeFns)
                 inst:RemoveEventCallback("ms_respawnedfromghost", OnRespawnedFromGhost)
             end,
         },
-        wortox_panflute_duration = {
-            title = STRINGS.SKILLTREE.WORTOX.WORTOX_PANFLUTE_DURATION_TITLE,
-            desc = STRINGS.SKILLTREE.WORTOX.WORTOX_PANFLUTE_DURATION_DESC,
-            icon = "wortox_panflute_duration",
+        wortox_panflute_soulcaller = {
+            title = STRINGS.SKILLTREE.WORTOX.WORTOX_PANFLUTE_SOULCALLER_TITLE,
+            desc = STRINGS.SKILLTREE.WORTOX.WORTOX_PANFLUTE_SOULCALLER_DESC,
+            icon = "wortox_panflute_soulcaller",
             pos = {ORIGIN_NEUTRAL_X - SPACER * 1.25, ORIGIN_NEUTRAL_Y},
             group = "neutral",
             tags = {"neutral"},

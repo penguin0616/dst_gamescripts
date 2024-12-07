@@ -367,8 +367,8 @@ ACTIONS =
     MAKEBALLOON = Action({ mount_valid=true }),
     CASTSPELL = Action({ priority=-1, rmb=true, distance=20, mount_valid=true }),
 	CAST_POCKETWATCH = Action({ priority=-1, rmb=true, mount_valid=true }), -- to actually use the mounted action, the pocket watch will need the pocketwatch_mountedcast tag
-    BLINK = Action({ priority=HIGH_ACTION_PRIORITY, rmb=true, distance=36, mount_valid=true }),
-    BLINK_MAP = Action({ priority=HIGH_ACTION_PRIORITY, customarrivecheck=ArriveAnywhere, rmb=true, mount_valid=true, map_action=true, }),
+    BLINK = Action({ priority=HIGH_ACTION_PRIORITY, rmb=true, distance=36, mount_valid=true, encumbered_valid=true }),
+    BLINK_MAP = Action({ priority=HIGH_ACTION_PRIORITY, customarrivecheck=ArriveAnywhere, rmb=true, mount_valid=true, encumbered_valid=true, map_action=true, }),
     COMBINESTACK = Action({ mount_valid=true, extra_arrive_dist=ExtraPickupRange }),
 	TOGGLE_DEPLOY_MODE = Action({ priority=HIGH_ACTION_PRIORITY, instant=true, mount_valid=true }),
     SUMMONGUARDIAN = Action({ rmb=false, distance=5 }),
@@ -1257,12 +1257,20 @@ ACTIONS.CHANGE_TACKLE.fn = function(act)
 				act.doer.components.inventory:GiveItem(item, nil, act.doer:GetPosition())
 			else
 				--nothing got moved, so lets swap with the first slot
-				local old_item = equipped.components.container:RemoveItemBySlot(1)
-				if not equipped.components.container:GiveItem(item, 1, nil, false) then
+				local old_item = equipped.components.container:GetItemInSlot(1)
+				if old_item.components.stackable and old_item.components.stackable:IsOverStacked() then
 					act.doer.components.inventory:GiveItem(item, nil, act.doer:GetPosition())
-				end
-				if old_item then
-					act.doer.components.inventory:GiveItem(old_item, nil, act.doer:GetPosition())
+					if equipped:HasTag("slingshot") then
+						act.doer.components.talker:Say(GetString(act.doer, "ANNOUNCE_AMMO_SLOT_OVERSTACKED"))
+					end
+				else
+					old_item = equipped.components.container:RemoveItemBySlot(1)
+					if not equipped.components.container:GiveItem(item, 1, nil, false) then
+						act.doer.components.inventory:GiveItem(item, nil, act.doer:GetPosition())
+					end
+					if old_item then
+						act.doer.components.inventory:GiveItem(old_item, nil, act.doer:GetPosition())
+					end
 				end
 			end
 		end
@@ -3072,7 +3080,7 @@ ACTIONS.BLINK.fn = function(act)
         if act.invobject.components.blinkstaff ~= nil then
             return act.invobject.components.blinkstaff:Blink(act_pos, act.doer)
         end
-    elseif TryToSoulhop(act, act_pos) then
+    elseif TryToSoulhop(act, act_pos, act.doer.components.inventory and act.doer.components.inventory:IsHeavyLifting() or false) then
         act.doer.sg:GoToState("portal_jumpin", {dest = act_pos,})
         return true
     end
@@ -3145,8 +3153,9 @@ ACTIONS_MAP_REMAP[ACTIONS.BLINK.code] = function(act, targetpos)
             seeabletilepercent = doer:GetSeeableTilePercent()
         end
     end
+    local heavylifting_mod = act.doer.replica.inventory and act.doer.replica.inventory:IsHeavyLifting() and TUNING.WORTOX_SOULHOP_HEAVYLIFTING_EFFICIENCY or 1
     local dist_perhop_mod = ((TUNING.SKILLS.WORTOX.MAPHOP_DISTANCE_SCALER_MAX - TUNING.WORTOX_MAPHOP_DISTANCE_SCALER) * seeabletilepercent + TUNING.WORTOX_MAPHOP_DISTANCE_SCALER)
-    local hopspersoul = TUNING.WORTOX_FREEHOP_HOPSPERSOUL
+    local hopspersoul = TUNING.WORTOX_FREEHOP_HOPSPERSOUL * heavylifting_mod
     local dist_perhop = act.distance * dist_perhop_mod * hopspersoul -- NOTES(JBK): Do not adjust by GetHopsPerSoul here because it is two multipliers for the same effect.
     local dist_mod = math.min((doer._freesoulhop_counter or 0), hopspersoul) * act.distance -- Adds to the total distance based off of the counter to remove distance able to be done from the hop do not include map gains here.
     local dist_souls = (dist + dist_mod) / dist_perhop

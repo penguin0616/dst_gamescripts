@@ -29,7 +29,7 @@ local function UpdateStats(inst, percent, souls)
         local damage = (maxdamage - mindamage) * percent + mindamage
         if owner and owner.components.skilltreeupdater and owner.components.skilltreeupdater:IsActivated("wortox_souljar_3") then
             local souls_max = TUNING.SKILLS.WORTOX.SOUL_DAMAGE_MAX_SOULS
-            local damage_percent = math.min(owner.soulcount or 0, souls_max) / souls_max
+            local damage_percent = math.min(souls, souls_max) / souls_max
             damage = damage * (1 + (TUNING.SKILLS.WORTOX.SOUL_DAMAGE_NABBAG_BONUS_MULT - 1) * damage_percent)
         end
         inst.components.weapon:SetDamage(damage)

@@ -2016,7 +2016,7 @@ function EntityScript:GetDebuff(name)
         or nil
 end
 
-function EntityScript:AddDebuff(name, prefab, data, skip_test, pre_buff_fn)
+function EntityScript:AddDebuff(name, prefab, data, skip_test, pre_buff_fn, buffer)
     if self.components.debuffable == nil then
         self:AddComponent("debuffable")
     end
@@ -2025,7 +2025,7 @@ function EntityScript:AddDebuff(name, prefab, data, skip_test, pre_buff_fn)
         if pre_buff_fn then
             pre_buff_fn()
         end
-        self.components.debuffable:AddDebuff(name, prefab, data)
+        self.components.debuffable:AddDebuff(name, prefab, data, buffer)
         return true
     end
 

@@ -147,28 +147,6 @@ local function RethrowProjectile(inst, speed, soulthiefreceiver)
     end
 end
 
-local function SoulSpearTest(inst, ent, owner)
-    if ent == owner or owner.components.combat == nil then
-        return false
-    end
-
-    if ent.components.health and ent.components.health:IsDead() then
-        return false
-    end
-
-    if ent:HasTag("player") and not TheNet:GetPVPEnabled() then
-        return false
-    end
-
-    if owner.components.combat:TargetHasFriendlyLeader(ent) or not owner.components.combat:CanTarget(ent) then
-        return false
-    end
-
-    -- FIXME(JBK): Did I miss something? Bug report it!
-
-    return wortox_soul_common.HasSoul(ent)
-end
-
 local COMBAT_MUSTHAVE_TAGS = { "_combat", "_health" }
 local COMBAT_CANTHAVE_TAGS = { "INLIMBO", "soul", "noauradamage", "companion" }
 local function SoulSpearTick(inst, owner)
@@ -204,7 +182,7 @@ local function SoulSpearTick(inst, owner)
             local dx, dz = x2 - x, z2 - z
             local dsq = dx * dx + dz * dz
             local dr = r2 + r
-            if dsq < dr * dr and inst:SoulSpearTest(ent, owner) then
+            if dsq < dr * dr and wortox_soul_common.SoulDamageTest(inst, ent, owner) then
                 local damagetoent = damage
                 local explosiveresist = ent.components.explosiveresist
                 if explosiveresist then
@@ -391,7 +369,6 @@ local function fn()
         return inst
     end
 
-    inst.SoulSpearTest = SoulSpearTest
     inst.SoulSpearTick = SoulSpearTick
 
     inst.AnimState:PushAnimation("idle_loop", true)

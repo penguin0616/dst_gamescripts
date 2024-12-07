@@ -777,21 +777,32 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_WARNING =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_USED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
 
     --walter specfic
+--fallback to speech_wilson.lua 	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
@@ -4050,12 +4061,11 @@ return{
 		SLINGSHOTAMMO_MOONGLASS = "Ever considered making your ammo a little more flammable?",
 		SLINGSHOTAMMO_GELBLOB = "Ever considered making your ammo a little more flammable?",
 		SLINGSHOTAMMO_SCRAPFEATHER = "Ever considered making your ammo a little more flammable?",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "Ever considered making your ammo a little more flammable?",
         SLINGSHOTAMMO_DREADSTONE = "Ever considered making your ammo a little more flammable?",
         SLINGSHOTAMMO_GUNPOWDER = "Oh yeah. That's the stuff.",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "Ever considered making your ammo a little more flammable?",
         SLINGSHOTAMMO_PUREBRILLIANCE = "Ever considered making your ammo a little more flammable?",
-        SLINGSHOTAMMO_PUREHORROR = "Ever considered making your ammo a little more flammable?",
+        SLINGSHOTAMMO_HORRORFUEL = "Ever considered making your ammo a little more flammable?",
         PORTABLETENT = "I call dibs on the tent!",
         PORTABLETENT_ITEM = "I was never any good at setting these things up.",
 
@@ -4088,6 +4098,7 @@ return{
 		GHOSTLYELIXIR_ATTACK = "Someone should probably check if it's flammable. I volunteer!",
 		GHOSTLYELIXIR_SPEED = "Someone should probably check if it's flammable. I volunteer!",
 		GHOSTLYELIXIR_RETALIATION = "Someone should probably check if it's flammable. I volunteer!",
+        GHOSTLYELIXIR_REVIVE = "Someone should probably check if it's flammable. I volunteer!",
 		SISTURN =
 		{
 			GENERIC = "A pyre would've been more fun.",
@@ -5523,12 +5534,15 @@ return{
 		SLINGSHOT_BAND_MIMIC = "That kid loves slinging almost as much as I love burning.",
 		SLINGSHOT_FRAME_BONE = "That kid loves slinging almost as much as I love burning.",
 		SLINGSHOT_FRAME_GEMS = "That kid loves slinging almost as much as I love burning.",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "That kid loves slinging almost as much as I love burning.",
 		SLINGSHOT_FRAME_WAGPUNK = "That kid loves slinging almost as much as I love burning.",
 		SLINGSHOT_HANDLE_STICKY = "That kid loves slinging almost as much as I love burning.",
 		SLINGSHOT_HANDLE_SILK = "That kid loves slinging almost as much as I love burning.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "That kid loves slinging almost as much as I love burning.",
 
-        WOBY_BADGE_STATION = "Big deal, Bernie doesn't care about badges.",
+        WOBY_BADGE_STATION = "Big deal. Bernie doesn't care about badges.",
+
+        ELIXIR_CONTAINER = "Wonder what she's got sloshing around in there.",
     },
 
     DESCRIBE_GENERIC = "I have no idea what that is!",

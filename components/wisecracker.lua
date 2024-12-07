@@ -271,12 +271,19 @@ local Wisecracker = Class(function(self, inst)
             end
         end)
 
+        inst:ListenForEvent("souloverloadwarning", function(inst)
+            inst.components.talker:Say(GetString(inst, "ANNOUNCE_SOUL_OVERLOAD_WARNING"))
+        end)
+        inst:ListenForEvent("souloverloadavoided", function(inst)
+            inst.components.talker:Say(GetString(inst, "ANNOUNCE_SOUL_OVERLOAD_AVOIDED"))
+        end)
+
         inst:ListenForEvent("wortox_panflute_playing_active", function(inst)
             inst.components.talker:Say(GetString(inst, "ANNOUNCE_PANFLUTE_BUFF_ACTIVE"))
         end)
 
-        inst:ListenForEvent("wortox_panflute_playing_expired", function(inst)
-            inst.components.talker:Say(GetString(inst, "ANNOUNCE_PANFLUTE_BUFF_EXPIRED"))
+        inst:ListenForEvent("wortox_panflute_playing_used", function(inst)
+            inst.components.talker:Say(GetString(inst, "ANNOUNCE_PANFLUTE_BUFF_USED"))
         end)
     end
 

@@ -125,12 +125,49 @@ end
 -- WENDY DECORATED GRAVE GUARD GHOST
 local guardbrain = require "brains/graveguard_ghostbrain"
 
-local function GuardAuraTest(inst, target)
-    if inst.components.combat:TargetIs(target) or (target.components.combat.target ~= nil and target.components.combat:TargetIs(inst)) then
+local GUARD_AURA_SAFE_TAGS = {"abigail", "ghostlyfriend"}
+local GUARD_AURA_UNSAFE_TAGS = {"hostile", "monster"}
+local function target_test(inst, target, pvp_enabled)
+    if inst.components.combat:TargetIs(target) then
         return true
-    else
-        return not target:HasAnyTag(GHOSTLYFRIEND_AURA_SAFE_TAGS)
     end
+
+    if pvp_enabled == nil then pvp_enabled = TheNet:GetPVPEnabled() end
+
+    -- If a character is ghost-friendly OR a player (with pvp off), don't immediately target them, unless they're targeting us.
+    -- Actively target anybody else.
+    if (target.isplayer and not pvp_enabled) or target:HasAnyTag(GUARD_AURA_SAFE_TAGS) then
+        return false
+    end
+
+    local target_combat = target.components.combat
+    if not target_combat then
+        return false
+    end
+
+    local target_combat_target = target_combat.target
+    if not target_combat_target then
+        return false
+    end
+
+    if target_combat_target == inst or (target_combat_target.isplayer and not pvp_enabled) then
+        return true
+    end
+
+    local target_combat_target_leader = (target_combat_target.components.follower ~= nil
+        and target_combat_target.components.follower.leader) or nil
+    if target_combat_target_leader then
+        if (target_combat_target_leader.isplayer and not pvp_enabled) or target_combat_target_leader:HasAnyTag(GUARD_AURA_SAFE_TAGS) then
+            return false
+        end
+    end
+
+    return target:HasAnyTag(GUARD_AURA_UNSAFE_TAGS) and not target:HasAnyTag(GUARD_AURA_SAFE_TAGS)
+end
+
+local TARGET_ONEOF_TAGS = { "character", "hostile", "monster", "smallcreature" }
+local function GuardAuraTest(inst, target)
+    return target:HasAnyTag(TARGET_ONEOF_TAGS) and target_test(inst, target)
 end
 
 local function GuardKeepTargetFn(inst, target)
@@ -180,10 +217,8 @@ local function graveguard_fn()
     inst.Light:Enable(true)
     inst.Light:SetColour(180/255, 195/255, 225/255)
 
-    inst:AddTag("monster")
-    inst:AddTag("hostile")
-    inst:AddTag("ghost")
     inst:AddTag("flying")
+    inst:AddTag("ghost")
     inst:AddTag("noauradamage")
 
     --trader (from trader component) added to pristine state for optimization
@@ -195,6 +230,8 @@ local function graveguard_fn()
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst._target_test = target_test
 
     --
     local aura = inst:AddComponent("aura")

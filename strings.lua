@@ -3266,12 +3266,11 @@ STRINGS =
         SLINGSHOTAMMO_MOONGLASS = "Moon Glass Rounds",
 		SLINGSHOTAMMO_GELBLOB = "Icky Rounds",
 		SLINGSHOTAMMO_SCRAPFEATHER = "Shockscrap Rounds",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "Infused Moon Glass Rounds",
         SLINGSHOTAMMO_DREADSTONE = "Dreadstone Rounds",
         SLINGSHOTAMMO_GUNPOWDER = "Gunpowder Rounds",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "Brightshade Husk Rounds",
-        SLINGSHOTAMMO_PUREBRILIANCE = "Pure Brilliance Rounds",
-        SLINGSHOTAMMO_PUREHORROR = "Pure Horror Rounds",
+        SLINGSHOTAMMO_PUREBRILLIANCE = "Pure Brilliance Rounds",
+        SLINGSHOTAMMO_HORRORFUEL = "Pure Horror Rounds",
         PORTABLETENT_ITEM = "Tent Roll",
         PORTABLETENT = "Camper's Tent",
 
@@ -3363,6 +3362,7 @@ STRINGS =
 		GHOSTLYELIXIR_ATTACK = "Nightshade Nostrum",
 		GHOSTLYELIXIR_SPEED = "Vigor Mortis",
 		GHOSTLYELIXIR_RETALIATION = "Distilled Vengeance",
+        GHOSTLYELIXIR_REVIVE = "Ghastly Experience",
 		SISTURN = "Sisturn",
 
         -- SSSS
@@ -4167,6 +4167,7 @@ STRINGS =
         PUMPKINCARVER3 = "Pumpkin Saw",
 
         -- Meta 5
+
         GHOSTLYELIXIR_LUNAR = "Luminous Wrath",
         GHOSTLYELIXIR_SHADOW = "Cursed Vexation",
         ARMOR_FLOWERDRESS = "Floral Shroud",
@@ -4179,12 +4180,18 @@ STRINGS =
 		SLINGSHOT_BAND_MIMIC = "Possessed Slingshot Band",
 		SLINGSHOT_FRAME_BONE = "Bony Slingshot Frame",
 		SLINGSHOT_FRAME_GEMS = "Thulecite Slingshot Frame",
-		SLINGSHOT_FRAME_WAGPUNK = "Scrappy Slingshot Frame",
-		SLINGSHOT_HANDLE_STICKY = "Slingshot Sticky Handle",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "Scrappy Slingshot Frame",
+		SLINGSHOT_FRAME_WAGPUNK = "Scrappier Slingshot Frame",
+		SLINGSHOT_HANDLE_STICKY = "Slingshot Sticky Grip",
 		SLINGSHOT_HANDLE_SILK = "Slingshot Grip Tape",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Slingshot Void Grip",
 
-        WOBY_BADGE_STATION = "Woby Training Station",        
+        WOBY_BADGE_STATION = "Woby Training Station",
+        ELIXIR_CONTAINER = "Picnic Casket",
+
+        -- For PVP!
+        SLINGSHOTAMMO_HORRORFUEL_DEBUFF_FX = "Horror Shadow Curse", -- TODO
+        SLINGSHOTAMMO_PUREBRILLIANCE_DEBUFF = "Brilliance Mark", -- TODO
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -4836,6 +4843,7 @@ STRINGS =
 		GHOSTLYELIXIR_ATTACK = "Call upon the power of darkness.",
 		GHOSTLYELIXIR_SPEED = "Give your soul a little boo-st.",
 		GHOSTLYELIXIR_RETALIATION = "Give foes a taste of their own medicine.",
+        GHOSTLYELIXIR_REVIVE = "Reminds Abigail of all she can be.",
 		SISTURN = "A place to rest your weary soul.",
         PETALS = "Purify your petals.",
         PETALS_EVIL = "Stain your petals.",
@@ -4855,12 +4863,11 @@ STRINGS =
         SLINGSHOTAMMO_MOONGLASS = "Shatter expectations.",
 		SLINGSHOTAMMO_GELBLOB = "Sticky and icky!",
         SLINGSHOTAMMO_SCRAPFEATHER = "Shockingly shocking!",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "", --[[TODO]]
         SLINGSHOTAMMO_DREADSTONE = "Dreadfully strong.",
         SLINGSHOTAMMO_GUNPOWDER = "Explode onto the scene!",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "Ensnare your enemies.",
-        SLINGSHOTAMMO_PUREBRILIANCE = "You'll be over the Moon with these.",
-        SLINGSHOTAMMO_PUREHORROR = "Reinforcements against dark forces.",
+        SLINGSHOTAMMO_PUREBRILLIANCE = "You'll be over the Moon with these.",
+        SLINGSHOTAMMO_HORRORFUEL = "Reinforcements against dark forces.",
         PORTABLETENT = "Portable protection from the elements.",
         PORTABLETENT_ITEM = "Portable protection from the elements.",
 
@@ -5278,6 +5285,7 @@ STRINGS =
 		SLINGSHOT_BAND_TENTACLE = "Sling farther-er!",
 		SLINGSHOT_FRAME_BONE = "More ammo? Yes please!",
 		SLINGSHOT_FRAME_GEMS = "A little bit of this, and a little bit of that!",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "Ya think you're some sorta big shot now, huh?",
 		SLINGSHOT_FRAME_WAGPUNK = "Embrace your ammo hoarding tendencies!",
 		SLINGSHOT_HANDLE_STICKY = "Get attached to your slingshot.",
 		SLINGSHOT_HANDLE_SILK = "Sling faster!",
@@ -5286,6 +5294,7 @@ STRINGS =
         WORTOX_REVIVER = "Soul revival of a single ghostly friend. May bring others closer.",
         WORTOX_NABBAG = "Stuff it and swing it!",
         WORTOX_SOULJAR = "Why let them be free when you can stuff them all into a jar?",
+        ELIXIR_CONTAINER = "For carrying all of Abigail's snacks.",
     },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
@@ -6559,20 +6568,6 @@ STRINGS =
         "\"This world could not hold me.\"",
         "\"I didn't like it here anyway.\"",
         "\"I've better places to be.\"",
-    },
-
-    -- Lines for Wendy grave quests
-    WENDY_QUEST_EPITAPHS =
-    {
-        AXE = "\"Here lies a guy that needed an axe.\"",
-        PICKAXE = "\"Here lies a guy that needed a pickaxe.\"",
-        TRAP = "\"Here lies someone that needed to trap more food.\"",
-        TORCH = "\"Here lies a lady that needed more light.\"",
-        COOKBOOK = "\"Here lies someone that should have known more recipes.\"",
-        OCEANFISHINGROD = "\"Here lies someone that was never taught to fish.\"",
-        FARM_PLOW_ITEM = "\"Here lies someone that was never taught to farm.\"",
-        WINTERHAT = "\"He died of cold ears.\"",
-        BOOMERANG = "\"She died when her weapon failed to come back.\"",
     },
 
     MESSAGEBOTTLE_NOTES =
@@ -14657,6 +14652,7 @@ STRINGS.SIGNS =
         FILTERING = "Validating Message...",
 
 		PROMPT_BEEFALO = "Name This Beef",
+        PROMPT_GRAVESTONE = "Write An Epitaph",
     },
 
     ADJ_NOUN_FMT = "{adjective} {noun}",
@@ -15143,6 +15139,14 @@ STRINGS.ENGINEER_REMOTE = {
 	ELEMENTAL_VOLLEY = "Planar Strike",
 }
 
+STRINGS.GHOSTCOMMANDS = {
+    UNSUMMON = "Unsummon",
+    ESCAPE = "Escape",
+    ATTACK_AT = "Attack At",
+    HAUNT_AT = "Haunt At",
+    SCARE = "Scare",
+}
+
 STRINGS.SKILLTREE = {
     INFOPANEL = "Outfit",
     INFOPANEL_DESC = "Become a seasoned survivor!",
@@ -15185,8 +15189,8 @@ STRINGS.SKILLTREE = {
         NAUGHTY = "NAUGHTY",
 
         WOBYBADGES = "WOBY TRAINING",
-        SLINGSHOTAMMO = "PROJECTILE PRO",
-        SLINGSHOTMODS = "SLINGSHOTSMITH",
+        SLINGSHOTAMMO = "AMMO",
+        SLINGSHOTMODS = "CUSTOMIZER",
     },
 
     ONLINE_DATA_USER_OFFLINE = "Login to use online skillset data.",
@@ -15205,66 +15209,63 @@ STRINGS.SKILLTREE = {
     -- CHARACTER SKILL NAMES AND DESCRIPTIONS
     WALTER =
     {
-        WALTER_SLINGSHOT_AMMO_STINGER_TITLE = "Stinger Rounds Maker",
+        WALTER_SLINGSHOT_AMMO_STINGER_TITLE = "Stinger Rounds",
         WALTER_SLINGSHOT_AMMO_STINGER_DESC = "Learn to craft Stinger Rounds: an ammo made of Stingers that does damage in a small area when hitting a creature.",
 
-        WALTER_SLINGSHOT_AMMO_MOONGLASSCHARGED_TITLE = "Moon Glass Rounds Maker",
-        WALTER_SLINGSHOT_AMMO_MOONGLASSCHARGED_DESC = "Learn to craft Infused Moon Glass Rounds: an ammo made of Infused Moon Shards that [...].", --TODO(DiogoW)
-
-        WALTER_SLINGSHOT_AMMO_DREADSTONE_TITLE = "Dreadstone Rounds Maker",
+        WALTER_SLINGSHOT_AMMO_DREADSTONE_TITLE = "Dreadstone Rounds",
         WALTER_SLINGSHOT_AMMO_DREADSTONE_DESC = "Learn to craft Dreadstone Rounds: an ammo made of Dreadstone that does a dreadful amount of damage.",
 
-        WALTER_SLINGSHOT_AMMO_SCRAPFEATHER_TITLE = "Shockscrap Rounds Maker",
+        WALTER_SLINGSHOT_AMMO_SCRAPFEATHER_TITLE = "Shockscrap Rounds",
         WALTER_SLINGSHOT_AMMO_SCRAPFEATHER_DESC = "Learn to craft Shockscrap Rounds: an ammo made of Scrap and Saffron Feathers that does electric damage.",
 
-        WALTER_SLINGSHOT_AMMO_HONEY_TITLE = "Sticky Rounds Maker",
+        WALTER_SLINGSHOT_AMMO_HONEY_TITLE = "Sticky Rounds",
         WALTER_SLINGSHOT_AMMO_HONEY_DESC = "Learn to craft Sticky Rounds: an ammo made of Honey that slightly slows down creatures.",
 
-        WALTER_SLINGSHOT_AMMO_MOONGLASS_TITLE = "Moon Glass Rounds Maker",
+        WALTER_SLINGSHOT_AMMO_MOONGLASS_TITLE = "Moon Glass Rounds",
         WALTER_SLINGSHOT_AMMO_MOONGLASS_DESC = "Learn to craft Moon Glass Rounds: an ammo made of Moon Shards that does damage in a considerable area when hitting a creature.",
 
-        WALTER_SLINGSHOT_AMMO_GUNPOWDER_TITLE = "Gunpowder Rounds Maker",
-        WALTER_SLINGSHOT_AMMO_GUNPOWDER_DESC = "Learn to craft Gunpowder Rounds: an ammo made of Gunpowder that explodes on contact, doing considerable damage!",--TODO
+        WALTER_SLINGSHOT_AMMO_GUNPOWDER_TITLE = "Gunpowder Rounds",
+        WALTER_SLINGSHOT_AMMO_GUNPOWDER_DESC = "Learn to craft Gunpowder Rounds: an ammo mostly made of Gunpowder that has an increasing chance to do a critical stike, doing increased damage in a large area.",
 
         ---------------------------------------------------------------------------------
 
-        WALTER_SLINGSHOT_AMMO_ECONOMY_LOCK_DESC = "Learn 4 Projectile Pro and/or Affinity skills to unlock.",
+        WALTER_SLINGSHOT_AMMO_ECONOMY_LOCK_DESC = "Learn 4 Ammo and/or Affinity skills to unlock.",
 
         WALTER_SLINGSHOT_AMMO_ECONOMY_1_TITLE = "Projectile Pro I",
-        WALTER_SLINGSHOT_AMMO_ECONOMY_1_DESC = "Learn how to craft ammo slightly more efficiently.",
+        WALTER_SLINGSHOT_AMMO_ECONOMY_1_DESC = "Learn how to craft ammo considerable more efficiently.",
 
         WALTER_SLINGSHOT_AMMO_ECONOMY_2_TITLE = "Projectile Pro II",
-        WALTER_SLINGSHOT_AMMO_ECONOMY_2_DESC = "Learn how to craft ammo considerable more efficiently.",
+        WALTER_SLINGSHOT_AMMO_ECONOMY_2_DESC = "Learn how to craft ammo greatly more efficiently.",
 
         ---------------------------------------------------------------------------------
 
-        WALTER_WOBY_BADGE_BASE_TITLE = "Woby Training",
+        WALTER_WOBY_BADGE_BASE_TITLE = "Basic Training",
         WALTER_WOBY_BADGE_BASE_DESC = "Learn to craft the Woby Training Station and unlock the basic version of every training badge.",
 
-        WALTER_WOBY_BADGE_SPEED_2_TITLE = "Agility Training II",
+        WALTER_WOBY_BADGE_SPEED_2_TITLE = "Agility II",
         WALTER_WOBY_BADGE_SPEED_2_DESC = "Unlocks the second agility badge at the Woby Training Station.\nThis badge greatly increases Woby's speed. It gets improved based on badge progress.",
 
-        WALTER_WOBY_BADGE_RESISTANCE_2_TITLE = "Bravery Training II",
+        WALTER_WOBY_BADGE_RESISTANCE_2_TITLE = "Bravery II",
         WALTER_WOBY_BADGE_RESISTANCE_2_DESC = "Unlocks the second bravery badge at the Woby Training Station.\nThis badge greatly increases the damage you can take before Woby knocks you off. It gets improved based on badge progress.",
 
-        WALTER_WOBY_BADGE_BRAVERY_2_TITLE = "Support Training II",
+        WALTER_WOBY_BADGE_BRAVERY_2_TITLE = "Support II",
         WALTER_WOBY_BADGE_BRAVERY_2_DESC = "Unlocks the second support badge at the Woby Training Station.\nThis badge greatly decreases the loss of sanity when taking damage while riding Woby. It gets improved based on badge progress.",
 
-        WALTER_WOBY_BADGE_DIGGING_1_TITLE = "Digging Training I",
+        WALTER_WOBY_BADGE_DIGGING_1_TITLE = "Digging I",
         WALTER_WOBY_BADGE_DIGGING_1_DESC = "Unlocks the first digging badge at the Woby Training Station.\nThis badge teaches Woby how to dig to find items. The chance of a successful excavation increases with badge progress.",
 
-        WALTER_WOBY_BADGE_DIGGING_2_TITLE = "Digging Training II",
+        WALTER_WOBY_BADGE_DIGGING_2_TITLE = "Digging II",
         WALTER_WOBY_BADGE_DIGGING_2_DESC = "Unlocks the second digging badge at the Woby Training Station.\nThis badge teaches Woby how to dig to find items.\nDecreases the time between excavations.",
 
-        WALTER_WOBY_BADGE_FETCHING_2_TITLE = "Fetching Training II",
+        WALTER_WOBY_BADGE_FETCHING_2_TITLE = "Fetching II",
         WALTER_WOBY_BADGE_FETCHING_2_DESC = "Unlocks the second fetching badge at the Woby Training Station.\nThis badge teaches Woby how assist you in picking up items. Fetch success increases with badge progress.",
 
         ---------------------------------------------------------------------------------
 
-		WALTER_SLINGSHOT_MODDING_TITLE = "Slingshotsmith",
+		WALTER_SLINGSHOT_MODDING_TITLE = "Basic Customization",
 		WALTER_SLINGSHOT_MODDING_DESC = "Learn to craft the Slingshot Field Kit and some basic parts for customizing your Slingshot.",
 
-		WALTER_SLINGSHOT_HANDLE_STICKY_TITLE = "Sticky Handle",
+		WALTER_SLINGSHOT_HANDLE_STICKY_TITLE = "Sticky Grip",
 		WALTER_SLINGSHOT_HANDLE_STICKY_DESC = "Learn to craft a handle mod that prevents the Slingshot from slipping out of your hands.",
 
 		WALTER_SLINGSHOT_HANDLE_VOIDCLOTH_TITLE = "Void Grip",
@@ -15277,15 +15278,15 @@ STRINGS.SKILLTREE = {
 		WALTER_SLINGSHOT_FRAME_GEMS_DESC = "Learn to craft a frame mod that adds a special ammo slot used for an alternate special attack.",
 
 		WALTER_SLINGSHOT_FRAME_WAGPUNK_TITLE = "Scrappy Frame",
-		WALTER_SLINGSHOT_FRAME_WAGPUNK_DESC = "Learn to craft a frame mod that expands your ammo slot size and adds an alternate charged attack.",
+		WALTER_SLINGSHOT_FRAME_WAGPUNK_DESC = "Learn to craft a frame mod that adds an alternate charged attack. This mod can be further upgraded to expand your ammo slot size.",
 
         ---------------------------------------------------------------------------------
 
-        WALTER_ALLEGIANCE_LUNAR_TITLE = "Lunar Affinity",
-        WALTER_ALLEGIANCE_LUNAR_DESC = "Learn to craft the Brightshade Husk Rounds. Just damage, for now... More coming soon!",
+        WALTER_ALLEGIANCE_LUNAR_TITLE = "Lunar Slinger",
+        WALTER_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity by teaching you how to craft the Pure Brilliance and Brightshade Rounds. A debuff and damage focused ammo, respectively.",
 
-        WALTER_ALLEGIANCE_SHADOW_TITLE = "Shadow Affinity",
-        WALTER_ALLEGIANCE_SHADOW_DESC = "Learn to craft the Icky Rounds. These rounds greatly slows down creatures. More coming soon!",
+        WALTER_ALLEGIANCE_SHADOW_TITLE = "Shadow Slinger",
+        WALTER_ALLEGIANCE_SHADOW_DESC = "The Cryptic Founder will reward your curiosity by teaching you how to craft the Icky and Pure Horror Rounds. A slow down and damage focused ammo, respectively.",
     },
 
     --[[WANDA = {
@@ -15402,6 +15403,8 @@ STRINGS.SKILLTREE = {
         WENDY_SISTURN_2_DESC = "Wendy's resistance to scary things is increased, and she grants some of that confidence to others nearby.",
         WENDY_SISTURN_3_TITLE = "Blessed Sisturn III",
         WENDY_SISTURN_3_DESC = "Abigail can be sent to rest at her urn, letting her health rise above normal levels.",
+        WENDY_SISTURN_4_TITLE = "Blessed Sisturn IV",
+        WENDY_SISTURN_4_DESC = "Resting Abigail's health will rise to even higher levels.",
 
         WENDY_GHOSTCOMMAND_1_TITLE = "Team Spirit I",
         WENDY_GHOSTCOMMAND_1_DESC = "Wendy can remind Abigail she's a ghost, able to be unseen by her enemies to escape bad situations.",
@@ -15409,6 +15412,8 @@ STRINGS.SKILLTREE = {
         WENDY_GHOSTCOMMAND_2_DESC = "Abigail can dash to anywhere Wendy needs reinforcement.",
         WENDY_GHOSTCOMMAND_3_TITLE = "Team Spirit III",
         WENDY_GHOSTCOMMAND_3_DESC = "Abigail can use her powers as a spooky ghost to scare things.",
+        WENDY_GHOSTCOMMAND_HAUNT_TITLE = "Team Spirit IV",
+        WENDY_GHOSTCOMMAND_HAUNT_DESC = "Wendy can suggest things for Abigail to haunt.",
 
         WENDY_SMALLGHOST_1_TITLE = "Pipspook Quest I",
         WENDY_SMALLGHOST_1_DESC = "Pipspook lost toys aren't quite so far away.",
@@ -15424,12 +15429,14 @@ STRINGS.SKILLTREE = {
         WENDY_MAKEGRAVEMOUNDS_TITLE = "Gravestones By Wendy",
         WENDY_MAKEGRAVEMOUNDS_DESC = "Wendy can make her own gravestones.",
 
-        WENDY_POTION_1_TITLE = "Strong Brew I",
-        WENDY_POTION_1_DESC = "Elixirs with one day duration will now last a third longer.",
-        WENDY_POTION_2_TITLE = "Strong Brew II",
-        WENDY_POTION_2_DESC = "Elixirs with one day duration will now last two thirds longer.",
-        WENDY_POTION_3_TITLE = "Strong Brew III",
-        WENDY_POTION_3_DESC = "Elixirs with one day duration will now last two days.",
+        WENDY_POTION_CONTAINER_TITLE = "Picnic Casket",
+        WENDY_POTION_CONTAINER_DESC = "Wendy can craft a Basket to cary all of Abby's Elixirs.",
+        WENDY_POTION_REVIVE_TITLE = "Ghastly Experience",
+        WENDY_POTION_REVIVE_DESC = "Wendy learns to brew a new Ghostly Elixir which helps Abigail quickly remember her potential.",
+        WENDY_POTION_DURATION_TITLE = "Strong Brew",
+        WENDY_POTION_DURATION_DESC = "Elixirs with one day duration will now last two.",
+        WENDY_POTION_YIELD_TITLE = "Extra Yield",
+        WENDY_POTION_YIELD_DESC = "Sometimes, Wendy is able to squeeze extra Elixers out of the same ingredients.",
 
         WENDY_PETAL_1_TITLE = "Dark Petals I",
         WENDY_PETAL_1_DESC = "Evil flowers hold no fear for Wendy.\nShe can stain Petals into Dark Petals and purify Dark Petals.",
@@ -15442,21 +15449,21 @@ STRINGS.SKILLTREE = {
         WENDY_SHADOW_LOCK_1_DESC = "Defeat the Fuel Weaver",
         WENDY_SHADOW_LOCK_2_DESC = "Have no other allegiance",
 
-        WENDY_SHADOW_1_TITLE = "Shadow Allegiance I",
+        WENDY_SHADOW_1_TITLE = "Shadow Sisterhood I",
         WENDY_SHADOW_1_DESC = "Abigail attunes with the shadows and earns some Planar Defense.",
-        WENDY_SHADOW_2_TITLE = "Shadow Allegiance II",
-        WENDY_SHADOW_2_DESC = "Wendy can craft an elixir infused with shadow magic that increases Abigail's Vex damage.",
-        WENDY_SHADOW_3_TITLE = "Shadow Allegiance III",
+        WENDY_SHADOW_2_TITLE = "Shadow Sisterhood II",
+        WENDY_SHADOW_2_DESC = "Wendy can craft a Super Elixir infused with shadow magic that increases Abigail's Vex damage.\nSuper Elixirs work in parallel to regular Elixirs.",
+        WENDY_SHADOW_3_TITLE = "Shadow Sisterhood III",
         WENDY_SHADOW_3_DESC = "Dark Magic is released whenever Wendy uses the Murder action filling Abigail with more power for a short time.",
 
         WENDY_LUNAR_LOCK_1_DESC = "Defeat the Celestial Champion",
         WENDY_LUNAR_LOCK_2_DESC = "Have no other allegiance",
 
-        WENDY_LUNAR_1_TITLE = "Lunar Allegiance I",
+        WENDY_LUNAR_1_TITLE = "Lunar Sisterhood I",
         WENDY_LUNAR_1_DESC = "Abigail attunes with lunar energies and earns some Planar Defense.",
-        WENDY_LUNAR_2_TITLE = "Lunar Allegiance II",
-        WENDY_LUNAR_2_DESC = "Wendy can craft an elixir infused with lunar energy that gives Abigail a boost of Planar Damage for its duration.",
-        WENDY_LUNAR_3_TITLE = "Lunar Allegiance III",
+        WENDY_LUNAR_2_TITLE = "Lunar Sisterhood II",
+        WENDY_LUNAR_2_DESC = "Wendy can craft a Super Elixir infused with lunar energy that gives Abigail a boost of Planar Damage for its duration.\nSuper Elixirs work in parallel to regular Elixirs.",
+        WENDY_LUNAR_3_TITLE = "Lunar Sisterhood III",
         WENDY_LUNAR_3_DESC = "Wendy can use the Moon Dial during a full moon to fill Abigail with lunar energy, turning her into a Gestalt. The Moon Dial can restore her ghost status during a new moon.",
     },
 
@@ -15974,8 +15981,10 @@ STRINGS.SKILLTREE = {
         -- GENERIC - Not skills but information boxes the player will be able to hover over for more information.
         WORTOX_INCLINATION_METER_TITLE = "The Scales",
         WORTOX_INCLINATION_METER_DESC = "Based off of how many Nice or Naughty skills selected, you will find yourself leaning towards a certain inclination.",
-        WORTOX_INCLINATION_NICE_DESC = "Nice inclination.\nHealing and Sanity gains from dropped Souls is increased.\nSanity loss from eating Souls is increased.",
-        WORTOX_INCLINATION_NAUGHTY_DESC = "Naughty inclination.\nHealing and Sanity gains from dropped Souls is decreased.\nSanity loss from eating Souls is decreased.",
+        WORTOX_INCLINATION_NICE_TITLE = "Nice Inclination",
+        WORTOX_INCLINATION_NICE_DESC = "Your nice demeanor has calmed down the monster side of you enough to stop its effects from creating hostility.\nEating or releasing Souls will change sanity at an increased amount.",
+        WORTOX_INCLINATION_NAUGHTY_TITLE = "Naughty Inclination",
+        WORTOX_INCLINATION_NAUGHTY_DESC = "Your desire for Souls is unquenched and you stop yourself from overloading of Soul power for a moment.\nEating or releasing Souls will no longer change sanity.",
 
         -- LOCKS
         WORTOX_NICE_LOCK_DESC = "Requires the skill below and 5 total Nice skills to unlock.",
@@ -15992,11 +16001,11 @@ STRINGS.SKILLTREE = {
         WORTOX_SOULPROTECTOR_1_TITLE = "Reaching Souls I",
         WORTOX_SOULPROTECTOR_1_DESC = "Dropped Souls will heal at an increased range.",
         WORTOX_SOULPROTECTOR_2_TITLE = "Reaching Souls II",
-        WORTOX_SOULPROTECTOR_2_DESC = "Souls will come to you faster.",
+        WORTOX_SOULPROTECTOR_2_DESC = "Souls will come to you faster.\nDropped Souls will heal at an increased range.",
         WORTOX_SOULPROTECTOR_3_TITLE = "Soul Bastion I",
         WORTOX_SOULPROTECTOR_3_DESC = "Dropped Souls will do a second healing wave for a lower amount after a delay.",
         WORTOX_SOULPROTECTOR_4_TITLE = "Soul Bastion II",
-        WORTOX_SOULPROTECTOR_4_DESC = "Reduce the delay for the second healing wave to happen.\nDropped Souls will heal at an increased range.",
+        WORTOX_SOULPROTECTOR_4_DESC = "Reduce the delay for the second healing wave to happen.\nSouls are more efficient at healing multiple players.",
 
         WORTOX_LIFTEDSPIRITS_1_TITLE = "Lifted Spirits I",
         WORTOX_LIFTEDSPIRITS_1_DESC = "Souls waiting to be freed in a Soul Echo will enhance your movement speed.",
@@ -16005,18 +16014,17 @@ STRINGS.SKILLTREE = {
         WORTOX_LIFTEDSPIRITS_3_TITLE = "Reverberation",
         WORTOX_LIFTEDSPIRITS_3_DESC = "Soul Echo will happen a second time.\nThis does not decrease Soul Hop costs from the Map.",
         WORTOX_LIFTEDSPIRITS_4_TITLE = "Capricious Movement",
-        WORTOX_LIFTEDSPIRITS_4_DESC = "Soul Hop cost from the Map will be reduced by how much of the current world has been explored.",
+        WORTOX_LIFTEDSPIRITS_4_DESC = "Soul Hop cost from the Map will be reduced by how much of the current world's land has been explored.",
 
         -- NEUTRAL
         WORTOX_PANFLUTE_PLAYING_TITLE = "Impromptu Flautist", -- Center
-        WORTOX_PANFLUTE_PLAYING_DESC = "You periodically feel a musical pull to play your flute if you are holding it. Pan Flutes will not lose durability one time when feeling this urge to play.",
-        WORTOX_PANFLUTE_DURATION_TITLE = "Pleasant Pastorale", -- Left
-        WORTOX_PANFLUTE_DURATION_DESC = "Pan Flutes soothe more by increasing its sleep duration.",
+        WORTOX_PANFLUTE_PLAYING_DESC = "You periodically feel a musical pull to play your flute. Pan Flutes will not lose durability one time when feeling this urge to play.",
+        WORTOX_PANFLUTE_SOULCALLER_TITLE = "Pleasant Pastorale", -- Left
+        WORTOX_PANFLUTE_SOULCALLER_DESC = "Playing your Pan Flute with such pleasing notes will bring lost Souls around for a listen.",
         WORTOX_PANFLUTE_FORGET_TITLE = "Cloudy Carmen", -- Right
         WORTOX_PANFLUTE_FORGET_DESC = "Things waking up after your Pan Flute playing will not be able to become hostile towards you for a moment.",
 
         -- NAUGHTY
-
         WORTOX_THIEF_1_TITLE = "Soul Thief I",
         WORTOX_THIEF_1_DESC = "Souls are created and attracted to you from further away.",
         WORTOX_THIEF_2_TITLE = "Soul Thief II",
@@ -16036,7 +16044,7 @@ STRINGS.SKILLTREE = {
         WORTOX_SOULJAR_3_DESC = "Held Souls and Souls inside of Soul Jars increases both the damage of the Knabsack and the damage of Souls, up to 100 total Souls collected.",
 
         WORTOX_SOULDECOY_1_TITLE = "Soul Decoy I",
-        WORTOX_SOULDECOY_1_DESC = "Soul Hopping for the first hop leaves behind a Soul Decoy to draw the attention of nearby attackers targeting you.",
+        WORTOX_SOULDECOY_1_DESC = "Soul Hopping for the first hop leaves behind a Soul Decoy to draw the attention of nearby creatures with Souls targeting you.",
         WORTOX_SOULDECOY_2_TITLE = "Soul Decoy II",
         WORTOX_SOULDECOY_2_DESC = "Soul Decoys will stay around for a bit longer if they are unharmed.",
         WORTOX_SOULDECOY_3_TITLE = "Soul Decoy III",

@@ -692,7 +692,7 @@ end
 
 function StatusDisplays:RefreshPetHealth()
     local pethealthbar = self.owner.components.pethealthbar
-	self.pethealthbadge:SetValues(pethealthbar:GetSymbol(), pethealthbar:GetPercent(), pethealthbar:GetOverTime(), pethealthbar:GetMaxHealth(), pethealthbar:GetPulse(), pethealthbar:GetMaxBonus(), pethealthbar:GetPercentBonus())
+	self.pethealthbadge:SetValues(pethealthbar:GetSymbol(), pethealthbar:GetSymbol2(), pethealthbar:GetPercent(), pethealthbar:GetOverTime(), pethealthbar:GetMaxHealth(), pethealthbar:GetPulse(), pethealthbar:GetMaxBonus(), pethealthbar:GetPercentBonus())
 	pethealthbar:ResetPulse()
 end
 

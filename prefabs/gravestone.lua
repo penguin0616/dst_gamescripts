@@ -6,8 +6,6 @@ local assets =
     Asset("INV_IMAGE", "dug_gravestone2"),
     Asset("INV_IMAGE", "dug_gravestone3"),
     Asset("INV_IMAGE", "dug_gravestone4"),
-
-    Asset("SCRIPT", "scripts/prefabs/wendy_grave_quest_defs.lua"),
 }
 
 local prefabs =
@@ -85,10 +83,9 @@ local function OnDugUp(inst, tool, worker)
     end
 
     if inst.components.upgradeable.stage > 1 then
-        local petals
         for _ = 1, TUNING.WENDYSKILL_GRAVESTONE_DECORATECOUNT do
             if math.random() > 0.5 then
-                petals = SpawnPrefab("petals")
+                local petals = SpawnPrefab("petals")
                 petals.Transform:SetPosition(ix, iy, iz)
                 Launch(petals, worker, 1.5)
             end
@@ -327,6 +324,10 @@ local function OnDugDeployed(inst, pt, deployer)
     gravestone.random_stone_choice = inst.random_stone_choice
     gravestone.AnimState:PlayAnimation("grave"..gravestone.random_stone_choice.."_place")
     gravestone.AnimState:PushAnimation("grave"..gravestone.random_stone_choice)
+
+    if deployer.SoundEmitter then
+        deployer.SoundEmitter:PlaySound("meta5/wendy/place_gravestone")
+    end
 
     if inst._epitaph then
         local epitaph_type = type(inst._epitaph)

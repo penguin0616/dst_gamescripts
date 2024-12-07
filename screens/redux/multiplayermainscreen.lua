@@ -427,6 +427,18 @@ local function MakeHallowedNights2024Banner(self, banner_root, anim)
     anim:SetScale(.667)
 end
 
+local function MakeMeta5Banner(self, banner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_meta5")
+    anim:GetAnimState():SetBank("dst_menu_meta5")
+    anim:GetAnimState():PlayAnimation("loop", true)
+    anim:SetScale(.667)
+    anim:SetPosition(75, 50)
+
+    if not IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
+        anim:GetAnimState():Hide("winter")
+    end
+end
+
 local function MakeDefaultBanner(self, banner_root, anim)
 	local banner_height = 350
 	banner_root:SetPosition(0, RESOLUTION_Y / 2 - banner_height / 2 + 1 ) -- positioning for when we had the top banner art
@@ -482,7 +494,7 @@ function MakeBanner(self)
 		--
 		--REMINDER: Check MakeBannerFront as well!
 		--
-        MakeHallowedNights2024Banner(self, banner_root, anim)
+        MakeMeta5Banner(self, banner_root, anim)
     elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTD) then
         MakeYOTDBanner(self, banner_root, anim)
     elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTR) then
@@ -503,7 +515,7 @@ function MakeBanner(self)
 		--*** !!! ***
 		--REMINDER: Check MakeBannerFront as well!
 		--
-        MakeRift4Banner(self, banner_root, anim)
+        MakeMeta5Banner(self, banner_root, anim)
         --MakeWurtWinonaQOLBanner(self, banner_root, anim)
         --MakeRiftsMetaQoLBanner(self, banner_root, anim)
 		--MakeMeta2Banner(self, banner_root, anim)

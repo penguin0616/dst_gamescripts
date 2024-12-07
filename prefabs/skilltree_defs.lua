@@ -19,9 +19,6 @@ local function CreateSkillTreeFor(characterprefab, skills)
             hasdefaultfocus = true
         end
         if skill.infographic then
-            if skill.lock_open then
-                PrintFixMe(string.format("Skill Tree for %s [skill %s] has an infographic lock! This is undefined behaviour.", characterprefab, skill_name))
-            end
             if skill.connects then
                 PrintFixMe(string.format("Skill Tree for %s [skill %s] has an infographic that connects! This is undefined behaviour.", characterprefab, skill_name))
             end

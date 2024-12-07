@@ -12,8 +12,7 @@ local function IsAlive(target)
 end
 
 local TARGET_CANT_TAGS = { "INLIMBO", "noauradamage" }
-local TARGET_ONEOF_TAGS = { "character", "monster" }
-
+local TARGET_ONEOF_TAGS = { "character", "hostile", "monster", "smallcreature" }
 local function GetFollowTarget(ghost)
     local incoming_followtarget = ghost.brain.followtarget
     if incoming_followtarget ~= nil
@@ -28,20 +27,13 @@ local function GetFollowTarget(ghost)
     end
 
     if not ghost.brain.followtarget then
+        local pvp_enabled = TheNet:GetPVPEnabled()
         local gx, gy, gz = ghost.Transform:GetWorldPosition()
         local potential_followtargets = TheSim:FindEntities(gx, gy, gz, 10, nil, TARGET_CANT_TAGS, TARGET_ONEOF_TAGS)
         for _, pft in ipairs(potential_followtargets) do
             -- We should only follow living characters.
             if IsAlive(pft) then
-                -- If a character is ghost-friendly OR a player, don't immediately target them, unless they're targeting us.
-                -- Actively target anybody else.
-                local graveguard_friendly = pft.isplayer or pft:HasTag("ghostlyfriend") or pft:HasTag("abigail")
-                if graveguard_friendly then
-                    if ghost.components.combat:TargetIs(pft) or (pft.components.combat ~= nil and pft.components.combat:TargetIs(ghost)) then
-                        ghost.brain.followtarget = pft
-                        break
-                    end
-                else
+                if ghost:_target_test(pft, pvp_enabled) then
                     ghost.brain.followtarget = pft
                     break
                 end

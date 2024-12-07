@@ -83,50 +83,70 @@ local potion_tunings =
 		dripfx = "ghostlyelixir_retaliation_dripfx",
 		skill_modifier_long_duration = true,
 	},
+	ghostlyelixir_revive =
+	{
+		DURATION = TUNING.GHOSTLYELIXIR_REVIVE_DURATION,
+        FLOATER = {"small", 0.2, 0.4},
+		ONAPPLY = function(inst, target)
+			if target.components.follower.leader and target.components.follower.leader.components.ghostlybond then
+				target.components.follower.leader.components.ghostlybond:SetBondLevel(3)
+			end
+		end,
+		ONDETACH = function(inst, target)
+
+		end,        
+		fx = "ghostlyelixir_retaliation_fx",
+		dripfx = "ghostlyelixir_retaliation_dripfx",
+		skill_modifier_long_duration = true,
+	},
 
 	ghostlyelixir_shadow =
 	{
-		DURATION = TUNING.WENDYSKILL_SHADOWELIXIR_DURATION,
+		DURATION = TUNING.SKILLS.WENDY.SHADOWELIXIR_DURATION,
         FLOATER = {"small", 0.2, 0.4},
 		fx = "ghostlyelixir_shadow_fx",
 		dripfx = "ghostlyelixir_shadow_dripfx",
-		ONAPPLY = function(inst, target)
-		end,
-		ONDETACH = function(inst, target)
-		end,
 		skill_modifier_long_duration = true,
+		super_elixir = true,
 	},
 	ghostlyelixir_lunar =
 	{
-		DURATION = TUNING.WENDYSKILL_LUNARELIXIR_DURATION,
+		DURATION = TUNING.SKILLS.WENDY.LUNARELIXIR_DURATION,
         FLOATER = {"small", 0.2, 0.4},
 		fx = "ghostlyelixir_lunar_fx",
 		dripfx = "ghostlyelixir_lunar_dripfx",
 		ONAPPLY = function(inst, target)
 			target.components.planardamage:RemoveBonus(inst, "ghostlyelixir_lunarbonus")
 			if target:HasTag("gestalt") then
-				target.components.planardamage:AddBonus(inst, TUNING.WENDYSKILL_LUNARELIXIR_DAMAGEBONUS_GESTALT, "ghostlyelixir_lunarbonus")
+				target.components.planardamage:AddBonus(inst, TUNING.SKILLS.WENDY.LUNARELIXIR_DAMAGEBONUS_GESTALT, "ghostlyelixir_lunarbonus")
 			else
-				target.components.planardamage:AddBonus(inst, TUNING.WENDYSKILL_LUNARELIXIR_DAMAGEBONUS, "ghostlyelixir_lunarbonus")
+				target.components.planardamage:AddBonus(inst, TUNING.SKILLS.WENDY.LUNARELIXIR_DAMAGEBONUS, "ghostlyelixir_lunarbonus")
 			end
 		end,
 		ONDETACH = function(inst, target)
 			target.components.planardamage:RemoveBonus(inst, "ghostlyelixir_lunarbonus")
 		end,
 		skill_modifier_long_duration = true,
+		super_elixir = true,
 	},
 }
 
 local function DoApplyElixir(inst, giver, target)
-	local buff = target:AddDebuff("elixir_buff", inst.buff_prefab, nil, nil, function()
-		local cur_buff = target:GetDebuff("elixir_buff")
+	local buff_type = "elixir_buff"
+
+	if inst.potion_tunings.super_elixir then
+		buff_type = "super_elixir_buff"
+	end
+
+	local buff = target:AddDebuff(buff_type, inst.buff_prefab, nil, nil, function()
+		local cur_buff = target:GetDebuff(buff_type)
 		if cur_buff ~= nil and cur_buff.prefab ~= inst.buff_prefab then
-			target:RemoveDebuff("elixir_buff")
+			target:RemoveDebuff(buff_type)
 		end
 	end)
 
 	if buff then
-		local new_buff = target:GetDebuff("elixir_buff")
+		local new_buff = target:GetDebuff(buff_type)
 		new_buff:buff_skill_modifier_fn(giver)
 		return buff
 	end
@@ -293,14 +313,8 @@ end
 local function buff_skill_modifier_fn(inst,doer)
 		local duration_mult = 1
 		
-		if inst.potion_tunings.skill_modifier_long_duration then
-			if doer.components.skilltreeupdater:IsActivated("wendy_potion_3") then
-				duration_mult = duration_mult + TUNING.SKILLS.WENDY.POTION_3_MOD
-			elseif doer.components.skilltreeupdater:IsActivated("wendy_potion_2") then
-				duration_mult = duration_mult + TUNING.SKILLS.WENDY.POTION_2_MOD
-			elseif doer.components.skilltreeupdater:IsActivated("wendy_potion_1") then
-				duration_mult = duration_mult + TUNING.SKILLS.WENDY.POTION_1_MOD
-			end
+		if inst.potion_tunings.skill_modifier_long_duration and doer.components.skilltreeupdater:IsActivated("wendy_potion_duration") then
+			duration_mult = duration_mult + TUNING.SKILLS.WENDY.POTION_DURATION_MOD
 		end
 
         inst.components.timer:StopTimer("decay")
@@ -379,5 +393,6 @@ AddPotion(potions, "speed", "speed")
 AddPotion(potions, "retaliation", "retaliation")
 AddPotion(potions, "shadow", "shadow")
 AddPotion(potions, "lunar", "lunar")
+AddPotion(potions, "revive", "revive")
 
 return unpack(potions)

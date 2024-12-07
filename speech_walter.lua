@@ -770,23 +770,32 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_WARNING =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_USED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
 
     --walter specfic
+	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "There's too much ammo to swap out now.",
 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 	{
 		"Uh oh... I'm all out of ammo.",
 		"Uh... just kidding!",
 	},
-	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "Uh... just kidding!", --TODO
-	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "Uh... just kidding!", --TODO
+	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "This ammo is tricky.",
+	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "Huh. How does this part work?",
 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 	{
         "Darnit, the fire went out right at the best part!",
@@ -4045,12 +4054,11 @@ return{
 		SLINGSHOTAMMO_MOONGLASS = "Now I can hit'em with the moon!",
 		SLINGSHOTAMMO_GELBLOB = "Icky. I like it.",
 		SLINGSHOTAMMO_SCRAPFEATHER = "They're in for a shock!",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "Moonshots!",
         SLINGSHOTAMMO_DREADSTONE = "These will pack a real punch.",
         SLINGSHOTAMMO_GUNPOWDER = "Woby, we're going out with a BANG!",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "Prickly-wickly.",
         SLINGSHOTAMMO_PUREBRILLIANCE = "Yes, Woby. We are brilliant!",
-        SLINGSHOTAMMO_PUREHORROR = "Spooktacular! Hehe.",
+        SLINGSHOTAMMO_HORRORFUEL = "Spooktacular! Hehe.",
         PORTABLETENT = "Nice and sturdy!",
         PORTABLETENT_ITEM = "I'll have this set up lickety-split!",
 
@@ -4083,6 +4091,7 @@ return{
 		GHOSTLYELIXIR_ATTACK = "Ghosts can drink potions? Uh, of course I knew that!",
 		GHOSTLYELIXIR_SPEED = "Ghosts can drink potions? Uh, of course I knew that!",
 		GHOSTLYELIXIR_RETALIATION = "Ghosts can drink potions? Uh, of course I knew that!",
+        GHOSTLYELIXIR_REVIVE = "Ghosts can drink potions? Uh, of course I knew that!",
 		SISTURN =
 		{
 			GENERIC = "Yeah, that looks haunted.",
@@ -5518,12 +5527,15 @@ return{
 		SLINGSHOT_BAND_MIMIC = "Creepy!",
 		SLINGSHOT_FRAME_BONE = "Bad to the bone! Hehe.",
 		SLINGSHOT_FRAME_GEMS = "Fancy.",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "There's a real kick to it!",
 		SLINGSHOT_FRAME_WAGPUNK = "I could slingshot forever.",
 		SLINGSHOT_HANDLE_STICKY = "It's gross but effective!",
 		SLINGSHOT_HANDLE_SILK = "It's good tape.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Oh yeah. Here we go.",
 
         WOBY_BADGE_STATION = "You're the smartest dog ever, Woby!",
+
+        ELIXIR_CONTAINER = "Contents not safe for human consumption!", --[[TODO]]
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

@@ -34,23 +34,12 @@ local POSITIONS =
     walter_slingshot_handle_voidcloth = { x = MODS_POS_X_MIDDLE,           y = MODS_POS_Y_TOP - PADDING * 2.25  },
     walter_slingshot_frame_wagpunk    = { x = MODS_POS_X_MIDDLE + PADDING, y = MODS_POS_Y_TOP - PADDING * 2.25  },
 
-    -- Layout with 6 skills.
-    walter_slingshot_ammo_moonglass        = { x = AMMO_POS_X_LEFT + PADDING * 0.5, y = AMMO_POS_Y_TOP           },
-    walter_slingshot_ammo_stinger          = { x = AMMO_POS_X_LEFT + PADDING * 1.5, y = AMMO_POS_Y_TOP           },
-    walter_slingshot_ammo_scrapfeather     = { x = AMMO_POS_X_LEFT + PADDING * 2.5, y = AMMO_POS_Y_TOP           },
-    walter_slingshot_ammo_gunpowder        = { x = AMMO_POS_X_LEFT + PADDING * 0.5, y = AMMO_POS_Y_TOP - PADDING },
-    walter_slingshot_ammo_dreadstone       = { x = AMMO_POS_X_LEFT + PADDING * 1.5, y = AMMO_POS_Y_TOP - PADDING },
-    walter_slingshot_ammo_honey            = { x = AMMO_POS_X_LEFT + PADDING * 2.5, y = AMMO_POS_Y_TOP - PADDING },
-
-    -- Layout with 7 skills.
-    -- walter_slingshot_ammo_stinger          = { x = AMMO_POS_X_LEFT + PADDING * 0, y = AMMO_POS_Y_TOP           },
-    -- walter_slingshot_ammo_scrapfeather     = { x = AMMO_POS_X_LEFT + PADDING * 1, y = AMMO_POS_Y_TOP           },
-    -- walter_slingshot_ammo_gunpowder        = { x = AMMO_POS_X_LEFT + PADDING * 2, y = AMMO_POS_Y_TOP           },
-    -- walter_slingshot_ammo_dreadstone       = { x = AMMO_POS_X_LEFT + PADDING * 3, y = AMMO_POS_Y_TOP           },
-
-    -- walter_slingshot_ammo_honey            = { x = AMMO_POS_X_LEFT + PADDING * 0.5, y = AMMO_POS_Y_TOP - PADDING },
-    -- walter_slingshot_ammo_moonglass        = { x = AMMO_POS_X_LEFT + PADDING * 1.5, y = AMMO_POS_Y_TOP - PADDING },
-    -- walter_slingshot_ammo_moonglasscharged = { x = AMMO_POS_X_LEFT + PADDING * 2.5, y = AMMO_POS_Y_TOP - PADDING },
+    walter_slingshot_ammo_honey        = { x = AMMO_POS_X_LEFT + PADDING * 0.5, y = AMMO_POS_Y_TOP           },
+    walter_slingshot_ammo_stinger      = { x = AMMO_POS_X_LEFT + PADDING * 1.5, y = AMMO_POS_Y_TOP           },
+    walter_slingshot_ammo_scrapfeather = { x = AMMO_POS_X_LEFT + PADDING * 2.5, y = AMMO_POS_Y_TOP           },
+    walter_slingshot_ammo_moonglass    = { x = AMMO_POS_X_LEFT + PADDING * 0.5, y = AMMO_POS_Y_TOP - PADDING },
+    walter_slingshot_ammo_gunpowder    = { x = AMMO_POS_X_LEFT + PADDING * 1.5, y = AMMO_POS_Y_TOP - PADDING },
+    walter_slingshot_ammo_dreadstone   = { x = AMMO_POS_X_LEFT + PADDING * 2.5, y = AMMO_POS_Y_TOP - PADDING },
 
     walter_slingshot_ammo_economy_lock = { x = AMMO_ECONOMY_POS_X + PADDING * 0 , y = AMMO_ECONOMY_POS_Y_TOP },
     walter_slingshot_ammo_economy_1    = { x = AMMO_ECONOMY_POS_X + PADDING * 1 , y = AMMO_ECONOMY_POS_Y_TOP },
@@ -119,7 +108,6 @@ end
 local BASIC_AMMO_TYPES =
 {
     "moonglass",
-    --"moonglasscharged", -- NOTES(DiogoW): Not ready yet ;)
     "dreadstone",
     "gunpowder",
     "scrapfeather",
@@ -270,6 +258,7 @@ local function BuildSkillsData(SkillTreeFns)
 
         walter_slingshot_ammo_economy_1 = {
             group = "slingshotammo",
+            tags = { "slingshoteconomy" },
 
             locks = { "walter_slingshot_ammo_economy_lock" },
             connects = { "walter_slingshot_ammo_economy_2" },
@@ -277,6 +266,7 @@ local function BuildSkillsData(SkillTreeFns)
 
         walter_slingshot_ammo_economy_2 = {
             group = "slingshotammo",
+            tags = { "slingshoteconomy" },
         },
 
         -----------------------------------------------------------------------------------------------------------------

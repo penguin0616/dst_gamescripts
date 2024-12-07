@@ -16,13 +16,25 @@ local events = {
     end),
 }
 
+local DECOY_DANCE_ODDS = 0.25
+local wortox_decoy_animations = {
+    "emoteXL_loop_dance6", -- chicken
+    "emoteXL_loop_dance8", -- robot
+    "emoteXL_loop_dance7", -- step
+    "emoteXL_loop_dance0", -- default
+}
+
 local states = {
     State{
         name = "idle",
         tags = { "idle" },
         onenter = function(inst, data)
             inst.sg.statemem.deathtime = data and data.deathtime or TUNING.SKILLS.WORTOX.SOULDECOY_DURATION
-            inst.AnimState:PlayAnimation("idle_loop", true)
+            if math.random() < DECOY_DANCE_ODDS then
+                inst.AnimState:PlayAnimation(wortox_decoy_animations[math.random(#wortox_decoy_animations)], true)
+            else
+                inst.AnimState:PlayAnimation("idle_loop", true)
+            end
         end,
         onupdate = function(inst)
             if GetTime() > inst.sg.statemem.deathtime then

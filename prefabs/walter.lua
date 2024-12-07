@@ -298,6 +298,37 @@ local function GetEquippableDapperness(owner, equippable)
 	return 0
 end
 
+local UNLOCKABLE_STATION_RECIPES =
+{
+	["walter_slingshot_ammo_moonglass"] =	{ "slingshotammo_moonglass" },
+	["walter_allegiance_lunar"] =			{ "slingshotammo_lunarplanthusk", "slingshotammo_purebrilliance" },
+	["walter_allegiance_shadow"] =			{ "slingshotammo_gelblob", "slingshotammo_horrorfuel" },
+	["walter_slingshot_frame_gems"] =		{ "slingshot_frame_gems" },
+	["walter_slingshot_handle_voidcloth"] =	{ "slingshot_handle_voidcloth" },
+}
+
+local function OnDeactivateSkill(inst, data)
+	if data then
+		local recipelist = UNLOCKABLE_STATION_RECIPES[data.skill]
+		if recipelist then
+			for _, recipename in ipairs(recipelist) do
+				inst.components.builder:RemoveRecipe(recipename)
+			end
+		end
+	end
+end
+
+local function OnSkillTreeInitialized(inst)
+	local skilltreeupdater = inst.components.skilltreeupdater
+	for skill, recipelist in pairs(UNLOCKABLE_STATION_RECIPES) do
+		if not (skilltreeupdater and skilltreeupdater:IsActivated(skill)) then
+			for _, recipename in ipairs(recipelist) do
+				inst.components.builder:RemoveRecipe(recipename)
+			end
+		end
+	end
+end
+
 local function common_postinit(inst)
     inst:AddTag("expertchef")
     inst:AddTag("pebblemaker")
@@ -373,6 +404,8 @@ local function master_postinit(inst)
 	inst:ListenForEvent("mounted", OnMounted)
     inst:ListenForEvent("dismounted", OnDismounted)
 
+	inst:ListenForEvent("ondeactivateskill_server", OnDeactivateSkill)
+	inst:ListenForEvent("ms_skilltreeinitialized", OnSkillTreeInitialized)
 end
 
 -------------------------------------------------------------------------------

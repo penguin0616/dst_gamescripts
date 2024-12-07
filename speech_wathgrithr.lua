@@ -770,21 +770,32 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_WARNING =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_USED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
 
     --walter specfic
+--fallback to speech_wilson.lua 	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
@@ -4043,12 +4054,11 @@ return{
 		SLINGSHOTAMMO_MOONGLASS = "What fun is a battle without hand to hand combat?",
 		SLINGSHOTAMMO_GELBLOB = "What fun is a battle without hand to hand combat?",
 		SLINGSHOTAMMO_SCRAPFEATHER = "What fun is a battle without hand to hand combat?",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "What fun is a battle without hand to hand combat?",
         SLINGSHOTAMMO_DREADSTONE = "What fun is a battle without hand to hand combat?",
         SLINGSHOTAMMO_GUNPOWDER = "What fun is a battle without hand to hand combat?",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "What fun is a battle without hand to hand combat?",
         SLINGSHOTAMMO_PUREBRILLIANCE = "What fun is a battle without hand to hand combat?",
-        SLINGSHOTAMMO_PUREHORROR = "What fun is a battle without hand to hand combat?",
+        SLINGSHOTAMMO_HORRORFUEL = "What fun is a battle without hand to hand combat?",
         PORTABLETENT = "'Tis a finely made shelter indeed!",
         PORTABLETENT_ITEM = "My talent lies in battle, not in building.",
 
@@ -4081,6 +4091,7 @@ return{
 		GHOSTLYELIXIR_ATTACK = "'Tis a powerful elixir!",
 		GHOSTLYELIXIR_SPEED = "'Tis a powerful elixir!",
 		GHOSTLYELIXIR_RETALIATION = "'Tis a powerful elixir!",
+        GHOSTLYELIXIR_REVIVE = "'Tis a powerful elixir!",
 		SISTURN =
 		{
 			GENERIC = "A small langhús for the ghostly warrior to regain her strength.",
@@ -5516,12 +5527,15 @@ return{
 		SLINGSHOT_BAND_MIMIC = "The young scout doth come into his own.",
 		SLINGSHOT_FRAME_BONE = "The young scout doth come into his own.",
 		SLINGSHOT_FRAME_GEMS = "The young scout doth come into his own.",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "The young scout doth come into his own.",
 		SLINGSHOT_FRAME_WAGPUNK = "The young scout doth come into his own.",
 		SLINGSHOT_HANDLE_STICKY = "The young scout doth come into his own.",
 		SLINGSHOT_HANDLE_SILK = "The young scout doth come into his own.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "The young scout doth come into his own.",
 
         WOBY_BADGE_STATION = "The loyal cur showeth vast potential.",
+
+        ELIXIR_CONTAINER = "The elixirs dost soothe her spirit.",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

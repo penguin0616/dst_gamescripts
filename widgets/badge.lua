@@ -137,11 +137,13 @@ function Badge:SetPercent(val, max, bonusval)
         end
     end
 
-    if bonusval then
-        self.anim_bonus:GetAnimState():SetPercent("anim", 1 - bonusval)
-        self.anim_bonus:Show()        
-    else
-        self.anim_bonus:Hide()
+    if self.anim_bonus then
+        if bonusval then
+            self.anim_bonus:GetAnimState():SetPercent("anim", 1 - bonusval)
+            self.anim_bonus:Show()
+        else
+            self.anim_bonus:Hide()
+        end
     end
 
     --print(val, max, val * max)

@@ -771,21 +771,32 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_WARNING =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_EXPIRED =
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_USED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
 
     --walter specfic
+--fallback to speech_wilson.lua 	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
@@ -4044,12 +4055,11 @@ return{
 		SLINGSHOTAMMO_MOONGLASS = "Not bad at all!",
 		SLINGSHOTAMMO_GELBLOB = "Not bad at all!",
 		SLINGSHOTAMMO_SCRAPFEATHER = "Not bad at all!",
-        SLINGSHOTAMMO_MOONGLASSCHARGED = "Not bad at all!",
         SLINGSHOTAMMO_DREADSTONE = "Not bad at all!",
         SLINGSHOTAMMO_GUNPOWDER = "Not bad at all!",
         SLINGSHOTAMMO_LUNARPLANTHUSK = "Not bad at all!",
         SLINGSHOTAMMO_PUREBRILLIANCE = "Not bad at all!",
-        SLINGSHOTAMMO_PUREHORROR = "Not bad at all!",
+        SLINGSHOTAMMO_HORRORFUEL = "Not bad at all!",
         PORTABLETENT = "I always sleep better in a tent.",
         PORTABLETENT_ITEM = "A portable tent! Why didn't we think of that, Luce?",
 
@@ -4082,6 +4092,7 @@ return{
 		GHOSTLYELIXIR_ATTACK = "Whoof, smells like week-old sockeye!",
 		GHOSTLYELIXIR_SPEED = "Whoof, smells like week-old sockeye!",
 		GHOSTLYELIXIR_RETALIATION = "Whoof, smells like week-old sockeye!",
+        GHOSTLYELIXIR_REVIVE = "Whoof, smells like week-old sockeye!",
 		SISTURN =
 		{
 			GENERIC = "Better pay our respects, eh Lucy?",
@@ -5517,12 +5528,15 @@ return{
 		SLINGSHOT_BAND_MIMIC = "Kid is getting fancy with that slingshooter.",
 		SLINGSHOT_FRAME_BONE = "Kid is getting fancy with that slingshooter.",
 		SLINGSHOT_FRAME_GEMS = "Kid is getting fancy with that slingshooter.",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "Kid is getting fancy with that slingshooter.",
 		SLINGSHOT_FRAME_WAGPUNK = "Kid is getting fancy with that slingshooter.",
 		SLINGSHOT_HANDLE_STICKY = "Kid is getting fancy with that slingshooter.",
 		SLINGSHOT_HANDLE_SILK = "Kid is getting fancy with that slingshooter.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Kid is getting fancy with that slingshooter.",
 
         WOBY_BADGE_STATION = "She's a good pup.",
+
+        ELIXIR_CONTAINER = "Think there's a spooky six-pack in there.",
     },
 
     DESCRIBE_GENERIC = "What's that, eh?",

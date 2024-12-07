@@ -9,6 +9,9 @@ local LinkedItemManager = Class(function(self, inst)
     self.linkeditems = {}
     self.players = {}
 
+    for _, player in ipairs(AllPlayers) do
+        self.players[player.userid] = player
+    end
     self.inst:ListenForEvent("ms_playerjoined", function(src, player) self:OnPlayerJoined(player) end, TheWorld)
     self.inst:ListenForEvent("ms_playerleft", function(src, player) self:OnPlayerLeft(player) end, TheWorld)
     self.inst:ListenForEvent("ms_registerlinkeditem", function(src, data) self:OnRegisterLinkedItem(data) end, TheWorld)

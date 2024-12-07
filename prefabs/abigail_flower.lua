@@ -17,8 +17,13 @@ local assets =
 
 local GHOSTCOMMAND_DEFS = require("prefabs/ghostcommand_defs")
 local GetGhostCommandsFor = GHOSTCOMMAND_DEFS.GetGhostCommandsFor
-local function updatespells(inst,owner)
-    inst.components.spellbook:SetItems((owner and GetGhostCommandsFor(owner)) or nil)
+local function updatespells(inst, owner)
+	if owner then
+		if owner.HUD then owner.HUD:CloseSpellWheel() end
+		inst.components.spellbook:SetItems(GetGhostCommandsFor(owner))
+	else
+		inst.components.spellbook:SetItems(nil)
+	end
 end
 
 local function DoClientUpdateSpells(inst, force)
@@ -276,9 +281,6 @@ local function fn()
 		updatespells(inst, owner)
 	end
 	inst._onsummonstatechanged_server = function(owner)
-		-- TODO @stevenm We need to close the spellbook, or otherwise update the wheel,
-		-- when this one happens, because it might be open (and the spell UI won't update until
-		-- we close and re-open it)
 		inst._updatespells:push()
 		updatespells(inst, owner)
 	end

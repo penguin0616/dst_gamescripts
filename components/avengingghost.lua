@@ -148,11 +148,6 @@ function Avengingghost:StopAvenging()
 	    self.inst:StopWatchingWorldState("isdusk", SetGhostDamage)
 	 	self.inst.components.combat.defaultdamage = self.olddamage
 
-					if self.inst:HasTag("playerghost") then
-						--self.inst.player_classified:SetGhostMode(true)
-					end
-	 				--self.inst.Light:SetColour(180/255, 195/255, 225/255)
-
 	    self.inst.SoundEmitter:KillSound("angry")
 	    self.inst.AnimState:SetMultColour(1, 1, 1, 1)
 
