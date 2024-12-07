@@ -30,8 +30,9 @@ end
 
 local function OnHaunt(inst, haunter)
     if inst._task == nil and
-        haunter:CanUseTouchStone(inst) and
-        inst.AnimState:IsCurrentAnimation("idle_activate") then
+            haunter.CanUseTouchStone ~= nil and
+            haunter:CanUseTouchStone(inst) and
+            inst.AnimState:IsCurrentAnimation("idle_activate") then
         inst.AnimState:PlayAnimation("resurrect")
         inst.AnimState:PushAnimation("idle_broken", false)
         inst.SoundEmitter:PlaySound("dontstarve/common/resurrectionstone_break")

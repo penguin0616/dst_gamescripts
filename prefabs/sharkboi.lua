@@ -759,6 +759,8 @@ local function fn()
 	inst:SetStateGraph("SGsharkboi")
 	inst:SetBrain(brain)
 
+	inst.hit_recovery = TUNING.SHARKBOI_HIT_RECOVERY
+
 	inst:ListenForEvent("newstate", OnNewState)
 	inst:ListenForEvent("attacked", OnAttacked)
 	inst:ListenForEvent("killed", OnKilledOther)

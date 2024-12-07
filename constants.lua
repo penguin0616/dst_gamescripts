@@ -1084,7 +1084,8 @@ end
 FE_MUSIC =
     (FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT] ~= nil and FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT].sound) or
     (SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT] ~= nil and SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT].sound) or
-    "dontstarve/music/music_FE_hallowednights2024"
+    "dontstarve/music/music_FE_meta5"
+    --"dontstarve/music/music_FE_hallowednights2024"
     --"dontstarve/music/music_FE_rifts4"
     --"dontstarve/music/music_FE_winonawurt"
     --"dontstarve/music/music_FE_junkyardhog"
@@ -2794,6 +2795,14 @@ WOBY_TRAINING_ASPECTS = -- NOTES(JBK): Keep this table updated in export_account
 }
 
 WOBY_TRAINING_ASPECTS_LIST = {}
+
+-- Tag pairs in this list behave mutually exclusively,
+-- when trying to attune to different objects.
+EQUIVALENT_ATTUNABLE_TAGS =
+{
+    ["remoteresurrector"] = "gravestoneresurrector",
+    ["gravestoneresurrector"] = "remoteresurrector",
+}
 
 for k, v in pairs(WOBY_TRAINING_ASPECTS) do
     table.insert(WOBY_TRAINING_ASPECTS_LIST, v)

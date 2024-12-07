@@ -1250,6 +1250,155 @@ local fx =
             inst.AnimState:SetFinalOffset(3)
         end,
     },        
+
+-- PLAYER ELIXIR
+    {
+        name = "ghostlyelixir_player_slowregen_fx",
+        bank = "player_vial_fx",
+        build = "player_vial_fx",
+        anim = "buff_regen",
+        sound = "dontstarve/characters/wendy/abigail/buff/gen",
+        fn = FinalOffset3,
+    },
+    {
+        name = "ghostlyelixir_player_fastregen_fx",
+        bank = "player_vial_fx",
+        build = "player_vial_fx",
+        anim = "buff_heal",
+        sound = "dontstarve/characters/wendy/abigail/buff/gen",
+        fn = FinalOffset3,
+    },
+    {
+        name = "ghostlyelixir_player_shield_fx",
+        bank = "player_vial_fx",
+        build = "player_vial_fx",
+        anim = "buff_shield",
+        sound = "dontstarve/characters/wendy/abigail/buff/shield",
+        fn = FinalOffset3,
+    },
+    {
+        name = "ghostlyelixir_player_attack_fx",
+        bank = "player_vial_fx",
+        build = "player_vial_fx",
+        anim = "buff_attack",
+        sound = "dontstarve/characters/wendy/abigail/buff/attack",
+        fn = FinalOffset3,
+    },
+    {
+        name = "ghostlyelixir_player_speed_fx",
+        bank = "player_vial_fx",
+        build = "player_vial_fx",
+        anim = "buff_speed",
+        sound = "dontstarve/characters/wendy/abigail/buff/speed",
+        fn = FinalOffset3,
+    },
+    {
+        name = "ghostlyelixir_player_retaliation_fx",
+        bank = "player_vial_fx",
+        build = "player_vial_fx",
+        anim = "buff_retaliation",
+        sound = "dontstarve/characters/wendy/abigail/buff/retaliation",
+        fn = FinalOffset3,
+    },
+    {
+        name = "ghostlyelixir_player_shadow_fx",
+        bank = "player_vial_fx",
+        build = "player_vial_fx",
+        anim = "buff_shadow",
+        --sound = "dontstarve/characters/wendy/abigail/buff/shadow", --[[TODO]]
+        fn = FinalOffset3,
+    }, 
+    {
+        name = "ghostlyelixir_player_lunar_fx",
+        bank = "player_vial_fx",
+        build = "player_vial_fx",
+        anim = "buff_lunar",
+        --sound = "dontstarve/characters/wendy/abigail/buff/lunar", --[[TODO]]
+        fn = FinalOffset3,
+    },        
+    {
+        name = "ghostlyelixir_player_slowregen_dripfx",
+        bank = "player_elixir_buff_drip",
+        build = "player_vial_fx",
+        anim = "player_elixir_buff_drip",
+        fn = function(inst)
+            inst.AnimState:OverrideSymbol("fx_swap", "abigail_vial_fx", "fx_regen_02")
+            inst.AnimState:SetFinalOffset(3)
+        end,
+    },
+    {
+        name = "ghostlyelixir_player_fastregen_dripfx",
+        bank = "player_elixir_buff_drip",
+        build = "player_vial_fx",
+        anim = "player_elixir_buff_drip",
+        fn = function(inst)
+            inst.AnimState:OverrideSymbol("fx_swap", "abigail_vial_fx", "fx_heal_02")
+            inst.AnimState:SetFinalOffset(3)
+        end,
+    },
+    {
+        name = "ghostlyelixir_player_shield_dripfx",
+        bank = "player_elixir_buff_drip",
+        build = "player_vial_fx",
+        anim = "player_elixir_buff_drip",
+        fn = function(inst)
+            inst.AnimState:OverrideSymbol("fx_swap", "abigail_vial_fx", "fx_shield_02")
+            inst.AnimState:SetFinalOffset(3)
+        end,
+    },
+    {
+        name = "ghostlyelixir_player_attack_dripfx",
+        bank = "player_elixir_buff_drip",
+        build = "player_vial_fx",
+        anim = "player_elixir_buff_drip",
+        fn = function(inst)
+            inst.AnimState:OverrideSymbol("fx_swap", "abigail_vial_fx", "fx_attack_02")
+            inst.AnimState:SetFinalOffset(3)
+        end,
+    },
+    {
+        name = "ghostlyelixir_player_speed_dripfx",
+        bank = "player_elixir_buff_drip",
+        build = "player_vial_fx",
+        anim = "player_elixir_buff_drip",
+        fn = function(inst)
+            inst.AnimState:OverrideSymbol("fx_swap", "abigail_vial_fx", "fx_speed_02")
+            inst.AnimState:SetFinalOffset(3)
+        end,
+    },
+    {
+        name = "ghostlyelixir_player_retaliation_dripfx",
+        bank = "player_elixir_buff_drip",
+        build = "player_vial_fx",
+        anim = "player_elixir_buff_drip",
+        fn = function(inst)
+            inst.AnimState:OverrideSymbol("fx_swap", "abigail_vial_fx", "fx_retaliation_02")
+            inst.AnimState:SetFinalOffset(3)
+        end,
+    },
+    {
+        name = "ghostlyelixir_player_shadow_dripfx",
+        bank = "player_elixir_buff_drip",
+        build = "player_vial_fx",
+        anim = "player_elixir_buff_drip",
+        fn = function(inst)
+            inst.AnimState:OverrideSymbol("fx_swap", "abigail_vial_fx", "fx_shadow_02")
+            inst.AnimState:SetFinalOffset(3)
+        end,
+    },
+    {
+        name = "ghostlyelixir_player_lunar_dripfx",
+        bank = "player_elixir_buff_drip",
+        build = "player_vial_fx",
+        anim = "player_elixir_buff_drip",
+        fn = function(inst)
+            inst.AnimState:OverrideSymbol("fx_swap", "abigail_vial_fx", "fx_lunar_02")
+            inst.AnimState:SetFinalOffset(3)
+        end,
+    },        
+    --------
+
+
     {
         name = "disease_puff",
         bank = "flies",
@@ -3553,6 +3702,13 @@ local fx =
 			inst.AnimState:SetSortOrder(3)
 		end,
 	},
+    
+    {
+        name = "elixir_player_forcefield",
+        bank = "abigail_shield",
+        build = "abigail_shield",
+        anim = "player_shield",
+    },   
 }
 
 for cratersteamindex = 1, 4 do
@@ -3589,7 +3745,7 @@ for j = 0, 3, 3 do
     end
 end
 
-local shot_types =
+local SHOT_TYPES =
 {
     "rock",
     "gold",
@@ -3611,18 +3767,19 @@ local shot_types =
     "trinket_1",
 }
 
-local aoe_shot_types =
+local SPECIFIC_HITFX_ANIM =
 {
-    stinger = true,
-    moonglass = true,
+    stinger = "used_stinger",
+    moonglass = "used_moonglass",
+    gunpowder = "used_gunpowder",
 }
 
-for _, shot_type in ipairs(shot_types) do
+for _, shot_type in ipairs(SHOT_TYPES) do
     table.insert(fx, {
         name = "slingshotammo_hitfx_"..shot_type,
         bank = "slingshotammo",
         build = "slingshotammo",
-        anim = aoe_shot_types[shot_type] and ("used_"..shot_type) or "used",
+        anim = SPECIFIC_HITFX_ANIM[shot_type] or "used",
         sound = "dontstarve/characters/walter/slingshot/"..shot_type,
         fn = function(inst)
 			if shot_type ~= "rock" then
@@ -3631,6 +3788,9 @@ for _, shot_type in ipairs(shot_types) do
 				if shot_type == "horrorfuel" then
 					inst.AnimState:SetLightOverride(1)
                 elseif shot_type == "purebrilliance" then
+                    inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+                    inst.AnimState:SetLightOverride(.1)
+                elseif shot_type == "gunpowder" then
                     inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
                     inst.AnimState:SetLightOverride(.1)
 				end

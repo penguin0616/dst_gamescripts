@@ -160,7 +160,7 @@ local function onbuilt(inst)
     inst.SoundEmitter:PlaySound(inst.data.sounds.ontakefuel)
 end
 
-local function OnHaunt(inst, haunter)
+local function OnHaunt(inst)
     if math.random() <= TUNING.HAUNT_CHANCE_RARE and
         inst.components.fueled ~= nil and
         not inst.components.fueled:IsEmpty() then

@@ -25,7 +25,6 @@ end
 
 local function UseableTargetedItem_ValidTarget(inst, target, doer)
 	--component exists on clients
-	--TODO: check skilltree!
 	return target.components.slingshotmods and target.components.slingshotmods:CanBeOpenedBy(doer)
 end
 
@@ -41,6 +40,9 @@ local function fn()
 	inst.AnimState:PlayAnimation("idle")
 
 	inst:AddTag("slingshotmodkit")
+
+	--useabletargeteditem_mounted (from useabletargeteditem component) added to pristine state for optimization
+	inst:AddTag("useabletargeteditem_mounted")
 
 	MakeInventoryPhysics(inst)
 	MakeInventoryFloatable(inst, "med", nil, 0.65)
@@ -58,6 +60,7 @@ local function fn()
 
 	inst:AddComponent("useabletargeteditem")
 	inst.components.useabletargeteditem:SetOnUseFn(OnUsed)
+	inst.components.useabletargeteditem:SetUseableMounted(true)
 
 	MakeSmallBurnable(inst, TUNING.SMALL_BURNTIME)
 	MakeSmallPropagator(inst)

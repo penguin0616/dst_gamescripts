@@ -137,8 +137,8 @@ local extras =
     slingshotammo_gunpowder =
     {
         final_offset = 3,
-        bloom = false,
-        light_override = 0,
+        scale = 1.8,
+        light_override = .2,
     },
 }
 

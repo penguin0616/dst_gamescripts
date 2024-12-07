@@ -254,6 +254,7 @@ end
 local NO_TAGS_PVP = { "INLIMBO", "playerghost", "FX", "NOCLICK", "DECOR", "notarget", "companion", "decoy" }
 local NO_TAGS = shallowcopy(NO_TAGS_PVP)
 table.insert(NO_TAGS, "player")
+table.insert(NO_TAGS, "wall")
 
 local function HasFriendlyLeader(target, attacker)
     local target_leader = (target.components.follower ~= nil) and target.components.follower.leader or nil

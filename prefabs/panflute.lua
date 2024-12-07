@@ -40,13 +40,15 @@ local function HearPanFlute(inst, musician, instrument)
 			inst.components.farmplanttendable:TendTo(musician)
         elseif inst.components.sleeper ~= nil then
             inst.components.sleeper:AddSleepiness(10, instrument.panflute_sleeptime)
+            if inst.components.sleeper:IsAsleep() then
+                if instrument.panflute_wortox_forget_debuff and inst.components.combat then
+                    inst:AddDebuff("wortox_forget_debuff", "wortox_forget_debuff", {toforget = musician})
+                end
+            end
         elseif inst.components.grogginess ~= nil then
             inst.components.grogginess:AddGrogginess(10, instrument.panflute_sleeptime)
         else
             inst:PushEvent("knockedout")
-        end
-        if instrument.panflute_wortox_forget_debuff and inst.components.combat then
-            inst:AddDebuff("wortox_forget_debuff", "wortox_forget_debuff", {toforget = musician})
         end
     end
 end

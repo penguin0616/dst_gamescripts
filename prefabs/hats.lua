@@ -4729,6 +4729,57 @@ local function MakeHat(name)
 
     -----------------------------------------------------------------------------
 
+    fns.ghostflower_custom_init = function(inst)
+        inst:AddTag("show_spoilage")
+        inst:AddTag("open_top_hat")
+    end
+
+    fns.ghostflower_onequip = function(inst, owner)
+        fns.opentop_onequip(inst, owner)
+        owner:AddTag("ghost_ally")
+        inst:AddTag("elixir_drinker")
+    end
+
+    fns.ghostflower_onunequip = function(inst, owner)
+        _onunequip(inst, owner)
+        owner:RemoveTag("ghost_ally")
+        inst:RemoveTag("elixir_drinker")
+
+        local debuff = owner:GetDebuff("elixir_buff")
+        if debuff then
+            debuff.components.debuff:Stop()
+        end
+    end    
+
+    fns.ghostflower = function()
+        local inst = simple(fns.ghostflower_custom_init)
+
+        inst.components.floater:SetSize("med")
+        inst.components.floater:SetScale(0.68)
+
+        if not TheWorld.ismastersim then
+            return inst
+        end
+
+        inst.components.equippable.dapperness = TUNING.DAPPERNESS_TINY
+        inst.components.equippable:SetOnEquip(fns.ghostflower_onequip)
+        inst.components.equippable:SetOnUnequip(fns.ghostflower_onunequip)
+
+        inst:AddComponent("perishable")
+        inst.components.perishable:SetPerishTime(TUNING.PERISH_MED)
+        inst.components.perishable:StartPerishing()
+        inst.components.perishable:SetOnPerishFn(inst.Remove)
+
+        inst:AddComponent("forcecompostable")
+        inst.components.forcecompostable.green = true
+
+        MakeHauntableLaunch(inst)
+
+        return inst
+    end
+
+    -----------------------------------------------------------------------------
+
     fns.rabbit_idleanims = function(inst)
         if inst.rabbithat_doidleanims then
             local r = math.random(9)
@@ -5441,6 +5492,8 @@ local function MakeHat(name)
 		table.insert(assets, Asset("INV_IMAGE", "inspectacleshat_equip_signal"))
 	elseif name == "roseglasses" then
 		fn = fns.roseglasses
+    elseif name == "ghostflower" then
+        fn = fns.ghostflower    
     elseif name == "rabbit" then
         fn = fns.rabbit
 		prefabs = { "rabbithat_fx", "smallmeat" }
@@ -6052,6 +6105,7 @@ return  MakeHat("straw"),
 
         MakeHat("inspectacles"),
 		MakeHat("roseglasses"),
+        MakeHat("ghostflower"),        
 
         MakeHat("rabbit"),
 

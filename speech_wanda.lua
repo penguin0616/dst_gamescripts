@@ -1080,6 +1080,14 @@ return{
 
     ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
+    ANNOUNCE_ELIXIR_BOOSTED = "Like a good cup of tea.",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "Let's get on with it.",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "Strength is efficiency!",
+
+    ANNOUNCE_ABIGAIL_HIDING = "only_used_by_wendy",
+
+    ANNOUNCE_EXLIIR_TOO_SUPER = "Ooph. That is far too strong.",
+
 	BATTLECRY =
 	{
 		GENERIC = "You ruffian! I'll clean your clock!",
@@ -5503,7 +5511,7 @@ return{
         GELBLOB_BOTTLE = "What should we do with this?",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "A horrid way to go.",
             ME = "Better luck this time.",
         },
@@ -5519,8 +5527,7 @@ return{
         -- Meta 5
         GHOSTLYELIXIR_LUNAR = "A little bit of metaphysical meddling never hurt anyone.",
         GHOSTLYELIXIR_SHADOW = "A little bit of metaphysical meddling never hurt anyone.",
-        REVIVER_FLOWER = "TODO", -- [[TODO]]
-
+        
 		SLINGSHOTMODKIT = "Rather innovative for a child.",
 		SLINGSHOT_BAND_PIGSKIN = "Rather innovative for a child.",
 		SLINGSHOT_BAND_TENTACLE = "Rather innovative for a child.",
@@ -5530,12 +5537,15 @@ return{
 		SLINGSHOT_FRAME_WAGPUNK_0 = "Rather innovative for a child.",
 		SLINGSHOT_FRAME_WAGPUNK = "Rather innovative for a child.",
 		SLINGSHOT_HANDLE_STICKY = "Rather innovative for a child.",
+		SLINGSHOT_HANDLE_JELLY = "Rather innovative for a child.",
 		SLINGSHOT_HANDLE_SILK = "Rather innovative for a child.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Rather innovative for a child.",
 
         WOBY_BADGE_STATION = "She's a fast learner.",
 
         ELIXIR_CONTAINER = "Pretty, practical.",
+        GHOSTFLOWERHAT = "Who has time to pick flowers?",
+        WENDY_RESURRECTIONGRAVE = "How many times have I done this?",
     },
 
     DESCRIBE_GENERIC = "A very particular something or other.",

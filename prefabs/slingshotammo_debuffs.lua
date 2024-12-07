@@ -1,13 +1,13 @@
 local SpDamageUtil = require("components/spdamageutil")
 
-local assets =
-{
-
-}
-
 local horrorfuel_assets =
 {
     Asset("ANIM", "anim/slingshot_shadowcurse.zip"),
+}
+
+local slow_assets =
+{
+	Asset("ANIM", "anim/slingshotammo_slow_fx.zip"),
 }
 
 local brilliance_mark_prefabs =
@@ -297,9 +297,9 @@ local function PureBrillianceMarkFx_AttachTo(inst, target)
     inst.Transform:SetPosition(0, 0, 0)
     inst._back.Transform:SetPosition(0, 0, 0)
 
-    local symbol, size = inst:GetBestSymbolAndSize(target)
+    inst.SoundEmitter:PlaySound("meta5/walter/ammo_pstfx_purebrilliance_lp", "loop")
 
-    --print(target.prefab, symbol, math.clamp(size or 2, 1, 3)) -- TODO(DiogoW): Using this for debbuging.
+    local symbol, size = inst:GetBestSymbolAndSize(target)
 
     if symbol ~= nil then
         local x, y, z, success = target.AnimState:GetSymbolPosition(symbol)
@@ -330,6 +330,7 @@ local function PureBrillianceMarkFxFn()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
+    inst.entity:AddSoundEmitter()
     inst.entity:AddFollower()
     inst.entity:AddNetwork()
 
@@ -446,6 +447,8 @@ local function HorrorFuel_Restart(inst, attacker, target, variation, quick)
         end
         inst:ListenForEvent("onremove", inst._ontargetremoved, target)
     end
+
+	inst.SoundEmitter:PlaySound("meta5/walter/ammo_pstfx_purehorror")
 end
 
 local function HorrorFuelFxFn()
@@ -453,6 +456,7 @@ local function HorrorFuelFxFn()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
+	inst.entity:AddSoundEmitter()
     inst.entity:AddFollower()
     inst.entity:AddNetwork()
 
@@ -464,6 +468,8 @@ local function HorrorFuelFxFn()
     inst.AnimState:SetBuild("slingshot_shadowcurse")
     inst.AnimState:SetFinalOffset(7)
     inst.AnimState:SetSymbolLightOverride("parts_red", 1)
+
+	inst:SetPrefabNameOverride("slingshotammo_horrorfuel")
 
     inst.entity:SetPristine()
 
@@ -488,7 +494,95 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------------
 
+local function Slow_AnimName(inst, anim, overridelevel)
+	return string.format("slow_%s_%s_%d", anim, inst._size, overridelevel or inst._level)
+end
+
+local function Slow_StartFX(inst, target, delay)
+	if inst._inittask and target and target:IsValid() then
+		inst._inittask:Cancel()
+		if delay then
+			inst._inittask = inst:DoTaskInTime(delay, Slow_StartFX, target)
+		else
+			inst._inittask = nil
+
+			--[[if target.components.combat and target.components.combat.hiteffectsymbol then
+				local x, y, z, success = target.AnimState:GetSymbolPosition(target.components.combat.hiteffectsymbol)
+				if success then
+					inst.entity:AddFollower():FollowSymbol(target.GUID, target.components.combat.hiteffectsymbol)
+				end
+				--otherwise stay parented at 0,0,0
+			end]]
+
+			inst._size =
+				(target:HasTag("smallcreature") and "small") or
+				(target:HasAnyTag("largecreature") and "large") or
+				"med"
+
+			--NOTE: we might have leveled up during delay, but pre anim only has level 1
+			inst.AnimState:PlayAnimation(Slow_AnimName(inst, "pre", 1))
+			inst.AnimState:PushAnimation(Slow_AnimName(inst, "loop"))
+		end
+	end
+end
+
+local function Slow_SetFXLevel(inst, level)
+	if not inst.killed and inst._level ~= level then
+		inst._level = level
+		if not inst._inittask then
+			inst.AnimState:PlayAnimation(Slow_AnimName(inst, "loop"), true)
+			inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1)
+		end
+	end
+end
+
+local function Slow_KillFX(inst)
+	if inst._inittask then
+		inst:Remove()
+	elseif not inst.killed then
+		inst.killed = true
+		inst.AnimState:PlayAnimation(Slow_AnimName(inst, "pst"))
+		--timer so it removes even when asleep
+		inst:DoTaskInTime(inst.AnimState:GetCurrentAnimationLength(), inst.Remove)
+	end
+end
+
+local function SlowFn()
+	local inst = CreateEntity()
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	--inst.entity:AddFollower() --add when needed, this is not pooled
+	inst.entity:AddNetwork()
+
+	inst:AddTag("FX")
+	inst:AddTag("NOCLICK")
+
+	inst.AnimState:SetBank("slingshotammo_slow_fx")
+	inst.AnimState:SetBuild("slingshotammo_slow_fx")
+	inst.AnimState:SetFinalOffset(7)
+
+	inst.entity:SetPristine()
+
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	inst._level = 1
+	inst._inittask = inst:DoTaskInTime(0, inst.Remove)
+	inst.StartFX = Slow_StartFX
+	inst.SetFXLevel = Slow_SetFXLevel
+	inst.KillFX = Slow_KillFX
+
+	inst.persists = false
+
+	return inst
+end
+
+--------------------------------------------------------------------------------------------------------------------------------
+
 return
     Prefab("slingshotammo_purebrilliance_debuff",    PureBrillianceMarkFn,   nil,                 brilliance_mark_prefabs),
     Prefab("slingshotammo_purebrilliance_debuff_fx", PureBrillianceMarkFxFn, brilliance_fx_assets                        ),
-    Prefab("slingshotammo_horrorfuel_debuff_fx",     HorrorFuelFxFn,         horrorfuel_assets                           )
+    Prefab("slingshotammo_horrorfuel_debuff_fx",     HorrorFuelFxFn,         horrorfuel_assets                           ),
+    Prefab("slingshotammo_slow_debuff_fx",           SlowFn,                 slow_assets                                 )

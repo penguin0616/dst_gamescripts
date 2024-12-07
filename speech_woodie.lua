@@ -1081,6 +1081,14 @@ return{
 
     ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
+    ANNOUNCE_ELIXIR_BOOSTED = "That's alright, eh.",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "Here's to seeing things in a different light.",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "We are really movin', Luce!",
+
+    ANNOUNCE_ABIGAIL_HIDING = "only_used_by_wendy",
+
+    ANNOUNCE_EXLIIR_TOO_SUPER = "I'll pass on that one.",
+
 	BATTLECRY =
 	{
 		GENERIC = "Get over here, eh!",
@@ -5504,7 +5512,7 @@ return{
         GELBLOB_BOTTLE = "Looks potent.",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "You're not yourself lately.",
             ME = "That is throwin' me for a loop, Luce.",
         },
@@ -5520,8 +5528,7 @@ return{
         -- Meta 5
         GHOSTLYELIXIR_LUNAR = "Whoof, smells like week-old sockeye!",
         GHOSTLYELIXIR_SHADOW = "Whoof, smells like week-old sockeye!",
-        REVIVER_FLOWER = "TODO", -- [[TODO]]
-
+        
 		SLINGSHOTMODKIT = "Kid is getting fancy with that slingshooter.",
 		SLINGSHOT_BAND_PIGSKIN = "Kid is getting fancy with that slingshooter.",
 		SLINGSHOT_BAND_TENTACLE = "Kid is getting fancy with that slingshooter.",
@@ -5531,12 +5538,15 @@ return{
 		SLINGSHOT_FRAME_WAGPUNK_0 = "Kid is getting fancy with that slingshooter.",
 		SLINGSHOT_FRAME_WAGPUNK = "Kid is getting fancy with that slingshooter.",
 		SLINGSHOT_HANDLE_STICKY = "Kid is getting fancy with that slingshooter.",
+		SLINGSHOT_HANDLE_JELLY = "Kid is getting fancy with that slingshooter.",
 		SLINGSHOT_HANDLE_SILK = "Kid is getting fancy with that slingshooter.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Kid is getting fancy with that slingshooter.",
 
         WOBY_BADGE_STATION = "She's a good pup.",
 
         ELIXIR_CONTAINER = "Think there's a spooky six-pack in there.",
+        GHOSTFLOWERHAT = "I'm not scared of wearin' it, Lucy. I just don't feel like it.",
+        WENDY_RESURRECTIONGRAVE = "Of course I'd remember you, Luce.",
     },
 
     DESCRIBE_GENERIC = "What's that, eh?",

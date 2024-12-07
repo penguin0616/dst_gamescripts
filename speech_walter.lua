@@ -1080,6 +1080,14 @@ return{
 
     ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
+    ANNOUNCE_ELIXIR_BOOSTED = "Refreshing!",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "It's the best of both worlds!",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "I bet I could carry you, Woby!",
+
+    ANNOUNCE_ABIGAIL_HIDING = "only_used_by_wendy",
+
+    ANNOUNCE_EXLIIR_TOO_SUPER = "I don't think my tummy can handle that.",
+
 	BATTLECRY =
 	{
 		GENERIC = "Sorry!!",
@@ -5503,7 +5511,7 @@ return{
         GELBLOB_BOTTLE = "We really should label that.",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "Don't you recognize me?",
             ME = "Dead me walking! Ha... ha?",
         },
@@ -5519,8 +5527,7 @@ return{
         -- Meta 5
         GHOSTLYELIXIR_LUNAR = "Ghosts can drink potions? Uh, of course I knew that!",
         GHOSTLYELIXIR_SHADOW = "Ghosts can drink potions? Uh, of course I knew that!",
-        REVIVER_FLOWER = "TODO", -- [[TODO]]
-
+        
 		SLINGSHOTMODKIT = "Time to mod my trusty slingshot?",
 		SLINGSHOT_BAND_PIGSKIN = "Mmm. Smells like bacon.",
 		SLINGSHOT_BAND_TENTACLE = "I think it twitched.",
@@ -5530,12 +5537,15 @@ return{
 		SLINGSHOT_FRAME_WAGPUNK_0 = "There's a real kick to it!",
 		SLINGSHOT_FRAME_WAGPUNK = "I could slingshot forever.",
 		SLINGSHOT_HANDLE_STICKY = "It's gross but effective!",
+		SLINGSHOT_HANDLE_JELLY = "Super sticky.",
 		SLINGSHOT_HANDLE_SILK = "It's good tape.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Oh yeah. Here we go.",
 
         WOBY_BADGE_STATION = "You're the smartest dog ever, Woby!",
 
-        ELIXIR_CONTAINER = "Contents not safe for human consumption!", --[[TODO]]
+        ELIXIR_CONTAINER = "Contents not safe for human consumption!",
+        GHOSTFLOWERHAT = "I guess it's kinda haunted.",
+        WENDY_RESURRECTIONGRAVE = "Hope I never have to use it, Woby!",
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

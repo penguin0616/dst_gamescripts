@@ -17,6 +17,8 @@ local prefabs =
 	"walter_campfire_story_proxy",
     "portabletent",
     "portabletent_item",
+	"slingshot_powerup_fx",
+	"slingshot_powerup_mounted_fx",
 }
 
 local start_inv = {}
@@ -71,8 +73,7 @@ local function OnHealthDelta(inst, data)
 		local mount = inst.components.rider:GetMount()
 
 		if mount ~= nil and mount:HasTag("woby") then
-			inst.components.dogtrainer:DoAspectDeltaIfHasBadge(WOBY_TRAINING_ASPECTS.BRAVERY, TUNING.SKILLS.WALTER.WOBY_BADGES_ASPECT_GAIN_RATE.bravery)
-			inst.components.dogtrainer:DoAspectDeltaIfHasBadge(WOBY_TRAINING_ASPECTS.RESISTANCE, TUNING.SKILLS.WALTER.WOBY_BADGES_ASPECT_GAIN_RATE.resistance)
+			inst.components.dogtrainer:DoAspectDeltaIfHasBadge(WOBY_TRAINING_ASPECTS.BRAVERY, -data.amount * TUNING.SKILLS.WALTER.WOBY_BADGES_ASPECT_GAIN_RATE.bravery_taken)
 		end
     end
 end
@@ -173,6 +174,8 @@ local function OnAttacked(inst, data)
 
 	inst._wobybuck_damage = inst._wobybuck_damage + damage
 
+	inst.components.dogtrainer:DoAspectDeltaIfHasBadge(WOBY_TRAINING_ASPECTS.RESISTANCE, damage * TUNING.SKILLS.WALTER.WOBY_BADGES_ASPECT_GAIN_RATE.resistance_taken)
+
 	local damage_threshold = mount:AddTrainingBonus(TUNING.WALTER_WOBYBUCK_DAMAGE_MAX, WOBY_TRAINING_ASPECTS.RESISTANCE)
 
 	if inst._wobybuck_damage >= damage_threshold then
@@ -185,9 +188,24 @@ local function OnAttacked(inst, data)
 	end
 end
 
+local function OnAttackOther(inst, data)
+    if not inst.components.rider:IsRiding() then
+		return
+	end
+
+	local mount = inst.components.rider:GetMount()
+
+	if not mount:HasTag("woby") then
+		return
+	end
+
+	inst.components.dogtrainer:DoAspectDeltaIfHasBadge(WOBY_TRAINING_ASPECTS.BRAVERY, TUNING.SKILLS.WALTER.WOBY_BADGES_ASPECT_GAIN_RATE.bravery_onatk)
+	inst.components.dogtrainer:DoAspectDeltaIfHasBadge(WOBY_TRAINING_ASPECTS.RESISTANCE, TUNING.SKILLS.WALTER.WOBY_BADGES_ASPECT_GAIN_RATE.resistance_onatk)
+end
+
 local INCREASE_SPEED_ASPECT_TASK_PERIOD = 10
 
-local function IncreaveSpeedAspect(inst, dt)
+local function IncreaseSpeedAspect(inst, dt)
 	inst.components.dogtrainer:DoAspectDeltaIfHasBadge(WOBY_TRAINING_ASPECTS.SPEED, dt * TUNING.SKILLS.WALTER.WOBY_BADGES_ASPECT_GAIN_RATE.speed)
 end
 
@@ -197,9 +215,14 @@ local function OnMounted(inst, data)
 	end
 
 	local woby_sanity_protection = data.target:AddTrainingBonus(0, WOBY_TRAINING_ASPECTS.BRAVERY)
+	local woby_sanity_regen = woby_sanity_protection * 2 -- x2 because woby_sanity_protection max value is 0.5
 
 	if woby_sanity_protection > 0 then
 		inst._sanity_damage_protection:SetModifier(data.target, woby_sanity_protection)
+
+		if inst.components.sanity ~= nil then
+			inst.components.sanity.externalmodifiers:SetModifier(data.target, TUNING.DAPPERNESS_MED_LARGE * woby_sanity_regen)
+		end
 	end
 
 	if inst.components.dogtrainer:HasBadgeOfAspect(WOBY_TRAINING_ASPECTS.SPEED) then
@@ -207,12 +230,16 @@ local function OnMounted(inst, data)
 			inst._wobyspeedaspecttask:Cancel()
 		end
 
-		inst._wobyspeedaspecttask = inst:DoPeriodicTask(INCREASE_SPEED_ASPECT_TASK_PERIOD, IncreaveSpeedAspect, nil, INCREASE_SPEED_ASPECT_TASK_PERIOD)
+		inst._wobyspeedaspecttask = inst:DoPeriodicTask(INCREASE_SPEED_ASPECT_TASK_PERIOD, IncreaseSpeedAspect, nil, INCREASE_SPEED_ASPECT_TASK_PERIOD)
 	end
 end
 
 local function OnDismounted(inst, data)
 	inst._sanity_damage_protection:RemoveModifier(data.target)
+
+	if inst.components.sanity ~= nil then
+		inst.components.sanity.externalmodifiers:RemoveModifier(data.target)
+	end
 
 	if inst._wobyspeedaspecttask ~= nil then
 		inst._wobyspeedaspecttask:Cancel()
@@ -381,6 +408,7 @@ local function master_postinit(inst)
 
 	inst:ListenForEvent("healthdelta", OnHealthDelta)
     inst:ListenForEvent("attacked", OnAttacked)
+	inst:ListenForEvent("onattackother", OnAttackOther)
 
 	inst._sanity_damage_protection = SourceModifierList(inst)
 

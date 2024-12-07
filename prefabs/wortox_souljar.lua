@@ -93,7 +93,7 @@ local function OnItemLose(inst, data)
     inst:UpdatePercent()
 end
 
-local function OnOpen(inst)
+local function OnOpen(inst, data)
     inst.components.inventoryitem:ChangeImageName("wortox_souljar_open")
     if not inst.components.inventoryitem:IsHeld() then
         inst.AnimState:PlayAnimation("lidoff")
@@ -102,6 +102,9 @@ local function OnOpen(inst)
         inst:UpdatePercent()
     else
         inst.AnimState:PlayAnimation("lidoff_idle")
+    end
+    if data and data.doer and data.doer.finishportalhoptask ~= nil then
+        data.doer:TryToPortalHop(1, true)
     end
 end
 

@@ -255,6 +255,7 @@ local states =
         tags = { "busy", "noattack", "nointerrupt", "dissipate" },
 
         onenter = function(inst)
+            inst:PushEvent("set_babysitter") --setting to nil
             inst.Physics:Stop()
 			inst.components.aura:Enable(false)
 			if inst._playerlink then
@@ -590,6 +591,7 @@ local states =
         tags = { "busy", "noattack", "nointerrupt" },
 
         onenter = function(inst)
+            
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("abigail_escape_pre")
 
@@ -617,7 +619,7 @@ local states =
         onenter = function(inst)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("abigail_escape_pst")
-
+            
             inst.components.health:SetInvincible(true)
 
             inst.Transform:SetNoFaced()
@@ -732,9 +734,10 @@ local states =
     },
 
 
+
     State {
         name = "gestalt_attack",
-        tags = { "busy", "nointerrupt", "noattack"},
+        tags = { "busy", "nointerrupt"},
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -753,13 +756,15 @@ local states =
                 end
             end),
         },
+
     },
 
     State {
         name = "gestalt_loop_attack",
-        tags = { "busy", "nointerrupt", "noattack", "swoop"},
+        tags = { "busy", "nointerrupt", "swoop"},
 
         onenter = function(inst)
+
             inst.components.locomotor:Stop()
             inst.Physics:Stop()
             inst:SetTransparentPhysics(true)
@@ -821,7 +826,6 @@ local states =
         end,
 
         onexit = function(inst)
-
             inst.components.locomotor:EnableGroundSpeedMultiplier(true)
             inst.Physics:ClearMotorVelOverride()
             inst.components.locomotor:Stop()
@@ -842,9 +846,9 @@ local states =
 
     State {
         name = "gestalt_pst_attack",
-        tags = { "busy", "nointerrupt", "noattack"},
+        tags = { "busy", "nointerrupt"},
 
-        onenter = function(inst)
+        onenter = function(inst)               
             inst.SoundEmitter:PlaySound("meta5/abigail/gestalt_abigail_dashattack_pst")
             inst.AnimState:PlayAnimation("gestalt_attack_pst")
         end,
@@ -852,9 +856,26 @@ local states =
         events =
         {
             EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
+                inst.sg:GoToState("gestalt_rest")
             end),
         },
+           
+    },
+
+    State {
+        name = "gestalt_rest",
+        tags = { "busy", "nocommands" },
+
+        onenter = function(inst)
+            inst.AnimState:PlayAnimation("idle", true)
+
+            inst.sg:SetTimeout(1)
+        end,
+
+        ontimeout = function(inst)
+            inst.sg:GoToState("idle")
+        end,
+
     },
 
     State {

@@ -25,15 +25,17 @@ local function DoHeal(inst)
         end
     end
     if healtargetscount > 0 then
-        -- Healing adjustments are absolute from the releaser.
+        -- Healing adjustments are absolute from the releaser but can be debuffed by the receiver.
         local loss_per_player = TUNING.WORTOX_SOULHEAL_LOSS_PER_PLAYER
         if inst.soul_heal_player_efficient then
             loss_per_player = loss_per_player * TUNING.SKILLS.WORTOX.WORTOX_SOULPROTECTOR_4_LOSS_PER_PLAYER_MULT
         end
         local amt = math.max(TUNING.WORTOX_SOULHEAL_MINIMUM_HEAL, (TUNING.HEALING_MED * (inst.soul_heal_premult or 1) - loss_per_player * (healtargetscount - 1)) * (inst.soul_heal_mult or 1))
+        local amt_naughty = amt * TUNING.SKILLS.WORTOX.NAUGHTY_SOULHEAL_RECEIVED_MULT
         for i = 1, healtargetscount do
             local v = healtargets[i]
-            v.components.health:DoDelta(amt, nil, inst.prefab)
+            local adjusted_amt = v.wortox_inclination == "naughty" and amt_naughty or amt
+            v.components.health:DoDelta(adjusted_amt, nil, inst.prefab)
             if v.components.combat then -- Always show fx now that the heals do special targeting to show the player that it stops working when everyone is full.
                 local fx = SpawnPrefab("wortox_soul_heal_fx")
                 fx.entity:AddFollower():FollowSymbol(v.GUID, v.components.combat.hiteffectsymbol, 0, -50, 0)

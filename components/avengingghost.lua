@@ -6,11 +6,11 @@ local MAX_TIME = 15
 local TICKTIME = 1.1
 local SLOWRATE = 0.5
 
-local Avengingghost = Class(function(self, inst)
+local AvengingGhost = Class(function(self, inst)
     self.inst = inst
     self.ismastersim = TheWorld.ismastersim
 
- 	self._symbol = net_hash(inst.GUID, "avengingghost._symbol", "avengingghostsymboldirty")
+	self._symbol = net_hash(inst.GUID, "avengingghost._symbol", "avengingghostsymboldirty")
     self._avengetime = net_float(inst.GUID, "avengingghost._avengetime", "avengetimedirty")
     self._maxtime = net_float(inst.GUID, "avengingghost._maxtime", "avengetimemaxdirty")
     self._maxtime:set(MAX_TIME)
@@ -21,30 +21,29 @@ local Avengingghost = Class(function(self, inst)
 		return
 	end
 
-    local onbecameghost = function()
-    	if self:ShouldAvenge() then	
-    		self:StartAvenging()
-    	end
-    end
+	local onbecameghost = function()
+		if self:ShouldAvenge() then
+			self:StartAvenging()
+		end
+	end
 
-    local onrespawnfromghost = function()
-    	self:StopAvenging()
-    end
+	local onrespawnfromghost = function()
+		self:StopAvenging()
+	end
 
-    local setattacktimer = function()
-    	if self.inst.components.timer:TimerExists("avenging_ghost_attack") then
-    		self.inst.components.timer:SetTimeLeft("avenging_ghost_attack",TICKTIME)
-    	else
-    		self.inst.components.timer:StartTimer("avenging_ghost_attack",TICKTIME)
-    	end
-    end
+	local setattacktimer = function()
+		if self.inst.components.timer:TimerExists("avenging_ghost_attack") then
+			self.inst.components.timer:SetTimeLeft("avenging_ghost_attack",TICKTIME)
+		else
+			self.inst.components.timer:StartTimer("avenging_ghost_attack",TICKTIME)
+		end
+	end
 
     self.inst:ListenForEvent("ms_becameghost", onbecameghost )
     self.inst:ListenForEvent("ms_respawnedfromghost", onrespawnfromghost )
 	self.inst:ListenForEvent("onareaattackother", setattacktimer )
-    
 
-    self.inst:DoTaskInTime(0,function()	
+    self.inst:DoTaskInTime(0,function()
 		if self.load_avengetime and self.inst:HasTag("playerghost") then
 			self:StartAvenging(self.load_avengetime)
 			self.load_avengetime = nil
@@ -54,35 +53,35 @@ local Avengingghost = Class(function(self, inst)
 end)
 
 -- Common Interface 
-function Avengingghost:GetSymbol()
+function AvengingGhost:GetSymbol()
     return self._symbol:value()
 end
 
-function Avengingghost:GetTime()	
+function AvengingGhost:GetTime()
     return self._avengetime:value()
 end
 
-function Avengingghost:GetMaxTime()
+function AvengingGhost:GetMaxTime()
     return self._maxtime:value()
 end
 
 -- Server Interface
 
 local PLAYERMUST = {"player"}
-function Avengingghost:ShouldAvenge()
+function AvengingGhost:ShouldAvenge()
 	if not self.ismastersim then
 		return
 	end
 
- 	local avenge = nil
- 	local x,y,z = self.inst.Transform:GetWorldPosition()
- 	local ents = TheSim:FindEntities(x, y, z, PLAYER_CAMERA_SEE_DISTANCE, PLAYERMUST)
- 	for i, ent in ipairs(ents)do
- 		if ent.components.skilltreeupdater and ent.components.skilltreeupdater:IsActivated("wendy_avenging_ghost") then
- 			avenge = true
- 			break
- 		end
- 	end	
+	local avenge = nil
+	local x,y,z = self.inst.Transform:GetWorldPosition()
+	local ents = TheSim:FindEntities(x, y, z, PLAYER_CAMERA_SEE_DISTANCE, PLAYERMUST)
+	for _, ent in ipairs(ents) do
+		if ent.components.skilltreeupdater and ent.components.skilltreeupdater:IsActivated("wendy_avenging_ghost") then
+			avenge = true
+			break
+		end
+	end
 
 	return avenge
 end
@@ -98,25 +97,22 @@ local function SetGhostDamage(inst, push)
 	elseif TheWorld.state.isnight then
 		inst.components.combat.defaultdamage = TUNING.ABIGAIL_DAMAGE.night
 		attack_anim = "attack3"
-	end	
-	if push then		
-    	inst.ghost_attack_fx.AnimState:PlayAnimation(attack_anim .. "_pre")
-    	inst.ghost_attack_fx.AnimState:PushAnimation(attack_anim .. "_loop", true)
-	else	
+	end
+	if push then
+		inst.ghost_attack_fx.AnimState:PlayAnimation(attack_anim .. "_pre")
+		inst.ghost_attack_fx.AnimState:PushAnimation(attack_anim .. "_loop", true)
+	else
 		inst.ghost_attack_fx.AnimState:PlayAnimation(attack_anim .. "_loop", true)
 	end
 end
 
-function Avengingghost:StartAvenging(time)
+function AvengingGhost:StartAvenging(time)
 	if not self.ismastersim then
 		return
 	end
 
 	local set = time or MAX_TIME
 	self._avengetime:set(set)
-			
-				--self.inst.player_classified:SetGhostMode(false)
-                --self.inst.Light:SetColour(255/255, 32/255, 32/255)
 
     self.olddamage = self.inst.components.combat.defaultdamage
     self.inst:WatchWorldState("isnight", SetGhostDamage)
@@ -130,12 +126,12 @@ function Avengingghost:StartAvenging(time)
 
     self.inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/abigail/attack_LP", "angry")
     self.inst.AnimState:SetMultColour(207/255, 92/255, 92/255, 1)
-   
+
 	self.inst.components.aura:Enable(true)
 	self.inst:StartUpdatingComponent(self)
 end
 
-function Avengingghost:StopAvenging()	
+function AvengingGhost:StopAvenging()
 	if not self.ismastersim then
 		return
 	end
@@ -146,7 +142,7 @@ function Avengingghost:StopAvenging()
 	    self.inst:StopWatchingWorldState("isnight", SetGhostDamage)
 	    self.inst:StopWatchingWorldState("isday", SetGhostDamage)
 	    self.inst:StopWatchingWorldState("isdusk", SetGhostDamage)
-	 	self.inst.components.combat.defaultdamage = self.olddamage
+		self.inst.components.combat.defaultdamage = self.olddamage
 
 	    self.inst.SoundEmitter:KillSound("angry")
 	    self.inst.AnimState:SetMultColour(1, 1, 1, 1)
@@ -161,10 +157,10 @@ function Avengingghost:StopAvenging()
 	self.inst:StopUpdatingComponent(self)
 end
 
-function Avengingghost:OnUpdate(dt)
+function AvengingGhost:OnUpdate(dt)
 	if not self.ismastersim then
 		return
-	end	
+	end
 	local time = dt
 
 	if self.inst.components.timer:TimerExists("avenging_ghost_attack") then
@@ -177,16 +173,16 @@ function Avengingghost:OnUpdate(dt)
 	end
 end
 
-function Avengingghost:OnSave()
+function AvengingGhost:OnSave()
 	local data = {}
 	data.avengetime = self.load_avengetime or self._avengetime:value()
     return data
 end
 
-function Avengingghost:OnLoad(data, newents)
+function AvengingGhost:OnLoad(data, newents)
 	if data and data.avengetime then
 		self.load_avengetime = data.avengetime
 	end
 end
 
-return Avengingghost
+return AvengingGhost

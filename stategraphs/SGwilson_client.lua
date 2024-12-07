@@ -3731,14 +3731,8 @@ local states =
         onenter = function(inst)
             inst.components.locomotor:Stop()
 
-			inst.sg.statemem.chained = inst.AnimState:IsCurrentAnimation("slingshot")
-
 			inst.AnimState:PlayAnimation("slingshot_pre")
 			inst.AnimState:PushAnimation("slingshot_lag", false)
-
-			if inst.sg.statemem.chained then
-				inst.AnimState:SetFrame(2)
-			end
 
             local buffaction = inst:GetBufferedAction()
             if buffaction ~= nil then
@@ -3796,17 +3790,8 @@ local states =
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 
-			inst.sg.statemem.chained =
-				inst.AnimState:IsCurrentAnimation("slingshot") or
-				inst.AnimState:IsCurrentAnimation("slingshot_pre") or
-				inst.AnimState:IsCurrentAnimation("slingshot_lag")
-
 			inst.AnimState:PlayAnimation("slingshot_alt_pre")
 			inst.AnimState:PushAnimation("slingshot_lag", false)
-
-			if inst.sg.statemem.chained then
-				inst.AnimState:SetFrame(2)
-			end
 
 			local buffaction = inst:GetBufferedAction()
 			if buffaction then
@@ -3844,17 +3829,8 @@ local states =
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 
-			inst.sg.statemem.chained =
-				inst.AnimState:IsCurrentAnimation("slingshot") or
-				inst.AnimState:IsCurrentAnimation("slingshot_pre") or
-				inst.AnimState:IsCurrentAnimation("slingshot_lag")
-
-			inst.AnimState:PlayAnimation("slingshot_alt_pre") --17 frames
+			inst.AnimState:PlayAnimation("slingshot_alt_pre")
 			inst.AnimState:PushAnimation("slingshot_lag", false)
-
-			if inst.sg.statemem.chained then
-				inst.AnimState:SetFrame(2)
-			end
 
 			local buffaction = inst:GetBufferedAction()
 			if buffaction then

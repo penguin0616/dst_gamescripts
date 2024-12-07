@@ -360,7 +360,7 @@ ACTIONS =
     SEW = Action({ mount_valid=true }),
     STEAL = Action(),
     USEITEM = Action({ priority=1, instant=true }),
-    USEITEMON = Action({ distance=2, priority=1 }),
+	USEITEMON = Action({ distance=2, priority=1, mount_valid=true }),
     STOPUSINGITEM = Action({ priority=1 }),
     TAKEITEM = Action(),
     TAKESINGLEITEM = Action(),
@@ -2961,6 +2961,12 @@ ACTIONS.USEITEMON.strfn = function(act)
             or "GENERIC"
 end
 
+ACTIONS.USEITEMON.pre_action_cb = function(act)
+	if act.doer.HUD and TheInput:ControllerAttached() and act.doer.HUD:IsControllerInventoryOpen() then
+		act.doer.HUD:CloseControllerInventory()
+	end
+end
+
 ACTIONS.USEITEMON.fn = function(act)
     if act.invobject ~= nil and act.target ~= nil
             and act.invobject.components.useabletargeteditem ~= nil
@@ -3594,8 +3600,12 @@ ACTIONS.MIGRATE.fn = function(act)
 end
 
 ACTIONS.REMOTERESURRECT.fn = function(act)
-    if act.doer ~= nil and act.doer.components.attuner ~= nil and act.doer:HasTag("playerghost") then
-        local target = act.doer.components.attuner:GetAttunedTarget("remoteresurrector")
+    if act.doer == nil then return end
+
+    local doer_attuner = act.doer.components.attuner
+    if doer_attuner and act.doer:HasTag("playerghost") then
+        local target = doer_attuner:GetAttunedTarget("remoteresurrector")
+            or doer_attuner:GetAttunedTarget("gravestoneresurrector")
         if target ~= nil then
             act.doer:PushEvent("respawnfromghost", { source = target })
             return true
@@ -5476,7 +5486,11 @@ end
 
 ACTIONS.APPLYELIXIR.stroverridefn = function(act)
     if act.invobject then
-        return subfmt(STRINGS.ACTIONS.GIVE.APPLY, {item = act.invobject:GetBasicDisplayName()})
+        if act.target and act.target:HasTag("elixir_drinker") then
+            return subfmt(STRINGS.ACTIONS.GIVE.DRINK, {item = act.invobject:GetBasicDisplayName()})
+        else    
+            return subfmt(STRINGS.ACTIONS.GIVE.APPLY, {item = act.invobject:GetBasicDisplayName()})
+        end
     end
 end
 
@@ -5487,24 +5501,25 @@ ACTIONS.APPLYELIXIR.fn = function(act)
     local doer = act.doer
     local object = act.invobject
     if doer and object and doer.components.inventory then
-        local elixirable_item = doer.components.inventory:FindItem(find_elixirable_fn)
-
-        if elixirable_item then
-            return object.components.ghostlyelixir:Apply(doer, elixirable_item)
+        if act.target and act.target:HasTag("elixir_drinker") then
+            object.components.ghostlyelixir:Apply(doer, act.target)
+            return true
         else
-            return false, "NO_ELIXIRABLE"
+            local elixirable_item = doer.components.inventory:FindItem(find_elixirable_fn)
+            if elixirable_item then
+                return object.components.ghostlyelixir:Apply(doer, elixirable_item)
+            else
+                return false, "NO_ELIXIRABLE"
+            end
         end
     end
 end
 
 ACTIONS.ATTACH_GHOST.stroverridefn = function(act)
-    if act.doer.components.ghostlybond and act.doer.components.ghostlybond.ghost then
-        local ghost = act.doer.components.ghostlybond.ghost
-        if ghost.ghost_babysitter then
-            return subfmt(STRINGS.ACTIONS.ATTACH_GHOST.RETRIEVE, {ghost = ghost:GetBasicDisplayName() })
-        else
-            return subfmt(STRINGS.ACTIONS.ATTACH_GHOST.RELEASE, {ghost = ghost:GetBasicDisplayName() })            
-        end
+    if act.doer:HasTag("ghost_is_babysat") then
+        return STRINGS.ACTIONS.ATTACH_GHOST.RETRIEVE
+    else
+        return STRINGS.ACTIONS.ATTACH_GHOST.RELEASE
     end
 end
 

@@ -7,7 +7,7 @@ local assets_basic =
 local assets_ex =
 {
 	Asset("ANIM", "anim/slingshot.zip"),
-	Asset("ANIM", "anim/ui_slingshot_wagpunk.zip"),
+	Asset("ANIM", "anim/ui_slingshot_wagpunk_0.zip"),
 	Asset("INV_IMAGE", "slingshot"),
 }
 
@@ -81,11 +81,34 @@ local SCRAPBOOK_DEPS =
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
+local function OnRemoveFx(fx)
+	local parent = fx._highlightparent
+	if parent and parent.highlightchildren then
+		table.removearrayvalue(parent.highlightchildren, fx)
+	end
+end
+
+local function SetHighlightChildren(fx, parent)
+	if parent.highlightchildren then
+		table.insert(parent.highlightchildren, fx)
+	else
+		parent.highlightchildren = { fx }
+	end
+	fx._highlightparent = parent
+	fx.OnRemoveEntity = OnRemoveFx
+end
+
 local function CreateFollowFx(inst, anim, owner, frame1, frame2)
 	local fx = SpawnPrefab("slingshotparts_fx")
 	fx.entity:SetParent(owner.entity)
 	fx.AnimState:PlayAnimation(anim)
 	fx.Follower:FollowSymbol(owner.GUID, "swap_object", 0, 0, 0, true, false, frame1, frame2)
+	if not TheNet:IsDedicated() then
+		SetHighlightChildren(fx, owner)
+	end
+	if owner.components.colouradder then
+		owner.components.colouradder:AttachChild(fx)
+	end
 	return fx
 end
 
@@ -242,6 +265,9 @@ local function OnProjectileLaunched(inst, attacker, target, proj)
             proj:SetHighProjectile()
         end
     end
+	if inst.voidbonusenabled and proj.SetVoidBonus then
+		proj:SetVoidBonus()
+	end
 	if inst.chargedmult and proj.SetChargedMultiplier then
 		proj:SetChargedMultiplier(inst.chargedmult)
 	end
@@ -507,7 +533,11 @@ local function slingshotex_OnChargedAttack(inst, doer, ticks)
 		local target = CreateTarget()
 		target.Transform:SetPosition(x + math.cos(angle) * TARGET_RANGE, 0, z - math.sin(angle) * TARGET_RANGE)
 
-		local k = math.min(1, ticks * FRAMES / TUNING.SLINGSHOT_MAX_CHARGE_TIME)
+		--V2C: -stategraph forces at least 8 ticks held before allowing shot
+		--     -adjusting charge value by 5 frames
+		ticks = math.max(0, ticks - 5)
+		local max_ticks = TUNING.SLINGSHOT_MAX_CHARGE_TIME / FRAMES - 5
+		local k = math.min(1, ticks / max_ticks)
 		inst.chargedmult = k * k
 		inst.components.weapon:LaunchProjectile(doer, target)
 		inst.chargedmult = nil
@@ -704,6 +734,13 @@ end
 
 --------------------------------------------------------------------------
 
+local function partsfx_OnEntityReplicated(inst)
+	local parent = inst.entity:GetParent()
+	if parent then
+		SetHighlightChildren(inst, parent)
+	end
+end
+
 local function partsfxfn()
 	local inst = CreateEntity()
 
@@ -721,6 +758,8 @@ local function partsfxfn()
 	inst.entity:SetPristine()
 
 	if not TheWorld.ismastersim then
+		inst.OnEntityReplicated = partsfx_OnEntityReplicated
+
 		return inst
 	end
 

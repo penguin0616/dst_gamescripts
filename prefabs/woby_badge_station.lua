@@ -31,7 +31,7 @@ local function OnBuilt(inst)
     inst.AnimState:PlayAnimation("place")
     inst.AnimState:PushAnimation("idle", false)
 
-    --inst.SoundEmitter:PlaySound("/woby_badge_station/place")
+    inst.SoundEmitter:PlaySound("meta5/walter/badge_station_build")
 end
 
 local function OnBurnt(inst)
@@ -67,7 +67,7 @@ local function fn()
     inst:AddTag("structure")
     inst:AddTag("wobybadgestation")
 
-    --inst.MiniMapEntity:SetIcon("yotb_beefalowardrobe.png")
+    inst.MiniMapEntity:SetIcon("woby_badge_station.png")
 
     inst.AnimState:SetBank("woby_badge_station")
     inst.AnimState:SetBuild("woby_badge_station")

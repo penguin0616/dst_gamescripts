@@ -42,6 +42,13 @@ local function OnEntitySleep(inst)
     inst.components.combat:SetTarget(nil)
 end
 
+local function OnHaunt(inst)
+    local action = BufferedAction(inst, nil, ACTIONS.GOHOME)
+    inst.components.locomotor:PushAction(action)
+    inst.components.hauntable.hauntvalue = TUNING.HAUNT_MEDIUM
+    return true
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -128,12 +135,7 @@ local function fn()
     inst:SetBrain(brain)
 
     inst:AddComponent("hauntable")
-    inst.components.hauntable:SetOnHauntFn(function(inst, haunter)
-        local action = BufferedAction(inst, nil, ACTIONS.GOHOME)
-        inst.components.locomotor:PushAction(action)
-        inst.components.hauntable.hauntvalue = TUNING.HAUNT_MEDIUM
-        return true
-    end)
+    inst.components.hauntable:SetOnHauntFn(OnHaunt)
 
     inst.OnPreLoad = OnPreLoad
     inst.OnEntitySleep = OnEntitySleep

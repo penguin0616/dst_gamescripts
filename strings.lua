@@ -409,6 +409,7 @@ STRINGS =
             CELESTIAL = "Offer",
             SHOW = "Show",
 			APPLY    = "Apply {item}",
+            DRINK    = "Drink {item}",
             QUAGMIRE_POT_HANGER = "Hang {item}",
             QUAGMIRE_OVEN       = "Place {item}",
             QUAGMIRE_ALTAR =
@@ -1057,8 +1058,8 @@ STRINGS =
 
         ATTACH_GHOST =
         {
-            RELEASE = "RIP {ghost}",
-            RETRIEVE = "Call {ghost}",
+            RELEASE = "RIP Abigail",
+            RETRIEVE = "Call Abigail",
         },
 
         GRAVEDIG = "Relocate",
@@ -4183,15 +4184,19 @@ STRINGS =
 		SLINGSHOT_FRAME_WAGPUNK_0 = "Scrappy Slingshot Frame",
 		SLINGSHOT_FRAME_WAGPUNK = "Scrappier Slingshot Frame",
 		SLINGSHOT_HANDLE_STICKY = "Slingshot Sticky Grip",
+		SLINGSHOT_HANDLE_JELLY = "Slingshot Jelly Grip",
 		SLINGSHOT_HANDLE_SILK = "Slingshot Grip Tape",
-		SLINGSHOT_HANDLE_VOIDCLOTH = "Slingshot Void Grip",
+		SLINGSHOT_HANDLE_VOIDCLOTH = "Slingshot Void Wrap",
 
         WOBY_BADGE_STATION = "Woby Training Station",
         ELIXIR_CONTAINER = "Picnic Casket",
+        GHOSTFLOWERHAT = "Wraith's Wreath",
+        WENDY_RESURRECTIONGRAVE = "Perennial Altar",
+        WENDY_RESURRECTIONGRAVE_NAMED = "{name}'s Perennial Altar",
 
         -- For PVP!
-        SLINGSHOTAMMO_HORRORFUEL_DEBUFF_FX = "Horror Shadow Curse", -- TODO
-        SLINGSHOTAMMO_PUREBRILLIANCE_DEBUFF = "Brilliance Mark", -- TODO
+        SLINGSHOTAMMO_HORRORFUEL_DEBUFF_FX = "Swarming Horror",
+        SLINGSHOTAMMO_PUREBRILLIANCE_DEBUFF = "Flash of Brilliance",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -5288,6 +5293,7 @@ STRINGS =
 		SLINGSHOT_FRAME_WAGPUNK_0 = "Ya think you're some sorta big shot now, huh?",
 		SLINGSHOT_FRAME_WAGPUNK = "Embrace your ammo hoarding tendencies!",
 		SLINGSHOT_HANDLE_STICKY = "Get attached to your slingshot.",
+		SLINGSHOT_HANDLE_JELLY = "The stickiest grip yet!",
 		SLINGSHOT_HANDLE_SILK = "Sling faster!",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Sling faster-er!",
 
@@ -5295,6 +5301,9 @@ STRINGS =
         WORTOX_NABBAG = "Stuff it and swing it!",
         WORTOX_SOULJAR = "Why let them be free when you can stuff them all into a jar?",
         ELIXIR_CONTAINER = "For carrying all of Abigail's snacks.",
+        GHOSTFLOWERHAT = "Think like a ghost, drink like a ghost.",
+        BUTTERFLY = "Help them relive their glory.",
+        WENDY_RESURRECTIONGRAVE = "Death is but an inconvenience.",
     },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
@@ -8793,6 +8802,7 @@ STRINGS.UI =
         AFK_BODY = "Make sure to stretch your legs! The deathly wilderness will still be here when you get back.",
         AFK_OK = "Return",
         ACTIVATE_RESURRECTION = "Activate Meat Effigy",
+        ACTIVATE_GRAVE_RESURRECTION = "Activate Perennial Altar",
         INSPECT_SELF = "Inspect Self",
         OPENGIFT = "Activate",
         CRITTER_TRAITS =
@@ -13982,6 +13992,21 @@ STRINGS.UI =
             EMPTY_SLOT = "Empty",
         },
 
+        BADGE_DESC = {
+            SPEED_1 = "Significantly increases Woby's speed, based on badge progress. Riding Woby advances this progress.",
+            SPEED_2 = "Greatly increases Woby's speed, based on badge progress.",
+            RESISTANCE_1 = "Significantly increases the damage you can take before Woby knocks you off, based on badge progress. Attacking and being attacked while riding Woby advance this progress.",
+            RESISTANCE_2 = "Greatly increases the damage you can take before Woby knocks you off, based on badge progress.",
+            FETCHING_1 = "This badge teaches Woby how to pick up items. Woby will pickup items based on what she's currently holding in her bag. Fetch success increases with badge progress. Fetch attempts advance this progress.",
+            FETCHING_2 = "This badge increases the distance Woby can see items, and decreases the time between fetches.",
+            DIGGING_1 = "This badge teaches Woby how to dig to find items. The chance of a successful dig increases with badge progress. Dig attempts advance this progress.",
+            DIGGING_2 = "This badge decreases the time between digs.",
+            BRAVERY_1 = "Significantly decreases the loss of sanity when taking damage while riding Woby, based on badge progress. It also slowly regenerates your sanity while riding Woby. Attacking and taking damage while riding Woby advance this progress.",
+            BRAVERY_2 = "Greatly decreases the loss of sanity when taking damage while riding Woby, based on badge progress.",
+
+            GENERIC = "" -- TODO
+        },
+
         SAVE = "Confirm Training",
         CANCEL = "Cancel",
     },
@@ -15222,17 +15247,17 @@ STRINGS.SKILLTREE = {
         WALTER_SLINGSHOT_AMMO_HONEY_DESC = "Learn to craft Sticky Rounds: an ammo made of Honey that slightly slows down creatures.",
 
         WALTER_SLINGSHOT_AMMO_MOONGLASS_TITLE = "Moon Glass Rounds",
-        WALTER_SLINGSHOT_AMMO_MOONGLASS_DESC = "Learn to craft Moon Glass Rounds: an ammo made of Moon Shards that does damage in a considerable area when hitting a creature.",
+        WALTER_SLINGSHOT_AMMO_MOONGLASS_DESC = "Learn to craft Moon Glass Rounds: an ammo made of Moon Shards that does damage in a significant area when hitting a creature.",
 
         WALTER_SLINGSHOT_AMMO_GUNPOWDER_TITLE = "Gunpowder Rounds",
-        WALTER_SLINGSHOT_AMMO_GUNPOWDER_DESC = "Learn to craft Gunpowder Rounds: an ammo mostly made of Gunpowder that has an increasing chance to do a critical stike, doing increased damage in a large area.",
+        WALTER_SLINGSHOT_AMMO_GUNPOWDER_DESC = "Learn to craft Gunpowder Rounds: an ammo mostly made of Gunpowder that has an increasing chance to do a critical stike, and does increased damage in a large area.",
 
         ---------------------------------------------------------------------------------
 
         WALTER_SLINGSHOT_AMMO_ECONOMY_LOCK_DESC = "Learn 4 Ammo and/or Affinity skills to unlock.",
 
         WALTER_SLINGSHOT_AMMO_ECONOMY_1_TITLE = "Projectile Pro I",
-        WALTER_SLINGSHOT_AMMO_ECONOMY_1_DESC = "Learn how to craft ammo considerable more efficiently.",
+        WALTER_SLINGSHOT_AMMO_ECONOMY_1_DESC = "Learn how to craft ammo significantly more efficiently.",
 
         WALTER_SLINGSHOT_AMMO_ECONOMY_2_TITLE = "Projectile Pro II",
         WALTER_SLINGSHOT_AMMO_ECONOMY_2_DESC = "Learn how to craft ammo greatly more efficiently.",
@@ -15243,50 +15268,50 @@ STRINGS.SKILLTREE = {
         WALTER_WOBY_BADGE_BASE_DESC = "Learn to craft the Woby Training Station and unlock the basic version of every training badge.",
 
         WALTER_WOBY_BADGE_SPEED_2_TITLE = "Agility II",
-        WALTER_WOBY_BADGE_SPEED_2_DESC = "Unlocks the second agility badge at the Woby Training Station.\nThis badge greatly increases Woby's speed. It gets improved based on badge progress.",
+        WALTER_WOBY_BADGE_SPEED_2_DESC = "Unlocks the second Agility Badge at the Woby Training Station.",
 
         WALTER_WOBY_BADGE_RESISTANCE_2_TITLE = "Bravery II",
-        WALTER_WOBY_BADGE_RESISTANCE_2_DESC = "Unlocks the second bravery badge at the Woby Training Station.\nThis badge greatly increases the damage you can take before Woby knocks you off. It gets improved based on badge progress.",
+        WALTER_WOBY_BADGE_RESISTANCE_2_DESC = "Unlocks the second Bravery Badge at the Woby Training Station.",
 
         WALTER_WOBY_BADGE_BRAVERY_2_TITLE = "Support II",
-        WALTER_WOBY_BADGE_BRAVERY_2_DESC = "Unlocks the second support badge at the Woby Training Station.\nThis badge greatly decreases the loss of sanity when taking damage while riding Woby. It gets improved based on badge progress.",
+        WALTER_WOBY_BADGE_BRAVERY_2_DESC = "Unlocks the second Support Badge at the Woby Training Station.",
 
         WALTER_WOBY_BADGE_DIGGING_1_TITLE = "Digging I",
-        WALTER_WOBY_BADGE_DIGGING_1_DESC = "Unlocks the first digging badge at the Woby Training Station.\nThis badge teaches Woby how to dig to find items. The chance of a successful excavation increases with badge progress.",
+        WALTER_WOBY_BADGE_DIGGING_1_DESC = "Unlocks the first Digging Badge at the Woby Training Station.",
 
         WALTER_WOBY_BADGE_DIGGING_2_TITLE = "Digging II",
-        WALTER_WOBY_BADGE_DIGGING_2_DESC = "Unlocks the second digging badge at the Woby Training Station.\nThis badge teaches Woby how to dig to find items.\nDecreases the time between excavations.",
+        WALTER_WOBY_BADGE_DIGGING_2_DESC = "Unlocks the second Digging Badge at the Woby Training Station.",
 
         WALTER_WOBY_BADGE_FETCHING_2_TITLE = "Fetching II",
-        WALTER_WOBY_BADGE_FETCHING_2_DESC = "Unlocks the second fetching badge at the Woby Training Station.\nThis badge teaches Woby how assist you in picking up items. Fetch success increases with badge progress.",
+        WALTER_WOBY_BADGE_FETCHING_2_DESC = "Unlocks the second Fetching Badge at the Woby Training Station.",
 
         ---------------------------------------------------------------------------------
 
 		WALTER_SLINGSHOT_MODDING_TITLE = "Basic Customization",
 		WALTER_SLINGSHOT_MODDING_DESC = "Learn to craft the Slingshot Field Kit and some basic parts for customizing your Slingshot.",
 
-		WALTER_SLINGSHOT_HANDLE_STICKY_TITLE = "Sticky Grip",
-		WALTER_SLINGSHOT_HANDLE_STICKY_DESC = "Learn to craft a handle mod that prevents the Slingshot from slipping out of your hands.",
+		WALTER_SLINGSHOT_HANDLE_STICKY_TITLE = "Sticky Grips",
+		WALTER_SLINGSHOT_HANDLE_STICKY_DESC = "Learn to craft two sticky grips that improve firing rate and prevent Slingshots from slipping out of your hands.",
 
-		WALTER_SLINGSHOT_HANDLE_VOIDCLOTH_TITLE = "Void Grip",
-		WALTER_SLINGSHOT_HANDLE_VOIDCLOTH_DESC = "Learn to craft a handle mod that improves your firing rate.",
+		WALTER_SLINGSHOT_HANDLE_VOIDCLOTH_TITLE = "Void Wrap",
+		WALTER_SLINGSHOT_HANDLE_VOIDCLOTH_DESC = "Learn to craft a grip wrap that continuously improves your firing rate when uninterrupted.",
 
 		WALTER_SLINGSHOT_BAND_TENTACLE_TITLE = "Flailing Band",
-		WALTER_SLINGSHOT_BAND_TENTACLE_DESC = "Learn to craft a rubber band mod that improves your firing distance.",
+		WALTER_SLINGSHOT_BAND_TENTACLE_DESC = "Learn to craft a slingshot band that improves your firing distance.",
 
 		WALTER_SLINGSHOT_FRAME_GEMS_TITLE = "Thulecite Frame",
-		WALTER_SLINGSHOT_FRAME_GEMS_DESC = "Learn to craft a frame mod that adds a special ammo slot used for an alternate special attack.",
+		WALTER_SLINGSHOT_FRAME_GEMS_DESC = "Learn to craft a frame that adds a special ammo slot used for an alternate special attack.",
 
 		WALTER_SLINGSHOT_FRAME_WAGPUNK_TITLE = "Scrappy Frame",
-		WALTER_SLINGSHOT_FRAME_WAGPUNK_DESC = "Learn to craft a frame mod that adds an alternate charged attack. This mod can be further upgraded to expand your ammo slot size.",
+		WALTER_SLINGSHOT_FRAME_WAGPUNK_DESC = "Learn to craft a frame that adds an alternate charged attack. This frame can be further upgraded to expand your ammo slot size.",
 
         ---------------------------------------------------------------------------------
 
         WALTER_ALLEGIANCE_LUNAR_TITLE = "Lunar Slinger",
-        WALTER_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity by teaching you how to craft the Pure Brilliance and Brightshade Rounds. A debuff and damage focused ammo, respectively.",
+        WALTER_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity by teaching you how to craft the Pure Brilliance and Brightshade Rounds: a debuff and damage focused ammo, respectively.",
 
         WALTER_ALLEGIANCE_SHADOW_TITLE = "Shadow Slinger",
-        WALTER_ALLEGIANCE_SHADOW_DESC = "The Cryptic Founder will reward your curiosity by teaching you how to craft the Icky and Pure Horror Rounds. A slow down and damage focused ammo, respectively.",
+        WALTER_ALLEGIANCE_SHADOW_DESC = "The Queen will reward your loyalty by teaching you how to craft the Icky and Pure Horror Rounds: a slow-down and damage focused ammo, respectively.",
     },
 
     --[[WANDA = {
@@ -15422,8 +15447,15 @@ STRINGS.SKILLTREE = {
         WENDY_SMALLGHOST_3_TITLE = "Pipspook Quest III",
         WENDY_SMALLGHOST_3_DESC = "Pipspooks produce more Mourning Glories.",
 
+        WENDY_GHOSTFLOWER_BUTTERFLY_TITLE = "Morning Glory I",
+        WENDY_GHOSTFLOWER_BUTTERFLY_DESC = "Begin the journey of revival with Butterflies.",
+        WENDY_GHOSTFLOWER_HAT_TITLE = "Morning Glory I",
+        WENDY_GHOSTFLOWER_HAT_DESC = "Surround yourself in ghotsly nature and taste the power of the elixirs even if not fully.",
+        WENDY_GHOSTFLOWER_GRAVE_TITLE = "Morning Glory I",
+        WENDY_GHOSTFLOWER_GRAVE_DESC = "You can bring back friends, but only if they've entered the constant it seems.",
+
         WENDY_GRAVESTONE_1_TITLE = "Grave Beautification",
-        WENDY_GRAVESTONE_1_DESC = "Wendy can adorn graves with flowers inviting the spirits living there to come out and visit.\nGraveyard spirits often promote dark gardens.",
+        WENDY_GRAVESTONE_1_DESC = "Wendy can adorn graves with flowers inviting the spirits living there to come out and visit, often promoting dark gardens.\nEvil Flowers no longer hold fear for Wendy.",
         WENDY_GRAVESTONE_2_TITLE = "Final Resting Place?",
         WENDY_GRAVESTONE_2_DESC = "Wendy can dig up gravestones and relocate them.",
         WENDY_MAKEGRAVEMOUNDS_TITLE = "Gravestones By Wendy",
@@ -15982,9 +16014,9 @@ STRINGS.SKILLTREE = {
         WORTOX_INCLINATION_METER_TITLE = "The Scales",
         WORTOX_INCLINATION_METER_DESC = "Based off of how many Nice or Naughty skills selected, you will find yourself leaning towards a certain inclination.",
         WORTOX_INCLINATION_NICE_TITLE = "Nice Inclination",
-        WORTOX_INCLINATION_NICE_DESC = "Your nice demeanor has calmed down the monster side of you enough to stop its effects from creating hostility.\nEating or releasing Souls will change sanity at an increased amount.",
+        WORTOX_INCLINATION_NICE_DESC = "Your kindness has made your monster side no longer stir up trouble.\nEating or releasing Souls will change sanity at an increased amount.",
         WORTOX_INCLINATION_NAUGHTY_TITLE = "Naughty Inclination",
-        WORTOX_INCLINATION_NAUGHTY_DESC = "Your desire for Souls is unquenched and you stop yourself from overloading of Soul power for a moment.\nEating or releasing Souls will no longer change sanity.",
+        WORTOX_INCLINATION_NAUGHTY_DESC = "Your greed stops you from overloading of Soul power, for a moment.\nEating or releasing Souls will no longer change sanity. Souls heal you for less.",
 
         -- LOCKS
         WORTOX_NICE_LOCK_DESC = "Requires the skill below and 5 total Nice skills to unlock.",

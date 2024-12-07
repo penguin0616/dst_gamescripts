@@ -1099,6 +1099,14 @@ return{
 
     ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
+    ANNOUNCE_ELIXIR_BOOSTED = "I feel like a new imp!",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "See like the dead, they said.",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "I have the strength of ten imps!",
+
+    ANNOUNCE_ABIGAIL_HIDING = "only_used_by_wendy",
+
+    ANNOUNCE_EXLIIR_TOO_SUPER = "Don't think I can take that drink!",
+
 	BATTLECRY =
 	{
 		GENERIC = "Let's have some fun.",
@@ -5523,7 +5531,7 @@ return{
         GELBLOB_BOTTLE = "Bottled abomination.",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "Can't you see, you're dead to me?",
             ME = "As such, I've seen too much. Hyuyu...",
         },
@@ -5539,7 +5547,6 @@ return{
         -- Meta 5
         GHOSTLYELIXIR_LUNAR = "Hyuyu! Someone's getting crafty!",
         GHOSTLYELIXIR_SHADOW = "Hyuyu! Someone's getting crafty!",
-        REVIVER_FLOWER = "TODO", -- [[TODO]]
 
 		SLINGSHOTMODKIT = "Hotshot! Is he not?",
 		SLINGSHOT_BAND_PIGSKIN = "Hotshot! Is he not?",
@@ -5550,12 +5557,15 @@ return{
 		SLINGSHOT_FRAME_WAGPUNK_0 = "Hotshot! Is he not?",
 		SLINGSHOT_FRAME_WAGPUNK = "Hotshot! Is he not?",
 		SLINGSHOT_HANDLE_STICKY = "Hotshot! Is he not?",
+		SLINGSHOT_HANDLE_JELLY = "Hotshot! Is he not?",
 		SLINGSHOT_HANDLE_SILK = "Hotshot! Is he not?",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Hotshot! Is he not?",
 
         WOBY_BADGE_STATION = "A proud pup leveling up!",
 
         ELIXIR_CONTAINER = "Any mixers for those elixirs?",
+        GHOSTFLOWERHAT = "Ghostly flowers yield strange powers.",
+        WENDY_RESURRECTIONGRAVE = "A just-in-case vase!",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",

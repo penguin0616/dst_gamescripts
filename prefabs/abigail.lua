@@ -47,7 +47,6 @@ local function SetMaxHealth(inst)
             inst._playerlink.components.pethealthbar:SetMaxHealth(health.maxhealth)
         end
     end
-
 end
 
 local function UpdateGhostlyBondLevel(inst, level)
@@ -171,21 +170,21 @@ end
 local function AggressiveRetarget(inst)
     if inst._playerlink == nil then
         return nil
-    else
-        local ix, iy, iz = inst.Transform:GetWorldPosition()
-        local entities_near_me = TheSim:FindEntities(
-            ix, iy, iz, TUNING.ABIGAIL_COMBAT_TARGET_DISTANCE,
-            COMBAT_MUSHAVE_TAGS, COMBAT_CANTHAVE_TAGS, COMBAT_MUSTONEOF_TAGS_AGGRESSIVE
-        )
-
-        for _, v in ipairs(entities_near_me) do
-            if CommonRetarget(inst, v) then
-                return v
-            end
-        end
-
-        return nil
     end
+
+    local ix, iy, iz = inst.Transform:GetWorldPosition()
+    local entities_near_me = TheSim:FindEntities(
+        ix, iy, iz, TUNING.ABIGAIL_COMBAT_TARGET_DISTANCE,
+        COMBAT_MUSHAVE_TAGS, COMBAT_CANTHAVE_TAGS, COMBAT_MUSTONEOF_TAGS_AGGRESSIVE
+    )
+
+    for _, entity_near_me in ipairs(entities_near_me) do
+        if CommonRetarget(inst, entity_near_me) then
+            return entity_near_me
+        end
+    end
+
+    return nil
 end
 
 local function StartForceField(inst)
@@ -213,10 +212,9 @@ local function OnAttacked(inst, data)
 			if elixir_buff ~= nil and elixir_buff.prefab == "ghostlyelixir_retaliation_buff" then
 				local retaliation = SpawnPrefab("abigail_retaliation")
 				retaliation:SetRetaliationTarget(data.attacker)
-				inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/abigail/shield/on")
-			else
-				inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/abigail/shield/on")
 			end
+
+            inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/abigail/shield/on")
 		end
     end
 
@@ -382,7 +380,7 @@ local function ApplyDebuff(inst, data)
         end
 
         local olddebuff = target:GetDebuff("abigail_vex_debuff")
-        if olddebuff and olddebuff.prefab ~= buff then            
+        if olddebuff and olddebuff.prefab ~= buff then
             target:RemoveDebuff("abigail_vex_debuff")
         end
 
@@ -417,11 +415,11 @@ local function linktoplayer(inst, player)
         local elixir_buff2 = inst:GetDebuff("super_elixir_buff")
         if elixir_buff2 then
             player.components.pethealthbar:SetSymbol2(elixir_buff2.prefab)
-        end        
+        end
     end
 
     if player:HasTag("player_shadow_aligned") then
-        inst.components.ghostlybond.ghost:AddTag("shadow_aligned")
+        inst:AddTag("shadow_aligned")
         local damagetyperesist = inst.components.damagetyperesist
         if damagetyperesist then
              damagetyperesist:AddResist("shadow_aligned", inst, TUNING.SKILLS.WENDY.ALLEGIANCE_SHADOW_RESIST, "allegiance_shadow")
@@ -430,11 +428,11 @@ local function linktoplayer(inst, player)
         if damagetypebonus then
             damagetypebonus:AddBonus("lunar_aligned", inst, TUNING.SKILLS.WENDY.ALLEGIANCE_VS_LUNAR_BONUS, "allegiance_shadow")
         end
-        inst.components.ghostlybond.ghost.components.planardefense:SetBaseDefense(TUNING.SKILLS.WENDY.GHOST_PLANARDEFENSE)
+        inst.components.planardefense:SetBaseDefense(TUNING.SKILLS.WENDY.GHOST_PLANARDEFENSE)
     end
 
-    if player:HasTag("player_lunar_aligned") then
-        inst.components.ghostlybond.ghost:AddTag("lunar_aligned")
+    if player:HasTag("player_lunar_aligned") then        
+        inst:AddTag("lunar_aligned")
         local damagetyperesist = inst.components.damagetyperesist
         if damagetyperesist then
              damagetyperesist:AddResist("lunar_aligned", inst, TUNING.SKILLS.WENDY.ALLEGIANCE_LUNAR_RESIST, "allegiance_lunar")
@@ -443,7 +441,7 @@ local function linktoplayer(inst, player)
         if damagetypebonus then
             damagetypebonus:AddBonus("shadow_aligned", inst, TUNING.SKILLS.WENDY.ALLEGIANCE_VS_SHADOW_BONUS, "allegiance_lunar")
         end
-        inst.components.ghostlybond.ghost.components.planardefense:SetBaseDefense(TUNING.SKILLS.WENDY.GHOST_PLANARDEFENSE)
+        inst.components.planardefense:SetBaseDefense(TUNING.SKILLS.WENDY.GHOST_PLANARDEFENSE)
     end
 
     UpdateGhostlyBondLevel(inst, player.components.ghostlybond.bondlevel)
@@ -463,14 +461,27 @@ local function do_transparency(transparency_level, inst)
 end
 
 local function DoGhostEscape(inst)
-    inst.components.fader:Fade(1.0, 0.3, 0.75, do_transparency)
-    inst.components.aura:Enable(false)
+    if (inst.sg and inst.sg:HasStateTag("nocommand"))
+            or (inst.components.health and inst.components.health:IsDead()) then
+        return
+    end
+--[[
+    if inst:HasTag("gestalt_hide") then
+        if inst._playerlink then inst._playerlink.components.talker:Say(GetString(inst._playerlink, "ANNOUNCE_ABIGAIL_HIDING")) end
+        return
+    end
+    ]]
+
+    if not inst:HasTag("gestalt_hide") then
+        inst.components.fader:Fade(1.0, 0.3, 0.75, do_transparency)
+        inst.components.aura:Enable(false)
+    end
     inst.components.locomotor:SetExternalSpeedMultiplier(inst, "transparency", 1.25)
     inst:AddTag("notarget")
     inst._is_transparent = true
 
 	inst.components.timer:StartTimer("undo_transparency", TUNING.WENDYSKILL_ESCAPE_TIME)
-
+    inst.point_filtered:set(true)
     -- Pushing a nil target should cause anybody targetting Abigail to drop her.
 	inst:PushEvent("transfercombattarget", nil)
     inst.components.combat:SetTarget(nil)
@@ -489,6 +500,16 @@ local SCARE_RADIUS = 10
 local SCARE_MUST_HAVE_TAGS = {"_combat", "_health"}
 local SCARE_CANT_HAVE_TAGS = { "balloon", "butterfly", "companion", "epic", "groundspike", "INLIMBO", "smashable", "structure", "wall"}
 local function DoGhostScare(inst)
+    if (inst.sg and inst.sg:HasStateTag("nocommand"))
+            or (inst.components.health and inst.components.health:IsDead()) then
+        return
+    end
+
+    if inst:HasTag("gestalt_hide") then
+        if inst._playerlink then inst._playerlink.components.talker:Say(GetString(inst._playerlink, "ANNOUNCE_ABIGAIL_HIDING")) end
+        return
+    end
+
     local PVP_enabled = TheNet:GetPVPEnabled()
     local doer = inst._playerlink
 
@@ -510,6 +531,16 @@ end
 local ATTACK_MUST_TAGS = {"_health", "_combat"}
 local ATTACK_NO_TAGS = {"DECOR", "FX", "INLIMBO", "NOCLICK"}
 local function DoGhostAttackAt(inst, pos)
+    if (inst.sg and inst.sg:HasStateTag("nocommand"))
+            or (inst.components.health and inst.components.health:IsDead()) then
+        return
+    end
+
+    if inst:HasTag("gestalt_hide") then
+        if inst._playerlink then inst._playerlink.components.talker:Say(GetString(inst._playerlink, "ANNOUNCE_ABIGAIL_HIDING")) end
+        return
+    end
+
 	local px, py, pz = pos:Get()
 	local targets_near_position = TheSim:FindEntities(px, py, pz, 2, ATTACK_MUST_TAGS, ATTACK_NO_TAGS)
 	if #targets_near_position > 0 then
@@ -525,6 +556,17 @@ end
 
 local HAUNT_CANT_TAGS = {"catchable", "DECOR", "FX", "haunted", "INLIMBO", "NOCLICK"}
 local function DoGhostHauntAt(inst, pos)
+    if (inst.sg and inst.sg:HasStateTag("nocommand"))
+            or (inst.components.health and inst.components.health:IsDead()) then
+        return
+    end
+
+    if inst:HasTag("gestalt_hide") then
+        if inst._playerlink then inst._playerlink.components.talker:Say(GetString(inst._playerlink, "ANNOUNCE_ABIGAIL_HIDING")) end
+        return
+    end
+
+
 	local px, py, pz = pos:Get()
 	local targets_near_position = TheSim:FindEntities(px, py, pz, 2, nil, HAUNT_CANT_TAGS)
 	if #targets_near_position > 0 then
@@ -536,11 +578,18 @@ end
 -- Timer
 local function OnTimerDone(inst, data)
     if data.name == "undo_transparency" then
-        inst.components.fader:Fade(0.3, 1.0, 0.75, do_transparency)
+
+        if not inst:HasTag("gestalt_hide") then
+            inst.components.fader:Fade(0.3, 1.0, 0.75, do_transparency)
+            inst.point_filtered:set(false)        
+        end
+
         if not inst:HasTag("gestalt") then inst.components.aura:Enable(true) end
+
         inst.components.locomotor:RemoveExternalSpeedMultiplier(inst, "transparency")
         inst:RemoveTag("notarget")
         inst._is_transparent = false
+        
     end
 end
 
@@ -563,26 +612,32 @@ local function DoShadowBurstBuff(inst, stack)
         stack = stack-1
     end
 
-    local time = GetTaskRemaining(inst:GetDebuff("abigail_murder_buff").decaytimer)
-    inst:GetDebuff("abigail_murder_buff"):murder_buff_OnExtended(math.min( time + stack*TUNING.SKILLS.WENDY.MURDER_BUFF_DURATION,  20*TUNING.SKILLS.WENDY.MURDER_BUFF_DURATION )  )
+    local murder_buff = inst:GetDebuff("abigail_murder_buff")
+    local time = GetTaskRemaining(murder_buff.decaytimer)
+    murder_buff:murder_buff_OnExtended(math.min( time + stack*TUNING.SKILLS.WENDY.MURDER_BUFF_DURATION,  20*TUNING.SKILLS.WENDY.MURDER_BUFF_DURATION )  )
 end
 
 local function SetBabysitter(inst, sisturn)
     if inst.components.follower and inst.components.follower.leader and
-        inst.components.follower.leader:HasTag("can_set_babysitter") and
-        sisturn and
-        sisturn.components.container:IsFull() then
+            inst.components.follower.leader:HasTag("can_set_babysitter") and
+            (sisturn and sisturn.components.container:IsFull()) then
 
         if not inst.ghost_babysitter then
             sisturn.components.ghostbabysitter:AddGhost(inst)
             inst.ghost_babysitter = sisturn
+            
+            inst.components.follower.leader:AddTag("ghost_is_babysat")
             inst:PushEvent("dance")
             return
         end
     end
+    
     if inst.ghost_babysitter then
         inst.ghost_babysitter.components.ghostbabysitter:RemoveGhost(inst)
         inst.ghost_babysitter = nil
+        if inst.components.follower and inst.components.follower.leader then
+            inst.components.follower.leader:RemoveTag("ghost_is_babysat")
+        end
     end
 end
 
@@ -641,6 +696,30 @@ local function OnHealthChanged(inst, data)
     inst.components.health.maxhealth = inst.base_max_health + inst.bonus_max_health
 end
 
+local function OnHealthDelta(inst,data)
+    if inst:HasTag("gestalt") and data.newpercent < TUNING.ABIGAIL_GESTALT_HIDE_THRESHOLD and not inst:HasTag("gestalt_hide") then
+        if inst.components.timer:TimerExists("undo_transparency") then 
+            OnTimerDone(inst, {name="undo_transparency"})
+        end
+
+        inst.components.health:SetMinHealth(0)
+        inst:AddTag("gestalt_hide")
+        if not inst._is_transparent then
+            inst.components.fader:Fade(1.0, 0.3, 0.75, do_transparency)
+            inst.point_filtered:set(true)
+        end
+    end
+
+    if inst:HasTag("gestalt") and data.newpercent >= TUNING.ABIGAIL_GESTALT_HIDE_THRESHOLD and inst:HasTag("gestalt_hide") then
+        inst:RemoveTag("gestalt_hide")
+        inst.components.health:SetMinHealth(1)
+        if not inst._is_transparent then
+            inst.components.fader:Fade(0.3, 1.0, 0.75, do_transparency)
+            inst.point_filtered:set(false)
+        end
+    end
+end
+
 local function SetToGestalt(inst)
     inst.SoundEmitter:PlaySound("meta5/abigail/abigail_gestalt_transform_stinger")
     inst:AddTag("gestalt")
@@ -653,6 +732,8 @@ local function SetToGestalt(inst)
     inst.AnimState:OverrideSymbol("v1_melt2",       "lunarthrall_plant_front",      "v1_melt2")
 
     inst.components.combat:SetAttackPeriod(3)
+    
+    inst.components.health:SetMinHealth(1)
 
     if inst:HasDebuff("super_elixir_buff") and inst.components.debuffable:GetDebuff("super_elixir_buff").prefab == "ghostlyelixir_lunar_buff" then
         inst.components.planardamage:RemoveBonus(inst, "ghostlyelixir_lunarbonus")
@@ -670,6 +751,8 @@ local function SetToNormal(inst)
     inst.AnimState:ClearOverrideSymbol("v1_ball_loop")
     inst.AnimState:ClearOverrideSymbol("v1_embers")
     inst.AnimState:ClearOverrideSymbol("v1_melt2")
+
+    inst.components.health:SetMinHealth(0)
 
     inst.components.combat:SetAttackPeriod(4)
 
@@ -714,6 +797,9 @@ local function ChangeToGestalt(inst, togestalt)
         end
     end
 end
+local function OnPointFilterDirty(inst)
+    inst.AnimState:UsePointFiltering(inst.point_filtered:value())
+end
 
 local function fn()
     local inst = CreateEntity()
@@ -728,7 +814,6 @@ local function fn()
     inst.AnimState:SetBuild("ghost_abigail_build")
     inst.AnimState:PlayAnimation("idle", true)
     inst.AnimState:SetBloomEffectHandle("shaders/anim_bloom_ghost.ksh")
-    inst.AnimState:UsePointFiltering(true)
 
     inst.AnimState:AddOverrideBuild("ghost_abigail_gestalt")
 
@@ -756,10 +841,20 @@ local function fn()
     --It's a loop that's always on, so we can start this in our pristine state
     -- inst.SoundEmitter:PlaySound("dontstarve/ghost/ghost_girl_howl_LP", "howl")
 
+--
+    inst.point_filtered = net_bool(inst.GUID, "abigail.point_filtered", "point_filtereddirty")
+    inst.point_filtered:set(false)
+
+    if not TheNet:IsDedicated() then
+        inst:ListenForEvent("point_filtereddirty", OnPointFilterDirty)
+    end
+
     inst.entity:SetPristine()
-    if not TheWorld.ismastersim then
+    if not TheWorld.ismastersim then       
         return inst
     end
+
+
 
     --
     inst.scrapbook_damage = { TUNING.ABIGAIL_DAMAGE.day, TUNING.ABIGAIL_DAMAGE.night }
@@ -871,6 +966,8 @@ local function fn()
     inst:ListenForEvent("timerdone", OnTimerDone)
     inst:ListenForEvent("set_babysitter", SetBabysitter)
     inst:ListenForEvent("pre_health_setval", OnHealthChanged)
+    inst:ListenForEvent("healthdelta", OnHealthDelta)
+    
 
     --
     inst:WatchWorldState("phase", UpdateDamage)

@@ -80,7 +80,7 @@ local function OnSetPlayerMode(inst, self)
         self:SetMightiness(self.owner:GetMightiness())
     end
 
-	if self.pethealthbadge ~= nil and self.onpethealthdirty == nil then
+    if self.pethealthbadge ~= nil and self.onpethealthdirty == nil then
         self.onpethealthdirty = function() self:RefreshPetHealth() end
         inst:ListenForEvent("clientpethealthdirty", self.onpethealthdirty, self.owner)
         inst:ListenForEvent("clientpethealthsymboldirty", self.onpethealthdirty, self.owner)
@@ -90,6 +90,12 @@ local function OnSetPlayerMode(inst, self)
         inst:ListenForEvent("clientpetbonusdirty", self.onpethealthdirty, self.owner)
 
         self:RefreshPetHealth()
+    end
+
+	if self.heart ~= nil and self.onheartbuffdirty == nil then
+        self.onheartbuffdirty = function() self:RefreshHealthBuff() end
+        inst:ListenForEvent("clienthealthbuffdirty", self.onheartbuffdirty, self.owner)
+        self:RefreshHealthBuff()
     end
 
     if self.onavengetimedirty then
@@ -157,13 +163,19 @@ local function OnSetGhostMode(inst, self)
         self.inst:RemoveEventCallback("clientpethealthsymboldirty", self.onpethealthdirty, self.owner)
         self.inst:RemoveEventCallback("clientpetmaxhealthdirty", self.onpethealthdirty, self.owner)
         self.inst:RemoveEventCallback("clientpethealthstatusdirty", self.onpethealthdirty, self.owner)
-        self.inst:RemoveEventCallback("clientpetbonusdirty", self.onpethealthdirty, self.owner)        
+        self.inst:RemoveEventCallback("clientpetbonusdirty", self.onpethealthdirty, self.owner)
         self.onpethealthdirty = nil
+    end
+
+
+    if self.onheartbuffdirty == nil then
+        self.inst:RemoveEventCallback("clienthealthbuffdirty", self.onheartbuffdirty, self.owner)
+        self:RefreshHealthBuff()
     end
 
     if self.avengingghostbadge ~= nil then
         self.onavengetimedirty = function() self:RefreshAvengingGhost() end
-        self.inst:ListenForEvent("clientavengetimedirty", self.onavengetimedirty, self.owner)
+       self.onheartbonusdirty = nil
     end
 
     if self.onpetskindirty ~= nil then
@@ -172,19 +184,22 @@ local function OnSetGhostMode(inst, self)
     end
 end
 
-local function UpdateRezButton(inst, self, enable)
-    self.rezbuttontask = nil
-    if enable then
-        self:EnableResurrect(true)
-    else
-        local was_button_visible = self.isghostmode and self.resurrectbutton:IsVisible()
-        self:EnableResurrect(false)
-        if was_button_visible and not self.resurrectbutton:IsVisible() then
-            self.resurrectbuttonfx:GetAnimState():PlayAnimation("break")
-            self.resurrectbuttonfx:Show()
-            if self.resurrectbuttonfx:IsVisible() then
-                TheFocalPoint.SoundEmitter:PlaySound(self.heart.effigybreaksound)
-            end
+local function UpdateRezButton_Enable(inst, self, proxy_is_gravestone)
+    self.rezbutton_new_task = nil
+    local effigy_type = (proxy_is_gravestone and "grave") or nil
+    self:EnableResurrect(true, effigy_type)
+end
+
+local function UpdateRezButton_Disable(inst, self, proxy_is_gravestone)
+    self.rezbutton_lost_task = nil
+    local effigy_type = (proxy_is_gravestone and "grave") or nil
+    local was_button_visible = self.isghostmode and self.resurrectbutton:IsVisible()
+    self:EnableResurrect(false, effigy_type)
+    if was_button_visible and not self.resurrectbutton:IsVisible() then
+        self.resurrectbuttonfx:GetAnimState():PlayAnimation("break")
+        self.resurrectbuttonfx:Show()
+        if self.resurrectbuttonfx:IsVisible() then
+            TheFocalPoint.SoundEmitter:PlaySound(self.heart.effigybreaksound)
         end
     end
 end
@@ -242,7 +257,7 @@ local StatusDisplays = Class(Widget, function(self, owner)
     self.stomach:SetPosition(self.column2, 20, 0)
     self.onhungerdelta = nil
 
-    self.heart = self:AddChild(owner.CreateHealthBadge ~= nil and owner.CreateHealthBadge(owner) or HealthBadge(owner))
+    self.heart = self:AddChild(owner.CreateHealthBadge ~= nil and owner.CreateHealthBadge(owner) or HealthBadge(owner, nil, "status_abigail"))
     self.heart:SetPosition(self.column4, 20, 0)
     self.heart.effigybreaksound = "dontstarve/creatures/together/lavae/egg_deathcrack"
     self.onhealthdelta = nil
@@ -278,27 +293,34 @@ local StatusDisplays = Class(Widget, function(self, owner)
 
     self.inst:ListenForEvent("gotnewattunement", function(owner, data)
         --can safely assume we are attuned if we just "got" an attunement
-        if data.proxy:IsAttunableType("remoteresurrector") then
-            if self.rezbuttontask ~= nil then
-                self.rezbuttontask:Cancel()
+        local proxy = data.proxy
+        local proxy_is_gravestone = proxy:IsAttunableType("gravestoneresurrector")
+        if proxy:IsAttunableType("remoteresurrector") or proxy_is_gravestone then
+            if self.rezbutton_new_task ~= nil then
+                self.rezbutton_new_task:Cancel()
             end
-            self.rezbuttontask = not self.heart.effigy and self.inst:DoTaskInTime(rezbuttondelay, UpdateRezButton, self, true) or nil
+            self.rezbutton_new_task = self.inst:DoTaskInTime(rezbuttondelay, UpdateRezButton_Enable, self, proxy_is_gravestone)
         end
     end, owner)
 
     self.inst:ListenForEvent("attunementlost", function(owner, data)
         --cannot assume that we are no longer attuned
         --to a type when we lose a single attunement!
-        if data.proxy:IsAttunableType("remoteresurrector") and
-            not (owner.components.attuner ~= nil and owner.components.attuner:HasAttunement("remoteresurrector")) then
-            if self.rezbuttontask ~= nil then
-                self.rezbuttontask:Cancel()
+        local proxy = data.proxy
+        local proxy_is_gravestone = proxy:IsAttunableType("gravestoneresurrector")
+        if (proxy:IsAttunableType("remoteresurrector") and
+                not (owner.components.attuner ~= nil and owner.components.attuner:HasAttunement("remoteresurrector")))
+                or (proxy_is_gravestone and
+                not (owner.components.attuner ~= nil and owner.components.attuner:HasAttunement("gravestoneresurrector"))) then
+            if self.rezbutton_lost_task ~= nil then
+                self.rezbutton_lost_task:Cancel()
             end
-            self.rezbuttontask = self.heart.effigy and self.inst:DoTaskInTime(rezbuttondelay, UpdateRezButton, self, false) or nil
+            self.rezbutton_lost_task = self.inst:DoTaskInTime(rezbuttondelay, UpdateRezButton_Disable, self, proxy_is_gravestone)
         end
     end, owner)
 
-    self.rezbuttontask = nil
+    self.rezbutton_new_task = nil
+    self.rezbutton_lost_task = nil
     self.modetask = nil
     self.isghostmode = true --force the initial SetGhostMode call to be dirty
     self.instantboatmeterclose = true
@@ -503,16 +525,24 @@ function StatusDisplays:SetGhostMode(ghostmode)
             self.mightybadge:Show()
         end
 
-        if self.avengingghostbadge then            
+        if self.avengingghostbadge then
             self.avengingghostbadge:Hide()
-        end        
+        end
     end
 
-    if self.rezbuttontask ~= nil then
-        self.rezbuttontask:Cancel()
-        self.rezbuttontask = nil
+    if self.rezbutton_new_task ~= nil then
+        self.rezbutton_new_task:Cancel()
+        self.rezbutton_new_task = nil
     end
-    self:EnableResurrect(self.owner.components.attuner ~= nil and self.owner.components.attuner:HasAttunement("remoteresurrector"))
+    if self.rezbutton_lost_task ~= nil then
+        self.rezbutton_lost_task:Cancel()
+        self.rezbutton_lost_task = nil
+    end
+    local owner_attuner = self.owner.components.attuner
+    self:EnableResurrect(
+        owner_attuner ~= nil and (owner_attuner:HasAttunement("remoteresurrector") or owner_attuner:HasAttunement("gravestoneresurrector")),
+        (owner_attuner:HasAttunement("gravestoneresurrector") and "grave") or nil
+    )
 
     if self.modetask ~= nil then
         self.modetask:Cancel()
@@ -696,6 +726,10 @@ function StatusDisplays:RefreshPetHealth()
 	pethealthbar:ResetPulse()
 end
 
+function StatusDisplays:RefreshHealthBuff()   
+    self.heart:UpdateBuff(self.owner._buffsymbol:value())
+end
+
 function StatusDisplays:RefreshAvengingGhost()
     local avengeingghost = self.owner.components.avengingghost
     if avengeingghost:GetTime() > 0 then
@@ -712,16 +746,24 @@ function StatusDisplays:RefreshPetSkin()
     self.pethealthbadge:SetIconSkin( skinname )
 end
 
-function StatusDisplays:EnableResurrect(enable)
+function StatusDisplays:EnableResurrect(enable, effigy_type)
     if enable then
-        self.heart:ShowEffigy()
+        self.heart:ShowEffigy(effigy_type)
+        if effigy_type == "grave" then
+            self.resurrectbuttonfx:GetAnimState():SetBank("wendy_gravestone_button")
+            self.resurrectbuttonfx:GetAnimState():SetBuild("wendy_gravestone_button")
+        else
+            self.resurrectbuttonfx:GetAnimState():SetBank("effigy_break")
+            self.resurrectbuttonfx:GetAnimState():SetBuild("effigy_button")
+        end
+        self.resurrectbutton:SetType(effigy_type)
         if self.isghostmode then
             self.resurrectbutton:Show()
         else
             self.resurrectbutton:Hide()
         end
     else
-        self.heart:HideEffigy()
+        self.heart:HideEffigy(effigy_type)
         self.resurrectbutton:Hide()
     end
 end

@@ -1081,6 +1081,14 @@ return{
 
     ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
+    ANNOUNCE_ELIXIR_BOOSTED = "Very nice!",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "Wolfgang is brave. Wolfgang is brave.",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "Super Wolfgang!",
+
+    ANNOUNCE_ABIGAIL_HIDING = "only_used_by_wendy",
+
+    ANNOUNCE_EXLIIR_TOO_SUPER = "Yuck! No, too much.",
+
 	BATTLECRY =
 	{
 		GENERIC = "I will punch you!",
@@ -5504,7 +5512,7 @@ return{
         GELBLOB_BOTTLE = "This not edible.",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "Hello? Do you remember Wolfgang?",
             ME = "Poor Wolfgang!",
         },
@@ -5520,8 +5528,7 @@ return{
         -- Meta 5
         GHOSTLYELIXIR_LUNAR = "Wolfgang not trust tiny bottles made by creepy girl.",
         GHOSTLYELIXIR_SHADOW = "Wolfgang not trust tiny bottles made by creepy girl.",
-        REVIVER_FLOWER = "TODO", -- [[TODO]]
-
+        
 		SLINGSHOTMODKIT = "Be careful, little scout boy!",
 		SLINGSHOT_BAND_PIGSKIN = "Be careful, little scout boy!",
 		SLINGSHOT_BAND_TENTACLE = "Be careful, little scout boy!",
@@ -5531,12 +5538,15 @@ return{
 		SLINGSHOT_FRAME_WAGPUNK_0 = "Be careful, little scout boy!",
 		SLINGSHOT_FRAME_WAGPUNK = "Be careful, little scout boy!",
 		SLINGSHOT_HANDLE_STICKY = "Be careful, little scout boy!",
+		SLINGSHOT_HANDLE_JELLY = "Be careful, little scout boy!",
 		SLINGSHOT_HANDLE_SILK = "Be careful, little scout boy!",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Be careful, little scout boy!",
 
         WOBY_BADGE_STATION = "Smart Woby!",
 
         ELIXIR_CONTAINER = "Little ghost girl have many supplements.",
+        GHOSTFLOWERHAT = "Is pretty... and creepy.",
+        WENDY_RESURRECTIONGRAVE = "Wolfgang like this... for others.",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

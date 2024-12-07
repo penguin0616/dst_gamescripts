@@ -1223,7 +1223,14 @@ local actionhandlers =
 	ActionHandler(ACTIONS.CARVEPUMPKIN, "pumpkincarving_pre"),
 
     ActionHandler(ACTIONS.APPLYELIXIR, 
-        function(inst)
+        function(inst, act)
+            if act.target and act.target:HasTag("elixir_drinker") then
+                if act.invobject.potion_tunings and act.invobject.potion_tunings.super_elixir then
+                    inst.components.talker:Say(GetString(inst, "ANNOUNCE_EXLIIR_TOO_SUPER"))
+                    return nil
+                end
+                return "drinkelixir"
+            end
             if inst.components.inventory:FindItem(function(thing) return thing:HasTag("abigail_flower") end) then
                 return "applyelixir"
             else
@@ -2804,6 +2811,47 @@ local states =
                 inst.AnimState:ClearOverrideSymbol(v)
             end
 
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:Enable(true)
+            end
+
+            inst.components.health:SetInvincible(false)
+            inst:ShowHUD(true)
+            inst:SetCameraDistance()
+
+            SerializeUserSession(inst)
+        end,
+    },
+
+    State{
+        name = "gravestone_rebirth",
+        tags = { "nopredict", "silentmorph" },
+
+        onenter = function(inst, source)
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:Enable(false)
+            end
+
+            inst.AnimState:OverrideSymbol("wormmovefx", "mole_build", "wormmovefx")
+            inst.AnimState:PlayAnimation("grave_spawn")
+
+            inst.components.health:SetInvincible(true)
+            inst:ShowHUD(false)
+            inst:SetCameraDistance(12)
+
+            inst.SoundEmitter:PlaySound("meta5/wendy/revive_emerge")
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+
+        onexit = function(inst)
             if inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:Enable(true)
             end
@@ -8267,7 +8315,7 @@ local states =
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("wendy_commune_pre")
-            inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/wisper")
+            inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/wisper","whisper")
             inst.AnimState:PushAnimation("wendy_commune_pst", false)
 
             if inst.bufferedaction ~= nil then
@@ -8293,13 +8341,14 @@ local states =
 				end
             end),
 			TimeEvent(14 * FRAMES, function(inst)
+                inst.sg:RemoveStateTag("busy")
 				if inst.sg.statemem.action_failed then
 					inst.AnimState:SetFrame(17)
 				end
 			end),
-			TimeEvent(18 * FRAMES, function(inst)
-                inst.sg:RemoveStateTag("busy")
-			end),
+            TimeEvent(32 * FRAMES, function(inst)
+                inst.SoundEmitter:KillSound("whisper")
+            end),
         },
 
         events =
@@ -8312,6 +8361,7 @@ local states =
         },
 
         onexit = function(inst)
+            inst.SoundEmitter:KillSound("whisper")
             inst.AnimState:ClearOverrideSymbol("flower")
             if inst.bufferedaction == inst.sg.statemem.action and
             (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
@@ -15763,23 +15813,50 @@ local states =
 
 			inst.sg.statemem.chained = inst.AnimState:IsCurrentAnimation("slingshot")
 
-			inst.AnimState:PlayAnimation("slingshot_pre") --16 frames
+			inst.AnimState:PlayAnimation("slingshot_pre") --11 frames
 			inst.AnimState:PushAnimation("slingshot_lag", false)
 
+			local timeout = 16
+			local rampingspeed = false
 			local weapon = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-			local timeout =
-				weapon and weapon.components.slingshotmods and (
-					(weapon.components.slingshotmods:HasPartName("slingshot_handle_voidcloth") and 16) or
-					(weapon.components.slingshotmods:HasPartName("slingshot_handle_silk") and 18)
-				) or 20
+			if weapon and weapon.components.slingshotmods then
+				if weapon.components.slingshotmods:HasPartName("slingshot_handle_sticky") then
+					timeout = 11
+				elseif weapon.components.slingshotmods:HasPartName("slingshot_handle_jelly") then
+					timeout = 7
+				elseif weapon.components.slingshotmods:HasPartName("slingshot_handle_voidcloth") then
+					timeout = 11
+					rampingspeed = true
+				elseif weapon.components.slingshotmods:HasPartName("slingshot_handle_silk") then
+					rampingspeed = true
+				end
+			end
 
 			if inst.sg.statemem.chained then
 				if inst.sg.laststate and inst.sg.laststate.name == "slingshot_shoot2" then
 					--No fast-forward when repeat initiated on server
 					inst.sg.statemem.no_predict_fastforward = true
 				end
-				inst.AnimState:SetFrame(2)
-				timeout = timeout - 2
+				if rampingspeed then
+					if (inst.sg.mem.slingshotchain or 0) < 1 then
+						inst.sg.statemem.chain = 1
+						timeout = timeout - 1
+					elseif inst.sg.mem.slingshotchain < 2 then
+						inst.sg.statemem.chain = 2
+						timeout = timeout - 2
+					elseif inst.sg.mem.slingshotchain < 3 then
+						inst.sg.statemem.chain = 3
+						timeout = timeout - 3
+						inst.sg.statemem.chainspeedfx = true
+					else
+						inst.sg.statemem.chain = 3
+						timeout = timeout - 6
+					end
+				else
+					inst.sg.mem.slingshotchain = nil
+				end
+			else
+				inst.sg.mem.slingshotchain = rampingspeed and 0 or nil
 			end
 
 			inst.components.combat:StartAttack()
@@ -15791,15 +15868,8 @@ local states =
 
 		timeline =
 		{
-			FrameEvent(8, function(inst)
-				if inst.sg.statemem.chained then
-					inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/stretch")
-				end
-			end),
-			FrameEvent(10, function(inst)
-				if not inst.sg.statemem.chained then
-					inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/stretch")
-				end
+			FrameEvent(5, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/stretch")
 			end),
 		},
 
@@ -15816,6 +15886,8 @@ local states =
 				attacktarget = inst.sg.statemem.attacktarget,
 				retarget = inst.sg.statemem.retarget,
 				air_attack = inst.sg.statemem.air_attack,
+				chain = inst.sg.statemem.chain,
+				chainspeedfx = inst.sg.statemem.chainspeedfx,
 			})
 		end,
 
@@ -15841,6 +15913,8 @@ local states =
 				inst.sg.statemem.attacktarget = data.attacktarget
 				inst.sg.statemem.retarget = data.retarget
 				inst.sg.statemem.air_attack = data.air_attack
+				inst.sg.statemem.chain = data.chain
+				inst.sg.statemem.chainspeedfx = data.chainspeedfx
 			end
 		end,
 
@@ -15856,6 +15930,7 @@ local states =
 					local equip = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
 					if equip then
 						if equip.components.slingshotmods and not equip.components.slingshotmods:CheckRequiredSkillsForPlayer(inst) then
+							inst.sg.mem.slingshotchain = nil
 							inst:ClearBufferedAction()
 							inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL"))
 							inst.sg:GoToState("idle")
@@ -15863,6 +15938,7 @@ local states =
 						end
 
 						if not (equip.components.weapon and equip.components.weapon.projectile) then
+							inst.sg.mem.slingshotchain = nil
 							inst:ClearBufferedAction()
 							inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_OUT_OF_AMMO"))
 							inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/no_ammo")
@@ -15872,6 +15948,7 @@ local states =
 
 						local ammo = equip.components.container and equip.components.container:GetItemInSlot(1) or nil
 						if ammo and ammo.REQUIRED_SKILL and not (inst.components.skilltreeupdater and inst.components.skilltreeupdater:IsActivated(ammo.REQUIRED_SKILL)) then
+							inst.sg.mem.slingshotchain = nil
 							inst:ClearBufferedAction()
 							inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL"))
 							inst.sg:GoToState("idle")
@@ -15880,6 +15957,16 @@ local states =
 
 						local target = buffaction and buffaction.target or nil
 						if target and target:IsValid() and inst.components.combat:CanTarget(target) then
+							inst.sg.mem.slingshotchain = inst.sg.statemem.chain
+							if inst.sg.statemem.chainspeedfx then
+								if inst.components.rider and inst.components.rider:IsRiding() then
+									local fx = SpawnPrefab("slingshot_powerup_mounted_fx")
+									fx.entity:SetParent(inst.entity)
+									fx.AnimState:MakeFacingDirty() -- Not needed for clients.
+								else
+									SpawnPrefab("slingshot_powerup_fx").entity:SetParent(inst.entity)
+								end
+							end
 							inst:PerformBufferedAction()
 							inst.sg:RemoveStateTag("abouttoattack")
 							inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/shoot")
@@ -15888,6 +15975,7 @@ local states =
 					end
 
 					--failed
+					inst.sg.mem.slingshotchain = nil
 					inst:ClearBufferedAction()
 					inst.sg:GoToState("idle")
 				end
@@ -15934,19 +16022,46 @@ local states =
 				inst.AnimState:IsCurrentAnimation("slingshot_pre") or
 				inst.AnimState:IsCurrentAnimation("slingshot_lag")
 
-			inst.AnimState:PlayAnimation("slingshot_alt_pre") --17 frames
+			inst.AnimState:PlayAnimation("slingshot_alt_pre") --15 frames
 			inst.AnimState:PushAnimation("slingshot_lag", false)
 
+			local timeout = 20
+			local rampingspeed = false
 			local weapon = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-			local timeout =
-				weapon and weapon.components.slingshotmods and (
-					(weapon.components.slingshotmods:HasPartName("slingshot_handle_voidcloth") and 17) or
-					(weapon.components.slingshotmods:HasPartName("slingshot_handle_silk") and 19)
-				) or 21
+			if weapon and weapon.components.slingshotmods then
+				if weapon.components.slingshotmods:HasPartName("slingshot_handle_sticky") then
+					timeout = 15
+				elseif weapon.components.slingshotmods:HasPartName("slingshot_handle_jelly") then
+					timeout = 11
+				elseif weapon.components.slingshotmods:HasPartName("slingshot_handle_voidcloth") then
+					timeout = 15
+					rampingspeed = true
+				elseif weapon.components.slingshotmods:HasPartName("slingshot_handle_silk") then
+					rampingspeed = true
+				end
+			end
 
 			if inst.sg.statemem.chained then
-				inst.AnimState:SetFrame(2)
-				timeout = timeout - 2
+				if rampingspeed then
+					if (inst.sg.mem.slingshotchain or 0) < 1 then
+						inst.sg.statemem.chain = 1
+						timeout = timeout - 1
+					elseif inst.sg.mem.slingshotchain < 2 then
+						inst.sg.statemem.chain = 2
+						timeout = timeout - 2
+					elseif inst.sg.mem.slingshotchain < 3 then
+						inst.sg.statemem.chain = 3
+						timeout = timeout - 3
+						inst.sg.statemem.chainspeedfx = true
+					else
+						inst.sg.statemem.chain = 3
+						timeout = timeout - 6
+					end
+				else
+					inst.sg.mem.slingshotchain = nil
+				end
+			else
+				inst.sg.mem.slingshotchain = rampingspeed and 0 or nil
 			end
 
 			inst.sg:SetTimeout(timeout * FRAMES)
@@ -15955,19 +16070,15 @@ local states =
 		timeline =
 		{
 			FrameEvent(9, function(inst)
-				if inst.sg.statemem.chained then
-					inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/stretch")
-				end
-			end),
-			FrameEvent(11, function(inst)
-				if not inst.sg.statemem.chained then
-					inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/stretch")
-				end
+				inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/stretch")
 			end),
 		},
 
 		ontimeout = function(inst)
-			inst.sg:GoToState("slingshot_special2")
+			inst.sg:GoToState("slingshot_special2", {
+				chain = inst.sg.statemem.chain,
+				chainspeedfx = inst.sg.statemem.chainspeedfx,
+			})
 		end,
 	},
 
@@ -15983,6 +16094,10 @@ local states =
 				inst.sg:AddStateTag("aoecharging")
 				inst.sg.statemem.fastforwarded = data and data.fastforwarded
 				inst.sg.statemem.chargeticks = data and data.chargeticks or 0
+			end
+			if data then
+				inst.sg.statemem.chain = data.chain
+				inst.sg.statemem.chainspeedfx = data.chainspeedfx
 			end
 		end,
 
@@ -16003,6 +16118,7 @@ local states =
 				local equip = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
 				if equip then
 					if equip.components.slingshotmods and not equip.components.slingshotmods:CheckRequiredSkillsForPlayer(inst) then
+						inst.sg.mem.slingshotchain = nil
 						inst:ClearBufferedAction()
 						inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL"))
 						inst.sg:GoToState("idle")
@@ -16011,6 +16127,7 @@ local states =
 
 					local ammo = equip.components.container and equip.components.container:GetItemInSlot(equip.components.container:GetNumSlots()) or nil
 					if ammo == nil then
+						inst.sg.mem.slingshotchain = nil
 						inst:ClearBufferedAction()
 						inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_OUT_OF_AMMO"))
 						inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/no_ammo")
@@ -16019,6 +16136,7 @@ local states =
 					end
 
 					if ammo.REQUIRED_SKILL and not (inst.components.skilltreeupdater and inst.components.skilltreeupdater:IsActivated(ammo.REQUIRED_SKILL)) then
+						inst.sg.mem.slingshotchain = nil
 						inst:ClearBufferedAction()
 						inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL"))
 						inst.sg:GoToState("idle")
@@ -16026,14 +16144,28 @@ local states =
 					end
 
 					if inst.sg.statemem.chargeticks == nil then
+						inst.sg.mem.slingshotchain = inst.sg.statemem.chain
+						if inst.sg.statemem.chainspeedfx then
+							SpawnPrefab(inst.components.rider and inst.components.rider:IsRiding() and "slingshot_powerup_mounted_fx" or "slingshot_powerup_fx").entity:SetParent(inst.entity)
+						end
 						inst:PerformBufferedAction()
-					elseif equip.components.aoecharging and equip.components.aoecharging:IsEnabled() then
-						equip.components.aoecharging:ReleaseChargedAttack(inst, inst.sg.statemem.chargeticks)
+						inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/shoot")
+						return
 					end
-					inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/shoot")
+
+					if equip.components.aoecharging and equip.components.aoecharging:IsEnabled() then
+						inst.sg.mem.slingshotchain = inst.sg.statemem.chain
+						if inst.sg.statemem.chainspeedfx then
+							SpawnPrefab(inst.components.rider and inst.components.rider:IsRiding() and "slingshot_powerup_mounted_fx" or "slingshot_powerup_fx").entity:SetParent(inst.entity)
+						end
+						equip.components.aoecharging:ReleaseChargedAttack(inst, inst.sg.statemem.chargeticks)
+						inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/shoot")
+						return
+					end
 				end
 
 				--failed
+				inst.sg.mem.slingshotchain = nil
 				inst:ClearBufferedAction()
 				inst.sg:GoToState("idle")
 			end),
@@ -16069,29 +16201,36 @@ local states =
 				inst:ForceFacePoint(buffaction:GetActionPoint():Get())
 			end
 
-			inst.sg.statemem.chained =
-				inst.AnimState:IsCurrentAnimation("slingshot") or
-				inst.AnimState:IsCurrentAnimation("slingshot_pre") or
-				inst.AnimState:IsCurrentAnimation("slingshot_lag")
-
-			inst.AnimState:PlayAnimation("slingshot_alt_pre") --17 frames
+			inst.AnimState:PlayAnimation("slingshot_alt_pre") --15 frames
 			inst.AnimState:PushAnimation("slingshot_lag", false)
 
 			inst.sg.statemem.isreleased = not (inst.components.playercontroller and inst.components.playercontroller:IsAnyOfControlsPressed(CONTROL_SECONDARY, CONTROL_CONTROLLER_ALTACTION))
 
+			inst.sg.statemem.speedup = 0
+			local rampingspeed = false
 			local weapon = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-			inst.sg.statemem.speedup =
-				weapon and weapon.components.slingshotmods and (
-					(weapon.components.slingshotmods:HasPartName("slingshot_handle_voidcloth") and 4) or
-					(weapon.components.slingshotmods:HasPartName("slingshot_handle_silk") and 2)
-				) or 0
-
-			local timeout = 21 - inst.sg.statemem.speedup
-			if inst.sg.statemem.chained then
-				inst.AnimState:SetFrame(2)
-				timeout = timeout - 2
+			if weapon and weapon.components.slingshotmods then
+				if weapon.components.slingshotmods:HasPartName("slingshot_handle_sticky") then
+					inst.sg.statemem.speedup = 2
+				elseif weapon.components.slingshotmods:HasPartName("slingshot_handle_jelly") then
+					inst.sg.statemem.speedup = 3
+				elseif weapon.components.slingshotmods:HasPartName("slingshot_handle_voidcloth") then
+					inst.sg.statemem.speedup = 4
+					rampingspeed = true
+				elseif weapon.components.slingshotmods:HasPartName("slingshot_handle_silk") then
+					inst.sg.statemem.speedup = 1
+					rampingspeed = true
+				end
 			end
-			inst.sg:SetTimeout(timeout * FRAMES)
+
+			if rampingspeed then
+				inst.sg.statemem.chain = 3
+				inst.sg.statemem.chainspeedfx = true
+			end
+			inst.sg.mem.slingshotchain = nil
+
+			local timeout = (15 - inst.sg.statemem.speedup) * FRAMES
+			inst.sg:SetTimeout(timeout)
 		end,
 
 		onupdate = function(inst)
@@ -16123,47 +16262,22 @@ local states =
 
 		timeline =
 		{
-			--chained (2 frames faster)
 			FrameEvent(8, function(inst)
-				if inst.sg.statemem.chained then
-					inst.sg.statemem.cancancel = true
-				end
+				inst.sg.statemem.cancancel = true
 			end),
 			FrameEvent(9, function(inst)
-				if inst.sg.statemem.chained then
-					inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/stretch")
-				end
-			end),
-			FrameEvent(88, function(inst) --timeout
-				if inst.sg.statemem.chained then
-					local weapon = inst.sg.statemem.weapon
-					if weapon and weapon.components.aoecharging and weapon.components.aoecharging:IsEnabled() then
-						inst.sg:GoToState("slingshot_special2", { chargeticks = weapon.components.aoecharging:GetChargeTicks() })
-					else
-						inst.sg:GoToState("idle")
-					end
-				end
-			end),
-
-			--normal
-			FrameEvent(10, function(inst)
-				if not inst.sg.statemem.chained then
-					inst.sg.statemem.cancancel = true
-				end
-			end),
-			FrameEvent(11, function(inst)
-				if not inst.sg.statemem.chained then
-					inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/stretch")
-				end
+				inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/stretch")
 			end),
 			FrameEvent(90, function(inst) --timeout
-				if not inst.sg.statemem.chained then
-					local weapon = inst.sg.statemem.weapon
-					if weapon and weapon.components.aoecharging and weapon.components.aoecharging:IsEnabled() then
-						inst.sg:GoToState("slingshot_special2", { chargeticks = weapon.components.aoecharging:GetChargeTicks() })
-					else
-						inst.sg:GoToState("idle")
-					end
+				local weapon = inst.sg.statemem.weapon
+				if weapon and weapon.components.aoecharging and weapon.components.aoecharging:IsEnabled() then
+					inst.sg:GoToState("slingshot_special2", {
+						chargeticks = weapon.components.aoecharging:GetChargeTicks(),
+						chain = inst.sg.statemem.chain,
+						chainspeedfx = inst.sg.statemem.chainspeedfx,
+					})
+				else
+					inst.sg:GoToState("idle")
 				end
 			end),
 		},
@@ -16174,7 +16288,12 @@ local states =
 			EventHandler("chargingreticulecancelled", function(inst) inst.sg:GoToState("idle") end),
 			EventHandler("chargingreticulereleased", function(inst, data)
 				if inst.sg.statemem.canshoot then
-					inst.sg:GoToState("slingshot_special2", { chargeticks = data.chargeticks, fastforwarded = true })
+					inst.sg:GoToState("slingshot_special2", {
+						chargeticks = data.chargeticks,
+						fastforwarded = true,
+						chain = inst.sg.statemem.chain,
+						chainspeedfx = inst.sg.statemem.chainspeedfx,
+					})
 					local playercontroller = inst.components.playercontroller
 					if playercontroller and playercontroller.remote_predicting and playercontroller.remote_authority then
 						local dt = GetTickTime()
@@ -21769,7 +21888,6 @@ local states =
             if inst.sg.statemem.action ~= nil then
                 local invobject = inst.sg.statemem.action.invobject
                 local elixir_type = invobject.elixir_buff_type
-                print("elixir_type",elixir_type)
 
                 inst.AnimState:OverrideSymbol("ghostly_elixirs_swap", "ghostly_elixirs", "ghostly_elixirs_".. elixir_type .."_swap")
 
@@ -21813,6 +21931,52 @@ local states =
             end
         end,
     },
+
+
+ -- WENDY
+    State{
+        name = "drinkelixir",
+        tags = { "doing", "busy" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+
+            inst.AnimState:PlayAnimation("drink")
+            inst.SoundEmitter:PlaySound("meta5/wendy/player_drink") 
+
+            inst.sg.statemem.action = inst:GetBufferedAction()
+
+            if inst.sg.statemem.action ~= nil then
+                local invobject = inst.sg.statemem.action.invobject
+                local elixir_type = invobject.elixir_buff_type
+
+                inst.AnimState:OverrideSymbol("ghostly_elixirs_swap", "ghostly_elixirs", "ghostly_elixirs_".. elixir_type .."_swap")              
+            end
+
+            inst.sg:SetTimeout(33 * FRAMES)
+        end,
+
+        timeline =
+        {
+            TimeEvent(4 * FRAMES, function(inst)
+                inst.sg:RemoveStateTag("busy")
+            end),
+            TimeEvent(31 * FRAMES, function(inst)
+                inst:PerformBufferedAction()
+            end),
+        },
+
+        ontimeout = function(inst)
+            inst.sg:GoToState("idle", true)
+        end,
+
+        onexit = function(inst)
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
+                inst:ClearBufferedAction()
+            end
+        end,
+    },    
     
 }
 

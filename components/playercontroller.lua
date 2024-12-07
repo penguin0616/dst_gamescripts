@@ -233,7 +233,7 @@ local function OnEquip(inst, data)
 		if self.reticule ~= nil and self.reticule.inst.components.spellbook ~= nil then
 			--Ignore when targeting with spellbook
 			return
-		elseif data.item.components.aoetargeting ~= nil then
+		elseif data.item.components.aoetargeting ~= nil and data.item.components.aoetargeting:IsEnabled() then
             if self.reticule ~= nil then
                 self.reticule:DestroyReticule()
                 self.reticule = nil
@@ -2146,7 +2146,8 @@ function PlayerController:GetResurrectButtonAction()
     return self.inst:HasTag("playerghost") and
         (self.inst.sg == nil or self.inst.sg:HasStateTag("moving") or self.inst.sg:HasStateTag("idle")) and
         (self.inst:HasTag("moving") or self.inst:HasTag("idle")) and
-        self.inst.components.attuner:HasAttunement("remoteresurrector") and
+        (self.inst.components.attuner:HasAttunement("remoteresurrector")
+            or self.inst.components.attuner:HasAttunement("gravestoneresurrector")) and
         BufferedAction(self.inst, nil, ACTIONS.REMOTERESURRECT) or
         nil
 end

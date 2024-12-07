@@ -1080,6 +1080,14 @@ return{
 
     ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
+    ANNOUNCE_ELIXIR_BOOSTED = "That will do nicely.",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "My eyes have been adjusted to the darkness.",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "Strength is wasted on the young!",
+
+    ANNOUNCE_ABIGAIL_HIDING = "only_used_by_wendy",
+
+    ANNOUNCE_EXLIIR_TOO_SUPER = "That is too strong.",
+
 	BATTLECRY =
 	{
 		GENERIC = "Combat!",
@@ -5503,7 +5511,7 @@ return{
         GELBLOB_BOTTLE = "This will do nicely.",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "An unsubtle reminder of one's own mortality.",
             ME = "How undignified.",
         },
@@ -5519,8 +5527,7 @@ return{
         -- Meta 5
         GHOSTLYELIXIR_LUNAR = "Color-coded and clearly labeled. Well done!",
         GHOSTLYELIXIR_SHADOW = "Color-coded and clearly labeled. Well done!",
-        REVIVER_FLOWER = "todo", -- [[TODO]]
-
+        
 		SLINGSHOTMODKIT = "What is that Walter up to now?",
 		SLINGSHOT_BAND_PIGSKIN = "What is that Walter up to now?",
 		SLINGSHOT_BAND_TENTACLE = "What is that Walter up to now?",
@@ -5530,12 +5537,15 @@ return{
 		SLINGSHOT_FRAME_WAGPUNK_0 = "What is that Walter up to now?",
 		SLINGSHOT_FRAME_WAGPUNK = "What is that Walter up to now?",
 		SLINGSHOT_HANDLE_STICKY = "What is that Walter up to now?",
+		SLINGSHOT_HANDLE_JELLY = "What is that Walter up to now?",
 		SLINGSHOT_HANDLE_SILK = "What is that Walter up to now?",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "What is that Walter up to now?",
 
         WOBY_BADGE_STATION = "Woby's penchant for learning is unprecedented.",
 
         ELIXIR_CONTAINER = "What a pretty elixir organizer!",
+        GHOSTFLOWERHAT = "It allows one to imbibe like the dead.",
+        WENDY_RESURRECTIONGRAVE = "Death is not the end.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

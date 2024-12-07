@@ -318,13 +318,15 @@ local function DoActualRez(inst, source, item)
             inst.sg:GoToState("wakeup")
         elseif source.prefab == "resurrectionstatue" then
             inst.sg:GoToState("rebirth", source)
+        elseif source.prefab == "wendy_resurrectiongrave" then
+            inst.sg:GoToState("gravestone_rebirth", source)
         elseif source:HasTag("multiplayer_portal") then
             inst.components.health:DeltaPenalty(TUNING.PORTAL_HEALTH_PENALTY)
 
             source:PushEvent("rez_player")
             inst.sg:GoToState("portal_rez")
         end
-    else 
+    else
 		if item ~= nil and (item.prefab == "pocketwatch_revive" or item.prefab == "pocketwatch_revive_reviver") then
 			inst.DynamicShadow:Enable(true)
 			inst.AnimState:SetBank("wilson")
@@ -557,7 +559,8 @@ local function OnRespawnFromGhost(inst, data) -- from ListenForEvent "respawnfro
         data ~= nil and
         data.source ~= nil and
         data.source.components.attunable ~= nil and
-        data.source.components.attunable:GetAttunableTag() == "remoteresurrector"
+        (data.source.components.attunable:GetAttunableTag() == "remoteresurrector"
+        or data.source.components.attunable:GetAttunableTag() == "gravestoneresurrector")
 end
 
 local function CommonPlayerDeath(inst)

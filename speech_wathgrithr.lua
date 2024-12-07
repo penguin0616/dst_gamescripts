@@ -1080,6 +1080,14 @@ return{
 
     ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
+    ANNOUNCE_ELIXIR_BOOSTED = "It doth soothe for but a fleeting moment.",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "Visions from Helheim!",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "I am the battalion.",
+
+    ANNOUNCE_ABIGAIL_HIDING = "only_used_by_wendy",
+
+    ANNOUNCE_EXLIIR_TOO_SUPER = "'Tis excess!",
+
 	BATTLECRY =
 	{
 		GENERIC = "Valhalla awaits!",
@@ -5503,7 +5511,7 @@ return{
         GELBLOB_BOTTLE = "The goo hath been contained.",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "I shall take no pleasure in destroying you, friend.",
             ME = "'Tis an abomination!",
         },
@@ -5519,8 +5527,7 @@ return{
         -- Meta 5
         GHOSTLYELIXIR_LUNAR = "'Tis a powerful elixir!",
         GHOSTLYELIXIR_SHADOW = "'Tis a powerful elixir!",
-        REVIVER_FLOWER = "TODO", -- [[TODO]]
-
+        
 		SLINGSHOTMODKIT = "The young scout doth come into his own.",
 		SLINGSHOT_BAND_PIGSKIN = "The young scout doth come into his own.",
 		SLINGSHOT_BAND_TENTACLE = "The young scout doth come into his own.",
@@ -5530,12 +5537,15 @@ return{
 		SLINGSHOT_FRAME_WAGPUNK_0 = "The young scout doth come into his own.",
 		SLINGSHOT_FRAME_WAGPUNK = "The young scout doth come into his own.",
 		SLINGSHOT_HANDLE_STICKY = "The young scout doth come into his own.",
+		SLINGSHOT_HANDLE_JELLY = "The young scout doth come into his own.",
 		SLINGSHOT_HANDLE_SILK = "The young scout doth come into his own.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "The young scout doth come into his own.",
 
         WOBY_BADGE_STATION = "The loyal cur showeth vast potential.",
 
         ELIXIR_CONTAINER = "The elixirs dost soothe her spirit.",
+        GHOSTFLOWERHAT = "Cursed blossoms of the dead.",
+        WENDY_RESURRECTIONGRAVE = "A warrior doth run toward death, not from it!",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

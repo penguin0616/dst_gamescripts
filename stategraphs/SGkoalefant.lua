@@ -9,7 +9,14 @@ local events=
 
     EventHandler("doattack", function(inst) if not inst.components.health:IsDead() then inst.sg:GoToState("attack") end end),
     EventHandler("death", function(inst) inst.sg:GoToState("death") end),
-    EventHandler("attacked", function(inst) if not inst.components.health:IsDead() and not inst.sg:HasStateTag("attack") then inst.sg:GoToState("hit") end end),
+	EventHandler("attacked", function(inst)
+		if not (inst.components.health:IsDead() or
+				inst.sg:HasStateTag("attack") or
+				CommonHandlers.HitRecoveryDelay(inst, TUNING.KOALEFANT_HIT_RECOVERY, TUNING.KOALEFANT_MAX_STUN_LOCKS))
+		then
+			inst.sg:GoToState("hit")
+		end
+	end),
 }
 
 local states=
@@ -161,7 +168,7 @@ CommonStates.AddRunStates(
         }
     })
 
-CommonStates.AddSimpleState(states,"hit", "hit", {"hit", "busy"})
+CommonStates.AddHitState(states)
 
 CommonStates.AddSleepStates(states,
 {

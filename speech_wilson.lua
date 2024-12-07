@@ -1090,6 +1090,14 @@ return {
 
     ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
+    ANNOUNCE_ELIXIR_BOOSTED = "It's like a BOO-ster Shot.",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "I feel fright headed.",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "I think I could lift a horse.",
+
+    ANNOUNCE_ABIGAIL_HIDING = "only_used_by_wendy",
+
+    ANNOUNCE_EXLIIR_TOO_SUPER = "This one seems a little strong.",
+
 	BATTLECRY =
 	{
 		GENERIC = "Go for the eyes!",
@@ -5513,7 +5521,7 @@ return {
         GELBLOB_BOTTLE = "I tend to keep things bottled up.",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "They're occupied.",
             ME = "I'm beside myself.",
         },
@@ -5529,8 +5537,7 @@ return {
         -- Meta 5
         GHOSTLYELIXIR_LUNAR = "Ah yes. Very science-y.",
         GHOSTLYELIXIR_SHADOW = "Ah yes. Very science-y.",
-        REVIVER_FLOWER = "It's a Telltale Heart that looks like it was made of Dark Petals.", -- [[TODO]]
-
+        
 		SLINGSHOTMODKIT = "Walter's really giving it his best shot.",
 		SLINGSHOT_BAND_PIGSKIN = "Walter's really giving it his best shot.",
 		SLINGSHOT_BAND_TENTACLE = "Walter's really giving it his best shot.",
@@ -5540,12 +5547,15 @@ return {
 		SLINGSHOT_FRAME_WAGPUNK_0 = "Walter's really giving it his best shot.",
 		SLINGSHOT_FRAME_WAGPUNK = "Walter's really giving it his best shot.",
 		SLINGSHOT_HANDLE_STICKY = "Walter's really giving it his best shot.",
+		SLINGSHOT_HANDLE_JELLY = "Walter's really giving it his best shot.",
 		SLINGSHOT_HANDLE_SILK = "Walter's really giving it his best shot.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Walter's really giving it his best shot.",
 
         WOBY_BADGE_STATION = "I guess you can teach an old dog new tricks.",
 
-        ELIXIR_CONTAINER = "That's more of a mortician's bag than a basket.", --[[TODO]]
+        ELIXIR_CONTAINER = "That's more of a mortician's bag than a basket.",
+        GHOSTFLOWERHAT = "This makes me thirsty.",
+        WENDY_RESURRECTIONGRAVE = "Strangely reassuring!",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

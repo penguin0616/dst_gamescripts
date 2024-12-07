@@ -754,6 +754,7 @@ local states =
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("hit")
 			inst.SoundEmitter:PlaySound("meta3/sharkboi/hit")
+			CommonHandlers.UpdateHitRecoveryDelay(inst)
 			inst.sg.statemem.nextstateparams = nextstateparams
 			if inst.sg.lasttags and inst.sg.lasttags["dizzy"] then
 				inst.sg:AddStateTag("dizzy")

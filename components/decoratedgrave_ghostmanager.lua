@@ -202,7 +202,7 @@ function self:OnUpdate(dt)
         if type(ghost) == "table" and ghost.prefab then
             gx, gy, gz = ghost.Transform:GetWorldPosition()
             player, pdsq = FindClosestPlayer(gx, gy, gz, true)
-            if pdsq > (DESPAWN_DISTANCE * DESPAWN_DISTANCE) then
+            if pdsq == nil or pdsq > (DESPAWN_DISTANCE * DESPAWN_DISTANCE) then
                 ghost._despawn_queued = true
             end
         end

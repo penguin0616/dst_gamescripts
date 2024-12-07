@@ -935,6 +935,8 @@ function Tune(overrides)
         KOALEFANT_TARGET_DIST = 5,
         KOALEFANT_CHASE_DIST = 30,
         KOALEFANT_FOLLOW_TIME = 30,
+		KOALEFANT_HIT_RECOVERY = 1,
+		KOALEFANT_MAX_STUN_LOCKS = 2,
 
         SPAT_HEALTH = 800,
         SPAT_PHLEGM_DAMAGE = 5,
@@ -1952,6 +1954,7 @@ function Tune(overrides)
         SPIDERQUEEN_MINWANDERTIME = total_day_time * 1.5,
         SPIDERQUEEN_MINDENSPACING = 20,
         SPIDERQUEEN_NEARBYPLAYERSDIST = 20,
+		SPIDERQUEEN_HIT_RECOVERY = 1.5,
 
         SPAWN_SPIDERQUEEN = true,
 
@@ -4765,7 +4768,7 @@ function Tune(overrides)
 		SLINGSHOT_DISTANCE_MAX = 14,
 
 		SLINGSHOT_AMMO_HONEY_DURATION = 8,
-		SLINGSHOT_AMMO_GELBLOB_DURATION = 120,
+		SLINGSHOT_AMMO_GELBLOB_DURATION = 60,
 		SLINGSHOT_AMMO_MOVESPEED_MULT = 2/3,
 		SLINGSHOT_AMMO_MOVESPEED_DURATION = 30,
 		SLINGSHOT_AMMO_MOVESPEED_MAX_STACKS = 3,
@@ -4789,12 +4792,14 @@ function Tune(overrides)
         
 		SLINGSHOT_AMMO_DAMAGE_DREADSTONE = wilson_attack * 2 - 10,
 		SLINGSHOT_AMMO_PLANAR_DREADSTONE = 10,
-        
+		SLINGSHOT_AMMO_DREADSTONE_RECOVER_CHANCE = 0.5,
+
 		SLINGSHOT_AMMO_DAMAGE_HORRORFUEL = wilson_attack * 0.5,	-- 17
 		SLINGSHOT_AMMO_PLANAR_HORRORFUEL = 20,
 		SLINGSHOT_HORROR_PLANAR_DAMAGE = 10,
-		SLINGSHOT_HORROR_TICKS = 4,
-        
+		SLINGSHOT_HORROR_TICKS = 7,
+		SLINGSHOT_HORROR_SETBONUS_TICKS = 9,
+
 		SLINGSHOT_AMMO_DAMAGE_LUNARPLANTHUSK = wilson_attack * 2 - 30,
 		SLINGSHOT_AMMO_PLANAR_LUNARPLANTHUSK = 30,
         
@@ -6813,6 +6818,8 @@ function Tune(overrides)
 		DAYWALKER_WALKSPEED = 2.7,
 		DAYWALKER_RUNSPEED = 9,
 		DAYWALKER_HIT_RECOVERY = 1,
+		DAYWALKER_STALK_HIT_RECOVERY = 1.5,
+		DAYWALKER_DODGE_HIT_RECOVERY = 2,
 		DAYWALKER_ATTACK_PERIOD = { min = 4, max = 6 },
 		DAYWALKER_ATTACK_RANGE = 6,
 		DAYWALKER_DAMAGE = 75,
@@ -6872,6 +6879,7 @@ function Tune(overrides)
 		SHARKBOI_ATTACK_RANGE = 8,
 		SHARKBOI_TORPEDO_CD = 20,
 		SHARKBOI_STANDING_DIVE_CD = 24,
+		SHARKBOI_HIT_RECOVERY = 1,
 
 		SHARKBOI_WATER_WALKSPEED = 2,
 		SHARKBOI_WATER_RUNSPEED = 7,
@@ -7210,20 +7218,20 @@ function Tune(overrides)
 
                 LUNARELIXIR_DURATION = 4 * seg_time,
                 LUNARELIXIR_DAMAGEBONUS = 10,
-                LUNARELIXIR_DAMAGEBONUS_GESTALT = 100,
+                LUNARELIXIR_DAMAGEBONUS_GESTALT = 50,
 
                 SHADOWELIXIR_DURATION = total_day_time,
-                ABIGAIL_GESTALT_VEX_MULT = 2,
+                ABIGAIL_GESTALT_VEX_MULT = 3,
             },
             ---
             WALTER = {
-                WOBY_DIGGING_COOLDOWN = total_day_time * 2.5,
+                WOBY_DIGGING_COOLDOWN = total_day_time * 2.0,
                 WOBY_DIGGING_DISTANCE = { min=5, max=10 },
-                WOBY_DIGGING_LOOT_CHANCE = { min=0.4, max=0.9 },
+                WOBY_DIGGING_LOOT_CHANCE = { min=0.5, max=0.9 },
 
-                WOBY_FETCHING_ASSIST_DISTANCE = 10,
-                WOBY_FETCHING_ASSIST_COOLDOWN = 5,
-                WOBY_FETCHING_ASSIST_SUCCESS_CHANCE = { min=.6, max=1 },
+                WOBY_FETCHING_ASSIST_DISTANCE = 8,
+                WOBY_FETCHING_ASSIST_COOLDOWN = 7,
+                WOBY_FETCHING_ASSIST_SUCCESS_CHANCE = { min=.5, max=1 },
 
                 WOBY_MAX_BADGES_SLOTS = 4,
 
@@ -7236,7 +7244,7 @@ function Tune(overrides)
                     RESISTANCE_1 = 10,
                     RESISTANCE_2 = 15,
 
-                    -- Sanity protection for Walter when riding Woby.
+                    -- Sanity protection for Walter when riding Woby. Also does sanity regen.
                     BRAVERY_1 = .2,
                     BRAVERY_2 = .3,
 
@@ -7251,9 +7259,11 @@ function Tune(overrides)
 
                 WOBY_BADGES_ASPECT_GAIN_RATE =
                 {
-                    speed = 1/(total_day_time*15), -- per second riding.
-                    resistance = 1/2000,           -- per damage unit taken.
-                    bravery = 1/2000,              -- per damage unit taken.
+                    speed = 1/(total_day_time*12), -- per second riding.
+                    resistance_taken = 1/800,      -- per damage unit taken.
+                    bravery_taken = 1/950,         -- per damage unit taken.
+                    resistance_onatk = 1/650,      -- flat number on attack.
+                    bravery_onatk = 1/500,         -- flat number on attack.
                     fetching = 1/150,              -- per try.
                     digging = 1/30,                -- per try.
                 },
@@ -7270,6 +7280,7 @@ function Tune(overrides)
                 NICE_SANITY_MULT = 2,
                 NAUGHTY_SANITY_MULT = 0.0,
                 NAUGHTY_OVERLOAD_STOP_TIME = 10,
+                NAUGHTY_SOULHEAL_RECEIVED_MULT = 0.75,
                 -- wortox_lifebringer_1
                 REVIVE_PERISH_TIME = 10 * total_day_time * perish_warp,
                 -- wortox_soulprotector_1
@@ -8255,10 +8266,11 @@ function Tune(overrides)
         -- Wendy Skill Tree
         ABIGAIL_GESTALT_DAMAGE =
         {
-            day = 150,
-            dusk = 250,
-            night = 400,
+            day = 75,
+            dusk = 125,
+            night = 200,
         },
+        ABIGAIL_GESTALT_HIDE_THRESHOLD = 0.25,
 
         WENDYSKILL_COMMAND_COOLDOWN = 4,
         WENDYSKILL_ESCAPE_TIME = 1.5,
@@ -8274,6 +8286,31 @@ function Tune(overrides)
 
         WENDYSKILL_SISTURN_SANITY_MODIFYER = 0.75,
         WENDY_SISTURN_PETAL_PRESRVE = 0.5,
+
+        GHOSTLYELIXIR_PLAYER_SLOWREGEN_HEALING = 1,
+        GHOSTLYELIXIR_PLAYER_SLOWREGEN_TICK_TIME = 1,
+        GHOSTLYELIXIR_PLAYER_SLOWREGEN_DURATION = 30, -- 30 hp
+
+        GHOSTLYELIXIR_PLAYER_FASTREGEN_HEALING = 5,
+        GHOSTLYELIXIR_PLAYER_FASTREGEN_TICK_TIME = 1,
+        GHOSTLYELIXIR_PLAYER_FASTREGEN_DURATION = 16, -- 80 hp
+
+        GHOSTLYELIXIR_PLAYER_DAMAGE_DURATION = total_day_time,
+
+        GHOSTLYELIXIR_PLAYER_SPEED_LOCO_MULT = 1.75,
+        GHOSTLYELIXIR_PLAYER_SPEED_DURATION = total_day_time,
+        GHOSTLYELIXIR_PLAYER_SPEED_PLAYER_GHOST_DURATION = 3,
+
+        GHOSTLYELIXIR_PLAYER_SHIELD_DURATION = seg_time*4,
+        GHOSTLYELIXIR_PLAYER_SHIELD_REDUCTION = 50,        
+
+        GHOSTLYELIXIR_PLAYER_RETALIATION_DAMAGE = 20,
+        GHOSTLYELIXIR_PLAYER_RETALIATION_DURATION = total_day_time,
+
+        GHOSTLYELIXIR_PLAYER_REVIVE_DURATION = 0.3,
+
+        GHOSTLYELIXIR_PLAYER_DRIP_FX_DELAY = seg_time / 2,
+
 
     }
 

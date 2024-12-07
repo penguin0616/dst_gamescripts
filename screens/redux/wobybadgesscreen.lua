@@ -99,6 +99,7 @@ local Badge = Class(ImageButton, function(self, context, index)
 
     self.ignore_standard_scaling = true
     self.move_on_click = false
+    self.stopclicksound = true
 
     self:SetFocusScale(BADGE_FOCUS_SCALE_DISABLED)
     self:ForceImageSize(self.BADGE_SIZE, self.BADGE_SIZE)
@@ -150,11 +151,11 @@ function Badge:SetBadgeType(data)
 
     self:SetTextures(
         ATLAS_1,
-        texture,          -- normal
-        texture,    -- focus
-        texture,    -- disabled
-        texture,    -- down  ---------- THIS IS ALSO FOCUS.
-        texture           -- selected
+        texture, -- normal
+        texture, -- focus
+        texture, -- disabled
+        texture, -- down
+        texture  -- selected
     )
 
     self.BADGE_SIZE = 680/self.NUM_BADGES_PER_ROW - (data.level == 1 and 45 or 25)
@@ -222,11 +223,14 @@ function Badge:OnClicked()
 
         self.screen.dirty = true
 
+        TheFrontEnd:GetSound():PlaySound("meta5/walter/badge_movement_UI")
+
     elseif (self.screen:GetNumCurrentOccupiedSlots() + self.badgedata.level) <= TUNING.SKILLS.WALTER.WOBY_MAX_BADGES_SLOTS then
         self:ToggleEnabledState(true)
 
         self.screen.dirty = true
 
+        TheFrontEnd:GetSound():PlaySound("meta5/walter/badge_movement_UI")
     else
         -- You can't enable more badges.
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_negative")
@@ -244,7 +248,7 @@ function Badge:UseFocusOverlay(...)
 end
 
 function Badge:OnGainFocus()
-    if self.stopclicksound then
+    if self.empty then
         return -- Empty badge.
     end
 
@@ -253,6 +257,8 @@ function Badge:OnGainFocus()
     if self:IsSelected() or self:IsDisabledState() or not self:IsEnabled() then
         return
     end
+
+    self.screen.infopanel:UpdateText(STRINGS.UI.WOBY_BADGES_POPUP.BADGE_DESC[string.upper(self.badgedata.name)] or self.badgedata.name)
 
     if self.pin ~= nil and self.pin._scale ~= nil and self.pin._pos_y then
         if self.ignore_standard_scaling and self.focus_scale then
@@ -266,7 +272,7 @@ function Badge:OnGainFocus()
 end
 
 function Badge:OnLoseFocus()
-    if self.stopclicksound then
+    if self.empty then
         return -- Empty badge.
     end
 
@@ -289,6 +295,23 @@ end
 
 --------------------------------------------------------------------------------------------------------------------
 
+local InfoPanel = Class(Widget, function(self)
+    Widget._ctor(self, "infopanel")
+
+    self.bg = self:AddChild(Image(ATLAS_1, "badge_background_text.tex"))
+    self.bg:ScaleToSize(580, 145)
+
+    self.desc = self:AddChild(Text(CHATFONT, 18, nil, UICOLOURS.BLACK))
+
+    self:UpdateText(STRINGS.UI.WOBY_BADGES_POPUP.BADGE_DESC.GENERIC)
+end)
+
+function InfoPanel:UpdateText(text)
+    self.desc:SetMultilineTruncatedString(text, 6, 450, nil, nil, true, 10)
+end
+
+--------------------------------------------------------------------------------------------------------------------
+
 local function ScrollWidgetSetData(context, widget, data, index)
     if data == nil then
         widget:Hide()
@@ -306,8 +329,6 @@ local function ScrollWidgetSetData(context, widget, data, index)
         local badge_size = 680/context.screen.NUM_BADGES_PER_ROW - (data.level == 1 and 45 or 25)
 
         widget.namelabel:SetPosition(0, badge_size/2 + 20, 0)
-
-        widget.stopclicksound = true
     end
 end
 
@@ -350,12 +371,13 @@ function WobyBadgesScreen:DoInit()
     self.box_root:SetPosition(-200 * 0.8, 0) -- BG pos * scale.
 
     self.box = self.box_root:AddChild(Image(ATLAS_2, "badge_bg.tex"))
+    self.box:SetPosition(0, 80)
     self.box:SetScale(.65)
 
     self.slots_str = self.box_root:AddChild(SlotsText(HEADERFONT, 26))
-    self.slots_str:SetPosition(-12, 220)
+    self.slots_str:SetPosition(-12, 300)
 
-    self.badges_bar = self.box_root:AddChild(
+    self.badges_grid = self.box_root:AddChild(
         TEMPLATES.ScrollingGrid(
             self:GetGridItems(),
             {
@@ -373,9 +395,16 @@ function WobyBadgesScreen:DoInit()
         )
     )
 
-    self.badges_bar:SetPosition(0, -30)
+    self.badges_grid:SetPosition(0, 50)
 
     self.slots_str:MoveToFront()
+
+    ----------------------------------------------------------------------------------------------------------
+
+    self.infopanel = self.box_root:AddChild(InfoPanel())
+    self.infopanel:SetPosition(0, -255)
+
+    ----------------------------------------------------------------------------------------------------------
 
     local buttons =
     {
@@ -393,7 +422,7 @@ function WobyBadgesScreen:DoInit()
         self.menu:Disable()
     end
 
-    self.default_focus = self.badges_bar
+    self.default_focus = self.badges_grid
 end
 
 function WobyBadgesScreen:DecodeTrainingData(data)

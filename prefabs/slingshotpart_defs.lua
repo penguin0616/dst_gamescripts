@@ -103,7 +103,7 @@ local function TransferAmmo(slingshot, new)
 end
 
 local function ReplaceSlingshot(slingshot, newprefab)
-	local new = SpawnPrefab(newprefab)
+	local new = SpawnPrefab(newprefab, slingshot:GetSkinBuild(), slingshot.skin_id)
 	slingshot.components.slingshotmods:TransferPartsTo(new.components.slingshotmods)
 
 	TransferAmmo(slingshot, new)
@@ -259,7 +259,11 @@ defs.slingshot_handle_sticky.oninstalledfn = function(inst, slingshot)
 end
 
 defs.slingshot_handle_sticky.onuninstalledfn = function(inst, slingshot)
-	if slingshot._hasstickyhandle and not slingshot.components.slingshotmods:HasPartName("slingshot_handle_sticky") then
+	if slingshot._hasstickyhandle and
+		not (	slingshot.components.slingshotmods:HasPartName("slingshot_handle_sticky") or
+				slingshot.components.slingshotmods:HasPartName("slingshot_handle_jelly")
+			)
+	then
 		slingshot._hasstickyhandle = nil
 		slingshot:RemoveEventCallback("equipped", handle_sticky_onequipped)
 		slingshot:RemoveEventCallback("unequipped", handle_stick_onunequipped)
@@ -268,6 +272,12 @@ defs.slingshot_handle_sticky.onuninstalledfn = function(inst, slingshot)
 		end
 	end
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+defs["slingshot_handle_jelly"] = shallowcopy(defs.slingshot_handle_sticky)
+defs.slingshot_handle_jelly.anim = "idle_jelly"
+defs.slingshot_handle_jelly.swap_symbol = "swap_handle_jelly"
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -286,8 +296,79 @@ defs["slingshot_handle_voidcloth"] =
 	slot = "handle",
 	anim = "idle_voidcloth",
 	swap_symbol = "swap_handle_voidcloth",
+	usedeferreduninstall = true,
 	skill = "walter_slingshot_handle_voidcloth",
 }
+
+local function handle_voidcloth_SetBuffEnabled(slingshot, enabled)
+	slingshot.voidbonusenabled = enabled
+end
+
+local function handle_voidcloth_SetBuffOwner(slingshot, owner)
+	if slingshot._voidowner ~= owner then
+		if slingshot._voidowner then
+			slingshot:RemoveEventCallback("equip", slingshot._onvoidownerequip, slingshot._voidowner)
+			slingshot:RemoveEventCallback("unequip", slingshot._onvoidownerunequip, slingshot._voidowner)
+			slingshot._onvoidownerequip = nil
+			slingshot._onvoidownerunequip = nil
+			handle_voidcloth_SetBuffEnabled(slingshot, false)
+		end
+		slingshot._voidowner = owner
+		if owner then
+			slingshot._onvoidownerequip = function(owner, data)
+				if data then
+					if data.item and data.item.prefab == "voidclothhat" then
+						handle_voidcloth_SetBuffEnabled(slingshot, true)
+					elseif data.eslot == EQUIPSLOTS.HEAD then
+						handle_voidcloth_SetBuffEnabled(slingshot, false)
+					end
+				end
+			end
+			slingshot._onvoidownerunequip  = function(owner, data)
+				if data and data.eslot == EQUIPSLOTS.HEAD then
+					handle_voidcloth_SetBuffEnabled(slingshot, false)
+				end
+			end
+			slingshot:ListenForEvent("equip", slingshot._onvoidownerequip, owner)
+			slingshot:ListenForEvent("unequip", slingshot._onvoidownerunequip, owner)
+
+			local hat = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
+			if hat and hat.prefab == "voidclothhat" then
+				handle_voidcloth_SetBuffEnabled(slingshot, true)
+			end
+		end
+	end
+end
+
+local function handle_voidcloth_onequipped(slingshot, data)
+	handle_voidcloth_SetBuffOwner(slingshot, data.owner)
+end
+
+local function handle_voidcloth_onunequipped(slingshot, data)
+	handle_voidcloth_SetBuffOwner(slingshot, nil)
+end
+
+defs.slingshot_handle_voidcloth.oninstalledfn = function(inst, slingshot)
+	if not slingshot._hasvoidset then
+		slingshot._hasvoidset = true
+		slingshot:ListenForEvent("equipped", handle_voidcloth_onequipped)
+		slingshot:ListenForEvent("unequipped", handle_voidcloth_onunequipped)
+		if slingshot.components.equippable:IsEquipped() then
+			handle_voidcloth_SetBuffOwner(slingshot, owner)
+		end
+	end
+end
+
+defs.slingshot_handle_voidcloth.onuninstalledfn = function(inst, slingshot)
+	if slingshot._hasvoidset and not slingshot.components.slingshotmods:HasPartName("slingshot_handle_voidcloth") then
+		slingshot._hasvoidset = nil
+		slingshot:RemoveEventCallback("equipped", handle_voidcloth_onequipped)
+		slingshot:RemoveEventCallback("unequipped", handle_voidcloth_onunequipped)
+		if slingshot.components.equippable:IsEquipped() then
+			handle_voidcloth_SetBuffOwner(slingshot, nil)
+		end
+	end
+end
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 

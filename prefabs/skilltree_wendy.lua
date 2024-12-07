@@ -56,7 +56,7 @@ local function BuildSkillsData(SkillTreeFns)
     local sisturn_skills =
     {
         wendy_sisturn_1 = {
-            pos = {-203,108},
+            pos = {-193-5,102-2},
             tags = {"sisturn"},
             root = true,
             connects = {
@@ -65,7 +65,7 @@ local function BuildSkillsData(SkillTreeFns)
             defaultfocus = true,
         },
         wendy_sisturn_2 = {
-            pos = {COL2, CURV2+ TILEGAP -8},
+            pos = {COL2-2-8, CURV2+ TILEGAP -10},
             tags = {"sisturn"},
             onactivate   = function(inst, fromload)
                inst.components.sanityauraadjuster:StartTask()
@@ -79,7 +79,7 @@ local function BuildSkillsData(SkillTreeFns)
         },
 
         wendy_sisturn_3 = {
-            pos = {COL3, CURV3+ TILEGAP},
+            pos = {COL3-4-10, CURV3+ TILEGAP-3},
             tags = {"sisturn"},
             onactivate   = function(inst, fromload)
                 inst:AddTag("can_set_babysitter")
@@ -93,7 +93,7 @@ local function BuildSkillsData(SkillTreeFns)
             },            
         },
         wendy_sisturn_4 = {
-            pos = {COL4, CURV4 +TILEGAP+4},
+            pos = {COL4-6-11, CURV4 +TILEGAP+4-3},
             tags = {"sisturn"},
         },        
     }
@@ -102,7 +102,7 @@ local function BuildSkillsData(SkillTreeFns)
     local potion_skills =
     {
         wendy_potion_container = {
-            pos = {COL1+30, CURV1-14},
+            pos = {COL1+35, CURV1-16},
             tags = {"potion"},
             root = true,
             connects = {
@@ -119,14 +119,14 @@ local function BuildSkillsData(SkillTreeFns)
         },
 
         wendy_potion_duration = {
-            pos =  {X+ 190, Y-171},
+            pos =  {X+ 190, Y-170},
             tags = {"potion"},
             connects = {
                 "wendy_potion_yield",
             },
         },
         wendy_potion_yield = {            
-            pos =  {COL4+15, Y-155},
+            pos =  {COL4+11, Y-154},
             tags = {"potion"},
         },
     }
@@ -135,7 +135,7 @@ local function BuildSkillsData(SkillTreeFns)
     local avenging_ghost_skills =
     {
         wendy_avenging_ghost = {
-            pos = {COL5 +(TILEGAP/2), CURV5+20 },            
+            pos = {COL5 +(TILEGAP/2)+7, CURV5+20-20 },            
             tags = {},
             root = true,
         },
@@ -146,7 +146,7 @@ local function BuildSkillsData(SkillTreeFns)
     local smallghost_skills =
     {
         wendy_smallghost_1 = {
-            pos = {COL6-10, CURV5+TILEGAP},
+            pos = {COL6+11+6, CURV5+TILEGAP},
             tags = {},
             root=true,
             connects = {
@@ -154,23 +154,47 @@ local function BuildSkillsData(SkillTreeFns)
             },
         },
         wendy_smallghost_2 = {
-            pos = {X+392-15,Y-115+4},
+            pos = {X+390+6,Y-115},
             tags = {},
             connects = {
                 "wendy_smallghost_3",
             },
         },
         wendy_smallghost_3 = {
-            pos = {X+439-20,Y-140+9},
+            pos = {X+428+6,Y-137},
             tags = {},
         },
     }
     finalize_skill_group(smallghost_skills, "smallghost")
 
+    local ghostflower_skills =
+    {
+        wendy_ghostflower_butterfly = {
+            pos = {COL4+10+14,CURV5+TILEGAP},
+            tags = {},
+            root=true,
+            connects = {
+                "wendy_ghostflower_hat",
+            },
+        },
+        wendy_ghostflower_hat = {
+            pos = {COL4+10+13+TILEGAP,CURV5+TILEGAP+5},
+            tags = {},
+            connects = {
+                "wendy_ghostflower_grave",
+            },
+        },
+        wendy_ghostflower_grave = {
+            pos = {COL4+10+12+TILEGAP+TILEGAP,CURV5+TILEGAP+ 6},
+            tags = {},
+        },
+    }
+    finalize_skill_group(ghostflower_skills, "ghostflower")
+
     local gravestone_skills =
     {
         wendy_gravestone_1 = {
-            pos = {COL6-15, CURV5},
+            pos = {COL6-5+3, CURV5-2-3},
             tags = {},
             root=true,
 
@@ -187,7 +211,7 @@ local function BuildSkillsData(SkillTreeFns)
             },
         },
         wendy_gravestone_2 = {
-            pos = {X+388-20,Y-161+6},
+            pos = {X+372+5,Y-155-4},
             tags = {},
 
             onactivate = function(inst, fromload)
@@ -203,7 +227,7 @@ local function BuildSkillsData(SkillTreeFns)
             },
         },
         wendy_makegravemounds = {
-            pos = {X+430-20,Y-189+15},
+            pos = {X+410+5,Y-174-6},
             tags = {},
         },
     }
@@ -212,7 +236,7 @@ local function BuildSkillsData(SkillTreeFns)
     local ghost_command_skills =
     {
         wendy_ghostcommand_1 = {
-            pos = {X+482-14,Y-175+15},
+            pos = {X+482-5,Y-175+15},
             tags = {},
             connects = {
                 "wendy_ghostcommand_2",
@@ -221,7 +245,7 @@ local function BuildSkillsData(SkillTreeFns)
             root = true,
         },
         wendy_ghostcommand_2 = {
-            pos = {X+495+10,Y-215+23},
+            pos = {X+495+8,Y-215+18},
             tags = {},
             connects = {
                 "wendy_ghostcommand_3",
@@ -242,11 +266,11 @@ local function BuildSkillsData(SkillTreeFns)
     local allegiance_skills =
     {
 
-        wendy_shadow_lock_1 = SkillTreeFns.MakeFuelWeaverLock({ pos = {COL3+TILEGAP/2 +21, A_BASE_H} }),
-        wendy_shadow_lock_2 = SkillTreeFns.MakeNoLunarLock({ pos = {COL4+TILEGAP/2 +18, A_BASE_H} }),
+        wendy_shadow_lock_1 = SkillTreeFns.MakeFuelWeaverLock({ pos = {COL3+TILEGAP/2 +14, A_BASE_H} }),
+        wendy_shadow_lock_2 = SkillTreeFns.MakeNoLunarLock({ pos = {COL4+TILEGAP/2 +11, A_BASE_H} }),
 
         wendy_shadow_1 = {
-            pos = {COL5+TILEGAP/2 +21, A_BASE_H },
+            pos = {COL5+TILEGAP/2 +12, A_BASE_H },
             tags = {"allegiance","shadow","shadow_favor"},
             connects = {
                 "wendy_shadow_2",
@@ -299,7 +323,7 @@ local function BuildSkillsData(SkillTreeFns)
 
         },
         wendy_shadow_2 = {
-            pos = {COL5+(width/11)+TILEGAP/2 +21, A_BASE_H},
+            pos = {COL5+(width/11)+TILEGAP/2 +12, A_BASE_H},
             tags = {"allegiance","shadow","shadow_favor"},
             connects = {
                 "wendy_shadow_3",
@@ -312,15 +336,15 @@ local function BuildSkillsData(SkillTreeFns)
             end,
         },
         wendy_shadow_3 = {
-            pos = {COL6+TILEGAP/2 +21, A_BASE_H},
+            pos = {COL6+TILEGAP/2 +12, A_BASE_H},
             tags = {"allegiance","shadow","shadow_favor"},
         },
 
-        wendy_lunar_lock_1 = SkillTreeFns.MakeCelestialChampionLock({ pos = {COL3+TILEGAP/2 +21,A_BASE_H+TILEGAP}}),
-        wendy_lunar_lock_2 = SkillTreeFns.MakeNoShadowLock({ pos = {COL4+TILEGAP/2 +18, A_BASE_H+TILEGAP}}), 
+        wendy_lunar_lock_1 = SkillTreeFns.MakeCelestialChampionLock({ pos = {COL3+TILEGAP/2 +14,A_BASE_H+TILEGAP}}),
+        wendy_lunar_lock_2 = SkillTreeFns.MakeNoShadowLock({ pos = {COL4+TILEGAP/2 +11, A_BASE_H+TILEGAP}}), 
 
         wendy_lunar_1 = {
-            pos = {COL5+TILEGAP/2 +21, A_BASE_H+TILEGAP },
+            pos = {COL5+TILEGAP/2 +12, A_BASE_H+TILEGAP },
             tags = {"allegiance","lunar","lunar_favor"},
             connects = {
                 "wendy_lunar_2",
@@ -373,7 +397,7 @@ local function BuildSkillsData(SkillTreeFns)
 
         },
         wendy_lunar_2 = {
-            pos = {COL5+(width/11)+TILEGAP/2 +21, A_BASE_H+TILEGAP},
+            pos = {COL5+(width/11)+TILEGAP/2 +12, A_BASE_H+TILEGAP},
             tags = {"allegiance","lunar","lunar_favor"},
             connects = {
                 "wendy_lunar_3",
@@ -386,7 +410,7 @@ local function BuildSkillsData(SkillTreeFns)
             end,
         },
         wendy_lunar_3 = {
-            pos = {COL6+TILEGAP/2 +21, A_BASE_H+TILEGAP},
+            pos = {COL6+TILEGAP/2 +12, A_BASE_H+TILEGAP},
             tags = {"allegiance","lunar","lunar_favor"},
         }, 
 

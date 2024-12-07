@@ -1080,6 +1080,14 @@ return{
 
     ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
+    ANNOUNCE_ELIXIR_BOOSTED = "It is no Maman's chicken soup.",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "How terrible it must be when one no longer recognizes the world around them.",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "I could lift a cow!",
+
+    ANNOUNCE_ABIGAIL_HIDING = "only_used_by_wendy",
+
+    ANNOUNCE_EXLIIR_TOO_SUPER = "Trop fort!",
+
 	BATTLECRY =
 	{
 		GENERIC = "I'm also an accomplished butcher!",
@@ -5503,7 +5511,7 @@ return{
         GELBLOB_BOTTLE = "I would not spread that on any toast.",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "Rest in peace... please!",
             ME = "My mind is scrambled!",
         },
@@ -5519,8 +5527,7 @@ return{
         -- Meta 5
         GHOSTLYELIXIR_LUNAR = "I'm not sure about some of those ingredients, mademoiselle.",
         GHOSTLYELIXIR_SHADOW = "I'm not sure about some of those ingredients, mademoiselle.",
-        REVIVER_FLOWER = "TODO", -- [[TODO]]
-
+        
 		SLINGSHOTMODKIT = "Young Walter is an artist with his slingshot.",
 		SLINGSHOT_BAND_PIGSKIN = "Young Walter is an artist with his slingshot.",
 		SLINGSHOT_BAND_TENTACLE = "Young Walter is an artist with his slingshot.",
@@ -5530,12 +5537,15 @@ return{
 		SLINGSHOT_FRAME_WAGPUNK_0 = "Young Walter is an artist with his slingshot.",
 		SLINGSHOT_FRAME_WAGPUNK = "Young Walter is an artist with his slingshot.",
 		SLINGSHOT_HANDLE_STICKY = "Young Walter is an artist with his slingshot.",
+		SLINGSHOT_HANDLE_JELLY = "Young Walter is an artist with his slingshot.",
 		SLINGSHOT_HANDLE_SILK = "Young Walter is an artist with his slingshot.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Young Walter is an artist with his slingshot.",
 
         WOBY_BADGE_STATION = "She is a clever girl.",
 
         ELIXIR_CONTAINER = "Maman loved... loves picnics.",
+        GHOSTFLOWERHAT = "I wonder. Do the dead taste?",
+        WENDY_RESURRECTIONGRAVE = "C'est la vie.",
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

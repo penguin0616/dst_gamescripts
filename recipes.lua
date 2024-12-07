@@ -141,9 +141,10 @@ Recipe2("armor_flowerdress",			{Ingredient("petals_evil", 20), Ingredient("ghost
 Recipe2("ghostlyelixir_shadow",			{Ingredient("horrorfuel", 1), Ingredient("ghostflower", 3)},									TECH.NONE,				{builder_tag="wendy_shadow_craft", override_numtogive_fn = elixir_numtogive, no_deconstruction=true})
 Recipe2("ghostlyelixir_lunar",			{Ingredient("purebrilliance", 1), Ingredient("ghostflower", 3)},								TECH.NONE,				{builder_tag="wendy_lunar_craft", override_numtogive_fn = elixir_numtogive, no_deconstruction=true})
 Recipe2("wendy_gravestone",				{Ingredient("cutstone", 1), Ingredient("petals_evil", 4)}, 										TECH.NONE,				{builder_skill="wendy_makegravemounds", product="wendy_recipe_gravestone", placer="wendy_recipe_gravestone_placer", min_spacing=0, no_deconstruction=true, image="dug_gravestone.tex"})
-Recipe2("petals",						{Ingredient("petals_evil", 4), Ingredient("ghostflower", 1)},									TECH.NONE,				{builder_skill="wendy_petal_1", numtogive=4})
-Recipe2("petals_evil",					{Ingredient("petals", 4), Ingredient("nightmarefuel", 1)},										TECH.NONE,				{builder_skill="wendy_petal_1", numtogive=2})
-Recipe2("elixir_container",				{Ingredient("twigs", 6), Ingredient("boards", 1), Ingredient("silk", 4)},						TECH.NONE,				{builder_skill="wendy_potion_1"})
+Recipe2("elixir_container",				{Ingredient("twigs", 6), Ingredient("boards", 1), Ingredient("silk", 4)},						TECH.NONE,				{builder_skill="wendy_potion_container"})
+Recipe2("ghostflowerhat",				{Ingredient("ghostflower", 6)},																	TECH.NONE,				{builder_skill="wendy_ghostflower_hat"})
+Recipe2("wendy_butterfly",				{Ingredient("ghostflower", 4), Ingredient("butterflywings", 1)},								TECH.NONE,				{builder_skill="wendy_ghostflower_butterfly", product="butterfly",image="butterfly.tex"})
+Recipe2("wendy_resurrectiongrave",		{Ingredient("ghostflower", 10), Ingredient("cutstone", 1), Ingredient(CHARACTER_INGREDIENT.HEALTH, TUNING.EFFIGY_HEALTH_PENALTY)}, TECH.NONE, {builder_skill="wendy_ghostflower_grave", placer="wendy_resurrectiongraveplacer"})
 
 -- Woodie
 Recipe2("wereitem_goose",				{Ingredient("monstermeat", 3), Ingredient("seeds", 3)},											TECH.NONE,				{builder_tag="werehuman"})
@@ -212,6 +213,7 @@ Recipe2("slingshot_frame_bone",			{Ingredient("boneshard", 2), Ingredient("rope"
 Recipe2("slingshot_frame_wagpunk_0",	{Ingredient("wagpunk_bits", 2), Ingredient("transistor", 1), Ingredient("trinket_6", 1)},		TECH.NONE,				{builder_tag="pebblemaker", nounlock=true, builder_skill = "walter_slingshot_frame_wagpunk"})
 Recipe2("slingshot_frame_wagpunk",		{Ingredient("slingshot_frame_wagpunk_0", 1), Ingredient("purebrilliance", 2), Ingredient("alterguardianhatshard", 1)}, TECH.NONE,	{builder_tag="pebblemaker", nounlock=true, builder_skill = "walter_slingshot_frame_wagpunk"})
 Recipe2("slingshot_handle_sticky",		{Ingredient("glommerfuel", 1)},									 								TECH.NONE,				{builder_tag="pebblemaker", nounlock=true, builder_skill = "walter_slingshot_handle_sticky"})
+Recipe2("slingshot_handle_jelly",		{Ingredient("royal_jelly", 1)},									 								TECH.NONE,				{builder_tag="pebblemaker", nounlock=true, builder_skill = "walter_slingshot_handle_sticky"})
 Recipe2("slingshot_handle_silk",		{Ingredient("silk", 2)},										 								TECH.NONE,				{builder_tag="pebblemaker", nounlock=true, builder_skill = "walter_slingshot_modding"})
 --slingshot parts that are prototyped at a station
 Recipe2("slingshot_frame_gems",			{Ingredient("thulecite", 2), Ingredient("nightmarefuel", 2), Ingredient("redgem", 1), Ingredient("bluegem", 1)},	TECH.ANCIENT_TWO,		{builder_tag="pebblemaker", force_hint=true, station_tag="ancient_station",	builder_skill = "walter_slingshot_frame_gems"})

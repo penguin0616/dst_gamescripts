@@ -237,8 +237,6 @@ local states=
 
         onenter = function(inst, data)
             inst.components.locomotor:StopMoving()
-            inst.DynamicShadow:Enable(false)
-            inst.AnimState:AddOverrideBuild("pupington_woby_build")
             inst.AnimState:PlayAnimation("transform_big_to_small")
         end,
 
@@ -246,6 +244,9 @@ local states=
         {
             TimeEvent(1*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/walter/woby/transform_big_to_small") end),
             -- TimeEvent(39*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/walter/woby/transform_big_to_small") end),
+            TimeEvent(13*FRAMES, function(inst) inst.DynamicShadow:SetSize(4, 1.5)  end),
+            TimeEvent(13*FRAMES, function(inst) inst.DynamicShadow:SetSize(3, 1.0)  end),
+            TimeEvent(60*FRAMES, function(inst) inst.DynamicShadow:SetSize(1.75, 1) end),
             TimeEvent(70*FRAMES, function(inst) inst:FinishTransformation() end),
         },
     },

@@ -1084,6 +1084,14 @@ return{
 
     ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
+    ANNOUNCE_ELIXIR_BOOSTED = "Feel good!",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "Oooh, ghost see",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "Plant power!",
+
+    ANNOUNCE_ABIGAIL_HIDING = "only_used_by_wendy",
+
+    ANNOUNCE_EXLIIR_TOO_SUPER = "Too much strong",
+
 	BATTLECRY =
 	{
 		GENERIC = "Attack!",
@@ -5507,7 +5515,7 @@ return{
         GELBLOB_BOTTLE = "Bad Sticky trapped!",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "Dead friend",
             ME = "Dead me!",
         },
@@ -5523,23 +5531,25 @@ return{
         -- Meta 5
         GHOSTLYELIXIR_LUNAR = "For ghost friend",
         GHOSTLYELIXIR_SHADOW = "For ghost friend",
-        REVIVER_FLOWER = "TODO", -- [[TODO]]
-
+        
 		SLINGSHOTMODKIT = "Walter loves pew pew",
 		SLINGSHOT_BAND_PIGSKIN = "Walter loves pew pew",
 		SLINGSHOT_BAND_TENTACLE = "Walter loves pew pew",
 		SLINGSHOT_BAND_MIMIC = "Walter loves pew pew",
 		SLINGSHOT_FRAME_BONE = "Walter loves pew pew",
 		SLINGSHOT_FRAME_GEMS = "Walter loves pew pew",
-		SLINGSHOT_FRAME_WAGPUNK_0 = "TODO",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "Walter loves pew pew",
 		SLINGSHOT_FRAME_WAGPUNK = "Walter loves pew pew",
 		SLINGSHOT_HANDLE_STICKY = "Walter loves pew pew",
+		SLINGSHOT_HANDLE_JELLY = "Walter loves pew pew",
 		SLINGSHOT_HANDLE_SILK = "Walter loves pew pew",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Walter loves pew pew",
 
         WOBY_BADGE_STATION = "Smart woofer!",
 
-        ELIXIR_CONTAINER = "Yummy ghost friend juice", --[[TODO]]
+        ELIXIR_CONTAINER = "Ghost friend's yummy juice",
+        GHOSTFLOWERHAT = "Pretty ghost friends hat",
+        WENDY_RESURRECTIONGRAVE = "Friends again bloom",
     },
 
     DESCRIBE_GENERIC = "Friend?",

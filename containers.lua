@@ -1199,8 +1199,8 @@ params.slingshot =
 }
 
 params.slingshotex = deepcopy(params.slingshot)
-params.slingshotex.widget.animbank = "ui_slingshot_wagpunk"
-params.slingshotex.widget.animbuild = "ui_slingshot_wagpunk"
+params.slingshotex.widget.animbank = "ui_slingshot_wagpunk_0"
+params.slingshotex.widget.animbuild = "ui_slingshot_wagpunk_0"
 
 params.slingshot999ex = deepcopy(params.slingshotex)
 params.slingshot999ex.widget.animbank = "ui_slingshot_wagpunk"
@@ -1251,6 +1251,7 @@ function params.slingshot.itemtestfn(container, item, slot)
 end
 
 params.slingshotex.itemtestfn = params.slingshot.itemtestfn
+params.slingshot999ex.itemtestfn = params.slingshot.itemtestfn
 params.slingshot2.itemtestfn = params.slingshot.itemtestfn
 params.slingshot2ex.itemtestfn = params.slingshot.itemtestfn
 

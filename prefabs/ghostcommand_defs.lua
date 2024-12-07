@@ -354,11 +354,13 @@ local function GetGhostCommandsFor(owner)
 	local behaviour_command = (owner:HasTag("has_aggressive_follower") and SOOTHE_ACTION) or RILE_UP_ACTION
 	table.insert(commands, behaviour_command)
 
-	for skill, skill_command in pairs(SKILLTREE_COMMAND_DEFS) do
-		if owner.components.skilltreeupdater:IsActivated(skill) then
-			table.insert(commands, skill_command)
-		end
-	end
+    if owner.components.skilltreeupdater then
+        for skill, skill_command in pairs(SKILLTREE_COMMAND_DEFS) do
+            if owner.components.skilltreeupdater:IsActivated(skill) then
+                table.insert(commands, skill_command)
+            end
+        end
+    end
 
     return commands
 end

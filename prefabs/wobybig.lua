@@ -40,6 +40,12 @@ local function ApplyBuildOverrides(inst, animstate)
     else
         animstate:SetBuild(basebuild)
     end
+    local skin_build = inst:GetSkinBuild()
+    if skin_build then
+        for _, symbol in ipairs(WOBY_BIG_SYMBOLS) do
+            animstate:OverrideItemSkinSymbol(symbol, skin_build, symbol, inst.GUID, basebuild)
+        end
+    end
 end
 
 local function TriggerTransformation(inst)
@@ -161,10 +167,18 @@ end
 local function FinishTransformation(inst)
     local items = inst.components.container:RemoveAllItems()
 	local player = inst._playerlink
-    local new_woby = ReplacePrefab(inst, "wobysmall")
+    local skin_build = inst:GetSkinBuild()
+    if skin_build then
+        skin_build = skin_build:gsub("woby_big", "pupington_woby")
+    end
+    local new_woby = ReplacePrefab(inst, "wobysmall", skin_build, inst.skin_id)
 
     for i,v in ipairs(items) do
         new_woby.components.container:GiveItem(v)
+    end
+
+    if inst.components.timer ~= nil then
+        inst.components.timer:TransferComponent(new_woby)
     end
 
 	if player ~= nil then
@@ -229,12 +243,12 @@ local function fn()
 
     MakeCharacterPhysics(inst, 100, .5)
 
-    inst.DynamicShadow:SetSize(6, 2)
+    inst.DynamicShadow:SetSize(5, 2)
     inst.Transform:SetSixFaced()
 
     inst.AnimState:SetBank("wobybig")
     inst.AnimState:SetBuild("woby_big_build")
-
+    inst.AnimState:AddOverrideBuild("pupington_woby_build")
     inst.AnimState:PlayAnimation("idle_loop", true)
     inst.AnimState:Hide("HEAT")
 
@@ -263,6 +277,7 @@ local function fn()
     inst.components.eater:SetAbsorptionModifiers(4,1,1)
 
     inst:AddComponent("inspectable")
+    inst:AddComponent("timer")
 
     inst:AddComponent("follower")
     inst.components.follower.keepdeadleader = true

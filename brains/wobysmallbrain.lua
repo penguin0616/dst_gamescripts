@@ -226,6 +226,12 @@ local function ShouldDigGround(inst, brain)
         return false
     end
 
+    if inst:GetCurrentPlatform() ~= nil then
+        brain.digging_pos = nil
+
+        return false
+    end
+
     return brain.digging_pos ~= nil or OwnerIsClose(inst, 7)
 end
 
@@ -252,14 +258,7 @@ local function GetDiggingPosition(inst)
     return inst.brain.digging_pos
 end
 
---------------------
-
-local PICKUP_MUST_TAGS = { "_inventoryitem" }
-
-local PICKUP_CANT_TAGS = {
-    "INLIMBO", "NOCLICK", "knockbackdelayinteraction", "minesprung", "mineactive", "catchable",
-    "fire", "light", "spider", "cursed", "paired", "bundle", "heatrock",
-}
+-----------------------------------------------------------------------------------------------------------------------------------
 
 local function DoPickUpAction(inst)
     local dogtrainer = inst._playerlink ~= nil and inst._playerlink.components.dogtrainer or nil
@@ -268,42 +267,40 @@ local function DoPickUpAction(inst)
         return
     end
 
-    local action = inst._lastleaderaction
-
-    inst._lastleaderaction = nil
-
     if inst.components.timer:TimerExists("fetchingcooldown") then
         return
     end
 
-    if action == nil or action.action ~= ACTIONS.PICKUP or action.target == nil then
+    if inst.components.container:IsEmpty() then
         return
     end
 
-    local IsValidPickUpTarget = function(ent)
-        return ent ~= action.target and ent.prefab == action.target.prefab
-    end
+    ------------------------------------------------------------------------
 
     local distance = AddTrainingBonus(inst, TUNING.SKILLS.WALTER.WOBY_FETCHING_ASSIST_DISTANCE, WOBY_TRAINING_ASPECTS.FETCHING)
 
-    local target = FindEntity(inst, TUNING.SKILLS.WALTER.WOBY_FETCHING_ASSIST_DISTANCE, IsValidPickUpTarget, PICKUP_MUST_TAGS, PICKUP_CANT_TAGS)
 
-    if target == nil then
-        target = FindEntity(GetOwner(inst), TUNING.SKILLS.WALTER.WOBY_FETCHING_ASSIST_DISTANCE, IsValidPickUpTarget, PICKUP_MUST_TAGS, PICKUP_CANT_TAGS)
+    local onlytheseprefabs = {}
+    local items = inst.components.container:GetAllItems()
+
+    for i, item in ipairs(items) do
+        if not (item.components.stackable == nil or item.components.stackable:IsFull()) then
+            onlytheseprefabs[item.prefab] = true
+        end
     end
 
-    if target == nil then
-        return
+    local item, pickable = FindPickupableItem(inst._playerlink, distance, true, inst:GetPosition(), nil, onlytheseprefabs, false, inst)
+
+    if item == nil then
+        item, pickable = FindPickupableItem(inst._playerlink, distance, true, nil, nil, onlytheseprefabs, false, inst)
     end
 
-    local count = inst.components.container:CanAcceptCount(target)
-
-    if count <= 0 then
-        return
+    if item == nil then
+        return nil
     end
 
-    if target ~= nil then
-        return BufferedAction(inst, target, ACTIONS.WOBY_PICKUP)
+    if item ~= nil then
+        return BufferedAction(inst, item, ACTIONS.WOBY_PICKUP)
     end
 end
 
@@ -375,8 +372,9 @@ function WobySmallBrain:OnStart()
             PriorityNode({
                 FailIfSuccessDecorator(Leash(self.inst, GetDiggingPosition, 1.5, 1, true)),
                 ActionNode(function()
-                    self.inst:PushEvent("dig_ground")
-                    self.digging_pos = nil
+                    if self.digging_pos ~= nil then
+                        self.inst:PushEvent("dig_ground")
+                    end
                 end),
             }, 0.5)
         ),

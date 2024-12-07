@@ -360,7 +360,7 @@ local COMPONENT_ACTIONS =
         end,
 
         ghostbabysitter = function(inst, doer, actions, right)
-            if doer:HasTag("ghostfriend_summoned") and doer:HasTag("can_set_babysitter") and  right then
+            if doer:HasTag("ghostfriend_summoned") and doer:HasTag("can_set_babysitter") and not inst:HasTag("burnt") and right then
                 table.insert(actions, ACTIONS.ATTACH_GHOST)
             end
         end,
@@ -874,7 +874,6 @@ local COMPONENT_ACTIONS =
         end,
 
         wobybadgestation = function(inst, doer, actions, right)
-            --TODO(DiogoW): Check for skill?
             if doer:HasTag("dogtrainer") and not inst:HasAnyTag("fire", "burnt") and not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding()) then
                 table.insert(actions, ACTIONS.CUSTOMIZE_WOBY_BADGES)
             end
@@ -1188,6 +1187,12 @@ local COMPONENT_ACTIONS =
         furnituredecor = function(inst, doer, target, actions)
             if target:HasTag("furnituredecortaker") then
                 table.insert(actions, ACTIONS.GIVE)
+            end
+        end,
+
+        ghostlyelixir = function(inst, doer, target, actions)
+            if target:HasTag("elixir_drinker") then
+                table.insert(actions, ACTIONS.APPLYELIXIR)
             end
         end,
 
@@ -1623,6 +1628,12 @@ local COMPONENT_ACTIONS =
 					(target.prefab and inst:HasTag(target.prefab.."_targeter"))
 				)
 			then
+				if not inst:HasTag("useabletargeteditem_mounted") then
+					local rider = doer.replica.rider
+					if rider and rider:IsRiding() then
+						return --this item isn't allowed to be used while mounted
+					end
+				end
 				table.insert(actions, ACTIONS.USEITEMON)
 			end
         end,

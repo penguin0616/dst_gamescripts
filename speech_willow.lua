@@ -1087,6 +1087,14 @@ return{
 
     ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
+    ANNOUNCE_ELIXIR_BOOSTED = "That's the stuff!",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "But I see fine by firelight.",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "I could lift Wolfgang!",
+
+    ANNOUNCE_ABIGAIL_HIDING = "only_used_by_wendy",
+
+    ANNOUNCE_EXLIIR_TOO_SUPER = "Phew! That's too strong.",
+
 	BATTLECRY =
 	{
 		GENERIC = "It's you or me!",
@@ -5510,7 +5518,7 @@ return{
         GELBLOB_BOTTLE = "I won't mistake that for jam.",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "Let's get you cremated.",
             ME = "Definitely cremation.",
         },
@@ -5526,8 +5534,7 @@ return{
         -- Meta 5
         GHOSTLYELIXIR_LUNAR = "Someone should probably check if it's flammable. I volunteer!",
         GHOSTLYELIXIR_SHADOW = "Someone should probably check if it's flammable. I volunteer!",
-        REVIVER_FLOWER = "TODO", -- [[TODO]]
-
+        
 		SLINGSHOTMODKIT = "That kid loves slinging almost as much as I love burning.",
 		SLINGSHOT_BAND_PIGSKIN = "That kid loves slinging almost as much as I love burning.",
 		SLINGSHOT_BAND_TENTACLE = "That kid loves slinging almost as much as I love burning.",
@@ -5537,12 +5544,15 @@ return{
 		SLINGSHOT_FRAME_WAGPUNK_0 = "That kid loves slinging almost as much as I love burning.",
 		SLINGSHOT_FRAME_WAGPUNK = "That kid loves slinging almost as much as I love burning.",
 		SLINGSHOT_HANDLE_STICKY = "That kid loves slinging almost as much as I love burning.",
+		SLINGSHOT_HANDLE_JELLY = "That kid loves slinging almost as much as I love burning.",
 		SLINGSHOT_HANDLE_SILK = "That kid loves slinging almost as much as I love burning.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "That kid loves slinging almost as much as I love burning.",
 
         WOBY_BADGE_STATION = "Big deal. Bernie doesn't care about badges.",
 
         ELIXIR_CONTAINER = "Wonder what she's got sloshing around in there.",
+        GHOSTFLOWERHAT = "Pretty. I guess.",
+        WENDY_RESURRECTIONGRAVE = "Does it work if you've been cremated?",
     },
 
     DESCRIBE_GENERIC = "I have no idea what that is!",

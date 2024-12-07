@@ -326,21 +326,20 @@ local function getstatus(inst)
 end
 
 local function OnHaunt(inst, haunter)
-	if not (inst:HasTag("burnt") or inst:HasTag("fire")) and inst:HasTag("winch_ready") and GetHeldItem(inst) == nil
+	if math.random() < TUNING.HAUNT_CHANCE_HALF
+		and haunter.isplayer
 		and inst.components.activatable:CanActivate()
-		and math.random() < TUNING.HAUNT_CHANCE_HALF then
+		and GetHeldItem(inst) == nil
+		and not (inst:HasTag("burnt") or inst:HasTag("fire"))
+		and inst:HasTag("winch_ready") then
 
 		inst.components.activatable:DoActivate(haunter)
 	end
 end
 
+local LOAD_OBJECT_FILTER_TAGS = {"burnt", "fire", "lowered_ground", "takeshelfitem"}
 local function load_object_action_filter(inst, doer, heavy_item)
-	return inst:HasTag("inactive")
-		and not inst:HasTag("takeshelfitem")
-		and not inst:HasTag("burnt")
-		and not inst:HasTag("lowered_ground")
-		and not inst:HasTag("fire")
-		and not inst:HasTag("burnt")
+	return inst:HasTag("inactive") and not inst:HasAnyTag(LOAD_OBJECT_FILTER_TAGS)
 end
 
 local function OnUseHeavy(inst, doer, heavy_item)

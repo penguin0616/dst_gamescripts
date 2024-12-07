@@ -305,11 +305,16 @@ end
 
 local function OnAttacked(inst, data)
     if data.attacker ~= nil then
-        if inst._recentattackers ~= nil and data.attacker:HasTag("player") then
-            if inst._recentattackers[data.attacker] ~= nil then
-                inst._recentattackers[data.attacker]:Cancel()
+        if data.attacker:HasTag("player") then
+            if inst._recentattackers ~= nil then
+                if inst._recentattackers[data.attacker] ~= nil then
+                    inst._recentattackers[data.attacker]:Cancel()
+                end
+                inst._recentattackers[data.attacker] = inst:DoTaskInTime(6, ClearRecentAttacker, data.attacker)
             end
-            inst._recentattackers[data.attacker] = inst:DoTaskInTime(6, ClearRecentAttacker, data.attacker)
+            if inst.atriumstalker then
+                inst._lastplayerhittime = GetTime()
+            end
         end
         local target = inst.components.combat.target
         if target ~= data.attacker and

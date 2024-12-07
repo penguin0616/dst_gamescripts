@@ -173,21 +173,21 @@ local function OnLoad(inst, data)
 	end
 end
 
-local function updatefn(inst, comp, dt)	
+local function updatefn(inst, comp, dt)
 
 	if not inst.update_timer then
 		inst.update_timer = 1
 	end
+
 	inst.update_timer = inst.update_timer -dt
 	if inst.update_timer <= 0 then
 		inst.update_timer = inst.update_timer + 1
-
 		for ghost in pairs(comp.babysitting) do
 			if not inst.components.container:IsFull() then
 				inst.components.ghostbabysitter:RemoveGhost(ghost)
 			elseif ghost.components.health:GetPercent() >= 1 and ghost:GetDistanceSqToInst(inst) < 25*25 then
 				if ghost.AddBonusHealth then
-					ghost:AddBonusHealth(1)
+					ghost:AddBonusHealth(2)
 				end
 			end
 		end

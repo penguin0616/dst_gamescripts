@@ -79,7 +79,7 @@ local function onfinishwork(inst, worker)
 end
 
 local function OnHaunt(inst, haunter)
-	if math.random() > TUNING.HAUNT_CHANCE_OCCASIONAL then
+	if haunter.isplayer and math.random() > TUNING.HAUNT_CHANCE_OCCASIONAL then
 		inst.components.cyclable:Cycle(haunter, math.random() > 0.5)-- 50% chance to cycle backwards
 		inst:PushEvent("ontuned")
 	end

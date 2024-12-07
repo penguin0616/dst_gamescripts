@@ -13,7 +13,7 @@ local assets =
 	Asset("ANIM", "anim/player_wendy_commune.zip"),
 	Asset("ANIM", "anim/player_wendy_mount_commune.zip"),
 	Asset("ANIM", "anim/wendy_flower_over.zip"),
-	Asset("ANIM", "anim/wendy_elixir.zip"),	
+	Asset("ANIM", "anim/wendy_elixir.zip"),
     Asset("ANIM", "anim/player_idles_wendy.zip"),
     Asset("ANIM", "anim/wendy_elixer_mounted.zip"),
 
@@ -101,14 +101,14 @@ local function testForSanityAuraBuff(inst, oldlist)
 
 	-- IF ACTIVE SISTURN, COLLECT NEARBY PLAYERS
 	if TheWorld.components.sisturnregistry and TheWorld.components.sisturnregistry:IsActive() then
-		local pos = Vector3(inst.Transform:GetWorldPosition())
-		newlist = FindPlayersInRange( pos.x, pos.y, pos.z, 25, true )	
+		local px, py, pz = inst.Transform:GetWorldPosition()
+		newlist = FindPlayersInRange( px, py, pz, 25, true )
 	end
 
 	-- SETUP PLAYERS THAT ARE NEW TO THE POLL
-	for i,player in ipairs(newlist)do
+	for _, player in ipairs(newlist) do
 		local newplayer = true
-		for t,previousplayer in ipairs(oldlist)do
+		for _, previousplayer in ipairs(oldlist) do
 			if player == previousplayer then
 				newplayer = false
 			end
@@ -124,43 +124,44 @@ local function testForSanityAuraBuff(inst, oldlist)
 	end
 
 	-- REMOVE PLAYERS NOW MISSING
-	for i,player in ipairs(oldlist)do
-		local quit = true
-		for t,newplayer in ipairs(newlist)do
-			if player == newplayer then
-				quit = false
+	for _, player in ipairs(oldlist) do
+		if player.components.sanity then
+			local quit = true
+			for _, newplayer in ipairs(newlist) do
+				if player == newplayer then
+					quit = false
+					break
+				end
 			end
-		end
-		if quit then
-			if player.components.sanity then
+			if quit then
 				local fx = SpawnPrefab("wendy_sanityaura_buff_off_fx")
 				player:AddChild(fx)
 				player.components.sanity.neg_aura_modifiers:RemoveModifier(inst, "wendyskill"..inst.GUID)
 			end
 		end
-	end	
+	end
 
 	return newlist
 end
 --------------------------------------------------------------------------
 
 local function common_postinit(inst)
-    inst:AddTag("ghostlyfriend")
-    inst:AddTag("elixirbrewer")
+	inst:AddTag("ghostlyfriend")
+	inst:AddTag("elixirbrewer")
 
-    if TheNet:GetServerGameMode() == "quagmire" then
-        inst:AddTag("quagmire_grillmaster")
-        inst:AddTag("quagmire_shopper")
+	if TheNet:GetServerGameMode() == "quagmire" then
+		inst:AddTag("quagmire_grillmaster")
+		inst:AddTag("quagmire_shopper")
 	else
 		inst:AddComponent("pethealthbar")
-    end
+	end
 
-    inst.AnimState:AddOverrideBuild("wendy_channel")
-    inst.AnimState:AddOverrideBuild("player_idles_wendy")
-    
+	inst.AnimState:AddOverrideBuild("wendy_channel")
+	inst.AnimState:AddOverrideBuild("player_idles_wendy")
+
 	inst._bondlevel = net_tinybyte(inst.GUID, "wendy._bondlevel", "_bondleveldirty")
 	inst.refreshflowertooltip = net_event(inst.GUID, "refreshflowertooltip")
-    inst:ListenForEvent("playeractivated", OnPlayerActivated)
+	inst:ListenForEvent("playeractivated", OnPlayerActivated)
 	inst:ListenForEvent("playerdeactivated", OnPlayerDeactivated)
 
 	inst:ListenForEvent("clientpetskindirty", OnClientPetSkinChanged)
@@ -170,12 +171,12 @@ end
 
 local function OnDespawn(inst)
 	local abigail = inst.components.ghostlybond.ghost
-    if abigail ~= nil and abigail.sg ~= nil and not abigail.inlimbo then
+	if abigail ~= nil and abigail.sg ~= nil and not abigail.inlimbo then
 		if not abigail.sg:HasStateTag("dissipate") then
 			abigail.sg:GoToState("dissipate")
 		end
-        abigail:DoTaskInTime(25 * FRAMES, abigail.Remove)
-    end
+		abigail:DoTaskInTime(25 * FRAMES, abigail.Remove)
+	end
 end
 
 local function OnReroll(inst)
@@ -256,10 +257,10 @@ local function update_sisturn_state(inst, is_active)
 end
 
 local function CustomCombatDamage(inst, target)
-
-	return (target:HasDebuff("abigail_vex_debuff") and target:GetDebuff("abigail_vex_debuff").prefab == "abigail_vex_debuff") and TUNING.ABIGAIL_VEX_GHOSTLYFRIEND_DAMAGE_MOD
-		or (target:HasDebuff("abigail_vex_debuff") and target:GetDebuff("abigail_vex_debuff").prefab == "abigail_vex_shadow_debuff") and TUNING.ABIGAIL_SHADOW_VEX_GHOSTLYFRIEND_DAMAGE_MOD
-		or (target == inst.components.ghostlybond.ghost and target:HasTag("abigail")) and 0
+	local vex_debuff = target:GetDebuff("abigail_vex_debuff")
+	return (vex_debuff ~= nil and vex_debuff.prefab == "abigail_vex_debuff" and TUNING.ABIGAIL_VEX_GHOSTLYFRIEND_DAMAGE_MOD)
+		or (vex_debuff ~= nil and vex_debuff.prefab == "abigail_vex_shadow_debuff" and TUNING.ABIGAIL_SHADOW_VEX_GHOSTLYFRIEND_DAMAGE_MOD)
+		or (target == inst.components.ghostlybond.ghost and target:HasTag("abigail") and 0)
 		or 1
 end
 
@@ -299,37 +300,33 @@ local function OnSave(inst, data)
 end
 
 local function OnLoad(inst, data)
-    if data ~= nil then
-		if data.abigail ~= nil then -- retrofitting
-			inst.components.inventory:GiveItem(SpawnPrefab("abigail_flower"))
+	if not data then return end
+
+	if data.abigail ~= nil then -- retrofitting
+		inst.components.inventory:GiveItem(SpawnPrefab("abigail_flower"))
+	end
+
+	if data.questghost ~= nil and inst.questghost == nil then
+		local questghost = SpawnSaveRecord(data.questghost)
+		if questghost ~= nil then
+			if inst.migrationpets ~= nil then
+				table.insert(inst.migrationpets, questghost)
+			end
+			questghost.SoundEmitter:PlaySound("dontstarve/common/ghost_spawn")
+			questghost:LinkToPlayer(inst)
 		end
-
-        if data.questghost ~= nil and inst.questghost == nil then
-            local questghost = SpawnSaveRecord(data.questghost)
-            if questghost ~= nil then
-                if inst.migrationpets ~= nil then
-                    table.insert(inst.migrationpets, questghost)
-                end
-                questghost.SoundEmitter:PlaySound("dontstarve/common/ghost_spawn")
-                questghost:LinkToPlayer(inst)
-            end
-        end
-    end
-end
-
-local function OnBabysitterSet(inst, data)
-	if data then
-		inst.components.talker:Say(GetString(inst, "ANNOUNCE_WENDY_BABYSITTER_SET"))		
-	else
-		inst.components.talker:Say(GetString(inst, "ANNOUNCE_WENDY_BABYSITTER_STOP"))		
 	end
 end
 
+local function OnBabysitterSet(inst, data)
+	inst.components.talker:Say(GetString(inst, (data and "ANNOUNCE_WENDY_BABYSITTER_SET") or "ANNOUNCE_WENDY_BABYSITTER_STOP"))
+end
+
 local function redirect_to_abigail(inst, amount, overtime, cause, ignore_invincible, afflicter, ignore_absorb)
-
-	--print("AFFLICTER",afflicter)
-
-	if inst:HasTag("ghostlybond_redirect") and inst.components.ghostlybond and inst.components.ghostlybond.ghost and not inst.components.ghostlybond.ghost:HasTag("INLIMBO") then
+	if inst.components.ghostlybond ~= nil
+			and inst.components.ghostlybond.ghost ~= nil
+			and not inst.components.ghostlybond.ghost:IsInLimbo()
+			and inst:HasTag("ghostlybond_redirect") then
 		inst.components.ghostlybond.ghost.components.health:DoDelta(amount)
 		return true
 	end
@@ -384,7 +381,7 @@ local function master_postinit(inst)
 
 		inst:ListenForEvent("babysitter_set", OnBabysitterSet)
 
-		inst:ListenForEvent("murdered", function(inst, data) checkforshadowsacrifice(inst,data) end)
+		inst:ListenForEvent("murdered", checkforshadowsacrifice)
 
 		inst:ListenForEvent("onsisturnstatechanged", function(world, data) update_sisturn_state(inst, data.is_active) end, TheWorld)
 		update_sisturn_state(inst)

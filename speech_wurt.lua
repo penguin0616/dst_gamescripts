@@ -1080,6 +1080,14 @@ return{
 
     ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
+    ANNOUNCE_ELIXIR_BOOSTED = "Florp! Nice.",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "See like Deadfolk, florp!",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "Mermfolk strong!",
+
+    ANNOUNCE_ABIGAIL_HIDING = "only_used_by_wendy",
+ 
+    ANNOUNCE_EXLIIR_TOO_SUPER = "Glurph! Too strong.",
+
 	BATTLECRY =
 	{
 		GENERIC = "Not scared of you, florp!",
@@ -5503,7 +5511,7 @@ return{
         GELBLOB_BOTTLE = "Cute!",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "Weird game.",
             ME = "Look familiar.",
         },
@@ -5519,8 +5527,7 @@ return{
         -- Meta 5
         GHOSTLYELIXIR_LUNAR = "Ooooh! Me wanna make some too, florp!",
         GHOSTLYELIXIR_SHADOW = "Ooooh! Me wanna make some too, florp!",
-        REVIVER_FLOWER = "TODO", -- [[TODO]]
-
+        
 		SLINGSHOTMODKIT = "Pine boy shooty toy. Florp!",
 		SLINGSHOT_BAND_PIGSKIN = "Pine boy shooty toy. Florp!",
 		SLINGSHOT_BAND_TENTACLE = "Pine boy shooty toy. Florp!",
@@ -5530,12 +5537,15 @@ return{
 		SLINGSHOT_FRAME_WAGPUNK_0 = "Pine boy toys. Florp!",
 		SLINGSHOT_FRAME_WAGPUNK = "Pine boy shooty toy. Florp!",
 		SLINGSHOT_HANDLE_STICKY = "Pine boy shooty toy. Florp!",
+		SLINGSHOT_HANDLE_JELLY = "Pine boy toys. Florp!",
 		SLINGSHOT_HANDLE_SILK = "Pine boy shooty toy. Florp!",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Pine boy shooty toy. Florp!",
 
         WOBY_BADGE_STATION = "Pine boy teach doggie.",
 
-        ELIXIR_CONTAINER = "Abby-gill won't share treats. Glurgh.", --[[TODO]]
+        ELIXIR_CONTAINER = "Abby-gill won't share treats. Glurgh.",
+        GHOSTFLOWERHAT = "Now can share Abby-gill treats!",
+        WENDY_RESURRECTIONGRAVE = "Dead, not dead! Glorp!",
     },
 
     DESCRIBE_GENERIC = "What that?",

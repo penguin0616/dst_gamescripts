@@ -26,7 +26,7 @@ local events =
     end),
 
     EventHandler("dig_ground", function(inst, data)
-        if not inst.sg:HasStateTag("nointerrupt") then
+        if not inst.sg:HasStateTag("busy") then
             inst.sg:GoToState("dig_ground")
         end
     end),
@@ -85,14 +85,15 @@ local states =
 
         onenter = function(inst, data)
             inst.components.locomotor:StopMoving()
-            inst.AnimState:AddOverrideBuild("woby_big_build")
             inst.AnimState:PlayAnimation("transform_small_to_big")
         end,
 
         timeline =
         {
-            TimeEvent(1*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/walter/woby/transform_small_to_big") end),
+            TimeEvent(1*FRAMES,  function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/walter/woby/transform_small_to_big") end),
             TimeEvent(41*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/walter/woby/big/roar") end),
+            TimeEvent(42*FRAMES, function(inst) inst.DynamicShadow:SetSize(3, 1.5) end),
+            TimeEvent(53*FRAMES, function(inst) inst.DynamicShadow:SetSize(5, 2) end),
             TimeEvent(80*FRAMES, function(inst)
                 inst:FinishTransformation()
             end),
@@ -131,6 +132,8 @@ local states =
             inst.AnimState:PushAnimation("dig_loop")
 
             inst.sg:SetTimeout((22 + 16 * math.random(2, 3)) * FRAMES) -- dig_pre + 2/3 dig_loop
+
+            inst.SoundEmitter:PlaySound("meta5/woby/woby_dig_lp", "loop")
         end,
 
         ontimeout = function(inst)
@@ -141,6 +144,8 @@ local states =
             if inst.sg.statemem.restoremass ~= nil then
                 inst.Physics:SetMass(inst.sg.statemem.restoremass)
             end
+
+            inst.SoundEmitter:KillSound("loop")
         end,
     },
 
@@ -163,6 +168,12 @@ local states =
             inst.AnimState:PlayAnimation(inst.sg.statemem.item ~= nil and "dig_pst" or "dig_fail")
 
             StartActionCooldown(inst, "diggingcooldown", TUNING.SKILLS.WALTER.WOBY_DIGGING_COOLDOWN, WOBY_TRAINING_ASPECTS.DIGGING)
+
+            if inst.brain ~= nil then
+                inst.brain.digging_pos = nil
+            end
+
+            inst.SoundEmitter:PlaySound("meta5/woby/woby_dig_pst")
         end,
 
         timeline =

@@ -1080,6 +1080,14 @@ return{
 
     ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
+    ANNOUNCE_ELIXIR_BOOSTED = "Mmmm, we feel better.",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "Like what Abby sees!",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "We can help carry heavy stuff!",
+
+    ANNOUNCE_ABIGAIL_HIDING = "only_used_by_wendy",
+
+    ANNOUNCE_EXLIIR_TOO_SUPER = "That's too much for us.",
+
 	BATTLECRY =
 	{
 		GENERIC = "En garde!",
@@ -5503,7 +5511,7 @@ return{
         GELBLOB_BOTTLE = "It's sticky like our webs!",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "Remember us?",
             ME = "Gonna be our own best friend!",
         },
@@ -5519,8 +5527,7 @@ return{
         -- Meta 5
         GHOSTLYELIXIR_LUNAR = "Hey, you didn't tell me you were making crafts!",
         GHOSTLYELIXIR_SHADOW = "Hey, you didn't tell me you were making crafts!",
-        REVIVER_FLOWER = "TODO", -- [[TODO]]
-
+        
 		SLINGSHOTMODKIT = "Walter has the best toys.",
 		SLINGSHOT_BAND_PIGSKIN = "Walter has the best toys.",
 		SLINGSHOT_BAND_TENTACLE = "Walter has the best toys.",
@@ -5530,12 +5537,15 @@ return{
 		SLINGSHOT_FRAME_WAGPUNK_0 = "Walter has the best toys.",
 		SLINGSHOT_FRAME_WAGPUNK = "Walter has the best toys.",
 		SLINGSHOT_HANDLE_STICKY = "Walter has the best toys.",
+		SLINGSHOT_HANDLE_JELLY = "Walter has the best toys.",
 		SLINGSHOT_HANDLE_SILK = "Walter has the best toys.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Walter has the best toys.",
 
         WOBY_BADGE_STATION = "Good girl, Woby!",
 
         ELIXIR_CONTAINER = "Will Abigail mind if we try some?",
+        GHOSTFLOWERHAT = "We wanna wear it!",
+        WENDY_RESURRECTIONGRAVE = "Oooh, we want one!",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

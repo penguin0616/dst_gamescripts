@@ -3,6 +3,13 @@ local function OnEnabledDirty(inst)
     if not self.enabled:value() then
         self:StopTargeting()
     end
+    local owner = ThePlayer
+    if owner and owner.components.playercontroller ~= nil then
+        local inventoryitem = self.inst.replica.inventoryitem
+        if inventoryitem ~= nil and inventoryitem:IsGrandOwner(owner) then
+            owner.components.playercontroller:RefreshReticule(self.inst)
+        end
+    end
 end
 
 local AOETargeting = Class(function(self, inst)

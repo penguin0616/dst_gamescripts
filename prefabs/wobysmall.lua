@@ -68,7 +68,6 @@ local function LinkToPlayer(inst, player)
     inst.components.follower:SetLeader(player)
 
     inst:ListenForEvent("onremove", inst._onlostplayerlink, player)
-    inst:ListenForEvent("performaction", inst._onplayeraction, player)
 end
 
 local function OnPlayerLinkDespawn(inst, forcedrop)
@@ -100,10 +99,18 @@ end
 local function FinishTransformation(inst)
     local items = inst.components.container:RemoveAllItems()
 	local player = inst._playerlink
-    local new_woby = ReplacePrefab(inst, "wobybig")
+    local skin_build = inst:GetSkinBuild()
+    if skin_build then
+        skin_build = skin_build:gsub("pupington_woby", "woby_big")
+    end
+    local new_woby = ReplacePrefab(inst, "wobybig", skin_build, inst.skin_id)
 
     for i,v in ipairs(items) do
         new_woby.components.container:GiveItem(v)
+    end
+
+    if inst.components.timer ~= nil then
+        inst.components.timer:TransferComponent(new_woby)
     end
 
 	if player ~= nil then
@@ -326,10 +333,6 @@ local function SpawnDiggingReward(inst)
     return reward
 end
 
-local function OnPlayerAction(inst, data)
-    inst._lastleaderaction = data.action -- Used in the brain!
-end
-
 ----------------------------------------------------------------------------------------------------------------------
 
 local function fn()
@@ -341,11 +344,12 @@ local function fn()
     inst.entity:AddDynamicShadow()
     inst.entity:AddNetwork()
 
-    inst.DynamicShadow:SetSize(1, .33)
+    inst.DynamicShadow:SetSize(1.75, 1)
     inst.Transform:SetFourFaced()
 
     inst.AnimState:SetBank("pupington")
     inst.AnimState:SetBuild("pupington_woby_build")
+    inst.AnimState:AddOverrideBuild("woby_big_build")
     inst.AnimState:PlayAnimation("idle_loop")
 
     -- FIXME(DiogoW): it might be better to just have these in the pupington_action file.
@@ -438,7 +442,6 @@ local function fn()
     inst.LinkToPlayer = LinkToPlayer
 	inst.OnPlayerLinkDespawn = OnPlayerLinkDespawn
 	inst._onlostplayerlink = function(player) inst._playerlink = nil end
-	inst._onplayeraction = function(player, data) OnPlayerAction(inst, data) end
 
     inst.FinishTransformation = FinishTransformation
     inst.GetDiggingReward = GetDiggingReward

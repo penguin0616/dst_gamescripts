@@ -333,7 +333,8 @@ local function CheckForOverload(inst, souls, count)
             local dropcount = count - math.floor(max_count / 2) + math.random(0, 2) - 1
             count = count - dropcount
             DropSouls(inst, souls, dropcount)
-            inst.components.sanity:DoDelta(-TUNING.SANITY_MEDLARGE)
+            local sanitydelta = -TUNING.SANITY_MEDLARGE * math.ceil(dropcount / max_count)
+            inst.components.sanity:DoDelta(sanitydelta)
             inst:PushEvent("souloverload") -- Stategraph.
         end
     else
@@ -647,7 +648,12 @@ local function CLIENT_Wortox_HostileTest(inst, target)
 	if target.HostileToPlayerTest ~= nil then
 		return target:HostileToPlayerTest(inst)
 	end
-    return (target:HasTag("hostile") or target:HasTag("pig") or target:HasTag("catcoon"))
+
+    if target:HasTag("hostile") then
+        return true
+    end
+
+    return inst.wortox_inclination ~= "nice" and target:HasAnyTag("pig", "catcoon")
 end
 
 --------------------------------------------------------------------------
@@ -1286,10 +1292,11 @@ local function SetOwner_decoy(inst, decoyowner)
             end
         end
     end
-    if next(inst.decoylured) == nil then
-        inst:Remove()
-        return -- Failed to lure anything we should get rid of this.
-    end
+    -- NOTES(JBK): This was making the decoy confusing in mechanic so commenting out for now.
+    --if next(inst.decoylured) == nil then
+    --    inst:Remove()
+    --    return -- Failed to lure anything we should get rid of this.
+    --end
 
     inst.decoyowner.wortox_decoy_inst = inst
     inst.Transform:SetRotation(inst.decoyowner.Transform:GetRotation())

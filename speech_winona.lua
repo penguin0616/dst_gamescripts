@@ -1086,6 +1086,14 @@ return{
 
     ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
+    ANNOUNCE_ELIXIR_BOOSTED = "That's pretty good.",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "Sis? I can't see you here.",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "I feel like a steam engine!",
+
+    ANNOUNCE_ABIGAIL_HIDING = "only_used_by_wendy",
+
+    ANNOUNCE_EXLIIR_TOO_SUPER = "Yikes, that's way too strong.",
+
 	BATTLECRY =
 	{
 		GENERIC = "I'll demolish you!",
@@ -5509,7 +5517,7 @@ return{
         GELBLOB_BOTTLE = "We can take it to go!",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "Ain't nothin' right about that.",
             ME = "No, thank you.",
         },
@@ -5525,23 +5533,25 @@ return{
         -- Meta 5
         GHOSTLYELIXIR_LUNAR = "I don't think that's safe to drink...",
         GHOSTLYELIXIR_SHADOW = "I don't think that's safe to drink...",
-        REVIVER_FLOWER = "TODO", -- [[TODO]]
-
-		SLINGSHOTMODKIT = "Aww, Walt's quite a lil' tinkerer.",
-		SLINGSHOT_BAND_PIGSKIN = "Aww, Walt's quite a lil' tinkerer.",
-		SLINGSHOT_BAND_TENTACLE = "Aww, Walt's quite a lil' tinkerer.",
-		SLINGSHOT_BAND_MIMIC = "Aww, Walt's quite a lil' tinkerer.",
-		SLINGSHOT_FRAME_BONE = "Aww, Walt's quite a lil' tinkerer.",
-		SLINGSHOT_FRAME_GEMS = "Aww, Walt's quite a lil' tinkerer.",
-		SLINGSHOT_FRAME_WAGPUNK_0 = "Aww, Walt's quite a lil' tinkerer.",
-		SLINGSHOT_FRAME_WAGPUNK = "Aww, Walt's quite a lil' tinkerer.",
-		SLINGSHOT_HANDLE_STICKY = "Aww, Walt's quite a lil' tinkerer.",
-		SLINGSHOT_HANDLE_SILK = "Aww, Walt's quite a lil' tinkerer.",
-		SLINGSHOT_HANDLE_VOIDCLOTH = "Aww, Walt's quite a lil' tinkerer.",
+        
+		SLINGSHOTMODKIT = "Aww, Walt's quite the lil' tinkerer.",
+		SLINGSHOT_BAND_PIGSKIN = "Aww, Walt's quite the lil' tinkerer.",
+		SLINGSHOT_BAND_TENTACLE = "Aww, Walt's quite the lil' tinkerer.",
+		SLINGSHOT_BAND_MIMIC = "Aww, Walt's quite the lil' tinkerer.",
+		SLINGSHOT_FRAME_BONE = "Aww, Walt's quite the lil' tinkerer.",
+		SLINGSHOT_FRAME_GEMS = "Aww, Walt's quite the lil' tinkerer.",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "Aww, Walt's quite the lil' tinkerer.",
+		SLINGSHOT_FRAME_WAGPUNK = "Aww, Walt's quite the lil' tinkerer.",
+		SLINGSHOT_HANDLE_STICKY = "Aww, Walt's quite the lil' tinkerer.",
+		SLINGSHOT_HANDLE_JELLY = "Aww, Walt's quite the lil' tinkerer.",
+		SLINGSHOT_HANDLE_SILK = "Aww, Walt's quite the lil' tinkerer.",
+		SLINGSHOT_HANDLE_VOIDCLOTH = "Aww, Walt's quite the lil' tinkerer.",
 
         WOBY_BADGE_STATION = "Atta girl, Wobes!",
 
         ELIXIR_CONTAINER = "Ain't no picnic for the livin' round here.",
+        GHOSTFLOWERHAT = "Ghost flowers? Pretty.",
+        WENDY_RESURRECTIONGRAVE = "Here lies... another crack at it.",
     },
 
     DESCRIBE_GENERIC = "Incredible! I have no idea what that is.",

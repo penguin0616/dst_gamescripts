@@ -145,9 +145,12 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"ghostlyelixir_shadow",
 	"ghostlyelixir_lunar",
 	"wendy_gravestone",
+	"wendy_resurrectiongrave",
 	"petals",
 	"petals_evil",
 	"elixir_container",
+	"ghostflowerhat",
+	"wendy_butterfly",
 
 	-- Woodie
 	"wereitem_goose",
@@ -203,8 +206,9 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"slingshot_frame_gems",
 	"slingshot_frame_wagpunk_0",
 	"slingshot_frame_wagpunk",
-	"slingshot_handle_sticky",
 	"slingshot_handle_silk",
+	"slingshot_handle_sticky",
+	"slingshot_handle_jelly",
 	"slingshot_handle_voidcloth",
 	"woby_badge_station",
 	"portabletent_item",
@@ -1109,7 +1113,6 @@ CRAFTING_FILTERS.CONTAINERS.recipes =
 	"fish_box",
 	"battlesong_container",
     "wortox_souljar",
-    "wortox_nabbag",
 }
 
 CRAFTING_FILTERS.STRUCTURES.recipes =

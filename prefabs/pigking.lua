@@ -596,12 +596,13 @@ local function AcceptTest(inst, item, giver)
     return item.components.tradable.goldvalue > 0 or is_event_item or item.prefab == "pig_token"
 end
 
-local function OnHaunt(inst, haunter)
+local function OnHaunt(inst)
     if inst.components.trader ~= nil and inst.components.trader.enabled then
         OnRefuseItem(inst)
         return true
+    else
+        return false
     end
-    return false
 end
 
 local function teletopos(inst)

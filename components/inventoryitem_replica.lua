@@ -389,7 +389,8 @@ end
 
 function InventoryItem:GetEquipRestrictedTag()
     if self.inst.components.equippable ~= nil then
-        return self.inst.components.equippable:GetRestrictedTag()
+		local tag = self.inst.components.equippable.restrictedtag
+		return tag and tag:len() > 0 and tag or nil
     end
     return self.classified ~= nil
         and self.classified.equiprestrictedtag:value() ~= 0

@@ -1084,6 +1084,14 @@ return{
 
     ANNOUNCE_NO_ABIGAIL_FLOWER = "I need Abby's flower to pour it on.",
 
+    ANNOUNCE_ELIXIR_BOOSTED = "All comfort is fleeting.",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "My world is just as cold and dark without you, Abby.",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "My heart is still heavy.",
+
+    ANNOUNCE_ABIGAIL_HIDING = "only_used_by_wendy",
+
+    ANNOUNCE_EXLIIR_TOO_SUPER = "It's too much.",
+
 	BATTLECRY =
 	{
 		GENERIC = "Death will find you!",
@@ -5507,7 +5515,7 @@ return{
         GELBLOB_BOTTLE = "I have an urge to toss it.",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "A souless existence.",
             ME = "I don't need another dead twin.",
         },
@@ -5523,8 +5531,7 @@ return{
         -- Meta 5
         GHOSTLYELIXIR_LUNAR = "You'll leave them reeling, Abby.",
         GHOSTLYELIXIR_SHADOW = "Abby will make a big impression.",
-        REVIVER_FLOWER = "TODO", -- [[TODO]]
-
+        
 		SLINGSHOTMODKIT = "Walter is getting serious with his slingshotting.",
 		SLINGSHOT_BAND_PIGSKIN = "Walter is getting serious with his slingshotting.",
 		SLINGSHOT_BAND_TENTACLE = "Walter is getting serious with his slingshotting.",
@@ -5534,12 +5541,15 @@ return{
 		SLINGSHOT_FRAME_WAGPUNK_0 = "Walter is getting serious with his slingshotting.",
 		SLINGSHOT_FRAME_WAGPUNK = "Walter is getting serious with his slingshotting.",
 		SLINGSHOT_HANDLE_STICKY = "Walter is getting serious with his slingshotting.",
+		SLINGSHOT_HANDLE_JELLY = "Walter is getting serious with his slingshotting.",
 		SLINGSHOT_HANDLE_SILK = "Walter is getting serious with his slingshotting.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "Walter is getting serious with his slingshotting.",
 
         WOBY_BADGE_STATION = "What a good girl, that Woby.",
 
         ELIXIR_CONTAINER = "If only I could have helped you then, as much as I can now.",
+        GHOSTFLOWERHAT = "That I may walk a mile under your veil, Abby.",
+        WENDY_RESURRECTIONGRAVE = "If only...",
     },
 
     DESCRIBE_GENERIC = "Sigh... I don't know.",

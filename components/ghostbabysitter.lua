@@ -8,10 +8,12 @@ end
 
 local function onremoved(inst)
     if inst.components.ghostbabysitter then
-        print("REMOVING")
         for ghost, i in pairs(inst.components.ghostbabysitter.babysitting)do
             print(ghost.GUID, ghost.components.ghostbabysitter)
             ghost.ghost_babysitter = nil
+            if ghost.components.follower and ghost.components.follower.leader then
+                ghost.components.follower.leader:RemoveTag("ghost_is_babysat")
+            end
         end
     end
 end
@@ -23,6 +25,7 @@ local Ghostbabysitter = Class(function(self, inst, activcb)
     self.babysitting = {}
 
     self.inst:ListenForEvent("onremove",onremoved)
+    self.inst:ListenForEvent("onburnt",onremoved)
 end,
 nil,
 {

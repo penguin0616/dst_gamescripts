@@ -200,7 +200,7 @@ local function onsave(inst, data)
     data.stone_index = inst.random_stone_choice
 
     local ents = {}
-    if inst.ghost ~= nil then
+    if inst.ghost ~= nil and inst.ghost.persists then
         data.ghost_id = inst.ghost.GUID
         table.insert(ents, data.ghost_id)
     end

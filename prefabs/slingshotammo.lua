@@ -3,12 +3,13 @@ local SpDamageUtil = require("components/spdamageutil")
 local assets =
 {
     Asset("ANIM", "anim/slingshotammo.zip"),
+	Asset("ANIM", "anim/slingshot_streaks.zip"),
 }
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
 local AOE_TARGET_MUST_TAGS     = { "_combat", "_health" }
-local AOE_TARGET_CANT_TAGS     = { "INLIMBO", "notarget", "noattack", "flight", "invisible", "playerghost", "companion", "player" }
+local AOE_TARGET_CANT_TAGS     = { "INLIMBO", "notarget", "noattack", "flight", "invisible", "playerghost", "companion", "player", "wall" }
 local AOE_TARGET_CANT_TAGS_PVP = { "INLIMBO", "notarget", "noattack", "flight", "invisible", "playerghost" }
 
 local AOE_RADIUS_PADDING = 3
@@ -67,7 +68,7 @@ local function no_aggro(attacker, target)
 end
 
 local function ImpactFx(inst, attacker, target)
-    if target ~= nil and target:IsValid() then
+    if not inst.noimpactfx and target ~= nil and target:IsValid() then
 		local impactfx = SpawnPrefab(inst.ammo_def.impactfx)
 		impactfx.Transform:SetPosition(target.Transform:GetWorldPosition())
     end
@@ -164,8 +165,9 @@ local function OnHit_Thulecite(inst, attacker, target)
 				end
 			end
 
-			local fx = SpawnPrefab("slingshot_shadow_aoe_fx")
+			local fx = SpawnPrefab("slingshot_aoe_fx")
 			fx.Transform:SetPosition(x, 0, z)
+			fx:SetColorType("shadow")
 		elseif math.random() < 0.5 then
 			DoHit_Thulecite(inst, attacker, target)
 		end
@@ -288,34 +290,39 @@ local function OnHit_Ice(inst, attacker, target)
 			local x, y, z = target.Transform:GetWorldPosition()
 			DoAOECallback(inst, x, z, TUNING.SLINGSHOT_MAGIC_AMP_RANGE, DoHit_Ice, attacker, target)
 
-			local fx = SpawnPrefab("slingshot_ice_aoe_fx")
+			local fx = SpawnPrefab("slingshot_aoe_fx")
 			fx.Transform:SetPosition(x, 0, z)
+			fx:SetColorType("ice")
 		end
 	end
 end
 
 --------------------------------------------------------------------------
 
-local function SetSpeed_Slow(target, numstacks)
+local function SetSpeed_Slow(target, fx, numstacks)
 	target.components.locomotor:SetExternalSpeedMultiplier(target, "slingshotammo_slow", TUNING.SLINGSHOT_AMMO_MOVESPEED_MULT ^ numstacks)
+	fx:SetFXLevel(numstacks)
 end
 
 local function Refresh_Slow(target, data)
 	table.remove(data.tasks, 1)
 	if #data.tasks > 0 then
-		SetSpeed_Slow(target, #data.tasks)
+		SetSpeed_Slow(target, data.fx, #data.tasks)
 	else
+		data.fx:KillFX()
 		target.components.locomotor:RemoveExternalSpeedMultiplier(target, "slingshotammo_slow")
 		target._slingshot_slow = nil
 	end
 end
 
-local function DoHit_Slow(inst, attacker, target, skipaggro)
+local function DoHit_Slow(inst, attacker, target, ismaintarget)
 	if target.components.locomotor then
 		local data = target._slingshot_slow
 		local shouldrefresh
 		if data == nil then
-			data = { tasks = {} }
+			data = { tasks = {}, fx = SpawnPrefab("slingshotammo_slow_debuff_fx") }
+			data.fx.entity:SetParent(target.entity)
+			data.fx:StartFX(target, not ismaintarget and math.random() * 0.3 or nil)
 			target._slingshot_slow = data
 			shouldrefresh = true
 		elseif #data.tasks < TUNING.SLINGSHOT_AMMO_MOVESPEED_MAX_STACKS then
@@ -327,13 +334,13 @@ local function DoHit_Slow(inst, attacker, target, skipaggro)
 		table.insert(data.tasks, target:DoTaskInTime(TUNING.SLINGSHOT_AMMO_MOVESPEED_DURATION, Refresh_Slow, data))
 
 		if shouldrefresh then
-			SetSpeed_Slow(target, #data.tasks)
+			SetSpeed_Slow(target, data.fx, #data.tasks)
 		end
 
-		if not (skipaggro or no_aggro(attacker, target)) and target.components.combat and target.components.combat:CanBeAttacked() then
+		if not (ismaintarget or no_aggro(attacker, target)) and target.components.combat and target.components.combat:CanBeAttacked() then
 			target:PushEvent("attacked", { attacker = attacker, damage = 0, weapon = inst })
+		end
 	end
-end
 end
 
 local function OnHit_Slow(inst, attacker, target)
@@ -344,8 +351,9 @@ local function OnHit_Slow(inst, attacker, target)
 			local x, y, z = target.Transform:GetWorldPosition()
 			DoAOECallback(inst, x, z, TUNING.SLINGSHOT_MAGIC_AMP_RANGE, DoHit_Slow, attacker, target)
 
-			local fx = SpawnPrefab("slingshot_slow_aoe_fx")
+			local fx = SpawnPrefab("slingshot_aoe_fx")
 			fx.Transform:SetPosition(x, 0, z)
+			fx:SetColorType("slow")
 		end
 	end
 end
@@ -410,8 +418,9 @@ end
 --------------------------------------------------------------------------
 
 local NUM_HORROR_VARIATIONS = 6
-local MAX_HORRORS = 3
-local HORROR_PERIOD = 2
+local MAX_HORRORS = 4
+local HORROR_PERIOD = 1
+local INITIAL_RND_PERIOD = 0.35
 
 local function RecycleHorrorDebuffFX(fx, pool)
 	fx:RemoveFromScene()
@@ -467,16 +476,17 @@ local function DoHit_HorrorFuel(inst, attacker, target, instant)
 			table.remove(data.tasks, 1):Cancel()
 		end
 
-		local endtime = GetTime() + HORROR_PERIOD * (TUNING.SLINGSHOT_HORROR_TICKS - 1) - 0.001
+		local numticks = inst.voidbonusenabled and TUNING.SLINGSHOT_HORROR_SETBONUS_TICKS or TUNING.SLINGSHOT_HORROR_TICKS
+		local endtime = GetTime() + HORROR_PERIOD * (numticks - 1) - 0.001
 		if instant then
-		table.insert(data.tasks, target:DoPeriodicTask(HORROR_PERIOD, OnUpdate_HorrorFuel, nil, attacker, data, endtime))
-		OnUpdate_HorrorFuel(target, attacker, data, endtime, true)
+			table.insert(data.tasks, target:DoPeriodicTask(HORROR_PERIOD, OnUpdate_HorrorFuel, nil, attacker, data, endtime))
+			OnUpdate_HorrorFuel(target, attacker, data, endtime, true)
 		else
-			local initialdelay = math.random() * HORROR_PERIOD / 6
+			local initialdelay = math.random() * INITIAL_RND_PERIOD
 			endtime = endtime + initialdelay
 			table.insert(data.tasks, target:DoPeriodicTask(HORROR_PERIOD, OnUpdate_HorrorFuel, initialdelay, attacker, data, endtime))
+		end
 	end
-end
 end
 
 local function OnHit_HorrorFuel(inst, attacker, target)
@@ -487,10 +497,17 @@ local function OnHit_HorrorFuel(inst, attacker, target)
 			local x, y, z = target.Transform:GetWorldPosition()
 			DoAOECallback(inst, x, z, TUNING.SLINGSHOT_MAGIC_AMP_RANGE, DoHit_HorrorFuel, attacker, target)
 
-			local fx = SpawnPrefab("slingshot_shadow_aoe_fx")
+			local fx = SpawnPrefab("slingshot_aoe_fx")
 			fx.Transform:SetPosition(x, 0, z)
+			fx:SetColorType("horror")
 		end
 	end
+end
+
+local function SetVoidBonus_HorrorFuel(inst)
+	inst.voidbonusenabled = true
+	inst.components.weapon:SetDamage(inst.components.weapon.damage * TUNING.WEAPONS_VOIDCLOTH_SETBONUS_DAMAGE_MULT)
+	inst.components.planardamage:AddBonus(inst, TUNING.WEAPONS_VOIDCLOTH_SETBONUS_PLANAR_DAMAGE, "setbonus")
 end
 
 local _horror_player = nil
@@ -749,17 +766,14 @@ local function OnHit_Gunpowder(inst, attacker, target)
         target._slingshot_gunpowder.task:Cancel()
         target._slingshot_gunpowder.task = target:DoTaskInTime(TUNING.SLINGSHOT_AMMO_GUNPOWDER_DUST_TIMEOUT, GunpowderStaticTimeout)
     end
+	
+	if inst._crithit then
+		local fx = SpawnPrefab("slingshotammo_gunpowder_explode")
 
-    local anim_scale = inst._crithit and 2 or .7
+		if fx ~= nil then
+			fx.Transform:SetPosition(target.Transform:GetWorldPosition())
+		end
 
-    local fx = SpawnPrefab("slingshotammo_gunpowder_explode")
-
-    if fx ~= nil then
-        fx.Transform:SetPosition(target.Transform:GetWorldPosition())
-        fx.Transform:SetScale(anim_scale, anim_scale, anim_scale)
-    end
-
-    if inst._crithit then
         for i, v in ipairs(AllPlayers) do
             local distSq = v:GetDistanceSqToInst(target)
             local k = math.max(0, math.min(1, distSq / 400))
@@ -773,6 +787,8 @@ local function OnHit_Gunpowder(inst, attacker, target)
 
         target._slingshot_gunpowder.task:Cancel()
         target._slingshot_gunpowder = nil
+
+		inst.noimpactfx = true -- Don't spawn the regular fx.
     end
 end
 
@@ -790,8 +806,8 @@ local function DoHit_PureBrilliance(inst, attacker, target, skipaggro)
 
 		if not (skipaggro or no_aggro(attacker, target)) then
 			target.components.combat:SuggestTarget(attacker)
+		end
 	end
-end
 end
 
 local function OnHit_PureBrilliance(inst, attacker, target)
@@ -806,8 +822,9 @@ local function OnHit_PureBrilliance(inst, attacker, target)
 			local x, y, z = target.Transform:GetWorldPosition()
 			DoAOECallback(inst, x, z, TUNING.SLINGSHOT_MAGIC_AMP_RANGE, DoHit_PureBrilliance, attacker, target)
 
-			local fx = SpawnPrefab("slingshot_lunar_aoe_fx")
+			local fx = SpawnPrefab("slingshot_aoe_fx")
 			fx.Transform:SetPosition(x, 0, z)
+			fx:SetColorType("lunar")
 		end
 	end
 end
@@ -864,10 +881,60 @@ end
 
 --------------------------------------------------------------------------
 
+local DREADSTONE_TAGS = { "dreadstoneammo" }
+local DREADSTONE_NOTAGS = { "INLIMBO" }
+
+local function FindStackableDreadstoneAmmo(inst, radius)
+	local x, y, z = inst.Transform:GetWorldPosition()
+	local num = inst.components.stackable:StackSize()
+	for i, v in ipairs(TheSim:FindEntities(x, y, z, radius, DREADSTONE_TAGS, DREADSTONE_NOTAGS)) do
+		if v ~= inst and v.components.inventoryitem.is_landed and v.components.stackable:RoomLeft() >= num then
+			return v
+		end
+	end
+end
+
+local function OnLanded2_Dreadstone(inst) --this is the inv item
+	inst:RemoveEventCallback("on_landed", OnLanded2_Dreadstone)
+
+	local other = FindStackableDreadstoneAmmo(inst, 0.25)
+	if other then
+		other.components.stackable:Put(inst)
+	end
+end
+
+local function OnLanded_Dreadstone(inst) --this is the inv item
+	inst:RemoveEventCallback("on_landed", OnLanded_Dreadstone)
+
+	local other = FindStackableDreadstoneAmmo(inst, 0.5)
+	if other then
+		local vx, vy, vz = inst.Physics:GetVelocity()
+		other.components.stackable:Put(inst)
+		if vx ~= 0 or vz ~= 0 then
+			local speed = math.sqrt(vx * vx + vz * vz)
+			local dir = math.atan2(vz, -vx) * DEGREES
+			Launch2(other, other, speed * 0.5, 0.1, 0, 0, 3, dir - 10 + math.random() * 20)
+			other.components.inventoryitem:SetLanded(false, true)
+			other:ListenForEvent("on_landed", OnLanded2_Dreadstone)
+		end
+	end
+end
+
 local function OnHit_Dreadstone(inst, attacker, target)
 	if target and target:IsValid() then
 		StartFlash(inst, target, 1, 0, 0)
+		if math.random() < TUNING.SLINGSHOT_AMMO_DREADSTONE_RECOVER_CHANCE then
+			local ammo = SpawnPrefab("slingshotammo_dreadstone")
+			LaunchAt(ammo, target, attacker and attacker:IsValid() and attacker or nil, 1, 1, target:GetPhysicsRadius(0), 40)
+			ammo.components.inventoryitem:SetLanded(false, true)
+			ammo:ListenForEvent("on_landed", OnLanded_Dreadstone)
+		end
 	end
+end
+
+local function SetVoidBonus_Dreadstone(inst)
+	inst.components.weapon:SetDamage(inst.components.weapon.damage * TUNING.WEAPONS_VOIDCLOTH_SETBONUS_DAMAGE_MULT)
+	inst.components.planardamage:AddBonus(inst, TUNING.WEAPONS_VOIDCLOTH_SETBONUS_PLANAR_DAMAGE, "setbonus")
 end
 
 --------------------------------------------------------------------------
@@ -876,8 +943,77 @@ local function OnMiss(inst, owner, target)
     inst:Remove()
 end
 
+local tails =
+{
+	["tail_5_2"] = .15,
+	["tail_5_3"] = .15,
+	["tail_5_4"] = .2,
+	["tail_5_5"] = .8,
+	["tail_5_6"] = 1,
+	["tail_5_7"] = 1,
+}
+
+local thintails =
+{
+	["tail_5_8"] = 1,
+	["tail_5_9"] = .5,
+}
+
+local function CreateTail(thintail)
+	local inst = CreateEntity()
+
+	inst:AddTag("FX")
+	inst:AddTag("NOCLICK")
+	--[[Non-networked entity]]
+	inst.entity:SetCanSleep(false)
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+
+	inst.AnimState:SetBank("slingshot_streaks")
+	inst.AnimState:SetBuild("slingshot_streaks")
+	inst.AnimState:PlayAnimation(weighted_random_choice(thintail and thintails or tails))
+	inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
+	if not thintail then
+		inst.AnimState:SetAddColour(1, 1, 0, 0)
+	end
+
+	inst:ListenForEvent("animover", inst.Remove)
+
+	return inst
+end
+
 local function OnUpdateSkillshot(inst)
-    local x, y, z = inst.Transform:GetWorldPosition()
+	if not inst:IsValid() then
+		return
+	end
+
+	if inst.taildelay1 == nil then
+		local x, y, z
+		if inst.taildelay2 then
+			x, y, z = inst.Transform:GetWorldPosition()
+			y = y + 2
+			inst.taildelay2 = inst.taildelay2 > 1 and inst.taildelay2 - 1 or nil
+		else
+			x, y, z = inst.AnimState:GetSymbolPosition(inst.ammo_def.spinsymbol or "rock")
+		end
+		if x and y and z then
+			local tail = CreateTail(inst.thintailcount > 0)
+			tail.Transform:SetPosition(x, y, z)
+			tail.Transform:SetRotation(inst.Transform:GetRotation())
+			if inst.thintailcount > 0 then
+				inst.thintailcount = inst.thintailcount - 1
+			end
+		end
+	else
+		inst.taildelay1 = inst.taildelay1 > 1 and inst.taildelay1 - 1 or nil
+		inst.taildelay2 = inst.taildelay2 > 1 and inst.taildelay2 - 1 or nil
+	end
+
+	if inst.components.projectile.owner == nil then
+        return
+    end
 
     local attacker = inst._attacker
 
@@ -885,7 +1021,9 @@ local function OnUpdateSkillshot(inst)
         return
     end
 
-    for i, v in ipairs(TheSim:FindEntities(x, y, z, 4, AOE_TARGET_MUST_TAGS, TheNet:GetPVPEnabled() and AOE_TARGET_CANT_TAGS_PVP or AOE_TARGET_CANT_TAGS)) do
+	local x, y, z = inst.Transform:GetWorldPosition()
+
+    for i, v in ipairs(TheSim:FindEntities(x, 0, z, 4, AOE_TARGET_MUST_TAGS, TheNet:GetPVPEnabled() and AOE_TARGET_CANT_TAGS_PVP or AOE_TARGET_CANT_TAGS)) do
         local range = v:GetPhysicsRadius(.5) + inst.components.projectile.hitdist
 
         if v:GetDistanceSqToPoint(x, y, z) < range * range and
@@ -913,12 +1051,18 @@ local function OnThrown(inst, owner, target, attacker)
 
     inst.components.projectile:SetHitDist(.7)
 
+	inst.thintailcount = math.random(2, 4)
     inst:AddComponent("updatelooper")
     inst.components.updatelooper:AddOnUpdateFn(OnUpdateSkillshot)
 end
 
 local function SetHighProjectile(inst)
 	inst.AnimState:PlayAnimation(inst.ammo_def.spinloopmounted or "spin_loop_mount")
+	if inst.thintailcount then
+		inst.thintailcount = inst.thintailcount - 1
+		inst.taildelay2 = inst.AnimState:GetCurrentAnimationNumFrames() - 2
+		inst.taildelay1 = math.min(4, inst.taildelay2)
+	end
 	inst.AnimState:PushAnimation(inst.ammo_def.spinloop or "spin_loop")
 end
 
@@ -927,11 +1071,11 @@ local function SetChargedMultiplier(inst, mult)
 	local speedmult = 1 + (TUNING.SLINGSHOT_MAX_CHARGE_SPEED_MULT - 1) * mult
 
 	local dmg = inst.components.weapon.damage
-	if dmg and  dmg > 0 then
+	if dmg and dmg > 0 then
 		inst.components.weapon:SetDamage(dmg * damagemult)
 	end
 	if inst.components.planardamage then
-		inst.components.planardamage:AddMultiplier(inst, mult, "chargedattack")
+		inst.components.planardamage:AddMultiplier(inst, damagemult, "chargedattack")
 	end
 
 	inst.components.projectile:SetSpeed(inst.components.projectile.speed * speedmult)
@@ -987,6 +1131,7 @@ local function projectile_fn(ammo_def)
     inst.SetHighProjectile = SetHighProjectile
 	inst.SetChargedMultiplier = SetChargedMultiplier
 	inst.SetMagicAmplified = SetMagicAmplified
+	inst.SetVoidBonus = ammo_def.setvoidbonus
 
     inst.persists = false
 
@@ -1061,7 +1206,7 @@ local function inv_fn(ammo_def)
 	if ammo_def.elemental then
     	inst:AddTag("molebait")
 	else
-		MakeInventoryFloatable(inst, "small", .15, FLOATER_SCALE)
+		MakeInventoryFloatable(inst, "small", .2, FLOATER_SCALE)
 	end
 
 	inst.REQUIRED_SKILL = ammo_def.skill
@@ -1164,7 +1309,7 @@ local ammo =
 		onunloadammo = onunloadammo_ice,
         damage = nil,
 		elemental = true,
-		prefabs = { "shatter", "slingshot_ice_aoe_fx" },
+		prefabs = { "shatter", "slingshot_aoe_fx" },
     },
     {
         name = "slingshotammo_slow",
@@ -1172,7 +1317,7 @@ local ammo =
 		onhit = OnHit_Slow,
         damage = TUNING.SLINGSHOT_AMMO_DAMAGE_SLOW,
 		elemental = true,
-		prefabs = { "slingshot_slow_aoe_fx" },
+		prefabs = { "slingshot_aoe_fx", "slingshotammo_slow_debuff_fx" },
     },
     {
         name = "slingshotammo_poop", -- distraction (drop target, note: hostile creatures will probably retarget you very shortly after)
@@ -1192,10 +1337,14 @@ local ammo =
     {
         name = "slingshotammo_dreadstone",
 		symbol = "dreadstone",
+		inv_common_postinit = function(inst)
+			inst:AddTag("dreadstoneammo")
+		end,
 		onhit = OnHit_Dreadstone,
 		damage = TUNING.SLINGSHOT_AMMO_DAMAGE_DREADSTONE,
 		planar = TUNING.SLINGSHOT_AMMO_PLANAR_DREADSTONE,
 		damagetypebonus = { ["lunar_aligned"] = TUNING.SLINGSHOT_AMMO_VS_LUNAR_BONUS },
+		setvoidbonus = SetVoidBonus_Dreadstone,
 		skill = "walter_slingshot_ammo_dreadstone",
 		elemental = true,
     },
@@ -1231,7 +1380,7 @@ local ammo =
 		planar = TUNING.SLINGSHOT_AMMO_PLANAR_PUREBLILLIANCE,
 		damagetypebonus = { ["shadow_aligned"] = TUNING.SLINGSHOT_AMMO_VS_SHADOW_BONUS },
 		skill = "walter_allegiance_lunar",
-		prefabs = { "slingshotammo_purebrilliance_debuff", "slingshot_lunar_aoe_fx" },
+		prefabs = { "slingshotammo_purebrilliance_debuff", "slingshot_aoe_fx" },
     },
     {
         name = "slingshotammo_horrorfuel",
@@ -1239,6 +1388,7 @@ local ammo =
 		idleanim = "idle_horrorfuel_rock",
 		spinloop = "spin_loop_horrorfuel",
 		spinloopmounted = "spin_loop_mount_horrorfuel",
+		spinsymbol = "horrofuel_stone",
 		inv_common_postinit = function(inst)
 			if not TheNet:IsDedicated() then
 				inst.fx = CreateFX_HorrorFuel()
@@ -1253,8 +1403,9 @@ local ammo =
 		damage = TUNING.SLINGSHOT_AMMO_DAMAGE_HORRORFUEL,
 		planar = TUNING.SLINGSHOT_AMMO_PLANAR_HORRORFUEL,
 		damagetypebonus = { ["lunar_aligned"] = TUNING.SLINGSHOT_AMMO_VS_LUNAR_BONUS },
+		setvoidbonus = SetVoidBonus_HorrorFuel,
 		skill = "walter_allegiance_shadow",
-		prefabs = { "slingshotammo_horrorfuel_debuff_fx", "slingshot_shadow_aoe_fx" },
+		prefabs = { "slingshotammo_horrorfuel_debuff_fx", "slingshot_aoe_fx" },
     },
 	{
 		name = "slingshotammo_gelblob",
@@ -1271,6 +1422,7 @@ local ammo =
 		idlelooping = true,
 		spinloop = "spin_loop_scrapfeather",
 		spinloopmounted = "spin_loop_mount_scrapfeather",
+		spinsymbol = "scrapfeather",
         onhit = OnHit_Scrapfeather,
 		inv_common_postinit = CommonPostInit_Scrapfeather,
 		proj_common_postinit = CommonPostInit_Scrapfeather,

@@ -100,7 +100,8 @@ local states = {
         tags = { "busy" },
         onenter = function(inst, expired)
             inst.Transform:SetNoFaced()
-            inst.sg.statemem.expired = expired
+            -- NOTES(JBK): The expired flag forces the decoy to always clap otherwise do a low chance for the death animation as a joke.
+            inst.sg.statemem.expired = expired or math.random() > 0.05
             inst.AnimState:PlayAnimation(inst.sg.statemem.expired and "emote_slowclap" or "death2")
         end,
         onupdate = function(inst)

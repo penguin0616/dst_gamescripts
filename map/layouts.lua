@@ -97,6 +97,34 @@ local function monkeyhut_area()
     return {"monkeyhut", "monkeyhut"}
 end
 
+local monkey_island_add_data =
+{
+	add_topology = {room_id = "StaticLayoutIsland:MonkeyIsland", tags = {"RoadPoison", "nohunt", "nohasslers", "not_mainland"}},
+	areas =
+	{
+		monkeyisland_prefabs = monkeyisland_prefabs_area,
+		monkeyhut_area = monkeyhut_area,
+
+		monkeyisland_docksafearea = function(area, data)
+			-- Convert the area we're given into a prefab recording that area,
+			-- so dock generation can access the area information while generating.
+			return {
+				{
+					prefab = "monkeyisland_dockgen_safeareacenter",
+					x = data.x,
+					y = data.y,
+					properties = {
+						data = {
+							width = data.width,
+							height = data.height,
+						},
+					},
+				}
+			}
+		end,
+	},
+}
+
 local StaticLayout = require("map/static_layout")
 local ExampleLayout =
 	{
@@ -1054,58 +1082,8 @@ local ExampleLayout =
 		min_dist_from_land = 0,
 	}),
 
-	["MonkeyIsland"] = StaticLayout.Get("map/static_layouts/monkeyisland_01",
-	{
-		add_topology = {room_id = "StaticLayoutIsland:MonkeyIsland", tags = {"RoadPoison", "nohunt", "nohasslers", "not_mainland"}},
-		areas =
-		{
-			monkeyisland_prefabs = function(area, data)
-				local prefabs = PickSomeWithDups(math.floor(area/5 + 0.5),
-                    {   "bananabush",
-                        "monkeytail",
-                        "palmconetree_short",
-                        "palmconetree_normal",
-                        "palmconetree_tall",
-                        "pirate_flag_pole",
-                    }
-                )
-
-                -- Make sure we have at least 1 of each plant represented.
-                table.insert(prefabs, "bananabush")
-                table.insert(prefabs, "palmconetree_normal")
-                table.insert(prefabs, "monkeytail")
-
-                table.insert(prefabs, "lightcrab")
-                if math.random() > 0.5 then
-                    table.insert(prefabs, "lightcrab")
-                end
-
-				return prefabs
-			end,
-			
-			monkeyhut_area = function(area, data)
-                return {"monkeyhut", "monkeyhut"}
-			end,
-
-            monkeyisland_docksafearea = function(area, data)
-                -- Convert the area we're given into a prefab recording that area,
-                -- so dock generation can access the area information while generating.
-                return {
-                    {
-                        prefab = "monkeyisland_dockgen_safeareacenter",
-                        x = data.x,
-                        y = data.y,
-                        properties = {
-                            data = {
-                                width = data.width,
-                                height = data.height,
-                            },
-                        },
-                    }
-                }
-            end,
-		},
-	}),
+	["MonkeyIsland"]      = StaticLayout.Get("map/static_layouts/monkeyisland_01", monkey_island_add_data),
+	["MonkeyIslandSmall"] = StaticLayout.Get("map/static_layouts/monkeyisland_01_small", monkey_island_add_data),
 
 	["AbandonedBoat1"] = StaticLayout.Get("map/static_layouts/abandonedboat",
 	{

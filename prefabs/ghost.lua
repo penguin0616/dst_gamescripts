@@ -15,7 +15,7 @@ local function OnDeath(inst)
     inst.components.aura:Enable(false)
 end
 
-local GHOSTLYFRIEND_AURA_SAFE_TAGS = {"abigail", "ghostlyfriend"}
+local GHOSTLYFRIEND_AURA_SAFE_TAGS = {"abigail", "ghostlyfriend", "ghost_ally"}
 local function AuraTest(inst, target)
     if inst.components.combat:TargetIs(target) or (target.components.combat.target ~= nil and target.components.combat:TargetIs(inst)) then
         return true

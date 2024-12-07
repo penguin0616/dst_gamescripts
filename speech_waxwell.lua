@@ -1080,6 +1080,14 @@ return{
 
     ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
 
+    ANNOUNCE_ELIXIR_BOOSTED = "That hit the spot.",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "I'd rather sleep like the dead.",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "Respect my brawn!",
+
+    ANNOUNCE_ABIGAIL_HIDING = "only_used_by_wendy",
+
+    ANNOUNCE_EXLIIR_TOO_SUPER = "That's too stiff a drink.",
+
 	BATTLECRY =
 	{
 		GENERIC = "To arms!",
@@ -5503,7 +5511,7 @@ return{
         GELBLOB_BOTTLE = "Wilson can take it on a picnic.",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "You've changed.",
             ME = "Jack? Wait, no.",
         },
@@ -5519,8 +5527,7 @@ return{
         -- Meta 5
         GHOSTLYELIXIR_LUNAR = "It appears someone has been toying with the dark arts and crafts.",
         GHOSTLYELIXIR_SHADOW = "It appears someone has been toying with the dark arts and crafts.",
-        REVIVER_FLOWER = "TODO", -- [[TODO]]
-
+        
 		SLINGSHOTMODKIT = "He'll shoot his eye out if he's not careful.",
 		SLINGSHOT_BAND_PIGSKIN = "He'll shoot his eye out if he's not careful.",
 		SLINGSHOT_BAND_TENTACLE = "He'll shoot his eye out if he's not careful.",
@@ -5530,12 +5537,15 @@ return{
 		SLINGSHOT_FRAME_WAGPUNK_0 = "He'll shoot his eye out if he's not careful.",
 		SLINGSHOT_FRAME_WAGPUNK = "He'll shoot his eye out if he's not careful.",
 		SLINGSHOT_HANDLE_STICKY = "He'll shoot his eye out if he's not careful.",
+		SLINGSHOT_HANDLE_JELLY = "He'll shoot his eye out if he's not careful.",
 		SLINGSHOT_HANDLE_SILK = "He'll shoot his eye out if he's not careful.",
 		SLINGSHOT_HANDLE_VOIDCLOTH = "He'll shoot his eye out if he's not careful.",
 
         WOBY_BADGE_STATION = "Pfft. Dog acts.",
 
         ELIXIR_CONTAINER = "Don't think I'm fooled by its innocent appearance.",
+        GHOSTFLOWERHAT = "Talk about a near death experience.",
+        WENDY_RESURRECTIONGRAVE = "Insurance.",
     },
 
     DESCRIBE_GENERIC = "You tell me.",
