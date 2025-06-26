@@ -197,7 +197,9 @@ local states =
         tags = { "moving", "running" },
 
         onenter = function(inst)
-            inst.components.timer:StartTimer("rammed", 3)
+            if not inst.components.timer:TimerExists("rammed") then
+                inst.components.timer:StartTimer("rammed", 3)
+            end
             inst.components.locomotor:RunForward()
             if not inst.AnimState:IsCurrentAnimation("atk") then
                 inst.AnimState:PlayAnimation("atk", true)
@@ -511,8 +513,7 @@ local states =
             inst.components.locomotor:EnableGroundSpeedMultiplier(false)
             inst.Physics:SetMotorVelOverride(vel,0,0)
 
-            inst.Physics:ClearCollisionMask()
-            inst.Physics:CollidesWith(COLLISION.WORLD)
+			inst.Physics:SetCollisionMask(COLLISION.WORLD)
         end,
 
 		timeline =

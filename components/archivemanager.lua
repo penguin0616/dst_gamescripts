@@ -34,9 +34,11 @@ local _power_enabled = false
 function self:SwitchPowerOn(setting)
 	if _power_enabled ~= true and setting == true then
 		_power_enabled = true
+        WORLDSTATETAGS.SetTagEnabled("ARCHIVES_ENERGIZED", true)
 		self.inst:PushEvent("arhivepoweron")
 	elseif _power_enabled ~= false and setting  == false then
 		_power_enabled = false
+        WORLDSTATETAGS.SetTagEnabled("ARCHIVES_ENERGIZED", false)
 		self.inst:PushEvent("arhivepoweroff")
 	end
 end

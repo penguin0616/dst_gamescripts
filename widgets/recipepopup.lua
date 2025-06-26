@@ -388,6 +388,8 @@ function RecipePopup:Refresh()
 				["SHADOW_FORGE"] = "NEEDSSHADOWFORGING_TWO",
 				["CARPENTRY_STATION"] = "NEEDSCARPENTRY_TWO",
 				["CARPENTRY_STATION_STONE"] = "NEEDSCARPENTRY_THREE",
+				["NEEDSMOONORB_LOW"] = "NEEDSCELESTIAL_ONE",
+				["NEEDSMOON_ALTAR_FULL"] = "NEEDSCELESTIAL_THREE",
             }
             local prototyper_tree = GetHintTextForRecipe(owner, recipe)
             str = STRINGS.UI.CRAFTING[hint_text[prototyper_tree] or ("NEEDS"..prototyper_tree)]

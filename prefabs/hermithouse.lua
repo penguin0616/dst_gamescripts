@@ -341,6 +341,8 @@ local function MakeHermitCrabHouse(name, client_postinit, master_postinit, house
            master_postinit(inst)
         end
 
+        TheWorld:PushEvent("ms_register_pearl_entity", inst)
+
         return inst
 	end
 

@@ -44,6 +44,7 @@ AddTaskSet("default", {
 			"terrariumchest",
 			"charlie_stage_post",
 			"statueharp_hedgespawner",
+			"balatro_machine",
 		},
 		set_pieces = {
 			["ResurrectionStone"] = { count = 2, tasks={"Make a pick", "Dig that rock", "Great Plains", "Squeltch", "Beeeees!", "Speak to the king", "Forest hunters", "Badlands" } },

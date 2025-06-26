@@ -345,6 +345,9 @@ local function beebox_hermit(inst)
 	inst:AddTag("antlion_sinkhole_blocker")
 
     inst.scrapbook_specialinfo = "BEEBOX"
+
+    TheWorld:PushEvent("ms_register_beebox_hermit", inst)
+    TheWorld:PushEvent("ms_register_pearl_entity", inst)
 end
 
 local function beebox_master(inst)

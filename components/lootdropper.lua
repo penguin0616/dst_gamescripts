@@ -347,6 +347,10 @@ function LootDropper:SpawnLootPrefab( lootprefab, pt, linked_skinname, skin_id, 
                 end
             end
 
+			if loot.components.heavyobstaclephysics then
+				loot.components.heavyobstaclephysics:ForceDropPhysics()
+			end
+
             -- here? so we can run a full drop loot?
             self:FlingItem(loot, pt)
 

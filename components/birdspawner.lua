@@ -251,6 +251,9 @@ function self:GetSpawnPoint(pt)
     --We have to use custom test function because birds can't land on creep
     local function TestSpawnPoint(offset)
         local spawnpoint_x, spawnpoint_y, spawnpoint_z = (pt + offset):Get()
+        if TheWorld.Map:IsPointInWagPunkArenaAndBarrierIsUp(spawnpoint_x, spawnpoint_y, spawnpoint_z) then
+            return false
+        end
         local allow_water = true
         local moonstorm = false
         if TheWorld.net.components.moonstorms and next(TheWorld.net.components.moonstorms:GetMoonstormNodes()) then

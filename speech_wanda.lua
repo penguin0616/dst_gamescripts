@@ -24,6 +24,11 @@ return{
             NOKELP = "only_used_by_wurt",
 --fallback to speech_wilson.lua             HASMERMLEADER = "only_used_by_wurt",
 		},
+        APPLYELIXIR =
+        {
+            TOO_SUPER = "Ooph. That is far too strong.",
+            NO_ELIXIRABLE = "only_used_by_wendy",
+        },
         APPLYMODULE =
         {
             COOLDOWN = "only_used_by_wx78",
@@ -120,6 +125,13 @@ return{
             GENERIC = "This is no time for cooking.",
             INUSE = "I should've gotten here sooner.",
             TOOFAR = "It's out of my reach.",
+        },
+        DEPLOY = {
+            HERMITCRAB_RELOCATE = "That's right, it's dry. I'll try again later.",
+        },
+        DIRECTCOURIER_MAP =
+        {
+--fallback to speech_wilson.lua             NOTARGET = "only_used_by_walter",
         },
 		DISMANTLE =
 		{
@@ -297,6 +309,7 @@ return{
 --fallback to speech_wilson.lua             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             BIRDSBLOCKED = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua             NOFIRES =       "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
@@ -336,6 +349,8 @@ return{
 			INUSE = "I'll have to check it later. Or earlier?",
             NOTMASTERCHEF = "It takes too long to cook a fancy meal.",
             NOTAMERM = "I don't expect there's anything in there I'd care to take.",
+            NOTSOULJARHANDLER = "The imp can do whatever he wants with these.",
+            RESTRICTED = "I'll not waste time with that.",
 		},
         SADDLE =
         {
@@ -367,6 +382,8 @@ return{
 			NOTALLOWED = "I don't have time to fuss with this!",
 			INUSE = "Please hurry, I have so much to do!",
             NOTMASTERCHEF = "It takes too long to cook a fancy meal.",
+            NOTSOULJARHANDLER = "The imp can do whatever he wants with these.",
+            RESTRICTED = "I'll not waste time with that.",
 		},
         TEACH =
         {
@@ -404,6 +421,10 @@ return{
             BEEF_BELL_INVALID_TARGET = "Oh, that's not... well this is embarrassing.",
             BEEF_BELL_ALREADY_USED = "I guess we weren't meant to be partners this time around.",
             BEEF_BELL_HAS_BEEF_ALREADY = "I don't have time to take care of all these beefalo!",
+
+			NOT_MINE = "None of my business.",
+
+			CANNOT_FIX_DRONE = "It's beyond repair now.",
         },
 		USEKLAUSSACKKEY =
         {
@@ -424,11 +445,41 @@ return{
         {
             DOESNTWORK = "Well, if he's not going to start the contest I'm not waiting around.",
             ALREADYACTIVE = "It doesn't look like anyone's here.",
+            NORESPONSE = "There's no one here.",
+            RIGHTTHERE = "He's busy.",
         },
         YOTB_UNLOCKSKIN =
         {
             ALREADYKNOWN = "I'm sure I've seen this before.",
         },
+		CARVEPUMPKIN =
+		{
+			INUSE = "Someone's already carving it.",
+			BURNING = "I'm burning!",
+		},
+		DECORATESNOWMAN =
+		{
+			INUSE = "Someone's decorating it.",
+			HASHAT = "I can't. Someone left a hat there.",
+			STACKEDTOOHIGH = "Nope. It's plenty tall.",
+			MELTING = "Its time has run out.",
+		},
+        MUTATE = 
+        {
+            NOGHOST = "only_used_by_wendy",
+            NONEWMOON = "only_used_by_wendy",
+            NOFULLMOON = "only_used_by_wendy",
+            NOTNIGHT = "only_used_by_wendy",
+            CAVE = "only_used_by_wendy",
+        },
+		MODSLINGSHOT =
+		{
+--fallback to speech_wilson.lua 			NOSLINGSHOT = "only_used_by_walter",
+		},
+		POUNCECAPTURE =
+		{
+			MISSED = "Missed! Bad timing...",
+		},
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -703,7 +754,23 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_EMPTY_NICE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_EMPTY_NAUGHTY =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_SOUL_FEW =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_FEW_NICE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_FEW_NAUGHTY =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
@@ -711,17 +778,52 @@ return{
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_MANY_NICE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_MANY_NAUGHTY =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_NICE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_NAUGHTY =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_WARNING =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
+--fallback to speech_wilson.lua     {
+--fallback to speech_wilson.lua         "only_used_by_wortox",
+--fallback to speech_wilson.lua     },
+--fallback to speech_wilson.lua     ANNOUNCE_PANFLUTE_BUFF_USED =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wortox",
 --fallback to speech_wilson.lua     },
 
     --walter specfic
+--fallback to speech_wilson.lua 	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+--fallback to speech_wilson.lua 	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
@@ -729,6 +831,38 @@ return{
 --fallback to speech_wilson.lua 	ANNOUNCE_STORYTELLING_ABORT_NOT_NIGHT =
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
+--fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_WOBY_RETURN =
+--fallback to speech_wilson.lua 	{
+--fallback to speech_wilson.lua 		"only_used_by_walter",
+--fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_WOBY_SIT =
+--fallback to speech_wilson.lua 	{
+--fallback to speech_wilson.lua 		"only_used_by_walter",
+--fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_WOBY_FOLLOW =
+--fallback to speech_wilson.lua 	{
+--fallback to speech_wilson.lua 		"only_used_by_walter",
+--fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_WOBY_PRAISE =
+--fallback to speech_wilson.lua 	{
+--fallback to speech_wilson.lua 		"only_used_by_walter",
+--fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_WOBY_FORAGE =
+--fallback to speech_wilson.lua 	{
+--fallback to speech_wilson.lua 		"only_used_by_walter",
+--fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_WOBY_WORK =
+--fallback to speech_wilson.lua 	{
+--fallback to speech_wilson.lua 		"only_used_by_walter",
+--fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_WOBY_COURIER =
+--fallback to speech_wilson.lua 	{
+--fallback to speech_wilson.lua 		"only_used_by_walter",
+--fallback to speech_wilson.lua 	},
+--fallback to speech_wilson.lua 	ANNOUNCE_WOBY_REMEMBERCHEST_FAIL =
+--fallback to speech_wilson.lua 	{
+--fallback to speech_wilson.lua 		"only_used_by_walter",
 --fallback to speech_wilson.lua 	},
 
     -- wx specific
@@ -741,12 +875,18 @@ return{
     QUAGMIRE_ANNOUNCE_LOSE = "I have a bad feeling about this.",
     QUAGMIRE_ANNOUNCE_WIN = "Time to go!",
 
---fallback to speech_wilson.lua     ANNOUNCE_ROYALTY =
---fallback to speech_wilson.lua     {
---fallback to speech_wilson.lua         "Your majesty.",
---fallback to speech_wilson.lua         "Your highness.",
---fallback to speech_wilson.lua         "My liege!",
---fallback to speech_wilson.lua     },
+    ANNOUNCE_ROYALTY =
+    {
+        "There's a regal air about you.",
+        "The crown suits you.",
+        "I'm in the presence of royalty.",
+    },
+    ANNOUNCE_ROYALTY_JOKER =
+    {
+        "There's a \"regal\" air about you.",
+        "The \"crown\" suits you.",
+        "I'm in the presence of \"royalty\".",
+    },
 
     ANNOUNCE_ATTACH_BUFF_ELECTRICATTACK    = "I've never felt so full of energy!",
     ANNOUNCE_ATTACH_BUFF_ATTACK            = "I want to punch something!!",
@@ -828,6 +968,8 @@ return{
 --fallback to speech_wilson.lua         "only_used_by_wendy",
 --fallback to speech_wilson.lua     },
 --fallback to speech_wilson.lua 	ANNOUNCE_SISTURN_FULL = "only_used_by_wendy",
+    ANNOUNCE_SISTURN_FULL_EVIL = "only_used_by_wendy",
+    ANNOUNCE_SISTURN_FULL_BLOSSOM = "only_used_by_wendy",
 --fallback to speech_wilson.lua     ANNOUNCE_ABIGAIL_DEATH = "only_used_by_wendy",
 --fallback to speech_wilson.lua     ANNOUNCE_ABIGAIL_RETRIEVE = "only_used_by_wendy",
 --fallback to speech_wilson.lua 	ANNOUNCE_ABIGAIL_LOW_HEALTH = "only_used_by_wendy",
@@ -997,6 +1139,26 @@ return{
 
 	-- Hallowed Nights 2024
 	ANNOUNCE_NOPUMPKINCARVINGONFIRE = "What a waste of time.",
+
+	-- Winter's Feast 2024
+	ANNOUNCE_SNOWBALL_TOO_BIG = "Let's not waste time. It's as big as it'll get.",
+	ANNOUNCE_SNOWBALL_NO_SNOW = "There's no snow.",
+
+    -- Meta 5
+    ANNOUNCE_WENDY_BABYSITTER_SET = "only_used_by_wendy", 
+    ANNOUNCE_WENDY_BABYSITTER_STOP = "only_used_by_wendy",
+
+	ANNOUNCE_WORTOX_REVIVER_FAILTELEPORT = "Botheration!",
+
+    ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
+
+    ANNOUNCE_ELIXIR_BOOSTED = "Like a good cup of tea.",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "Let's get on with it.",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "Strength is efficiency!",
+
+    ANNOUNCE_ELIXIR_TOO_SUPER = "Ooph. That is far too strong.",
+
+    ANNOUNCE_LUNARGUARDIAN_INCOMING = "Right on cue.",
 
 	BATTLECRY =
 	{
@@ -1922,10 +2084,13 @@ return{
         CHESSPIECE_EYEOFTERROR = "Certainly an eye to behold.",
         CHESSPIECE_TWINSOFTERROR = "I'd be quite happy to never lay eyes on them again.",
         CHESSPIECE_DAYWALKER = "Ah yes, how could I forget that time I was nearly smashed to bits?",
+        CHESSPIECE_DAYWALKER2 = "A familiar face I couldn't forget soon enough.",
         CHESSPIECE_DEERCLOPS_MUTATED = "What an unpleasant subject for a statue.",
         CHESSPIECE_WARG_MUTATED = "That's one memory I'd be happy not to revisit.",
         CHESSPIECE_BEARGER_MUTATED = "Oh, wonderful. It's even worse than I remembered.",
         CHESSPIECE_SHARKBOI = "How could I forget this ruffian?",
+        CHESSPIECE_WORMBOSS = "Rather not relive this one.",
+        CHESSPIECE_YOTS = "And I just managed to forget you.",
 
         CHESSJUNK1 = "I don't see much in the way of proper clockwork in there.",
         CHESSJUNK2 = "I have a suspicion these were held together with more magic than craftsmanship.",
@@ -3955,14 +4120,28 @@ return{
             "Oh, please don't slobber on me...",
         },
 		WALTERHAT = "What a funny little hat! Sadly, I don't think it would suit me.",
-		SLINGSHOT = "I think that young man might be more mischievous than he appears.",
+		SLINGSHOT =
+		{
+			GENERIC = "I think that young man might be more mischievous than he appears.",
+--fallback to speech_wilson.lua 			NOT_MINE = "only_used_by_walter",
+		},
 		SLINGSHOTAMMO_ROCK = "These obviously weren't made with precision in mind.",
 		SLINGSHOTAMMO_MARBLE = "These obviously weren't made with precision in mind.",
 		SLINGSHOTAMMO_THULECITE = "These obviously weren't made with precision in mind.",
         SLINGSHOTAMMO_GOLD = "These obviously weren't made with precision in mind.",
+		SLINGSHOTAMMO_HONEY = "These obviously weren't made with precision in mind.",
         SLINGSHOTAMMO_SLOW = "Tampering with the timestream, are we? Good lad.",
         SLINGSHOTAMMO_FREEZE = "These obviously weren't made with precision in mind.",
 		SLINGSHOTAMMO_POOP = "It seems sensible enough to me, if a bit unpleasant.",
+		SLINGSHOTAMMO_STINGER = "These obviously weren't made with precision in mind.",
+		SLINGSHOTAMMO_MOONGLASS = "These obviously weren't made with precision in mind.",
+		SLINGSHOTAMMO_GELBLOB = "These obviously weren't made with precision in mind.",
+		SLINGSHOTAMMO_SCRAPFEATHER = "These obviously weren't made with precision in mind.",
+        SLINGSHOTAMMO_DREADSTONE = "These obviously weren't made with precision in mind.",
+        SLINGSHOTAMMO_GUNPOWDER = "These obviously weren't made with precision in mind.",
+        SLINGSHOTAMMO_LUNARPLANTHUSK = "These obviously weren't made with precision in mind.",
+        SLINGSHOTAMMO_PUREBRILLIANCE = "These obviously weren't made with precision in mind.",
+        SLINGSHOTAMMO_HORRORFUEL = "These obviously weren't made with precision in mind.",
         PORTABLETENT = "A safe place to spend the night would be a welcome change.",
         PORTABLETENT_ITEM = "Someone with more time on their hands should set it up.",
 
@@ -3995,15 +4174,22 @@ return{
 		GHOSTLYELIXIR_ATTACK = "A little bit of metaphysical meddling never hurt anyone.",
 		GHOSTLYELIXIR_SPEED = "A little bit of metaphysical meddling never hurt anyone.",
 		GHOSTLYELIXIR_RETALIATION = "A little bit of metaphysical meddling never hurt anyone.",
+        GHOSTLYELIXIR_REVIVE = "A little bit of metaphysical meddling never hurt anyone.",
 		SISTURN =
 		{
 			GENERIC = "Death should be the farthest thing from a child's mind...",
 			SOME_FLOWERS = "Well... I guess it wouldn't take too long to gather a few flowers.",
 			LOTS_OF_FLOWERS = "I hope she finds some comfort in this.",
+            LOTS_OF_FLOWERS_EVIL = "Ugh, my head!",
+            LOTS_OF_FLOWERS_BLOSSOM = "I don't want to know what's making that noise.",   
 		},
 
         --Wortox
 --fallback to speech_wilson.lua         WORTOX_SOUL = "only_used_by_wortox", --only wortox can inspect souls
+        --WORTOX_DECOY is not needed because it uses the default WORTOX inspection.
+        WORTOX_NABBAG = "Multipurpose? Good.",
+        WORTOX_REVIVER = "It's more efficient to just avoid dying.",
+        WORTOX_SOULJAR = "At least they're not lost souls.",
 
         PORTABLECOOKPOT_ITEM =
         {
@@ -5184,6 +5370,7 @@ return{
         RECORD_MAIN = "I prefer their earlier work.", -- Unused.
         RECORD_WORKTOBEDONE = "I prefer their later work.", -- Unused.
         RECORD_HALLOWEDNIGHTS = "This takes me back.",
+        RECORD_BALATRO = "I've heard it before and I'll hear it again.",
 
         ARCHIVE_ORCHESTRINA_MAIN = "What an intricate design.",
 
@@ -5340,8 +5527,8 @@ return{
         MERM_ARMORY_UPGRADED = "I doubt there's anything in there worth my time.",
         MERM_TOOLSHED = "I doubt there's anything in there worth my time.",
         MERM_TOOLSHED_UPGRADED = "I doubt there's anything in there worth my time.",
-        MERMARMORHAT = "It’s for a merm.",
-        MERMARMORUPGRADEDHAT = "It’s for a merm.",
+        MERMARMORHAT = "It's for a merm.",
+        MERMARMORUPGRADEDHAT = "It's for a merm.",
         MERM_TOOL = "I doubt it'll stand the test of time.",
         MERM_TOOL_UPGRADED = "I doubt it'll stand the test of time.",
 
@@ -5394,7 +5581,7 @@ return{
 
         CHEST_MIMIC_REVEALED = "Totally not worth the peek!",
 
-        GELBLOB_STORAGE = { 
+        GELBLOB_STORAGE = {
             GENERIC  = "It'll extend the expiration date.",
             FULL = "Suspended in time.",
         },
@@ -5402,7 +5589,7 @@ return{
         GELBLOB_BOTTLE = "What should we do with this?",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "A horrid way to go.",
             ME = "Better luck this time.",
         },
@@ -5414,6 +5601,116 @@ return{
         SHADOWTHRALL_PARASITE = "Wondered when you'd be showing up.",
 
         PUMPKINCARVER = "No time for fun... Well, maybe this once.",
+		SNOWMAN =
+		{
+			GENERIC = "Child's play. Not bad, though.",
+			SNOWBALL = "Must admit I have a few ideas for this one.",
+		},
+        SNOWBALL_ITEM = "There's always time for a snowball fight.",
+
+        -- Year of the Snake
+        YOTS_SNAKESHRINE =
+        {
+            GENERIC = "Offering made. Let's get on with it, worm!",
+            EMPTY = "If I recall, it needs monster meat.",
+            BURNT = "It was just a matter of time.",
+        },
+        YOTS_WORM = "I don't remember seeing you up here.",
+        YOTS_LANTERN_POST = 
+        {
+            GENERIC = "Who has time to celebrate? Okay, fine.",
+            BURNT = "Who saw that coming? Me.",
+        },
+        YOTS_LANTERN_POST_ITEM = "Let's put it up already!",
+        CHESSPIECE_DEPTHWORM  = "And I just managed to forget you.",
+
+        -- Meta 5
+        GHOSTLYELIXIR_LUNAR = "A little bit of metaphysical meddling never hurt anyone.",
+        GHOSTLYELIXIR_SHADOW = "A little bit of metaphysical meddling never hurt anyone.",
+
+		SLINGSHOTMODKIT = "Rather innovative for a child.",
+		SLINGSHOT_BAND_PIGSKIN = "Rather innovative for a child.",
+		SLINGSHOT_BAND_TENTACLE = "Rather innovative for a child.",
+		SLINGSHOT_BAND_MIMIC = "Rather innovative for a child.",
+		SLINGSHOT_FRAME_BONE = "Rather innovative for a child.",
+		SLINGSHOT_FRAME_GEMS = "Rather innovative for a child.",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "Rather innovative for a child.",
+		SLINGSHOT_FRAME_WAGPUNK = "Rather innovative for a child.",
+		SLINGSHOT_HANDLE_STICKY = "Rather innovative for a child.",
+		SLINGSHOT_HANDLE_JELLY = "Rather innovative for a child.",
+		SLINGSHOT_HANDLE_SILK = "Rather innovative for a child.",
+		SLINGSHOT_HANDLE_VOIDCLOTH = "Rather innovative for a child.",
+
+		WOBY_TREAT = "I suppose with a really strong cup of tea… nah.",
+		BANDAGE_BUTTERFLYWINGS = "This will heal it up in no time at all.",
+		PORTABLEFIREPIT_ITEM = "That Walter is a clever little fellow.",
+        SLINGSHOTAMMO_CONTAINER = "Stockpiling for the future. Good boy!",
+
+        ELIXIR_CONTAINER = "Pretty, practical.",
+        GHOSTFLOWERHAT = "Who has time to pick flowers?",
+        WENDY_RESURRECTIONGRAVE = "How many times have I done this?",
+        GRAVEURN =
+        {
+            GENERIC = "Empty.",
+            HAS_SPIRIT = "I hope this is temporary.",
+        },
+
+        SHALLOW_GRAVE = "Must have been in a hurry.",
+        THULECITEBUGNET = "I've seen this before.",
+
+        -- Deck of Cards
+        DECK_OF_CARDS = "Certainly a way to kill time.",
+        PLAYING_CARD = "What does one do with a single card?",
+        BALATRO_MACHINE = "Perhaps I have time for a round or two.",
+
+		-- Rifts 5
+		GESTALT_CAGE =
+		{
+			GENERIC = "Empty.",
+			FILLED = "Hello there.",
+		},
+		WAGBOSS_ROBOT_SECRET = "I've seen what's under there.",
+        WAGBOSS_ROBOT = "This never ends well.",
+        WAGBOSS_ROBOT_POSSESSED = "We never learn!",
+		WAGBOSS_ROBOT_LEG = "I remember these being useful somehow.",
+		ALTERGUARDIAN_PHASE1_LUNARRIFT = "There's something different about you.",
+		ALTERGUARDIAN_PHASE1_LUNARRIFT_GESTALT = "He's waiting for it.",
+        ALTERGUARDIAN_PHASE4_LUNARRIFT = "I'll never get used to that!",
+		WAGDRONE_ROLLING =
+        {
+            GENERIC = "Always in the way!",
+            INACTIVE = "I remember you.",
+            DAMAGED = "It can have a second chance or its parts can give one.",
+            FRIENDLY = "I wonder if it remembers.",
+        },
+        WAGDRONE_FLYING =
+        {
+            GENERIC = "They're driving me mad!",
+            INACTIVE = "I remember you.",
+            DAMAGED = "It's beyond repair but the parts are still good.",
+        },
+		WAGDRONE_PARTS = "These can be recycled.",
+		WAGDRONE_BEACON = "Some lines should not be crossed.",
+
+        WAGPUNK_WORKSTATION = "Ahead of his time.",
+        WAGPUNK_LEVER = "I know what this does...",
+        WAGPUNK_FLOOR_KIT = "Hmm, a shortcut to terraformation?",
+        WAGPUNK_CAGEWALL = "I don't like being stuck.",
+
+		WAGSTAFF_ITEM_1 = "How did this glove come to be?",
+		WAGSTAFF_ITEM_2 = "It's no longer a projection.",
+
+        HERMITCRAB_RELOCATION_KIT = "Where did I move her to again?",
+
+        WANDERINGTRADER =
+        {
+            REVEALED = "I knew it was you.",
+            GENERIC = "He looks familiar.",
+        },
+
+        GESTALT_GUARD_EVOLVED = "They know what we've done.",
+        FLOTATIONCUSHION = "How convenient!",
+        LUNAR_SEED = "I forget if this is the end or the beginning.",
     },
 
     DESCRIBE_GENERIC = "A very particular something or other.",
@@ -5436,4 +5733,8 @@ return{
         TALLBIRDEGG_CRACKED = "Oooh, that's... upsettingly crunchy.",
 		WINTERSFEASTFUEL = "I can't explain why, but it reminds me of baba's cooking.",
     },
+
+    WENDY_SKILLTREE_EASTEREGG = "only_used_by_wendy",
+
+
 }

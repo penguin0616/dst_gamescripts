@@ -893,6 +893,7 @@ TileManager.AddTile(
         walksound="dontstarve/movement/run_marble",
         snowsound="dontstarve/movement/run_ice",
         mudsound="dontstarve/movement/run_mud",
+        hard = true,
     },
     {
         name="map_edge",
@@ -916,6 +917,7 @@ TileManager.AddTile(
         walksound="dontstarve/movement/walk_dirt",
         snowsound="dontstarve/movement/run_ice",
         mudsound="dontstarve/movement/run_mud",
+        hard = true,
     },
     {
         name="map_edge",
@@ -939,6 +941,7 @@ TileManager.AddTile(
         walksound="dontstarve/movement/walk_dirt",
         snowsound="dontstarve/movement/run_ice",
         mudsound="dontstarve/movement/run_mud",
+        hard = true,
     },
     {
         name="map_edge",
@@ -962,6 +965,7 @@ TileManager.AddTile(
         walksound="dontstarve/movement/walk_dirt",
         snowsound="dontstarve/movement/run_snow",
         mudsound="dontstarve/movement/run_mud",
+        hard = true,
     },
     {
         name="map_edge",
@@ -985,6 +989,7 @@ TileManager.AddTile(
         walksound="dontstarve/movement/walk_dirt",
         snowsound="dontstarve/movement/run_ice",
         mudsound="dontstarve/movement/run_mud",
+        hard = true,
     },
     {
         name="map_edge",
@@ -1008,6 +1013,7 @@ TileManager.AddTile(
         walksound="dontstarve/movement/walk_dirt",
         snowsound="dontstarve/movement/run_snow",
         mudsound="dontstarve/movement/run_mud",
+        hard = true,
     },
     {
         name="map_edge",
@@ -1031,6 +1037,7 @@ TileManager.AddTile(
         walksound="dontstarve/movement/walk_dirt",
         snowsound="dontstarve/movement/run_ice",
         mudsound="dontstarve/movement/run_mud",
+        hard = true,
     },
     {
         name="map_edge",
@@ -1149,6 +1156,26 @@ TileManager.AddTile(
         cannotbedug = true,
         hard = true,
         istemptile = true,
+    },
+    {
+        name="map_edge",
+        noise_texture="mini_woodfloor_noise",
+    }
+)
+
+TileManager.AddTile(
+    "WAGSTAFF_FLOOR",
+    TileRanges.LAND,
+    {ground_name = "Wagstaff Floor"},
+    {
+        name="blocky",
+        noise_texture="ground_noise_wagstaff_floor",
+        runsound="dontstarve/movement/run_wagdock",
+        walksound="dontstarve/movement/walk_wagdock",
+        snowsound="dontstarve/movement/walk_wagdock",
+        mudsound="dontstarve/movement/walk_wagdock",
+        cannotbedug = true,
+        hard = true,
     },
     {
         name="map_edge",

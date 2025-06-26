@@ -144,9 +144,10 @@ local function dragonboat_common(inst, boat_data)
     Physics:SetFriction(0)
     Physics:SetDamping(5)
     Physics:SetCollisionGroup(COLLISION.OBSTACLES)
-    Physics:ClearCollisionMask()
-    Physics:CollidesWith(COLLISION.WORLD)
-    Physics:CollidesWith(COLLISION.OBSTACLES)
+	Physics:SetCollisionMask(
+		COLLISION.WORLD,
+		COLLISION.OBSTACLES
+	)
     Physics:SetCylinder(radius, 3)
     Physics:SetDontRemoveOnSleep(true)
 
@@ -803,9 +804,10 @@ local function dragonboat_player_collision_fn()
     physics:SetFriction(0)
     physics:SetDamping(5)
     physics:SetCollisionGroup(COLLISION.BOAT_LIMITS)
-    physics:ClearCollisionMask()
-    physics:CollidesWith(COLLISION.CHARACTERS)
-    physics:CollidesWith(COLLISION.WORLD)
+	physics:SetCollisionMask(
+		COLLISION.CHARACTERS,
+		COLLISION.WORLD
+	)
     physics:SetTriangleMesh(build_boat_collision_mesh(radius + 0.1, 3))
     physics:SetDontRemoveOnSleep(true)
 
@@ -837,10 +839,11 @@ local function dragonboat_item_collision_fn()
     physics:SetFriction(0)
     physics:SetDamping(5)
     physics:SetCollisionGroup(COLLISION.BOAT_LIMITS)
-    physics:ClearCollisionMask()
-    physics:CollidesWith(COLLISION.ITEMS)
-    physics:CollidesWith(COLLISION.FLYERS)
-    physics:CollidesWith(COLLISION.WORLD)
+	physics:SetCollisionMask(
+		COLLISION.ITEMS,
+		COLLISION.FLYERS,
+		COLLISION.WORLD
+	)
     physics:SetTriangleMesh(build_boat_collision_mesh(radius + 0.2, 3))
 
     -- Boats currently need to not go to sleep because constraints will cause a crash

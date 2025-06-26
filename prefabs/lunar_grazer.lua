@@ -325,6 +325,11 @@ local function OnAttacked(inst, data)
 	end
 end
 
+local function OnCaptured(inst, obj, doer)
+	inst.persists = false
+	inst.sg:HandleEvent("captured_despawn")
+end
+
 --------------------------------------------------------------------------
 
 local function OnEntitySleep(inst)
@@ -385,6 +390,10 @@ local function fn()
 	inst:AddTag("hostile")
 	inst:AddTag("notraptrigger")
 	inst:AddTag("lunar_aligned")
+	inst:AddTag("brightmare")
+
+	--gestaltcapturable (from gestaltcapturable component) added to pristine state for optimization
+	inst:AddTag("gestaltcapturable")
 
 	MakeCharacterPhysics(inst, 10, .5)
 
@@ -448,6 +457,10 @@ local function fn()
 
 	inst:AddComponent("knownlocations")
 	inst:AddComponent("entitytracker")
+
+	inst:AddComponent("gestaltcapturable")
+	inst.components.gestaltcapturable:SetLevel(2)
+	inst.components.gestaltcapturable:SetOnCapturedFn(OnCaptured)
 
 	inst.debris = nil
 	inst.debrisshown = false

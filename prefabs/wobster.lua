@@ -308,10 +308,11 @@ local function base_land_wobster(build_name, nameoverride, fish_def, fadeout, co
     phys:SetFriction(0)
     phys:SetDamping(5)
     phys:SetCollisionGroup(COLLISION.CHARACTERS)
-    phys:ClearCollisionMask()
-    phys:CollidesWith((TheWorld.has_ocean and COLLISION.GROUND) or COLLISION.WORLD)
-    phys:CollidesWith(COLLISION.OBSTACLES)
-    phys:CollidesWith(COLLISION.SMALLOBSTACLES)
+	phys:SetCollisionMask(
+		TheWorld.has_ocean and COLLISION.GROUND or COLLISION.WORLD,
+		COLLISION.OBSTACLES,
+		COLLISION.SMALLOBSTACLES
+	)
     phys:SetCapsule(0.5, 1)
 
     inst.Transform:SetFourFaced()

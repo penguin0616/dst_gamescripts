@@ -326,6 +326,8 @@ local function EnableReticule(inst, enable)
             inst.components.reticule.reticuleprefab = "reticuleline2"
             inst.components.reticule.targetfn = ReticuleTargetFn
             inst.components.reticule.updatepositionfn = ReticuleUpdatePositionFn
+            inst.components.reticule.twinstickcheckscheme = true
+            inst.components.reticule.twinstickmode = 1
             inst.components.reticule.ease = true
             if inst.components.playercontroller ~= nil and inst == ThePlayer then
                 inst.components.playercontroller:RefreshReticule()
@@ -713,23 +715,25 @@ local function SetWereDrowning(inst, mode)
         if mode == WEREMODES.GOOSE and not TheWorld:HasTag("cave") then
             if inst.components.drownable.enabled ~= false then
                 inst.components.drownable.enabled = false
-                inst.Physics:ClearCollisionMask()
-                inst.Physics:CollidesWith(COLLISION.GROUND)
-                inst.Physics:CollidesWith(COLLISION.OBSTACLES)
-                inst.Physics:CollidesWith(COLLISION.SMALLOBSTACLES)
-                inst.Physics:CollidesWith(COLLISION.CHARACTERS)
-                inst.Physics:CollidesWith(COLLISION.GIANTS)
+				inst.Physics:SetCollisionMask(
+					COLLISION.GROUND,
+					COLLISION.OBSTACLES,
+					COLLISION.SMALLOBSTACLES,
+					COLLISION.CHARACTERS,
+					COLLISION.GIANTS
+				)
                 inst.Physics:Teleport(inst.Transform:GetWorldPosition())
             end
         elseif inst.components.drownable.enabled == false then
             inst.components.drownable.enabled = true
             if not inst:HasTag("playerghost") then
-                inst.Physics:ClearCollisionMask()
-                inst.Physics:CollidesWith(COLLISION.WORLD)
-                inst.Physics:CollidesWith(COLLISION.OBSTACLES)
-                inst.Physics:CollidesWith(COLLISION.SMALLOBSTACLES)
-                inst.Physics:CollidesWith(COLLISION.CHARACTERS)
-                inst.Physics:CollidesWith(COLLISION.GIANTS)
+				inst.Physics:SetCollisionMask(
+					COLLISION.WORLD,
+					COLLISION.OBSTACLES,
+					COLLISION.SMALLOBSTACLES,
+					COLLISION.CHARACTERS,
+					COLLISION.GIANTS
+				)
                 inst.Physics:Teleport(inst.Transform:GetWorldPosition())
             end
         end
@@ -1628,7 +1632,11 @@ end
 
 --------------------------------------------------------------------------
 
-local function IsNotArchives(map, x, y, z)
+local function IsNotArchivesAndNotWagpunkArena(map, x, y, z)
+    local inwagpunkarena = map:IsPointInWagPunkArenaAndBarrierIsUp(x, y, z)
+    if inwagpunkarena then
+        return false
+    end
     -- Don't land inside the archives, but you can fly from inside the archives.
     return map:IsLandTileAtPoint(x, y, z) and not map:NodeAtPointHasTag(x, y, z, "nocavein")
 end
@@ -1647,7 +1655,12 @@ local function UseWereFormSkill(inst, act)
         end
 
     elseif inst:HasTag("weregoose") and TheWorld ~= nil then
-        local pos = TheWorld.Map:FindRandomPointWithFilter(50, IsNotArchives)
+        local x, y, z = inst.Transform:GetWorldPosition()
+        local inwagpunkarena = TheWorld.Map:IsPointInWagPunkArenaAndBarrierIsUp(x, y, z)
+        local pos
+        if not inwagpunkarena then
+            pos = TheWorld.Map:FindRandomPointWithFilter(50, IsNotArchivesAndNotWagpunkArena)
+        end
 
         if pos ~= nil then
             inst.Physics:Teleport(pos.x, 0, pos.z)
@@ -1667,6 +1680,34 @@ end
 
 local function IsWeregoose(inst)
     return inst.weremode:value() == WEREMODES.GOOSE
+end
+
+local function OnInventoryStateChanged(inst, data)
+    inst:AddOrRemoveTag("cancarveboards", inst.components.inventory:Has("lucy", 1, true))
+end
+
+local function OnSkillSelectionChange(inst, data)
+    local has_skill = inst.components.skilltreeupdater:IsActivated("woodie_human_lucy_1")
+
+    if has_skill then
+        if inst._oninventorystatechanged == nil then
+            inst._oninventorystatechanged = OnInventoryStateChanged
+
+            inst:ListenForEvent("itemget",  inst._oninventorystatechanged)
+            inst:ListenForEvent("itemlose", inst._oninventorystatechanged)
+        end
+
+        OnInventoryStateChanged(inst)
+    else
+        if inst._oninventorystatechanged ~= nil then
+            inst:RemoveEventCallback("itemget",  inst._oninventorystatechanged)
+            inst:RemoveEventCallback("itemlose", inst._oninventorystatechanged)
+
+            inst._oninventorystatechanged = nil
+        end
+
+        inst:RemoveTag("cancarveboards")
+    end
 end
 
 --------------------------------------------------------------------------
@@ -1792,6 +1833,10 @@ local function master_postinit(inst)
 
         inst:ListenForEvent("ms_respawnedfromghost", onrespawnedfromghost)
         inst:ListenForEvent("ms_becameghost", onbecameghost)
+
+		inst:ListenForEvent("onactivateskill_server", OnSkillSelectionChange)
+		inst:ListenForEvent("ondeactivateskill_server", OnSkillSelectionChange)
+		inst:ListenForEvent("ms_skilltreeinitialized", OnSkillSelectionChange)
 
         onrespawnedfromghost(inst, nil, true)
 

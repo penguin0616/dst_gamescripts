@@ -268,6 +268,7 @@ local function common_postinit(inst)
 end
 
 local function master_postinit(inst)
+    inst.refusestobowtoroyalty = true
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
 
 	inst.customidleanim = customidleanimfn --priority when not returning nil

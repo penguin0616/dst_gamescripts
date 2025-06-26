@@ -61,17 +61,17 @@ local function Knockback(source, target)
 end
 
 local function ToggleOffPhysics(inst)
-    inst.Physics:ClearCollisionMask()
-    inst.Physics:CollidesWith(COLLISION.GROUND)
+	inst.Physics:SetCollisionMask(COLLISION.GROUND)
 end
 
 local function ToggleOnPhysics(inst)
-    inst.Physics:ClearCollisionMask()
-    inst.Physics:CollidesWith(COLLISION.WORLD)
-    inst.Physics:CollidesWith(COLLISION.OBSTACLES)
-    inst.Physics:CollidesWith(COLLISION.SMALLOBSTACLES)
-    inst.Physics:CollidesWith(COLLISION.CHARACTERS)
-    inst.Physics:CollidesWith(COLLISION.GIANTS)
+	inst.Physics:SetCollisionMask(
+		COLLISION.WORLD,
+		COLLISION.OBSTACLES,
+		COLLISION.SMALLOBSTACLES,
+		COLLISION.CHARACTERS,
+		COLLISION.GIANTS
+	)
 end
 
 ----------------------------------------------------------------------------------------------------------------------------------------
@@ -708,7 +708,7 @@ local function MoveSegmentUnderGround(inst, chunk, test_segment, percent, instan
 
     chunk.segmentstotal = chunk.segmentstotal - 1
 
-    if #chunk.segments <= 0 and chunk.dirt_end:IsValid() then
+    if #chunk.segments <= 0 and chunk.dirt_end and chunk.dirt_end:IsValid() then
         chunk.dirt_end.AnimState:PlayAnimation("dirt_pst_slow")
     end
 

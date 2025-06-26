@@ -57,7 +57,7 @@ local actionhandlers =
 local events =
 {
     CommonHandlers.OnHop(),
-    CommonHandlers.OnSleep(),
+    CommonHandlers.OnSleepEx(),
     CommonHandlers.OnFreeze(),
 
     EventHandler("onsink", function(inst, data)
@@ -221,7 +221,7 @@ local states =
         end,
         timeline=
         {
-            FrameEvent(14, function(inst)  inst:PlaySound("taunt_fx_f14") end),
+            FrameEvent(14, function(inst) inst:PlaySound("taunt_fx_f14") end),
         },
         events = OnAnimOver("idle"),
     },
@@ -234,7 +234,6 @@ local states =
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("atk1")
             inst:PlaySound("atk_vocal")
-
 
             inst.components.combat:StartAttack()
             inst.sg.statemem.target = target
@@ -291,7 +290,7 @@ local states =
             inst.components.combat:StartAttack()
             inst.AnimState:PlayAnimation("atk_loop",true)
 
-            inst.SoundEmitter:PlaySound("meta4/crabcritter/atk2_spin_lp","spin")
+            inst.SoundEmitter:PlaySound("meta4/crabcritter/atk2_spin_lp", "spin")
 
             inst.sg.statemem.targets = targets or {}
         end,
@@ -389,7 +388,7 @@ local states =
 
     State{
         name = "break_land",
-        tags = { "busy" },
+        tags = { "busy", "nosleep" },
 
         onenter = function(inst)
             inst:PlaySound("break_land_vocal")
@@ -404,7 +403,10 @@ local states =
             end),
         },
 
-        events = OnAnimOver("idle"),
+        events =
+        {
+            CommonHandlers.OnNoSleepAnimOver("idle"),
+        },
     },
 
     State{
@@ -472,7 +474,7 @@ local states =
 
     State{
         name = "dive_pst_land",
-        tags = {"busy"},
+        tags = {"busy", "nomorph", "nosleep"},
 
         onenter = function(inst)
             if inst.components.locomotor then
@@ -482,7 +484,10 @@ local states =
             inst.AnimState:PlayAnimation("dive_pst_land")
         end,
 
-        events = OnAnimOver("idle"),
+        events =
+        {
+            CommonHandlers.OnNoSleepAnimOver("idle"),
+        },
     },
 
     State{
@@ -516,21 +521,66 @@ local states =
         onenter = function(inst)
             inst.sg:GoToState("dive_pst_water")
         end,
-    }
+    },
+
+    State{
+        name = "flying",
+        tags = { "doing", "nointerrupt", "busy", "jumping", "flying", "nomorph", "nosleep" },
+
+        onenter = function(inst)
+            inst:PlaySound("dive_appear_vocal")
+
+            inst.AnimState:PlayAnimation("boat_jump_loop", true)
+        end,
+
+        events =
+        {
+            EventHandler("hit_ground", function(inst)
+                local px, _, pz = inst.Transform:GetWorldPosition()
+                local on_land = TheWorld.Map:IsPassableAtPoint(px, 0, pz)
+
+                inst.sg:GoToState(on_land and "flying_pst_land" or "flying_pst_water")
+            end),
+        },
+    },
+
+    State{
+        name = "flying_pst_land",
+        tags = { "doing", "nointerrupt", "busy", "jumping", "flying", "nomorph", "nosleep" },
+
+        onenter = function(inst)
+            inst.components.locomotor:StopMoving()
+
+            inst.AnimState:PlayAnimation("boat_jump_pst")
+        end,
+
+        events =
+        {
+            CommonHandlers.OnNoSleepAnimOver("idle"),
+        },
+    },
+
+    State{
+        name = "flying_pst_water",
+        tags = { "busy", "nomorph", "drowning", "nointerrupt", "nowake" },
+
+        onenter = function(inst)
+            inst.sg:GoToState("dive_pst_water")
+        end,
+    },
 }
 
-CommonStates.AddSleepStates(states,
+CommonStates.AddSleepExStates(states,
 {
     starttimeline = {
         SoundFrameEvent(0, "meta4/crabcritter/sleep_pre_vocal"),
         SoundFrameEvent(14, "meta4/crabcritter/sleep_pre_fx_f14"),
-
-
-
     },
+
     sleeptimeline ={
         SoundFrameEvent(35, "meta4/crabcritter/sleep_lp_vocal"),
     },
+
     waketimeline = {
         SoundFrameEvent(0, "meta4/crabcritter/sleep_pst_vocal"),
         SoundFrameEvent(8, "meta4/crabcritter/sleep_pst_fx_f8"),

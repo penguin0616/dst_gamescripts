@@ -283,6 +283,9 @@ local book_defs =
             end
 
             local pt = reader:GetPosition()
+            if TheWorld.Map:IsPointInWagPunkArenaAndBarrierIsUp(pt.x, pt.y, pt.z) then
+                return false, "BIRDSBLOCKED"
+            end
 
             --we can actually run out of command buffer memory if we allow for infinite birds
             local ents = TheSim:FindEntities(pt.x, pt.y, pt.z, 10, BIRDSMAXCHECK_MUST_TAGS)

@@ -429,14 +429,14 @@ local function OnUpdateObstacleSize(inst)
 end
 
 local function OnChangeToObstacle(inst)
-
     inst.Physics:SetMass(100)
     inst.Physics:SetCollisionGroup(COLLISION.GIANTS)
-    inst.Physics:ClearCollisionMask()
-    inst.Physics:CollidesWith(COLLISION.WORLD)
-    inst.Physics:CollidesWith(COLLISION.OBSTACLES)
-    inst.Physics:CollidesWith(COLLISION.SMALLOBSTACLES)
-    inst.Physics:CollidesWith(COLLISION.GIANTS)
+	inst.Physics:SetCollisionMask(
+		COLLISION.WORLD,
+		COLLISION.OBSTACLES,
+		COLLISION.SMALLOBSTACLES,
+		COLLISION.GIANTS
+	)
     
     inst.ischaracterpassthrough = true
     inst.task = inst:DoPeriodicTask(.5, OnUpdateObstacleSize)

@@ -84,6 +84,10 @@ local function OnTeach(inst)
     end
 end
 
+local function OnPutInInventory(inst)
+    inst.removewhenspawned = nil
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -121,7 +125,7 @@ local function fn()
     inst:AddComponent("inspectable")
 
     inst:AddComponent("inventoryitem")
-    inst.components.inventoryitem:SetOnPickupFn(function() inst.removewhenspawned = nil end)
+    inst.components.inventoryitem:SetOnPutInInventoryFn(OnPutInInventory)
     inst.product_orchestrina = nil
 
     inst.OnSave = OnSave

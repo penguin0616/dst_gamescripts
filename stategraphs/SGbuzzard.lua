@@ -42,6 +42,10 @@ local events=
     end),
 }
 
+local function IsStuck(inst)
+	return inst:HasAnyTag("honey_ammo_afflicted", "gelblob_ammo_afflicted") and TheWorld.Map:IsPassableAtPoint(inst.Transform:GetWorldPosition())
+end
+
 local states=
 {
     State{
@@ -157,7 +161,21 @@ local states=
         events=
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("distress") end ),
-            EventHandler("onextinguish", function(inst) if not inst.components.health:IsDead() then inst.sg:GoToState("idle", "flap_pst") end end ),
+			EventHandler("stop_honey_ammo_afflicted", function(inst)
+				if not (inst.components.health:IsDead() or (inst.components.burnable and inst.components.burnable:IsBurning()) or IsStuck(inst)) then
+					inst.sg:GoToState("flyaway")
+				end
+			end),
+			EventHandler("stop_gelblob_ammo_afflicted", function(inst)
+				if not (inst.components.health:IsDead() or (inst.components.burnable and inst.components.burnable:IsBurning()) or IsStuck(inst)) then
+					inst.sg:GoToState("flyaway")
+				end
+			end),
+			EventHandler("onextinguish", function(inst)
+				if not (inst.components.health:IsDead() or IsStuck(inst)) then
+					inst.sg:GoToState("idle", "flap_pst")
+				end
+			end),
         },
     },
 
@@ -271,6 +289,11 @@ local states=
         name = "flyaway",
         tags = {"flight", "busy", "canrotate"},
         onenter = function(inst)
+			if IsStuck(inst) then
+				inst.sg:GoToState("distress_pre")
+				return
+			end
+
             inst.Physics:Stop()
             inst.sg:SetTimeout(.1+math.random()*.2)
             inst.sg.statemem.vert = math.random() > .5

@@ -249,8 +249,7 @@ local function GoHomeAction(inst)
 end
 
 local function on_reach_destination(inst, data)
-    if data and data.target
-            and data.target:IsValid() -- TODO @stevenm check if locomotor GoToEntity covers this test
+    if data and data.target ~= nil
             and data.target:HasTag("oceanfishable_creature")
             and data.target:IsOnOcean(false) then
         inst.sg:GoToState("toss_fish", data.target)
@@ -298,7 +297,6 @@ function OtterBrain:OnStart()
             Panic(self.inst)),
         ChaseAndAttack(self.inst, STEAL_CHASE_TIMEOUT_TIME, 1.5 * self.max_wander_dist),
         WhileNode( IsHungry_Redirect, "Is Hungry",
-            -- TODO @stevenm do we want to condition any of this behaviour on time-of-year...?
             PriorityNode({
                 DoAction(self.inst, FindGroundFoodToEatAction, "Look For Ground Food", nil, ACTION_TIMEOUT_TIME),
                 DoAction(self.inst, TryDroppingInventoryFood, "Drop Food From Pockets", nil, ACTION_TIMEOUT_TIME),
@@ -323,7 +321,6 @@ function OtterBrain:OnStart()
                 DoAction(self.inst, LootContainerFood, "Look For Container Food", nil, ACTION_TIMEOUT_TIME),
                 DoAction(self.inst, StealCharacterFood, "Look For Character Food", nil, STEAL_CHASE_TIMEOUT_TIME),
 
-                -- TODO @stevenm don't want to FindEntity twice w/ 2 GetNearbyFishTarget calls
                 WhileNode(function() return GetNearbyFishTarget(self.inst) ~= nil end, "Try Fishing",
                     ActionNode(function() TryToFish(self.inst) end)
                 ),

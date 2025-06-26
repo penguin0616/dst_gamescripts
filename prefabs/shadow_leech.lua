@@ -71,10 +71,11 @@ local function fn()
 	inst.entity:AddNetwork()
 
 	MakeCharacterPhysics(inst, 10, 0.9)
-	inst.Physics:ClearCollisionMask()
 	inst.Physics:SetCollisionGroup(COLLISION.SANITY)
-	inst.Physics:CollidesWith(COLLISION.SANITY)
-	inst.Physics:CollidesWith(COLLISION.WORLD)
+	inst.Physics:SetCollisionMask(
+		COLLISION.SANITY,
+		COLLISION.WORLD
+	)
 
 	inst.Transform:SetSixFaced()
 
@@ -84,6 +85,7 @@ local function fn()
 	inst:AddTag("shadow")
 	inst:AddTag("notraptrigger")
 	inst:AddTag("shadow_aligned")
+    inst:AddTag("NOBLOCK")
 
 	inst.AnimState:SetBank("shadow_leech")
 	inst.AnimState:SetBuild("shadow_leech")

@@ -372,10 +372,11 @@ function MakeInventoryPhysics(inst, mass, rad)
 	phys:SetDamping(0)
 	phys:SetRestitution(.5)
 	phys:SetCollisionGroup(COLLISION.ITEMS)
-	phys:ClearCollisionMask()
-	phys:CollidesWith(COLLISION.WORLD)
-	phys:CollidesWith(COLLISION.OBSTACLES)
-	phys:CollidesWith(COLLISION.SMALLOBSTACLES)
+	phys:SetCollisionMask(
+		COLLISION.WORLD,
+		COLLISION.OBSTACLES,
+		COLLISION.SMALLOBSTACLES
+	)
 	phys:SetSphere(rad)
     return phys
 end
@@ -389,8 +390,7 @@ function MakeProjectilePhysics(inst, mass, rad)
 	phys:SetDamping(0)
 	phys:SetRestitution(.5)
 	phys:SetCollisionGroup(COLLISION.ITEMS)
-	phys:ClearCollisionMask()
-	phys:CollidesWith(COLLISION.GROUND)
+	phys:SetCollisionMask(COLLISION.GROUND)
 	phys:SetSphere(rad)
     return phys
 end
@@ -401,12 +401,13 @@ function MakeCharacterPhysics(inst, mass, rad)
     phys:SetFriction(0)
     phys:SetDamping(5)
     phys:SetCollisionGroup(COLLISION.CHARACTERS)
-    phys:ClearCollisionMask()
-    phys:CollidesWith(COLLISION.WORLD)
-    phys:CollidesWith(COLLISION.OBSTACLES)
-    phys:CollidesWith(COLLISION.SMALLOBSTACLES)
-    phys:CollidesWith(COLLISION.CHARACTERS)
-    phys:CollidesWith(COLLISION.GIANTS)
+	phys:SetCollisionMask(
+		COLLISION.WORLD,
+		COLLISION.OBSTACLES,
+		COLLISION.SMALLOBSTACLES,
+		COLLISION.CHARACTERS,
+		COLLISION.GIANTS
+	)
     phys:SetCapsule(rad, 1)
     return phys
 end
@@ -417,9 +418,10 @@ function MakeFlyingCharacterPhysics(inst, mass, rad)
     phys:SetFriction(0)
     phys:SetDamping(5)
     phys:SetCollisionGroup(COLLISION.FLYERS)
-    phys:ClearCollisionMask()
-    phys:CollidesWith((TheWorld:CanFlyingCrossBarriers() and COLLISION.GROUND) or COLLISION.WORLD)
-    phys:CollidesWith(COLLISION.FLYERS)
+	phys:SetCollisionMask(
+		TheWorld:CanFlyingCrossBarriers() and COLLISION.GROUND or COLLISION.WORLD,
+		COLLISION.FLYERS
+	)
     phys:SetCapsule(rad, 1)
     return phys
 end
@@ -430,8 +432,7 @@ function MakeTinyFlyingCharacterPhysics(inst, mass, rad)
     phys:SetFriction(0)
     phys:SetDamping(5)
     phys:SetCollisionGroup(COLLISION.FLYERS)
-    phys:ClearCollisionMask()
-    phys:CollidesWith((TheWorld:CanFlyingCrossBarriers() and COLLISION.GROUND) or COLLISION.WORLD)
+	phys:SetCollisionMask(TheWorld:CanFlyingCrossBarriers() and COLLISION.GROUND or COLLISION.WORLD)
     phys:SetCapsule(rad, 1)
     return phys
 end
@@ -442,11 +443,12 @@ function MakeGiantCharacterPhysics(inst, mass, rad)
     phys:SetFriction(0)
     phys:SetDamping(5)
     phys:SetCollisionGroup(COLLISION.GIANTS)
-    phys:ClearCollisionMask()
-    phys:CollidesWith(COLLISION.WORLD)
-    phys:CollidesWith(COLLISION.OBSTACLES)
-    phys:CollidesWith(COLLISION.CHARACTERS)
-    phys:CollidesWith(COLLISION.GIANTS)
+	phys:SetCollisionMask(
+		COLLISION.WORLD,
+		COLLISION.OBSTACLES,
+		COLLISION.CHARACTERS,
+		COLLISION.GIANTS
+	)
     phys:SetCapsule(rad, 1)
     return phys
 end
@@ -457,11 +459,12 @@ function MakeFlyingGiantCharacterPhysics(inst, mass, rad)
     phys:SetFriction(0)
     phys:SetDamping(5)
     phys:SetCollisionGroup(COLLISION.GIANTS)
-    phys:ClearCollisionMask()
-    phys:CollidesWith((TheWorld:CanFlyingCrossBarriers() and COLLISION.GROUND) or COLLISION.WORLD)
-    --phys:CollidesWith(COLLISION.OBSTACLES)
-    phys:CollidesWith(COLLISION.CHARACTERS)
-    phys:CollidesWith(COLLISION.GIANTS)
+	phys:SetCollisionMask(
+		TheWorld:CanFlyingCrossBarriers() and COLLISION.GROUND or COLLISION.WORLD,
+		--COLLISION.OBSTACLES,
+		COLLISION.CHARACTERS,
+		COLLISION.GIANTS
+	)
     phys:SetCapsule(rad, 1)
     return phys
 end
@@ -472,11 +475,12 @@ function MakeGhostPhysics(inst, mass, rad)
     phys:SetFriction(0)
     phys:SetDamping(5)
     phys:SetCollisionGroup(COLLISION.CHARACTERS)
-    phys:ClearCollisionMask()
-    phys:CollidesWith((TheWorld:CanFlyingCrossBarriers() and COLLISION.GROUND) or COLLISION.WORLD)
-    --phys:CollidesWith(COLLISION.OBSTACLES)
-    phys:CollidesWith(COLLISION.CHARACTERS)
-    phys:CollidesWith(COLLISION.GIANTS)
+	phys:SetCollisionMask(
+		TheWorld:CanFlyingCrossBarriers() and COLLISION.GROUND or COLLISION.WORLD,
+		--COLLISION.OBSTACLES,
+		COLLISION.CHARACTERS,
+		COLLISION.GIANTS
+	)
     phys:SetCapsule(rad, 1)
     return phys
 end
@@ -487,8 +491,7 @@ function MakeTinyGhostPhysics(inst, mass, rad)
     phys:SetFriction(0)
     phys:SetDamping(5)
     phys:SetCollisionGroup(COLLISION.CHARACTERS)
-    phys:ClearCollisionMask()
-    phys:CollidesWith((TheWorld:CanFlyingCrossBarriers() and COLLISION.GROUND) or COLLISION.WORLD)
+    phys:SetCollisionMask(TheWorld:CanFlyingCrossBarriers() and COLLISION.GROUND or COLLISION.WORLD)
     phys:SetCapsule(rad, 1)
     return phys
 end
@@ -496,11 +499,12 @@ end
 function ChangeToGhostPhysics(inst)
     local phys = inst.Physics
     phys:SetCollisionGroup(COLLISION.CHARACTERS)
-    phys:ClearCollisionMask()
-    phys:CollidesWith((TheWorld:CanFlyingCrossBarriers() and COLLISION.GROUND) or COLLISION.WORLD)
-    --phys:CollidesWith(COLLISION.OBSTACLES)
-    phys:CollidesWith(COLLISION.CHARACTERS)
-    phys:CollidesWith(COLLISION.GIANTS)
+	phys:SetCollisionMask(
+		TheWorld:CanFlyingCrossBarriers() and COLLISION.GROUND or COLLISION.WORLD,
+		--COLLISION.OBSTACLES,
+		COLLISION.CHARACTERS,
+		COLLISION.GIANTS
+	)
     return phys
 end
 
@@ -512,7 +516,13 @@ function ChangeToCharacterPhysics(inst, mass, rad)
         phys:SetDamping(5)
     end
     phys:SetCollisionGroup(COLLISION.CHARACTERS)
-	phys:SetCollisionMask(COLLISION.WORLD, COLLISION.OBSTACLES, COLLISION.SMALLOBSTACLES, COLLISION.CHARACTERS, COLLISION.GIANTS)
+	phys:SetCollisionMask(
+		COLLISION.WORLD,
+		COLLISION.OBSTACLES,
+		COLLISION.SMALLOBSTACLES,
+		COLLISION.CHARACTERS,
+		COLLISION.GIANTS
+	)
     if rad then
         phys:SetCapsule(rad, 1)
     end
@@ -527,11 +537,12 @@ function ChangeToGiantCharacterPhysics(inst, mass, rad)
 		phys:SetDamping(5)
 	end
 	phys:SetCollisionGroup(COLLISION.GIANTS)
-	phys:ClearCollisionMask()
-	phys:CollidesWith(COLLISION.WORLD)
-	phys:CollidesWith(COLLISION.OBSTACLES)
-	phys:CollidesWith(COLLISION.CHARACTERS)
-	phys:CollidesWith(COLLISION.GIANTS)
+	phys:SetCollisionMask(
+		COLLISION.WORLD,
+		COLLISION.OBSTACLES,
+		COLLISION.CHARACTERS,
+		COLLISION.GIANTS
+	)
 	if rad then
 		phys:SetCapsule(rad, 1)
 	end
@@ -540,12 +551,13 @@ end
 function ChangeToObstaclePhysics(inst, rad, height)
     local phys = inst.Physics
     phys:SetCollisionGroup(COLLISION.OBSTACLES)
-    phys:ClearCollisionMask()
     phys:SetMass(0)
-    --phys:CollidesWith(COLLISION.GROUND)
-    phys:CollidesWith(COLLISION.ITEMS)
-    phys:CollidesWith(COLLISION.CHARACTERS)
-    phys:CollidesWith(COLLISION.GIANTS)
+	phys:SetCollisionMask(
+		--COLLISION.GROUND,
+		COLLISION.ITEMS,
+		COLLISION.CHARACTERS,
+		COLLISION.GIANTS
+	)
     if rad then
         phys:SetCapsule(rad, height or 2)
     end
@@ -553,8 +565,16 @@ function ChangeToObstaclePhysics(inst, rad, height)
 end
 
 function ChangeToWaterObstaclePhysics(inst)
-    local phys = ChangeToObstaclePhysics(inst)
-    phys:CollidesWith(COLLISION.OBSTACLES)
+	local phys = inst.Physics
+	phys:SetCollisionGroup(COLLISION.OBSTACLES)
+	phys:SetMass(0)
+	phys:SetCollisionMask(
+		--COLLISION.GROUND,
+		COLLISION.ITEMS,
+		COLLISION.CHARACTERS,
+		COLLISION.GIANTS,
+		COLLISION.OBSTACLES
+	)
     return phys
 end
 
@@ -567,7 +587,11 @@ function ChangeToInventoryItemPhysics(inst, mass, rad)
         phys:SetRestitution(.5)
     end    
     phys:SetCollisionGroup(COLLISION.ITEMS)
-    phys:SetCollisionMask(COLLISION.WORLD, COLLISION.OBSTACLES, COLLISION.SMALLOBSTACLES)
+	phys:SetCollisionMask(
+		COLLISION.WORLD,
+		COLLISION.OBSTACLES,
+		COLLISION.SMALLOBSTACLES
+	)
     if rad then
         phys:SetSphere(rad, 1)
     end    
@@ -578,10 +602,11 @@ end
 function ChangeToInventoryPhysics(inst)
     local phys = inst.Physics
     phys:SetCollisionGroup(COLLISION.OBSTACLES)
-    phys:ClearCollisionMask()
-    phys:CollidesWith(COLLISION.WORLD)
-    phys:CollidesWith(COLLISION.OBSTACLES)
-    phys:CollidesWith(COLLISION.SMALLOBSTACLES)
+	phys:SetCollisionMask(
+		COLLISION.WORLD,
+		COLLISION.OBSTACLES,
+		COLLISION.SMALLOBSTACLES
+	)
     return phys
 end
 
@@ -590,10 +615,11 @@ function MakeObstaclePhysics(inst, rad, height)
     local phys = inst.entity:AddPhysics()
     phys:SetMass(0) --Bullet wants 0 mass for static objects
     phys:SetCollisionGroup(COLLISION.OBSTACLES)
-    phys:ClearCollisionMask()
-    phys:CollidesWith(COLLISION.ITEMS)
-    phys:CollidesWith(COLLISION.CHARACTERS)
-    phys:CollidesWith(COLLISION.GIANTS)
+	phys:SetCollisionMask(
+		COLLISION.ITEMS,
+		COLLISION.CHARACTERS,
+		COLLISION.GIANTS
+	)
     phys:SetCapsule(rad, height or 2)
     return phys
 end
@@ -603,11 +629,12 @@ function MakeWaterObstaclePhysics(inst, rad, height, restitution)
     local phys = inst.entity:AddPhysics()
     phys:SetMass(0) --Bullet wants 0 mass for static objects
     phys:SetCollisionGroup(COLLISION.OBSTACLES)
-    phys:ClearCollisionMask()
-    phys:CollidesWith(COLLISION.ITEMS)
-    phys:CollidesWith(COLLISION.CHARACTERS)
-    phys:CollidesWith(COLLISION.GIANTS)
-    phys:CollidesWith(COLLISION.OBSTACLES)
+	phys:SetCollisionMask(
+		COLLISION.ITEMS,
+		COLLISION.CHARACTERS,
+		COLLISION.GIANTS,
+		COLLISION.OBSTACLES
+	)
     phys:SetCapsule(rad, height)
 
     inst:AddComponent("waterphysics")
@@ -621,9 +648,10 @@ function MakeSmallObstaclePhysics(inst, rad, height)
     local phys = inst.entity:AddPhysics()
     phys:SetMass(0) --Bullet wants 0 mass for static objects
     phys:SetCollisionGroup(COLLISION.SMALLOBSTACLES)
-    phys:ClearCollisionMask()
-    phys:CollidesWith(COLLISION.ITEMS)
-    phys:CollidesWith(COLLISION.CHARACTERS)
+	phys:SetCollisionMask(
+		COLLISION.ITEMS,
+		COLLISION.CHARACTERS
+	)
     phys:SetCapsule(rad, height or 2)
     return phys
 end
@@ -640,10 +668,11 @@ function MakeHeavyObstaclePhysics(inst, rad, height)
     --obstacle physics
     phys:SetMass(0)
     phys:SetCollisionGroup(COLLISION.OBSTACLES)
-    phys:ClearCollisionMask()
-    phys:CollidesWith(COLLISION.ITEMS)
-    phys:CollidesWith(COLLISION.CHARACTERS)
-    phys:CollidesWith(COLLISION.GIANTS)
+	phys:SetCollisionMask(
+		COLLISION.ITEMS,
+		COLLISION.CHARACTERS,
+		COLLISION.GIANTS
+	)
     phys:SetCapsule(rad, height or 2)
     return phys
 end
@@ -660,9 +689,10 @@ function MakeSmallHeavyObstaclePhysics(inst, rad, height)
     --obstacle physics
     phys:SetMass(0)
     phys:SetCollisionGroup(COLLISION.SMALLOBSTACLES)
-    phys:ClearCollisionMask()
-    phys:CollidesWith(COLLISION.ITEMS)
-    phys:CollidesWith(COLLISION.CHARACTERS)
+	phys:SetCollisionMask(
+		COLLISION.ITEMS,
+		COLLISION.CHARACTERS
+	)
     phys:SetCapsule(rad, height or 2)
     return phys
 end
@@ -672,10 +702,11 @@ function MakePondPhysics(inst, rad, height)
 	local phys = inst.entity:AddPhysics()
 	phys:SetMass(0) --Bullet wants 0 mass for static objects
 	phys:SetCollisionGroup(COLLISION.OBSTACLES)
-	phys:ClearCollisionMask()
-	phys:CollidesWith(COLLISION.ITEMS)
-	phys:CollidesWith(COLLISION.CHARACTERS)
-	phys:CollidesWith(COLLISION.GIANTS)
+	phys:SetCollisionMask(
+		COLLISION.ITEMS,
+		COLLISION.CHARACTERS,
+		COLLISION.GIANTS
+	)
 	phys:SetCapsule(rad, height or 2)
 	return phys
 end
@@ -685,9 +716,10 @@ function RemovePhysicsColliders(inst)
     if not physics then
         return
     end
-    physics:ClearCollisionMask()
     if physics:GetMass() > 0 then
-        physics:CollidesWith(COLLISION.GROUND)
+		physics:SetCollisionMask(COLLISION.GROUND)
+	else
+		physics:ClearCollisionMask()
     end
 end
 
@@ -1466,10 +1498,12 @@ function ToggleOffAllObjectCollisions(inst)
     if not (inst.sg.mem.isobstaclepassthrough and inst.sg.mem.ischaracterpassthrough) then
         inst.sg.mem.isobstaclepassthrough = true
         inst.sg.mem.ischaracterpassthrough = true
-		inst.Physics:ClearCollidesWith(COLLISION.CHARACTERS)
-		inst.Physics:ClearCollidesWith(COLLISION.OBSTACLES)
-		inst.Physics:ClearCollidesWith(COLLISION.SMALLOBSTACLES)
-		inst.Physics:ClearCollidesWith(COLLISION.GIANTS)
+		inst.Physics:ClearCollidesWith(bit.bor(
+			COLLISION.CHARACTERS,
+			COLLISION.OBSTACLES,
+			COLLISION.SMALLOBSTACLES,
+			COLLISION.GIANTS
+		))
     end
     if inst.sg.mem.physicstask ~= nil then
         inst.sg.mem.physicstask:Cancel()
@@ -1483,9 +1517,11 @@ end
 function ToggleOnAllObjectCollisionsAt(inst, x, z)
     if inst.sg.mem.isobstaclepassthrough then
         inst.sg.mem.isobstaclepassthrough = nil
-        inst.Physics:CollidesWith(COLLISION.OBSTACLES)
-        inst.Physics:CollidesWith(COLLISION.SMALLOBSTACLES)
-        inst.Physics:CollidesWith(COLLISION.GIANTS)
+        inst.Physics:CollidesWith(bit.bor(
+        	COLLISION.OBSTACLES,
+			COLLISION.SMALLOBSTACLES,
+			COLLISION.GIANTS
+        ))
     end
     inst.Physics:Teleport(x, 0, z)
     ToggleOnCharacterCollisions(inst)
@@ -1528,9 +1564,7 @@ local function OnUpdatePlacedObjectPhysicsRadius(inst, data)
 end
 
 function PreventCharacterCollisionsWithPlacedObjects(inst)
-    inst.Physics:ClearCollisionMask()
-    inst.Physics:CollidesWith(COLLISION.ITEMS)
-    inst.Physics:CollidesWith(COLLISION.GIANTS)
+	inst.Physics:ClearCollidesWith(COLLISION.CHARACTERS)
     if inst._physicstask ~= nil then
         inst._physicstask:Cancel()
     end
@@ -1694,3 +1728,83 @@ function MakeWaxablePlant(inst)
     waxable:SetWaxfn(WAXED_PLANTS.WaxPlant)
     waxable:SetNeedsSpray()
 end
+
+--------------------------------------------------------------------------
+
+local function GiveOrDropItem(item, inventory, pos)
+    if inventory ~= nil then
+        inventory:GiveItem(item, nil, pos)
+    else
+        item.Transform:SetPosition(pos:Get())
+        item.components.inventoryitem:OnDropped(true)
+    end
+end
+
+local function MaterialRecycler_OnBuilt(inst, builder) -- Give rewards after consuming ingredients for inventory organanization purposes.
+    if inst._recycle_materials_data == nil then
+        return
+    end
+
+    local pos = builder:GetPosition()
+
+    for reward, data in pairs(inst._recycle_materials_data) do
+        local prefab = SpawnPrefab(reward)
+
+        if prefab ~= nil then
+            if prefab.components.stackable ~= nil then
+                prefab.components.stackable:SetStackSize(data.number)
+
+                GiveOrDropItem(prefab, data.container, pos)
+            else
+                GiveOrDropItem(prefab, data.container, pos)
+
+                for i = 2, data.number do
+                    local addt_prefab = SpawnPrefab(reward)
+                    GiveOrDropItem(addt_prefab, data.container, pos)
+                end
+            end
+        end
+    end
+
+    inst._recycle_materials_data = nil
+end
+
+function MakeCraftingMaterialRecycler(inst, data)
+    assert(not (DEBUG_MODE and inst.onPreBuilt ~= nil))
+    assert(not (DEBUG_MODE and inst.OnBuiltFn ~= nil))
+    assert(not (DEBUG_MODE and inst._recycle_materials_data ~= nil))
+
+    local function OnPreBuilt(inst, builder, materials, recipe)
+        inst._recycle_materials_data = {}
+
+        for material, reward in pairs(data) do
+            if materials ~= nil and materials[material] ~= nil then
+                local total = 0
+                local container
+        
+                for item, amount in pairs(materials[material]) do
+                    total = total + amount
+
+                    if container == nil then
+                        container = item.components.inventoryitem:GetContainer() -- Also returns inventory component.
+                    end
+                end
+        
+                if total > 0 then
+                    inst._recycle_materials_data[reward] = {
+                        number = total,
+                        container = container,
+                    }
+                end
+            end
+        end
+
+        if not next(inst._recycle_materials_data) then
+            inst._recycle_materials_data = nil
+        end
+    end
+
+    inst.onPreBuilt = OnPreBuilt
+    inst.OnBuiltFn  = MaterialRecycler_OnBuilt
+end
+

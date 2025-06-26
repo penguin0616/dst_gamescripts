@@ -1008,8 +1008,7 @@ local states =
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("jumpout")
             inst.Physics:SetMotorVel(4, 0, 0)
-            inst.Physics:ClearCollisionMask()
-            inst.Physics:CollidesWith(COLLISION.GROUND)
+			inst.Physics:SetCollisionMask(COLLISION.GROUND)
         end,
 
         timeline =
@@ -1022,10 +1021,11 @@ local states =
             end),
             TimeEvent(15.2 * FRAMES, function(inst)
                 inst.sg.statemem.physicson = true
-                inst.Physics:ClearCollisionMask()
-                inst.Physics:CollidesWith(COLLISION.WORLD)
-                inst.Physics:CollidesWith(COLLISION.CHARACTERS)
-                inst.Physics:CollidesWith(COLLISION.GIANTS)
+				inst.Physics:SetCollisionMask(
+					COLLISION.WORLD,
+					COLLISION.CHARACTERS,
+					COLLISION.GIANTS
+				)
             end),
             TimeEvent(17 * FRAMES, function(inst)
                 inst.Physics:SetMotorVel(1, 0, 0)
@@ -1046,10 +1046,11 @@ local states =
 
         onexit = function(inst)
             if not inst.sg.statemem.physicson then
-                inst.Physics:ClearCollisionMask()
-                inst.Physics:CollidesWith(COLLISION.WORLD)
-                inst.Physics:CollidesWith(COLLISION.CHARACTERS)
-                inst.Physics:CollidesWith(COLLISION.GIANTS)
+				inst.Physics:SetCollisionMask(
+					COLLISION.WORLD,
+					COLLISION.CHARACTERS,
+					COLLISION.GIANTS
+				)
             end
         end,
     },

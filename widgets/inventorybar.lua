@@ -7,6 +7,7 @@ local EquipSlot = require "widgets/equipslot"
 local ItemTile = require "widgets/itemtile"
 local Text = require "widgets/text"
 local HudCompass = require "widgets/hudcompass"
+local ItemTile = require("widgets/itemtile")
 
 local TEMPLATES = require "widgets/templates"
 
@@ -455,7 +456,14 @@ function Inv:OnUpdate(dt)
 	if self.open and not self.autopaused then
 		local playercontroller = self.owner.components.playercontroller
 		if playercontroller ~= nil then
-			local busy = playercontroller:IsDoingOrWorking() or playercontroller:IsBusy()
+			local busy = playercontroller:IsBusy()
+			if not busy and playercontroller:IsDoingOrWorking() then
+				local shouldautopause = self.owner.sg ~= nil and self.owner.sg:HasStateTag("shouldautopausecontrollerinventory")
+				if not (shouldautopause or TheWorld.ismastersim) then
+					shouldautopause = self.owner:HasTag("shouldautopausecontrollerinventory")
+				end
+				busy = not shouldautopause
+			end
 			if self.autopause_delay > 0 then
 				if busy then
 					--started doing the action
@@ -555,34 +563,22 @@ function Inv:OnUpdate(dt)
 				end
 			end
 
-			local ignore_rstick = false
-			if self.owner.components.playercontroller and
-				self.owner.components.playercontroller.reticule and
-				self.owner.components.playercontroller.reticule.twinstickmode
-			then
-				ignore_rstick = true
-			elseif self.owner.components.strafer and self.owner.components.strafer:IsAiming() then
-				ignore_rstick = true
-			end
-
-			if not ignore_rstick then
-				if TheInput:IsControlPressed(CONTROL_INVENTORY_LEFT) then
-					self:RefreshRepeatDelay(CONTROL_INVENTORY_LEFT)
-					self:CursorLeft()
-					return
-				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_RIGHT) then
-					self:RefreshRepeatDelay(CONTROL_INVENTORY_RIGHT)
-					self:CursorRight()
-					return
-				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_UP) then
-					self:RefreshRepeatDelay(CONTROL_INVENTORY_UP)
-					self:CursorUp()
-					return
-				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_DOWN) then
-					self:RefreshRepeatDelay(CONTROL_INVENTORY_DOWN)
-					self:CursorDown()
-					return
-				end
+			if TheInput:IsControlPressed(VIRTUAL_CONTROL_INV_LEFT) then
+				self:RefreshRepeatDelay(VIRTUAL_CONTROL_INV_LEFT)
+				self:CursorLeft()
+				return
+			elseif TheInput:IsControlPressed(VIRTUAL_CONTROL_INV_RIGHT) then
+				self:RefreshRepeatDelay(VIRTUAL_CONTROL_INV_RIGHT)
+				self:CursorRight()
+				return
+			elseif TheInput:IsControlPressed(VIRTUAL_CONTROL_INV_UP) then
+				self:RefreshRepeatDelay(VIRTUAL_CONTROL_INV_UP)
+				self:CursorUp()
+				return
+			elseif TheInput:IsControlPressed(VIRTUAL_CONTROL_INV_DOWN) then
+				self:RefreshRepeatDelay(VIRTUAL_CONTROL_INV_DOWN)
+				self:CursorDown()
+				return
 			end
 
 			self.repeat_time = 0
@@ -801,7 +797,13 @@ function Inv:OnControl(control, down)
         inv_item = nil
     end
 
+    local isreadonlycontainer = self.active_slot and self.active_slot.container and self.active_slot.container.IsReadOnlyContainer and self.active_slot.container:IsReadOnlyContainer()
+
     if control == CONTROL_ACCEPT then
+        if isreadonlycontainer then
+            TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/click_negative")
+            return true
+        end
         if inv_item ~= nil and active_item == nil and
             (   (GetGameModeProperty("non_item_equips") and inv_item.replica.equippable ~= nil) or
                 not inv_item.replica.inventoryitem:CanGoInContainer()
@@ -814,13 +816,21 @@ function Inv:OnControl(control, down)
             return true
         end
     elseif control == CONTROL_PUTSTACK then
+        if isreadonlycontainer then
+            TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/click_negative")
+            return true
+        end
         if self.active_slot ~= nil then
             if not was_force_single_drop then
                 self.active_slot:Click(true)
             end
             return true
         end
-    elseif control == CONTROL_INVENTORY_DROP then
+	elseif control == TheInput:ResolveVirtualControls(VIRTUAL_CONTROL_INV_ACTION_DOWN) then
+        if isreadonlycontainer then
+            TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/click_negative")
+            return true
+        end
         if inv_item ~= nil and active_item == nil then
             if not was_force_single_drop and TheInput:IsControlPressed(CONTROL_PUTSTACK) then
                 self.force_single_drop = true
@@ -831,6 +841,10 @@ function Inv:OnControl(control, down)
             return true
         end
     elseif control == CONTROL_USE_ITEM_ON_ITEM then
+        if isreadonlycontainer then
+            TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/click_negative")
+            return true
+        end
         if inv_item ~= nil and active_item ~= nil then
 			self:SetAutopausedInternal(false)
 			self.autopause_delay = .5
@@ -873,6 +887,14 @@ function Inv:OpenControllerInventory()
         TheFrontEnd:LockFocus(true)
         self:SetFocus()
     end
+end
+
+function Inv:OnNewContainerWidget(containerwidg)
+	if self.open then
+		--V2C: need to spawn at the larger scale if controller inventory is already open
+		--     (this can now happen with the slingshotmodkit for example)
+		containerwidg:SetScale(self.selected_scale)
+	end
 end
 
 function Inv:OnEnable()
@@ -929,6 +951,7 @@ local function GetDropActionString(doer, item)
 end
 
 function Inv:UpdateCursorText()
+    if ThePlayer then ThePlayer.test = self.active_slot end
     local inv_item = self:GetCursorItem()
     local active_item = self.cursortile ~= nil and self.cursortile.item or nil
     if inv_item ~= nil and inv_item.replica.inventoryitem == nil then
@@ -962,93 +985,136 @@ function Inv:UpdateCursorText()
         local is_equip_slot = self.active_slot and self.active_slot.equipslot
         local str = {}
 
-        if not self.open then
-            if inv_item ~= nil then
-                table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_INVENTORY_EXAMINE) .. " " .. STRINGS.UI.HUD.INSPECT)
+        local isreadonlycontainer = self.active_slot and self.active_slot.container and self.active_slot.container.IsReadOnlyContainer and self.active_slot.container:IsReadOnlyContainer()
+        if not isreadonlycontainer then
+            if not self.open then
+                if inv_item ~= nil then
+					--local scheme = TheInput:GetActiveControlScheme(CONTROL_SCHEME_CAM_AND_INV)
+					--Check Profile directly since this code here is specifically for controller ui.
+					local scheme = Profile:GetControlScheme(CONTROL_SCHEME_CAM_AND_INV) or 1
+					local show_actions = true
+					local show_mod_hint = false
+					local use_preset_dpad = scheme >= 4 and scheme <= 7
 
-                if not is_equip_slot then
-                    if not inv_item.replica.inventoryitem:IsGrandOwner(self.owner) then
-                        table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_INVENTORY_USEONSCENE) .. " " .. STRINGS.UI.HUD.TAKE)
-                    else
-                        local scene_action = self.owner.components.playercontroller:GetItemUseAction(inv_item)
-                        if scene_action ~= nil then
-                            table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_INVENTORY_USEONSCENE) .. " " .. scene_action:GetActionString())
-                        end
-                    end
-                    local self_action = self.owner.components.playercontroller:GetItemSelfAction(inv_item)
-                    if self_action ~= nil then
-                        table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_INVENTORY_USEONSELF) .. " " .. self_action:GetActionString())
-                    end
-                else
-                    local self_action = self.owner.components.playercontroller:GetItemSelfAction(inv_item)
-                    if self_action ~= nil and self_action.action ~= ACTIONS.UNEQUIP then
-                        table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_INVENTORY_USEONSCENE) .. " " .. self_action:GetActionString())
-                    end
-                    if #self.inv > 0 and not (inv_item:HasTag("heavy") or GetGameModeProperty("non_item_equips")) then
-                        table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_INVENTORY_USEONSELF) .. " " .. STRINGS.UI.HUD.UNEQUIP)
-                    end
-                end
+					if use_preset_dpad then
+						--DPad is shared between inventory nav vs actions
+						local actions_require_modifier = scheme >= 6
+						--local ismodified = TheInput:IsControlPressed(CONTROL_CAM_AND_INV_MODIFIER)
+						--Use TheSim:GetDigitalControl to skip some of the redundant checks.
+						local ismodified = TheSim:GetDigitalControl(CONTROL_CAM_AND_INV_MODIFIER)
+						if actions_require_modifier then
+							if not ismodified then
+								show_actions = false
+								show_mod_hint = true
+							end
+						elseif ismodified then
+							show_actions = false
+						end
+					end
 
-                table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_INVENTORY_DROP) .. " " .. GetDropActionString(self.owner, inv_item))
-            end
-        else
-            if is_equip_slot then
-                --handle the quip slot stuff as a special case because not every item can go there
-                if active_item ~= nil and active_item.replica.equippable ~= nil and active_item.replica.equippable:EquipSlot() == self.active_slot.equipslot and not active_item.replica.equippable:IsRestricted(self.owner) then
-                    if inv_item and active_item then
-                        table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.UI.HUD.SWAP)
-                    elseif not inv_item and active_item then
-                        table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.UI.HUD.EQUIP)
-                    end
-                elseif active_item == nil and inv_item ~= nil then
-                    if not (GetGameModeProperty("non_item_equips") and inv_item.replica.equippable ~= nil) and
-                        inv_item.replica.inventoryitem:CanGoInContainer() then
-                        table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.UI.HUD.UNEQUIP)
-                    else
-                        table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. GetDropActionString(self.owner, inv_item))
-                    end
+					if show_actions then
+						local examine_ctrl, scene_act_ctrl, self_use_ctrl, drop_ctrl
+						if use_preset_dpad then
+							examine_ctrl = CONTROL_PRESET_DPAD_UP
+							drop_ctrl = CONTROL_PRESET_DPAD_DOWN
+							scene_act_ctrl = CONTROL_PRESET_DPAD_LEFT
+							self_use_ctrl = CONTROL_PRESET_DPAD_RIGHT
+						else
+							examine_ctrl = CONTROL_INVENTORY_EXAMINE
+							drop_ctrl = CONTROL_INVENTORY_DROP
+							scene_act_ctrl = CONTROL_INVENTORY_USEONSCENE
+							self_use_ctrl = CONTROL_INVENTORY_USEONSELF
+						end
+
+						table.insert(str, TheInput:GetLocalizedControl(controller_id, examine_ctrl).." "..STRINGS.UI.HUD.INSPECT)
+
+						if not is_equip_slot then
+							if not inv_item.replica.inventoryitem:IsGrandOwner(self.owner) then
+								table.insert(str, TheInput:GetLocalizedControl(controller_id, scene_act_ctrl).." "..STRINGS.UI.HUD.TAKE)
+							else
+								local scene_action = self.owner.components.playercontroller:GetItemUseAction(inv_item)
+								if scene_action then
+									table.insert(str, TheInput:GetLocalizedControl(controller_id, scene_act_ctrl).." "..scene_action:GetActionString())
+								end
+							end
+							local self_action = self.owner.components.playercontroller:GetItemSelfAction(inv_item)
+							if self_action then
+								table.insert(str, TheInput:GetLocalizedControl(controller_id, self_use_ctrl).." "..self_action:GetActionString())
+							end
+						else
+							local self_action = self.owner.components.playercontroller:GetItemSelfAction(inv_item)
+							if self_action and self_action.action ~= ACTIONS.UNEQUIP then
+								table.insert(str, TheInput:GetLocalizedControl(controller_id, scene_act_ctrl).." "..self_action:GetActionString())
+							end
+							if #self.inv > 0 and not (inv_item:HasTag("heavy") or GetGameModeProperty("non_item_equips")) then
+								table.insert(str, TheInput:GetLocalizedControl(controller_id, self_use_ctrl).." "..STRINGS.UI.HUD.UNEQUIP)
+							end
+						end
+
+						table.insert(str, TheInput:GetLocalizedControl(controller_id, drop_ctrl).." "..GetDropActionString(self.owner, inv_item))
+					elseif show_mod_hint then
+						table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_CAM_AND_INV_MODIFIER))--.." "..STRINGS.UI.HUD.ITEM_ACTIONS)
+					end
                 end
             else
-                local can_take_active_item = active_item ~= nil and self.active_slot.container.CanTakeItemInSlot == nil or self.active_slot.container:CanTakeItemInSlot(active_item, self.active_slot.num)
+                if is_equip_slot then
+                    --handle the quip slot stuff as a special case because not every item can go there
+                    if active_item ~= nil and active_item.replica.equippable ~= nil and active_item.replica.equippable:EquipSlot() == self.active_slot.equipslot and not active_item.replica.equippable:IsRestricted(self.owner) then
+                        if inv_item and active_item then
+                            table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.UI.HUD.SWAP)
+                        elseif not inv_item and active_item then
+                            table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.UI.HUD.EQUIP)
+                        end
+                    elseif active_item == nil and inv_item ~= nil then
+                        if not (GetGameModeProperty("non_item_equips") and inv_item.replica.equippable ~= nil) and
+                            inv_item.replica.inventoryitem:CanGoInContainer() then
+                            table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.UI.HUD.UNEQUIP)
+                        else
+                            table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. GetDropActionString(self.owner, inv_item))
+                        end
+                    end
+                else
+                    local can_take_active_item = active_item ~= nil and (self.active_slot.container.CanTakeItemInSlot == nil or self.active_slot.container:CanTakeItemInSlot(active_item, self.active_slot.num))
 
-                if active_item ~= nil and active_item.replica.stackable ~= nil and
-                    ((inv_item ~= nil and inv_item.prefab == active_item.prefab and inv_item.skinname == active_item.skinname) or (inv_item == nil and can_take_active_item)) then
-                    table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_PUTSTACK) .. " " .. STRINGS.UI.HUD.PUTONE)
-                end
+                    if active_item ~= nil and active_item.replica.stackable ~= nil and
+                        ((inv_item ~= nil and inv_item.prefab == active_item.prefab and inv_item.skinname == active_item.skinname) or (inv_item == nil and can_take_active_item)) then
+                        table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_PUTSTACK) .. " " .. STRINGS.UI.HUD.PUTONE)
+                    end
 
-                if active_item == nil and inv_item ~= nil and inv_item.replica.stackable ~= nil and inv_item.replica.stackable:IsStack() then
-                    table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_PUTSTACK) .. " " .. STRINGS.UI.HUD.GETHALF)
-                end
+                    if active_item == nil and inv_item ~= nil and inv_item.replica.stackable ~= nil and inv_item.replica.stackable:IsStack() then
+                        table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_PUTSTACK) .. " " .. STRINGS.UI.HUD.GETHALF)
+                    end
 
-                if inv_item ~= nil and active_item == nil then
-                    table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.UI.HUD.SELECT)
-                    table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_INVENTORY_DROP) .. " " .. GetDropActionString(self.owner, inv_item))
-                elseif inv_item ~= nil and active_item ~= nil then
-                    if inv_item.prefab == active_item.prefab and inv_item.skinname == active_item.skinname and active_item.replica.stackable ~= nil then
+                    if inv_item ~= nil and active_item == nil then
+                        table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.UI.HUD.SELECT)
+						table.insert(str, TheInput:GetLocalizedControl(controller_id, VIRTUAL_CONTROL_INV_ACTION_DOWN).." "..GetDropActionString(self.owner, inv_item))
+                    elseif inv_item ~= nil and active_item ~= nil then
+                        if inv_item.prefab == active_item.prefab and inv_item.skinname == active_item.skinname and active_item.replica.stackable ~= nil then
+                            table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.UI.HUD.PUT)
+                        elseif can_take_active_item then
+                            table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.UI.HUD.SWAP)
+                        else
+                            table.insert(str, " ")
+                        end
+                    elseif inv_item == nil and active_item ~= nil and can_take_active_item then
                         table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.UI.HUD.PUT)
-                    elseif can_take_active_item then
-                        table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.UI.HUD.SWAP)
                     else
                         table.insert(str, " ")
                     end
-                elseif inv_item == nil and active_item ~= nil and can_take_active_item then
-                    table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.UI.HUD.PUT)
-                else
-                    table.insert(str, " ")
                 end
-            end
 
-            if active_item ~= nil and inv_item ~= nil then
-                local use_action = self.owner.components.playercontroller:GetItemUseAction(active_item, inv_item)
-                if use_action ~= nil then
-                    table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_USE_ITEM_ON_ITEM) .. " " .. use_action:GetActionString())
+                if active_item ~= nil and inv_item ~= nil then
+                    local use_action = self.owner.components.playercontroller:GetItemUseAction(active_item, inv_item)
+                    if use_action ~= nil then
+                        table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_USE_ITEM_ON_ITEM) .. " " .. use_action:GetActionString())
+                    end
                 end
             end
         end
 
         local was_shown = self.actionstring.shown
         local old_string = self.actionstringbody:GetString()
-        local new_string = table.concat(str, '\n')
+        local new_string = isreadonlycontainer and " " or table.concat(str, '\n')
         if old_string ~= new_string then
             self.actionstringbody:SetString(new_string)
             self.actionstringtime = CURSOR_STRING_DELAY
@@ -1366,7 +1432,7 @@ function Inv:OnItemGet(item, slot, source_pos, ignore_stacksize_anim)
 
         if source_pos ~= nil then
             local dest_pos = slot:GetWorldPosition()
-            local im = Image(item.replica.inventoryitem:GetAtlas(), item.replica.inventoryitem:GetImage())
+			local im = ItemTile.sSetImageFromItem(Image(), item)
             if GetGameModeProperty("icons_use_cc") then
                 im:SetEffect("shaders/ui_cc.ksh")
             end

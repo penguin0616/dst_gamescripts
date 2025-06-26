@@ -217,7 +217,7 @@ local function meatrack_master(inst)
 end
 
 local function meatrack_hermit_master(inst)
-
+    TheWorld:PushEvent("ms_register_pearl_entity", inst) -- NOTES(JBK): This function was a stub and now it has a use!
 end
 
 

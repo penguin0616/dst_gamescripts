@@ -255,6 +255,11 @@ local function MakeBundle(name, onesize, variations, loot, tossloot, setupdata, 
         --unwrappable (from unwrappable component) added to pristine state for optimization
         inst:AddTag("unwrappable")
 
+        if setupdata.peekcontainer then
+            --canpeek (from unwrappable component) added to pristine state for optimization
+            inst:AddTag("canpeek")
+        end
+
         if setupdata ~= nil and setupdata.common_postinit ~= nil then
             setupdata.common_postinit(inst, setupdata)
         end
@@ -286,6 +291,7 @@ local function MakeBundle(name, onesize, variations, loot, tossloot, setupdata, 
         inst:AddComponent("unwrappable")
         inst.components.unwrappable:SetOnWrappedFn(OnWrapped)
         inst.components.unwrappable:SetOnUnwrappedFn(OnUnwrapped)
+        inst.components.unwrappable:SetPeekContainer(setupdata.peekcontainer)
         inst.UpdateInventoryImage = UpdateInventoryImage
 
         MakeSmallBurnable(inst, TUNING.SMALL_BURNTIME)
@@ -315,6 +321,7 @@ local bundle =
 	common_postinit = function(inst, setupdata)
 		inst.SCANNABLE_RECIPENAME = "bundlewrap"
 	end,
+    peekcontainer = "bundle_container",
 }
 
 local gift =
@@ -322,6 +329,7 @@ local gift =
 	common_postinit = function(inst, setupdata)
 		inst.SCANNABLE_RECIPENAME = "giftwrap"
 	end,
+    --peekcontainer = nonononono, -- NOTES(JBK): No peeking gifts naughty one.
 }
 
 local redpouch =

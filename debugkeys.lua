@@ -1067,49 +1067,49 @@ end
 local wormholetarget = nil
 local tentaholetarget = nil
 AddGameDebugKey(KEY_T, function()
+    local player = ConsoleCommandPlayer()
+    local target = player
     if TheInput:IsKeyDown(KEY_ALT) then
-		if c_sel() ~= nil and c_sel().components.locomotor ~= nil then
-			c_sel().Transform:SetPosition(TheInput:GetWorldPosition():Get())
-		end
-    else
-        local player = ConsoleCommandPlayer()
-        if player then
-            local boat = (TheInput:IsKeyDown(KEY_CTRL) and player:GetCurrentPlatform()) or nil
-            local topscreen = TheFrontEnd:GetActiveScreen()
-            if topscreen.minimap ~= nil then
+        target = c_sel() and c_sel().components.locomotor and c_sel() or nil
+    end
+    if target then
+        local boat = (TheInput:IsKeyDown(KEY_CTRL) and target:GetCurrentPlatform()) or nil
+        local topscreen = TheFrontEnd:GetActiveScreen()
+        if topscreen.minimap ~= nil then
 
-                local mousepos = TheInput:GetScreenPosition()
-                local mousewidgetpos = topscreen:ScreenPosToWidgetPos( mousepos )
-                local mousemappos = topscreen:WidgetPosToMapPos( mousewidgetpos )
+            local mousepos = TheInput:GetScreenPosition()
+            local mousewidgetpos = topscreen:ScreenPosToWidgetPos( mousepos )
+            local mousemappos = topscreen:WidgetPosToMapPos( mousewidgetpos )
 
-                local x,y,z = topscreen.minimap:MapPosToWorldPos( mousemappos:Get() )
+            local x,y,z = topscreen.minimap:MapPosToWorldPos( mousemappos:Get() )
 
-                if TheWorld ~= nil and not TheWorld.ismastersim then
-                    if boat then
-                        ConsoleRemote("d_teleportboat(%d, %d, %d)", {x, 0, y})
-                    else
-                        ConsoleRemote("c_teleport(%d, %d, %d)", {x, 0, y})
-                    end
+            if TheWorld ~= nil and not TheWorld.ismastersim then
+                if boat then
+                    ConsoleRemote("d_teleportboat(%d, %d, %d)", {x, 0, y})
                 else
-                    if not boat or not try_boat_teleport(boat, x, 0, y) then
-                        player.Physics:Teleport(x, 0, y)
-                    end
+                    ConsoleRemote("c_teleport(%d, %d, %d)", {x, 0, y})
                 end
-                topscreen.minimap.minimap:ResetOffset()
             else
-                if TheWorld ~= nil and not TheWorld.ismastersim then
-                    local x, y, z = ConsoleWorldPosition():Get()
+                if not boat or not try_boat_teleport(boat, x, 0, y) then
+                    target.Physics:Teleport(x, 0, y)
+                end
+            end
+            if target == player then
+                topscreen.minimap.minimap:ResetOffset()
+            end
+        else
+            if TheWorld ~= nil and not TheWorld.ismastersim then
+                local x, y, z = ConsoleWorldPosition():Get()
 
-                    if boat then
-                        ConsoleRemote("d_teleportboat(%d, %d, %d)", {x, y, z})
-                    else
-                        ConsoleRemote("c_teleport(%d, %d, %d)", {x, y, z})
-                    end
+                if boat then
+                    ConsoleRemote("d_teleportboat(%d, %d, %d)", {x, y, z})
                 else
-                    local x, y, z = TheInput:GetWorldPosition():Get()
-                    if not boat or not try_boat_teleport(boat, x, y, z) then
-                        player.Physics:Teleport(x, y, z)
-                    end
+                    ConsoleRemote("c_teleport(%d, %d, %d)", {x, y, z})
+                end
+            else
+                local x, y, z = TheInput:GetWorldPosition():Get()
+                if not boat or not try_boat_teleport(boat, x, y, z) then
+                    target.Physics:Teleport(x, y, z)
                 end
             end
         end

@@ -1166,6 +1166,8 @@ local function fn()
 		return inst
 	end
 
+	inst.scrapbook_damage = TUNING.DAYWALKER_XCLAW_DAMAGE * .5 -- playerdamagepercent
+
 	inst.footstep = "daywalker/action/step"
 
 	inst.components.talker.ontalk = OnTalk
@@ -1244,6 +1246,7 @@ local function fn()
 	inst.looted = false
 	inst.fatigue = 0
 	inst._fatiguetask = nil
+	inst._trampledelays = {}
 
 	--ability unlocks
 	inst.canfatigue = false

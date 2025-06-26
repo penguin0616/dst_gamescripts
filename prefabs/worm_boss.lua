@@ -13,6 +13,8 @@ local prefabs =
     "worm_boss_dirt_ground_fx",
     "worm_boss_head",
     "worm_boss_segment",
+    "chesspiece_wormboss_sketch",
+    "winter_ornament_boss_wormboss",
 }
 
 -----------------------------------------------------------------------------------------------------------------------
@@ -30,11 +32,13 @@ SetSharedLootTable("worm_boss",
     { "monstermeat",  0.66 },
     { "monstermeat",  0.66 },
     { "wormlight",    1.00 },
+
+    { "chesspiece_wormboss_sketch", 1.00 },
 })
 
 -----------------------------------------------------------------------------------------------------------------------
 
-local function GenerateLoot(inst, pos)
+local function GenerateLoot(inst, pos, loot)
     local loottable = {
         boneshard = 25,
         rocks = 20,
@@ -61,10 +65,16 @@ local function GenerateLoot(inst, pos)
 
     local choice = weighted_random_choice(loottable)
 
+    if loot then
+        choice = loot
+    end
+
     if choice ~= nil then
         inst.components.lootdropper:FlingItem(SpawnPrefab(choice), pos)
     end
 end
+
+local LUCY_NUGGET_CHANCE = 0.3
 
 local SHAKE_DIST = 40
 
@@ -385,6 +395,9 @@ local function OnLoadPostPass(inst, newents, data)
                 GenerateLoot(inst, pos)
                 GenerateLoot(inst, pos)
                 GenerateLoot(inst, pos)
+                if IsSpecialEventActive(SPECIAL_EVENTS.YOTS) and math.random() < LUCY_NUGGET_CHANCE then
+                    GenerateLoot(inst, pos, "lucky_goldnugget")
+                end
             end
         end
         if data.headlootdropped then
@@ -872,7 +885,9 @@ local function Segment_OnAnimOver(inst)
         GenerateLoot(inst)
         GenerateLoot(inst)
         GenerateLoot(inst)
-
+        if IsSpecialEventActive(SPECIAL_EVENTS.YOTS) and math.random() < LUCY_NUGGET_CHANCE then
+            GenerateLoot(inst,nil,"lucky_goldnugget")
+        end
     elseif inst.AnimState:IsCurrentAnimation("segment_death_pst") then
         ErodeAway(inst, SEGMENT_ERODE_TIME)
     end

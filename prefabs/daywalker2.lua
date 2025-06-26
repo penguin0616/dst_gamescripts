@@ -37,6 +37,8 @@ local prefabs =
     "chestupgrade_stacksize_blueprint",
     "wagpunkbits_kit_blueprint",
     "wagpunkbits_kit",
+    "chesspiece_daywalker2_sketch",
+    "winter_ornament_boss_daywalker2",
 }
 
 local brain = require("brains/daywalker2brain")
@@ -52,6 +54,7 @@ SetSharedLootTable("daywalker2",
 	{ "wagpunk_bits",		0.5 },
 
 	{ "scrap_monoclehat",	1 },
+	{ "chesspiece_daywalker2_sketch", 1 },
 })
 
 local MASS = 1000
@@ -1062,7 +1065,6 @@ end
 
 --------------------------------------------------------------------------
 
--- NOTES(DiogoW): @V2C, please keep this updated :)
 local scrapbook_data =
 {
 	scrapbook_anim =			"scrapbook",
@@ -1073,6 +1075,7 @@ local scrapbook_data =
 	scrapbook_hide =			{ "follow_eye" },
 	scrapbook_hidesymbol =		{ "ww_armlower_red" },
 	scrapbook_deps =			{ "scraphat" },
+	scrapbook_damage = TUNING.DAYWALKER_XCLAW_DAMAGE * .5, -- playerdamagepercent
 }
 
 local function fn()

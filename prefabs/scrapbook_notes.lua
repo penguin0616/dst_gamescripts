@@ -3,6 +3,10 @@ local DEFAULT_ASSETS =
     Asset("ANIM", "anim/blueprint_tackle.zip"),
 }
 
+-- Adding scrapbook_notes:
+--   1. Add entry in NOTES table below. Note that the prefab will have a "_note" suffix.
+--   2. Add scrapbook entry for it and an entry in the SCRAPBOOK.SPECIALINFO string table.
+
 local NOTES =
 {
     {
@@ -11,6 +15,9 @@ local NOTES =
         build = "wagstaff_notes",
     },
 }
+
+-- For searching purposes:
+--     wagstaff_mutations_note
 
 local function CancelReservation(inst)
     inst.reserved_userid = nil

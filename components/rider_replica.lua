@@ -7,6 +7,8 @@ local Rider = Class(function(self, inst)
         self.classified = inst.player_classified
         self._onmounthealthdelta = function(mount, data) self:OnMountHealth(data.newpercent) end
     else
+		--self.predictriderrunspeed = nil
+
         self._onisriding = function() self:OnIsRiding(self._isriding:value()) end
         inst:ListenForEvent("isridingdirty", self._onisriding)
 
@@ -213,6 +215,9 @@ function Rider:GetMountRunSpeed()
     elseif mount.components.locomotor ~= nil then
         return mount.components.locomotor.runspeed
     elseif self.classified ~= nil then
+		if self.predictriderrunspeed and self.inst:HasTag("autopredict") then
+			return self.predictriderrunspeed
+		end
         return self.classified.riderrunspeed:value()
     else
         return 0

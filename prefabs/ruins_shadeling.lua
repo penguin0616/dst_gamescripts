@@ -105,6 +105,7 @@ local function fn()
 	inst:AddTag("shadow")
 	inst:AddTag("shadow_aligned")
 	inst:AddTag("gestaltnoloot")
+    inst:AddTag("NOBLOCK")
 
 	inst.AnimState:SetBank("ruins_shadeling")
 	inst.AnimState:SetBuild("ruins_shadeling")

@@ -330,7 +330,7 @@ local StartPrecipitation = _ismastersim and function(temperature)
     _moisturefloor:set(RandomizeMoistureFloor(_season))
     _peakprecipitationrate:set(RandomizePeakPrecipitationRate(_season))
     local riftspawner = _world.components.riftspawner
-    if TUNING.ACIDRAIN_ENALBED and riftspawner and riftspawner:IsShadowPortalActive() then
+    if TUNING.ACIDRAIN_ENABLED and riftspawner and riftspawner:IsShadowPortalActive() then
         _preciptype:set(PRECIP_TYPES.acidrain)
     else
         _preciptype:set(PRECIP_TYPES.rain)

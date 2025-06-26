@@ -56,11 +56,13 @@ local events =
 }
 
 local function RestoreCollidesWith(inst)
-	inst.Physics:CollidesWith(COLLISION.WORLD
-						+ COLLISION.OBSTACLES
-						+ COLLISION.SMALLOBSTACLES
-						+ COLLISION.CHARACTERS
-						+ COLLISION.GIANTS)
+	inst.Physics:SetCollisionMask(
+		COLLISION.WORLD,
+		COLLISION.OBSTACLES,
+		COLLISION.SMALLOBSTACLES,
+		COLLISION.CHARACTERS,
+		COLLISION.GIANTS
+	)
 end
 
 local function SetSortOrderIsInWater(inst, in_water)

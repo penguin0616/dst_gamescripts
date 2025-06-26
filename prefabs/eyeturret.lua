@@ -108,10 +108,7 @@ local function retargetfn(inst)
 end
 
 local function shouldKeepTarget(inst, target)
-    return target ~= nil
-        and target:IsValid()
-        and target.components.health ~= nil
-        and not target.components.health:IsDead()
+	return inst.components.combat:CanTarget(target)
         and inst:IsNear(target, TUNING.EYETURRET_RANGE + 3)
 end
 

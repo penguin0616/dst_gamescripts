@@ -305,6 +305,22 @@ function ReconstructTopology(graph)
 
 	-- Find out which node connections are actually valid, remove the ones that aren`t
 	print("\t...Validating connections")
+    local validcaps = {ignorewalls = true, ignorecreep = true}
+    local function IsPathClearBetweenNodes(node1, node2, p1, p2)
+        -- NOTES(JBK): We want to detect that there is land between two nodes so that it is always traversable.
+        -- The old algorithm was a line check between node origins which for Voronoi generations is not a valid check for all configurations.
+        -- So we will walk along the node edge and cast two clear rays from the node origins to this interpolated point and if that is clear the two nodes are traversable.
+        local distmod = math.ceil(math.sqrt(distsq(p1[1], p1[2], p2[1], p2[2])) / TILE_SCALE)
+        for j = 0, distmod - 1 do
+            local t = j / distmod
+            local x = Lerp(p1[1], p2[1], t)
+            local z = Lerp(p1[2], p2[2], t)
+            if TheWorld.Pathfinder:IsClear(node1.x, 0, node1.y, x, 0, z, validcaps) and TheWorld.Pathfinder:IsClear(node2.x, 0, node2.y, x, 0, z, validcaps) then
+                return true
+            end
+        end
+        return false
+    end
 	for i=#flattenedEdges,1,-1 do
 		local pi1 = flattenedEdges[i][1]
 		local pi2 = flattenedEdges[i][2]
@@ -324,11 +340,7 @@ function ReconstructTopology(graph)
 			local nodeIndex2 = nodeIndices[2]
 			local node1 = graph.nodes[nodeIndex1]
 			local node2 = graph.nodes[nodeIndex2]
-			local startpos = Point(node1.x,0,node1.y)
-			local endpos = Point(node2.x,0,node2.y)
-			if not TheWorld.Pathfinder:IsClear(startpos.x, startpos.y, startpos.z,
-		                                                 endpos.x, endpos.y, endpos.z,
-		                                                 {ignorewalls = true, ignorecreep = true}) then
+			if not IsPathClearBetweenNodes(node1, node2, p1, p2) then
 				-- remove this index from all nodes
 				RemoveEdge(graph.nodes, i)
 				-- and clear out this edge from the supporting structures

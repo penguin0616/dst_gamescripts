@@ -9,12 +9,19 @@ local MIN_TRAP_COUNT_FOR_RESPAWN = 4
 local RANGED_ATTACK_DSQ = TUNING.ALTERGUARDIAN_PHASE3_STAB_RANGE^2
 local SUMMON_DSQ = TUNING.ALTERGUARDIAN_PHASE3_SUMMONRSQ - 36
 
+local function hit_recovery_skip_cooldown_fn(inst, last_t, delay)
+	--no skipping when we're dodging (inst.sg.mem.isdodging set from brain)
+	return not inst.sg.mem.isdodging
+		and inst.components.combat:InCooldown()
+		and inst.sg:HasStateTag("idle")
+end
+
 local events =
 {
     CommonHandlers.OnFreeze(),
     CommonHandlers.OnDeath(),
     CommonHandlers.OnLocomote(false, true),
-    CommonHandlers.OnAttacked(nil, TUNING.ALTERGUARDIAN_PHASE3_MAX_STUN_LOCKS),
+	CommonHandlers.OnAttacked(nil, TUNING.ALTERGUARDIAN_PHASE3_MAX_STUN_LOCKS, hit_recovery_skip_cooldown_fn),
 
     EventHandler("doattack", function(inst, data)
         if not (inst.components.health:IsDead() or inst.sg:HasStateTag("busy"))

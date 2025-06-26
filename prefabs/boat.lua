@@ -388,9 +388,10 @@ local function create_common_pre(inst, bank, build, data)
     phys:SetFriction(0)
     phys:SetDamping(5)
     phys:SetCollisionGroup(COLLISION.OBSTACLES)
-    phys:ClearCollisionMask()
-    phys:CollidesWith(COLLISION.WORLD)
-    phys:CollidesWith(COLLISION.OBSTACLES)
+	phys:SetCollisionMask(
+		COLLISION.WORLD,
+		COLLISION.OBSTACLES
+	)
     phys:SetCylinder(radius, 3)
 
     inst.AnimState:SetBank(bank)
@@ -662,9 +663,10 @@ local function boat_player_collision_template(radius)
     phys:SetDamping(5)
 	phys:SetRestitution(0)
     phys:SetCollisionGroup(COLLISION.BOAT_LIMITS)
-    phys:ClearCollisionMask()
-    phys:CollidesWith(COLLISION.CHARACTERS)
-    phys:CollidesWith(COLLISION.WORLD)
+	phys:SetCollisionMask(
+		COLLISION.CHARACTERS,
+		COLLISION.WORLD
+	)
     phys:SetTriangleMesh(build_boat_collision_mesh(radius + 0.1, 3))
 
     inst:AddTag("NOBLOCK")
@@ -693,10 +695,11 @@ local function boat_item_collision_template(radius)
     phys:SetFriction(0)
     phys:SetDamping(5)
     phys:SetCollisionGroup(COLLISION.BOAT_LIMITS)
-    phys:ClearCollisionMask()
-    phys:CollidesWith(COLLISION.ITEMS)
-    phys:CollidesWith(COLLISION.FLYERS)
-    phys:CollidesWith(COLLISION.WORLD)
+	phys:SetCollisionMask(
+		COLLISION.ITEMS,
+		COLLISION.FLYERS,
+		COLLISION.WORLD
+	)
     phys:SetTriangleMesh(build_boat_collision_mesh(radius + 0.2, 3))
     --Boats currently need to not go to sleep because
     --constraints will cause a crash if either the target object or the source object is removed from the physics world

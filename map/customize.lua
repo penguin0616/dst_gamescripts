@@ -394,6 +394,7 @@ local WORLDGEN_GROUP = {
 			["terrariumchest"] = {value = "default", image = "terrarium.tex", desc = yesno_descriptions, world={"forest"}},
 			["stageplays"] = {value = "default", image = "stageplays.tex", desc = yesno_descriptions, world={"forest"}},
 			["junkyard"] = {value = "default", image = "junkyard.tex", desc = yesno_descriptions, world={"forest"}},
+			["balatro"] = {value = "default", image = "balatro_machine.tex", desc = yesno_descriptions, world={"forest"}},
 		}
 	},
 	["global"] = {
@@ -576,6 +577,7 @@ local WORLDSETTINGS_GROUP = {
             ["rifts_frequency"] = {value = "default", image = "lunarrift_portal.tex", desc = frequency_descriptions, world={"forest"}},
             ["rifts_enabled"] = {value = "default", image = "lunarrift_portal.tex", desc = riftsenabled_descriptions, world={"forest"}},
             ["lunarhail_frequency"] = {value = "default", image = "lunar_hail.tex", desc = frequency_descriptions, world={"forest"}},
+			["wanderingtrader_enabled"] = {value = "always", image = "wanderingtrader.tex", desc = enableddisabled_descriptions, world={"forest"}},
 
 			["weather"] = {value = "default", image = "rain.tex", desc = frequency_descriptions, world={"forest", "cave"}},
 
@@ -626,6 +628,7 @@ local WORLDSETTINGS_GROUP = {
 			["year_of_the_catcoon"] = {value = "default", image = "yot_catcoonshrine.tex", masteroption = true, master_controlled = true, order = 9},
 			["year_of_the_bunnyman"] = {value = "default", image = "yotr_rabbitshrine.tex", masteroption = true, master_controlled = true, order = 10},
 			["year_of_the_dragonfly"] = {value = "default", image = "yotd_dragonshrine.tex", masteroption = true, master_controlled = true, order = 11},
+			["year_of_the_snake"] = {value = "default", image = "yots_wormshrine.tex", masteroption = true, master_controlled = true, order = 12},			
 		}
 	},
 	["global"] = {

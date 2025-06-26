@@ -115,6 +115,10 @@ local function FindItemToPickupAndStore_filter(inst, item, match_item)
         return
     end
 
+    if item.Physics ~= nil and item.Physics:IsActive() and checkbit(item.Physics:GetCollisionMask(), inst.Physics:GetCollisionGroup()) then
+        return -- No items with physics and that we collide with, like pickable creatures, moles...
+    end
+
     if not item:IsOnPassablePoint() or item:GetCurrentPlatform() ~= inst:GetCurrentPlatform() then
         return
     end

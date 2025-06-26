@@ -682,3 +682,164 @@ function HasMeatInInventoryFor(inst)
 end
 
 --------------------------------------------------------------------------
+-- These may be used on both client and server so have the callbacks acceptable for both uses.
+-- Return nil for no count logic and go back to default logic.
+
+-- For items going into a player's inventory.
+-- TODO(JBK): Logic for swapping items is not handled.
+DesiredMaxTakeCountFunctions = {}
+function SetDesiredMaxTakeCountFunction(prefab, callback)
+    DesiredMaxTakeCountFunctions[prefab] = callback
+end
+function GetDesiredMaxTakeCountFunction(prefab)
+    return DesiredMaxTakeCountFunctions[prefab]
+end
+
+-- For items going out of a player's inventory they need their own support added.
+--DesiredMaxPutCountFunctions = {}
+--function SetDesiredMaxPutCountFunction(prefab, callback)
+--    DesiredMaxPutCountFunctions[prefab] = callback
+--end
+--function GetDesiredMaxPutCountFunction(prefab)
+--    return DesiredMaxPutCountFunctions[prefab]
+--end
+
+--------------------------------------------------------------------------
+
+PICKABLE_FOOD_PRODUCTS =
+{
+    ancientfruit_nightvision = true,
+    berries = true,
+    berries_juicy = true,
+    blue_cap = true,
+    cactus_meat = true,
+    carrot = true,
+    cave_banana = true,
+    cutlichen = true,
+    green_cap = true,
+    red_cap = true,
+    wormlight_lesser = true,
+}
+
+function IsFoodSourcePickable(inst)
+    return inst.components.pickable ~= nil and PICKABLE_FOOD_PRODUCTS[inst.components.pickable.product]
+end
+
+--------------------------------------------------------------------------
+-- wobycourier
+
+function GetWobyCourierChestPosition(inst)
+    if inst.woby_commands_classified then
+        local x = inst.woby_commands_classified.chest_posx:value()
+        local z = inst.woby_commands_classified.chest_posz:value()
+        if x ~= WOBYCOURIER_NO_CHEST_COORD and z ~= WOBYCOURIER_NO_CHEST_COORD then
+            return x, z
+        end
+    end
+    return nil, nil
+end
+
+--------------------------------------------------------------------------
+-- Placer
+
+HAS_AXISALIGNED_MOD_ENABLED = nil
+KNOWN_AXISALIGNED_MODS = {
+    "workshop-351325790",
+}
+
+function UpdateAxisAlignmentValues(intervals)
+    TUNING.AXISALIGNEDPLACEMENT_INTERVALS = intervals
+    TUNING.AXISALIGNEDPLACEMENT_CIRCLESIZE = math.min(8 / intervals, 4)
+    if ThePlayer then
+        ThePlayer:PushEvent("refreshaxisalignedplacementintervals")
+    end
+end
+
+local DEFAULT_AXISALIGNMENT_VALUE = 1
+AXISALIGNMENT_VALUES = {
+    {text = STRINGS.UI.OPTIONS.AXISALIGNEDPLACEMENT_SIZE_HALFWALL, data = 2},
+    {text = STRINGS.UI.OPTIONS.AXISALIGNEDPLACEMENT_SIZE_WALL, data = DEFAULT_AXISALIGNMENT_VALUE},
+    {text = STRINGS.UI.OPTIONS.AXISALIGNEDPLACEMENT_SIZE_HALFTILE, data = 0.5},
+    {text = STRINGS.UI.OPTIONS.AXISALIGNEDPLACEMENT_SIZE_TILE, data = 0.25},
+}
+function CycleAxisAlignmentValues() -- Do not save with Profile.
+    local closestdiff
+    local closestindex
+    local intervals = TUNING.AXISALIGNEDPLACEMENT_INTERVALS
+    local defaultindex
+    for i, v in ipairs(AXISALIGNMENT_VALUES) do
+        local diff = math.abs(v.data - intervals)
+        if closestdiff == nil or diff < closestdiff then
+            closestdiff = diff
+            closestindex = i
+        end
+        if v.data == DEFAULT_AXISALIGNMENT_VALUE then
+            defaultindex = i
+        end
+    end
+    if not closestindex then
+        closestindex = defaultindex or 1 -- Default got eliminated somewhere.
+    end
+
+    closestindex = closestindex + 1
+    if closestindex > #AXISALIGNMENT_VALUES then
+        closestindex = 1
+    end
+
+    UpdateAxisAlignmentValues(AXISALIGNMENT_VALUES[closestindex].data)
+end
+
+--------------------------------------------------------------------------
+-- wagpunk_arena_manager
+WAGPUNK_ARENA_COLLISION_DATA = { -- x, z, rotation, sfxlooper
+    {-28, -20, 315, false},
+    {-28, -10, 0, false},
+    {-28, 0, 0, true},
+    {-28, 10, 0, false},
+    {-28, 20, 45, false},
+    {-24, 20, 45, false},
+    {-24, 24, 45, true},
+    {-20, 24, 45, false},
+    {-20, 28, 45, false},
+    {-10, 28, 90, false},
+    {0, 28, 90, true},
+    {10, 28, 90, false},
+    {20, 28, 135, false},
+    {20, 24, 135, false},
+    {24, 24, 135, true},
+    {24, 20, 135, false},
+    {28, 20, 135, false},
+    {28, 10, 180, false},
+    {28, 0, 180, true},
+    {28, -10, 180, false},
+    {28, -20, 225, false},
+    {24, -20, 225, false},
+    {24, -24, 225, true},
+    {20, -24, 225, false},
+    {20, -28, 225, false},
+    {10, -28, 270, false},
+    {0, -28, 270, true},
+    {-10, -28, 270, false},
+    {-20, -28, 315, false},
+    {-20, -24, 315, false},
+    {-24, -24, 315, true},
+    {-24, -20, 315, false},
+}
+
+--------------------------------------------------------------------------
+
+local CLEARSPOT_CANT_TAGS = {"INLIMBO", "NOCLICK", "FX", "irreplaceable"}
+function ClearSpotForRequiredPrefabAtXZ(x, z, r)
+    local _world = TheWorld
+    local ents = TheSim:FindEntities(x, 0, z, MAX_PHYSICS_RADIUS, nil, CLEARSPOT_CANT_TAGS)
+    for _, ent in ipairs(ents) do
+        if ent:IsValid() then
+            local radius = ent:GetPhysicsRadius(0) + r
+            if ent:GetDistanceSqToPoint(x, 0, z) < radius * radius then
+                DestroyEntity(ent, _world)
+            end
+        end
+    end
+end
+
+--------------------------------------------------------------------------

@@ -67,6 +67,7 @@ function FollowCamera:SetDefault()
     self.pangain = 4
     self.headinggain = 20
     self.distancegain = 1
+	self.continuousdistancegain = 6
 
     self.zoomstep = 4
     self.distancetarget = 30
@@ -190,7 +191,6 @@ function FollowCamera:Shake(type, duration, speed, scale)
     if Profile:IsScreenShakeEnabled() then
         self.shake = CameraShake(type, duration, speed, scale)
     end
-    TheInputProxy:AddVibration(VIBRATION_CAMERA_SHAKE, duration, math.max(0, math.min(scale * .25, 1)), false)
 end
 
 function FollowCamera:SetTarget(inst)
@@ -288,16 +288,42 @@ function FollowCamera:GetHeadingTarget()
 end
 
 function FollowCamera:SetHeadingTarget(r)
-    self.headingtarget = r
+	self.headingtarget = normalize(r)
+	self.headingdelta = nil
+	self.lastheadingdelta = nil
+end
+
+--V2C: Added for controller camera modifer rotation, where we rotate
+--     smoothly instead of periodically snapping 45 degrees. "delta"
+--     controls the speed of rotation based on analog control.
+function FollowCamera:SetContinuousHeadingTarget(r, delta)
+	self.headingtarget = normalize(r)
+
+	if self.lastheadingdelta and (self.lastheadingdelta > 0) == (delta > 0) then
+		self.headingdelta = (delta + self.lastheadingdelta) / 2
+	else
+		self.headingdelta = delta
+	end
+end
+
+function FollowCamera:ContinuousZoomDelta(delta)
+	if self.lastzoomdelta and (self.lastzoomdelta > 0) == (delta > 0) then
+		delta = (delta + self.lastzoomdelta) / 2
+	end
+	self.distancetarget = math.clamp(self.distancetarget + delta, self.mindist, self.maxdist)
+	self.lastzoomdelta = delta
+	self.time_since_zoom = 0
 end
 
 function FollowCamera:ZoomIn(step)
     self.distancetarget = math.max(self.mindist, self.distancetarget - (step or self.zoomstep))
+	self.lastzoomdelta = nil
     self.time_since_zoom = 0
 end
 
 function FollowCamera:ZoomOut(step)
     self.distancetarget = math.min(self.maxdist, self.distancetarget + (step or self.zoomstep))
+	self.lastzoomdelta = nil
     self.time_since_zoom = 0
 end
 
@@ -314,8 +340,11 @@ function FollowCamera:Snap()
     self.currentscreenxoffset = #self.screenoffsetstack > 0 and self.screenoffsetstack[1].xoffset or 0
     self.currentpos.x, self.currentpos.y, self.currentpos.z = self.targetpos:Get()
     self.heading = self.headingtarget
+	self.headingdelta = nil
+	self.lastheadingdelta = nil
     if not self.lockdistance then
         self.distance = self.distancetarget
+		self.lastzoomdelta = nil
     end
 
     self.pitch = lerp(self.mindistpitch, self.maxdistpitch, (self.distance - self.mindist) / (self.maxdist - self.mindist))
@@ -399,22 +428,53 @@ function FollowCamera:Update(dt, dontupdatepos)
         end
     end
 
-    self.heading = normalize(self.heading)
-    self.headingtarget = normalize(self.headingtarget)
+	if self.headingdelta then
+		--continuous rotation (no 45 degree snapping) using camera control modifier + analog
+		self.heading = normalize(self.heading + self.headingdelta)
+		self.lastheadingdelta = self.headingdelta
+		self.headingdelta = nil
+	else
+		local diffheading = math.abs(self.heading - self.headingtarget)
+		if diffheading <= 0.01 or diffheading >= 359.99 then
+			self.heading = self.headingtarget
+			self.lastheadingdelta = nil
+		else
+			local newheading =
+				normalize(lerp(
+					self.heading,
+					diffheading <= 180 and
+					self.headingtarget or
+					self.headingtarget + (self.heading > self.headingtarget and 360 or -360),
+					dt * self.headinggain
+				))
 
-    local diffheading = math.abs(self.heading - self.headingtarget)
+			if self.lastheadingdelta then
+				--continous rotation stopped; finish lerping to headingtarget at our last speed
 
-    self.heading =
-        diffheading <= .01 and
-        self.headingtarget or
-        lerp(self.heading,
-            diffheading <= 180 and
-            self.headingtarget or
-            self.headingtarget + (self.heading > self.headingtarget and 360 or -360),
-            dt * self.headinggain)
+				--DiffAngle is [0, 180], whereas normalize is [0, 360]
+				diffheading = DiffAngle(newheading, self.heading)
+				if math.abs(self.lastheadingdelta) < diffheading then 
+					self.heading = self.heading + self.lastheadingdelta
+					local min = self.lastheadingdelta < 0 and -0.1 or 0.1
+					self.lastheadingdelta = min * 0.1 + self.lastheadingdelta * 0.95
+				else
+					self.heading = newheading
+					self.lastheadingdelta = nil
+				end
+			else
+				--default 45 degree step camera rotation; i.e. fixed lerp speed
+				self.heading = newheading
+			end
+		end
+	end
 
-    self.distance = math.abs(self.distance - self.distancetarget) > .01 and lerp(self.distance, self.distancetarget, dt * self.distancegain)
-					or self.distancetarget
+	if math.abs(self.distance - self.distancetarget) <= 0.01 then
+		self.distance = self.distancetarget
+		self.lastzoomdelta = nil
+	else
+		--lerp much faster when doing continuous zoom (using camera control modifier + analog)
+		self.distance = lerp(self.distance, self.distancetarget, dt * (self.lastzoomdelta and self.continuousdistancegain or self.distancegain))
+	end
 
     self.pitch = lerp(self.mindistpitch, self.maxdistpitch, (self.distance - self.mindist) / (self.maxdist - self.mindist))
 

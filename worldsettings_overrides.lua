@@ -3040,11 +3040,25 @@ local applyoverrides_pre = {
         local tuning_vars =
         {
             none = {
-                ACIDRAIN_ENALBED = false
+                ACIDRAIN_ENABLED = false
             },
             --[[
             always = {
-                ACIDRAIN_ENALBED = true,
+                ACIDRAIN_ENABLED = true,
+            },
+            ]]
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
+    wanderingtrader_enabled = function(difficulty)
+        local tuning_vars =
+        {
+            none = {
+                WANDERINGTRADER_ENABLED = false
+            },
+            --[[
+            always = {
+                WANDERINGTRADER_ENABLED = true,
             },
             ]]
         }

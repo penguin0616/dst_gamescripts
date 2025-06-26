@@ -148,6 +148,13 @@ local TRIGGERED_DANGER_MUSIC =
         "dontstarve/music/music_epicfight_worm",
     },
 
+	wagboss =
+	{
+		"dontstarve/music/music_epicfight_wagboss_1",
+		"", --silence
+		"dontstarve/music/music_epicfight_wagboss_2",
+	},
+
     default =
     {
         "dontstarve/music/music_epicfight_ruins",
@@ -174,6 +181,7 @@ local BUSYTHEMES = {
     PILLOWFIGHT = 16,
     RIDEOFTHEVALKYRIE = 17,
     BOATRACE = 18,
+	BALATRO = 19,
 }
 
 --------------------------------------------------------------------------
@@ -443,6 +451,14 @@ local function StartBoatRaceMusic(player)
     StartBusyTheme(player, BUSYTHEMES.BOATRACE, "dontstarve/music/music_boatrace", 2)
 end
 
+local function StartBalatroMusic(player)
+	if _dangertask or _pirates_near then
+		return
+	end
+
+	StartBusyTheme(player, BUSYTHEMES.BALATRO, "dontstarve/music/music_balatro", 2)
+end
+
 local function ExtendBusy()
     if _busytask ~= nil then
         _extendtime = math.max(_extendtime, GetTime() + 10)
@@ -624,18 +640,15 @@ local function CheckAction(player)
     end
 end
 
+local NON_DANGER_TAGS = {"noepicmusic", "shadow", "shadowchesspiece", "smolder", "thorny"}
 local function OnAttacked(player, data)
     if data ~= nil and
-        --For a valid client side check, shadowattacker must be
-        --false and not nil, pushed from player_classified
-        (data.isattackedbydanger == true or
-        --For a valid server side check, attacker must be non-nil
-        (data.attacker ~= nil and
-        not (data.attacker:HasTag("shadow") or
-            data.attacker:HasTag("shadowchesspiece") or
-            data.attacker:HasTag("noepicmusic") or
-            data.attacker:HasTag("thorny") or
-            data.attacker:HasTag("smolder")))) then
+            --For a valid client side check, shadowattacker must be
+            --false and not nil, pushed from player_classified
+            (data.isattackedbydanger == true or
+            --For a valid server side check, attacker must be non-nil
+            (data.attacker ~= nil and
+            not data.attacker:HasAnyTag(NON_DANGER_TAGS))) then
 
         StartDanger(player)
     end
@@ -685,6 +698,7 @@ local function StartPlayerListeners(player)
     inst:ListenForEvent("playpillowfightmusic", StartPillowFightMusic, player)
     inst:ListenForEvent("playrideofthevalkyrie", StartRideoftheValkyrieMusic, player)
     inst:ListenForEvent("playboatracemusic", StartBoatRaceMusic, player)
+	inst:ListenForEvent("playbalatromusic", StartBalatroMusic, player)
 end
 
 local function StopPlayerListeners(player)
@@ -708,6 +722,7 @@ local function StopPlayerListeners(player)
     inst:RemoveEventCallback("playpillowfightmusic", StartPillowFightMusic, player)
     inst:RemoveEventCallback("playrideofthevalkyrie", StartRideoftheValkyrieMusic, player)
     inst:RemoveEventCallback("playboatracemusic", StartBoatRaceMusic, player)
+	inst:RemoveEventCallback("playbalatromusic", StartBalatroMusic, player)
 end
 
 local function OnPhase(inst, phase)

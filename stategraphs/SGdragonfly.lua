@@ -70,9 +70,7 @@ local function SwitchToFlyOverPhysics(inst)
         inst.sg.mem.flyoverphysics = true
         CommonHandlers.UpdateHitRecoveryDelay(inst)
         inst.hit_recovery = TUNING.DRAGONFLY_FLYING_HIT_RECOVERY
-        inst.Physics:ClearCollisionMask()
-        inst.Physics:CollidesWith(COLLISION.GROUND)
-        inst.Physics:CollidesWith(COLLISION.GIANTS)
+        inst.Physics:ClearCollidesWith(COLLISION.CHARACTERS)
     end
 end
 
@@ -80,10 +78,7 @@ local function SwitchToCombatPhysics(inst)
     if inst.sg.mem.flyoverphysics then
         inst.sg.mem.flyoverphysics = false
         inst.hit_recovery = TUNING.DRAGONFLY_HIT_RECOVERY
-        inst.Physics:ClearCollisionMask()
-        inst.Physics:CollidesWith(COLLISION.GROUND)
-        inst.Physics:CollidesWith(COLLISION.CHARACTERS)
-        inst.Physics:CollidesWith(COLLISION.GIANTS)
+		inst.Physics:CollidesWith(COLLISION.CHARACTERS)
     end
 end
 

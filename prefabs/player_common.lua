@@ -327,24 +327,31 @@ end
 
 local function ShouldAcceptItem(inst, item)
     if inst:HasTag("playerghost") then
-        return item.prefab == "reviver" and inst:IsOnPassablePoint()
+        return item:HasTag("reviver") and inst:IsOnPassablePoint()
     else
         return item.components.inventoryitem ~= nil
     end
 end
 
 local function OnGetItem(inst, giver, item)
-    if item ~= nil and item.prefab == "reviver" and inst:HasTag("playerghost") then
+    if item ~= nil and item:HasTag("reviver") and inst:HasTag("playerghost") then
         if item.skin_sound then
             item.SoundEmitter:PlaySound(item.skin_sound)
         end
+        local dohealthpenalty = not item:HasTag("noreviverhealthpenalty")
+        if item.prefab == "wortox_reviver" and giver.components.skilltreeupdater and giver.components.skilltreeupdater:IsActivated("wortox_lifebringer_2") then
+            dohealthpenalty = false
+        end
+
         item:PushEvent("usereviver", { user = giver })
         giver.hasRevivedPlayer = true
         AwardPlayerAchievement("hasrevivedplayer", giver)
         item:Remove()
         inst:PushEvent("respawnfromghost", { source = item, user = giver })
 
-        inst.components.health:DeltaPenalty(TUNING.REVIVE_HEALTH_PENALTY)
+        if dohealthpenalty then
+            inst.components.health:DeltaPenalty(TUNING.REVIVE_HEALTH_PENALTY)
+        end
         giver.components.sanity:DoDelta(TUNING.REVIVE_OTHER_SANITY_BONUS)
     elseif item ~= nil and giver.components.age ~= nil then
 		if giver.components.age:GetAgeInDays() >= TUNING.ACHIEVEMENT_HELPOUT_GIVER_MIN_AGE and inst.components.age:GetAgeInDays() <= TUNING.ACHIEVEMENT_HELPOUT_RECEIVER_MAX_AGE then
@@ -360,7 +367,7 @@ local function DropWetTool(inst, data)
     end
 
     local tool = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-    if tool ~= nil and tool:GetIsWet() and math.random() < easing.inSine(TheWorld.state.wetness, 0, .15, inst.components.moisture:GetMaxMoisture()) then
+	if tool and tool:GetIsWet() and not tool:HasTag("stickygrip") and math.random() < easing.inSine(TheWorld.state.wetness, 0, 0.15, inst.components.moisture:GetMaxMoisture()) then
         local projectile =
             data.weapon ~= nil and
             data.projectile == nil and
@@ -428,7 +435,8 @@ end
 local function OnGotNewAttunement(inst, data)
     --can safely assume we are attuned if we just "got" an attunement
     if not inst._isrezattuned and
-        data.proxy:IsAttunableType("remoteresurrector") then
+            (data.proxy:IsAttunableType("remoteresurrector")
+            or data.proxy:IsAttunableType("gravestoneresurrector")) then
         --NOTE: parenting automatically handles visibility
         SpawnPrefab("attune_out_fx").entity:SetParent(inst.entity)
         inst._isrezattuned = true
@@ -439,8 +447,10 @@ local function OnAttunementLost(inst, data)
     --cannot assume that we are no longer attuned
     --to a type when we lose a single attunement!
     if inst._isrezattuned and
-        data.proxy:IsAttunableType("remoteresurrector") and
-        not inst.components.attuner:HasAttunement("remoteresurrector") then
+            (data.proxy:IsAttunableType("remoteresurrector") and
+            not inst.components.attuner:HasAttunement("remoteresurrector"))
+            or (data.proxy:IsAttunableType("gravestoneresurrector") and
+            not inst.components.attuner:HasAttunement("gravestoneresurrector")) then
         --remoterezsource flag means we're currently performing remote resurrection,
         --so we will lose attunement in the process, but we don't really want an fx!
         if not inst.remoterezsource then
@@ -577,6 +587,13 @@ fns.OnRiftMoonTile = function(inst, on_rift_moon)
 	inst.components.sanity:EnableLunacy(on_rift_moon, "rift_moon")
 end
 
+fns.OnFullMoonEnlightenment = function(inst, isfullmoon)
+    local is_post_rift_lunacy = isfullmoon
+        and TheWorld.components.riftspawner ~= nil
+        and TheWorld.components.riftspawner:GetLunarRiftsEnabled()
+    inst.components.sanity:EnableLunacy(is_post_rift_lunacy, "rifts_opened")
+end
+
 --------------------------------------------------------------------------
 --Equipment Breaking Events
 --------------------------------------------------------------------------
@@ -673,6 +690,7 @@ local function RegisterMasterEventListeners(inst)
 	inst:ListenForEvent("on_LUNAR_MARSH_tile", fns.OnRiftMoonTile)
 	inst:WatchWorldState("isnight", fns.OnAlterNight)
 	inst:WatchWorldState("isalterawake", fns.OnAlterNight)
+    inst:WatchWorldState("isfullmoon", fns.OnFullMoonEnlightenment)
 
     -- Merm murder event
     inst:ListenForEvent("murdered", ex_fns.OnMurderCheckForFishRepel)
@@ -829,7 +847,8 @@ local function OnPlayerJoined(inst)
         --to hit the callbacks to spawn fx for those
         inst:ListenForEvent("gotnewattunement", OnGotNewAttunement)
         inst:ListenForEvent("attunementlost", OnAttunementLost)
-        inst._isrezattuned = inst.components.attuner:HasAttunement("remoteresurrector")
+        inst._isrezattuned = (inst.components.attuner:HasAttunement("remoteresurrector")
+            or inst.components.attuner:HasAttunement("gravestoneresurrector"))
     end
 end
 
@@ -958,7 +977,16 @@ end
 
 local function OnSetOwner(inst)
     inst.name = inst.Network:GetClientName()
+    if inst.userid and inst.userid ~= "" then
+        inst:RemoveTag("player_" .. inst.userid)
+    end
     inst.userid = inst.Network:GetUserID()
+    if inst.userid and inst.userid ~= "" then
+        inst:AddTag("player_" .. inst.userid)
+        if TheWorld.ismastersim then
+            print("User ID", inst.userid, "assigned ownership to entity", inst) -- NOTES(JBK): This is not just a debug print leave it here.
+        end
+    end
     inst.playercolour = inst.Network:GetPlayerColour()
     if TheWorld.ismastersim then
         TheNet:SetIsClientInWorld(inst.userid, true)
@@ -1641,6 +1669,25 @@ fns.ApplyAnimScale = function(inst, source, scale)
     end
 end
 
+fns.OnDebuffAdded = function(inst, name, debuff)
+    --if name == "super_elixir_buff" then    
+    if name == "elixir_buff" then
+        fns.SetSymbol(inst, debuff.prefab)
+    end
+end
+
+fns.OnDebuffRemoved = function(inst, name, debuff)
+   if name == "elixir_buff" then
+        fns.SetSymbol(inst, 0)
+    end
+end
+
+fns.SetSymbol = function(inst,symbol)
+    if TheWorld.ismastersim and inst._buffsymbol:value() ~= symbol then
+        inst._buffsymbol:set(symbol)
+    end
+end
+
 --------------------------------------------------------------------------
 -- NOTES(JBK): Used to apply overrides to skins for states on things like Wurt.
 local function ApplySkinOverrides(inst)
@@ -1787,6 +1834,13 @@ local function OnParasiteOverlayDirty(inst)
     end
 end
 
+
+local function OnHealthbarBuffSymbolDirty(inst)
+    if ThePlayer ~= nil and  ThePlayer == inst then
+        ThePlayer:PushEvent("clienthealthbuffdirty", inst._buffsymbol:value())
+    end
+end
+
 --------------------------------------------------------------------------
 
 --V2C: starting_inventory passed as a parameter here is now deprecated
@@ -1809,6 +1863,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_actions_item.zip"),
         Asset("ANIM", "anim/player_cave_enter.zip"),
         Asset("ANIM", "anim/player_actions_uniqueitem.zip"),
+        Asset("ANIM", "anim/player_actions_uniqueitem_2.zip"),        
         Asset("ANIM", "anim/player_actions_useitem.zip"),
         Asset("ANIM", "anim/player_actions_bugnet.zip"),
         Asset("ANIM", "anim/player_actions_unsaddle.zip"),
@@ -1915,9 +1970,11 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_emotes.zip"), -- item emotes
         Asset("ANIM", "anim/player_emote_extra.zip"), -- item emotes
         Asset("ANIM", "anim/player_emotes_dance2.zip"), -- item emotes
+        Asset("ANIM", "anim/player_emotes_hat_tip.zip"), -- item emotes
         Asset("ANIM", "anim/player_mount_emotes_extra.zip"), -- item emotes
 
         Asset("ANIM", "anim/player_mount_emotes_dance2.zip"), -- item emotes
+        Asset("ANIM", "anim/player_mount_emotes_hat_tip.zip"), -- item emotes
         Asset("ANIM", "anim/player_mount_pet.zip"),
         Asset("ANIM", "anim/player_hatdance.zip"),
         Asset("ANIM", "anim/player_bow.zip"),
@@ -1933,6 +1990,9 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 		Asset("ANIM", "anim/player_channelcast_hit.zip"),
 		Asset("ANIM", "anim/player_channelcast_oh_basic.zip"), --channelcast using off-hand (can walk)
 		Asset("ANIM", "anim/player_channelcast_oh_hit.zip"),
+		Asset("ANIM", "anim/player_pushing.zip"),
+        Asset("ANIM", "anim/player_drink.zip"),
+
 
         Asset("ANIM", "anim/player_sandstorm.zip"),
         Asset("ANIM", "anim/player_tiptoe.zip"),
@@ -1956,6 +2016,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_mount_frozen.zip"),
         Asset("ANIM", "anim/player_mount_groggy.zip"),
         Asset("ANIM", "anim/player_mount_encumbered.zip"),
+        Asset("ANIM", "anim/player_mount_drink.zip"),
 
         Asset("ANIM", "anim/player_mount_sandstorm.zip"),
         Asset("ANIM", "anim/player_mount_hit_darkness.zip"),
@@ -1977,10 +2038,12 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
         Asset("ANIM", "anim/player_acting.zip"),
 		Asset("ANIM", "anim/player_closeinspect.zip"),
-
         Asset("ANIM", "anim/player_attack_pillows.zip"),
-
         Asset("ANIM", "anim/player_shadow_thrall_parasite.zip"),
+		Asset("ANIM", "anim/player_pouncecapture.zip"),
+
+        Asset("ANIM", "anim/wortox_teleport_reviver.zip"),
+        Asset("ANIM", "anim/player_grave_spawn.zip"),
 
         Asset("INV_IMAGE", "skull_"..name),
 
@@ -2008,19 +2071,23 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         "tears",
         "shock_fx",
         "splash",
-        "globalmapicon",
+        "globalmapiconnamed",
         "lavaarena_player_revive_from_corpse_fx",
         "superjump_fx",
 		"washashore_puddle_fx",
 		"spawnprotectionbuff",
         "battreefx",
 		"impact",
-
+        "ghostvision_buff",
+        "elixir_player_forcefield",
+        
         -- Player specific classified prefabs
         "player_classified",
         "inventory_classified",
         "wonkey",
         "spellbookcooldown",
+
+
     }
 
     if starting_inventory ~= nil or customprefabs ~= nil then
@@ -2076,12 +2143,15 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 		inst.IsChannelCastingItem = fns.IsChannelCastingItem -- Didn't want to make channelcaster a networked component
         inst.EnableMovementPrediction = EnableMovementPrediction
         inst.EnableBoatCamera = fns.EnableBoatCamera
+		inst.EnableTargetLocking = ex_fns.EnableTargetLocking
         inst.ShakeCamera = fns.ShakeCamera
         inst.SetGhostMode = SetGhostMode
         inst.IsActionsVisible = IsActionsVisible
         inst.CanSeeTileOnMiniMap = ex_fns.CanSeeTileOnMiniMap
         inst.CanSeePointOnMiniMap = ex_fns.CanSeePointOnMiniMap
+        inst.GetSeeableTilePercent = ex_fns.GetSeeableTilePercent
         inst.MakeGenericCommander = ex_fns.MakeGenericCommander
+		inst.CommandWheelAllowsGameplay = ex_fns.CommandWheelAllowsGameplay
 	end
 
     local max_range = TUNING.MAX_INDICATOR_RANGE * 1.5
@@ -2166,6 +2236,25 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         end
     end
 
+local function auratest(inst, target, can_initiate)
+
+    if target.components.minigame_participator ~= nil then
+        return false
+    end
+
+    if (target:HasTag("player") and not TheNet:GetPVPEnabled()) or target:HasTag("ghost") or target:HasTag("noauradamage") then
+        return false
+    end
+
+    if target.components.follower and target.components.follower.leader ~= nil and
+         target.components.follower.leader:HasTag("player") then
+        return false
+    end
+
+    return true
+end
+
+
     local function fn()
         local inst = CreateEntity()
 
@@ -2193,6 +2282,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         end
         inst.AnimState:PlayAnimation("idle")
 
+        -- NOTES(JBK): Keep these in sync with wortox_decoy. [WSDCSC]
         inst.AnimState:Hide("ARM_carry")
         inst.AnimState:Hide("HAT")
         inst.AnimState:Hide("HAIR_HAT")
@@ -2212,6 +2302,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.AnimState:AddOverrideBuild("player_hit_darkness")
         inst.AnimState:AddOverrideBuild("player_receive_gift")
         inst.AnimState:AddOverrideBuild("player_actions_uniqueitem")
+        inst.AnimState:AddOverrideBuild("player_actions_uniqueitem_2")
         inst.AnimState:AddOverrideBuild("player_wrap_bundle")
         inst.AnimState:AddOverrideBuild("player_lunge")
         inst.AnimState:AddOverrideBuild("player_attack_leap")
@@ -2228,7 +2319,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.AnimState:AddOverrideBuild("player_actions_farming")
         inst.AnimState:AddOverrideBuild("player_actions_cowbell")
 
-        inst.AnimState:AddOverrideBuild("player_shadow_thrall_parasite")        
+        inst.AnimState:AddOverrideBuild("player_shadow_thrall_parasite")
 
         inst.DynamicShadow:SetSize(1.3, .6)
 
@@ -2258,6 +2349,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:AddTag(UPGRADETYPES.MAST.."_upgradeuser")
         inst:AddTag(UPGRADETYPES.CHEST.."_upgradeuser")
         inst:AddTag("usesvegetarianequipment")
+        inst:AddTag("ghostlyelixirable") -- for ghostlyelixirable component
 
 		SetInstanceFunctions(inst)
 
@@ -2307,6 +2399,10 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
 		inst:AddComponent("spellbookcooldowns")
 
+        inst:AddComponent("avengingghost")
+            --
+        inst:AddComponent("ghostlyelixirable")
+
 		if TheNet:GetServerGameMode() == "lavaarena" then
             inst:AddComponent("healthsyncer")
         end
@@ -2351,7 +2447,9 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst._parasiteoverlay = net_bool(inst.GUID, "localplayer._parasiteoverlay","parasiteoverlaydirty")
         inst._parasiteoverlay:set(false)
         inst._blackout = net_bool(inst.GUID, "localplayer._blackout","blackoutdirty")
-        inst._blackout:set(false)        
+        inst._blackout:set(false)
+        inst._buffsymbol = net_hash(inst.GUID, "healthbarbuff._buffsymbol", "healthbarbuffsymboldirty")
+        inst._buffsymbol:set(0)
 
         if IsSpecialEventActive(SPECIAL_EVENTS.YOTB) then
             inst.yotb_skins_sets = net_shortint(inst.GUID, "player.yotb_skins_sets")
@@ -2375,13 +2473,13 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
         inst:ListenForEvent("finishseamlessplayerswap", onfinishseamlessplayerswap)
 
-
         inst._piratemusicstate = net_bool(inst.GUID, "player.piratemusicstate", "piratemusicstatedirty")
         inst._piratemusicstate:set(false)
         inst:ListenForEvent("piratemusicstatedirty", OnPirateMusicStateDirty)
 
         
         inst:ListenForEvent("parasiteoverlaydirty", OnParasiteOverlayDirty)
+        inst:ListenForEvent("healthbarbuffsymboldirty", OnHealthbarBuffSymbolDirty)
         inst:ListenForEvent("blackoutdirty", OnBlackoutDirty)
         
 
@@ -2453,7 +2551,10 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:AddComponent("birdattractor")
 
         inst:AddComponent("maprevealable")
+        inst.components.maprevealable:SetIconPrefab("globalmapiconnamed")
+        inst.components.maprevealable:SetIconTag("globalmapicon_player")
         inst.components.maprevealable:SetIconPriority(10)
+        inst.components.maprevealable:SetOnIconCreatedFn(ex_fns.MapRevealable_OnIconCreatedFn)
 
 		inst:AddComponent("embarker")
 		inst.components.embarker.embark_speed = TUNING.WILSON_RUN_SPEED
@@ -2594,6 +2695,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:AddComponent("pinnable")
         inst:AddComponent("debuffable")
         inst.components.debuffable:SetFollowSymbol("headbase", 0, -200, 0)
+        inst.components.debuffable.ondebuffadded = fns.OnDebuffAdded
+        inst.components.debuffable.ondebuffremoved = fns.OnDebuffRemoved
 
         inst:AddComponent("workmultiplier")
 
@@ -2623,6 +2726,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.components.singingshelltrigger.trigger_range = TUNING.SINGINGSHELL_TRIGGER_RANGE
 
         inst:AddComponent("timer")
+        inst:AddComponent("counter")
 
         inst:AddComponent("cursable")
 
@@ -2633,6 +2737,16 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 		inst.components.channelcaster:SetOnStopChannelingFn(fns.OnStopChannelCastingItem)
 
         inst:AddComponent("experiencecollector")
+
+        -------------------------------------
+
+        local aura = inst:AddComponent("aura")
+        aura.radius = 4
+        aura.tickperiod = 1
+        aura.ignoreallies = true
+        aura.auratestfn = auratest
+        aura:Enable(false)
+        --------------------------------------
 
         inst:AddInherentAction(ACTIONS.PICK)
         inst:AddInherentAction(ACTIONS.SLEEPIN)
@@ -2701,6 +2815,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.IsActing = ex_fns.IsActing
 
 		fns.OnAlterNight(inst)
+        fns.OnFullMoonEnlightenment(inst)
 
         --V2C: used by multiplayer_portal_moon
         inst.SaveForReroll = SaveForReroll

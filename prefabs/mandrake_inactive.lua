@@ -11,7 +11,7 @@ local prefabs =
     "mandrake_active",
 }
 
-local function onpickup(inst)
+local function onputininventory(inst)
     inst.AnimState:PlayAnimation("object")
 end
 
@@ -123,7 +123,7 @@ local function rawfn()
     inst.components.edible.hungervalue = TUNING.CALORIES_HUGE
     inst.components.edible:SetOnEatenFn(oneaten_raw)
 
-    inst.components.inventoryitem:SetOnPickupFn(onpickup)
+    inst.components.inventoryitem:SetOnPutInInventoryFn(onputininventory)
 
     return inst
 end

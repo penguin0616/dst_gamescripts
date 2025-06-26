@@ -238,6 +238,14 @@ function Inventory:IsHolding(item, checkcontainer)
     end
 end
 
+function Inventory:FindItem(fn)
+	if self.inst.components.inventory then
+		return self.inst.components.inventory:FindItem(fn)
+	else
+		return self.classified and self.classified:FindItem(fn)
+	end
+end
+
 function Inventory:GetActiveItem()
     if self.inst.components.inventory ~= nil then
         return self.inst.components.inventory:GetActiveItem()
@@ -369,6 +377,14 @@ function Inventory:TakeActiveItemFromHalfOfSlot(slot)
         self.inst.components.inventory:TakeActiveItemFromHalfOfSlot(slot)
     elseif self.classified ~= nil then
         self.classified:TakeActiveItemFromHalfOfSlot(slot)
+    end
+end
+
+function Inventory:TakeActiveItemFromCountOfSlot(slot)
+    if self.inst.components.inventory ~= nil then
+        self.inst.components.inventory:TakeActiveItemFromCountOfSlot(slot)
+    elseif self.classified ~= nil then
+        self.classified:TakeActiveItemFromCountOfSlot(slot)
     end
 end
 
@@ -519,6 +535,14 @@ function Inventory:MoveItemFromHalfOfSlot(slot, container)
         self.inst.components.inventory:MoveItemFromHalfOfSlot(slot, container)
     elseif self.classified ~= nil then
         self.classified:MoveItemFromHalfOfSlot(slot, container)
+    end
+end
+
+function Inventory:MoveItemFromCountOfSlot(slot, container, count)
+    if self.inst.components.inventory ~= nil then
+        self.inst.components.inventory:MoveItemFromCountOfSlot(slot, container, count)
+    elseif self.classified ~= nil then
+        self.classified:MoveItemFromCountOfSlot(slot, container, count)
     end
 end
 

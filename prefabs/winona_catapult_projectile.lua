@@ -498,7 +498,7 @@ local function fn()
     inst.Physics:SetDamping(0)
 	inst.Physics:SetRestitution(0)
     inst.Physics:SetCollisionGroup(COLLISION.ITEMS)
-    inst.Physics:CollidesWith(COLLISION.GROUND)
+	inst.Physics:SetCollisionMask(COLLISION.GROUND)
     inst.Physics:SetSphere(.4)
 
     inst:AddTag("NOCLICK")
@@ -506,6 +506,7 @@ local function fn()
 
     --projectile (from complexprojectile component) added to pristine state for optimization
     inst:AddTag("projectile")
+	inst:AddTag("complexprojectile")
 
     inst.hideanim = net_bool(inst.GUID, "winona_catapult_projectile.hideanim", "hideanimdirty")
 	inst.element = net_tinybyte(inst.GUID, "winona_catapult_projectile.element", "elementdirty")

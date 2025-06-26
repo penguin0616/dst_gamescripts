@@ -519,6 +519,7 @@ local SGTagsToEntTags =
     ["sleeping"] = true,
     ["working"] = true,
     ["boathopping"] = true,
+	["shouldautopausecontrollerinventory"] = true, --autopause even if "doing", see "openslingshotmods" state
 }
 
 function StateGraphInstance:HasState(statename)
@@ -617,11 +618,23 @@ function StateGraphInstance:HasStateTag(tag)
 end
 
 function StateGraphInstance:HasAnyStateTag(...)
-	for i = 1, select("#", ...) do
-		if self.tags[select(i, ...)] then
-            return true
-        end
-    end
+	local tags = select(1, ...)
+	if type(tags) == "table" then
+		for i, v in ipairs(tags) do
+			if self.tags[v] then
+				return true
+			end
+		end
+	else
+		if self.tags[tags] then
+			return true
+		end
+		for i = 2, select("#", ...) do
+			if self.tags[select(i, ...)] then
+				return true
+			end
+		end
+	end
     return false
 end
 

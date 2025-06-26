@@ -34,6 +34,11 @@ return {
             NOKELP = "only_used_by_wurt",
             HASMERMLEADER = "only_used_by_wurt",
 		},
+        APPLYELIXIR =
+        {
+            TOO_SUPER = "This one seems a little strong.",
+            NO_ELIXIRABLE = "only_used_by_wendy",
+        },
         APPLYMODULE =
         {
             COOLDOWN = "only_used_by_wx78",
@@ -130,6 +135,13 @@ return {
             GENERIC = "I can't cook right now.",
             INUSE = "Looks like we had the same idea.",
             TOOFAR = "It's too far away!",
+        },
+        DEPLOY = {
+            HERMITCRAB_RELOCATE = "It's empty, I shell try again later.",
+        },
+        DIRECTCOURIER_MAP =
+        {
+            NOTARGET = "only_used_by_walter",
         },
 		DISMANTLE =
 		{
@@ -307,6 +319,7 @@ return {
             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+            BIRDSBLOCKED = "only_used_by_waxwell_and_wicker",
             NOFIRES =       "only_used_by_waxwell_and_wicker",
             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
@@ -346,6 +359,8 @@ return {
 			INUSE = "They're elbow deep in junk right now.",
             NOTMASTERCHEF = "I'm not a fancy enough chef for that.",
             NOTAMERM = "I don't think the merms would be happy about that.",
+            NOTSOULJARHANDLER = "It's not my cup of tea.",
+            RESTRICTED = "Case closed... to me.",
 		},
         SADDLE =
         {
@@ -377,6 +392,8 @@ return {
 			NOTALLOWED = "That can't go in there.",
 			INUSE = "I should wait my turn.",
             NOTMASTERCHEF = "I'm not a fancy enough chef for that.",
+            NOTSOULJARHANDLER = "I'm not soul'ed on it.",
+            RESTRICTED = "Case closed... to me.",
 		},
         TEACH =
         {
@@ -414,6 +431,10 @@ return {
             BEEF_BELL_INVALID_TARGET = "I couldn't possibly!",
             BEEF_BELL_ALREADY_USED = "This beefalo already belongs to someone else.",
             BEEF_BELL_HAS_BEEF_ALREADY = "I don't need a whole herd.",
+
+			NOT_MINE = "This belongs to someone else.",
+
+			CANNOT_FIX_DRONE = "It's too damaged to fix.",
         },
 		USEKLAUSSACKKEY =
         {
@@ -434,11 +455,41 @@ return {
         {
             DOESNTWORK = "I guess they don't support the arts here.",
             ALREADYACTIVE = "He must be busy with another contest somewhere.",
+            NORESPONSE = "He must have wandered off.",
+            RIGHTTHERE = "He's busy.",
         },
         YOTB_UNLOCKSKIN =
         {
             ALREADYKNOWN = "I'm seeing a familiar pattern... I've learned this already!",
         },
+		CARVEPUMPKIN =
+		{
+			INUSE = "Looks like we had the same idea.",
+			BURNING = "The flames are hurting me.",
+		},
+		DECORATESNOWMAN =
+		{
+			INUSE = "It's being snowmanned!",
+			HASHAT = "I can't top that hat!",
+			STACKEDTOOHIGH = "It's too high!",
+			MELTING = "I can't! It's about to melt!",
+		},
+        MUTATE = 
+        {
+            NOGHOST = "only_used_by_wendy",
+            NONEWMOON = "only_used_by_wendy",
+            NOFULLMOON = "only_used_by_wendy",
+            NOTNIGHT = "only_used_by_wendy",
+            CAVE = "only_used_by_wendy",
+        },
+		MODSLINGSHOT =
+		{
+			NOSLINGSHOT = "only_used_by_walter",
+		},
+		POUNCECAPTURE =
+		{
+			MISSED = "Drat, I missed.",
+		},
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -713,7 +764,23 @@ return {
     {
         "only_used_by_wortox",
     },
+    ANNOUNCE_SOUL_EMPTY_NICE =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_SOUL_EMPTY_NAUGHTY =
+    {
+        "only_used_by_wortox",
+    },
     ANNOUNCE_SOUL_FEW =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_SOUL_FEW_NICE =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_SOUL_FEW_NAUGHTY =
     {
         "only_used_by_wortox",
     },
@@ -721,17 +788,52 @@ return {
     {
         "only_used_by_wortox",
     },
+    ANNOUNCE_SOUL_MANY_NICE =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_SOUL_MANY_NAUGHTY =
+    {
+        "only_used_by_wortox",
+    },
     ANNOUNCE_SOUL_OVERLOAD =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_SOUL_OVERLOAD_NICE =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_SOUL_OVERLOAD_NAUGHTY =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_SOUL_OVERLOAD_WARNING =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_SOUL_OVERLOAD_AVOIDED =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_PANFLUTE_BUFF_ACTIVE =
+    {
+        "only_used_by_wortox",
+    },
+    ANNOUNCE_PANFLUTE_BUFF_USED =
     {
         "only_used_by_wortox",
     },
 
     --walter specfic
+	ANNOUNCE_AMMO_SLOT_OVERSTACKED = "only_used_by_walter",
 	ANNOUNCE_SLINGHSOT_OUT_OF_AMMO =
 	{
 		"only_used_by_walter",
 		"only_used_by_walter",
 	},
+	ANNOUNCE_SLINGHSOT_NO_AMMO_SKILL = "only_used_by_walter",
+	ANNOUNCE_SLINGHSOT_NO_PARTS_SKILL = "only_used_by_walter",
 	ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT =
 	{
         "only_used_by_walter",
@@ -739,6 +841,38 @@ return {
 	ANNOUNCE_STORYTELLING_ABORT_NOT_NIGHT =
 	{
         "only_used_by_walter",
+	},
+	ANNOUNCE_WOBY_RETURN =
+	{
+		"only_used_by_walter",
+	},
+	ANNOUNCE_WOBY_SIT =
+	{
+		"only_used_by_walter",
+	},
+	ANNOUNCE_WOBY_FOLLOW =
+	{
+		"only_used_by_walter",
+	},
+	ANNOUNCE_WOBY_PRAISE =
+	{
+		"only_used_by_walter",
+	},
+	ANNOUNCE_WOBY_FORAGE =
+	{
+		"only_used_by_walter",
+	},
+	ANNOUNCE_WOBY_WORK =
+	{
+		"only_used_by_walter",
+	},
+	ANNOUNCE_WOBY_COURIER =
+	{
+		"only_used_by_walter",
+	},
+	ANNOUNCE_WOBY_REMEMBERCHEST_FAIL =
+	{
+		"only_used_by_walter",
 	},
 
     -- wx specific
@@ -753,9 +887,15 @@ return {
 
     ANNOUNCE_ROYALTY =
     {
-        "Your majesty.",
-        "Your highness.",
-        "My liege!",
+        "Your Majesty.",
+        "Your Highness.",
+        "My Liege!",
+    },
+    ANNOUNCE_ROYALTY_JOKER =
+    {
+        "Your \"Majesty\".",
+        "Your \"Highness\".",
+        "My \"Liege\"!",
     },
 
     ANNOUNCE_ATTACH_BUFF_ELECTRICATTACK    = "I feel positively electric!",
@@ -838,6 +978,8 @@ return {
         "only_used_by_wendy",
     },
 	ANNOUNCE_SISTURN_FULL = "only_used_by_wendy",
+    ANNOUNCE_SISTURN_FULL_EVIL = "only_used_by_wendy",
+    ANNOUNCE_SISTURN_FULL_BLOSSOM = "only_used_by_wendy",
     ANNOUNCE_ABIGAIL_DEATH = "only_used_by_wendy",
     ANNOUNCE_ABIGAIL_RETRIEVE = "only_used_by_wendy",
 	ANNOUNCE_ABIGAIL_LOW_HEALTH = "only_used_by_wendy",
@@ -1007,6 +1149,26 @@ return {
 
 	-- Hallowed Nights 2024
 	ANNOUNCE_NOPUMPKINCARVINGONFIRE = "This pumpkin is cooked.",
+
+	-- Winter's Feast 2024
+	ANNOUNCE_SNOWBALL_TOO_BIG = "It won't get any bigger than that.",
+	ANNOUNCE_SNOWBALL_NO_SNOW = "There's not enough snow on the ground.",
+
+    -- Meta 5
+    ANNOUNCE_WENDY_BABYSITTER_SET = "only_used_by_wendy", 
+    ANNOUNCE_WENDY_BABYSITTER_STOP = "only_used_by_wendy",
+
+	ANNOUNCE_WORTOX_REVIVER_FAILTELEPORT = "Hmm. What went wrong?",
+
+    ANNOUNCE_NO_ABIGAIL_FLOWER = "only_used_by_wendy",
+
+    ANNOUNCE_ELIXIR_BOOSTED = "It's like a BOO-ster Shot.",
+    ANNOUNCE_ELIXIR_GHOSTVISION = "I feel fright headed.",
+    ANNOUNCE_ELIXIR_PLAYER_SPEED = "I think I could lift a horse.",
+
+    ANNOUNCE_ELIXIR_TOO_SUPER = "This one seems a little strong.",
+
+    ANNOUNCE_LUNARGUARDIAN_INCOMING = "It's back!",
 
 	BATTLECRY =
 	{
@@ -1700,7 +1862,7 @@ return {
 		},
         BEEQUEENHIVEGROWN = "How in science did it get so big?!",
         BEEGUARD = "It's guarding the queen.",
-        HIVEHAT = "The world seems less a little crazy when I wear it.",
+        HIVEHAT = "The world seems a little less crazy when I wear it.",
         MINISIGN =
         {
             GENERIC = "I could draw better than that!",
@@ -1932,10 +2094,13 @@ return {
         CHESSPIECE_EYEOFTERROR = "It's giving me a stony stare.",
         CHESSPIECE_TWINSOFTERROR = "That was a terrible night of very uncomfortable eye contact.",
         CHESSPIECE_DAYWALKER = "Now he's off who-knows-were.",
+        CHESSPIECE_DAYWALKER2 = "This belongs in a junkpile!",
         CHESSPIECE_DEERCLOPS_MUTATED = "This sculpture is a bit of an eyesore.",
         CHESSPIECE_WARG_MUTATED = "It's just missing that horrible breath.",
         CHESSPIECE_BEARGER_MUTATED = "Somehow it seems crankier than the real one.",
         CHESSPIECE_SHARKBOI = "There's just some-fin about it.",
+        CHESSPIECE_WORMBOSS = "It still shakes me up.",
+        CHESSPIECE_YOTS = "I usually try to stay away from gold diggers.",
 
         CHESSJUNK1 = "A pile of broken chess pieces.",
         CHESSJUNK2 = "Another pile of broken chess pieces.",
@@ -3965,14 +4130,28 @@ return {
             "It's a scientific fact that petting a good dog will improve your day.",
         },
 		WALTERHAT = "I was never exactly \"outdoorsy\" in my youth.",
-		SLINGSHOT = "The bane of windows everywhere.",
+		SLINGSHOT =
+		{
+			GENERIC = "The bane of windows everywhere.",
+			NOT_MINE = "only_used_by_walter",
+		},
 		SLINGSHOTAMMO_ROCK = "Shots to be slinged.",
 		SLINGSHOTAMMO_MARBLE = "Shots to be slinged.",
 		SLINGSHOTAMMO_THULECITE = "Shots to be slinged.",
         SLINGSHOTAMMO_GOLD = "Shots to be slinged.",
+		SLINGSHOTAMMO_HONEY = "Shots to be slinged.",
         SLINGSHOTAMMO_SLOW = "Shots to be slinged.",
         SLINGSHOTAMMO_FREEZE = "Shots to be slinged.",
 		SLINGSHOTAMMO_POOP = "Poop projectiles.",
+		SLINGSHOTAMMO_STINGER = "Shots to be stinged?",
+		SLINGSHOTAMMO_MOONGLASS = "Shots to be slinged... slung?",
+		SLINGSHOTAMMO_GELBLOB = "Shots to be slinged.",
+		SLINGSHOTAMMO_SCRAPFEATHER = "Shots to be slinged.",
+        SLINGSHOTAMMO_DREADSTONE = "Shots to be slinged.",
+        SLINGSHOTAMMO_GUNPOWDER = "Shots to be slinged.",
+        SLINGSHOTAMMO_LUNARPLANTHUSK = "Shots to be slinged.",
+        SLINGSHOTAMMO_PUREBRILLIANCE = "Shots to be slinged.",
+        SLINGSHOTAMMO_HORRORFUEL = "Shots to be slinged.",
         PORTABLETENT = "I feel like I haven't had a proper night's sleep in ages!",
         PORTABLETENT_ITEM = "This requires some a-tent-tion.",
 
@@ -4005,15 +4184,22 @@ return {
 		GHOSTLYELIXIR_ATTACK = "Ah yes. Very science-y.",
 		GHOSTLYELIXIR_SPEED = "Ah yes. Very science-y.",
 		GHOSTLYELIXIR_RETALIATION = "Ah yes. Very science-y.",
+        GHOSTLYELIXIR_REVIVE = "Ah yes. Very science-y.",
 		SISTURN =
 		{
 			GENERIC = "Some flowers would liven it up a bit.",
 			SOME_FLOWERS = "A few more flowers should do the trick.",
 			LOTS_OF_FLOWERS = "What a brilliant boo-quet!",
+            LOTS_OF_FLOWERS_EVIL = "It gives me a bad feeling.",
+            LOTS_OF_FLOWERS_BLOSSOM = "What an eerie sound.",   
 		},
 
         --Wortox
         WORTOX_SOUL = "only_used_by_wortox", --only wortox can inspect souls
+        --WORTOX_DECOY is not needed because it uses the default WORTOX inspection.
+        WORTOX_NABBAG = "He's a chip off the ol' Krampus.",
+        WORTOX_REVIVER = "I can guess what that's fur.",
+        WORTOX_SOULJAR = "It's rather jarring if you think about it.",
 
         PORTABLECOOKPOT_ITEM =
         {
@@ -5194,6 +5380,7 @@ return {
         RECORD_MAIN = "Needs more trumpet.", -- Unused.
         RECORD_WORKTOBEDONE = "One of their more experimental tracks.", -- Unused.
         RECORD_HALLOWEDNIGHTS = "Spooktacular!",
+        RECORD_BALATRO = "Irresistible! It's like it touches my mind!",
 
         ARCHIVE_ORCHESTRINA_MAIN = "It's like they made it puzzling on purpose.",
 
@@ -5404,7 +5591,7 @@ return {
 
         CHEST_MIMIC_REVEALED = "Horrible! Definitely horrible!",
 
-        GELBLOB_STORAGE = { 
+        GELBLOB_STORAGE = {
             GENERIC  = "Looks empty.",
             FULL = "It's keeping it... fresh?",
         },
@@ -5412,7 +5599,7 @@ return {
         GELBLOB_BOTTLE = "I tend to keep things bottled up.",
 
         PLAYER_HOSTED =
-        {        
+        {
             GENERIC = "They're occupied.",
             ME = "I'm beside myself.",
         },
@@ -5424,6 +5611,116 @@ return {
         SHADOWTHRALL_PARASITE = "It makes my brain itch.",
 
         PUMPKINCARVER = "Who's up for a gourd time?",
+		SNOWMAN =
+		{
+			GENERIC = "It's snow laughing matter!",
+			SNOWBALL = "Someone knew their roll!",
+		},
+        SNOWBALL_ITEM = "Not throwing this chance away...",
+
+        -- Year of the Snake
+        YOTS_SNAKESHRINE =
+        {
+            GENERIC = "It's bursting with promise!",
+            EMPTY = "It has a monstrous appetite.",
+            BURNT = "Willow!",
+        },
+        YOTS_WORM = "It comes from lesser depths.",
+        YOTS_LANTERN_POST = 
+        {
+            GENERIC = "It's post to be there.",
+            BURNT = "It's post post",
+        },
+        YOTS_LANTERN_POST_ITEM = "Where's it post to go?",
+        CHESSPIECE_DEPTHWORM  = "It's a worm, figures.",
+
+        -- Meta 5
+        GHOSTLYELIXIR_LUNAR = "Ah yes. Very science-y.",
+        GHOSTLYELIXIR_SHADOW = "Ah yes. Very science-y.",
+
+		SLINGSHOTMODKIT = "Walter's really giving it his best shot.",
+		SLINGSHOT_BAND_PIGSKIN = "Walter's really giving it his best shot.",
+		SLINGSHOT_BAND_TENTACLE = "Walter's really giving it his best shot.",
+		SLINGSHOT_BAND_MIMIC = "Walter's really giving it his best shot.",
+		SLINGSHOT_FRAME_BONE = "Walter's really giving it his best shot.",
+		SLINGSHOT_FRAME_GEMS = "Walter's really giving it his best shot.",
+		SLINGSHOT_FRAME_WAGPUNK_0 = "Walter's really giving it his best shot.",
+		SLINGSHOT_FRAME_WAGPUNK = "Walter's really giving it his best shot.",
+		SLINGSHOT_HANDLE_STICKY = "Walter's really giving it his best shot.",
+		SLINGSHOT_HANDLE_JELLY = "Walter's really giving it his best shot.",
+		SLINGSHOT_HANDLE_SILK = "Walter's really giving it his best shot.",
+		SLINGSHOT_HANDLE_VOIDCLOTH = "Walter's really giving it his best shot.",
+
+		WOBY_TREAT = "I think I'm barking up the wrong tree with this snack.",
+		BANDAGE_BUTTERFLYWINGS = "This bandage is really winging it.",
+		PORTABLEFIREPIT_ITEM = "Finally, fire on the go! Patent pending.",
+        SLINGSHOTAMMO_CONTAINER = "It's full of potential... energy!",
+
+        ELIXIR_CONTAINER = "That's more of a mortician's bag than a basket.",
+        GHOSTFLOWERHAT = "This makes me thirsty.",
+        WENDY_RESURRECTIONGRAVE = "Strangely reassuring!",
+        GRAVEURN =
+        {
+            GENERIC = "This urn has a lack of spirit.",
+            HAS_SPIRIT = "This spirit has urned a new home!",
+        },
+
+        SHALLOW_GRAVE = "Better you than me.",
+        THULECITEBUGNET = "Anyone catch the latest buzz?",
+
+        -- Deck of Cards
+        DECK_OF_CARDS = "Are we playing with a full deck?",
+        PLAYING_CARD = "It's fifty-one short of a deck.",
+        BALATRO_MACHINE = "I'm game for a game.",
+
+		-- Rifts 5
+		GESTALT_CAGE =
+		{
+			GENERIC = "Drat, empty.",
+			FILLED = "It's occupied.",
+		},
+		WAGBOSS_ROBOT_SECRET = "How intriguing!",
+        WAGBOSS_ROBOT = "Fascinating!",
+        WAGBOSS_ROBOT_POSSESSED = "Has anyone tried resetting it?",
+		WAGBOSS_ROBOT_LEG = "It withstood for a while!",
+		ALTERGUARDIAN_PHASE1_LUNARRIFT = "You look the same but different.",
+		ALTERGUARDIAN_PHASE1_LUNARRIFT_GESTALT = "This must be the one he wants.",
+        ALTERGUARDIAN_PHASE4_LUNARRIFT = "Haven't you broken enough science?!",
+		WAGDRONE_ROLLING =
+        {
+            GENERIC = "They just drone on and on.",
+            INACTIVE = "We should take it for a whirl.",
+            DAMAGED = "I could repair it or harvest for parts.",
+            FRIENDLY = "Spin it to win it!",
+        },
+        WAGDRONE_FLYING =
+        {
+            GENERIC = "Like a bot out of hell.",
+            INACTIVE = "We should take it for a whirl.",
+            DAMAGED = "It's too damaged to fix but I can salvage the parts.",
+        },
+		WAGDRONE_PARTS = "Now I can put a positive spin on things.",
+		WAGDRONE_BEACON = "This will help keep things contained.",
+
+        WAGPUNK_WORKSTATION = "Let's get to work!",
+        WAGPUNK_LEVER = "It's a good time to switch things up.",
+        WAGPUNK_FLOOR_KIT = "What is this floor?",
+        WAGPUNK_CAGEWALL = "Wall or nothing!",
+
+		WAGSTAFF_ITEM_1 = "Strange, this glove is not a projection.",
+		WAGSTAFF_ITEM_2 = "This clipboard is... real.",
+
+        HERMITCRAB_RELOCATION_KIT = "The crab's new home will be pitcher perfect.",
+
+        WANDERINGTRADER =
+        {
+            REVEALED = "If we trade, will we beef friends!",
+            GENERIC = "Looks like it's about to turn.",
+        },
+
+        GESTALT_GUARD_EVOLVED = "These ones have an explosive personality.",
+        FLOTATIONCUSHION = "Oh, buoyancy!",
+        LUNAR_SEED = "This formed part of its crown.",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",
@@ -5446,4 +5743,8 @@ return {
         TALLBIRDEGG_CRACKED = "Mmm. Beaky.",
 		WINTERSFEASTFUEL = "Tastes like the holidays.",
     },
+
+    WENDY_SKILLTREE_EASTEREGG = "only_used_by_wendy",
+
+
 }

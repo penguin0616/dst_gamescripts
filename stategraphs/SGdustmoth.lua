@@ -59,6 +59,11 @@ local states =
         tags = { "idle", "canrotate" },
 
         onenter = function(inst, playanim)
+            if inst._giveblueprint then
+                inst._giveblueprint = nil
+                inst.sg:GoToState("sneeze", {dropblueprint = true,})
+                return
+            end
             inst.Physics:Stop()
             if playanim then
                 inst.AnimState:PlayAnimation(playanim)
@@ -95,7 +100,8 @@ local states =
         name = "sneeze",
         tags = { "busy" },
 
-        onenter = function(inst)
+        onenter = function(inst, data)
+            inst.sg.statemem.dropblueprint = data and data.dropblueprint or nil
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("sneeze")
         end,
@@ -104,6 +110,10 @@ local states =
         {
             TimeEvent(36*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound(inst._sounds.sneeze)
+                if inst.sg.statemem.dropblueprint then
+                    inst.sg.statemem.dropblueprint = nil
+                    inst:TryToDropBlueprint()
+                end
             end),
         },
 

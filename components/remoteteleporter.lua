@@ -93,11 +93,15 @@ function RemoteTeleporter:Teleport(doer)
         exclude_radius_sq = exclude_radius_sq * exclude_radius_sq
 
         local x, y, z = doer.Transform:GetWorldPosition()
+		local map = TheWorld.Map
+		local inarena = map:IsPointInWagPunkArenaAndBarrierIsUp(x, y, z)
         local closest_outofcamera, closest_outofcameradsq, closest_outofcamerax, closest_outofcameraz
         local furthest_incamera, furthest_incameradsq, furthest_incamerax, furthest_incameraz
         for target, _ in pairs(targets) do
-            if self.checkdestinationfn == nil or self.checkdestinationfn(self.inst, target, doer) then
-                local x1, y1, z1 = target.Transform:GetWorldPosition()
+			local x1, y1, z1 = target.Transform:GetWorldPosition()
+			if inarena and not map:IsPointInWagPunkArena(x1, y1, z1) then
+				--blocked by arena barrier
+			elseif self.checkdestinationfn == nil or self.checkdestinationfn(self.inst, target, doer) then
                 local dsq = distsq(x, z, x1, z1)
                 if dsq > exclude_radius_sq then
                     if closest_outofcameradsq == nil or dsq < closest_outofcameradsq then

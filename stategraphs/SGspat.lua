@@ -15,6 +15,7 @@ local events=
     CommonHandlers.OnLocomote(true,true),
     CommonHandlers.OnSleep(),
     CommonHandlers.OnFreeze(),
+	CommonHandlers.OnAttacked(nil, math.huge), --hit delay only for projectiles
 
     EventHandler("doattack", function(inst, data)
         if not inst.components.health:IsDead() then
@@ -29,11 +30,6 @@ local events=
         end
     end),
     EventHandler("death", function(inst) inst.sg:GoToState("death") end),
-    EventHandler("attacked", function(inst)
-        if not inst.components.health:IsDead() and not inst.sg:HasStateTag("busy") then
-            inst.sg:GoToState("hit")
-        end
-    end),
     EventHandler("heardhorn", function(inst, data)
         if not inst.components.health:IsDead()
            and not inst.sg:HasStateTag("attack")
@@ -270,7 +266,7 @@ CommonStates.AddRunStates(
         }
     })
 
-CommonStates.AddSimpleState(states,"hit", "hit")
+CommonStates.AddSimpleState(states, "hit", "hit", nil, nil, nil, { onenter = CommonHandlers.UpdateHitRecovery })
 CommonStates.AddFrozenStates(states)
 
 CommonStates.AddSleepStates(states,

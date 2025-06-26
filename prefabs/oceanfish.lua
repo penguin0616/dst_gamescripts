@@ -21,6 +21,15 @@ local function flopsoundcheck(inst)
 end
 
 local function Flop(inst)
+	if not inst.components.inventoryitem.canbepickedup then
+		if inst.flop_task ~= nil then
+			inst.flop_task:Cancel()
+			inst.flop_task = nil
+		end
+
+		return -- Don't flop if we can't be picked up, this likely means we're in a special place/state.
+	end
+
 	if inst.flopsnd1 then inst.flopsnd1:Cancel() inst.flopsnd1 = nil end
 	if inst.flopsnd2 then inst.flopsnd2:Cancel() inst.flopsnd2 = nil end
 	if inst.flopsnd3 then inst.flopsnd3:Cancel() inst.flopsnd3 = nil end

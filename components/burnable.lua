@@ -4,46 +4,26 @@ local SourceModifierList = require("util/sourcemodifierlist")
 local willow_ember_common = require("prefabs/willow_ember_common")
 
 local function oncanlight(self)
-    if not self.burning and self.canlight then
-        self.inst:AddTag("canlight")
-        self.inst:RemoveTag("nolight")
-    else
-        self.inst:RemoveTag("canlight")
-        self.inst:AddTag("nolight")
-    end
+    local can_light_state = not self.burning and self.canlight
+    self.inst:AddOrRemoveTag("canlight", can_light_state)
+    self.inst:AddOrRemoveTag("nolight", not can_light_state)
 end
 
 local function onburning(self, burning)
-    if burning then
-        self.inst:AddTag("fire")
-    else
-        self.inst:RemoveTag("fire")
-    end
+    self.inst:AddOrRemoveTag("fire", burning)
     oncanlight(self)
 end
 
 local function onsmoldering(self, smoldering)
-    if smoldering then
-        self.inst:AddTag("smolder")
-    else
-        self.inst:RemoveTag("smolder")
-    end
+    self.inst:AddOrRemoveTag("smolder", smoldering)
 end
 
 local function onignorefuel(self, ignorefuel)
-    if ignorefuel then
-        self.inst:AddTag("burnableignorefuel")
-    else
-        self.inst:RemoveTag("burnableignorefuel")
-    end
+    self.inst:AddOrRemoveTag("burnableignorefuel", ignorefuel)
 end
 
 local function onstokeablefire(self, stokeablefire)
-    if stokeablefire then
-        self.inst:AddTag("stokeablefire")
-    else
-        self.inst:RemoveTag("stokeablefire")
-    end
+    self.inst:AddOrRemoveTag("stokeablefire", stokeablefire)
 end
 
 local Burnable = Class(function(self, inst)

@@ -200,6 +200,19 @@ function PlayerActionPicker:GetPointSpecialActions(pos, useitem, right, useretic
 	return {}
 end
 
+--pos: double click coords; nil when double tapping direction instead of mouse
+--dir: WASD/analog dir; nil if neutral (NOTE: this may be in a different direction than pos!)
+--target: double click mouseover target; nil when tapping direction instead of mouse
+--remote: only pos2 is sent to server, similar to actions that are aimed toward reticule pos
+function PlayerActionPicker:GetDoubleClickActions(pos, dir, target)
+	--V2C: pos2 may be returned (when dir or target is in a different direction than pos)
+	if self.doubleclickactionsfn then
+		local actions, pos2 = self.doubleclickactionsfn(self.inst, pos, dir, target)
+		return self:SortActionList(actions, pos2 or pos)
+	end
+	return {}
+end
+
 function PlayerActionPicker:GetEquippedItemActions(target, useitem, right)
     local actions = {}
 
@@ -352,7 +365,8 @@ function PlayerActionPicker:GetRightClickActions(position, target, spellbook)
 
     if target ~= nil and self.containers[target] then
         --check if we have container widget actions
-        actions = self:GetSceneActions(target, true)
+        local isreadonlycontainer = target.replica.container and target.replica.container:IsReadOnlyContainer()
+        actions = isreadonlycontainer and {} or self:GetSceneActions(target, true)
     elseif useitem ~= nil then
         --if we're specifically using an item, see if we can use it on the target entity
         if useitem:IsValid() then
@@ -446,9 +460,14 @@ function PlayerActionPicker:DoGetMouseActions(position, target, spellbook)
 		if isaoetargeting then
 			position = self.inst.components.playercontroller:GetAOETargetingPos()
 			spellbook = spellbook or self.inst.components.playercontroller:GetActiveSpellBook()
-		else
-			position = TheInput:GetWorldPosition()
-			target = target or TheInput:GetWorldEntityUnderMouse()
+        else
+            if self.inst.components.playercontroller:IsAxisAlignedPlacement() then
+                position = self.inst.components.playercontroller:GetPlacerPosition()
+            end
+            if position == nil then
+                position = TheInput:GetWorldPosition()
+            end
+            target = target or TheInput:GetWorldEntityUnderMouse()
 		end
 
         local cansee
@@ -489,6 +508,14 @@ function PlayerActionPicker:DoGetMouseActions(position, target, spellbook)
 
     local lmb = not isaoetargeting and self:GetLeftClickActions(position, target)[1] or nil
     local rmb = not wantsaoetargeting and self:GetRightClickActions(position, target, spellbook)[1] or nil
+
+	--@V2C: Filtering out local UI actions that we do not really want as explicit actions.
+	--e.g. CLOSESPELLBOOK we can just [Esc] or R.Click anywhere to achieve the same thing,
+	--     so we'd rather not have the player highlighted with an action prompt.
+	--     (NOTE: We still generate these actions so that they block lower priority ones.)
+	if rmb and rmb.action == ACTIONS.CLOSESPELLBOOK and rmb.target == rmb.doer then
+		rmb = nil
+	end
 
     return lmb, rmb ~= nil and (lmb == nil or lmb.action ~= rmb.action) and rmb or nil
 end

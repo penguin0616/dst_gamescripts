@@ -122,14 +122,33 @@ function Equippable:Unequip(owner)
 end
 
 function Equippable:GetWalkSpeedMult()
-    return self.walkspeedmult or 1.0
+
+    local speed = self.walkspeedmult or 1.0
+
+    local owner = self.inst.components.inventoryitem and self.inst.components.inventoryitem.owner
+    if speed < 1 and self.isequipped and owner and owner:HasTag("vigorbuff") then
+        speed = math.min(1, speed + 0.25)
+    end
+
+    return speed
 end
 
+--V2C: reminder to update replica version as well XD
 function Equippable:IsRestricted(target)
+	if not target:HasTag("player") then
+		--restricted tags and links only apply to players
+		return false
+	end
+    local linkeditem = self.inst.components.linkeditem
+    if linkeditem and linkeditem:IsEquippableRestrictedToOwner() then
+        local owneruserid = linkeditem:GetOwnerUserID()
+        if owneruserid and owneruserid ~= target.userid then
+            return true
+        end
+    end
     return self.restrictedtag ~= nil
         and self.restrictedtag:len() > 0
         and not target:HasTag(self.restrictedtag)
-        and target:HasTag("player") --restricted tags only apply to players
 end
 
 function Equippable:IsRestricted_FromLoad(target)

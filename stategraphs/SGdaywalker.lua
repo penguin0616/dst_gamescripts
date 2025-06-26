@@ -27,6 +27,13 @@ local function IsPlayerMelee(data) --"attacked" event data
 			))
 end
 
+local function hit_recovery_skip_cooldown_fn(inst, last_t, delay)
+	--no skipping when we're stalking or dodging (hit_recovery increased)
+	return inst.hit_recovery == TUNING.DAYWALKER_HIT_RECOVERY
+		and inst.components.combat:InCooldown()
+		and inst.sg:HasStateTag("idle")
+end
+
 local events =
 {
 	CommonHandlers.OnLocomote(true, true),
@@ -57,7 +64,7 @@ local events =
 				end
 			end
 			if (not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("caninterrupt")) and
-				not CommonHandlers.HitRecoveryDelay(inst) then
+				not CommonHandlers.HitRecoveryDelay(inst, nil, nil, hit_recovery_skip_cooldown_fn) then
 				inst.sg:GoToState("hit", playermelee or inst.sg.statemem.trytired)
 			end
 		end
@@ -222,32 +229,81 @@ for k, v in pairs(COLLAPSIBLE_WORK_ACTIONS) do
 	table.insert(COLLAPSIBLE_TAGS, k.."_workable")
 end
 local NON_COLLAPSIBLE_TAGS = { "FX", --[["NOCLICK",]] "DECOR", "INLIMBO" }
+local FOOTSTEP_NON_COLLAPSIBLE_TAGS = { "FX", --[["NOCLICK",]] "DECOR", "INLIMBO", "event_trigger" }
 
-local function DoAOEWork(inst, dist, radius, targets)
+--Each step a bit under 1 second.
+--The timeout is for resetting the counter to reach threshold, in case he's
+--not stuck stationary, but is still trapped bouncing around in small area.
+--Also could be stunlocked while trying to run through, slowing down steps.
+local TRAMPLE_TIMEOUT = 5 --seconds
+local TRAMPLE_THRESHOLD = 5 --steps
+
+local function _OnTrampleTimeout(inst, trampledelays, target)
+	trampledelays[target] = nil
+end
+
+local function DoAOEWork(inst, dist, radius, targets, overridenontags, trampledelays)
 	local x, y, z = inst.Transform:GetWorldPosition()
 	if dist ~= 0 then
 		local rot = inst.Transform:GetRotation() * DEGREES
 		x = x + dist * math.cos(rot)
 		z = z - dist * math.sin(rot)
 	end
-	for i, v in ipairs(TheSim:FindEntities(x, y, z, radius, nil, NON_COLLAPSIBLE_TAGS, COLLAPSIBLE_TAGS)) do
-		if not (targets ~= nil and targets[v]) and v:IsValid() and not v:IsInLimbo() and v.components.workable ~= nil then
-			local work_action = v.components.workable:GetWorkAction()
-			--V2C: nil action for NPC_workable (e.g. campfires)
-			if (work_action == nil and v:HasTag("NPC_workable")) or
-				(v.components.workable:CanBeWorked() and work_action ~= nil and COLLAPSIBLE_WORK_ACTIONS[work_action.id])
+	for i, v in ipairs(TheSim:FindEntities(x, y, z, radius + AOE_RANGE_PADDING, nil, overridenontags or NON_COLLAPSIBLE_TAGS, COLLAPSIBLE_TAGS)) do
+		if not (targets ~= nil and targets[v]) and v:IsValid() and not v:IsInLimbo() then
+			local range = radius + v:GetPhysicsRadius(0)
+			if v:GetDistanceSqToPoint(x, 0, z) < range * range and v.components.workable then
+				local work_action = v.components.workable:GetWorkAction()
+				--V2C: nil action for NPC_workable (e.g. campfires)
+				if (work_action == nil and v:HasTag("NPC_workable")) or
+					(v.components.workable:CanBeWorked() and work_action ~= nil and COLLAPSIBLE_WORK_ACTIONS[work_action.id])
 				then
-				if v:HasTag("daywalker_pillar") then
-					v:OnCollided(inst)
-				else
-					v.components.workable:Destroy(inst)
-					--[[if v:IsValid() and v:HasTag("stump") then
-						v:Remove()
-					end]]
+					if v:HasTag("daywalker_pillar") then
+						v:OnCollided(inst)
+					else
+						--obstacles take a few footsteps b4 getting destroyed by regular running
+						local shoulddelaytrample
+						if trampledelays and v:HasTag("blocker") then
+							local data = trampledelays[v]
+							if data == nil then
+								trampledelays[v] =
+								{
+									n = 1,
+									task = inst:DoTaskInTime(TRAMPLE_TIMEOUT, _OnTrampleTimeout, trampledelays, v),
+								}
+								shoulddelaytrample = true
+							else
+								data.n = data.n + 1
+								data.task:Cancel()
+								if data.n < TRAMPLE_THRESHOLD then
+									data.task = inst:DoTaskInTime(TRAMPLE_TIMEOUT, _OnTrampleTimeout, trampledelays, v)
+									shoulddelaytrample = true
+								else
+									trampledelays[v] = nil
+								end
+							end
+						end
+
+						if shoulddelaytrample then
+							v.components.workable:WorkedBy(inst, 0)
+						else
+							v.components.workable:Destroy(inst)
+						end
+						--[[if v:IsValid() and v:HasTag("stump") then
+							v:Remove()
+						end]]
+						if targets then
+							targets[v] = true
+						end
+					end
 				end
 			end
 		end
 	end
+end
+
+local function DoFootstepAOE(inst)
+	DoAOEWork(inst, 0.3, 1.5, nil, FOOTSTEP_NON_COLLAPSIBLE_TAGS, inst._trampledelays)
 end
 
 --------------------------------------------------------------------------
@@ -1678,8 +1734,22 @@ local states =
 	},
 }
 
+local function DoFootstep(inst, volume)
+	inst.sg.mem.lastfootstep = GetTime()
+	inst.SoundEmitter:PlaySound(inst.footstep, nil, volume)
+end
+
 SGDaywalkerCommon.AddWalkStates(states)
-SGDaywalkerCommon.AddRunStates(states, nil,
+SGDaywalkerCommon.AddRunStates(states,
+{
+	runtimeline =
+	{
+		FrameEvent(9, DoFootstep),
+		FrameEvent(10, DoFootstepAOE),
+		FrameEvent(22, DoFootstep),
+		FrameEvent(23, DoFootstepAOE),
+	},
+},
 {
 	runonenter = function(inst)
 		if not inst.components.combat:InCooldown() then

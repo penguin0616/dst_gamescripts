@@ -355,6 +355,8 @@ local function fn()
         return inst
     end
 
+    WORLDSTATETAGS.SetTagEnabled("CELESTIAL_ORB_FOUND", true) -- Will drop when the boss is fully defeated.
+
     inst.DoSpikeAttack = do_spike_attack
     inst.SetNoMusic = SetNoMusic
 

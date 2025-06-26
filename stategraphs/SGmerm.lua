@@ -381,19 +381,21 @@ local states =
         tags = {"busy"},
 
         onenter = function(inst)
-            if inst.components.locomotor ~= nil then
-                inst.components.locomotor:StopMoving()
-            end
-            inst.AnimState:PlayAnimation("eat")
+            inst.components.locomotor:StopMoving()
+			inst.AnimState:PlayAnimation("eat")
+
+			local buffaction = inst:GetBufferedAction()
+
+			inst.sg.statemem.item = buffaction ~= nil and buffaction.target or nil -- Don't care about validity.
         end,
 
         timeline =
         {
             TimeEvent(10*FRAMES, function(inst)
-                local food = inst:GetBufferedAction().target
                 inst:PerformBufferedAction()
-                if food and food:HasTag("moonglass_piece") then
-                    inst:TestForLunarMutation(food)
+
+                if inst.sg.statemem.item ~= nil then
+                    inst:TestForLunarMutation(inst.sg.statemem.item)
                 end
             end),
             TimeEvent(2*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/creatures/merm/eat") end),

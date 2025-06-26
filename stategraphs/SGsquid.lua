@@ -126,11 +126,13 @@ local function RestorRunSpeed(inst)
 end
 
 local function RestoreCollidesWith(inst)
-    inst.Physics:CollidesWith(COLLISION.WORLD
-                        + COLLISION.OBSTACLES
-                        + COLLISION.SMALLOBSTACLES
-                        + COLLISION.CHARACTERS
-                        + COLLISION.GIANTS)
+	inst.Physics:SetCollisionMask(
+    	COLLISION.WORLD,
+		COLLISION.OBSTACLES,
+		COLLISION.SMALLOBSTACLES,
+		COLLISION.CHARACTERS,
+		COLLISION.GIANTS
+	)
 end
 
 local function AddNoClick(inst)

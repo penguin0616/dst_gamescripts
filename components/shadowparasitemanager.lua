@@ -194,7 +194,6 @@ function ShadowParasiteManager:SpawnParasiteWaveForPlayer(player, joining)
                 local np = pt + offset
 
                 host.Transform:SetPosition(np:Get())
-                host.SoundEmitter:PlaySound("hallowednights2024/thrall_parasite/appear_taunt_offscreen")
 
                 if joining then
                     host:DoTaskInTime(JOIN_TARGET_DELAY, SuggestTarget, player)

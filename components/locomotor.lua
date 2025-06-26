@@ -1,17 +1,17 @@
 local SourceModifierList = require("util/sourcemodifierlist")
 
-local DOZE_OFF_TIME = 2
+--local DOZE_OFF_TIME = 2
 
-local PATHFIND_PERIOD = 1
-local PATHFIND_MAX_RANGE = 40
+--local PATHFIND_PERIOD = 1
+--local PATHFIND_MAX_RANGE = 40
 
 local STATUS_CALCULATING = 0
 local STATUS_FOUNDPATH = 1
-local STATUS_NOPATH = 2
+--local STATUS_NOPATH = 2
 
 local ARRIVE_STEP = .15
 
-local MOVE_TIMER_STOP_THRESHOLD = .1 --seconds
+local MOVE_TIMER_STOP_THRESHOLD = 0.3 --seconds
 
 local INVALID_PLATFORM_ID = "INVALID PLATFORM"
 
@@ -271,6 +271,7 @@ local LocoMotor = Class(function(self, inst)
     self.fastmultiplier = 1.3
     self.movestarttime = -1
     self.movestoptime = -1
+	--self.movetimeoverride = nil
     --self.predictmovestarttime = nil
 	--self.no_predict_fastforward = nil --see PlayerController:RepeatHeldAction()
 
@@ -367,6 +368,10 @@ function LocoMotor:StartMoveTimerInternal()
     if self.movestoptime ~= nil then
         local t = GetTime()
         if t - self.movestoptime >= MOVE_TIMER_STOP_THRESHOLD then
+			if self.movetimeoverride then
+				self.movetimeoverride:Cancel()
+				self.movetimeoverride = nil
+			end
             self.movestarttime = t
         end
         self.movestoptime = nil
@@ -379,12 +384,43 @@ function LocoMotor:StopMoveTimerInternal()
     end
 end
 
+local function ClearOverrideMoveTimer(inst, self)
+	self.movetimeoverride = nil
+end
+
+function LocoMotor:OverrideMoveTimer(movetime)
+	local t = GetTime()
+	self.movestoptime = nil
+	self.movestarttime = t - movetime
+	if not self.ismastersim then
+		if self.movetimeoverride then
+			self.movetimeoverride:Cancel()
+		end
+		self.movetimeoverride = self.inst:DoTaskInTime(2 * FRAMES, ClearOverrideMoveTimer, self)
+		self.movetimeoverride._movetime = movetime
+	end
+end
+
+--only used by clients for sending to server
+function LocoMotor:PopOverrideTimeMoving()
+	if self.movetimeoverride then
+		local movetime = self.movetimeoverride._movetime
+		self.movetimeoverride:Cancel()
+		self.movetimeoverride = nil
+		return movetime
+	end
+end
+
 function LocoMotor:RestartPredictMoveTimer()
     self.predictmovestarttime = GetTime()
 end
 
 function LocoMotor:CancelPredictMoveTimer()
     self.predictmovestarttime = nil
+end
+
+function LocoMotor:OverridePredictTimer(t)
+	self.predictmovestarttime = t
 end
 
 function LocoMotor:StopMoving()
@@ -533,7 +569,10 @@ function LocoMotor:UpdateGroundSpeedMultiplier()
             self.inst:PushEvent("walkoncreep", eventdata)
             self.wasoncreep = true
         end
-        self.groundspeedmultiplier = self.slowmultiplier
+
+        if not self.inst:HasTag("vigorbuff") then
+            self.groundspeedmultiplier = self.slowmultiplier
+        end
     else
         if self.wasoncreep and self.triggerscreep then
             self.inst:PushEvent("walkoffcreep")
@@ -541,7 +580,7 @@ function LocoMotor:UpdateGroundSpeedMultiplier()
         self.wasoncreep = false
 
         local current_ground_tile = TheWorld.Map:GetTileAtPoint(x, 0, z)
-        self.groundspeedmultiplier = (self:IsFasterOnGroundTile(current_ground_tile) or 
+        self.groundspeedmultiplier = (self:IsFasterOnGroundTile(current_ground_tile) or
                                      (self:FasterOnRoad() and ((RoadManager ~= nil and RoadManager:IsOnRoad(x, 0, z)) or GROUND_ROADWAYS[current_ground_tile])) or
                                      (oncreep and self:FasterOnCreep()))
 									 and self.fastmultiplier
@@ -664,7 +703,7 @@ function LocoMotor:Clear()
     self.atdestfn = nil
     self.wantstomoveforward = nil
     self.wantstorun = nil
-    self.bufferedaction = nil
+	self:SetBufferedAction(nil)
     --self:ResetPath()
 end
 
@@ -833,7 +872,7 @@ function LocoMotor:PushAction(bufferedaction, run, try_instant)
 			end
 		end
 		if not closeinspect then
-			local pos = self.inst.components.playercontroller:GetRemotePredictPosition()
+			local pos = self.inst.components.playercontroller:GetRemotePredictPositionExternal()
 			if pos and not self.inst.components.playercontroller.directwalking then
 				self:GoToPoint(pos, bufferedaction, run)
 			else
@@ -1231,7 +1270,7 @@ function LocoMotor:ScanForPlatform(my_platform, target_x, target_z, hop_distance
 
     local can_hop, px, pz, found_platform = self:ScanForPlatformInDir(my_platform, TheWorld.Map, my_x, my_z, dir_x, dir_z, step_count, PLATFORM_SCAN_STEP_SIZE)
     local blocked = false
-    if can_hop then
+    --[[if can_hop then
         -- If we found a place to hop to, we need to check that our path is clear of obstacles.
         local path_x, path_z = px - my_x, pz - my_z
 
@@ -1247,13 +1286,11 @@ function LocoMotor:ScanForPlatform(my_platform, target_x, target_z, hop_distance
             platform_dir_x, platform_dir_z = path_x / p_length, path_z / p_length
         end
 
-        --[[
-        if self:TestForBlocked(my_x, my_z, platform_dir_x, platform_dir_z, self.inst:GetPhysicsRadius(0), p_length) then
-            can_hop = false
-            blocked = true
-        end
-        ]]--
-    end
+        --if self:TestForBlocked(my_x, my_z, platform_dir_x, platform_dir_z, self.inst:GetPhysicsRadius(0), p_length) then
+        --    can_hop = false
+        --    blocked = true
+        --end
+    end]]--
 
     return can_hop, px, pz, found_platform, blocked
 end
@@ -1361,6 +1398,7 @@ function LocoMotor:OnUpdate(dt, arrive_check_only)
         if invalid then
             self:Stop()
             self:Clear()
+			return
         elseif reached_dest then
         	--I think this is fine? we might need to make OnUpdateFinish() function that we can run to finish up the OnUpdate so we don't duplicate code
             if in_cooldown then return end
@@ -1379,14 +1417,17 @@ function LocoMotor:OnUpdate(dt, arrive_check_only)
 						self:FaceMovePoint(act_pos:Get())
                     end
                 end
+				local bufferedaction = self.bufferedaction
+				self.bufferedaction = nil --so it doesn't get Failed at Clear()
                 if self.ismastersim then
-                    self.inst:PushBufferedAction(self.bufferedaction)
+					self.inst:PushBufferedAction(bufferedaction)
                 else
-                    self.inst:PreviewBufferedAction(self.bufferedaction)
+					self.inst:PreviewBufferedAction(bufferedaction)
                 end
             end
             self:Stop()
             self:Clear()
+			return
 		elseif not arrive_check_only then
             --Print(VERBOSITY.DEBUG, "LOCOMOTING")
             if self:WaitingForPathSearch() then

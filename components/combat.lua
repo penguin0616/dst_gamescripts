@@ -53,6 +53,9 @@ local Combat = Class(function(self, inst)
     self.shouldavoidaggro = nil
     self.forbiddenaggrotags = nil
 	self.lastwasattackedbytargettime = 0
+	--self.lastattacker = nil
+	--self.lastattacktype = nil
+	--self.laststimuli = nil
 
 	self.externaldamagemultipliers = SourceModifierList(self.inst) -- damage dealt to others multiplier
 
@@ -302,10 +305,21 @@ function Combat:OnUpdate(dt)
             end
             self.keeptargettimeout = 1
 
-            if not self.target:IsValid() or
-                self.target:IsInLimbo() or
-                not self.keeptargetfn(self.inst, self.target) or not
-                (self.target and self.target.components.combat and self.target.components.combat:CanBeAttacked(self.inst)) then
+			local drop
+			if not self.target:IsValid() or self.target:IsInLimbo() then
+				drop = true
+			else
+				local iframeskeepaggro_combat = self.target.sg and self.target.sg:HasStateTag("iframeskeepaggro") and self.inst.replica.combat or nil --V2C: intentionally using replica on server
+				if iframeskeepaggro_combat then
+					iframeskeepaggro_combat.temp_iframes_keep_aggro = true
+				end
+				drop = not (self.target.components.combat and self.keeptargetfn(self.inst, self.target) and self.target.components.combat:CanBeAttacked(self.inst))
+				if iframeskeepaggro_combat then
+					iframeskeepaggro_combat.temp_iframes_keep_aggro = nil
+				end
+			end
+
+			if drop then
                 self.inst:PushEvent("losttarget")
                 self:DropTarget()
             end
@@ -402,7 +416,7 @@ function Combat:ShouldAggro(target, ignore_forbidden)
 		end
 		if target.components.health ~= nil and (target.components.health.minhealth or 0) > 0 and not target:HasTag("hostile") then
 			target = target.components.follower ~= nil and target.components.follower:GetLeader() or target
-			if not target:HasTag("player") then
+			if not target.isplayer then
 				--npc should not aggro on things that can't be killed (unless hostile!)
 				return false
 			end
@@ -434,8 +448,8 @@ end
 function Combat:SetTarget(target)
     if target ~= self.target and
         (target == nil or (self:IsValidTarget(target) and self:ShouldAggro(target))) and
-        not (target and target.sg and target.sg:HasStateTag("hiding") and target:HasTag("player"))
-        then
+		not (target and target.isplayer and target.sg and target.sg:HasStateTag("hiding"))
+	then
         self:DropTarget(target ~= nil)
         self:EngageTarget(target)
     end
@@ -543,6 +557,20 @@ function Combat:GetAttacked(attacker, damage, weapon, stimuli, spdamage)
 	local original_damage = damage
 
     self.lastattacker = attacker
+
+	--can add more attacktypes as needed
+	--currently just "projectile" or nil, used for hit stun calculation
+	if (damage or 0) > 0 and
+		weapon and
+		(	weapon.components.projectile or
+			(weapon.components.weapon and weapon.components.weapon.projectile)
+		)
+	then
+		self.lastattacktype = "projectile"
+	else
+		self.lastattacktype = nil
+	end
+	self.laststimuli = stimuli
 
     if self.inst.components.health ~= nil and damage ~= nil and damageredirecttarget == nil then
         if self.inst.components.attackdodger ~= nil and self.inst.components.attackdodger:CanDodge(attacker) then
@@ -696,23 +724,25 @@ function Combat:GetImpactSound(target, weapon)
 
     else
         local tgttype =
-            ((target:HasTag("hive") or target:HasTag("eyeturret") or target:HasTag("houndmound")) and "hive_") or
+			(target:HasAnyTag("hive", "eyeturret", "houndmound") and "hive_") or
             (target:HasTag("ghost") and "ghost_") or
-            ((target:HasTag("insect") or target:HasTag("spider")) and "insect_") or
-            ((target:HasTag("chess") or target:HasTag("mech")) and "mech_") or
+			(target:HasAnyTag("insect", "spider") and "insect_") or
+			(target:HasAnyTag("chess", "mech") and "mech_") or
+			--V2C: "mech" higher priority over "brightmare(boss)"
+			(target:HasAnyTag("brightmare", "brightmareboss") and "ghost_") or
             (target:HasTag("mound") and "mound_") or
-            ((target:HasTag("shadow") or target:HasTag("shadowminion") or target:HasTag("shadowchesspiece")) and "shadow_") or
-            ((target:HasTag("tree") or target:HasTag("wooden")) and "tree_") or
+			(target:HasAnyTag("shadow", "shadowminion", "shadowchesspiece") and "shadow_") or
+			(target:HasAnyTag("tree", "wooden") and "tree_") or
             (target:HasTag("veggie") and "vegetable_") or
             (target:HasTag("shell") and "shell_") or
-            ((target:HasTag("rocky") or target:HasTag("fossil")) and "stone_") or
+			(target:HasAnyTag("rocky", "fossil") and "stone_") or
             nil
         return
             hitsound..(
                 tgttype or "flesh_"
             )..(
-                ((target:HasTag("smallcreature") or target:HasTag("small")) and "sml_") or
-                ((target:HasTag("largecreature") or target:HasTag("epic") or target:HasTag("large")) and not (target:HasTag("shadowchesspiece") or target:HasTag("fossil")) and "lrg_") or
+				(target:HasAnyTag("smallcreature", "small") and "sml_") or
+				(target:HasAnyTag("largecreature", "epic", "large") and not target:HasAnyTag("shadowchesspiece", "fossil", "brightmareboss") and "lrg_") or
                 (tgttype == nil and target:GetIsWet() and "wet_") or
                 "med_"
             )..weaponmod
@@ -756,10 +786,7 @@ function Combat:CanAttack(target)
         and not (   -- gjans: Some specific logic so the birchnutter doesn't attack it's spawn with it's AOE
                     -- This could possibly be made more generic so that "things" don't attack other things in their "group" or something
                     self.inst:HasTag("birchnutroot") and
-                    (   target:HasTag("birchnutroot") or
-                        target:HasTag("birchnut") or
-                        target:HasTag("birchnutdrake")
-                    )
+					target:HasAnyTag("birchnutroot", "birchnut", "birchnutdrake")
                 )
 end
 
@@ -768,10 +795,10 @@ function Combat:LocomotorCanAttack(reached_dest, target)
         return false, true, false
     end
 
-    local attackrange = self:CalcAttackRangeSq(target)
+	local attackrangesq = self:CalcAttackRangeSq(target)
 
     reached_dest = reached_dest or
-        (self.ignorehitrange or distsq(target:GetPosition(), self.inst:GetPosition()) <= attackrange)
+		(self.ignorehitrange or distsq(target:GetPosition(), self.inst:GetPosition()) <= attackrangesq)
 
     local valid = self.canattack
         and (   self.inst.sg == nil or
@@ -781,15 +808,12 @@ function Combat:LocomotorCanAttack(reached_dest, target)
         and not (   -- gjans: Some specific logic so the birchnutter doesn't attack it's spawn with it's AOE
                     -- This could possibly be made more generic so that "things" don't attack other things in their "group" or something
                     self.inst:HasTag("birchnutroot") and
-                    (   target:HasTag("birchnutroot") or
-                        target:HasTag("birchnut") or
-                        target:HasTag("birchnutdrake")
-                    )
+					target:HasAnyTag("birchnutroot", "birchnut", "birchnutdrake")
                 )
 
-    if attackrange > 2 * 2 and self.inst:HasTag("player") then
+	if attackrangesq > 4 and self.inst.isplayer then
         local weapon = self:GetWeapon()
-        local is_ranged_weapon = weapon ~= nil and (weapon:HasTag("projectile") or weapon:HasTag("rangedweapon"))
+		local is_ranged_weapon = weapon ~= nil and weapon:HasAnyTag("projectile", "rangedweapon")
 
         if not is_ranged_weapon then
             local currentpos = self.inst:GetPosition()
@@ -855,8 +879,8 @@ function Combat:CalcDamage(target, weapon, multiplier)
     local externaldamagemultipliers = self.externaldamagemultipliers
 	local damagetypemult = 1
     local bonus = self.damagebonus --not affected by multipliers
-    local playermultiplier = target ~= nil and target:HasTag("player")
-    local pvpmultiplier = playermultiplier and self.inst:HasTag("player") and self.pvp_damagemod or 1
+	local playermultiplier = target ~= nil and (target.isplayer or target:HasTag("player_damagescale"))
+	local pvpmultiplier = playermultiplier and self.inst.isplayer and self.pvp_damagemod or 1
 	local mount = nil
 	local spdamage
 
@@ -928,9 +952,14 @@ function Combat:CalcDamage(target, weapon, multiplier)
 			--playermultiplier * --@V2C excluded to avoid tuning nightmare
 			pvpmultiplier
 
+        if self.customspdamagemultfn then
+            spmult = spmult * (self.customspdamagemultfn(self.inst, target, weapon, multiplier, mount) or 1)
+        end
+
 		if spmult ~= 1 then
 			spdamage = SpDamageUtil.ApplyMult(spdamage, spmult)
 		end
+
 	end
 	return damage, spdamage
 end
@@ -1073,8 +1102,13 @@ function Combat:DoAttack(targ, weapon, projectile, stimuli, instancemult, instra
         weapon = self:GetWeapon()
     end
     if stimuli == nil then
-        if weapon ~= nil and weapon.components.weapon ~= nil and weapon.components.weapon.overridestimulifn ~= nil then
-            stimuli = weapon.components.weapon.overridestimulifn(weapon, self.inst, targ)
+		if weapon and weapon.components.weapon then
+			if weapon.components.weapon.overridestimulifn then
+				stimuli = weapon.components.weapon.overridestimulifn(weapon, self.inst, targ)
+			end
+			if stimuli == nil and weapon.components.weapon.stimuli == "electric" then
+				stimuli = "electric"
+			end
         end
         if stimuli == nil and self.inst.components.electricattacks ~= nil then
             stimuli = "electric"
@@ -1189,19 +1223,30 @@ function Combat:GetDamageReflect(target, damage, weapon, stimuli)
 end
 
 local AREAATTACK_MUST_TAGS = { "_combat" }
-function Combat:DoAreaAttack(target, range, weapon, validfn, stimuli, excludetags)
+function Combat:DoAreaAttack(target, range, weapon, validfn, stimuli, excludetags, onlyontarget)
     local hitcount = 0
     local x, y, z = target.Transform:GetWorldPosition()
-    local ents = TheSim:FindEntities(x, y, z, range, AREAATTACK_MUST_TAGS, excludetags)
-    for i, ent in ipairs(ents) do
-        if ent ~= target and
-            ent ~= self.inst and
-            self:IsValidTarget(ent) and
+    if onlyontarget then
+        local ent = target
+        if self:IsValidTarget(ent) and
             (validfn == nil or validfn(ent, self.inst)) then
             self.inst:PushEvent("onareaattackother", { target = ent, weapon = weapon, stimuli = stimuli })
-			local dmg, spdmg = self:CalcDamage(ent, weapon, self.areahitdamagepercent)
-			ent.components.combat:GetAttacked(self.inst, dmg, weapon, stimuli, spdmg)
+            local dmg, spdmg = self:CalcDamage(ent, weapon, self.areahitdamagepercent)
+            ent.components.combat:GetAttacked(self.inst, dmg, weapon, stimuli, spdmg)
             hitcount = hitcount + 1
+        end
+    else
+        local ents = TheSim:FindEntities(x, y, z, range, AREAATTACK_MUST_TAGS, excludetags)
+        for i, ent in ipairs(ents) do
+            if ent ~= target and
+                ent ~= self.inst and
+                self:IsValidTarget(ent) and
+                (validfn == nil or validfn(ent, self.inst)) then
+                self.inst:PushEvent("onareaattackother", { target = ent, weapon = weapon, stimuli = stimuli })
+                local dmg, spdmg = self:CalcDamage(ent, weapon, self.areahitdamagepercent)
+                ent.components.combat:GetAttacked(self.inst, dmg, weapon, stimuli, spdmg)
+                hitcount = hitcount + 1
+            end
         end
     end
 

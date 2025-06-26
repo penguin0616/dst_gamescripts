@@ -1,9 +1,11 @@
 require("stategraphs/commonstates")
 
-local actionhandlers =
-{
-}
-
+local function hit_recovery_skip_cooldown_fn(inst, last_t, delay)
+	--no skipping when we're dodging (hit_recovery increased)
+	return inst.hit_recovery == nil
+		and inst.components.combat:InCooldown()
+		and inst.sg:HasStateTag("idle")
+end
 
 local events=
 {
@@ -13,7 +15,7 @@ local events=
     CommonHandlers.OnSleep(),
     CommonHandlers.OnFreeze(),
     CommonHandlers.OnAttack(),
-    CommonHandlers.OnAttacked(),
+	CommonHandlers.OnAttacked(nil, nil, hit_recovery_skip_cooldown_fn),
     CommonHandlers.OnDeath(),
 }
 
@@ -140,5 +142,5 @@ CommonStates.AddSinkAndWashAshoreStates(states)
 CommonStates.AddVoidFallStates(states)
 
 
-return StateGraph("knight", states, events, "idle", actionhandlers)
+return StateGraph("knight", states, events, "idle")
 

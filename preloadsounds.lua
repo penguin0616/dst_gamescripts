@@ -230,7 +230,17 @@ local MainSounds =
     "rifts4.fsb",
 
 	"hallowednights2024.fev",
-    "hallowednights2024.fsb",    
+    "hallowednights2024.fsb",   
+
+    "meta5.fev",
+    "meta5.fsb", 
+
+    "balatro.fev",
+    "balatro.fsb",     
+
+    "rifts5.fev",
+    "rifts5.fsb",
+
 }
 
 function PreloadSoundList(list)

@@ -346,6 +346,7 @@ local function fn()
     inst.AnimState:PlayAnimation("anim")
 
     inst:AddTag("metal") -- Impact sound.
+	inst:AddTag("hardarmor")
     inst:AddTag("show_broken_ui")
 
     inst.foleysound = "dontstarve/movement/foley/metalarmour"

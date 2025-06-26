@@ -133,7 +133,6 @@ local function FindNearbyScarer(inst)
     local ents = TheSim:FindEntities(x, y, z, SEE_SCARER_DIST, SCARER_MUST_TAGS)
     for _, ent in ipairs(ents) do
         if ent:HasTag("INLIMBO") then
-            print(ent, ent.components.equippable and ent.components.equippable:IsEquipped(), ent.components.inventoryitem == nil or ent.components.inventoryitem:GetGrandOwner() ~= leader)
             if ent.components.equippable and ent.components.equippable:IsEquipped() then
                 if ent.components.inventoryitem == nil or ent.components.inventoryitem:GetGrandOwner() ~= leader then
                     return ent
@@ -174,7 +173,7 @@ function BunnymanBrain:OnStart()
             WhileNode(function() return IsHomeOnFire(self.inst) end, "OnFire",
                 ChattyNode(self.inst, "RABBIT_PANICHOUSEFIRE",
                     Panic(self.inst))),
-            WhileNode(function() return TheWorld.state.isacidraining end, "IsAcidRaining", -- TODO @stevenm do we need the beardlord restriction...?
+            WhileNode(function() return TheWorld.state.isacidraining end, "IsAcidRaining",
                 DoAction(self.inst, GoHomeAction, "go home", true ), 1),
             FaceEntity(self.inst, GetTraderFn, KeepTraderFn),
             DoAction(self.inst, FindFoodAction),

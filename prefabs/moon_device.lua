@@ -386,7 +386,7 @@ end
 local function MakeDeviceStage(name, client_postinit, master_postinit, construction_data)
 	local function fn()
 
-   		local inst = CreateEntity()
+        local inst = CreateEntity()
 
         inst.entity:AddTransform()
         inst.entity:AddAnimState()
@@ -441,6 +441,10 @@ local function MakeDeviceStage(name, client_postinit, master_postinit, construct
 		if not TheWorld.ismastersim then
 			return inst
 		end
+
+        if name == "moon_device_construction2" or name == "moon_device" then
+            WORLDSTATETAGS.SetTagEnabled("CELESTIAL_ORB_FOUND", true) -- Recipes and products that use "moonrockseed".
+        end
 
         inst._construction_product = construction_data ~= nil and construction_data.construction_product or nil
 

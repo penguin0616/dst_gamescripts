@@ -36,7 +36,7 @@ local KitcoonPuppet = require "widgets/kitcoonpuppet"
 local SHOW_DST_DEBUG_HOST_JOIN = BRANCH == "dev"
 local SHOW_QUICKJOIN = false
 
-local IS_BETA = BRANCH == "staging" or BRANCH == "dev"
+local IS_BETA = BRANCH == "staging"-- or BRANCH == "dev"
 local IS_DEV_BUILD = BRANCH == "dev"
 
 local function PlayBannerSound(inst, self, sound)
@@ -184,6 +184,14 @@ local function MakeYOTDBanner(self, banner_root, anim)
     anim:GetAnimState():SetBuild("dst_menu_yotd")
     anim:GetAnimState():SetBank ("dst_menu_yotd")
     anim:SetScale(.667)
+    anim:GetAnimState():PlayAnimation("loop", true)
+end
+
+
+local function MakeYOTSBanner(self, banner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_yots")
+    anim:GetAnimState():SetBank ("dst_menu_yots")
+    anim:SetScale(.667/2)
     anim:GetAnimState():PlayAnimation("loop", true)
 end
 
@@ -427,6 +435,32 @@ local function MakeHallowedNights2024Banner(self, banner_root, anim)
     anim:SetScale(.667)
 end
 
+local function MakeWintersFeast2024Banner(self, banner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_winter2024")
+    anim:GetAnimState():SetBank("dst_menu_winter2024")
+    anim:GetAnimState():PlayAnimation("loop", true)
+    anim:SetScale(.667)
+end
+
+local function MakeMeta5Banner(self, banner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_meta5")
+    anim:GetAnimState():SetBank("dst_menu_meta5")
+    anim:GetAnimState():PlayAnimation("loop", true)
+    anim:SetScale(.667)
+    anim:SetPosition(75, 50)
+
+    if not IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
+        anim:GetAnimState():Hide("winter")
+    end
+end
+
+local function MakeRift5Banner(self, banner_root, anim)
+	anim:GetAnimState():SetBuild("dst_menu_rift5")
+	anim:GetAnimState():SetBank("dst_menu_rift5")
+	anim:GetAnimState():PlayAnimation("loop", true)
+	anim:SetScale(.667)
+end
+
 local function MakeDefaultBanner(self, banner_root, anim)
 	local banner_height = 350
 	banner_root:SetPosition(0, RESOLUTION_Y / 2 - banner_height / 2 + 1 ) -- positioning for when we had the top banner art
@@ -482,7 +516,10 @@ function MakeBanner(self)
 		--
 		--REMINDER: Check MakeBannerFront as well!
 		--
-        MakeHallowedNights2024Banner(self, banner_root, anim)
+		MakeRift5Banner(self, banner_root, anim)
+        
+    elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTS) then
+        MakeYOTSBanner(self, banner_root, anim)        
     elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTD) then
         MakeYOTDBanner(self, banner_root, anim)
     elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTR) then
@@ -491,19 +528,17 @@ function MakeBanner(self)
         MakeYOTCBanner(self, banner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOT_CATCOON) then
         MakeYOTCatcoonBanner(self, banner_root, anim)
+	elseif IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
+        MakeWintersFeast2024Banner(self, banner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.HALLOWED_NIGHTS) then
-        --MakeHallowedNightsBanner(self, banner_root, anim)
         MakeHallowedNights2024Banner(self, banner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
-
-        --MakeMeta2Banner(self, banner_root, anim)
-        --MakeCawnivalBanner(self, banner_root, anim)
         MakeWurtWinonaQOLBanner(self, banner_root, anim)
 	else
 		--*** !!! ***
 		--REMINDER: Check MakeBannerFront as well!
 		--
-        MakeRift4Banner(self, banner_root, anim)
+		MakeRift5Banner(self, banner_root, anim)
         --MakeWurtWinonaQOLBanner(self, banner_root, anim)
         --MakeRiftsMetaQoLBanner(self, banner_root, anim)
 		--MakeMeta2Banner(self, banner_root, anim)
@@ -614,7 +649,6 @@ local function MakeBannerFront(self)
         return nil
 
     elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
-
         local banner_front = Widget("banner_front")
         banner_front:SetPosition(0, 0)
         banner_front:SetClickable(false)
@@ -1152,8 +1186,8 @@ function MultiplayerMainScreen:MakeSubMenu()
         end
 
 		if not IsRail() then
-			table.insert(submenuitems, {widget = TEMPLATES.IconButton("images/button_icons.xml", "forums.tex", STRINGS.UI.MAINSCREEN.FORUM, false, true, function() VisitURL("http://forums.kleientertainment.com/forums/forum/73-dont-starve-together/") end, {font=NEWFONT_OUTLINE})})
-	        table.insert(submenuitems, {widget = TEMPLATES.IconButton("images/button_icons.xml", "more_games.tex", STRINGS.UI.MAINSCREEN.MOREGAMES, false, true, function() VisitURL("http://store.steampowered.com/search/?developer=Klei%20Entertainment") end, {font=NEWFONT_OUTLINE})})
+			table.insert(submenuitems, {widget = TEMPLATES.IconButton("images/button_icons.xml", "forums.tex", STRINGS.UI.MAINSCREEN.FORUM, false, true, function() VisitURL("https://forums.kleientertainment.com/forums/forum/73-dont-starve-together/") end, {font=NEWFONT_OUTLINE})})
+	        table.insert(submenuitems, {widget = TEMPLATES.IconButton("images/button_icons.xml", "more_games.tex", STRINGS.UI.MAINSCREEN.MOREGAMES, false, true, function() VisitURL("https://store.steampowered.com/search/?developer=Klei%20Entertainment") end, {font=NEWFONT_OUTLINE})})
 		end
     end
 
@@ -1332,8 +1366,39 @@ function MultiplayerMainScreen:FinishedFadeIn()
 	end
 end
 
+function MultiplayerMainScreen:HandleNewControlSchemePopup()
+    if TheInput:ControllerAttached() and not self.profile:SawControlSchemePopup() then
+        local function PopupClose()
+            self.profile:ShowedControlSchemePopup()
+            self.profile:Save()
+            TheFrontEnd:PopScreen()
+        end
+        TheFrontEnd:PushScreen(
+            PopupDialogScreen(
+                STRINGS.UI.NEW_CONTROLSCHEME_POPUP.TITLE,
+                STRINGS.UI.NEW_CONTROLSCHEME_POPUP.BODY,
+                { 
+                    {
+                        text=STRINGS.UI.NEW_CONTROLSCHEME_POPUP.YES, 
+                        cb = function() 
+                                 self:Settings("CONTROLSCHEME")
+                                 PopupClose()
+                             end 
+                    },
+                    {
+                        text=STRINGS.UI.NEW_CONTROLSCHEME_POPUP.NO, 
+                        cb = function() 
+                                 PopupClose()
+                             end
+                    }  
+                }
+           )
+        )
+    end
+end
 
 function MultiplayerMainScreen:OnUpdate(dt)
+    self:HandleNewControlSchemePopup()
 end
 
 function MultiplayerMainScreen:CheckNewUser(onnofn, no_button_text)

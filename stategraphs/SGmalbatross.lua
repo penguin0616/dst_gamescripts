@@ -12,16 +12,6 @@ local actionhandlers =
 
 local SHAKE_DIST = 40
 
-local function swoopcollision(inst)
-    inst.Physics:ClearCollisionMask()
-end
-
-local function resetcollision(inst)
-    inst.Physics:CollidesWith((TheWorld:CanFlyingCrossBarriers() and COLLISION.GROUND) or COLLISION.WORLD)
-    inst.Physics:CollidesWith(COLLISION.FLYERS)
-end
-
-
 local function spawnripple(inst)
     if not TheWorld.Map:IsVisualGroundAtPoint(inst.Transform:GetWorldPosition()) then
         inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/ripple")
@@ -823,16 +813,20 @@ CommonStates.AddCombatStates(states,
 local function land_without_floater(creature)
     creature:RemoveTag("flying")
     if creature.Physics ~= nil then
-        creature.Physics:CollidesWith(COLLISION.LIMITS)
-        creature.Physics:ClearCollidesWith(COLLISION.FLYERS)
+		CollisionMaskBatcher(creature)
+			:CollidesWith(COLLISION.LIMITS)
+			:ClearCollidesWith(COLLISION.FLYERS)
+			:CommitTo(creature)
     end
 end
 
 local function raise_without_floater(creature)
     creature:AddTag("flying")
     if creature.Physics ~= nil then
-        creature.Physics:ClearCollidesWith(COLLISION.LIMITS)
-        creature.Physics:CollidesWith(COLLISION.FLYERS)
+		CollisionMaskBatcher(creature)
+			:ClearCollidesWith(COLLISION.LIMITS)
+			:CollidesWith(COLLISION.FLYERS)
+			:CommitTo(creature)
     end
 end
 

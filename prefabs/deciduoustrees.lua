@@ -432,14 +432,20 @@ local function chop_tree(inst, chopper, chopsleft, numchops)
     SpawnLeafFX(inst, nil, true)
 
     -- Force update anims if monster
-    if inst.monster then
+	-- V2C: added dostartmonster_task check, still transforming, bank hasn't changed yet
+	if inst.monster and inst.dostartmonster_task == nil then
         inst.anims = monster_anims
     end
     inst.AnimState:PlayAnimation(inst.anims.chop)
 
     if inst.monster then
-        inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/deciduous/hurt_chop")
-        inst.sg:GoToState("chop_pst")
+		if inst.dostartmonster_task == nil then
+			inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/deciduous/hurt_chop")
+			inst.sg:GoToState("chop_pst")
+		elseif inst.components.workable and chopsleft <= 0 then
+			-- V2C: doesn't handle nicely being chopped down during the short transformation window
+			inst.components.workable:SetWorkLeft(1)
+		end
     else
         PushSway(inst)
     end
@@ -764,6 +770,7 @@ local function inspect_tree(inst)
 end
 
 local function DoStartMonster(inst, starttimeoffset)
+	inst.dostartmonster_task = nil
     if inst.components.workable ~= nil then
        inst.components.workable:SetWorkLeft(TUNING.DECIDUOUS_CHOPS_MONSTER)
     end
@@ -817,7 +824,7 @@ local function StartMonster(inst, force, starttimeoffset)
             inst:DoTaskInTime(12 * FRAMES, DoStartMonsterChangeLeaves)
         end
 
-        inst:DoTaskInTime(26 * FRAMES, DoStartMonster, starttimeoffset)
+		inst.dostartmonster_task = inst:DoTaskInTime(26 * FRAMES, DoStartMonster, starttimeoffset)
     end
 end
 

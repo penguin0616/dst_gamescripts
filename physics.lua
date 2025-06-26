@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------
 --this is called back by the engine side
 
 PhysicsCollisionCallbacks = {}
@@ -15,6 +16,41 @@ function OnPhysicsCollision(guid1, guid2, world_position_on_a_x, world_position_
         callback2(i2, i1, world_position_on_b_x, world_position_on_b_y, world_position_on_b_z, world_position_on_a_x, world_position_on_a_y, world_position_on_a_z, -world_normal_on_b_x, -world_normal_on_b_y, -world_normal_on_b_z, lifetime_in_frames)
     end
 end
+
+--------------------------------------------------------------------------
+--Helper class so we don't make multiple calls to c++ Physics component when updating collision mask
+
+CollisionMaskBatcher = Class(function(self, entormask)
+	self.mask = EntityScript.is_instance(entormask) and entormask.Physics:GetCollisionMask() or mask or 0
+end)
+
+function CollisionMaskBatcher:ClearCollisionMask()
+	self.mask = 0
+	return self
+end
+
+function CollisionMaskBatcher:SetCollisionMask(...)
+	for i = 1, select('#', ...) do
+		self.mask = bit.bor(self.mask, select(i, ...))
+	end
+	return self
+end
+
+function CollisionMaskBatcher:CollidesWith(mask)
+	self.mask = bit.bor(self.mask, mask)
+	return self
+end
+
+function CollisionMaskBatcher:ClearCollidesWith(mask)
+	self.mask = bit.band(self.mask, bit.bnot(mask))
+	return self
+end
+
+function CollisionMaskBatcher:CommitTo(ent)
+	ent.Physics:SetCollisionMask(self.mask)
+end
+
+--------------------------------------------------------------------------
 
 function Launch(inst, launcher, basespeed)
     if inst ~= nil and inst.Physics ~= nil and inst.Physics:IsActive() and launcher ~= nil then
@@ -35,11 +71,11 @@ end
 function Launch2(inst, launcher, basespeed, speedmult, startheight, startradius, vertical_speed, force_angle)
     if inst ~= nil and inst.Physics ~= nil and inst.Physics:IsActive() and launcher ~= nil then
 	    local x, y, z = launcher.Transform:GetWorldPosition()
-		local x1, y1, z1 = inst.Transform:GetWorldPosition()
-		local dx, dz = x1 - x, z1 - z
-		local dsq = dx * dx + dz * dz
 		local angle = force_angle ~= nil and (force_angle*DEGREES) or nil
 		if not angle then
+			local x1, y1, z1 = inst.Transform:GetWorldPosition()
+			local dx, dz = x1 - x, z1 - z
+			local dsq = dx * dx + dz * dz
 			if dsq > 0 then
 				local dist = math.sqrt(dsq)
 				angle = math.atan2(dz / dist, dx / dist) + (math.random() * 20 - 10) * DEGREES

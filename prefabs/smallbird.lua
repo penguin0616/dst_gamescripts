@@ -286,10 +286,11 @@ local function create_common(inst, physicscylinder)
     MakeCharacterPhysics(inst, 10, .25)
 
     inst.Physics:SetCollisionGroup(COLLISION.CHARACTERS)
-    inst.Physics:ClearCollisionMask()
-    inst.Physics:CollidesWith(COLLISION.WORLD)
-    inst.Physics:CollidesWith(COLLISION.OBSTACLES)
-    inst.Physics:CollidesWith(COLLISION.CHARACTERS)
+	inst.Physics:SetCollisionMask(
+		COLLISION.WORLD,
+		COLLISION.OBSTACLES,
+		COLLISION.CHARACTERS
+	)
     if physicscylinder then
         inst.Physics:SetCylinder(.5, 1)
     end

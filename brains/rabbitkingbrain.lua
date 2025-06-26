@@ -60,7 +60,7 @@ function RabbitKingBrain:Create_Passive()
     -- Offers a selection of tradables.
     return PriorityNode({
         BrainCommon.PanicTrigger(self.inst),
-        WhileNode(function() return self.inst.rabbitking_trading end, "Trading",
+        WhileNode(function() return self.inst.sg.mem.trading end, "Trading",
             FaceEntity(self.inst, GetFaceTargetFn_Passive, KeepFaceTargetFn_Passive)),
 
         DoAction(self.inst, EatFoodAction),

@@ -6,7 +6,15 @@ local actionhandlers =
 
 local events=
 {
-    EventHandler("attacked", function(inst) if not inst.components.health:IsDead() and not inst.sg:HasStateTag("nointerrupt") and not inst.sg:HasStateTag("attack") then inst.sg:GoToState("hit") end end),
+	EventHandler("attacked", function(inst)
+		if not (inst.components.health:IsDead() or
+				inst.sg:HasStateTag("nointerrupt") or
+				inst.sg:HasStateTag("attack") or
+				CommonHandlers.HitRecoveryDelay(inst, nil, math.huge)) --hit delay only for projectiles
+		then
+			inst.sg:GoToState("hit")
+		end
+	end),
     EventHandler("death", function(inst) inst.sg:GoToState("death") end),
     EventHandler("doattack", function(inst) if not inst.components.health:IsDead() and (inst.sg:HasStateTag("hit") or not inst.sg:HasStateTag("busy")) then inst.sg:GoToState("attack") end end),
     CommonHandlers.OnSleep(),
@@ -68,6 +76,7 @@ local states=
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("hit")
             inst.SoundEmitter:PlaySound("dontstarve/creatures/spiderqueen/hurt")
+			CommonHandlers.UpdateHitRecoveryDelay(inst)
         end,
 
         events=

@@ -1810,12 +1810,67 @@ local PREFABS =
     ["pumpkincarver1"] = true,
     ["pumpkincarver2"] = true,
     ["pumpkincarver3"] = true,
-
     ["mask_sagehat"] = true,
     ["mask_toadyhat"] = true,
     ["mask_halfwithat"] = true,
-
     ["shadowthrall_parasite"] = true,
+
+    -- Winter's Feast 2024
+    ["chesspiece_wormboss"] = true,
+    ["chesspiece_daywalker2"] = true,
+
+    ["winter_ornament_boss_daywalker2"] = true,
+    ["winter_ornament_boss_sharkboi"] = true,
+    ["winter_ornament_boss_wormboss"] = true,
+
+    ["snowball_item"] = true,
+    ["snowman"] = true,
+
+    -- Meta 5
+
+    ["bandage_butterflywings"] = true,
+    ["elixir_container"] = true,
+    ["ghostflowerhat"] = true,
+    ["ghostlyelixir_lunar"] = true,
+    ["ghostlyelixir_revive"] = true,
+    ["ghostlyelixir_shadow"] = true,
+    ["graveguard_ghost"] = true,
+    ["graveurn"] = true,
+    ["portablefirepit_item"] = true,
+    ["shallow_grave"] = true,
+    ["slingshot_band_mimic"] = true,
+    ["slingshot_band_pigskin"] = true,
+    ["slingshot_band_tentacle"] = true,
+    ["slingshot_frame_bone"] = true,
+    ["slingshot_frame_gems"] = true,
+    ["slingshot_frame_wagpunk_0"] = true,
+    ["slingshot_frame_wagpunk"] = true,
+    ["slingshot_handle_jelly"] = true,
+    ["slingshot_handle_silk"] = true,
+    ["slingshot_handle_sticky"] = true,
+    ["slingshot_handle_voidcloth"] = true,
+    ["slingshotammo_container"] = true,
+    ["slingshotammo_dreadstone"] = true,
+    ["slingshotammo_gelblob"] = true,
+    ["slingshotammo_gunpowder"] = true,
+    ["slingshotammo_honey"] = true,
+    ["slingshotammo_horrorfuel"] = true,
+    ["slingshotammo_lunarplanthusk"] = true,
+    ["slingshotammo_moonglass"] = true,
+    ["slingshotammo_purebrilliance"] = true,
+    ["slingshotammo_scrapfeather"] = true,
+    ["slingshotammo_stinger"] = true,
+    ["slingshotmodkit"] = true,
+    ["thulecitebugnet"] = true,
+    ["wendy_resurrectiongrave"] = true,
+    ["woby_treat"] = true,
+    ["wortox_nabbag"] = true,
+    ["wortox_reviver"] = true,
+    ["wortox_souljar"] = true,
+
+    -- Balatro
+    ["deck_of_cards"] = true,
+    ["playing_card"] = true,
 
     --[[POI]]
     ["charlie_stage_post"] = true,
@@ -1834,6 +1889,7 @@ local PREFABS =
     ["atrium_gate"] = true,
     ["archive_orchestrina_main"] = true,
     ["multiplayer_portal"] = true,
+    ["balatro_machine"] = true,
 
     -----------------------------------------------
 

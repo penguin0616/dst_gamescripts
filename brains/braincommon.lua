@@ -84,7 +84,7 @@ BrainCommon.AnchorToSaltlick = AnchorToSaltlick
 --------------------------------------------------------------------------
 
 local function ShouldTriggerPanic(inst)
-	return (inst.components.health ~= nil and inst.components.health.takingfiredamage)
+	return (inst.components.health and (inst.components.health.takingfiredamage or inst.components.health:GetLunarBurnFlags() ~= 0))
 		or (inst.components.hauntable ~= nil and inst.components.hauntable.panic)
 end
 
@@ -265,9 +265,9 @@ local function NodeAssistLeaderDoAction(self, parameters)
     end
     local looper
     if parameters.chatterstring then
-        looper = LoopNode{ConditionNode(whilenode), ChattyNode(self.inst, parameters.chatterstring, DoAction(self.inst, findnode, "DoAction_Chatty", nil, 3))}
+        looper = LoopNode{ConditionNode(whilenode), ChattyNode(self.inst, parameters.chatterstring, DoAction(self.inst, findnode, "DoAction_Chatty", parameters.shouldrun, 3))}
     else
-        looper = LoopNode{ConditionNode(whilenode), DoAction(self.inst, findnode, "DoAction_NoChatty", nil, 3)}
+        looper = LoopNode{ConditionNode(whilenode), DoAction(self.inst, findnode, "DoAction_NoChatty", parameters.shouldrun, 3)}
     end
 
     return IfThenDoWhileNode(ifnode, whilenode, action, looper)

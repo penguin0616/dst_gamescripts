@@ -6,6 +6,10 @@ local actionhandlers =
     ActionHandler(ACTIONS.GOHOME, "flyaway"),
 }
 
+local function IsStuck(inst)
+	return inst:HasAnyTag("honey_ammo_afflicted", "gelblob_ammo_afflicted") and TheWorld.Map:IsPassableAtPoint(inst.Transform:GetWorldPosition())
+end
+
 local events =
 {
     EventHandler("gotosleep", function(inst)
@@ -137,8 +141,18 @@ local states =
 
         events =
         {
+			EventHandler("stop_honey_ammo_afflicted", function(inst)
+				if not (inst.components.health:IsDead() or (inst.components.burnable and inst.components.burnable:IsBurning()) or IsStuck(inst)) then
+					inst.sg:GoToState("flyaway")
+				end
+			end),
+			EventHandler("stop_gelblob_ammo_afflicted", function(inst)
+				if not (inst.components.health:IsDead() or (inst.components.burnable and inst.components.burnable:IsBurning()) or IsStuck(inst)) then
+					inst.sg:GoToState("flyaway")
+				end
+			end),
             EventHandler("onextinguish", function(inst)
-                if not inst.components.health:IsDead() then
+				if not (inst.components.health:IsDead() or IsStuck(inst)) then
                     inst.sg:GoToState("idle", "flap_post")
                 end
             end),
@@ -154,6 +168,7 @@ local states =
 
         onenter = function(inst, delay)
             inst:AddTag("NOCLICK")
+			inst:AddTag("NOBLOCK")
             inst:Hide()
             inst.Physics:SetActive(false)
             inst.sg:SetTimeout(delay)
@@ -168,6 +183,7 @@ local states =
         onexit = function(inst)
             if not inst.sg.statemem.gliding then
                 inst:RemoveTag("NOCLICK")
+                inst:RemoveTag("NOBLOCK")
                 inst.DynamicShadow:Enable(true)
             end
             inst:Show()
@@ -181,6 +197,7 @@ local states =
 
         onenter = function(inst)
 			inst:AddTag("NOCLICK")
+            inst:AddTag("NOBLOCK")
             if not inst.AnimState:IsCurrentAnimation("glide") then
                 inst.AnimState:PlayAnimation("glide", true)
             end
@@ -222,6 +239,7 @@ local states =
 
 		onexit = function(inst)
 			inst:RemoveTag("NOCLICK")
+            inst:RemoveTag("NOBLOCK")
 			inst.DynamicShadow:Enable(true)
 		end,
     },
@@ -269,7 +287,16 @@ local states =
         tags = { "flight", "busy", "notarget" },
 
         onenter = function(inst)
+			if IsStuck(inst) then
+				inst.sg:GoToState("distress_pre")
+				return
+			end
+
+            local x, y, z = inst.Transform:GetWorldPosition()
+            inst.sg.statemem.noescape = TheWorld.Map:IsPointInWagPunkArenaAndBarrierIsUp(x, y, z)
+
 			inst:AddTag("NOCLICK")
+			inst:AddTag("NOBLOCK")
 
             if inst.components.floater ~= nil then
                 inst:PushEvent("on_no_longer_landed")
@@ -277,10 +304,13 @@ local states =
             inst.Physics:Stop()
             inst.sg:SetTimeout(.1 + math.random() * .2)
             inst.sg.statemem.vert = math.random() < .5
+            if inst.sg.statemem.noescape then
+                inst.sg.statemem.vert = true
+            end
 
             inst.SoundEmitter:PlaySound(inst.sounds.takeoff)
 
-            if inst.components.periodicspawner ~= nil and math.random() <= TUNING.BIRD_LEAVINGS_CHANCE then
+            if not inst.sg.statemem.noescape and inst.components.periodicspawner ~= nil and math.random() <= TUNING.BIRD_LEAVINGS_CHANCE then
                 inst.components.periodicspawner:TrySpawn()
             end
 
@@ -290,7 +320,11 @@ local states =
         ontimeout = function(inst)
             if inst.sg.statemem.vert then
                 inst.AnimState:PushAnimation("takeoff_vertical_loop", true)
-                inst.Physics:SetMotorVel(math.random() * 4 - 2, math.random() * 5 + 15, math.random() * 4 - 2)
+                local horix, horiz = math.random() * 4 - 2, math.random() * 4 - 2
+                if inst.sg.statemem.noescape then
+                    horix, horiz = horix * 0.1, horiz * 0.1
+                end
+                inst.Physics:SetMotorVel(horix, math.random() * 5 + 15, horiz)
             else
                 inst.AnimState:PushAnimation("takeoff_diagonal_loop", true)
                 inst.Physics:SetMotorVel(math.random() * 8 + 8, math.random() * 5 + 15,math.random() * 4 - 2)
@@ -304,12 +338,17 @@ local states =
 				inst.DynamicShadow:SetSize(.6, .5)
 			end),
             TimeEvent(2, function(inst)
-                inst:Remove()
+                if inst.sg.statemem.noescape then
+                    inst.sg:GoToState("fall")
+                else
+                    inst:Remove()
+                end
             end),
         },
 
 		onexit = function(inst)
 			inst:RemoveTag("NOCLICK")
+			inst:RemoveTag("NOBLOCK")
 			inst.DynamicShadow:SetSize(1, .75)
 			inst.DynamicShadow:Enable(true)
 		end,

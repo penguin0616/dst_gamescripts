@@ -249,6 +249,8 @@ local TRANSLATE_TO_PREFABS = {
 	["stageplays"] =		{"charlie_stage_post", "statueharp_hedgespawner"},
 	-- Allow for the junk piles to be required world gen prefabs, but still disable-able via World Gen settings
 	["junkyard"] =		    {"junk_pile", "junk_pile_big"},
+	-- Allow for the balatro machine to be required world gen prefabs, but still disable-able via World Gen settings
+	["balatro"] =		    {"balatro_machine"},
 }
 
 local TRANSLATE_TO_CLUMP = {

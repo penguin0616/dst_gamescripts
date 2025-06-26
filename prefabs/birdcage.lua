@@ -31,6 +31,7 @@ local invalid_foods =
     -- "monstermeat",
     -- "cookedmonstermeat",
     -- "monstermeat_dried",
+	"woby_treat",
 }
 
 local CAGE_STATES =

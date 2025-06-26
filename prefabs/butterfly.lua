@@ -51,10 +51,6 @@ local function OnWorked(inst, worker)
     end
 end
 
-local function CanDeploy(inst)
-    return true
-end
-
 local function OnDeploy(inst, pt, deployer)
     local flower = SpawnPrefab("planted_flower")
     if flower then
@@ -181,7 +177,7 @@ local function fn()
 
     inst.butterflyspawner = TheWorld.components.butterflyspawner
     if inst.butterflyspawner ~= nil then
-        inst.components.inventoryitem:SetOnPickupFn(inst.butterflyspawner.StopTrackingFn)
+        inst.components.inventoryitem:SetOnPutInInventoryFn(inst.butterflyspawner.StopTrackingFn)
         inst:ListenForEvent("onremove", inst.butterflyspawner.StopTrackingFn)
         inst.butterflyspawner:StartTracking(inst)
     end

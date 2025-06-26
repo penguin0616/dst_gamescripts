@@ -383,8 +383,25 @@ end
 function Map:HasAdjacentLandTile(tx, ty) -- Tile coordinates only.
     for x_off = -1, 1, 1 do
         for y_off = -1, 1, 1 do
-            if (x_off ~= 0 or y_off ~= 0) and IsLandTile(TheWorld.Map:GetTile(tx + x_off, ty + y_off)) then
-                return true
+            if x_off ~= 0 or y_off ~= 0 then
+                local tileid = TheWorld.Map:GetTile(tx + x_off, ty + y_off)
+                if IsLandTile(tileid) then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
+function Map:HasAdjacentTileFiltered(tx, ty, filterfn) -- Tile coordinates only.
+    for x_off = -1, 1, 1 do
+        for y_off = -1, 1, 1 do
+            if x_off ~= 0 or y_off ~= 0 then
+                local tileid = TheWorld.Map:GetTile(tx + x_off, ty + y_off)
+                if filterfn(tileid) then
+                    return true
+                end
             end
         end
     end
@@ -621,7 +638,42 @@ function Map:IsSurroundedByLand(x, y, z, radius)
     return true
 end
 
-function Map:GetNearestPointOnWater(x, z, radius, iterations)
+function Map:GetNearbyOceanPointFromXZ(x, z, maxradius, radiusscale)
+    if not radiusscale then
+        radiusscale = TILE_SCALE
+    end
+    local testx, testz
+    for r = 1, maxradius do -- Go around in a square spiral to try to find an ocean tile.
+        local maxradiusoffset = r * radiusscale
+        for dx = -r, r do -- Top left to top right.
+            testx, testz = x + dx * radiusscale, z + maxradiusoffset
+            if self:IsOceanTileAtPoint(testx, 0, testz) then
+                return testx, testz
+            end
+        end
+        for dz = r - 1, -r, -1 do -- Top right to bottom right.
+            testx, testz = x + maxradiusoffset, z + dz * radiusscale
+            if self:IsOceanTileAtPoint(testx, 0, testz) then
+                return testx, testz
+            end
+        end
+        for dx = r - 1, -r, -1 do -- Bottom right to bottom left.
+            testx, testz = x + dx * radiusscale, z - maxradiusoffset
+            if self:IsOceanTileAtPoint(testx, 0, testz) then
+                return testx, testz
+            end
+        end
+        for dz = -r + 1, r - 1 do -- Bottom left to top left.
+            testx, testz = x - maxradiusoffset, z + dz * radiusscale
+            if self:IsOceanTileAtPoint(testx, 0, testz) then
+                return testx, testz
+            end
+        end
+    end
+    return nil, nil
+end
+
+function Map:GetNearestPointOnWater(x, z, radius, iterations) -- NOTES(JBK): Deprecated use GetNearbyOceanPointFromXZ this is kept around for mods.
     local test_increment = radius / iterations
 
     for i=1,iterations do
@@ -1192,3 +1244,44 @@ function Map:IsPointInSharkBoiArena(x, y, z)
 
     return world.net.components.sharkboimanagerhelper:IsPointInArena(x, y, z)
 end
+
+function Map:IsPointInWagPunkArena(x, y, z)
+    local world = TheWorld
+    if world.net == nil or world.net.components.wagpunk_floor_helper == nil then
+        return false
+    end
+
+    return world.net.components.wagpunk_floor_helper:IsPointInArena(x, y, z)
+end
+
+function Map:IsPointInWagPunkArenaAndBarrierIsUp(x, y, z)
+    local world = TheWorld
+    if world.net == nil or world.net.components.wagpunk_floor_helper == nil then
+        return false
+    end
+
+    if not world.net.components.wagpunk_floor_helper:IsBarrierUp() then
+        return false
+    end
+
+    return world.net.components.wagpunk_floor_helper:IsPointInArena(x, y, z)
+end
+
+function Map:GetWagPunkArenaCenterXZ()
+    local world = TheWorld
+    if world.net == nil or world.net.components.wagpunk_floor_helper == nil then
+        return nil, nil
+    end
+
+    return world.net.components.wagpunk_floor_helper:GetArenaOrigin()
+end
+
+function Map:IsWagPunkArenaBarrierUp()
+    local world = TheWorld
+    if world.net == nil or world.net.components.wagpunk_floor_helper == nil then
+        return false
+    end
+
+    return world.net.components.wagpunk_floor_helper:IsBarrierUp()
+end
+

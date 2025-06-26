@@ -531,9 +531,9 @@ local function OnChargeFromBattery(inst, battery)
 
     inst.components.upgrademoduleowner:AddCharge(1)
 
-    if not inst.components.inventory:IsInsulated() then
-        inst.sg:GoToState("electrocute")
-    end
+	--V2C: -switched to stategraph event instead of GoToState
+	--     -use HandleEvent to preserve legacy timing
+	inst.sg:HandleEvent("electrocute")
 
     return true
 end
@@ -639,6 +639,7 @@ local function common_postinit(inst)
 end
 
 local function master_postinit(inst)
+    inst.refusestobowtoroyalty = true
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
 
 	inst.customidlestate = "wx78_funnyidle"

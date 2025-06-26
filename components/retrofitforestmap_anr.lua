@@ -1224,6 +1224,70 @@ local function SkilltreeSpotlightWinonaWurtRetrofitting_PopulateOtterDens()
 	print("Retrofitting for Skilltree Spotlight: Winona & Wurt - Added " .. tostring(count) .. " Otter Dens.")
 end
 
+--------------------------------------------------------------------------
+
+local function Balatro_NewContent_Retrofitting()
+	if TheWorld.topology.overrides ~= nil and TheWorld.topology.overrides.balatro == "never" then
+		print("Retrofitting for Balatro: Skipping due to overrides.balatro == never")
+		return
+	end
+
+	-- Find appropriate biomes
+	local VALID_BALATRO_BACKGROUNDS = {
+		"BGBadlands",
+		"BGCrappyForest",
+		"BGDeciduous",
+		"BGDeepForest",
+		"BGForest",
+		"BGGrass",
+		"BGGrassBurnt",
+		"BGMarsh",
+		"BGRocky",
+		"BGSavanna",
+	}
+
+	local node_indices, balatro_candidate_nodes, statue_candidate_nodes = {}, {}, {}
+	for node_index, id_string in ipairs(TheWorld.topology.ids) do
+		for _, bg_string in ipairs(VALID_BALATRO_BACKGROUNDS) do
+			if id_string:find(bg_string) then
+				table.insert(balatro_candidate_nodes, TheWorld.topology.nodes[node_index])
+			end
+		end
+	end
+
+	if #balatro_candidate_nodes == 0 or #balatro_candidate_nodes == 0 then
+		print("Retrofitting for Balatro: Failed to find any appropriate nodes to spawn in.")
+		return
+	end
+
+	print("Retrofitting for Balatro: Adding missing balatro objects.")
+
+	local VALID_BALATRO_WORLDTILES = {
+		WORLD_TILES.DIRT_NOISE,
+		WORLD_TILES.DECIDUOUS,
+		WORLD_TILES.FOREST,
+		WORLD_TILES.GRASS,
+		WORLD_TILES.MARSH,
+		WORLD_TILES.ROCKY,
+		WORLD_TILES.SAVANNA,
+	}
+	local is_valid_balatro_turf = function(x, y, z, prefab)
+		local tile = TheWorld.Map:GetTileAtPoint(x, y, z)
+		for _, tile_type in ipairs(VALID_BALATRO_WORLDTILES) do
+			if tile_type == tile then
+				return true
+			end
+		end
+		return false
+	end
+	if not RetrofitNewContentPrefab(inst, "balatro_machine", 10.5, 11, is_valid_balatro_turf, balatro_candidate_nodes)
+			and not RetrofitNewContentPrefab(inst, "balatro_machine", 10.5, 11, nil, balatro_candidate_nodes) then
+		print("Retrofitting for Balatro: Failed to place a JIMBO in the world.")
+	end
+end
+
+--------------------------------------------------------------------------
+
 
 --------------------------------------------------------------------------
 --[[ Post initialization ]]
@@ -1533,6 +1597,11 @@ function self:OnPostInit()
 		ALittleDrama_NewContent_Retrofitting()
 	end
 
+	if self.retrofit_balatro_content then
+		print ("Retrofitting for Balatro: Adding important prefabs normally found in new setpieces.")
+		Balatro_NewContent_Retrofitting()
+	end
+
 	---------------------------------------------------------------------------
 
     if self.retrofit_daywalker_content then
@@ -1617,10 +1686,30 @@ function self:OnPostInit()
         end
     end
 
+	---------------------------------------------------------------------------
+
 	if self.retrofit_otterdens then
         print("Retrofitting for Skilltree Spotlight: Winona & Wurt: Adding Otter Dens.")
 		SkilltreeSpotlightWinonaWurtRetrofitting_PopulateOtterDens()
 	end
+
+	---------------------------------------------------------------------------
+
+    if self.sharkboi_ice_hazard_fix then
+        print("Removing sharkboi_ice_hazard entities off of the world's edge.")
+        self.sharkboi_ice_hazard_fix = nil
+        -- NOTES(JBK): This fixup exists from an issue with sharkboimanager spawning ice without checking for ocean first.
+        local removedcount = 0
+        for _, v in pairs(Ents) do
+            if v.prefab == "sharkboi_ice_hazard" then
+                if not TheWorld.Map:IsOceanAtPoint(v.Transform:GetWorldPosition()) then
+                    v:Remove()
+                    removedcount = removedcount + 1
+                end
+            end
+        end
+        print("Removed", removedcount, "sharkboi_ice_hazard entities!")
+    end
 
 	---------------------------------------------------------------------------
 
@@ -1673,6 +1762,7 @@ function self:OnLoad(data)
         self.retrofit_removeextraaltarpieces = data.retrofit_removeextraaltarpieces or false
         self.retrofit_terraria_terrarium = data.retrofit_terraria_terrarium or false
 		self.retrofit_alittledrama_content = data.retrofit_alittledrama_content or false
+		self.retrofit_balatro_content = data.retrofit_balatro_content or false		
         self.retrofit_daywalker_content = data.retrofit_daywalker_content or false
         self.console_beard_turf_fix = data.console_beard_turf_fix or false
         self.retrofit_junkyard_content = data.retrofit_junkyard_content or false
@@ -1680,6 +1770,7 @@ function self:OnLoad(data)
         self.retrofit_junkyardv3_content = data.retrofit_junkyardv3_content or false
         self.remove_rift_terraformers_fix = data.remove_rift_terraformers_fix or false
 		self.retrofit_otterdens = data.retrofit_otterdens or false
+        self.sharkboi_ice_hazard_fix = data.sharkboi_ice_hazard_fix or false
     end
 end
 

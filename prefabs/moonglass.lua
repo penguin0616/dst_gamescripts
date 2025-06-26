@@ -98,6 +98,11 @@ local function ondropped(inst)
     inst.Light:Enable(true)
 end
 
+local function regular_postinit(inst)
+	inst:AddComponent("snowmandecor")
+	return inst
+end
+
 local function infused_preinit(inst)
     inst.entity:AddLight()
     inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
@@ -125,5 +130,5 @@ local function infused_postinit(inst)
     return inst
 end
 
-return createglass("moonglass"),
+return createglass("moonglass", nil, regular_postinit),
        createglass("moonglass_charged", infused_preinit, infused_postinit)
