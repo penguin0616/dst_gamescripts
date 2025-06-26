@@ -159,6 +159,7 @@ function Input:UpdatePosition(x, y)
 end
 
 -- Is for all the button devices (mouse, joystick (even the analog parts), keyboard as well, keyboard
+ValidateLineNumber(162)
 function Input:OnControl(control, digitalvalue, analogvalue)
     if (self.mouse_enabled or
         (control ~= CONTROL_PRIMARY and control ~= CONTROL_SECONDARY)) and
@@ -167,6 +168,7 @@ function Input:OnControl(control, digitalvalue, analogvalue)
         self.oncontrol:HandleEvent("oncontrol", control, digitalvalue, analogvalue)
     end
 end
+ValidateLineNumber(171)
 
 function Input:OnMouseMove(x, y)
     if self.mouse_enabled then
@@ -745,9 +747,11 @@ function OnPosition(x, y)
     TheInput:UpdatePosition(x, y)
 end
 
+ValidateLineNumber(750)
 function OnControl(control, digitalvalue, analogvalue)
     TheInput:OnControl(control, digitalvalue, analogvalue)
 end
+ValidateLineNumber(754)
 
 function OnMouseButton(button, is_up, x, y)
     TheInput:OnMouseButton(button, is_up, x, y)

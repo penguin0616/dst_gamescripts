@@ -408,6 +408,7 @@ function FrontEnd:OnFocusMove(dir, down)
 	end
 end
 
+ValidateLineNumber(411)
 function FrontEnd:OnControl(control, down)
     -- if there is a textedit that is currently editing, stop editing if the player clicks somewhere else
     if self.textProcessorWidget ~= nil and not self.textProcessorWidget.focus and not down and control == CONTROL_PRIMARY then
@@ -486,6 +487,7 @@ function FrontEnd:OnControl(control, down)
     end
     self.isprimary = false
 end
+ValidateLineNumber(490)
 
 function FrontEnd:ShowTitle(text,subtext)
 	self.title:SetString(text)

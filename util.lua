@@ -782,7 +782,6 @@ end
 
 -- make environment
 local env = {  -- add functions you know are safe here
-    loadstring=loadstring -- functions can get serialized to text, this is required to turn them back into functions
  }
 
 function RunInEnvironment(fn, fnenv)
