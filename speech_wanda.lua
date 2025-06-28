@@ -1158,7 +1158,11 @@ return{
 
     ANNOUNCE_ELIXIR_TOO_SUPER = "Ooph. That is far too strong.",
 
+    -- Rift 5
+
     ANNOUNCE_LUNARGUARDIAN_INCOMING = "Right on cue.",
+    ANNOUNCE_FLOATER_HELD = "I saw my life flash before my eyes... not in any particular order.",
+    ANNOUNCE_FLOATER_LETGO = "I hate this part!",
 
 	BATTLECRY =
 	{

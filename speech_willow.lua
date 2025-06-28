@@ -1165,7 +1165,11 @@ return{
 
     ANNOUNCE_ELIXIR_TOO_SUPER = "Phew! That's too strong.",
 
+    -- Rift 5
+
     ANNOUNCE_LUNARGUARDIAN_INCOMING = "Ugh, not again!",
+    ANNOUNCE_FLOATER_HELD = "Something touched my foot.",
+    ANNOUNCE_FLOATER_LETGO = "I hate waiting!",
 
 	BATTLECRY =
 	{

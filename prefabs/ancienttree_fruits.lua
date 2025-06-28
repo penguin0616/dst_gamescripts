@@ -260,6 +260,7 @@ local function gem_fruit_fn()
     inst.pickupsound = "rock"
 
     inst:AddTag("molebait")
+    -- NOTES(JBK): Do not add the gem tag to this it is not a socketable gem.
 
     MakeInventoryPhysics(inst)
 

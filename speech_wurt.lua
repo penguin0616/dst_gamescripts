@@ -1158,7 +1158,11 @@ return{
 
     ANNOUNCE_ELIXIR_TOO_SUPER = "Glurph! Too strong.",
 
+    -- Rift 5
+
     ANNOUNCE_LUNARGUARDIAN_INCOMING = "Flort! It baaack!",
+    ANNOUNCE_FLOATER_HELD = "See? Me best floater.",
+    ANNOUNCE_FLOATER_LETGO = "Glurph!",
 
 	BATTLECRY =
 	{

@@ -1158,7 +1158,11 @@ return{
 
     ANNOUNCE_ELIXIR_TOO_SUPER = "'Tis excess!",
 
+    -- Rift 5
+
     ANNOUNCE_LUNARGUARDIAN_INCOMING = "Thou return'st!",
+    ANNOUNCE_FLOATER_HELD = "Aye, I deny thee, Njord!",
+    ANNOUNCE_FLOATER_LETGO = "Curse thee, Njord!",
 
 	BATTLECRY =
 	{

@@ -1159,7 +1159,11 @@ return{
 
     ANNOUNCE_ELIXIR_TOO_SUPER = "I'll pass on that one.",
 
+    -- Rift 5
+
     ANNOUNCE_LUNARGUARDIAN_INCOMING = "Aw heck. Not again.",
+    ANNOUNCE_FLOATER_HELD = "That was a close one!",
+    ANNOUNCE_FLOATER_LETGO = "Why'd I let-",
 
 	BATTLECRY =
 	{

@@ -1177,7 +1177,11 @@ return{
 
     ANNOUNCE_ELIXIR_TOO_SUPER = "Don't think I can take that drink!",
 
+    -- Rift 5
+
     ANNOUNCE_LUNARGUARDIAN_INCOMING = "Ack! It's back!",
+    ANNOUNCE_FLOATER_HELD = "Wet fur? What for?",
+    ANNOUNCE_FLOATER_LETGO = "No time to rhy-",
 
 	BATTLECRY =
 	{

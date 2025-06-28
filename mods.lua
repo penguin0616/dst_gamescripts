@@ -525,7 +525,7 @@ function ModWrangler:LoadMods(worldgen)
     local function sanitizepriority(priority)
         local prioritytype = type(priority)
         if prioritytype == "string" then
-            return tonumber(priority)
+            return tonumber(priority) or 0
         elseif prioritytype == "number" then
             return priority
         end
@@ -543,7 +543,7 @@ function ModWrangler:LoadMods(worldgen)
                 if type(aname) ~= "string" then
                     aname = a.modname
                 end
-                local bname = b.modinfo.name or b.modname
+                local bname = b.modinfo.name
                 if type(bname) ~= "string" then
                     bname = b.modname
                 end

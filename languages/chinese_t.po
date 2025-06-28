@@ -385458,8 +385458,8 @@ msgstr "打開合成"
 
 #. STRINGS.UI.CONTROLSSCREEN.PS4.L3
 msgctxt "STRINGS.UI.CONTROLSSCREEN.PS4.L3"
-msgid "Chat*"
-msgstr "聊天*"
+msgid "Toggle Target Locking"
+msgstr "Toggle Target Locking"
 
 #. STRINGS.UI.CONTROLSSCREEN.PS4.LSTICK
 msgctxt "STRINGS.UI.CONTROLSSCREEN.PS4.LSTICK"

@@ -1159,7 +1159,11 @@ return{
 
     ANNOUNCE_ELIXIR_TOO_SUPER = "Yuck! No, too much.",
 
+    -- Rift 5
+
     ANNOUNCE_LUNARGUARDIAN_INCOMING = "It back!",
+    ANNOUNCE_FLOATER_HELD = "Wolfgang unsinkable!",
+    ANNOUNCE_FLOATER_LETGO = "Wolfgang oopsie!",
 
 	BATTLECRY =
 	{

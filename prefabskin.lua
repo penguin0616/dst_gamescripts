@@ -965,16 +965,25 @@ beargerfur_sack_clear_fn = function(inst)
     RemoveSkinSounds(inst)
 end
 
+flotationcushion_init_fn = function(inst, build_name)
+    basic_init_fn(inst, build_name, "flotationcushion")
+end
+flotationcushion_clear_fn = function(inst, build_name)
+    basic_clear_fn(inst, "flotationcushion")
+end
+
 sisturn_init_fn = function(inst, build_name)
     basic_init_fn(inst, build_name, "sisturn")
     if not TheWorld.ismastersim then
         return
     end
     AddSkinSounds(inst)
+    inst:UpdateFlowerDecor()
 end
 sisturn_clear_fn = function(inst)
     basic_clear_fn(inst, "sisturn")
     RemoveSkinSounds(inst)
+    inst:UpdateFlowerDecor()
 end
 
 lucy_init_fn = function(inst, build_name)

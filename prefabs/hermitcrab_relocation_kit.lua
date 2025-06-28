@@ -143,6 +143,9 @@ local function ondeploy(inst, pt, deployer, rotation)
             end
         end
         hermitcrab_relocation_manager:SetupTeleportingPearlToSetPieceData(orientatedsetpiece, pt.x, pt.z)
+        inst:Remove()
+    else
+        inst.Transform:SetPosition(pt:Get())
     end
 end
 

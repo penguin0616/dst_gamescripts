@@ -364,33 +364,6 @@ local replace =
     --["feather"] = "feather_crow", -- NOTES(JBK): This rename is so old no world around today should need this fixup. Leaving a comment here in case someone comes knocking later.
 }
 
-local function TryGetGemCoreTileData(savedata)
-	local old_ground
-	local function LoadGemCoreTileData(load_success, str)
-		if load_success and #str > 0 then
-			local GemCoreTileData = loadstring(str)()
-
-			local idx = TheNet:GetCurrentSnapshot()
-			while idx > 1 do
-				if GemCoreTileData[idx] ~= nil then
-					old_ground = GemCoreTileData[idx]
-					break
-				end
-				idx = idx - 1
-			end
-		end
-	end
-
-	local path = "session/"..savedata.meta.session_identifier.."/GemCoreTileData"
-	if not TheNet:IsDedicated() and not ShardGameIndex:GetServerData().use_legacy_session_path then
-		TheSim:GetPersistentStringInClusterSlot(ShardGameIndex:GetSlot(), "Master", path, LoadGemCoreTileData)
-    else
-		TheSim:GetPersistentString(path, LoadGemCoreTileData)
-    end
-
-	return old_ground
-end
-
 POPULATING = false
 local function PopulateWorld(savedata, profile)
     POPULATING = true
@@ -533,23 +506,12 @@ local function PopulateWorld(savedata, profile)
 					end
 				end
 			else
-				--try and load GemCore's tile history if it exists, it will be more accurate than old_static_id
-				local gemcore_old_ground = TryGetGemCoreTileData(savedata)
-				if gemcore_old_ground then
-					for name, id in pairs(GetWorldTileMap()) do
-						local previous_id = gemcore_old_ground[name]
-						if previous_id and previous_id ~= id then
-							tile_id_conversion_map[previous_id] = id
-						end
-					end
-				else
-					for name, id in pairs(GetWorldTileMap()) do
-						local tile_info = GetTileInfo(id)
-						if tile_info and tile_info.old_static_id ~= nil and tile_info.old_static_id ~= id then
-							tile_id_conversion_map[tile_info.old_static_id] = id
-						end
-					end
-				end
+                for name, id in pairs(GetWorldTileMap()) do
+                    local tile_info = GetTileInfo(id)
+                    if tile_info and tile_info.old_static_id ~= nil and tile_info.old_static_id ~= id then
+                        tile_id_conversion_map[tile_info.old_static_id] = id
+                    end
+                end
 			end
 			map:DoDynamicTileConversion(tile_id_conversion_map)
 

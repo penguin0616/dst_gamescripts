@@ -181,20 +181,37 @@ local function remove_decor(inst, data)
 	TheWorld:PushEvent("ms_updatesisturnstate", {inst = inst, is_active = IsFullOfFlowers(inst)})
 end
 
+local function UpdateFlowerDecor(inst)
+    if not inst:HasTag("burnt") then
+        for slot, layer in ipairs(FLOWER_LAYERS) do
+            local item = inst.components.container.slots[slot]
+            if item then
+                local symbolname
+                if item.prefab == "petals_evil" then
+                    symbolname = "flowers_evil"
+                elseif item.prefab == "moon_tree_blossom" then
+                    symbolname = "flowers_lunar"
+                end
+                if symbolname then
+                    local skin_build = inst:GetSkinBuild()
+                    if not skin_build then
+                        inst.AnimState:OverrideSymbol("flowers_0" .. slot, "sisturn", symbolname)
+                    else
+                        inst.AnimState:OverrideSkinSymbol("flowers_0" .. slot, skin_build, symbolname)
+                    end
+                else
+                    inst.AnimState:ClearOverrideSymbol("flowers_0" .. slot)
+                end
+            end
+        end
+    end
+end
+
 local function add_decor(inst, data)
     if data ~= nil and data.slot ~= nil and FLOWER_LAYERS[data.slot] and not inst:HasTag("burnt") then
-		inst.AnimState:Show(FLOWER_LAYERS[data.slot])
-		inst.SoundEmitter:PlaySound("meta5/wendy/sisturn_petals_add_remove")
-		local item = inst.components.container.slots[data.slot]
-		if item then	
-			if item.prefab == "petals_evil" then
-				inst.AnimState:OverrideSymbol("flowers_0"..data.slot, "sisturn", "flowers_evil")
-			elseif item.prefab == "moon_tree_blossom" then				
-				inst.AnimState:OverrideSymbol("flowers_0"..data.slot, "sisturn", "flowers_lunar")
-			else
-				inst.AnimState:ClearOverrideSymbol("flowers_0"..data.slot)
-			end
-		end
+        inst.AnimState:Show(FLOWER_LAYERS[data.slot])
+        inst.SoundEmitter:PlaySound("meta5/wendy/sisturn_petals_add_remove")
+        inst:UpdateFlowerDecor()
     end
 
 
@@ -316,6 +333,7 @@ local function fn()
     MakeSnowCovered(inst)
 
 	--
+    inst.UpdateFlowerDecor = UpdateFlowerDecor
     inst:ListenForEvent("itemget", add_decor)
     inst:ListenForEvent("itemlose", remove_decor)
     inst:ListenForEvent("onbuilt", on_built)

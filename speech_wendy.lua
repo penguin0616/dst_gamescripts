@@ -1162,7 +1162,11 @@ return{
 
     ANNOUNCE_ELIXIR_TOO_SUPER = "It's too much.",
 
+    -- Rift 5
+
     ANNOUNCE_LUNARGUARDIAN_INCOMING = "It remembers.",
+    ANNOUNCE_FLOATER_HELD = "What now?",
+    ANNOUNCE_FLOATER_LETGO = "It's time.",
 
 	BATTLECRY =
 	{

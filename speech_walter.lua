@@ -1200,7 +1200,11 @@ return{
 
     ANNOUNCE_ELIXIR_TOO_SUPER = "I don't think my tummy can handle that.",
 
+    -- Rift 5
+
     ANNOUNCE_LUNARGUARDIAN_INCOMING = "Incoming... again?",
+    ANNOUNCE_FLOATER_HELD = "I knew I'd come out on top!",
+    ANNOUNCE_FLOATER_LETGO = "Submerging!",
 
 	BATTLECRY =
 	{
